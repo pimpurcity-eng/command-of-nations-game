@@ -1,0 +1,386 @@
+[
+ {
+  "name": "Volyn",
+  "country": "Ukraine",
+  "longitude": 25.0,
+  "latitude": 51.0
+ },
+ {
+  "name": "Rivne",
+  "country": "Ukraine",
+  "longitude": 26.5,
+  "latitude": 51.0
+ },
+ {
+  "name": "Zhytomyr",
+  "country": "Ukraine",
+  "longitude": 28.3,
+  "latitude": 50.6
+ },
+ {
+  "name": "Kyiv",
+  "country": "Ukraine",
+  "longitude": 30.5,
+  "latitude": 50.3
+ },
+ {
+  "name": "Chernihiv",
+  "country": "Ukraine",
+  "longitude": 32.0,
+  "latitude": 51.3
+ },
+ {
+  "name": "Sumy",
+  "country": "Ukraine",
+  "longitude": 34.1,
+  "latitude": 50.9
+ },
+ {
+  "name": "Lviv",
+  "country": "Ukraine",
+  "longitude": 24.0,
+  "latitude": 49.7
+ },
+ {
+  "name": "Ternopil",
+  "country": "Ukraine",
+  "longitude": 25.6,
+  "latitude": 49.4
+ },
+ {
+  "name": "Khmelnytskyi",
+  "country": "Ukraine",
+  "longitude": 26.9,
+  "latitude": 49.5
+ },
+ {
+  "name": "Vinnytsia",
+  "country": "Ukraine",
+  "longitude": 28.5,
+  "latitude": 49.0
+ },
+ {
+  "name": "Cherkasy",
+  "country": "Ukraine",
+  "longitude": 31.5,
+  "latitude": 49.1
+ },
+ {
+  "name": "Poltava",
+  "country": "Ukraine",
+  "longitude": 33.8,
+  "latitude": 49.5
+ },
+ {
+  "name": "Kharkiv",
+  "country": "Ukraine",
+  "longitude": 36.3,
+  "latitude": 49.6
+ },
+ {
+  "name": "Zakarpattia",
+  "country": "Ukraine",
+  "longitude": 23.2,
+  "latitude": 48.4
+ },
+ {
+  "name": "Ivano-Frankivsk",
+  "country": "Ukraine",
+  "longitude": 24.6,
+  "latitude": 48.6
+ },
+ {
+  "name": "Chernivtsi",
+  "country": "Ukraine",
+  "longitude": 26.0,
+  "latitude": 48.3
+ },
+ {
+  "name": "Odesa",
+  "country": "Ukraine",
+  "longitude": 30.0,
+  "latitude": 46.8
+ },
+ {
+  "name": "Mykolaiv",
+  "country": "Ukraine",
+  "longitude": 31.8,
+  "latitude": 47.2
+ },
+ {
+  "name": "Kirovohrad",
+  "country": "Ukraine",
+  "longitude": 32.3,
+  "latitude": 48.4
+ },
+ {
+  "name": "Dnipropetrovsk",
+  "country": "Ukraine",
+  "longitude": 34.9,
+  "latitude": 48.4
+ },
+ {
+  "name": "Zaporizhzhia",
+  "country": "Ukraine",
+  "longitude": 35.6,
+  "latitude": 47.4
+ },
+ {
+  "name": "Kherson",
+  "country": "Ukraine",
+  "longitude": 33.5,
+  "latitude": 46.7
+ },
+ {
+  "name": "Donetsk",
+  "country": "Ukraine",
+  "longitude": 37.6,
+  "latitude": 48.0
+ },
+ {
+  "name": "Luhansk",
+  "country": "Ukraine",
+  "longitude": 39.0,
+  "latitude": 49.0
+ },
+ {
+  "name": "Crimea",
+  "country": "Ukraine",
+  "longitude": 34.0,
+  "latitude": 45.3
+ },
+ {
+  "name": "Moscow",
+  "country": "Russia",
+  "longitude": 37.6,
+  "latitude": 55.7
+ },
+ {
+  "name": "Bryansk",
+  "country": "Russia",
+  "longitude": 33.7,
+  "latitude": 52.9
+ },
+ {
+  "name": "Kursk",
+  "country": "Russia",
+  "longitude": 36.2,
+  "latitude": 51.7
+ },
+ {
+  "name": "Belgorod",
+  "country": "Russia",
+  "longitude": 36.8,
+  "latitude": 50.7
+ },
+ {
+  "name": "Voronezh",
+  "country": "Russia",
+  "longitude": 40.0,
+  "latitude": 51.5
+ },
+ {
+  "name": "Rostov",
+  "country": "Russia",
+  "longitude": 41.0,
+  "latitude": 47.8
+ },
+ {
+  "name": "Krasnodar",
+  "country": "Russia",
+  "longitude": 39.0,
+  "latitude": 45.4
+ },
+ {
+  "name": "Adygea",
+  "country": "Russia",
+  "longitude": 40.1,
+  "latitude": 44.6
+ },
+ {
+  "name": "Stavropol",
+  "country": "Russia",
+  "longitude": 43.5,
+  "latitude": 45.1
+ },
+ {
+  "name": "Kalmykia",
+  "country": "Russia",
+  "longitude": 45.4,
+  "latitude": 46.6
+ },
+ {
+  "name": "Volgograd",
+  "country": "Russia",
+  "longitude": 44.1,
+  "latitude": 49.3
+ },
+ {
+  "name": "Astrakhan",
+  "country": "Russia",
+  "longitude": 47.4,
+  "latitude": 47.3
+ },
+ {
+  "name": "Saratov",
+  "country": "Russia",
+  "longitude": 46.0,
+  "latitude": 51.8
+ },
+ {
+  "name": "Penza",
+  "country": "Russia",
+  "longitude": 44.0,
+  "latitude": 53.2
+ },
+ {
+  "name": "Tambov",
+  "country": "Russia",
+  "longitude": 41.6,
+  "latitude": 52.7
+ },
+ {
+  "name": "Lipetsk",
+  "country": "Russia",
+  "longitude": 39.2,
+  "latitude": 52.7
+ },
+ {
+  "name": "Oryol",
+  "country": "Russia",
+  "longitude": 36.1,
+  "latitude": 53.0
+ },
+ {
+  "name": "Tula",
+  "country": "Russia",
+  "longitude": 37.6,
+  "latitude": 53.9
+ },
+ {
+  "name": "Kaluga",
+  "country": "Russia",
+  "longitude": 35.4,
+  "latitude": 54.3
+ },
+ {
+  "name": "Smolensk",
+  "country": "Russia",
+  "longitude": 32.2,
+  "latitude": 54.8
+ },
+ {
+  "name": "Tver",
+  "country": "Russia",
+  "longitude": 35.0,
+  "latitude": 57.0
+ },
+ {
+  "name": "Pskov",
+  "country": "Russia",
+  "longitude": 29.2,
+  "latitude": 57.3
+ },
+ {
+  "name": "Novgorod",
+  "country": "Russia",
+  "longitude": 32.0,
+  "latitude": 58.3
+ },
+ {
+  "name": "Leningrad",
+  "country": "Russia",
+  "longitude": 30.8,
+  "latitude": 59.4
+ },
+ {
+  "name": "Vologda",
+  "country": "Russia",
+  "longitude": 40.5,
+  "latitude": 59.4
+ },
+ {
+  "name": "Yaroslavl",
+  "country": "Russia",
+  "longitude": 39.2,
+  "latitude": 57.6
+ },
+ {
+  "name": "Kostroma",
+  "country": "Russia",
+  "longitude": 42.0,
+  "latitude": 58.0
+ },
+ {
+  "name": "Ivanovo",
+  "country": "Russia",
+  "longitude": 41.6,
+  "latitude": 57.0
+ },
+ {
+  "name": "Vladimir",
+  "country": "Russia",
+  "longitude": 40.8,
+  "latitude": 56.0
+ },
+ {
+  "name": "Ryazan",
+  "country": "Russia",
+  "longitude": 40.6,
+  "latitude": 54.4
+ },
+ {
+  "name": "Nizhny Novgorod",
+  "country": "Russia",
+  "longitude": 44.6,
+  "latitude": 56.3
+ },
+ {
+  "name": "Mordovia",
+  "country": "Russia",
+  "longitude": 44.3,
+  "latitude": 54.3
+ },
+ {
+  "name": "Chuvashia",
+  "country": "Russia",
+  "longitude": 47.0,
+  "latitude": 55.5
+ },
+ {
+  "name": "Karachay-Cherkessia",
+  "country": "Russia",
+  "longitude": 41.9,
+  "latitude": 43.8
+ },
+ {
+  "name": "Kabardino-Balkaria",
+  "country": "Russia",
+  "longitude": 43.4,
+  "latitude": 43.5
+ },
+ {
+  "name": "North Ossetia",
+  "country": "Russia",
+  "longitude": 44.3,
+  "latitude": 43.1
+ },
+ {
+  "name": "Ingushetia",
+  "country": "Russia",
+  "longitude": 44.9,
+  "latitude": 43.2
+ },
+ {
+  "name": "Chechnya",
+  "country": "Russia",
+  "longitude": 45.8,
+  "latitude": 43.3
+ },
+ {
+  "name": "Dagestan",
+  "country": "Russia",
+  "longitude": 47.3,
+  "latitude": 42.7
+ }
+]

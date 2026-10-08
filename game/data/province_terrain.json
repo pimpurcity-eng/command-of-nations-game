@@ -1,0 +1,450 @@
+{
+  "Ukraine:Volyn": {
+    "terrain": "forest",
+    "forest_density": 0.72,
+    "dryness": 0,
+    "wetness": 0.65,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Ukraine:Rivne": {
+    "terrain": "forest",
+    "forest_density": 0.72,
+    "dryness": 0,
+    "wetness": 0.65,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Ukraine:Zhytomyr": {
+    "terrain": "forest",
+    "forest_density": 0.72,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Ukraine:Kyiv": {
+    "terrain": "forest",
+    "forest_density": 0.72,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Ukraine:Chernihiv": {
+    "terrain": "forest",
+    "forest_density": 0.72,
+    "dryness": 0,
+    "wetness": 0.65,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Ukraine:Sumy": {
+    "terrain": "plains",
+    "forest_density": 0.08,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Ukraine:Lviv": {
+    "terrain": "hills",
+    "forest_density": 0.25,
+    "dryness": 0.03899999999999963,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Ukraine:Ternopil": {
+    "terrain": "hills",
+    "forest_density": 0.25,
+    "dryness": 0.0780000000000002,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Ukraine:Khmelnytskyi": {
+    "terrain": "hills",
+    "forest_density": 0.25,
+    "dryness": 0.065,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Ukraine:Vinnytsia": {
+    "terrain": "hills",
+    "forest_density": 0.25,
+    "dryness": 0.13,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Ukraine:Cherkasy": {
+    "terrain": "plains",
+    "forest_density": 0.08,
+    "dryness": 0.11699999999999981,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Ukraine:Poltava": {
+    "terrain": "plains",
+    "forest_density": 0.08,
+    "dryness": 0.065,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Ukraine:Kharkiv": {
+    "terrain": "plains",
+    "forest_density": 0.08,
+    "dryness": 0.05199999999999982,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Ukraine:Zakarpattia": {
+    "terrain": "mountains",
+    "forest_density": 0.4,
+    "dryness": 0.20800000000000018,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Ukraine:Ivano-Frankivsk": {
+    "terrain": "mountains",
+    "forest_density": 0.4,
+    "dryness": 0.18199999999999983,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Ukraine:Chernivtsi": {
+    "terrain": "mountains",
+    "forest_density": 0.4,
+    "dryness": 0.2210000000000004,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Ukraine:Odesa": {
+    "terrain": "plains",
+    "forest_density": 0.08,
+    "dryness": 0.41600000000000037,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Ukraine:Mykolaiv": {
+    "terrain": "plains",
+    "forest_density": 0.08,
+    "dryness": 0.36399999999999966,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Ukraine:Kirovohrad": {
+    "terrain": "plains",
+    "forest_density": 0.08,
+    "dryness": 0.20800000000000018,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Ukraine:Dnipropetrovsk": {
+    "terrain": "plains",
+    "forest_density": 0.08,
+    "dryness": 0.20800000000000018,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Ukraine:Zaporizhzhia": {
+    "terrain": "plains",
+    "forest_density": 0.08,
+    "dryness": 0.3380000000000002,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Ukraine:Kherson": {
+    "terrain": "plains",
+    "forest_density": 0.08,
+    "dryness": 0.42899999999999966,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Ukraine:Donetsk": {
+    "terrain": "hills",
+    "forest_density": 0.25,
+    "dryness": 0.26,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Ukraine:Luhansk": {
+    "terrain": "hills",
+    "forest_density": 0.25,
+    "dryness": 0.13,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Ukraine:Crimea": {
+    "terrain": "plains",
+    "forest_density": 0.08,
+    "dryness": 0.6110000000000004,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Moscow": {
+    "terrain": "forest",
+    "forest_density": 0.72,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Bryansk": {
+    "terrain": "forest",
+    "forest_density": 0.72,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Kursk": {
+    "terrain": "hills",
+    "forest_density": 0.25,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Belgorod": {
+    "terrain": "hills",
+    "forest_density": 0.25,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Voronezh": {
+    "terrain": "plains",
+    "forest_density": 0.08,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Rostov": {
+    "terrain": "plains",
+    "forest_density": 0.08,
+    "dryness": 0.28600000000000037,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Krasnodar": {
+    "terrain": "plains",
+    "forest_density": 0.08,
+    "dryness": 0.5980000000000002,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Adygea": {
+    "terrain": "hills",
+    "forest_density": 0.25,
+    "dryness": 0.7019999999999998,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Stavropol": {
+    "terrain": "plains",
+    "forest_density": 0.08,
+    "dryness": 0.8369999999999997,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Kalmykia": {
+    "terrain": "plains",
+    "forest_density": 0.08,
+    "dryness": 0.6419999999999999,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Volgograd": {
+    "terrain": "plains",
+    "forest_density": 0.08,
+    "dryness": 0.29100000000000037,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Astrakhan": {
+    "terrain": "plains",
+    "forest_density": 0.08,
+    "dryness": 0.5510000000000004,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Saratov": {
+    "terrain": "hills",
+    "forest_density": 0.25,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Penza": {
+    "terrain": "hills",
+    "forest_density": 0.25,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Tambov": {
+    "terrain": "forest",
+    "forest_density": 0.72,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Lipetsk": {
+    "terrain": "hills",
+    "forest_density": 0.25,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Oryol": {
+    "terrain": "hills",
+    "forest_density": 0.25,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Tula": {
+    "terrain": "hills",
+    "forest_density": 0.25,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Kaluga": {
+    "terrain": "hills",
+    "forest_density": 0.25,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Smolensk": {
+    "terrain": "forest",
+    "forest_density": 0.72,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Tver": {
+    "terrain": "forest",
+    "forest_density": 0.72,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Pskov": {
+    "terrain": "forest",
+    "forest_density": 0.72,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Novgorod": {
+    "terrain": "forest",
+    "forest_density": 0.72,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Leningrad": {
+    "terrain": "forest",
+    "forest_density": 0.72,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Vologda": {
+    "terrain": "forest",
+    "forest_density": 0.72,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Yaroslavl": {
+    "terrain": "forest",
+    "forest_density": 0.72,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Kostroma": {
+    "terrain": "forest",
+    "forest_density": 0.72,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Ivanovo": {
+    "terrain": "forest",
+    "forest_density": 0.72,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Vladimir": {
+    "terrain": "forest",
+    "forest_density": 0.72,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Ryazan": {
+    "terrain": "forest",
+    "forest_density": 0.72,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Nizhny Novgorod": {
+    "terrain": "forest",
+    "forest_density": 0.72,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Mordovia": {
+    "terrain": "hills",
+    "forest_density": 0.25,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Chuvashia": {
+    "terrain": "forest",
+    "forest_density": 0.72,
+    "dryness": 0,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Karachay-Cherkessia": {
+    "terrain": "mountains",
+    "forest_density": 0.4,
+    "dryness": 0.8060000000000004,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Kabardino-Balkaria": {
+    "terrain": "mountains",
+    "forest_density": 0.4,
+    "dryness": 1,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:North Ossetia": {
+    "terrain": "mountains",
+    "forest_density": 0.4,
+    "dryness": 1,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Ingushetia": {
+    "terrain": "mountains",
+    "forest_density": 0.4,
+    "dryness": 1,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Chechnya": {
+    "terrain": "mountains",
+    "forest_density": 0.4,
+    "dryness": 1,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  },
+  "Russia:Dagestan": {
+    "terrain": "mountains",
+    "forest_density": 0.4,
+    "dryness": 1,
+    "wetness": 0.0,
+    "provenance": "Authored geographic approximation; no measured DEM/land-cover data"
+  }
+}

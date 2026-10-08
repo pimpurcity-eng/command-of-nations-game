@@ -1,0 +1,71 @@
+[
+  {
+    "id": "factory",
+    "name": "Military factory",
+    "asset_roster_id": "warehouse3",
+    "capital_only": false,
+    "max_level": 3,
+    "hours": 2,
+    "cost": {
+      "funds": 200,
+      "materials": 100,
+      "electronics": 30,
+      "fuel": 20,
+      "manpower": 20
+    },
+    "description": "Each level above 1 increases this city\u2019s unit production speed by 25%.",
+    "starting_level": 1
+  },
+  {
+    "id": "industry",
+    "name": "Industrial complex",
+    "asset_roster_id": "warehouse7",
+    "capital_only": false,
+    "max_level": 3,
+    "hours": 3,
+    "cost": {
+      "funds": 240,
+      "materials": 120,
+      "electronics": 20,
+      "fuel": 30,
+      "manpower": 25
+    },
+    "description": "Each level above 1 increases this city\u2019s income of all five resources by 25%.",
+    "starting_level": 1
+  },
+  {
+    "id": "research_center",
+    "name": "Research center",
+    "asset_roster_id": "warehouse11",
+    "capital_only": true,
+    "max_level": 3,
+    "hours": 4,
+    "cost": {
+      "funds": 300,
+      "materials": 100,
+      "electronics": 70,
+      "fuel": 15,
+      "manpower": 20
+    },
+    "description": "Capital only. Each level above 1 increases national research speed by 25%. Two research slots.",
+    "starting_level": 1
+  },
+  {
+    "id": "airbase",
+    "name": "Airbase",
+    "asset_roster_id": "warehouse1",
+    "capital_only": false,
+    "starting_level": 0,
+    "capital_starting_level": 1,
+    "max_level": 3,
+    "hours": 3,
+    "cost": {
+      "funds": 220,
+      "materials": 110,
+      "electronics": 45,
+      "fuel": 30,
+      "manpower": 20
+    },
+    "description": "Enables fighter production and provides a home base. Each extra level reduces refueling time by 25%."
+  }
+]

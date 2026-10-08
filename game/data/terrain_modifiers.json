@@ -1,0 +1,224 @@
+{
+  "plains": {
+    "armor": {
+      "speed": 1.2,
+      "attack": 1.2,
+      "defense": 1.0
+    },
+    "ifv": {
+      "speed": 1.1,
+      "attack": 1.05,
+      "defense": 1.0
+    },
+    "artillery": {
+      "speed": 1,
+      "attack": 1.05,
+      "defense": 1
+    },
+    "air_defense": {
+      "speed": 1,
+      "attack": 1,
+      "defense": 1
+    },
+    "fighter": {
+      "speed": 1,
+      "attack": 1,
+      "defense": 1
+    },
+    "naval": {
+      "speed": 1,
+      "attack": 1,
+      "defense": 1
+    },
+    "missile_launcher": {
+      "speed": 1,
+      "attack": 1.0,
+      "defense": 1
+    }
+  },
+  "forest": {
+    "armor": {
+      "speed": 0.65,
+      "attack": 0.75,
+      "defense": 0.95
+    },
+    "ifv": {
+      "speed": 0.85,
+      "attack": 1.05,
+      "defense": 1.25
+    },
+    "artillery": {
+      "speed": 0.7,
+      "attack": 0.9,
+      "defense": 1.05
+    },
+    "air_defense": {
+      "speed": 0.75,
+      "attack": 0.95,
+      "defense": 1.1
+    },
+    "fighter": {
+      "speed": 1,
+      "attack": 1,
+      "defense": 1
+    },
+    "naval": {
+      "speed": 1,
+      "attack": 1,
+      "defense": 1
+    },
+    "missile_launcher": {
+      "speed": 0.7,
+      "attack": 1.0,
+      "defense": 1.05
+    }
+  },
+  "hills": {
+    "armor": {
+      "speed": 0.8,
+      "attack": 0.9,
+      "defense": 1.05
+    },
+    "ifv": {
+      "speed": 0.9,
+      "attack": 1,
+      "defense": 1.15
+    },
+    "artillery": {
+      "speed": 0.8,
+      "attack": 1.1,
+      "defense": 1.1
+    },
+    "air_defense": {
+      "speed": 0.8,
+      "attack": 1.05,
+      "defense": 1.05
+    },
+    "fighter": {
+      "speed": 1,
+      "attack": 1,
+      "defense": 1
+    },
+    "naval": {
+      "speed": 1,
+      "attack": 1,
+      "defense": 1
+    },
+    "missile_launcher": {
+      "speed": 0.8,
+      "attack": 1.0,
+      "defense": 1.1
+    }
+  },
+  "mountains": {
+    "armor": {
+      "speed": 0.5,
+      "attack": 0.6,
+      "defense": 0.8
+    },
+    "ifv": {
+      "speed": 0.7,
+      "attack": 0.85,
+      "defense": 1.2
+    },
+    "artillery": {
+      "speed": 0.6,
+      "attack": 0.8,
+      "defense": 1.1
+    },
+    "air_defense": {
+      "speed": 0.65,
+      "attack": 0.9,
+      "defense": 1.1
+    },
+    "fighter": {
+      "speed": 1,
+      "attack": 1,
+      "defense": 1
+    },
+    "naval": {
+      "speed": 1,
+      "attack": 1,
+      "defense": 1
+    },
+    "missile_launcher": {
+      "speed": 0.6,
+      "attack": 1.0,
+      "defense": 1.1
+    }
+  },
+  "wetlands": {
+    "armor": {
+      "speed": 0.45,
+      "attack": 0.65,
+      "defense": 0.8
+    },
+    "ifv": {
+      "speed": 0.65,
+      "attack": 0.8,
+      "defense": 1.1
+    },
+    "artillery": {
+      "speed": 0.5,
+      "attack": 0.75,
+      "defense": 0.95
+    },
+    "air_defense": {
+      "speed": 0.55,
+      "attack": 0.8,
+      "defense": 1
+    },
+    "fighter": {
+      "speed": 1,
+      "attack": 1,
+      "defense": 1
+    },
+    "naval": {
+      "speed": 1,
+      "attack": 1,
+      "defense": 1
+    },
+    "missile_launcher": {
+      "speed": 0.5,
+      "attack": 1.0,
+      "defense": 0.95
+    }
+  },
+  "urban": {
+    "armor": {
+      "speed": 0.65,
+      "attack": 0.75,
+      "defense": 1
+    },
+    "ifv": {
+      "speed": 0.8,
+      "attack": 1.1,
+      "defense": 1.35
+    },
+    "artillery": {
+      "speed": 0.65,
+      "attack": 0.85,
+      "defense": 1.15
+    },
+    "air_defense": {
+      "speed": 0.7,
+      "attack": 0.95,
+      "defense": 1.15
+    },
+    "fighter": {
+      "speed": 1,
+      "attack": 1,
+      "defense": 1
+    },
+    "naval": {
+      "speed": 1,
+      "attack": 1,
+      "defense": 1
+    },
+    "missile_launcher": {
+      "speed": 0.65,
+      "attack": 1.0,
+      "defense": 1.15
+    }
+  }
+}
