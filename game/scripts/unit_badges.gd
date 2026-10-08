@@ -11,8 +11,14 @@ func contains(screen: Vector2) -> bool:
 	for button in buttons.values():
 		if button.visible and button.get_global_rect().has_point(point): return true
 	return false
+## No labels or tags on units (owner request): units are recognised by their 3D models.
+## The selected army's details are in the army panel.
+const SHOW_TAGS: = false
 func _process(_delta: float) -> void :
 	if armies == null: return
+	if not SHOW_TAGS:
+		for button in buttons.values(): button.visible = false
+		return
 	var camera: = get_viewport().get_camera_3d()
 	if camera == null: return
 	var transform: = get_final_transform().affine_inverse()

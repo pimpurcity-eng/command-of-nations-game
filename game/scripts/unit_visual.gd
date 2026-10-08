@@ -25,9 +25,27 @@ static func preview_path(equipment_id: String) -> String:
 	var roster_id: String = equipment.get("asset_roster_id", {"t90": "t90m", "armata": "armata", "abrams": "abrams"}.get(equipment_id, ""))
 	return AssetRoster.appearance(roster_id, equipment.get("country", GameSession.player_country)).get("preview", "")
 
+## Equipment whose own original model has not been recovered yet (Leopard 2, Challenger 2,
+## Oplot, ...) is shown with an original model of the same role instead of being invisible.
+## Replace by adding the real model to assets/library and data/asset_roster.json.
+static func stand_in_path(equipment_id: String, kind: String) -> String:
+	var country: String = EquipmentIdentity.spec(equipment_id).get("country", GameSession.player_country)
+	var russian: = country == "russia"
+	match kind:
+		"armor": return "res://assets/library/t90m_original.glb" if russian else "res://assets/library/abrams_european.glb"
+		"ifv": return "res://assets/library/upload661a_original.glb"
+		"artillery": return "res://assets/library/upload7a7e_original.glb"
+		"air_defense": return "res://assets/library/skyguard_" + ("russian" if russian else "european") + ".glb"
+		"fighter": return "res://assets/library/su57_russian.glb" if russian else "res://assets/library/f18a_european.glb"
+	return ""
+
 static func create(kind: String, _faction: Color, equipment_id: String = "") -> Node3D:
 	var assembly: = Node3D.new()
 	var path: = asset_path(equipment_id)
+	if path.is_empty() or not ResourceLoader.exists(path):
+		var spec_kind: String = EquipmentIdentity.spec(equipment_id).get("visual_kind", kind)
+		path = stand_in_path(equipment_id, spec_kind)
+		assembly.set_meta("stand_in_model", true)
 	assembly.set_meta("asset_path", path)
 	assembly.set_meta("original_vehicle_asset", true)
 	if path.is_empty() or not ResourceLoader.exists(path):

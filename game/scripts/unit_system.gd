@@ -108,7 +108,8 @@ func _spawn(data: Dictionary, point: Vector2, color: Color) -> void :
 	ink.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	ring.material_override = ink
 	marker.add_child(ring)
-	units.append({"fire_mode": data.get("fire_mode", "at_will"), "attack_target": data.get("attack_target", ""), "firing_halt": false, "level": data.get("level", 1), "upgrade_remaining": data.get("upgrade_remaining", 0.0), "upgrade_target": data.get("upgrade_target", data.get("level", 1)), "stack_id": data.get("stack_id", data.id), "equipment_id": equipment_id, "id": data.id, "country": data.country, "name": spec[0], "visual_kind": visual_kind, "presentation": data.get("presentation", ""), "node": marker, "target": spec[1], "moving": false, "engaged": false, "waypoints": [], "health": 100.0, "heading": 0.0, "ring": ring, "faction_color": color})
+	units.append({"fire_mode": data.get("fire_mode", "at_will"), "attack_target": data.get("attack_target", ""), "firing_halt": false, "level": data.get("level", 1), "upgrade_remaining": data.get("upgrade_remaining", 0.0), "upgrade_target": data.get("upgrade_target", data.get("level", 1)), "stack_id": data.get("stack_id", data.id), "equipment_id": equipment_id, "id": data.id, "country": data.country, "name": spec[0], "visual_kind": visual_kind, "presentation": data.get("presentation", ""), "node": marker, "target": spec[1], "moving": false, "engaged": false, "waypoints": [], "health": 100.0, "heading": _facing_enemy(data.country, point), "ring": ring, "faction_color": color})
+	model.rotation.y = units[-1].heading
 	air.configure(units[-1], data)
 	units[-1].forced_march = data.get("forced_march", false)
 	units[-1].delay_remaining = float(data.get("delay_remaining", 0.0))
@@ -387,6 +388,11 @@ func restore(state: Array) -> void :
 		_update_heading(unit)
 	_draw_route()
 
+## Idle armies start facing the opposing capital instead of all pointing north.
+func _facing_enemy(country: String, point: Vector2) -> float:
+	var goal: = GeographicProjection.project(30.52, 50.45) if country == "russia" else GeographicProjection.project(37.62, 55.75)
+	var direction: = goal - point
+	return atan2( - direction.x, - direction.y) if direction.length() > 0.01 else 0.0
 func _update_heading(unit: Dictionary) -> void :
 	var current: = Vector2(unit.node.position.x, unit.node.position.z)
 	var direction: Vector2 = (unit.waypoints[0] if not unit.waypoints.is_empty() else unit.target) - current
