@@ -222,77 +222,149 @@ func _city_mesh(parent: Node3D, mesh: Mesh, position: Vector3, material: Materia
 		batches[key] = tool
 	batches[key].append_from(mesh, 0, Transform3D(Basis.IDENTITY, position))
 	parent.set_meta("building_batches", batches)
-func _build_city_district(district: Node3D, city: Dictionary, ink: StandardMaterial3D) -> void :
-	var asphalt: = StandardMaterial3D.new()
-	asphalt.albedo_color = Color("55534b")
-	asphalt.roughness = 1.0
-	var paving: = StandardMaterial3D.new()
-	paving.albedo_color = Color("aaa28b")
-	paving.roughness = 1.0
-	var garden: = StandardMaterial3D.new()
-	garden.albedo_color = Color("78805b")
-	garden.roughness = 1.0
-	var roof: = StandardMaterial3D.new()
-	roof.albedo_color = Color("936e5b")
-	roof.roughness = 0.92
-	var slate: = StandardMaterial3D.new()
-	slate.albedo_color = Color("777b78")
-	slate.roughness = 0.94
-	var facades: Array[ShaderMaterial] = []
-	for color in ["d1c9b5", "aaa99d", "b9b9af", "c0ad98"]:
-		var material: = ShaderMaterial.new()
-		material.shader = load("res://assets/building_facade.gdshader")
-		material.set_shader_parameter("facade", Color(color))
-		facades.append(material)
-
-
-	for offset in [-0.4725, 0.0525, 0.5775]:
-
-		for segment in 16:
-			_city_box(district, Vector3(1.95 / 16.0, 0.012, 0.045), Vector3(-0.975 + (segment + 0.5) * 1.95 / 16.0, 0.018, offset), asphalt)
-			_city_box(district, Vector3(0.045, 0.012, 1.75 / 16.0), Vector3(offset, 0.018, -0.875 + (segment + 0.5) * 1.75 / 16.0), asphalt)
+func _facade(color: String, glass: String, roof: String, floor_height: float, bay: float, window_w: float, window_h: float, shine: float) -> ShaderMaterial:
+	var material: = ShaderMaterial.new()
+	material.shader = load("res://assets/building_facade.gdshader")
+	material.set_shader_parameter("facade", Color(color))
+	material.set_shader_parameter("glass", Color(glass))
+	material.set_shader_parameter("roof", Color(roof))
+	material.set_shader_parameter("floor_height", floor_height)
+	material.set_shader_parameter("bay_width", bay)
+	material.set_shader_parameter("window_width", window_w)
+	material.set_shader_parameter("window_height", window_h)
+	material.set_shader_parameter("shine", shine)
+	return material
+func _city_block(parent: Node3D, size: Vector3, center: Vector3, angle: float, material: Material) -> void :
+	var batches: Dictionary = parent.get_meta("building_batches", {})
+	var key: = material.get_instance_id()
+	if not batches.has(key):
+		var tool: = SurfaceTool.new()
+		tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+		tool.set_material(material)
+		batches[key] = tool
+	var mesh: = BoxMesh.new()
+	mesh.size = size
+	batches[key].append_from(mesh, 0, Transform3D(Basis(Vector3.UP, angle), center))
+	parent.set_meta("building_batches", batches)
+## Modern city: glass skyscrapers downtown, Soviet-era apartment blocks around them,
+## low-rise houses on the outskirts, radial avenues and a ring road.
+func _build_city_district(district: Node3D, city: Dictionary, _ink: StandardMaterial3D) -> void :
 	var rng: = RandomNumberGenerator.new()
 	rng.seed = city.name.hash()
-	var building_count: = 0
-	for x in 18:
-		for z in 18:
-			if x in [4, 9, 14] or z in [4, 9, 14]: continue
-			var position: = Vector3((x - 8.5) * 0.105, 0, (z - 8.5) * 0.105)
-
-			if Vector2(position.x / 0.94, position.z / 0.8).length() > rng.randf_range(0.9, 1.12): continue
-			if rng.randf() < 0.08:
-				_city_box(district, Vector3(0.09, 0.01, 0.09), position + Vector3.UP * 0.017, garden)
-				continue
-			if absf(position.x) < 0.025 or absf(position.z) < 0.025: continue
-			var central: = x in [6, 7, 8, 9] and z in [6, 7, 8, 9]
-			var height: = rng.randf_range(0.18, 0.32) if central else rng.randf_range(0.06, 0.16)
-			if central and city.name in ["Moscow", "Kyiv"]: height *= 1.3
-			var width: = rng.randf_range(0.07, 0.095)
-			var depth: = rng.randf_range(0.07, 0.095)
-			_city_box(district, Vector3(0.1, 0.012, 0.1), position + Vector3.UP * 0.012, paving)
-			var roof_material: Material = slate if central or rng.randf() < 0.3 else roof
-			_city_box(district, Vector3(width, height, depth), position + Vector3(0, 0.02 + height * 0.5, 0), facades[rng.randi_range(0, 3)])
-			if not central and rng.randf() < 0.72:
-				var pitched_roof: = PrismMesh.new()
-				pitched_roof.size = Vector3(width + 0.012, 0.035, depth + 0.012)
-				_city_mesh(district, pitched_roof, position + Vector3(0, 0.035 + height, 0), roof_material)
-			else:
-				_city_box(district, Vector3(width + 0.008, 0.012, depth + 0.008), position + Vector3(0, 0.026 + height, 0), roof_material)
-			building_count += 1
-	district.set_meta("urban_building_count", building_count)
-
-
-	var stone: = StandardMaterial3D.new()
-	stone.albedo_color = Color("c4b9a0")
-	_city_box(district, Vector3(0.28, 0.018, 0.28), Vector3(0, 0.022, 0), stone)
-	var civic_height: = 0.28 if city.get("capital", false) else 0.12
-	_city_box(district, Vector3(0.18, civic_height, 0.12), Vector3(0, civic_height * 0.5 + 0.03, -0.18), facades[0])
-	_city_box(district, Vector3(0.19, 0.012, 0.13), Vector3(0, civic_height + 0.035, -0.18), roof)
-	if city.get("capital", false):
-		_city_box(district, Vector3(0.055, 0.13, 0.055), Vector3(0, civic_height + 0.1, -0.18), stone)
-		var cap: = PrismMesh.new()
-		cap.size = Vector3(0.075, 0.045, 0.075)
-		_city_mesh(district, cap, Vector3(0, civic_height + 0.18, -0.18), roof)
+	var capital: bool = city.get("capital", false)
+	var asphalt: = StandardMaterial3D.new()
+	asphalt.albedo_color = Color("4d4c48")
+	asphalt.roughness = 1.0
+	var plaza: = StandardMaterial3D.new()
+	plaza.albedo_color = Color("b3ab98")
+	plaza.roughness = 1.0
+	var park: = StandardMaterial3D.new()
+	park.albedo_color = Color("5f7046")
+	park.roughness = 1.0
+	var tiles: = StandardMaterial3D.new()
+	tiles.albedo_color = Color("6e5a4e")
+	tiles.roughness = 0.9
+	var towers: Array[ShaderMaterial] = [
+		_facade("2f3a44", "6f8ea6", "3b4248", 0.0105, 0.009, 0.86, 0.78, 1.0),
+		_facade("3c4a4f", "7aa0a8", "41484c", 0.0105, 0.010, 0.82, 0.74, 1.0),
+		_facade("4a4136", "a08a68", "3f3a34", 0.0105, 0.009, 0.84, 0.72, 0.9),
+		_facade("c9c7c0", "44515b", "6d6f70", 0.0115, 0.011, 0.55, 0.62, 0.4)]
+	var blocks: Array[ShaderMaterial] = [
+		_facade("cfc8b8", "3c4650", "8a8a86", 0.0125, 0.012, 0.42, 0.5, 0.0),
+		_facade("b9b6ad", "39424a", "7d7f7c", 0.0125, 0.012, 0.42, 0.5, 0.0),
+		_facade("d8cdb4", "414a52", "8d8a82", 0.0125, 0.013, 0.40, 0.48, 0.0),
+		_facade("a99178", "3a4047", "6f6a62", 0.0125, 0.012, 0.40, 0.5, 0.0)]
+	var houses: Array[ShaderMaterial] = [
+		_facade("ddd3bf", "3f4850", "8e5b47", 0.016, 0.016, 0.38, 0.42, 0.0),
+		_facade("c9b79c", "3f4850", "8e5b47", 0.016, 0.016, 0.38, 0.42, 0.0)]
+	var taken: Array = []  # [Vector2 position, radius]
+	var avenues: Array = []
+	var avenue_count: = rng.randi_range(4, 6)
+	var base_angle: = rng.randf() * TAU
+	for i in avenue_count:
+		var angle: = base_angle + TAU * i / avenue_count + rng.randf_range(-0.2, 0.2)
+		avenues.append(angle)
+		var direction: = Vector2(cos(angle), sin(angle))
+		_city_block(district, Vector3(1.0, 0.01, 0.034), Vector3(direction.x * 0.52, 0.016, direction.y * 0.52), -angle, asphalt)
+	# Irregular city outline instead of a perfect circle.
+	var phase_a: = rng.randf() * TAU
+	var phase_b: = rng.randf() * TAU
+	var reach: = func(angle: float) -> float:
+		return 0.86 + 0.13 * sin(2.0 * angle + phase_a) + 0.09 * sin(3.0 * angle + phase_b)
+	_city_block(district, Vector3(0.22, 0.012, 0.22), Vector3(0, 0.018, 0), base_angle, plaza)
+	taken.append([Vector2.ZERO, 0.12])
+	var place: = func(point: Vector2, radius: float) -> bool:
+		for angle in avenues:
+			var direction: = Vector2(cos(angle), sin(angle))
+			var along: = point.dot(direction)
+			if along > 0 and absf(point.cross(direction)) < radius + 0.022: return false
+		for item in taken:
+			if point.distance_to(item[0]) < radius + item[1] + 0.008: return false
+		taken.append([point, radius])
+		return true
+	var built: = 0
+	# Downtown skyscrapers.
+	var tower_count: = 22 if capital else 13
+	var tallest: = 1.05 if capital else 0.62
+	for attempt in 400:
+		if built >= tower_count: break
+		var r: = sqrt(rng.randf()) * 0.3
+		var a: = rng.randf() * TAU
+		var point: = Vector2(cos(a), sin(a)) * r
+		var footprint: = rng.randf_range(0.05, 0.085)
+		if not place.call(point, footprint * 0.72): continue
+		var height: = lerpf(tallest, tallest * 0.35, r / 0.3) * rng.randf_range(0.7, 1.0)
+		var material: = towers[rng.randi_range(0, towers.size() - 1)]
+		var turn: = base_angle + rng.randf_range(-0.15, 0.15)
+		_city_block(district, Vector3(footprint, height, footprint * rng.randf_range(0.75, 1.0)), Vector3(point.x, 0.02 + height * 0.5, point.y), turn, material)
+		if rng.randf() < 0.45:
+			var crown: = height * rng.randf_range(0.12, 0.25)
+			_city_block(district, Vector3(footprint * 0.66, crown, footprint * 0.66), Vector3(point.x, 0.02 + height + crown * 0.5, point.y), turn, material)
+			if height > tallest * 0.8:
+				_city_block(district, Vector3(0.006, 0.12, 0.006), Vector3(point.x, 0.02 + height + crown + 0.06, point.y), turn, plaza)
+		built += 1
+	# Apartment blocks (long slabs) around downtown.
+	for attempt in 900:
+		if built >= tower_count + 95: break
+		var a: = rng.randf() * TAU
+		var r: float = rng.randf_range(0.26, 0.72) * float(reach.call(a))
+		var point: = Vector2(cos(a), sin(a)) * r
+		var length: = rng.randf_range(0.1, 0.19)
+		if not place.call(point, length * 0.5): continue
+		var height: = rng.randf_range(0.07, 0.17)
+		var facing: = -a + (PI * 0.5 if rng.randf() < 0.6 else 0.0)
+		_city_block(district, Vector3(length, height, 0.036), Vector3(point.x, 0.02 + height * 0.5, point.y), facing, blocks[rng.randi_range(0, blocks.size() - 1)])
+		built += 1
+	# Parks.
+	for attempt in 60:
+		var a: = rng.randf() * TAU
+		var r: float = rng.randf_range(0.3, 0.8) * float(reach.call(a))
+		var point: = Vector2(cos(a), sin(a)) * r
+		if place.call(point, 0.06): _city_block(district, Vector3(0.12, 0.011, 0.1), Vector3(point.x, 0.017, point.y), -a, park)
+	# Low-rise houses with pitched roofs on the outskirts.
+	for attempt in 1400:
+		if built >= tower_count + 95 + 190: break
+		var a: = rng.randf() * TAU
+		var r: float = rng.randf_range(0.55, 1.0) * float(reach.call(a))
+		var point: = Vector2(cos(a), sin(a)) * r
+		if not place.call(point, 0.022): continue
+		var height: = rng.randf_range(0.026, 0.05)
+		var turn: = -a + rng.randf_range(-0.2, 0.2)
+		var width: = rng.randf_range(0.032, 0.048)
+		_city_block(district, Vector3(width, height, width * 0.8), Vector3(point.x, 0.02 + height * 0.5, point.y), turn, houses[rng.randi_range(0, 1)])
+		var pitched: = PrismMesh.new()
+		pitched.size = Vector3(width + 0.006, 0.018, width * 0.8 + 0.006)
+		var batches: Dictionary = district.get_meta("building_batches", {})
+		var key: = tiles.get_instance_id()
+		if not batches.has(key):
+			var tool: = SurfaceTool.new()
+			tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+			tool.set_material(tiles)
+			batches[key] = tool
+			district.set_meta("building_batches", batches)
+		batches[key].append_from(pitched, 0, Transform3D(Basis(Vector3.UP, turn), Vector3(point.x, 0.02 + height + 0.009, point.y)))
+		built += 1
+	district.set_meta("urban_building_count", built)
 	for tool in district.get_meta("building_batches").values():
 		var visual: = MeshInstance3D.new()
 		tool.index()
