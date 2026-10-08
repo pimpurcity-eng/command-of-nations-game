@@ -220,5 +220,42 @@
       "attack": 1.0,
       "defense": 1.15
     }
+  },
+  "desert": {
+    "armor": {
+      "speed": 0.95,
+      "attack": 1.1,
+      "defense": 0.95
+    },
+    "ifv": {
+      "speed": 1.0,
+      "attack": 1.0,
+      "defense": 0.95
+    },
+    "artillery": {
+      "speed": 0.85,
+      "attack": 1.0,
+      "defense": 0.95
+    },
+    "air_defense": {
+      "speed": 0.9,
+      "attack": 1.0,
+      "defense": 0.95
+    },
+    "fighter": {
+      "speed": 1,
+      "attack": 1,
+      "defense": 1
+    },
+    "naval": {
+      "speed": 1,
+      "attack": 1,
+      "defense": 1
+    },
+    "missile_launcher": {
+      "speed": 0.85,
+      "attack": 1.0,
+      "defense": 0.95
+    }
   }
 }

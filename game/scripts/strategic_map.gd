@@ -8,11 +8,18 @@ var selected_id: = ""
 var relation_signature: = ""
 var noise: = FastNoiseLite.new()
 var _surface_samples: Dictionary = {}
+var _border_rings: Array = []
+var _political: = -1.0
+var _city_points: = PackedVector2Array()
 func _ready() -> void :
 	noise.seed = 1874
 	noise.frequency = 0.13
+	for city in GeographicProjection.load_cities(): _city_points.append(city.point)
 	for territory in territories:
 		_build_sector(territory)
+	var province_lines: = MapBorder.build_segments(MapBorder.unique_segments(_border_rings), self, 0.9, Color(0.21, 0.23, 0.2, 0.75))
+	province_lines.name = "ProvinceBorders"
+	add_child(province_lines)
 	_add_landscape()
 	_add_country_outlines()
 	_add_connections()
@@ -36,6 +43,10 @@ func _build_sector(t: Dictionary) -> void :
 	var material: = ShaderMaterial.new()
 	material.shader = load("res://assets/terrain.gdshader")
 	material.set_shader_parameter("terrain_types", TerrainVisualMap.get_texture())
+	material.set_shader_parameter("terrain_weights", TerrainVisualMap.get_weights())
+	material.set_shader_parameter("relief", load("res://assets/materials/relief.png"))
+	material.set_shader_parameter("city_points", _city_points)
+	material.set_shader_parameter("city_count", _city_points.size())
 	material.set_shader_parameter("land_detail", load("res://assets/materials/land_detail.png"))
 	material.set_shader_parameter("ownership_strength", 0.18 if t.playable else 0.0)
 	material.set_shader_parameter("blank_context", not t.playable)
@@ -53,6 +64,8 @@ func _build_sector(t: Dictionary) -> void :
 	var visual: = MeshInstance3D.new()
 	visual.mesh = mesh
 	visual.material_override = material
+	# Raised terrain cast hard shadow wedges onto the sea along mountain coasts (Crimea).
+	visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(visual)
 	var body: = StaticBody3D.new()
 	body.collision_layer = 1 if t.playable else 2
@@ -64,11 +77,8 @@ func _build_sector(t: Dictionary) -> void :
 	add_child(body)
 	bodies[t.id] = body
 	if not t.playable: return
-	var rings: Array = [poly]
-	rings.append_array(t.get("holes", []))
-	var lines: = MapBorder.build(rings, self, 0.7, Color("434940"))
-	lines.name = "ProvinceBorder_" + t.id
-	add_child(lines)
+	_border_rings.append(poly)
+	_border_rings.append_array(t.get("holes", []))
 func _subdivide(s: SurfaceTool, a: Vector2, b: Vector2, c: Vector2, depth: int) -> void :
 	if depth > 0:
 		var ab: = (a + b) * 0.5
@@ -199,6 +209,14 @@ func _add_country_outlines() -> void :
 		visual.name = "CountryBorder_" + country.country
 		add_child(visual)
 
+## Call of War look: strong political colours when zoomed out, terrain detail up close.
+func set_view_distance(distance: float) -> void :
+	var value: = smoothstep(13.0, 30.0, distance)
+	if absf(value - _political) < 0.01: return
+	_political = value
+	for territory in territories:
+		if territory.playable: materials[territory.id].set_shader_parameter("political", value)
+
 func set_terrain_mode(enabled: bool) -> void :
 	for territory in territories:
 		materials[territory.id].set_shader_parameter("ownership_strength", (0.08 if enabled else 0.18) if territory.playable else 0.0)
@@ -245,4 +263,5 @@ func update_relations(at_war: bool) -> void :
 		if not territory.playable: continue
 		var material: ShaderMaterial = materials[territory.id]
 		material.set_shader_parameter("hostile", at_war and territory.controller != GameSession.player_country)
+		material.set_shader_parameter("occupied", territory.controller != territory.owner)
 		material.set_shader_parameter("country_tint", Color("c5b77e") if territory.controller == GameSession.player_country else Color("8a9872"))

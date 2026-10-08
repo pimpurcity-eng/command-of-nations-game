@@ -16,16 +16,17 @@ static func landform(longitude: float, latitude: float) -> String:
 	if longitude >= 33 and longitude <= 35.5 and latitude < 45.1: return "mountains"
 	if (longitude >= 35 and longitude <= 39.5 and latitude >= 50 and latitude <= 54.5) or (longitude >= 43.3 and longitude <= 46.5 and latitude >= 50 and latitude <= 55) or (longitude >= 36.8 and longitude <= 40.2 and latitude >= 47.7 and latitude < 49.5) or (longitude < 29 and latitude >= 48.2 and latitude < 50): return "hills"
 	if latitude >= 52.0 or (longitude < 33.5 and latitude >= 50.3): return "forest"
+	# Caspian lowland semi-desert (Kalmykia, Astrakhan).
+	if longitude >= 44.2 and latitude >= 45.0 and latitude < 47.8: return "desert"
 	return "plains"
 static func sample(point: Vector2, urban: bool = true) -> String:
 	if urban:
 		for city in cities:
 			if city.point.distance_squared_to(point) < 0.36: return "urban"
 	var geo: = GeographicProjection.unproject(point)
-	var kind: = landform(geo.x, geo.y)
-
-	if geo.x >= 24 and geo.x < 33.5 and geo.y >= 50.8 and geo.y < 52.4 and sin(point.x * 1.4) * cos(point.y * 1.1) > 0.45: return "wetlands"
-	return kind
+	# Polissia's marshes count as forest: the old repeating sin*cos "wetlands" pattern drew
+	# rectangular patches across Volyn, Rivne and Zhytomyr.
+	return landform(geo.x, geo.y)
 static func height(point: Vector2) -> float:
 	var geo: = GeographicProjection.unproject(point)
 	var mountain: = exp( - pow(ridge_distance(point, carpathians) / 1.15, 2)) * 2.2 + exp( - pow(ridge_distance(point, caucasus) / 1.4, 2)) * 3.0 + exp( - pow(ridge_distance(point, crimea) / 0.45, 2)) * 0.8
