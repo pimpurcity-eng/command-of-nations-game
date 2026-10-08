@@ -94,13 +94,6 @@ func _spawn(data: Dictionary, point: Vector2, color: Color) -> void :
 	var model: = UnitVisual.create(visual_kind, color, equipment_id)
 	model.scale = Vector3.ONE * 0.65
 	marker.add_child(model)
-	var flag: = Sprite3D.new()
-	flag.texture = load("res://assets/vehicles/" + data.country + "_flag.png")
-	flag.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	flag.pixel_size = 0.0023
-	flag.position = Vector3(0.23, 0.88, 0)
-	flag.shaded = false
-	marker.add_child(flag)
 	var ring: = MeshInstance3D.new()
 	var shape: = TorusMesh.new()
 	shape.inner_radius = 0.76
@@ -378,6 +371,8 @@ func _process(delta: float) -> void :
 		var chosen: = chosen_stacks.has(unit.stack_id)
 		unit.ring.material_override.albedo_color = Color("f5cf82") if chosen else unit.faction_color
 		unit.ring.scale = Vector3.ONE * (0.52 if chosen else 0.42)
+		# Call of War: only the selected army gets a ring; the map tag shows ownership.
+		unit.ring.visible = chosen
 		var model: Node3D = unit.node.get_child(0)
 		model.rotation.y = lerp_angle(model.rotation.y, unit.heading, 1.0 - exp( - delta * 8.0))
 		if unit.node.has_meta("detailed_sprite"):

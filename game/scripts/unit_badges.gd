@@ -37,23 +37,29 @@ func _process(_delta: float) -> void :
 	for unit in ordered:
 		alive[unit.id] = true
 		if not buttons.has(unit.id):
+			# Call of War style tag: model thumbnail + unit count + health. No names on the map;
+			# the selected army's names are shown in the army panel.
 			var button: = Button.new()
-			button.text = EquipmentIdentity.title(unit.equipment_id)
+			button.text = ""
 			button.icon = UnitVisual.preview_texture(unit.equipment_id)
 			button.expand_icon = true
-			button.custom_minimum_size.y = 30
-			button.add_theme_constant_override("icon_max_width", 20)
-			button.add_theme_font_size_override("font_size", 11)
+			button.custom_minimum_size = Vector2(0, 26)
+			button.add_theme_constant_override("icon_max_width", 22)
+			button.add_theme_constant_override("h_separation", 3)
+			button.add_theme_font_size_override("font_size", 13)
 			var style: = StyleBoxFlat.new()
-			style.bg_color = Color("081b27")
-			style.border_color = unit.faction_color
-			style.border_width_left = 3
-			style.set_corner_radius_all(4)
-			style.content_margin_left = 5
-			style.content_margin_right = 5
-			style.content_margin_top = 3
-			style.content_margin_bottom = 3
-			for state in ["normal", "hover", "pressed"]: button.add_theme_stylebox_override(state, style)
+			style.bg_color = Color("eeece4")
+			style.set_corner_radius_all(3)
+			style.corner_radius_top_left = 11
+			style.corner_radius_bottom_left = 11
+			style.content_margin_left = 4
+			style.content_margin_right = 6
+			style.content_margin_top = 1
+			style.content_margin_bottom = 4
+			style.shadow_color = Color(0, 0, 0, 0.35)
+			style.shadow_size = 2
+			button.set_meta("style", style)
+			for state in ["normal", "hover", "pressed", "focus"]: button.add_theme_stylebox_override(state, style)
 			button.pressed.connect( func():
 				for index in armies.units.size():
 					if armies.units[index].id == unit.id:
@@ -72,7 +78,7 @@ func _process(_delta: float) -> void :
 			health.offset_top = -5
 			health.offset_bottom = -2
 			var fill: = StyleBoxFlat.new()
-			fill.bg_color = Color("70b49a")
+			fill.bg_color = Color("5fb04a")
 			health.add_theme_stylebox_override("fill", fill)
 			button.add_child(health)
 			buttons[unit.id] = button
@@ -81,31 +87,23 @@ func _process(_delta: float) -> void :
 		var group: = armies.stacks.members(unit)
 		if armies.stacks.leader(group).id != unit.id or not armies.visible_to_player(unit): continue
 		var selected: bool = armies.selected >= 0 and armies.units[armies.selected].stack_id == unit.stack_id and armies.units[armies.selected].country == unit.country
-		var close: = camera.global_position.distance_to(unit.node.global_position) < 18
-		var role_name: String = str(EquipmentIdentity.spec(unit.equipment_id).get("role", unit.visual_kind))
-		var short_role: String = {"armor": "TANK", "ifv": "IFV", "artillery": "ART", "air_defense": "SAM", "missile_launcher": "MISSILE", "fighter": "AIR", "naval": "NAVY", "drone": "UAV"}.get(role_name, role_name.to_upper())
-		button.text = str(group.size()) + " " + (EquipmentIdentity.title(unit.equipment_id) if selected else short_role)
-		var composition: Dictionary = {}
-		for member in group:
-			var role: String = str(EquipmentIdentity.spec(member.equipment_id).get("role", member.visual_kind)).to_upper()
-			composition[role] = composition.get(role, 0) + 1
-		if composition.size() > 1:
-			var rows: PackedStringArray = []
-			for role in composition: rows.append(str(composition[role]) + " " + role)
-			button.text = " · ".join(rows) if not selected and not close else button.text + "\n" + " · ".join(rows)
+		button.text = str(group.size())
 		var missing: bool = unit.node.get_child(0).get_meta("missing_original_model", false)
-		if missing: button.text = "? " + button.text
 		button.tooltip_text = unit.country.capitalize() + " · " + armies.stacks.summary(unit)
 		if missing: button.tooltip_text += " · Original model not recovered"
-		button.modulate = Color("ffe0a0") if selected else (Color("ed8880") if armies.at_war and unit.country != GameSession.player_country else Color.WHITE)
+		var hostile: bool = armies.at_war and unit.country != GameSession.player_country
+		var tag: StyleBoxFlat = button.get_meta("style")
+		tag.bg_color = Color("f2c94c") if selected else (Color("c8453b") if hostile else (Color("eeece4") if unit.country == GameSession.player_country else Color("b9bdb3")))
+		button.add_theme_color_override("font_color", Color.WHITE if hostile and not selected else Color("1d2224"))
 		var hp: = 0.0
 		for member in group: hp += member.health
 		button.get_node("Health").value = hp / group.size()
-		var anchor: Vector3 = unit.node.global_position + Vector3.UP * 0.7
+		var anchor: Vector3 = unit.node.global_position + Vector3.UP * 0.15
 		if camera.is_position_behind(anchor): continue
 		var point: = transform * camera.unproject_position(anchor)
 		var footprint: = button.get_combined_minimum_size()
-		for offset in [Vector2( - footprint.x * 0.5, - footprint.y - 5), Vector2( - footprint.x * 0.5, 10), Vector2(16, - footprint.y * 0.5), Vector2( - footprint.x - 16, - footprint.y * 0.5), Vector2(16, - footprint.y - 20), Vector2( - footprint.x - 16, 20), Vector2( - footprint.x * 0.5, - footprint.y - 54), Vector2( - footprint.x * 0.5, 56)]:
+		# Beside the unit (Call of War), not floating above it.
+		for offset in [Vector2(18, - footprint.y * 0.5), Vector2( - footprint.x * 0.5, 10), Vector2( - footprint.x - 16, - footprint.y * 0.5), Vector2(16, - footprint.y - 20), Vector2( - footprint.x - 16, 20), Vector2( - footprint.x * 0.5, - footprint.y - 54), Vector2( - footprint.x * 0.5, 56)]:
 			var bounds: = Rect2(point + offset, footprint)
 			if not safe.encloses(bounds): continue
 			var clear: = true
