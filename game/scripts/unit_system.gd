@@ -278,46 +278,85 @@ func advance(delta: float) -> void :
 			if a.node.position.distance_to(b.node.position) <= 0.3: stacks.join(a, b)
 	if selected >= 0:
 		selected = units.find(stacks.leader(stacks.members(units[selected])))
-		_draw_route()
+	_draw_route()
 func _draw_route() -> void :
 	if route == null: return
-	var show: bool = selected >= 0 and units[selected].moving and visible_to_player(units[selected])
-	route.visible = show
-	destination_marker.visible = show
-	if not show:
-		route_signature = ""
-		return
-	var unit: Dictionary = units[selected]
-	destination_marker.position = surface_position(unit, unit.target) + Vector3.UP * 0.1
-	var signature: String = unit.id + str(unit.node.position.snapped(Vector3.ONE * 0.08)) + str(unit.waypoints)
+	# Call of War: every one of your moving armies shows its path; the selected one is
+	# brighter. Armies with an attack order show a red arc to their target.
+	destination_marker.visible = false
+	var selected_key: = ""
+	if selected >= 0 and selected < units.size(): selected_key = units[selected].country + ":" + units[selected].stack_id
+	var orders: Array = []
+	var signature: = ""
+	for group in stacks.groups():
+		var leader: Dictionary = stacks.leader(group)
+		if not visible_to_player(leader): continue
+		var key: String = leader.country + ":" + leader.stack_id
+		var chosen: = key == selected_key
+		if leader.country != GameSession.player_country and not chosen: continue
+		var start: = Vector2(leader.node.position.x, leader.node.position.z)
+		if leader.moving:
+			var points: Array = [start]
+			points.append_array(leader.waypoints)
+			if points.size() == 1: points.append(leader.target)
+			orders.append({"move": true, "chosen": chosen, "points": points, "unit": leader})
+			signature += key + str(start.snapped(Vector2.ONE * 0.08)) + str(leader.waypoints) + str(leader.target)
+		if not str(leader.get("attack_target", "")).is_empty():
+			var enemy: = find_id(leader.attack_target)
+			if not enemy.is_empty() and visible_to_player(enemy):
+				var finish: = Vector2(enemy.node.position.x, enemy.node.position.z)
+				var bend: = (finish - start).orthogonal() * 0.22
+				var arc: Array = []
+				for i in 17:
+					var t: = i / 16.0
+					arc.append(start.lerp(finish, t) + bend * 4.0 * t * (1.0 - t))
+				orders.append({"move": false, "chosen": chosen, "points": arc, "unit": leader})
+				signature += key + ">" + str(finish.snapped(Vector2.ONE * 0.08)) + str(start.snapped(Vector2.ONE * 0.08))
+	route.visible = not orders.is_empty()
 	if signature == route_signature: return
 	route_signature = signature
+	if orders.is_empty(): return
 	var surface: = SurfaceTool.new()
 	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
-	var length: = 0.0
-	if show:
-		var start: = Vector2(units[selected].node.position.x, units[selected].node.position.z)
-		var points: Array = [start]
-		points.append_array(units[selected].waypoints)
-		if points.size() == 1: points.append(units[selected].target)
+	for order in orders:
+		var unit: Dictionary = order.unit
+		var tone: = Color(1.0 if order.move else 0.0, 1.0 if order.chosen else 0.0, 0.0)
+		var width: = 4.5 if order.chosen else 3.5
+		var points: Array = order.points
+		var length: = 0.0
 		for segment in range(points.size() - 1):
 			var a: Vector2 = points[segment]
 			var b: Vector2 = points[segment + 1]
 			var distance: = a.distance_to(b)
 			if distance < 0.0001: continue
-			var normal: = Vector2( - (b - a).y, (b - a).x).normalized() * 0.028
+			var normal: = (b - a).orthogonal().normalized()
 			var steps: = maxi(1, ceili(distance / 0.18))
 			for i in steps:
 				var from: = a.lerp(b, i / float(steps))
 				var to: = a.lerp(b, (i + 1) / float(steps))
-				var vertices: = [from - normal, from + normal, to + normal, from - normal, to + normal, to - normal]
-				var uv: = [Vector2(length, 0), Vector2(length, 1), Vector2(length + distance / steps, 1), Vector2(length, 0), Vector2(length + distance / steps, 1), Vector2(length + distance / steps, 0)]
-				for index in 6:
-					surface.set_uv(uv[index])
+				var l0: = length + distance * i / steps
+				var l1: = length + distance * (i + 1) / steps
+				for corner in [[from, l0, -1.0], [from, l0, 1.0], [to, l1, 1.0], [from, l0, -1.0], [to, l1, 1.0], [to, l1, -1.0]]:
+					surface.set_color(tone)
+					surface.set_uv(Vector2(corner[1], corner[2]))
+					surface.set_uv2(normal * corner[2] * width)
 					surface.set_normal(Vector3.UP)
-					surface.add_vertex(surface_position(unit, vertices[index]) + Vector3.UP * 0.11)
-				length += distance / steps
-	if length > 0: route.mesh = surface.commit()
+					surface.add_vertex(surface_position(unit, corner[0]) + Vector3.UP * 0.11)
+			length += distance
+		# Arrowhead at the destination / target.
+		var tip: Vector2 = points[-1]
+		var back: Vector2 = points[-2] if points.size() > 1 else tip
+		var direction: = (tip - back).normalized()
+		if direction == Vector2.ZERO: continue
+		var side: = direction.orthogonal()
+		var arrow_tone: = Color(tone.r, tone.g, 1.0)
+		for offset in [direction * 16.0, -direction * 6.0 + side * 12.0, -direction * 6.0 - side * 12.0]:
+			surface.set_color(arrow_tone)
+			surface.set_uv(Vector2(length, 0))
+			surface.set_uv2(offset)
+			surface.set_normal(Vector3.UP)
+			surface.add_vertex(surface_position(unit, tip) + Vector3.UP * 0.12)
+	route.mesh = surface.commit()
 
 func snapshot() -> Array:
 	var result: Array = []

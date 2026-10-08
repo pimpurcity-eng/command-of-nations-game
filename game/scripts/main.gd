@@ -439,7 +439,7 @@ func _touch_over_ui(screen: Vector2) -> bool:
 	if city_panel != null and city_panel.visible: return true
 	var point: Vector2 = hud.get_final_transform().affine_inverse() * screen
 	if hud.command_panel.get_global_rect().has_point(point): return true
-	if Rect2(Vector2(12, 10), Vector2(get_viewport().get_visible_rect().size.x - 24, 98)).has_point(point): return true
+	if hud.top_bar.get_global_rect().has_point(point): return true
 	if hud.toolbar.get_global_rect().has_point(point): return true
 	for label in cities.labels:
 		if label.visible and label.get_global_rect().has_point(cities.label_layer.get_final_transform().affine_inverse() * screen): return true

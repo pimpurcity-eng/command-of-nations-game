@@ -19,6 +19,10 @@ var rendered_target: = Vector3(3, 0, -5)
 var rendered_distance: = 57.0
 var rendered_yaw: = 0.0
 var rendered_pitch: = 1.02
+## Finger taps may wobble a little on high-density phone screens.
+const TAP_SLOP: = 14.0
+var fling: = Vector3.ZERO
+var _drag_velocity: = Vector3.ZERO
 func _ready() -> void :
 	add_child(camera)
 	camera.current = true
@@ -32,6 +36,12 @@ func _process(delta: float) -> void :
 	if Input.is_physical_key_pressed(KEY_A) or Input.is_physical_key_pressed(KEY_LEFT): direction.x -= 1
 	if Input.is_physical_key_pressed(KEY_D) or Input.is_physical_key_pressed(KEY_RIGHT): direction.x += 1
 	_pan(direction * delta * 450.0)
+	# Momentum after a flick, like Call of War's map.
+	if fling.length() > 0.01 and touches.is_empty() and not dragging:
+		target += fling * delta
+		fling *= exp(-delta * 4.0)
+	else:
+		fling = Vector3.ZERO if not touches.is_empty() or dragging else fling
 	_snap(1.0 - exp( - delta * 12.0))
 func _snap(weight: float) -> void :
 	target.x = clampf(target.x, -20, 22)
@@ -81,11 +91,11 @@ func _unhandled_input(event: InputEvent) -> void :
 				dragging = true
 				mouse_moved = false
 			else:
-				if dragging and event.button_index == button and not mouse_moved and press.distance_to(event.position) < 7 and not event.canceled:
+				if dragging and event.button_index == button and not mouse_moved and press.distance_to(event.position) < TAP_SLOP and not event.canceled:
 					map_clicked.emit(event.position, event.button_index == MOUSE_BUTTON_RIGHT)
 				dragging = false
 	elif event is InputEventMouseMotion and dragging:
-		mouse_moved = mouse_moved or press.distance_to(event.position) >= 7
+		mouse_moved = mouse_moved or press.distance_to(event.position) >= TAP_SLOP
 		if not mouse_moved: return
 		if button == MOUSE_BUTTON_MIDDLE or Input.is_physical_key_pressed(KEY_SHIFT):
 			rotate_view( - event.relative.x * 0.004)
@@ -96,6 +106,8 @@ func _unhandled_input(event: InputEvent) -> void :
 		if event.pressed:
 			if input_blocked.is_valid() and input_blocked.call(event.position): return
 			touches[event.index] = event.position
+			fling = Vector3.ZERO
+			_drag_velocity = Vector3.ZERO
 			if touches.size() > 1:
 				touch_moved = true
 				pinch_active = true
@@ -104,12 +116,13 @@ func _unhandled_input(event: InputEvent) -> void :
 				touch_moved = false
 		else:
 			if event.canceled: touch_moved = true
-			if touches.has(event.index) and touches.size() == 1 and not touch_moved and press.distance_to(event.position) < 7: map_clicked.emit(event.position, false)
+			if touches.has(event.index) and touches.size() == 1 and not touch_moved and press.distance_to(event.position) < TAP_SLOP: map_clicked.emit(event.position, false)
+			if touches.size() == 1 and touch_moved and not pinch_active: fling = _drag_velocity
 			touches.erase(event.index)
 			if touches.is_empty(): pinch_active = false
 	elif event is InputEventScreenDrag:
 		if not touches.has(event.index): return
-		touch_moved = touch_moved or press.distance_to(event.position) > 7 or touches.size() > 1
+		touch_moved = touch_moved or press.distance_to(event.position) > TAP_SLOP or touches.size() > 1
 		if touches.size() == 2:
 			var other: Vector2 = touches[touches.keys()[1] if touches.keys()[0] == event.index else touches.keys()[0]]
 			var previous: Vector2 = touches[event.index] - other
@@ -123,6 +136,8 @@ func _unhandled_input(event: InputEvent) -> void :
 		elif not pinch_active and touch_moved: _drag_map(touches[event.index], event.position)
 		touches[event.index] = event.position
 func reset_gestures() -> void :
+	fling = Vector3.ZERO
+	_drag_velocity = Vector3.ZERO
 	touches.clear()
 	dragging = false
 	mouse_moved = false
@@ -141,6 +156,8 @@ func _drag_map(previous: Vector2, current: Vector2) -> void :
 		var shift: Vector3 = a - b
 		if shift.is_finite():
 			target += shift
+			var dt: = maxf(get_process_delta_time(), 1.0 / 120.0)
+			_drag_velocity = _drag_velocity.lerp(shift / dt, 0.35)
 			_snap(1.0)
 
 func _input(event: InputEvent) -> void :
