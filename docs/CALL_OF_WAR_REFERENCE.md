@@ -321,6 +321,144 @@ Army speed = the speed of its slowest unit. Units below 50% HP move slower.
 - **Muted military parchment**: dark olive/charcoal panels with a subtle texture, cream text.
 - **Small, clean icon buttons**: round or slightly rounded square, never oversized.
 
+## 11b. Current mobile interface (2025 app). **This is the target.**
+
+Notes from the owner's own gameplay screenshots of the current Android app. These are newer
+than the wiki images above; where the two differ, follow this section. The screenshots are
+not stored in this repo because it is public and they show Bytro's art.
+
+### Top bar (fixed)
+- **Commander portrait**: an illustrated officer in a shield-shaped frame, top-left, slightly
+  overlapping the map.
+- **Resource row**: a large illustrated icon with a short number under it
+  (`59k`, `9.6k`, `2.2m`). In order:
+  - money (banknotes)
+  - manpower (helmet)
+  - food (wheat)
+  - metal (steel bar)
+  - oil (red jerry can)
+  - a capped resource shown as `current/max` (`677/36k`)
+- **Second row**:
+  - small country flag
+  - `9,011 Gold` with a yellow **+** button
+  - calendar icon with **game day** (`1`, `22`)
+  - `» 4` (**game speed 4×**)
+- **Rank tab** hanging under the bar: `★ 1st` / `★ 2nd`.
+- Style: dark charcoal panels, white bold numbers, gold accents. Compact; it takes about the
+  top 13% of the screen.
+
+### Right edge
+A vertical column of dark square buttons with gold line icons:
+- globe (zoom to world view)
+- tasks clipboard (with red number badge)
+- map filters
+- FREE video (rewarded ad)
+- inventory backpack
+- reward chest
+- profile/advisor
+
+### Left edge
+- Floating diamond offer badge (gold bars with a % tag and a gift icon).
+
+### Bottom bar
+- 6 tabs: **Diplomacy · Produce · Provinces · Market · Research · More**.
+- Gold icons above white labels, on a dark bar. Red square number badges, e.g. Research `2`
+  and Diplomacy `18`.
+
+### Map: two zoom levels (LOD)
+
+**Strategic zoom (zoomed out)**
+- Political colours:
+  - own nation: pale sand/khaki
+  - neutral nations: muted sage green
+  - enemy at war: salmon/brick red
+- Big **curved serif country names** follow the shape of the country (KOREA, JAPAN, SIBERIA,
+  KAMCHATKA).
+- Thin dark province borders, thicker country borders.
+- Sea: deep teal-blue with a painted texture and a light glow along coasts.
+- **Concentric pale-cyan rings** around own territory and units show **view/radar range**
+  (the fog-of-war edge).
+- **Units become diamond tokens**: a rotated square with a black silhouette of the unit type
+  (soldier, tank, plane, anchor) and the unit count under it.
+  - **white/grey** = own
+  - **yellow** = selected
+  - **red** = enemy
+  - **dark grey with "?"** = enemy army whose composition is unknown (fog)
+- At full world zoom, grey soldier-bust markers sit on nations; probably a player or AI marker.
+
+**Tactical zoom (zoomed in)**
+- Terrain becomes **realistic shaded relief** (hills and mountains in sand/olive, desert dunes
+  in pink-sand).
+- Province **center dots** (small grey ovals) are joined by **thin dashed brown road lines**
+  to neighbouring centers. This is the movement graph.
+- **Units are small 3D-rendered figures** (soldier group, AA gun, armored car) standing on the
+  map. Next to each is a **pennant tag** containing:
+  - unit-type icon
+  - count
+  - **segmented green HP bar** (vertical bars)
+  The tag is yellow when selected, white for own units, and stacks one row per unit type for
+  mixed armies.
+- **Cities** are a dense 3D-looking block of buildings drawn into the terrain. When the city
+  has buildings, you also see an airstrip runway with a windsock and factory smokestacks.
+- **City label**:
+  - flag + **letter-spaced serif capitals** on a translucent dark plate (`T O K Y O`)
+  - under it, small dark boxes for the resource icon and `★10` VP
+- **Rural resource provinces**: a dark rounded-square icon (wheat, steel, oil can) placed on
+  the province.
+- **Non-core (conquered) land**: wide diagonal light stripes.
+- **Front line / fortified border**: **anti-tank hedgehogs** drawn along the border line.
+- **Range circles**: a large translucent circle around ranged, AA or radar units.
+
+### Orders on the map
+- **Move path**: dashed line in **yellow and dark-brown alternating dashes**, ending in a
+  **yellow chevron arrowhead** at the destination. Long sea routes use the same style.
+- **Attack path**: short **red curved arc** from army to target.
+- **Selected army**: blue-violet circle around it.
+- **Enemy weapon range**: translucent red/orange disc, visible when an enemy army has ranged
+  units.
+
+### Army panel (army selected)
+- **Command row** across the screen above the panel:
+  - **Stop** (grey square)
+  - **Split** (branch arrows)
+  - **Attack** (large **red** button, lightning bolt)
+  - **Move** (large **green** button, curved arrow)
+  - **Add army** (yellow-outlined +)
+  - **More** (≡)
+- **Header**:
+  - big flag tile
+  - `7TH INFANTRY REGIMENT (FR 7)`
+  - nation name
+  - square **i** (info) and **X** (close) buttons
+- **Stats row**:
+  - units `20/10` (red when over the 10-unit limit)
+  - strength `53.8` (fist icon)
+  - speed `36` (»)
+  - protection `0%` (shield)
+  - status `Idle` (map-pin icon)
+- **Unit cards**: illustrated portrait, **level chevron badge** at the top-right, segmented
+  green HP bar, armor-class icon and count.
+- **Right block**: `294 / 294` HP with a medkit icon and segmented bar, plus a large green
+  **HEAL ARMY** button (disabled grey-green at full HP).
+- **Multi-select mode**:
+  - top banner `7 units selected`
+  - panel line `Tap To Select Armies`
+  - big red **CANCEL** and green **ACCEPT** buttons
+
+### What to copy and what to drop
+- **Copy:**
+  - the layout
+  - the two-level zoom (tokens far out, 3D figures close in)
+  - the pennant HP tags
+  - the colour language (sand own / green neutral / red enemy, yellow selection)
+  - the dashed yellow path with chevron
+  - the red attack arc and Attack/Move button colours
+  - the stats row and HEAL ARMY
+- **Drop or tone down:** ad clutter (FREE video, offer diamond, chest) and the oversized
+  commander portrait. Our version keeps the map cleaner.
+- **Our own art:** a modern Russian/Ukrainian commander portrait, a T-90M figure in blue
+  camouflage instead of WW2 armour, and modern icons.
+
 ## 12. What "a lot better" can mean (after we match it)
 
 1. **Real 3D map** instead of painted parchment: actual terrain relief, 3D cities, and our own
