@@ -108,3 +108,14 @@ Scope: building data, effects, and recolored asset scene wrappers only. City/res
 Validation: Godot 4.6.3 Compatibility — building expansion **37/0**, campaign **192/0**, touch **13/0**, battle effects **27/0**. Native city/list previews inspected, **0 render errors**, including no null-material errors. Screenshots are review previews, not a published game build; map preview temporarily sets all eligible buildings to level 1 for visibility.
 
 Claude UI follow-through (not edited here): group new buildings into economy/production/defense/infrastructure; use `definition.description` for new effect text and `definition.colour` for preview tint; city income display should multiply `buildings.resource_rate(city_id, resource)`; production ETA should use `buildings.production_rate(city_id, spec)`; construction ETA should use `buildings.construction_time(city_id, building_id, target, progress)` rather than raw duration. The current screens show base durations/income until these helpers are connected. Keep live publishing paused until Matthew reviews the screenshots.
+
+## Menu polish — 2026-10-09, Matthew requested
+
+This follows local building commit de1ea9c9b6194e065a4f41588d309f5a9fd9526e, based on shared 577393ce8edbb475b6767fb307f16e1a99858a03. Matthew explicitly requested menu improvements after the ownership agreement. Changes are focused on shared style helpers, icon assets, original-model thumbnail selection, and production-list sizing; city/research layout and signals are retained.
+
+- Clean slate headers, light neutral rows, muted green actions, subtle outlines and rounded corners replace the embossed texture skin. Roboto Condensed is used consistently with lighter body text and restrained title weight.
+- High-resolution SVG resources and outline command icons replace chunky silhouettes and circular resource badges. Country flags retain national colours.
+- Close control fits its button; production lists use larger previews and show more equipment. Research and production use original same-role model previews when a specific unit has no recovered thumbnail, rather than presenting a flag as its equipment image.
+- Files: cow_ui.gd, strategy_theme.gd, hud.gd, resource_sites.gd, mobile_start_panel.gd, production_panel.gd, research_panel.gd, SVG icons and render_menu_style.gd. No battle, movement, economy or building-rule changes in this commit.
+- Validation: campaign 192/0, touch 13/0, buildings 37/0; native portrait city/production/research screenshots inspected with zero render errors. Review screenshots in docs/review/menus. Not published live.
+- Claude: import the menu commit after the building commit, review these narrow shared-style/thumbnail changes against any newer UI work, and keep Matthew's screenshot review before publishing. The new rate helpers from the building checkpoint still need the city-screen income/ETA connections.

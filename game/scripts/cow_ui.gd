@@ -14,16 +14,44 @@ const GREEN: = Color("4f8a3a")
 const RED: = Color("b5413a")
 
 ## Textured 9-patch from assets/interface/skin (tools/make_ui_skin.py).
-static func skin(name: String, corner: int = 8, margin: int = 0, tint: Color = Color.WHITE) -> StyleBoxTexture:
-	var style: = StyleBoxTexture.new()
-	style.texture = load("res://assets/interface/skin/" + name + ".png")
-	style.set_texture_margin_all(corner)
-	style.set_content_margin_all(margin)
-	style.modulate_color = tint
+static func skin(name: String, _corner: int = 8, margin: int = 0, tint: Color = Color.WHITE) -> StyleBox:
+	var palette: = {"panel_dark": "20282d", "header": "182126", "inset": "263239", "frame": "2d3a41", "list": "e2e2d9", "row": "f1f0e9", "tab_on": "34423d", "tab_off": "232e34", "btn_green": "4b6a4e", "btn_green_pressed": "3b5340", "btn_grey": "92978e", "btn_dark": "2c373d", "btn_red": "944d46", "banner_russia": "f1f0e9", "banner_ukraine": "f1f0e9"}
+	if not palette.has(name):
+		var art: = StyleBoxTexture.new()
+		art.texture = load("res://assets/interface/skin/" + name + ".png")
+		art.set_texture_margin_all(_corner)
+		art.set_content_margin_all(margin)
+		art.modulate_color = tint
+		return art
+	var style: = box(Color(palette[name]) * tint, 6, Color("c4c8be") if name == "row" else Color("3a464a"), 1, margin)
+	if name == "tab_on":
+		style.border_color = GOLD
+		style.border_width_bottom = 3
+		style.border_width_top = 0
+		style.border_width_left = 0
+		style.border_width_right = 0
+	if name == "row": style.shadow_color = Color(0, 0, 0, 0.08);style.shadow_size = 2
 	return style
 
+static var _icons: Dictionary = {}
+static func icon_texture(kind: String) -> Texture2D:
+	var path: = "res://assets/interface/icons/" + kind + ".svg"
+	if not ResourceLoader.exists(path): return null
+	if not _icons.has(kind): _icons[kind] = load(path)
+	return _icons[kind]
+
+static func equipment_picture(id: String) -> Texture2D:
+	var direct: = UnitVisual.preview_path(id)
+	if not direct.is_empty() and ResourceLoader.exists(direct): return load(direct)
+	var spec: = EquipmentIdentity.spec(id)
+	var path: = UnitVisual.stand_in_path(id, spec.get("visual_kind", "armor"))
+	for suffix in [".png", "_preview.png"]:
+		var candidate: String = path.trim_suffix(".glb") + suffix
+		if ResourceLoader.exists(candidate): return load(candidate)
+	return UnitVisual.preview_texture(id)
+
 static func title_font() -> Font:
-	return StrategyTheme.font("Oswald", 600)
+	return StrategyTheme.font("RobotoCondensed", 600)
 
 static func box(color: Color, radius: int = 0, border: Color = Color(0, 0, 0, 0), width: int = 0, margin: int = 0) -> StyleBoxFlat:
 	var style: = StyleBoxFlat.new()
@@ -48,8 +76,12 @@ static func square(kind: String) -> Button:
 	button.custom_minimum_size = Vector2(52, 52)
 	for state in ["normal", "hover", "pressed"]:
 		button.add_theme_stylebox_override(state, skin("frame", 10, 0, Color.WHITE if state == "normal" else Color(1.15, 1.1, 1.0)))
-	var icon: = Icon.new(kind, GOLD, Vector2(52, 52))
+	var icon: = Icon.new(kind, GOLD, Vector2.ZERO)
 	icon.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	icon.offset_left = 14
+	icon.offset_right = -14
+	icon.offset_top = 14
+	icon.offset_bottom = -14
 	button.add_child(icon)
 	return button
 
@@ -63,7 +95,7 @@ static func header(title_text: String, with_back: bool) -> Dictionary:
 	back.modulate.a = 1.0 if with_back else 0.0
 	back.disabled = not with_back
 	row.add_child(back)
-	var title: = label(title_text, 32, Color("f3e6c4"))
+	var title: = label(title_text, 28, Color("f3e6c4"))
 	title.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.7))
 	title.add_theme_constant_override("shadow_offset_y", 2)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -198,6 +230,10 @@ class Icon extends Control:
 		custom_minimum_size = minimum
 		mouse_filter = Control.MOUSE_FILTER_IGNORE
 	func _draw() -> void:
+		var texture: = CowUI.icon_texture(kind)
+		if texture != null:
+			draw_texture_rect(texture, Rect2(Vector2.ZERO, size), false, tint)
+			return
 		var c: = size * 0.5
 		var u: = minf(size.x, size.y) / 24.0
 		if tint.get_luminance() > 0.5:

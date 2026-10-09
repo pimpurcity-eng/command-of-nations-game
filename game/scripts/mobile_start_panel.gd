@@ -40,7 +40,7 @@ func setup(theme: Theme, saved: bool) -> void :
 	panel = PanelContainer.new()
 	root.add_child(panel)
 	var style: = StrategyTheme.surface("panel", 22)
-	style.modulate_color = Color(0.75, 0.85, 0.91, 0.94)
+	style.bg_color = Color("20282d")
 	style.content_margin_top = 20
 	style.content_margin_bottom = 20
 	panel.add_theme_stylebox_override("panel", style)

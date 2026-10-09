@@ -351,7 +351,7 @@ func _flat(color: Color, radius: int = 6, margin: Vector4 = Vector4(6, 4, 6, 4),
 	style.border_width_bottom = bottom
 	return style
 ## Textured skin piece (CowUI) with HUD content margins.
-func _skinned(name: String, margin: Vector4, corner: int = 10, tint: Color = Color.WHITE) -> StyleBoxTexture:
+func _skinned(name: String, margin: Vector4, corner: int = 10, tint: Color = Color.WHITE) -> StyleBox:
 	var style: = CowUI.skin(name, corner, 0, tint)
 	style.content_margin_left = margin.x
 	style.content_margin_top = margin.y
@@ -545,6 +545,11 @@ class Glyph extends Control:
 		custom_minimum_size = minimum
 		mouse_filter = Control.MOUSE_FILTER_IGNORE
 	func _draw() -> void:
+		var texture: = CowUI.icon_texture(kind)
+		if texture != null:
+			var side: = minf(size.x, size.y) * scale_factor
+			draw_texture_rect(texture, Rect2((size - Vector2.ONE * side) * 0.5, Vector2.ONE * side), false, tint)
+			return
 		var s: = minf(size.x, size.y)
 		var c: = size * 0.5
 		var u: = s / 24.0 * scale_factor

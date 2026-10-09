@@ -29,7 +29,7 @@ static func icon(resource: String) -> Texture2D:
 	# A plain in-memory copy per icon: the imported texture drew as a white square in the HUD
 	# top bar on the GL Compatibility renderer (money icon), while the copy draws correctly.
 	if not _icons.has(resource):
-		var source: Texture2D = load("res://assets/interface/res_" + resource + ".png")
+		var source: Texture2D = load("res://assets/interface/icons/" + resource + ".svg")
 		_icons[resource] = ImageTexture.create_from_image(source.get_image())
 	return _icons[resource]
 

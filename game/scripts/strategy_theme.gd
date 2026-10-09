@@ -1,19 +1,17 @@
 class_name StrategyTheme
 extends RefCounted
-static func surface(name: String, margin: float = 12.0) -> StyleBoxTexture:
-	var style: = StyleBoxTexture.new()
-	style.texture = load("res://assets/interface/" + name + ".png")
-	style.texture_margin_left = 4
-	style.texture_margin_right = 4
-	style.texture_margin_top = 4
-	style.texture_margin_bottom = 4
-	style.content_margin_left = margin
-	style.content_margin_right = margin
-	style.content_margin_top = 8
-	style.content_margin_bottom = 8
+static func surface(name: String, margin: float = 12.0) -> StyleBoxFlat:
+	var style: = StyleBoxFlat.new()
+	style.bg_color = Color({"panel": "20282d", "button": "344047", "hover": "44564f", "pressed": "293932", "disabled": "283137"}.get(name, "20282d"))
+	style.border_color = Color("52605e")
+	style.set_border_width_all(1)
+	style.set_corner_radius_all(6)
+	style.set_content_margin_all(margin)
+	style.content_margin_top = 10
+	style.content_margin_bottom = 10
 	return style
-## Owner review: the default font looked like "Atari graphics". Roboto Condensed for text,
-## Oswald for titles and buttons (both SIL Open Font License, assets/fonts/OFL-*.txt).
+
+## Consistent scalable typography; included fonts use SIL Open Font License.
 static var _fonts: Dictionary = {}
 static func font(family: String, weight: int) -> Font:
 	var key: = family + str(weight)
@@ -25,9 +23,9 @@ static func font(family: String, weight: int) -> Font:
 	return _fonts[key]
 static func create() -> Theme:
 	var theme: = Theme.new()
-	theme.default_font_size = 15
-	theme.default_font = font("RobotoCondensed", 500)
-	theme.set_font("font", "Button", font("Oswald", 500))
+	theme.default_font_size = 16
+	theme.default_font = font("RobotoCondensed", 400)
+	theme.set_font("font", "Button", font("RobotoCondensed", 500))
 	for type_name in ["Button", "OptionButton", "MenuButton"]:
 		for state in ["normal", "hover", "pressed", "disabled"]:
 			theme.set_stylebox(state, type_name, surface("button" if state == "normal" else state))

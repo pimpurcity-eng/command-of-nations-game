@@ -89,7 +89,7 @@ func setup(system: ResearchSystem, theme: Theme) -> void:
 		banner.add_theme_stylebox_override("pressed", CowUI.skin(art, 6, 0, Color(0.92, 0.92, 0.92)))
 		banner.pressed.connect(func(): show_category(index))
 		var picture: = TextureRect.new()
-		picture.texture = UnitVisual.preview_texture(families[0].id)
+		picture.texture = CowUI.equipment_picture(families[0].id)
 		picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		picture.anchor_left = 0.45
@@ -222,7 +222,7 @@ func _build_tree() -> void:
 		var tab: = CowUI.tab(CATEGORIES[index], "", index == category_index)
 		tab.custom_minimum_size.x = 96
 		var picture: = TextureRect.new()
-		picture.texture = UnitVisual.preview_texture(families[0].id)
+		picture.texture = CowUI.equipment_picture(families[0].id)
 		picture.custom_minimum_size = Vector2(44, 30)
 		picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -277,7 +277,7 @@ func _build_tree() -> void:
 			card.offset_right = 52
 			card.offset_top = 12
 			card.offset_bottom = 112
-			card.icon = UnitVisual.preview_texture(spec.id)
+			card.icon = CowUI.equipment_picture(spec.id)
 			card.expand_icon = true
 			card.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			card.pressed.connect(func():
@@ -341,7 +341,7 @@ func _refresh() -> void:
 			slot.text.text = "No research"
 			continue
 		var total: = system.duration(job.level)
-		slot.picture.texture = UnitVisual.preview_texture(job.equipment)
+		slot.picture.texture = CowUI.equipment_picture(job.equipment)
 		slot.text.text = "L" + str(job.level) + " · " + SimulationClock.duration(total - job.progress, system.clock.speed)
 		slot.bar.max_value = total
 		slot.bar.value = job.progress
@@ -365,7 +365,7 @@ func _refresh() -> void:
 			for style_state in ["normal", "hover", "pressed"]: cell.card.add_theme_stylebox_override(style_state, face)
 		cell.card.modulate = Color(1, 1, 1, 0.7) if state == "locked" else Color.WHITE
 	# Selected technology.
-	detail.picture.texture = UnitVisual.preview_texture(selected_id)
+	detail.picture.texture = CowUI.equipment_picture(selected_id)
 	detail.name.text = EquipmentIdentity.title(selected_id) + " · Level " + str(selected_level) + ("  (+" + str((selected_level - 1) * 12) + "% damage)" if selected_level > 1 else "")
 	for child in detail.costs.get_children(): child.queue_free()
 	var caption: Label = detail.start.get_meta("caption")

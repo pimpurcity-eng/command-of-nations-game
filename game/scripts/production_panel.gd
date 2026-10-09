@@ -79,8 +79,8 @@ func setup(system: ProductionSystem, units: UnitSystem, theme: Theme) -> void :
 	category_picker.item_selected.connect( func(_index: int): _populate_equipment())
 	selectors.add_child(category_picker)
 	equipment_list = ItemList.new()
-	equipment_list.custom_minimum_size.y = 145
-	equipment_list.fixed_icon_size = Vector2i(48, 34)
+	equipment_list.custom_minimum_size.y = 420
+	equipment_list.fixed_icon_size = Vector2i(88, 60)
 	equipment_list.add_theme_constant_override("v_separation", 12)
 	equipment_list.item_selected.connect( func(index: int):
 		chosen = filtered[index].id
@@ -169,7 +169,7 @@ func _populate_equipment() -> void :
 		if spec.country != _country(): continue
 		if category_picker.selected != 0 and spec.category != category_picker.get_item_text(category_picker.selected): continue
 		filtered.append(spec)
-		equipment_list.add_item(spec.name + " · " + spec.category, UnitVisual.preview_texture(spec.id))
+		equipment_list.add_item(spec.name + " · " + spec.category, CowUI.equipment_picture(spec.id))
 	if not filtered.is_empty():
 		equipment_list.select(0)
 		chosen = filtered[0].id
