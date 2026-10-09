@@ -238,12 +238,12 @@ func _build_tree() -> void:
 		tab_row.add_child(tab)
 	var families: = _families(category_index)
 	var air_tree: bool = CATEGORIES[category_index] == "Air defense"
-	var cell_size: Vector2 = Vector2(maxf(150, (panel.size.x - 88) / 2), 150) if air_tree else CELL
+	var cell_size: Vector2 = Vector2(maxf(150, (panel.size.x - 88) / 2), 208) if air_tree else CELL
 	for child in column_titles.get_children(): child.queue_free()
 	var corner: = PanelContainer.new()
 	corner.custom_minimum_size = Vector2(56, 52)
 	corner.add_theme_stylebox_override("panel", CowUI.box(Color("e6e9e7"), 14))
-	var day: = CowUI.label("Day", 15, CowUI.INK)
+	var day: = CowUI.label("Level" if air_tree else "Day", 15, CowUI.INK)
 	day.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	day.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	corner.add_child(day)
@@ -264,10 +264,10 @@ func _build_tree() -> void:
 	for level in range(1, 6):
 		var day_number: int = ResearchSystem.DAYS[level - 1]
 		var day_cell: = PanelContainer.new()
-		day_cell.custom_minimum_size = Vector2(56, CELL.y)
+		day_cell.custom_minimum_size = Vector2(56, cell_size.y)
 		day_cell.add_theme_stylebox_override("panel", CowUI.box(Color("e6e9e7"), 14))
 		var shown: bool = level == 1 or ResearchSystem.DAYS[level - 2] != day_number
-		var number: = CowUI.label(str(day_number) if shown else "", 34, CowUI.INK)
+		var number: = CowUI.label(str(level) if air_tree else str(day_number) if shown else "", 34, CowUI.INK)
 		number.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		number.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		day_cell.add_child(number)
@@ -281,17 +281,19 @@ func _build_tree() -> void:
 			card.offset_left = -cell_size.x * 0.43 if air_tree else -52
 			card.offset_right = cell_size.x * 0.43 if air_tree else 52
 			card.offset_top = 12
-			card.offset_bottom = 136
+			card.offset_bottom = cell_size.y - 14
 			var portrait: = TextureRect.new()
 			portrait.texture = CowUI.research_picture(spec.id, level)
 			var portrait_material: = ShaderMaterial.new()
 			portrait_material.shader = load("res://assets/interface/portrait_round.gdshader")
 			portrait.material = portrait_material
 			portrait.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-			portrait.offset_top = 4
-			portrait.offset_bottom = -27
+			portrait.offset_left = 3
+			portrait.offset_right = -3
+			portrait.offset_top = 3
+			portrait.offset_bottom = -3
 			portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-			portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 			portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			card.add_child(portrait)
 			card.expand_icon = true
@@ -302,15 +304,16 @@ func _build_tree() -> void:
 				message.text = ""
 				_refresh())
 			cell.add_child(card)
-			var ribbon: = CowUI.label(EquipmentIdentity.research_title(spec.id, level) if air_tree else "Level " + str(level), 16 if air_tree else 14, CowUI.INK)
+			var ribbon: = CowUI.label(EquipmentIdentity.research_title(spec.id, level) + " · Day " + str(_system().unlock_day(spec.id, level)) if air_tree else "Level " + str(level), 16 if air_tree else 14, Color("fff7e5"))
 			ribbon.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			ribbon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			ribbon.add_theme_stylebox_override("normal", CowUI.box(Color(0.06, 0.08, 0.09, 0.86), 8, Color.TRANSPARENT, 0, 3))
 			ribbon.anchor_left = 0.5
 			ribbon.anchor_right = 0.5
-			ribbon.offset_left = -cell_size.x * 0.48 if air_tree else -52
-			ribbon.offset_right = cell_size.x * 0.48 if air_tree else 52
-			ribbon.offset_top = 108
-			ribbon.offset_bottom = 132
+			ribbon.offset_left = -cell_size.x * 0.43 if air_tree else -52
+			ribbon.offset_right = cell_size.x * 0.43 if air_tree else 52
+			ribbon.offset_top = cell_size.y - 42
+			ribbon.offset_bottom = cell_size.y - 18
 			cell.add_child(ribbon)
 			grid.add_child(cell)
 			cells.append({"card": card, "id": spec.id, "level": level})
@@ -422,4 +425,4 @@ class TechCell extends Control:
 	func _draw() -> void:
 		var x: = size.x * 0.5
 		if above: draw_line(Vector2(x, 0), Vector2(x, 12), Color("98aaa7"), 2)
-		if below: draw_line(Vector2(x, 140), Vector2(x, size.y), Color("98aaa7"), 2)
+		if below: draw_line(Vector2(x, size.y - 14), Vector2(x, size.y), Color("98aaa7"), 2)

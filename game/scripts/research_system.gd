@@ -18,6 +18,9 @@ func setup(production: ProductionSystem, time: SimulationClock, units: UnitSyste
 
 func day() -> int:
 	return 1 + int(clock.elapsed * SimulationClock.REAL_SECONDS_PER_SIM_SECOND / 86400.0)
+func unlock_day(id: String, target: int) -> int:
+	var days: Array = economy.equipment(id).get("research_days", DAYS)
+	return int(days[clampi(target - 1, 0, days.size() - 1)])
 func level(id: String) -> int:
 	return int(levels.get(id, 1))
 func duration(target: int) -> float:
@@ -47,7 +50,7 @@ func reason(id: String, target: int, country: String = "") -> String:
 	if target < 2 or target > 5: return "Level 1 is available from the start"
 	if target <= level(id): return "Already researched"
 	if target != level(id) + 1: return "Research the previous level first"
-	if day() < DAYS[target - 1]: return "Available on Day " + str(DAYS[target - 1])
+	if day() < unlock_day(id, target): return "Available on Day " + str(unlock_day(id, target))
 	if not active(id).is_empty(): return "This family is already being researched"
 	var count: = 0
 	for job in jobs:

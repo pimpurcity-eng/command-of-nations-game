@@ -380,7 +380,14 @@
         "improvement": "Advanced interception"
       }
     ],
-    "model_status": "Shared Patriot model stand-in"
+    "model_status": "Shared Patriot model stand-in",
+    "research_days": [
+      1,
+      4,
+      8,
+      12,
+      18
+    ]
   },
   {
     "id": "skyguard_russia",
@@ -435,7 +442,14 @@
         "improvement": "Advanced interception"
       }
     ],
-    "model_status": "Shared Skyguard model stand-in"
+    "model_status": "Shared Skyguard model stand-in",
+    "research_days": [
+      1,
+      3,
+      6,
+      9,
+      12
+    ]
   },
   {
     "id": "su57_ukraine",
@@ -536,7 +550,14 @@
         "improvement": "Advanced interception"
       }
     ],
-    "model_status": "Shared Patriot model stand-in"
+    "model_status": "Shared Patriot model stand-in",
+    "research_days": [
+      1,
+      4,
+      8,
+      12,
+      18
+    ]
   },
   {
     "id": "skyguard_ukraine",
@@ -591,7 +612,14 @@
         "improvement": "Advanced interception"
       }
     ],
-    "model_status": "Shared Skyguard model stand-in"
+    "model_status": "Shared Skyguard model stand-in",
+    "research_days": [
+      1,
+      3,
+      6,
+      9,
+      12
+    ]
   },
   {
     "id": "destroyer_russia",

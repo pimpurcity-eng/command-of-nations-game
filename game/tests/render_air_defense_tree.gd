@@ -20,6 +20,13 @@ func run() -> void:
 	game.research_panel.show_category(4)
 	game.research_panel.selected_id = "patriot_russia"
 	game.research_panel.selected_level = 3
+	game.research_panel.message.text = ""
 	game.research_panel._refresh()
 	await capture("Russian_Air_Defense_Tree")
+	var scroller: ScrollContainer = game.research_panel.grid.get_parent()
+	scroller.scroll_vertical = 600
+	game.research_panel.selected_level = 5
+	game.research_panel.message.text = ""
+	game.research_panel._refresh()
+	await capture("Russian_Air_Defense_Later_Tiers")
 	quit()
