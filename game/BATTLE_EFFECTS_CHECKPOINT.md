@@ -119,3 +119,15 @@ This follows local building commit de1ea9c9b6194e065a4f41588d309f5a9fd9526e, bas
 - Files: cow_ui.gd, strategy_theme.gd, hud.gd, resource_sites.gd, mobile_start_panel.gd, production_panel.gd, research_panel.gd, SVG icons and render_menu_style.gd. No battle, movement, economy or building-rule changes in this commit.
 - Validation: campaign 192/0, touch 13/0, buildings 37/0; native portrait city/production/research screenshots inspected with zero render errors. Review screenshots in docs/review/menus. Not published live.
 - Claude: import the menu commit after the building commit, review these narrow shared-style/thumbnail changes against any newer UI work, and keep Matthew's screenshot review before publishing. The new rate helpers from the building checkpoint still need the city-screen income/ETA connections.
+
+
+## 2026-10-09 — Air-defense research paths (ChatGPT)
+User resumed work specifically to add Russian short/long-range air-defense research using supplied lineup. Based on local b475388 (menu handoff), itself on remote 577393c. Keep previous building/menu handoffs when importing.
+- Existing equipment IDs skyguard_russia / patriot_russia preserved for saves and production. Two independent five-level branches; national two-slot research, sequential prerequisites and existing Day 1/1/2/4/6 gates preserved.
+- Short: Strela-10 → guidance → Tor-M2 → radar → interception. Long: Buk-M3 → radar → S-400 → guidance → S-500. Ukrainian existing families also receive branch labels and corresponding upgrades, without Russian names.
+- Reused Skyguard/Patriot meshes and thumbnails are explicitly labelled stand-ins in selected research details. No new 3D models, no assertion that these are authentic Russian meshes. No model files in commit.
+- EquipmentIdentity.research_tier/title and air_defense_range provide per-level gameplay values. AirBattleSystem uses tier damage without applying generic level bonus a second time, plus per-level interception range. Existing aircraft/drone target rules unchanged; cruise/ballistic/hypersonic/satellite interception NOT implemented or advertised.
+- Values are game balance units, not real-world km: short range 2.4/2.5/2.7/2.8/3.0, damage 7/8/9/10/11; long range 3.5/3.8/4.2/4.5/5.0, damage 10/11.5/13/14.5/16.
+- UI: wider two-column cards with branch headers, per-level names, connectors, selected tier improvement/range/damage/model disclosure; muted completed/active/available/locked colors. Call of War official research wiki used for categories/columns/day gates/slots/details structure, not copied art or stats.
+- Files changed: equipment.json, equipment_identity.gd, air_battle_system.gd, research_panel.gd; two test/render scripts; review image. No map, movement, city, Android changes.
+- Checks: air-defense 42/0, campaign 192/0; native phone screenshot and touch check recorded with handoff. Review before publication. No live release or GitHub push claimed.

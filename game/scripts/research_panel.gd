@@ -154,7 +154,8 @@ func setup(system: ResearchSystem, theme: Theme) -> void:
 	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	bar_row.add_child(info)
 	var name_label: = CowUI.label("", 16)
-	name_label.clip_text = true
+	name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	name_label.custom_minimum_size.x = 220
 	info.add_child(name_label)
 	var costs_back: = PanelContainer.new()
 	costs_back.add_theme_stylebox_override("panel", CowUI.box(CowUI.ROW, 4, Color(0, 0, 0, 0), 0, 3))
@@ -203,7 +204,9 @@ func _system() -> ResearchSystem:
 	return research
 
 func _families(index: int) -> Array:
-	return _system().economy.catalog.filter(func(spec: Dictionary): return spec.country == GameSession.player_country and spec.category == CATEGORIES[index])
+	var result: Array = _system().economy.catalog.filter(func(spec: Dictionary): return spec.country == GameSession.player_country and spec.category == CATEGORIES[index])
+	if CATEGORIES[index] == "Air defense": result.sort_custom(func(a, b): return a.aa_range < b.aa_range)
+	return result
 
 func show_category(index: int) -> void:
 	category_index = index
@@ -234,6 +237,8 @@ func _build_tree() -> void:
 		tab.pressed.connect(func(): show_category(index))
 		tab_row.add_child(tab)
 	var families: = _families(category_index)
+	var air_tree: bool = CATEGORIES[category_index] == "Air defense"
+	var cell_size: Vector2 = Vector2(maxf(150, (panel.size.x - 88) / 2), 150) if air_tree else CELL
 	for child in column_titles.get_children(): child.queue_free()
 	var corner: = PanelContainer.new()
 	corner.custom_minimum_size = Vector2(56, 52)
@@ -245,9 +250,9 @@ func _build_tree() -> void:
 	column_titles.add_child(corner)
 	for spec in families:
 		var heading: = PanelContainer.new()
-		heading.custom_minimum_size = Vector2(CELL.x, 52)
+		heading.custom_minimum_size = Vector2(cell_size.x, 52)
 		heading.add_theme_stylebox_override("panel", CowUI.box(Color("dcd7c6"), 0, Color("a39e8b"), 1, 4))
-		var text: = CowUI.label(EquipmentIdentity.title(spec.id), 15, CowUI.INK)
+		var text: = CowUI.label(spec.get("research_branch", EquipmentIdentity.title(spec.id)), 21 if air_tree else 15, CowUI.INK)
 		text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		text.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		text.clip_text = true
@@ -269,12 +274,12 @@ func _build_tree() -> void:
 		grid.add_child(day_cell)
 		for spec in families:
 			var cell: = TechCell.new(level > 1, level < 5)
-			cell.custom_minimum_size = CELL
+			cell.custom_minimum_size = cell_size
 			var card: = Button.new()
 			card.anchor_left = 0.5
 			card.anchor_right = 0.5
-			card.offset_left = -52
-			card.offset_right = 52
+			card.offset_left = -cell_size.x * 0.43 if air_tree else -52
+			card.offset_right = cell_size.x * 0.43 if air_tree else 52
 			card.offset_top = 12
 			card.offset_bottom = 112
 			card.icon = CowUI.equipment_picture(spec.id)
@@ -286,13 +291,13 @@ func _build_tree() -> void:
 				message.text = ""
 				_refresh())
 			cell.add_child(card)
-			var ribbon: = CowUI.label("Level " + str(level), 14, Color("efe6cf"))
+			var ribbon: = CowUI.label(EquipmentIdentity.research_title(spec.id, level) if air_tree else "Level " + str(level), 16 if air_tree else 14, Color("efe6cf"))
 			ribbon.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			ribbon.add_theme_stylebox_override("normal", CowUI.box(Color("2c2b27"), 0, Color(0, 0, 0, 0), 0, 2))
 			ribbon.anchor_left = 0.5
 			ribbon.anchor_right = 0.5
-			ribbon.offset_left = -52
-			ribbon.offset_right = 52
+			ribbon.offset_left = -cell_size.x * 0.48 if air_tree else -52
+			ribbon.offset_right = cell_size.x * 0.48 if air_tree else 52
 			ribbon.offset_top = 116
 			ribbon.offset_bottom = 140
 			cell.add_child(ribbon)
@@ -327,7 +332,7 @@ func _state(id: String, level: int) -> String:
 
 func _refresh() -> void:
 	var system: = _system()
-	title.text = "Research"
+	title.text = "Air defense research" if tree_view.visible and CATEGORIES[category_index] == "Air defense" else "Research"
 	# Slots.
 	var jobs: = system.jobs.filter(func(job: Dictionary): return system.economy.equipment(job.equipment).country == GameSession.player_country)
 	for i in slots.size():
@@ -355,9 +360,9 @@ func _refresh() -> void:
 	# Tree cards.
 	for cell in cells:
 		var state: = _state(cell.id, cell.level)
-		var color: Color = {"done": Color("6f9a4a"), "active": Color("5b86b0"), "available": Color("d7b25a"), "locked": Color("8f8b7c")}[state]
+		var color: Color = {"done": Color("668cad"), "active": Color("5b86b0"), "available": Color("b8c3cb"), "locked": Color("8f959b")}[state]
 		var chosen: bool = cell.id == selected_id and cell.level == selected_level
-		var face: = CowUI.skin("btn_grey", 12, 6, Color(color.r * 1.75, color.g * 1.75, color.b * 1.75))
+		var face: = CowUI.box(Color("edf0f2") if state == "available" else color.lightened(0.32), 8, color, 2, 6)
 		if chosen:
 			var ring: = CowUI.box(color.lightened(0.15), 6, CowUI.GOLD, 4, 6)
 			for style_state in ["normal", "hover", "pressed"]: cell.card.add_theme_stylebox_override(style_state, ring)
@@ -367,6 +372,9 @@ func _refresh() -> void:
 	# Selected technology.
 	detail.picture.texture = CowUI.equipment_picture(selected_id)
 	detail.name.text = EquipmentIdentity.title(selected_id) + " · Level " + str(selected_level) + ("  (+" + str((selected_level - 1) * 12) + "% damage)" if selected_level > 1 else "")
+	var tier: Dictionary = EquipmentIdentity.research_tier(selected_id, selected_level)
+	if not tier.is_empty():
+		detail.name.text = EquipmentIdentity.research_title(selected_id, selected_level) + " · L" + str(selected_level) + "\n" + tier.improvement + " · Range " + str(tier.range) + " · AA " + str(tier.damage) + "\nAircraft & drones · " + EquipmentIdentity.spec(selected_id).model_status
 	for child in detail.costs.get_children(): child.queue_free()
 	var caption: Label = detail.start.get_meta("caption")
 	var state: = _state(selected_id, selected_level)

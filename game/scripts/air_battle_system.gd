@@ -4,7 +4,13 @@ signal weapon_fired(source: Dictionary, target_unit: Dictionary, effect: String)
 const ROUND_SECONDS: = CombatSystem.ROUND_SECONDS
 var cooldowns: Dictionary = {}
 func value(unit: Dictionary, name: String, defending: bool = false) -> float:
-	return TerrainRules.unit_factor(unit, "defense" if defending else "attack") * EquipmentIdentity.spec(unit.equipment_id).get(name, 0.0) * (0.2 + 0.8 * clampf(unit.health / 100.0, 0, 1)) * (1.0 + 0.12 * (unit.get("level", 1) - 1))
+	var base: float = EquipmentIdentity.spec(unit.equipment_id).get(name, 0.0)
+	var scaling: float = 1.0 + 0.12 * (unit.get("level", 1) - 1)
+	var tier: Dictionary = EquipmentIdentity.research_tier(unit.equipment_id, unit.get("level", 1))
+	if name == "aa_damage" and not tier.is_empty():
+		base = tier.damage
+		scaling = 1.0
+	return TerrainRules.unit_factor(unit, "defense" if defending else "attack") * base * (0.2 + 0.8 * clampf(unit.health / 100.0, 0, 1)) * scaling
 func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resolve_now: bool = false) -> void :
 	if not is_finite(seconds) or seconds < 0 or (seconds == 0 and not resolve_now) or not armies.at_war: return
 	var remaining: = seconds
@@ -23,7 +29,7 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 			var aa: bool = unit.visual_kind == "air_defense"
 			if not fighter and not aa: continue
 			var patrol: bool = fighter and unit.flight_mode == "patrol"
-			var reach: float = AirOperations.PATROL_RADIUS if patrol else 1.2 if fighter else EquipmentIdentity.spec(unit.equipment_id).get("aa_range", 2.4)
+			var reach: float = AirOperations.PATROL_RADIUS if patrol else 1.2 if fighter else EquipmentIdentity.air_defense_range(unit)
 			var origin: Vector2 = unit.patrol_center if patrol else Vector2(unit.node.position.x, unit.node.position.z)
 			var nearest: = INF
 			var patrol_targets: Array = []

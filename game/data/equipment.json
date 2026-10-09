@@ -330,7 +330,7 @@
   {
     "id": "patriot_russia",
     "country": "russia",
-    "name": "Patriot-derived air defense",
+    "name": "Long-range air defense",
     "category": "Air defense",
     "visual_kind": "air_defense",
     "asset_roster_id": "patriot",
@@ -346,12 +346,46 @@
       "factory": 1
     },
     "aa_range": 3.5,
-    "aa_damage": 10.0
+    "aa_damage": 10.0,
+    "research_branch": "Long range",
+    "research_tiers": [
+      {
+        "name": "Buk-M3",
+        "range": 3.5,
+        "damage": 10,
+        "improvement": "Baseline coverage"
+      },
+      {
+        "name": "Buk-M3 \u00b7 radar",
+        "range": 3.8,
+        "damage": 11.5,
+        "improvement": "Better target tracking"
+      },
+      {
+        "name": "S-400 Triumf",
+        "range": 4.2,
+        "damage": 13,
+        "improvement": "Wider coverage"
+      },
+      {
+        "name": "S-400 \u00b7 guidance",
+        "range": 4.5,
+        "damage": 14.5,
+        "improvement": "Improved guidance"
+      },
+      {
+        "name": "S-500 Prometey",
+        "range": 5.0,
+        "damage": 16,
+        "improvement": "Advanced interception"
+      }
+    ],
+    "model_status": "Shared Patriot model stand-in"
   },
   {
     "id": "skyguard_russia",
     "country": "russia",
-    "name": "Skyguard-derived air defense",
+    "name": "Short-range air defense",
     "category": "Air defense",
     "visual_kind": "air_defense",
     "asset_roster_id": "skyguard",
@@ -367,7 +401,41 @@
       "factory": 1
     },
     "aa_range": 2.4,
-    "aa_damage": 7.0
+    "aa_damage": 7.0,
+    "research_branch": "Short range",
+    "research_tiers": [
+      {
+        "name": "Strela-10",
+        "range": 2.4,
+        "damage": 7,
+        "improvement": "Baseline coverage"
+      },
+      {
+        "name": "Strela-10 \u00b7 guidance",
+        "range": 2.5,
+        "damage": 8,
+        "improvement": "Better target tracking"
+      },
+      {
+        "name": "Tor-M2",
+        "range": 2.7,
+        "damage": 9,
+        "improvement": "Wider coverage"
+      },
+      {
+        "name": "Tor-M2 \u00b7 radar",
+        "range": 2.8,
+        "damage": 10,
+        "improvement": "Improved guidance"
+      },
+      {
+        "name": "Tor-M2 \u00b7 interception",
+        "range": 3.0,
+        "damage": 11,
+        "improvement": "Advanced interception"
+      }
+    ],
+    "model_status": "Shared Skyguard model stand-in"
   },
   {
     "id": "su57_ukraine",
@@ -434,7 +502,41 @@
       "factory": 1
     },
     "aa_range": 3.5,
-    "aa_damage": 10.0
+    "aa_damage": 10.0,
+    "research_branch": "Long range",
+    "research_tiers": [
+      {
+        "name": "Patriot M903",
+        "range": 3.5,
+        "damage": 10,
+        "improvement": "Baseline coverage"
+      },
+      {
+        "name": "Patriot \u00b7 radar",
+        "range": 3.8,
+        "damage": 11.5,
+        "improvement": "Better target tracking"
+      },
+      {
+        "name": "Patriot \u00b7 guidance",
+        "range": 4.2,
+        "damage": 13,
+        "improvement": "Wider coverage"
+      },
+      {
+        "name": "Patriot \u00b7 tracking",
+        "range": 4.5,
+        "damage": 14.5,
+        "improvement": "Improved guidance"
+      },
+      {
+        "name": "Patriot \u00b7 interception",
+        "range": 5.0,
+        "damage": 16,
+        "improvement": "Advanced interception"
+      }
+    ],
+    "model_status": "Shared Patriot model stand-in"
   },
   {
     "id": "skyguard_ukraine",
@@ -455,7 +557,41 @@
       "factory": 1
     },
     "aa_range": 2.4,
-    "aa_damage": 7.0
+    "aa_damage": 7.0,
+    "research_branch": "Short range",
+    "research_tiers": [
+      {
+        "name": "Skyguard",
+        "range": 2.4,
+        "damage": 7,
+        "improvement": "Baseline coverage"
+      },
+      {
+        "name": "Skyguard \u00b7 tracking",
+        "range": 2.5,
+        "damage": 8,
+        "improvement": "Better target tracking"
+      },
+      {
+        "name": "Skyguard \u00b7 radar",
+        "range": 2.7,
+        "damage": 9,
+        "improvement": "Wider coverage"
+      },
+      {
+        "name": "Skyguard \u00b7 guidance",
+        "range": 2.8,
+        "damage": 10,
+        "improvement": "Improved guidance"
+      },
+      {
+        "name": "Skyguard \u00b7 interception",
+        "range": 3.0,
+        "damage": 11,
+        "improvement": "Advanced interception"
+      }
+    ],
+    "model_status": "Shared Skyguard model stand-in"
   },
   {
     "id": "destroyer_russia",
