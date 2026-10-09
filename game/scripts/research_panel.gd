@@ -283,7 +283,7 @@ func _build_tree() -> void:
 			card.offset_top = 12
 			card.offset_bottom = 136
 			var portrait: = TextureRect.new()
-			portrait.texture = CowUI.equipment_picture(spec.id)
+			portrait.texture = CowUI.research_picture(spec.id, level)
 			var portrait_material: = ShaderMaterial.new()
 			portrait_material.shader = load("res://assets/interface/portrait_round.gdshader")
 			portrait.material = portrait_material
@@ -357,7 +357,7 @@ func _refresh() -> void:
 			slot.text.text = "No research"
 			continue
 		var total: = system.duration(job.level)
-		slot.picture.texture = CowUI.equipment_picture(job.equipment)
+		slot.picture.texture = CowUI.research_picture(job.equipment, job.level)
 		slot.text.text = "L" + str(job.level) + " · " + SimulationClock.duration(total - job.progress, system.clock.speed)
 		slot.bar.max_value = total
 		slot.bar.value = job.progress
@@ -381,7 +381,7 @@ func _refresh() -> void:
 			for style_state in ["normal", "hover", "pressed"]: cell.card.add_theme_stylebox_override(style_state, face)
 		cell.card.modulate = Color.WHITE
 	# Selected technology.
-	detail.picture.texture = CowUI.equipment_picture(selected_id)
+	detail.picture.texture = CowUI.research_picture(selected_id, selected_level)
 	detail.name.text = EquipmentIdentity.title(selected_id) + " · Level " + str(selected_level) + ("  (+" + str((selected_level - 1) * 12) + "% damage)" if selected_level > 1 else "")
 	var tier: Dictionary = EquipmentIdentity.research_tier(selected_id, selected_level)
 	if not tier.is_empty():

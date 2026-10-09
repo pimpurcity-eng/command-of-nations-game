@@ -139,3 +139,9 @@ Owner requested better pictures, less square menus, then explicitly requested ba
 - Rounded shared panel/button skin corners to 16px. Research board uses 22px corners, softer two-column cards, rounded portrait masks, integrated names, thin connectors and no square grid border lines.
 - Portraits stored as UI PNGs; model source folders remain excluded. Reproducible render_equipment_portraits.gd uses original UnitVisual.create, preserves owner's current camouflage and facing.
 - Cosmetic only: research costs, prerequisites, range and combat rules unchanged. Phone native render clean; touch 13/0. Screenshot docs/review/research/Rounded_Air_Defense_Tree.png. No live publication or GitHub push.
+
+
+## 2026-10-09 — Distinct illustrated Russian air-defense portraits
+Owner rejected blue rendered thumbnails and specifically requested drawings, pointing out that previous levels reused the same images. Built-in image-generation tool produced five distinct illustrated assets: strela10, torm2, bukm3, s400, s500. Olive woodland camouflage, three-quarter view, field/treeline background, no insignia or text. These are illustrative UI art, not claims of technically exact model geometry.
+CowUI.research_picture selects the named vehicle for each research level; same-vehicle guidance/radar improvements intentionally retain that vehicle's portrait. Research cards, active slots and selected details use the level-specific image; Russian category/production family preview uses the branch baseline illustration. Rounded menu from 0af38e6 retained. No gameplay changes, no model files added, no publication.
+Assets: game/assets/interface/illustrations/*.png. Native phone screenshot: docs/review/research/Illustrated_Air_Defense_Tree.png. Model archive integration/animations/range circles remain a separate queued task while owner asked to finish menu first.
