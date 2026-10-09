@@ -131,3 +131,11 @@ User resumed work specifically to add Russian short/long-range air-defense resea
 - UI: wider two-column cards with branch headers, per-level names, connectors, selected tier improvement/range/damage/model disclosure; muted completed/active/available/locked colors. Call of War official research wiki used for categories/columns/day gates/slots/details structure, not copied art or stats.
 - Files changed: equipment.json, equipment_identity.gd, air_battle_system.gd, research_panel.gd; two test/render scripts; review image. No map, movement, city, Android changes.
 - Checks: air-defense 42/0, campaign 192/0; native phone screenshot and touch check recorded with handoff. Review before publication. No live release or GitHub push claimed.
+
+
+## 2026-10-09 — Rounded menus and equipment pictures (ChatGPT)
+Owner requested better pictures, less square menus, then explicitly requested backgrounds in pictures. Based on dce247e.
+- Re-rendered every existing equipment family's recovered model at 640x400, with three-quarter camera, floor background and contact shadows. Shared CowUI.equipment_picture prefers these portraits; stand-in identity disclosures from prior handoff remain. No new model identity or geometry claimed.
+- Rounded shared panel/button skin corners to 16px. Research board uses 22px corners, softer two-column cards, rounded portrait masks, integrated names, thin connectors and no square grid border lines.
+- Portraits stored as UI PNGs; model source folders remain excluded. Reproducible render_equipment_portraits.gd uses original UnitVisual.create, preserves owner's current camouflage and facing.
+- Cosmetic only: research costs, prerequisites, range and combat rules unchanged. Phone native render clean; touch 13/0. Screenshot docs/review/research/Rounded_Air_Defense_Tree.png. No live publication or GitHub push.

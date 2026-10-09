@@ -123,7 +123,7 @@ func setup(system: ResearchSystem, theme: Theme) -> void:
 	tab_scroll.add_child(tab_row)
 	var board: = PanelContainer.new()
 	board.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	board.add_theme_stylebox_override("panel", CowUI.skin("list", 8))
+	board.add_theme_stylebox_override("panel", CowUI.box(Color("e6e9e7"), 22, Color("6c797e"), 1, 8))
 	tree_view.add_child(board)
 	var board_column: = VBoxContainer.new()
 	board_column.add_theme_constant_override("separation", 0)
@@ -242,7 +242,7 @@ func _build_tree() -> void:
 	for child in column_titles.get_children(): child.queue_free()
 	var corner: = PanelContainer.new()
 	corner.custom_minimum_size = Vector2(56, 52)
-	corner.add_theme_stylebox_override("panel", CowUI.box(Color("cfcab8"), 0, Color("a39e8b"), 1))
+	corner.add_theme_stylebox_override("panel", CowUI.box(Color("e6e9e7"), 14))
 	var day: = CowUI.label("Day", 15, CowUI.INK)
 	day.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	day.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -251,7 +251,7 @@ func _build_tree() -> void:
 	for spec in families:
 		var heading: = PanelContainer.new()
 		heading.custom_minimum_size = Vector2(cell_size.x, 52)
-		heading.add_theme_stylebox_override("panel", CowUI.box(Color("dcd7c6"), 0, Color("a39e8b"), 1, 4))
+		heading.add_theme_stylebox_override("panel", CowUI.box(Color("d4dddb"), 18, Color.TRANSPARENT, 0, 4))
 		var text: = CowUI.label(spec.get("research_branch", EquipmentIdentity.title(spec.id)), 21 if air_tree else 15, CowUI.INK)
 		text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		text.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -265,7 +265,7 @@ func _build_tree() -> void:
 		var day_number: int = ResearchSystem.DAYS[level - 1]
 		var day_cell: = PanelContainer.new()
 		day_cell.custom_minimum_size = Vector2(56, CELL.y)
-		day_cell.add_theme_stylebox_override("panel", CowUI.box(Color("cfcab8"), 0, Color("a39e8b"), 1))
+		day_cell.add_theme_stylebox_override("panel", CowUI.box(Color("e6e9e7"), 14))
 		var shown: bool = level == 1 or ResearchSystem.DAYS[level - 2] != day_number
 		var number: = CowUI.label(str(day_number) if shown else "", 34, CowUI.INK)
 		number.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -281,8 +281,19 @@ func _build_tree() -> void:
 			card.offset_left = -cell_size.x * 0.43 if air_tree else -52
 			card.offset_right = cell_size.x * 0.43 if air_tree else 52
 			card.offset_top = 12
-			card.offset_bottom = 112
-			card.icon = CowUI.equipment_picture(spec.id)
+			card.offset_bottom = 136
+			var portrait: = TextureRect.new()
+			portrait.texture = CowUI.equipment_picture(spec.id)
+			var portrait_material: = ShaderMaterial.new()
+			portrait_material.shader = load("res://assets/interface/portrait_round.gdshader")
+			portrait.material = portrait_material
+			portrait.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			portrait.offset_top = 4
+			portrait.offset_bottom = -27
+			portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			card.add_child(portrait)
 			card.expand_icon = true
 			card.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			card.pressed.connect(func():
@@ -291,15 +302,15 @@ func _build_tree() -> void:
 				message.text = ""
 				_refresh())
 			cell.add_child(card)
-			var ribbon: = CowUI.label(EquipmentIdentity.research_title(spec.id, level) if air_tree else "Level " + str(level), 16 if air_tree else 14, Color("efe6cf"))
+			var ribbon: = CowUI.label(EquipmentIdentity.research_title(spec.id, level) if air_tree else "Level " + str(level), 16 if air_tree else 14, CowUI.INK)
 			ribbon.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-			ribbon.add_theme_stylebox_override("normal", CowUI.box(Color("2c2b27"), 0, Color(0, 0, 0, 0), 0, 2))
+			ribbon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			ribbon.anchor_left = 0.5
 			ribbon.anchor_right = 0.5
 			ribbon.offset_left = -cell_size.x * 0.48 if air_tree else -52
 			ribbon.offset_right = cell_size.x * 0.48 if air_tree else 52
-			ribbon.offset_top = 116
-			ribbon.offset_bottom = 140
+			ribbon.offset_top = 108
+			ribbon.offset_bottom = 132
 			cell.add_child(ribbon)
 			grid.add_child(cell)
 			cells.append({"card": card, "id": spec.id, "level": level})
@@ -362,13 +373,13 @@ func _refresh() -> void:
 		var state: = _state(cell.id, cell.level)
 		var color: Color = {"done": Color("668cad"), "active": Color("5b86b0"), "available": Color("b8c3cb"), "locked": Color("8f959b")}[state]
 		var chosen: bool = cell.id == selected_id and cell.level == selected_level
-		var face: = CowUI.box(Color("edf0f2") if state == "available" else color.lightened(0.32), 8, color, 2, 6)
+		var face: = CowUI.box(Color("edf0f2") if state == "available" else color.lightened(0.55), 22, color, 1, 6)
 		if chosen:
-			var ring: = CowUI.box(color.lightened(0.15), 6, CowUI.GOLD, 4, 6)
+			var ring: = CowUI.box(Color("f6f1df"), 22, CowUI.GOLD, 3, 6)
 			for style_state in ["normal", "hover", "pressed"]: cell.card.add_theme_stylebox_override(style_state, ring)
 		else:
 			for style_state in ["normal", "hover", "pressed"]: cell.card.add_theme_stylebox_override(style_state, face)
-		cell.card.modulate = Color(1, 1, 1, 0.7) if state == "locked" else Color.WHITE
+		cell.card.modulate = Color.WHITE
 	# Selected technology.
 	detail.picture.texture = CowUI.equipment_picture(selected_id)
 	detail.name.text = EquipmentIdentity.title(selected_id) + " · Level " + str(selected_level) + ("  (+" + str((selected_level - 1) * 12) + "% damage)" if selected_level > 1 else "")
@@ -410,6 +421,5 @@ class TechCell extends Control:
 		below = to_below
 	func _draw() -> void:
 		var x: = size.x * 0.5
-		if above: draw_line(Vector2(x, 0), Vector2(x, 12), Color("2c2b27"), 4)
-		if below: draw_line(Vector2(x, 140), Vector2(x, size.y), Color("2c2b27"), 4)
-		draw_line(Vector2(size.x, 0), Vector2(size.x, size.y), Color("a39e8b"), 1)
+		if above: draw_line(Vector2(x, 0), Vector2(x, 12), Color("98aaa7"), 2)
+		if below: draw_line(Vector2(x, 140), Vector2(x, size.y), Color("98aaa7"), 2)

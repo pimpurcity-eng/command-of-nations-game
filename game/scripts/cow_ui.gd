@@ -23,7 +23,7 @@ static func skin(name: String, _corner: int = 8, margin: int = 0, tint: Color = 
 		art.set_content_margin_all(margin)
 		art.modulate_color = tint
 		return art
-	var style: = box(Color(palette[name]) * tint, 6, Color("c4c8be") if name == "row" else Color("3a464a"), 1, margin)
+	var style: = box(Color(palette[name]) * tint, 16, Color("c4c8be") if name == "row" else Color("3a464a"), 1, margin)
 	if name == "tab_on":
 		style.border_color = GOLD
 		style.border_width_bottom = 3
@@ -41,6 +41,8 @@ static func icon_texture(kind: String) -> Texture2D:
 	return _icons[kind]
 
 static func equipment_picture(id: String) -> Texture2D:
+	var portrait: = "res://assets/interface/portraits/" + id + ".png"
+	if ResourceLoader.exists(portrait): return load(portrait)
 	var direct: = UnitVisual.preview_path(id)
 	if not direct.is_empty() and ResourceLoader.exists(direct): return load(direct)
 	var spec: = EquipmentIdentity.spec(id)
