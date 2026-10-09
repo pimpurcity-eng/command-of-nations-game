@@ -493,8 +493,8 @@ func show_unit(unit: Dictionary) -> void :
 	inspecting_unit = true
 	own_unit = unit.country == GameSession.player_country
 	show_health(unit.health)
-	detail.text = EquipmentIdentity.title(unit.equipment_id).to_upper() + " / " + unit.country.to_upper() + " · " + str(int(unit.health)) + "%"
-	unit_portrait.texture = UnitVisual.preview_texture(unit.equipment_id)
+	detail.text = EquipmentIdentity.research_title(unit.equipment_id, unit.get("level", 1)).to_upper() + " / " + unit.country.to_upper() + " · " + str(int(unit.health)) + "%"
+	unit_portrait.texture = CowUI.research_picture(unit.equipment_id, unit.get("level", 1))
 	move_button.disabled = not own_unit
 	stop_button.disabled = not own_unit
 	show_air_commands(unit.visual_kind == "fighter")

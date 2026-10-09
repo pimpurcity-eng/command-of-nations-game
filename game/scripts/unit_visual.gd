@@ -46,9 +46,11 @@ static func stand_in_path(equipment_id: String, kind: String) -> String:
 		"fighter": return "res://assets/library/su57_russian.glb" if russian else "res://assets/library/f18a_european.glb"
 	return ""
 
-static func create(kind: String, _faction: Color, equipment_id: String = "") -> Node3D:
+static func create(kind: String, _faction: Color, equipment_id: String = "", level: int = 1) -> Node3D:
 	var assembly: = Node3D.new()
-	var path: = asset_path(equipment_id)
+	assembly.set_meta("visual_level", level)
+	var tier: Dictionary = EquipmentIdentity.research_tier(equipment_id, level)
+	var path: String = tier.get("model", asset_path(equipment_id))
 	if path.is_empty() or not ResourceLoader.exists(path):
 		var spec_kind: String = EquipmentIdentity.spec(equipment_id).get("visual_kind", kind)
 		path = stand_in_path(equipment_id, spec_kind)
@@ -62,7 +64,8 @@ static func create(kind: String, _faction: Color, equipment_id: String = "") -> 
 	var spec: = EquipmentIdentity.spec(equipment_id)
 	var role: String = spec.get("role", "")
 	if role.is_empty(): role = spec.get("visual_kind", kind)
-	if spec.get("country", "") == "russia": paint_russian(vehicle, model_bounds(vehicle, 0.0))
+	if path.contains("/airdefense/"): pass  # Keep the owner's original woodland paint.
+	elif spec.get("country", "") == "russia": paint_russian(vehicle, model_bounds(vehicle, 0.0))
 	elif spec.get("visual_kind", kind) in GROUND_KINDS: paint_camo(vehicle, model_bounds(vehicle, 0.0), UKRAINE_CAMO)
 	# The pivot carries the fitting transform; the source scene's own transform is kept.
 	var pivot: = Node3D.new()
@@ -71,6 +74,12 @@ static func create(kind: String, _faction: Color, equipment_id: String = "") -> 
 	_fit(pivot, vehicle, role, path)
 	assembly.add_child(pivot)
 	_enable_shadows(vehicle)
+	if path.contains("/airdefense/"):
+		var animator: = AirDefenseAnimator.new()
+		assembly.add_child(animator)
+		animator.configure(vehicle, path.get_file().get_basename())
+		assembly.set_meta("air_defense_animator", animator)
+		assembly.set_meta("visual_level", level)
 	assembly.set_meta("missing_original_model", false)
 	return assembly
 
@@ -81,6 +90,7 @@ static func _fit(pivot: Node3D, vehicle: Node3D, role: String, path: String) -> 
 	var yaw: = PI  # owner review 2026-10-09 ("undo"): guns face the direction of travel / target
 	if raw.size.x > raw.size.z * 1.1: yaw += PI * 0.5  # source model lies sideways
 	yaw += deg_to_rad(YAW_FIX.get(path.get_file().get_basename().get_slice("_", 0), 0.0))
+	if path.contains("/airdefense/"): yaw = PI * 0.5  # Source +X cab faces game -Z.
 	var bounds: = model_bounds(vehicle, yaw)
 	var longest: = maxf(maxf(bounds.size.x, bounds.size.z), 0.001)
 	var factor: float = FOOTPRINT.get(role, 0.62) / longest

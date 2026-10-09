@@ -53,7 +53,7 @@ func open(armies: UnitSystem, terrain: StrategicMap) -> void :
 	portrait.custom_minimum_size.y = 130
 	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	portrait.texture = UnitVisual.preview_texture(unit.equipment_id)
+	portrait.texture = CowUI.research_picture(unit.equipment_id, unit.get("level", 1))
 	content.add_child(portrait)
 	var hp: = 0.0
 	var classes: Dictionary = {}
@@ -61,9 +61,12 @@ func open(armies: UnitSystem, terrain: StrategicMap) -> void :
 	for member in group:
 		hp += member.health
 		classes[member.visual_kind] = classes.get(member.visual_kind, 0) + 1
-		text += EquipmentIdentity.title(member.equipment_id) + " · L" + str(member.get("level", 1)) + " · " + str(int(member.health)) + "/100 HP\n"
+		text += EquipmentIdentity.research_title(member.equipment_id, member.get("level", 1)) + " · L" + str(member.get("level", 1)) + " · " + str(int(member.health)) + "/100 HP\n"
 	section("ARMY STATUS", unit.country.capitalize() + " · " + armies.stacks.summary(unit) + "\nHealth " + str(int(hp)) + " / " + str(group.size() * 100) + "\n" + ("Battle in progress" if unit.engaged else ("Moving" if unit.moving else "Ready for orders")))
 	section("UNITS", text)
+	if unit.visual_kind == "air_defense":
+		var tier: Dictionary = EquipmentIdentity.research_tier(unit.equipment_id, unit.get("level", 1))
+		section("AIR DEFENSE", "Coverage radius " + str(EquipmentIdentity.air_defense_range(unit)) + " · AA damage " + str(tier.get("damage", 0)) + "\nProtects against aircraft and drones · select a unit to see its range circle.")
 	if not armies.air.is_air(unit): section("FIRE CONTROL", FireControlPanel.MODES.get(unit.get("fire_mode", "at_will"), FireControlPanel.MODES.at_will).title + " · " + ("Movement deferred while firing" if unit.get("firing_halt", false) else "Current orders active"))
 	var cards_scroll: = ScrollContainer.new()
 	cards_scroll.custom_minimum_size.y = 180
@@ -87,10 +90,10 @@ func open(armies: UnitSystem, terrain: StrategicMap) -> void :
 		picture.custom_minimum_size = Vector2(130, 70)
 		picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		picture.texture = UnitVisual.preview_texture(family.unit.equipment_id)
+		picture.texture = CowUI.research_picture(family.unit.equipment_id, family.unit.get("level", 1))
 		card.add_child(picture)
 		var label: = Label.new()
-		label.text = EquipmentIdentity.title(family.unit.equipment_id) + "\n" + str(family.count) + " units · L" + str(family.unit.get("level", 1)) + "\n" + str(int(family.health)) + " / " + str(family.count * 100) + " HP"
+		label.text = EquipmentIdentity.research_title(family.unit.equipment_id, family.unit.get("level", 1)) + "\n" + str(family.count) + " units · L" + str(family.unit.get("level", 1)) + "\n" + str(int(family.health)) + " / " + str(family.count * 100) + " HP"
 		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		card.add_child(label)
 		var health: = ProgressBar.new()
@@ -102,7 +105,7 @@ func open(armies: UnitSystem, terrain: StrategicMap) -> void :
 	text = "Terrain: " + biome.capitalize() + "\nGround stacks move at the speed of their slowest member.\n"
 	for member in group:
 		if armies.air.is_air(member) or armies.is_naval(member): continue
-		text += EquipmentIdentity.title(member.equipment_id) + ": speed " + str(roundi(TerrainRules.multiplier(member.visual_kind, biome, "speed") * 100)) + "%, attack " + str(roundi(TerrainRules.multiplier(member.visual_kind, biome, "attack") * 100)) + "%, defensive fire " + str(roundi(TerrainRules.multiplier(member.visual_kind, biome, "defense") * 100)) + "%\n"
+		text += EquipmentIdentity.research_title(member.equipment_id, member.get("level", 1)) + ": speed " + str(roundi(TerrainRules.multiplier(member.visual_kind, biome, "speed") * 100)) + "%, attack " + str(roundi(TerrainRules.multiplier(member.visual_kind, biome, "attack") * 100)) + "%, defensive fire " + str(roundi(TerrainRules.multiplier(member.visual_kind, biome, "defense") * 100)) + "%\n"
 	section("TERRAIN INFLUENCES", text)
 	text = ""
 	for kind in classes: text += str(kind).capitalize() + ": " + str(classes[kind]) + "\n"

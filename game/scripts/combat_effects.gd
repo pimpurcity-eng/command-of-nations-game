@@ -49,6 +49,12 @@ func on_shot(source: Dictionary, target_unit: Dictionary, effect: String) -> voi
 	if not source_visible and not target_visible: return
 	var start: Vector3 = source.node.position + Vector3.UP * 0.4
 	var finish: Vector3 = target_unit.node.position + Vector3.UP * 0.2
+	if source_visible and effect == "interceptor":
+		var model: Node3D = source.node.get_child(0)
+		if model.has_meta("air_defense_animator"):
+			var animator: AirDefenseAnimator = model.get_meta("air_defense_animator")
+			animator.fire(finish)
+			start = animator.muzzle_position()
 	if source_visible:
 		var direction: = (finish - start).normalized()
 		if effect == "missile":

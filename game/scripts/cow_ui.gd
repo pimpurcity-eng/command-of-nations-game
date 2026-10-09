@@ -41,7 +41,7 @@ static func icon_texture(kind: String) -> Texture2D:
 	return _icons[kind]
 
 static func equipment_picture(id: String) -> Texture2D:
-	var air_drawing: String = {"skyguard_russia": "strela10", "patriot_russia": "bukm3"}.get(id, "")
+	var air_drawing: String = {"skyguard_russia": "strela10", "patriot_russia": "bukm3", "skyguard_ukraine": "roland", "patriot_ukraine": "iris_t_slm"}.get(id, "")
 	var air_path: String = "res://assets/interface/illustrations/" + air_drawing + ".png"
 	if not air_drawing.is_empty() and ResourceLoader.exists(air_path): return load(air_path)
 	var portrait: = "res://assets/interface/portraits/" + id + ".png"
@@ -61,6 +61,8 @@ static func research_picture(id: String, level: int) -> Texture2D:
 	if id.ends_with("_russia"):
 		for pair in [["Strela-10", "strela10"], ["Tor-M2", "torm2"], ["Buk-M3", "bukm3"], ["S-400", "s400"], ["S-500", "s500"]]:
 			if tier_name.begins_with(pair[0]): drawing = pair[1]
+	var tier: Dictionary = EquipmentIdentity.research_tier(id, level)
+	if str(tier.get("model", "")).contains("/nato_"): drawing = str(tier.model).get_file().get_basename().trim_prefix("nato_")
 	var path: String = "res://assets/interface/illustrations/" + drawing + ".png"
 	return load(path) if not drawing.is_empty() and ResourceLoader.exists(path) else equipment_picture(id)
 

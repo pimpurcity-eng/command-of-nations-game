@@ -498,7 +498,7 @@ func refresh_hud() -> void :
 			var hp: = 0.0
 			for member in group: hp += member.health
 			hud.show_health(hp / maxi(1, group.size()))
-			hud.detail.text = EquipmentIdentity.title(unit.equipment_id).to_upper() + " · L" + str(unit.get("level", 1)) + """
+			hud.detail.text = EquipmentIdentity.research_title(unit.equipment_id, unit.get("level", 1)).to_upper() + " · L" + str(unit.get("level", 1)) + """
 """ + unit.country.to_upper() + " · " + str(group.size()) + " UNITS · " + state
 			if units.air.is_air(unit):
 				hud.detail.text = EquipmentIdentity.title(unit.equipment_id) + " · " + unit.flight_mode.to_upper() + " · RADIUS " + str(int(units.air.radius(unit) * 40)) + " game km"
@@ -518,7 +518,7 @@ func refresh_hud() -> void :
 			for territory in map.territories:
 				if match_rules.capture_progress.has(territory.id) and RegionData.contains(territory, point):
 					hud.detail.text += " · CAPTURE " + str(int(match_rules.capture_progress[territory.id].seconds / 6.0 * 100)) + "%"
-		if unit.node.get_child(0).get_meta("missing_original_model", false): hud.detail.text = EquipmentIdentity.title(unit.equipment_id).to_upper() + " · ORIGINAL MODEL NOT RECOVERED"
+		if unit.node.get_child(0).get_meta("missing_original_model", false): hud.detail.text = EquipmentIdentity.research_title(unit.equipment_id, unit.get("level", 1)).to_upper() + " · ORIGINAL MODEL NOT RECOVERED"
 		hud.move_button.disabled = unit.country != GameSession.player_country or unit.get("upgrade_remaining", 0.0) > 0 or (match_rules != null and not match_rules.winner.is_empty())
 		hud.stop_button.disabled = hud.move_button.disabled
 	else:
@@ -578,7 +578,14 @@ func populate_weapons_test() -> void:
 	units.restore([])
 	var city_data: = GeographicProjection.load_cities()
 	var counts: Dictionary = {}
-	for spec in EquipmentIdentity.catalog:
+	var test_catalog: Array = []
+	for family in EquipmentIdentity.catalog:
+		var spawn_levels: Array = [1, 3] if family.get("research_branch", "") == "Short range" else [1, 3, 5] if family.category == "Air defense" else [1]
+		for spawn_level in spawn_levels:
+			var variant: Dictionary = family.duplicate(true)
+			variant.spawn_level = spawn_level
+			test_catalog.append(variant)
+	for spec in test_catalog:
 		var bases: Array = city_data.filter(func(city: Dictionary): return city.country.to_lower() == spec.country and (spec.visual_kind != "naval" or city.has("naval_spawn")))
 		if bases.is_empty(): continue
 		var number: int = counts.get(spec.country, 0)
@@ -589,7 +596,7 @@ func populate_weapons_test() -> void:
 			point = GeographicProjection.project(base.naval_spawn.longitude, base.naval_spawn.latitude)
 			point += Vector2(float(number % 2) * 0.3, 0.3)
 			if not units.sea_navigation.on_sea(point): point = GeographicProjection.project(base.naval_spawn.longitude, base.naval_spawn.latitude)
-		var data: = {"id": "weapons_test_" + spec.id, "name": spec.name, "country": spec.country, "equipment_id": spec.id, "visual_kind": spec.visual_kind, "base_city": base.id}
+		var data: = {"id": "weapons_test_" + spec.id + "_l" + str(spec.spawn_level), "level": spec.spawn_level, "name": spec.name, "country": spec.country, "equipment_id": spec.id, "visual_kind": spec.visual_kind, "base_city": base.id}
 		units._spawn(data, point, Color("73bcff") if spec.country == "ukraine" else Color("ef827c"))
 	units.fog_enabled = false
 	add_original_weapon_inspection()

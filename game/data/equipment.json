@@ -353,34 +353,39 @@
         "name": "Buk-M3",
         "range": 3.5,
         "damage": 10,
-        "improvement": "Baseline coverage"
+        "improvement": "Baseline coverage",
+        "model": "res://assets/library/airdefense/russia_buk_m3.glb"
       },
       {
         "name": "Buk-M3 \u00b7 radar",
         "range": 3.8,
         "damage": 11.5,
-        "improvement": "Better target tracking"
+        "improvement": "Better target tracking",
+        "model": "res://assets/library/airdefense/russia_buk_m3.glb"
       },
       {
         "name": "S-400 Triumf",
         "range": 4.2,
         "damage": 13,
-        "improvement": "Wider coverage"
+        "improvement": "Wider coverage",
+        "model": "res://assets/library/airdefense/russia_s400.glb"
       },
       {
         "name": "S-400 \u00b7 guidance",
         "range": 4.5,
         "damage": 14.5,
-        "improvement": "Improved guidance"
+        "improvement": "Improved guidance",
+        "model": "res://assets/library/airdefense/russia_s400.glb"
       },
       {
         "name": "S-500 Prometey",
         "range": 5.0,
         "damage": 16,
-        "improvement": "Advanced interception"
+        "improvement": "Advanced interception",
+        "model": "res://assets/library/airdefense/russia_s500_prometey.glb"
       }
     ],
-    "model_status": "Shared Patriot model stand-in",
+    "model_status": "Original supplied air-defense model",
     "research_days": [
       1,
       4,
@@ -415,34 +420,39 @@
         "name": "Strela-10",
         "range": 2.4,
         "damage": 7,
-        "improvement": "Baseline coverage"
+        "improvement": "Baseline coverage",
+        "model": "res://assets/library/airdefense/russia_strela10.glb"
       },
       {
         "name": "Strela-10 \u00b7 guidance",
         "range": 2.5,
         "damage": 8,
-        "improvement": "Better target tracking"
+        "improvement": "Better target tracking",
+        "model": "res://assets/library/airdefense/russia_strela10.glb"
       },
       {
         "name": "Tor-M2",
         "range": 2.7,
         "damage": 9,
-        "improvement": "Wider coverage"
+        "improvement": "Wider coverage",
+        "model": "res://assets/library/airdefense/russia_tor_m2.glb"
       },
       {
         "name": "Tor-M2 \u00b7 radar",
         "range": 2.8,
         "damage": 10,
-        "improvement": "Improved guidance"
+        "improvement": "Improved guidance",
+        "model": "res://assets/library/airdefense/russia_tor_m2.glb"
       },
       {
         "name": "Tor-M2 \u00b7 interception",
         "range": 3.0,
         "damage": 11,
-        "improvement": "Advanced interception"
+        "improvement": "Advanced interception",
+        "model": "res://assets/library/airdefense/russia_tor_m2.glb"
       }
     ],
-    "model_status": "Shared Skyguard model stand-in",
+    "model_status": "Original supplied air-defense model",
     "research_days": [
       1,
       3,
@@ -500,7 +510,7 @@
   {
     "id": "patriot_ukraine",
     "country": "ukraine",
-    "name": "Patriot M903",
+    "name": "European long range air defense",
     "category": "Air defense",
     "visual_kind": "air_defense",
     "asset_roster_id": "patriot",
@@ -520,37 +530,42 @@
     "research_branch": "Long range",
     "research_tiers": [
       {
-        "name": "Patriot M903",
+        "name": "IRIS-T SLM",
         "range": 3.5,
         "damage": 10,
-        "improvement": "Baseline coverage"
+        "improvement": "Baseline coverage",
+        "model": "res://assets/library/airdefense/nato_iris_t_slm.glb"
       },
       {
-        "name": "Patriot \u00b7 radar",
+        "name": "IRIS-T \u00b7 radar",
         "range": 3.8,
         "damage": 11.5,
-        "improvement": "Better target tracking"
+        "improvement": "Better target tracking",
+        "model": "res://assets/library/airdefense/nato_iris_t_slm.glb"
       },
       {
-        "name": "Patriot \u00b7 guidance",
+        "name": "SAMP/T",
         "range": 4.2,
         "damage": 13,
-        "improvement": "Wider coverage"
+        "improvement": "Wider coverage",
+        "model": "res://assets/library/airdefense/nato_samp_t.glb"
       },
       {
-        "name": "Patriot \u00b7 tracking",
+        "name": "SAMP/T \u00b7 guidance",
         "range": 4.5,
         "damage": 14.5,
-        "improvement": "Improved guidance"
+        "improvement": "Improved guidance",
+        "model": "res://assets/library/airdefense/nato_samp_t.glb"
       },
       {
-        "name": "Patriot \u00b7 interception",
+        "name": "ASTER 30",
         "range": 5.0,
         "damage": 16,
-        "improvement": "Advanced interception"
+        "improvement": "Advanced interception",
+        "model": "res://assets/library/airdefense/nato_aster30.glb"
       }
     ],
-    "model_status": "Shared Patriot model stand-in",
+    "model_status": "Original supplied air-defense model",
     "research_days": [
       1,
       4,
@@ -562,7 +577,7 @@
   {
     "id": "skyguard_ukraine",
     "country": "ukraine",
-    "name": "Skyguard air defense",
+    "name": "European short range air defense",
     "category": "Air defense",
     "visual_kind": "air_defense",
     "asset_roster_id": "skyguard",
@@ -582,37 +597,42 @@
     "research_branch": "Short range",
     "research_tiers": [
       {
-        "name": "Skyguard",
+        "name": "Roland",
         "range": 2.4,
         "damage": 7,
-        "improvement": "Baseline coverage"
+        "improvement": "Baseline coverage",
+        "model": "res://assets/library/airdefense/nato_roland.glb"
       },
       {
-        "name": "Skyguard \u00b7 tracking",
+        "name": "Roland \u00b7 tracking",
         "range": 2.5,
         "damage": 8,
-        "improvement": "Better target tracking"
+        "improvement": "Better target tracking",
+        "model": "res://assets/library/airdefense/nato_roland.glb"
       },
       {
-        "name": "Skyguard \u00b7 radar",
+        "name": "NASAMS",
         "range": 2.7,
         "damage": 9,
-        "improvement": "Wider coverage"
+        "improvement": "Wider coverage",
+        "model": "res://assets/library/airdefense/nato_nasams.glb"
       },
       {
-        "name": "Skyguard \u00b7 guidance",
+        "name": "NASAMS \u00b7 radar",
         "range": 2.8,
         "damage": 10,
-        "improvement": "Improved guidance"
+        "improvement": "Improved guidance",
+        "model": "res://assets/library/airdefense/nato_nasams.glb"
       },
       {
-        "name": "Skyguard \u00b7 interception",
+        "name": "NASAMS \u00b7 interception",
         "range": 3.0,
         "damage": 11,
-        "improvement": "Advanced interception"
+        "improvement": "Advanced interception",
+        "model": "res://assets/library/airdefense/nato_nasams.glb"
       }
     ],
-    "model_status": "Shared Skyguard model stand-in",
+    "model_status": "Original supplied air-defense model",
     "research_days": [
       1,
       3,

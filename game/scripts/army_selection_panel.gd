@@ -67,8 +67,8 @@ func open(armies: UnitSystem, selected_ids: Array[String]) -> void :
 		button.toggle_mode = true
 		button.custom_minimum_size.y = 64
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		button.text = EquipmentIdentity.title(unit.equipment_id) + " · " + str(group.size()) + " units\n" + ("Moving" if unit.moving else "Idle") + " · " + unit.visual_kind.capitalize()
-		button.icon = UnitVisual.preview_texture(unit.equipment_id)
+		button.text = EquipmentIdentity.research_title(unit.equipment_id, unit.get("level", 1)) + " · " + str(group.size()) + " units\n" + ("Moving" if unit.moving else "Idle") + " · " + unit.visual_kind.capitalize()
+		button.icon = CowUI.research_picture(unit.equipment_id, unit.get("level", 1))
 		button.add_theme_constant_override("icon_max_width", 60)
 		button.button_pressed = unit.id in selected_ids
 		button.toggled.connect( func(_on: bool): _count())

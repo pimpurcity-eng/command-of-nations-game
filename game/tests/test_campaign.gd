@@ -55,17 +55,19 @@ func run() -> void:
 		game.apply_player_country(false)
 		check(GameSession.player_country == country, country + " save restores country")
 		game.populate_weapons_test()
-		check(game.units.units.size() == EquipmentIdentity.catalog.size(), country + " exactly one of 34 weapons")
+		check(game.units.units.size() == EquipmentIdentity.catalog.size() + 6, country + " original families plus ten air-defense models")
 		var ids = {}
 		for weapon in game.units.units:
-			check(not ids.has(weapon.equipment_id), country + " unique " + weapon.equipment_id)
-			ids[weapon.equipment_id] = true
+			check(not ids.has(weapon.equipment_id + ":" + str(weapon.level)), country + " unique " + weapon.equipment_id)
+			ids[weapon.equipment_id + ":" + str(weapon.level)] = true
 			check(not weapon.node.get_child(0).get_meta("asset_path", "").begins_with("res://assets/vehicles/"), country + " original asset " + weapon.equipment_id)
 			if weapon.visual_kind == "naval": check(game.units.sea_navigation.on_sea(Vector2(weapon.node.position.x, weapon.node.position.z)), country + " ship on sea " + weapon.equipment_id)
 		game.match_rules.declare_war()
 		var a = game.units.units.filter(func(x): return x.country == "russia" and x.visual_kind == "armor")[0]
 		var b = game.units.units.filter(func(x): return x.country == "ukraine" and x.visual_kind == "armor")[0]
 		b.node.position = a.node.position + Vector3(0.1, 0, 0)
+		# An assaulting tank must be moving; avoid relying on another nearby artillery unit.
+		a.moving = true
 		a.attack_target = b.id; b.attack_target = a.id
 		game.match_rules.advance(1.0)
 		check(a.health < 100 or b.health < 100, country + " combat damage")

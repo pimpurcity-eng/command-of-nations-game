@@ -103,7 +103,8 @@ func _spawn(data: Dictionary, point: Vector2, color: Color) -> void :
 	add_child(marker)
 	var visual_kind: String = data.get("visual_kind", "armor")
 	var equipment_id: = EquipmentIdentity.resolve(data)
-	var model: = UnitVisual.create(visual_kind, color, equipment_id)
+	if visual_kind == "air_defense": spec[0] = EquipmentIdentity.research_title(equipment_id, int(data.get("level", 1)))
+	var model: = UnitVisual.create(visual_kind, color, equipment_id, int(data.get("level", 1)))
 	model.scale = Vector3.ONE * 0.65
 	marker.add_child(model)
 	UnitShadow.create(marker)
@@ -431,6 +432,12 @@ func _process(delta: float) -> void :
 			air_range.scale = Vector3(radius, 1, radius)
 			air_range.position = terrain.position_at(place.point) + Vector3.UP * 0.1
 
+	if selected >= 0 and selected < units.size() and units[selected].visual_kind == "air_defense":
+		air_range.visible = true
+		var aa_unit: Dictionary = units[selected]
+		var aa_radius: float = EquipmentIdentity.air_defense_range(aa_unit)
+		air_range.scale = Vector3(aa_radius, 1, aa_radius)
+		air_range.position = terrain.position_at(Vector2(aa_unit.node.position.x, aa_unit.node.position.z)) + Vector3.UP * 0.12
 	var chosen_stacks: Dictionary = {}
 	for leader in command_groups(): chosen_stacks[leader.stack_id] = true
 	for unit in units:
@@ -445,6 +452,21 @@ func _process(delta: float) -> void :
 		# Call of War: only the selected army gets a ring; the map tag shows ownership.
 		unit.ring.visible = chosen
 		var model: Node3D = unit.node.get_child(0)
+		if unit.visual_kind == "air_defense":
+			if int(model.get_meta("visual_level", -1)) != int(unit.level):
+				var replacement: = UnitVisual.create(unit.visual_kind, unit.faction_color, unit.equipment_id, unit.level)
+				replacement.rotation = model.rotation
+				replacement.scale = model.scale
+				unit.node.remove_child(model)
+				model.queue_free()
+				unit.node.add_child(replacement)
+				unit.node.move_child(replacement, 0)
+				model = replacement
+				unit.name = EquipmentIdentity.research_title(unit.equipment_id, unit.level)
+			if model.has_meta("air_defense_animator"):
+				var animator: AirDefenseAnimator = model.get_meta("air_defense_animator")
+				animator.moving = unit.moving
+				animator.animate(delta)
 		model.rotation.y = lerp_angle(model.rotation.y, unit.heading, 1.0 - exp( - delta * 8.0))
 		if not is_naval(unit) and not air.is_air(unit):
 			var slope: = Quaternion(Vector3.UP, ground_normal(Vector2(unit.node.position.x, unit.node.position.z)))
@@ -452,6 +474,7 @@ func _process(delta: float) -> void :
 		# Owner review: armies inside a city shrink so they sit among the buildings.
 		var target_scale: = 0.65 * (CITY_SCALE if _in_city(Vector2(unit.node.position.x, unit.node.position.z)) else 1.0)
 		model.scale = model.scale.lerp(Vector3.ONE * target_scale, 1.0 - exp( - delta * 6.0))
+		if unit.visual_kind == "air_defense": unit.ring.scale = Vector3.ONE * (0.52 if chosen else 0.42) * (model.scale.x / 0.65)
 		if unit.node.has_meta("detailed_sprite"):
 			var sprite: Sprite3D = unit.node.get_meta("detailed_sprite")
 			var camera: = get_viewport().get_camera_3d()
