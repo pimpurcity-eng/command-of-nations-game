@@ -148,7 +148,8 @@ func _add_landscape() -> void :
 	river.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(river)
 	var forest: = StandardMaterial3D.new()
-	forest.albedo_color = Color("475b36")
+	forest.albedo_color = Color("2f4527")
+	forest.roughness = 0.95
 	forest.vertex_color_use_as_albedo = true
 	var rng: = RandomNumberGenerator.new()
 	rng.seed = 2943
@@ -171,21 +172,25 @@ func _add_landscape() -> void :
 				transforms.append(Transform3D(Basis(Vector3.UP, rng.randf_range(0, TAU)).scaled(Vector3(scale, scale * rng.randf_range(0.8, 1.3), scale)), position_at(point) + Vector3.UP * 0.22))
 				break
 
+	# Realistic small trees instead of the old round "lollipop" spheres: a layered conifer
+	# with a dark trunk, in natural muted greens (per-instance colour variation below).
 	var tree_builder: = SurfaceTool.new()
 	tree_builder.begin(Mesh.PRIMITIVE_TRIANGLES)
-	for offset in [Vector3(0, 0.12, 0), Vector3(-0.055, 0.07, 0.025), Vector3(0.05, 0.07, -0.02)]:
-		var crown: = SphereMesh.new()
-		crown.radius = 0.12
-		crown.height = 0.22
-		crown.radial_segments = 10
-		crown.rings = 5
-		tree_builder.append_from(crown, 0, Transform3D(Basis.IDENTITY, offset))
+	for tier in [[0.0, 0.11, 0.16], [0.08, 0.085, 0.14], [0.15, 0.055, 0.12]]:
+		var cone: = CylinderMesh.new()
+		cone.top_radius = 0.0
+		cone.bottom_radius = tier[1]
+		cone.height = tier[2]
+		cone.radial_segments = 7
+		cone.rings = 1
+		tree_builder.append_from(cone, 0, Transform3D(Basis.IDENTITY, Vector3(0, tier[0], 0)))
 	var trunk: = CylinderMesh.new()
-	trunk.top_radius = 0.019
-	trunk.bottom_radius = 0.024
-	trunk.height = 0.25
-	trunk.radial_segments = 6
-	tree_builder.append_from(trunk, 0, Transform3D(Basis.IDENTITY, Vector3(0, -0.14, 0)))
+	trunk.top_radius = 0.012
+	trunk.bottom_radius = 0.016
+	trunk.height = 0.08
+	trunk.radial_segments = 5
+	tree_builder.append_from(trunk, 0, Transform3D(Basis.IDENTITY, Vector3(0, -0.1, 0)))
+	tree_builder.generate_normals()
 	var tree: = tree_builder.commit()
 	var grove: = MultiMeshInstance3D.new()
 	grove.name = "ForestInstances"
@@ -196,7 +201,7 @@ func _add_landscape() -> void :
 	instances.instance_count = transforms.size()
 	for i in transforms.size():
 		instances.set_instance_transform(i, transforms[i])
-		instances.set_instance_color(i, Color(0.8 + rng.randf() * 0.25, 0.85 + rng.randf() * 0.2, 0.75 + rng.randf() * 0.2))
+		instances.set_instance_color(i, Color(0.8 + rng.randf() * 0.35, 0.85 + rng.randf() * 0.3, 0.75 + rng.randf() * 0.25))
 	grove.multimesh = instances
 	grove.set_meta("placement_transforms", transforms)
 	grove.material_override = forest
@@ -250,7 +255,7 @@ func _add_connections() -> void :
 	var material: = StandardMaterial3D.new()
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
-	material.albedo_color = Color("a59a77")
+	material.albedo_color = Color("5e5b52")
 	roads.material_override = material
 	add_child(roads)
 

@@ -107,12 +107,15 @@ func sync_buildings() -> void :
 				var appearance: = AssetRoster.appearance(definition.asset_roster_id, city.country.to_lower())
 				visual = (load(appearance.model) as PackedScene).instantiate() as Node3D
 				visual.name = name
-				visual.position = Vector3(-0.88 + index * 0.63, 0.09, 0.96)
+				# Spread around the city edge instead of a straight row south of it.
+				var around: = TAU * (index + 0.5) / maxf(system.catalog.size(), 1.0) + float(city.name.hash() % 100) * 0.01
+				visual.position = Vector3(cos(around) * 1.08, 0.09, sin(around) * 1.08)
+				visual.rotation.y = -around
 				district.add_child(visual)
 			var infrastructure_world: = district.position + visual.position * district.scale
 			visual.position.y = 0.09 + (terrain.elevation(Vector2(infrastructure_world.x, infrastructure_world.z)) - district.position.y) / district.scale.y
 			visual.show()
-			visual.scale = Vector3.ONE * (0.16 + 0.02 * (current - 1))
+			visual.scale = Vector3.ONE * (0.11 + 0.015 * (current - 1))
 			visual.set_meta("building_level", current)
 func _map_label(text: String, size: int, color: Color) -> Label:
 	var label: = Label.new()
