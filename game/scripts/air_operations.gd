@@ -91,7 +91,7 @@ func position(unit: Dictionary, point: Vector2) -> void :
 func flight_speed(unit: Dictionary) -> float:
 	var result: = INF
 	for member in armies.stacks.members(unit): result = minf(result, EquipmentIdentity.spec(member.equipment_id).get("air_speed", 3.0))
-	return result
+	return result * SimulationClock.MOVEMENT_PACE
 func advance(unit: Dictionary, seconds: float) -> void :
 	unit.engaged = false
 	if unit.flight_mode == "grounded":

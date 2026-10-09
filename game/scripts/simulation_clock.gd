@@ -1,6 +1,10 @@
 class_name SimulationClock
 extends Node
 const REAL_SECONDS_PER_SIM_SECOND: = 120.0
+## Armies and aircraft travel this many times faster than the real-time economy clock, so
+## movement is visible on a phone (owner review: units with orders looked frozen; a 2-province
+## march took over 30 real minutes). Production, research and combat rounds are unchanged.
+const MOVEMENT_PACE: = 10.0
 signal advanced(seconds: float)
 signal state_changed
 var elapsed: = 0.0

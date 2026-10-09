@@ -9,7 +9,10 @@ const FOOTPRINT: = {"armor": 1.35, "ifv": 1.25, "artillery": 1.3, "air_defense":
 ## keyed by model file prefix. Checked with tests/model_lineup.gd (all models face north).
 const YAW_FIX: = {"su57": 180.0, "f18a": 180.0, "destroyer": 180.0, "kclass": 180.0, "upload20ab": 180.0}
 const RUSSIAN_CAMO: = "res://assets/materials/russian_blue_camo.png"
-static var _camo: Texture2D
+## Owner review (phone build): weapons must not look white. Ukrainian ground equipment gets
+## a green/brown/black woodland scheme the same way Russian equipment gets the blue camo.
+const UKRAINE_CAMO: = "res://assets/materials/ukraine_woodland_camo.png"
+const GROUND_KINDS: = ["armor", "ifv", "artillery", "air_defense", "missile_launcher"]
 static var _camo_shader: Shader
 ## Camouflage materials are created once and shared by every unit using the same model and
 ## paint. Per-unit materials were freed together with a destroyed/replaced unit while the
@@ -60,6 +63,7 @@ static func create(kind: String, _faction: Color, equipment_id: String = "") -> 
 	var role: String = spec.get("role", "")
 	if role.is_empty(): role = spec.get("visual_kind", kind)
 	if spec.get("country", "") == "russia": paint_russian(vehicle, model_bounds(vehicle, 0.0))
+	elif spec.get("visual_kind", kind) in GROUND_KINDS: paint_camo(vehicle, model_bounds(vehicle, 0.0), UKRAINE_CAMO)
 	# The pivot carries the fitting transform; the source scene's own transform is kept.
 	var pivot: = Node3D.new()
 	pivot.name = "ModelFit"
@@ -106,7 +110,10 @@ static func _meshes(node: Node, to_root: Transform3D) -> Array:
 ## Russian equipment gets the Su-57-inspired blue splinter camouflage on its paint surfaces.
 ## Only materials (paint) change; the original model geometry is untouched.
 static func paint_russian(vehicle: Node, bounds: AABB) -> void:
-	if _camo == null: _camo = load(RUSSIAN_CAMO)
+	paint_camo(vehicle, bounds, RUSSIAN_CAMO)
+
+static func paint_camo(vehicle: Node, bounds: AABB, pattern_path: String) -> void:
+	var pattern: Texture2D = load(pattern_path)
 	if _camo_shader == null: _camo_shader = load("res://assets/russian_camo.gdshader")
 	# Untextured originals (e.g. the T-90M) get the camouflage projected triplanar in model
 	# space: about two pattern repeats along the hull.
@@ -120,14 +127,14 @@ static func paint_russian(vehicle: Node, bounds: AABB) -> void:
 			var material: = mesh_instance.get_active_material(surface)
 			if not (material is BaseMaterial3D): continue
 			var base: = material as BaseMaterial3D
-			var key: = "%d:%.4f" % [base.get_instance_id(), tiles]
+			var key: = "%d:%.4f:%s" % [base.get_instance_id(), tiles, pattern_path]
 			if _camo_materials.has(key):
 				mesh_instance.set_surface_override_material(surface, _camo_materials[key])
 				continue
 			if base.albedo_texture != null and base.resource_name.to_lower().contains("paint"):
 				# Converted models with a dedicated paint material: swap the pattern on its UVs.
 				var blue: = base.duplicate() as BaseMaterial3D
-				blue.albedo_texture = _camo
+				blue.albedo_texture = pattern
 				blue.albedo_color = Color.WHITE
 				_camo_materials[key] = blue
 				mesh_instance.set_surface_override_material(surface, blue)
@@ -136,7 +143,7 @@ static func paint_russian(vehicle: Node, bounds: AABB) -> void:
 			if not textured and not _is_hull_paint(base.albedo_color): continue
 			var camo: = ShaderMaterial.new()
 			camo.shader = _camo_shader
-			camo.set_shader_parameter("camo", _camo)
+			camo.set_shader_parameter("camo", pattern)
 			camo.set_shader_parameter("tiles", tiles)
 			camo.set_shader_parameter("use_original", textured)
 			if textured:

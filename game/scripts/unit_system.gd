@@ -31,7 +31,17 @@ func is_naval(unit: Dictionary) -> bool: return unit.visual_kind == "naval"
 func routes_for(unit: Dictionary) -> RefCounted: return sea_navigation if is_naval(unit) else navigation
 func path_for(unit: Dictionary, start: Vector2, finish: Vector2) -> Array:
 	return sea_navigation.find_path(start, finish) if is_naval(unit) else navigation.find_path(start, finish, unit.visual_kind)
-func surface_position(unit: Dictionary, point: Vector2) -> Vector3: return Vector3(point.x, 0.15, point.y) if is_naval(unit) else terrain.position_at(point)
+func surface_position(unit: Dictionary, point: Vector2) -> Vector3:
+	if is_naval(unit): return Vector3(point.x, 0.15, point.y)
+	return footprint_ground(point)
+func footprint_ground(point: Vector2) -> Vector3:
+	# Rest on the highest ground under the vehicle's footprint so the hull's ends do not
+	# sink into slopes (the height was only sampled at the centre).
+	var y: = terrain.elevation(point)
+	for i in 8:
+		var offset: = Vector2.from_angle(TAU * i / 8.0) * 0.42
+		y = maxf(y, terrain.elevation(point + offset))
+	return Vector3(point.x, y + 0.02, point.y)
 var route: MeshInstance3D
 var destination_marker: MeshInstance3D
 var route_signature: = ""
@@ -87,7 +97,7 @@ func _spawn(data: Dictionary, point: Vector2, color: Color) -> void :
 	if data.get("visual_kind", "armor") not in ["fighter", "naval"]: point = navigation.nearest_land(point)
 	var spec: = [data.name, point, color]
 	var marker: = Node3D.new()
-	marker.position = Vector3(point.x, 0.15, point.y) if data.get("visual_kind", "") == "naval" else terrain.position_at(spec[1])
+	marker.position = Vector3(point.x, 0.15, point.y) if data.get("visual_kind", "") == "naval" else footprint_ground(spec[1])
 	add_child(marker)
 	var visual_kind: String = data.get("visual_kind", "armor")
 	var equipment_id: = EquipmentIdentity.resolve(data)

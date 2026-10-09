@@ -98,7 +98,7 @@ func movement_speed(group: Array, point: Variant = null) -> float:
 		if point != null and unit.visual_kind not in ["fighter", "naval"]: member_speed *= TerrainRules.multiplier(unit.visual_kind, TerrainProfile.sample(point), "speed")
 		if unit.get("forced_march", false): member_speed *= 1.5
 		speed = minf(speed, member_speed)
-	return speed
+	return speed * SimulationClock.MOVEMENT_PACE
 
 func split_units(ids: Array[String]) -> String:
 	if armies.selected < 0: return "Select an army first"

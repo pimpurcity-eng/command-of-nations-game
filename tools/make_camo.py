@@ -3,7 +3,8 @@
 
 Usage: python3 tools/make_camo.py game/assets/materials/russian_blue_camo.png
 
-Pale grey-blue base with angular splinter patches in mid blue-grey and dark slate blue,
+Steel-blue base with angular splinter patches in mid blue and dark navy (owner review:
+the paler first version rendered almost white on phones), light blue-grey slivers,
 like the Su-57's scheme. The texture tiles seamlessly (every patch is drawn with wrap-around).
 """
 import random
@@ -12,10 +13,10 @@ import sys
 from PIL import Image, ImageDraw, ImageFilter
 
 SIZE = 1024
-BASE = (172, 188, 201)
-MID = (118, 142, 166)
-DARK = (70, 89, 112)
-LIGHT = (198, 210, 219)
+BASE = (104, 128, 156)
+MID = (66, 90, 124)
+DARK = (33, 47, 74)
+LIGHT = (146, 166, 188)
 
 
 def splinter(rng, cx, cy, length, width):

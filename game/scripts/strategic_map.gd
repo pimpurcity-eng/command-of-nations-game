@@ -11,12 +11,19 @@ var _surface_samples: Dictionary = {}
 var _border_rings: Array = []
 var _political: = -1.0
 var _city_points: = PackedVector2Array()
+## The drawn ground is made of province triangles that can lie well above or below the smooth
+## height formula between their corners, which buried roads, sank tanks and split cities.
+## After the ground is built, heights come from the drawn triangles (bucketed in a grid).
+const GROUND_CELL: = 0.5
+var _ground_cells: Dictionary = {}
+var _ground_ready: = false
 func _ready() -> void :
 	noise.seed = 1874
 	noise.frequency = 0.13
 	for city in GeographicProjection.load_cities(): _city_points.append(city.point)
 	for territory in territories:
 		_build_sector(territory)
+	_ground_ready = true
 	var province_lines: = MapBorder.build_segments(MapBorder.unique_segments(_border_rings), self, 0.9, Color(0.21, 0.23, 0.2, 0.75))
 	province_lines.name = "ProvinceBorders"
 	add_child(province_lines)
@@ -24,7 +31,32 @@ func _ready() -> void :
 	_add_country_outlines()
 	_add_connections()
 func elevation(point: Vector2) -> float:
+	if _ground_ready:
+		for tri in _ground_cells.get(Vector2i(floori(point.x / GROUND_CELL), floori(point.y / GROUND_CELL)), []):
+			var a: Vector3 = tri[0]
+			var b: Vector3 = tri[1]
+			var c: Vector3 = tri[2]
+			var weights: = _barycentric(point, Vector2(a.x, a.z), Vector2(b.x, b.z), Vector2(c.x, c.z))
+			if weights.x >= -0.0001 and weights.y >= -0.0001 and weights.z >= -0.0001:
+				return a.y * weights.x + b.y * weights.y + c.y * weights.z
 	return TerrainProfile.height(point)
+static func _barycentric(p: Vector2, a: Vector2, b: Vector2, c: Vector2) -> Vector3:
+	var v0: = b - a
+	var v1: = c - a
+	var v2: = p - a
+	var denominator: = v0.x * v1.y - v1.x * v0.y
+	if absf(denominator) < 1e-12: return Vector3(-1, -1, -1)
+	var v: = (v2.x * v1.y - v1.x * v2.y) / denominator
+	var w: = (v0.x * v2.y - v2.x * v0.y) / denominator
+	return Vector3(1.0 - v - w, v, w)
+func _register_ground(a: Vector3, b: Vector3, c: Vector3) -> void :
+	var low: = Vector2i(floori(minf(a.x, minf(b.x, c.x)) / GROUND_CELL), floori(minf(a.z, minf(b.z, c.z)) / GROUND_CELL))
+	var high: = Vector2i(floori(maxf(a.x, maxf(b.x, c.x)) / GROUND_CELL), floori(maxf(a.z, maxf(b.z, c.z)) / GROUND_CELL))
+	for x in range(low.x, high.x + 1):
+		for y in range(low.y, high.y + 1):
+			var key: = Vector2i(x, y)
+			if not _ground_cells.has(key): _ground_cells[key] = []
+			_ground_cells[key].append([a, b, c])
 func terrain_at(point: Vector2) -> String:
 	return TerrainProfile.sample(point)
 func position_at(point: Vector2) -> Vector3:
@@ -99,6 +131,7 @@ func _subdivide(s: SurfaceTool, a: Vector2, b: Vector2, c: Vector2, depth: int) 
 			s.set_color(Color("486c4d").lerp(Color("ddd3b1"), clampf(sample[0].y / 3.0, 0, 1)))
 			s.set_normal(sample[1])
 			s.add_vertex(sample[0])
+		_register_ground(_surface_samples[a][0], _surface_samples[b][0], _surface_samples[c][0])
 func select(t: Dictionary) -> void :
 	selected_id = t.id
 	for item in territories:
@@ -229,34 +262,121 @@ func set_terrain_mode(enabled: bool) -> void :
 func _add_connections() -> void :
 	var locations: Dictionary = {}
 	for city in GeographicProjection.load_cities(): locations[city.name] = city.point
-	var surface: = SurfaceTool.new()
-	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var land: Array = []
+	for country in RegionData.countries():
+		if country.country in ["Russia", "Ukraine"]: land.append(country.polygon)
+	# Highways between the major cities.
+	var highways: = SurfaceTool.new()
+	highways.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var connections: = [["Lviv", "Kyiv"], ["Kyiv", "Kharkiv"], ["Kyiv", "Dnipro"], ["Dnipro", "Odesa"], ["Kharkiv", "Dnipro"], ["Moscow", "Kursk"], ["Moscow", "Voronezh"], ["Kursk", "Belgorod"], ["Voronezh", "Rostov-on-Don"]]
-	for pair in connections:
-		var start: Vector2 = locations[pair[0]]
-		var end: Vector2 = locations[pair[1]]
-		var normal: = Vector2( - (end - start).y, (end - start).x).normalized()
-		var count: = maxi(8, ceili(start.distance_to(end) / 0.22))
-		for i in count:
-			var t: = i / float(count)
-			var next: = (i + 1) / float(count)
-			var a: = start.lerp(end, t) + normal * sin(t * PI) * 0.4
-			var b: = start.lerp(end, next) + normal * sin(next * PI) * 0.4
-			var on_land: = false
-			for country in RegionData.countries():
-				if country.country in ["Russia", "Ukraine"] and Geometry2D.is_point_in_polygon((a + b) * 0.5, country.polygon):
-					on_land = true
+	for pair in connections: _road(highways, locations[pair[0]], locations[pair[1]], 0.025, 0.4, land)
+	_add_road_mesh(highways, Color("5e5b52"))
+	var local: = SurfaceTool.new()
+	local.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for edge in road_network(territories): _road(local, edge[0], edge[1], 0.022, edge[2], land)
+	_add_road_mesh(local, Color("6a6456"))
+
+## [start, end, bend] for the local road between every pair of neighbouring provinces.
+static func road_network(territory_list: Array) -> Array:
+	# Owner review: a road to every province. Provinces that share a border are joined
+	# centre to centre; a road a-b is dropped when a common neighbour c is closer to both
+	# (the detour a-c-b replaces it), which keeps every province connected without clutter.
+	# One road node per province (island parts join their main part); a city province and
+	# its surrounding region (Moscow, Kyiv, St. Petersburg) share one hub.
+	var main_part: Dictionary = {}  # title -> centre of its largest piece
+	var largest: Dictionary = {}
+	for t in territory_list:
+		if not t.playable: continue
+		var area: = _polygon_area(t.polygon)
+		if area > largest.get(t.title, -1.0):
+			largest[t.title] = area
+			main_part[t.title] = t.center
+	var centers: Array[Vector2] = []
+	var node_of: Dictionary = {}
+	var cells: Dictionary = {}  # 0.04 grid cell -> province nodes with a border vertex there
+	for t in territory_list:
+		if not t.playable: continue
+		var center: Vector2 = main_part[t.title]
+		var hub: = Vector2i(roundi(center.x * 10.0), roundi(center.y * 10.0))
+		var key: String = node_of.get(t.title, node_of.get(hub, ""))
+		var index: int
+		if key.is_empty():
+			index = centers.size()
+			centers.append(center)
+		else: index = int(key)
+		node_of[t.title] = str(index)
+		node_of[hub] = str(index)
+		for vertex in t.polygon:
+			var cell: = Vector2i(floori(vertex.x / 0.04), floori(vertex.y / 0.04))
+			if not cells.has(cell): cells[cell] = {}
+			cells[cell][index] = true
+	var neighbours: Array[Dictionary] = []
+	for i in centers.size(): neighbours.append({})
+	for cell in cells:
+		for dx in [-1, 0, 1]:
+			for dy in [-1, 0, 1]:
+				var other: Dictionary = cells.get(cell + Vector2i(dx, dy), {})
+				for i in cells[cell]:
+					for j in other:
+						if i != j: neighbours[i][j] = true
+	var edges: Array = []
+	var connected: Dictionary = {}
+	for i in centers.size():
+		for j in neighbours[i]:
+			if j <= i: continue
+			var length: = centers[i].distance_to(centers[j])
+			var blocked: = false
+			for k in neighbours[i]:
+				if k != j and neighbours[j].has(k) and maxf(centers[k].distance_to(centers[i]), centers[k].distance_to(centers[j])) < length:
+					blocked = true
 					break
-			if not on_land: continue
-			for point in [a - normal * 0.025, a + normal * 0.025, b + normal * 0.025, a - normal * 0.025, b + normal * 0.025, b - normal * 0.025]:
-				surface.add_vertex(position_at(point) + Vector3.UP * 0.045)
+			if not blocked:
+				edges.append([centers[i], centers[j], 0.12 * sin(float(i * 31 + j))])
+				connected[i] = true
+				connected[j] = true
+	# Enclaves (Kyiv City inside Kyiv region) share no outer border vertex: join the nearest.
+	for i in centers.size():
+		if connected.has(i): continue
+		var nearest: = -1
+		for j in centers.size():
+			if j != i and centers[j].distance_to(centers[i]) < 6.0 and (nearest < 0 or centers[j].distance_to(centers[i]) < centers[nearest].distance_to(centers[i])): nearest = j
+		if nearest >= 0: edges.append([centers[i], centers[nearest], 0.0])
+	return edges
+
+static func _polygon_area(polygon: PackedVector2Array) -> float:
+	var area: = 0.0
+	for i in polygon.size(): area += polygon[i].cross(polygon[(i + 1) % polygon.size()])
+	return absf(area) * 0.5
+
+## Ribbon road from a to b with a gentle sideways bend, following the terrain; segments over
+## water are skipped.
+func _road(surface: SurfaceTool, start: Vector2, end: Vector2, half_width: float, bend: float, land: Array) -> void :
+	var normal: = Vector2( - (end - start).y, (end - start).x).normalized()
+	var count: = maxi(8, ceili(start.distance_to(end) / 0.2))
+	for i in count:
+		var t: = i / float(count)
+		var next: = (i + 1) / float(count)
+		var a: = start.lerp(end, t) + normal * sin(t * PI) * bend
+		var b: = start.lerp(end, next) + normal * sin(next * PI) * bend
+		var on_land: = false
+		for polygon in land:
+			if Geometry2D.is_point_in_polygon((a + b) * 0.5, polygon):
+				on_land = true
+				break
+		if not on_land: continue
+		var side: = (b - a).orthogonal().normalized() * half_width
+		for point in [a - side, a + side, b + side, a - side, b + side, b - side]:
+			surface.add_vertex(position_at(point) + Vector3.UP * 0.04)
+
+func _add_road_mesh(surface: SurfaceTool, color: Color) -> void :
 	var roads: = MeshInstance3D.new()
 	roads.mesh = surface.commit()
 	var material: = StandardMaterial3D.new()
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
-	material.albedo_color = Color("5e5b52")
+	material.albedo_color = color
 	roads.material_override = material
+	roads.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(roads)
 
 func update_relations(at_war: bool) -> void :

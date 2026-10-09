@@ -9,6 +9,7 @@ var hud: StrategyHUD
 var cities: CitySystem
 var combat_effects: CombatEffects
 var production: ProductionSystem
+var resource_sites: ResourceSites
 var production_panel: ProductionPanel
 var research: ResearchSystem
 var research_panel: ResearchPanel
@@ -199,6 +200,10 @@ func _ready() -> void :
 	badges.badge_clicked.connect(func(index: int): units.select_unit(index))
 	production = ProductionSystem.new()
 	production.setup(map, cities.cities, session.countries)
+	resource_sites = ResourceSites.new()
+	add_child(resource_sites)
+	resource_sites.setup(map, rig)
+	production.resource_sites = resource_sites
 	buildings = BuildingSystem.new()
 	buildings.setup(production, session.countries)
 	production.buildings = buildings

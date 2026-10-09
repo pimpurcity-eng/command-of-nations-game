@@ -65,6 +65,31 @@ func setup(map: StrategicMap, camera_rig: StrategyCamera) -> void :
 		hover.bg_color = Color("233945")
 		label.add_theme_stylebox_override("hover", hover)
 		label.add_theme_stylebox_override("pressed", hover)
+		# The city's resource specialties as badges at the right end of its name tag.
+		var specialties: = ResourceSites.city_resources(city.name)
+		if not specialties.is_empty():
+			style.content_margin_right = 8 + specialties.size() * 18
+			hover.content_margin_right = style.content_margin_right
+			var icons: = HBoxContainer.new()
+			icons.add_theme_constant_override("separation", 1)
+			icons.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			icons.anchor_left = 1.0
+			icons.anchor_right = 1.0
+			icons.anchor_top = 0.5
+			icons.anchor_bottom = 0.5
+			icons.offset_left = -(4 + specialties.size() * 18)
+			icons.offset_right = -4
+			icons.offset_top = -8
+			icons.offset_bottom = 8
+			for resource in specialties:
+				var badge: = TextureRect.new()
+				badge.texture = ResourceSites.icon(resource)
+				badge.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+				badge.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+				badge.custom_minimum_size = Vector2(17, 17)
+				badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				icons.add_child(badge)
+			label.add_child(icons)
 		label.pressed.connect( func(): select_city(city))
 		label_layer.add_child(label)
 		labels.append(label)

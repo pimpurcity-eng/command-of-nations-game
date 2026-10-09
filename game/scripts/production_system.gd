@@ -11,6 +11,8 @@ const PLAN_LIMIT: = 8
 var rally_points: Dictionary = {}
 var cities: Array
 var terrain: StrategicMap
+## Resource sites in the provinces (oil fields, mines, plants, farmland); optional.
+var resource_sites: ResourceSites
 var _building_ref: WeakRef
 var buildings: BuildingSystem:
 	get: return _building_ref.get_ref() if _building_ref != null else null
@@ -72,7 +74,14 @@ func advance(seconds: float) -> void :
 		if not stockpiles.has(country): continue
 		var multiplier: = buildings.rate(city.id, "industry") if buildings != null else 1.0
 		if country != city.country.to_lower(): multiplier *= 0.25
-		for resource in RESOURCES: stockpiles[country][resource] += income[resource] * seconds * multiplier
+		var specialties: = ResourceSites.city_resources(city.name)
+		var bonus: float = ResourceSites.data().get("city_specialty_bonus", 0.0)
+		for resource in RESOURCES: stockpiles[country][resource] += income[resource] * seconds * multiplier * (1.0 + bonus if resource in specialties else 1.0)
+	if resource_sites != null:
+		var earned: = resource_sites.income(seconds)
+		for country in earned:
+			if not stockpiles.has(country): continue
+			for resource in earned[country]: stockpiles[country][resource] += earned[country][resource]
 
 	for city in cities:
 		var remaining: = seconds
