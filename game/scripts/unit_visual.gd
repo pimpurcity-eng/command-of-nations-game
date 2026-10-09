@@ -7,7 +7,7 @@ extends RefCounted
 const FOOTPRINT: = {"armor": 1.35, "ifv": 1.25, "artillery": 1.3, "air_defense": 1.3, "missile_launcher": 1.4, "fighter": 1.5, "drone": 1.1, "naval": 1.9}
 ## Extra yaw (degrees) for source models that face backwards after long-axis alignment,
 ## keyed by model file prefix. Checked with tests/model_lineup.gd (all models face north).
-const YAW_FIX: = {"su57": 180.0, "f18a": 180.0, "destroyer": 180.0, "kclass": 180.0}
+const YAW_FIX: = {"su57": 180.0, "f18a": 180.0, "destroyer": 180.0, "kclass": 180.0, "upload20ab": 180.0}
 const RUSSIAN_CAMO: = "res://assets/materials/russian_blue_camo.png"
 static var _camo: Texture2D
 static var _camo_shader: Shader
@@ -74,7 +74,7 @@ static func create(kind: String, _faction: Color, equipment_id: String = "") -> 
 ## footprint and stand it on the ground at the marker's origin.
 static func _fit(pivot: Node3D, vehicle: Node3D, role: String, path: String) -> void:
 	var raw: = model_bounds(vehicle, 0.0)
-	var yaw: = 0.0  # owner check: models faced backwards with the old 180° base turn
+	var yaw: = PI  # owner review 2026-10-09 ("undo"): guns face the direction of travel / target
 	if raw.size.x > raw.size.z * 1.1: yaw += PI * 0.5  # source model lies sideways
 	yaw += deg_to_rad(YAW_FIX.get(path.get_file().get_basename().get_slice("_", 0), 0.0))
 	var bounds: = model_bounds(vehicle, yaw)
@@ -159,7 +159,8 @@ static func preview_texture(equipment_id: String) -> Texture2D:
 	return load("res://assets/vehicles/" + country + "_flag.png")
 
 
-# The fitted model's front is -Z; the 20AB cab faces -Z without a 180-degree fix.
+# The fitted model's front is -Z (base yaw PI; the 20AB truck needs its 180-degree fix so its
+# cab, not its launcher rack, faces -Z).
 static func firing_heading(_equipment_id: String, direction: Vector3) -> float:
 	return atan2(-direction.x, -direction.z)
 

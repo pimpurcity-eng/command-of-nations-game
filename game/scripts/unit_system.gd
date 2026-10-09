@@ -389,6 +389,15 @@ func restore(state: Array) -> void :
 		_update_heading(unit)
 	_draw_route()
 
+const CITY_SCALE: = 0.55
+const CITY_RADIUS: = 0.8
+static var _city_points: = PackedVector2Array()
+func _in_city(point: Vector2) -> bool:
+	if _city_points.is_empty():
+		for city in GeographicProjection.load_cities(): _city_points.append(city.point)
+	for city_point in _city_points:
+		if point.distance_to(city_point) < CITY_RADIUS: return true
+	return false
 ## Idle armies start facing the opposing capital instead of all pointing north.
 func _facing_enemy(country: String, point: Vector2) -> float:
 	var goal: = GeographicProjection.project(30.52, 50.45) if country == "russia" else GeographicProjection.project(37.62, 55.75)
@@ -423,6 +432,9 @@ func _process(delta: float) -> void :
 		unit.ring.visible = chosen
 		var model: Node3D = unit.node.get_child(0)
 		model.rotation.y = lerp_angle(model.rotation.y, unit.heading, 1.0 - exp( - delta * 8.0))
+		# Owner review: armies inside a city shrink so they sit among the buildings.
+		var target_scale: = 0.65 * (CITY_SCALE if _in_city(Vector2(unit.node.position.x, unit.node.position.z)) else 1.0)
+		model.scale = model.scale.lerp(Vector3.ONE * target_scale, 1.0 - exp( - delta * 6.0))
 		if unit.node.has_meta("detailed_sprite"):
 			var sprite: Sprite3D = unit.node.get_meta("detailed_sprite")
 			var camera: = get_viewport().get_camera_3d()
