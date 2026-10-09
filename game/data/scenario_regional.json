@@ -8,7 +8,7 @@
       "color": "376bba",
       "statistics": {},
       "relations": {},
-      "starting_force_count": 0,
+      "starting_force_count": 5,
       "capital_city": "kyiv"
     },
     {
@@ -17,9 +17,140 @@
       "color": "ad4741",
       "statistics": {},
       "relations": {},
-      "starting_force_count": 0,
+      "starting_force_count": 5,
       "capital_city": "moscow"
     }
   ],
-  "units": []
+  "units": [
+    {
+      "id": "ukraine_ad_kyiv",
+      "name": "Kyiv air defense",
+      "country": "ukraine",
+      "longitude": 30.5234,
+      "latitude": 50.4501,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "air_defense",
+      "equipment_id": "patriot_ukraine"
+    },
+    {
+      "id": "ukraine_ad_lviv",
+      "name": "Lviv air defense",
+      "country": "ukraine",
+      "longitude": 24.0311,
+      "latitude": 49.8429,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "air_defense",
+      "equipment_id": "patriot_ukraine"
+    },
+    {
+      "id": "ukraine_ad_odesa",
+      "name": "Odesa air defense",
+      "country": "ukraine",
+      "longitude": 30.7233,
+      "latitude": 46.4825,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "air_defense",
+      "equipment_id": "skyguard_ukraine"
+    },
+    {
+      "id": "ukraine_ad_kharkiv",
+      "name": "Kharkiv air defense",
+      "country": "ukraine",
+      "longitude": 36.2304,
+      "latitude": 49.9935,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "air_defense",
+      "equipment_id": "skyguard_ukraine"
+    },
+    {
+      "id": "ukraine_ad_dnipro",
+      "name": "Dnipro air defense",
+      "country": "ukraine",
+      "longitude": 35.0462,
+      "latitude": 48.4647,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "air_defense",
+      "equipment_id": "skyguard_ukraine"
+    },
+    {
+      "id": "russia_ad_moscow",
+      "name": "Moscow air defense",
+      "country": "russia",
+      "longitude": 37.6173,
+      "latitude": 55.7558,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "air_defense",
+      "equipment_id": "patriot_russia"
+    },
+    {
+      "id": "russia_ad_kursk",
+      "name": "Kursk air defense",
+      "country": "russia",
+      "longitude": 36.193,
+      "latitude": 51.7304,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "air_defense",
+      "equipment_id": "skyguard_russia"
+    },
+    {
+      "id": "russia_ad_belgorod",
+      "name": "Belgorod air defense",
+      "country": "russia",
+      "longitude": 36.5873,
+      "latitude": 50.5957,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "air_defense",
+      "equipment_id": "skyguard_russia"
+    },
+    {
+      "id": "russia_ad_voronezh",
+      "name": "Voronezh air defense",
+      "country": "russia",
+      "longitude": 39.2003,
+      "latitude": 51.6608,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "air_defense",
+      "equipment_id": "skyguard_russia"
+    },
+    {
+      "id": "russia_ad_rostov_on_don",
+      "name": "Rostov-on-Don air defense",
+      "country": "russia",
+      "longitude": 39.7015,
+      "latitude": 47.2357,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "air_defense",
+      "equipment_id": "patriot_russia"
+    }
+  ]
 }
