@@ -301,3 +301,10 @@ Verified owner Drive APK: https://drive.google.com/file/d/16FdQBk8yYmj3Wn469mnm4
 SHA256: 71b06e9daa1a38ce9997ebcbc10df8ef6cb6745e8db180eab088ffa907f8513d
 Owner Godot test ZIP: https://drive.google.com/file/d/1m9euv0xHVAPZzE7kCdQ4oOhpSTOckn2Z/view?usp=drivesdk (35,909,021 bytes)
 No public Git model files, no deployment or remote push.
+
+
+## 2026-10-09 — Owner shadow review and road connectivity audit
+
+Replaced broad dark unit shadows with softer contact shadows sized to each fitted model's horizontal bounds, including city shrink. Reduced contact opacity from 0.70 to 0.38, removed the opaque core and large viewer offset. Source +X / game -Z model facing is unchanged. All ten AA fronts still pass the native seven-o'clock review check. Battle-effects suite 27/0; native render had no errors. Preview: docs/review/air_defense/Soft_Contact_Shadows.png. These source changes are not installed on the owner's phone or in the previously provided version9 APK.
+
+Read-only road connectivity audit: 72 province hubs belong to one connected land-road component, all city points are road endpoints, and Kaliningrad region is the only isolated province hub. tests/check_road_connectivity.gd logs component sizes, isolated provinces and city misses. No map/road edits.

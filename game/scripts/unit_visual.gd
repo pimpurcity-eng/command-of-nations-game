@@ -74,6 +74,8 @@ static func create(kind: String, _faction: Color, equipment_id: String = "", lev
 	pivot.add_child(vehicle)
 	_fit(pivot, vehicle, role, path)
 	assembly.add_child(pivot)
+	var fitted_bounds: AABB = model_bounds(pivot, 0.0)
+	assembly.set_meta("ground_shadow_size", Vector2(fitted_bounds.size.x, fitted_bounds.size.z) * 0.65)
 	_enable_shadows(vehicle)
 	if path.contains("/airdefense/"):
 		var animator: = AirDefenseAnimator.new()
