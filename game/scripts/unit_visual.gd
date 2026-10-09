@@ -4,7 +4,7 @@ extends RefCounted
 ## Map footprint (longest horizontal side, before the 0.65 marker scale) per unit type, so
 ## every original model reads at a consistent size against the cities instead of keeping
 ## whatever scale its source file happened to use.
-const FOOTPRINT: = {"armor": 0.95, "ifv": 0.9, "artillery": 0.95, "air_defense": 0.95, "missile_launcher": 1.0, "fighter": 1.15, "drone": 0.8, "naval": 1.5}
+const FOOTPRINT: = {"armor": 1.35, "ifv": 1.25, "artillery": 1.3, "air_defense": 1.3, "missile_launcher": 1.4, "fighter": 1.5, "drone": 1.1, "naval": 1.9}
 ## Extra yaw (degrees) for source models that face backwards after long-axis alignment,
 ## keyed by model file prefix. Checked with tests/model_lineup.gd (all models face north).
 const YAW_FIX: = {"su57": 180.0, "f18a": 180.0, "destroyer": 180.0, "kclass": 180.0, "upload20ab": 180.0}
@@ -69,7 +69,7 @@ static func create(kind: String, _faction: Color, equipment_id: String = "") -> 
 ## footprint and stand it on the ground at the marker's origin.
 static func _fit(pivot: Node3D, vehicle: Node3D, role: String, path: String) -> void:
 	var raw: = model_bounds(vehicle, 0.0)
-	var yaw: = PI
+	var yaw: = 0.0  # owner check: models faced backwards with the old 180° base turn
 	if raw.size.x > raw.size.z * 1.1: yaw += PI * 0.5  # source model lies sideways
 	yaw += deg_to_rad(YAW_FIX.get(path.get_file().get_basename().get_slice("_", 0), 0.0))
 	var bounds: = model_bounds(vehicle, yaw)

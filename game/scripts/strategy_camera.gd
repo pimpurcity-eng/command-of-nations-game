@@ -51,7 +51,7 @@ func _snap(weight: float) -> void :
 	rendered_yaw = lerpf(rendered_yaw, yaw, weight)
 	# Tilt the camera when zoomed in so units and cities read as 3D (Call of War style);
 	# look more straight down when zoomed out over the whole theater.
-	var tilt: = lerpf(0.68, 1.12, smoothstep(5.0, 32.0, rendered_distance))
+	var tilt: = lerpf(0.58, 1.1, smoothstep(5.0, 32.0, rendered_distance))
 	rendered_pitch = lerpf(rendered_pitch, minf(pitch, tilt), weight)
 	var offset: = Vector3(sin(rendered_yaw) * cos(rendered_pitch), sin(rendered_pitch), cos(rendered_yaw) * cos(rendered_pitch)) * rendered_distance
 	camera.position = rendered_target + offset
