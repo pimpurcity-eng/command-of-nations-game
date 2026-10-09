@@ -45,3 +45,12 @@ No files from `assets/library/` or `assets/vehicles/` are committed. Obtain thos
 ## Coordination
 
 ChatGPT owns this effects handoff and its facing/shadow integration. Claude should review this commit, preserve the effects while adding subsequent changes, investigate native material logging, rerun all three checks, and send the owner screenshots of moving units, firing launcher cab direction, missile flight, impact, helicopter visibility and shadows before publishing. Keep one integration base, with exact commit references and a changed-file list for each handoff. Resolve conflicting edits to a shared script explicitly rather than replacing the file wholesale.
+
+## Handoff log
+
+### Claude — 2026-10-09
+- `aca8542` — ChatGPT's handoff committed on `chatgpt/battle-effects` (base `49c40be`), reviewed: only files with real changes imported (others differed by a trailing blank line / regenerated uids; data JSON identical in content).
+- `3ae0c31` — Fix `Parameter "material" is null`: per-unit camouflage materials were freed with replaced/destroyed models while the GL renderer still referenced them; camouflage materials are now shared per (source material, pattern scale). Preview errors 16 → 0.
+- Checks with Godot 4.6.3 on `3ae0c31`: battle effects 27/0, campaign 192/0, touch 13/0 (checks/failures); `render_battle_effects.gd` 0 null-material errors.
+- Visual review (screenshots sent to Matthew): Moscow and Kyiv skyscraper downtowns present; a Russian IFV ordered into Belgorod arrives at the city point (distance 0.0) and stays visible among the buildings; launcher cab faces its target; missile flight, impact flash/ring and smoke visible.
+- Open: with base yaw 0 (commit `f466b89`, the owner's 180° request) the T-90 in the battle preview points its gun **away** from the unit it is set to face — tanks face backwards. Awaiting Matthew's keep/undo decision. Garrisoned units are larger than city blocks (unit footprint 1.35). Impact smoke reads as a hard-edged polygon dome.
