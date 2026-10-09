@@ -289,3 +289,15 @@ Added scenes/air_defense_test_map.tscn for owner testing in installed Godot. Ten
 After merge: original-model/animation/interception tests 104/0; AA research 46/0; archived campaign 212/0; touch 13/0; battle effects 27/0; building expansion 37/0. Native Godot rendered all ten, checked each forward direction down-left. Updated legacy tests to use the archived arsenal rather than restoring it into the live game.
 
 See docs/AIR_DEFENSE_TEST_MAP.md and docs/review/air_defense/Air_Defense_Seven_Oclock_Test.png. Private owner ZIP includes model assets for local testing, not public Git distribution. Nothing deployed or pushed from this workspace.
+
+
+## 2026-10-09 — Owner-requested Android app test
+
+Built Command_of_Nations_Air_Defense_Test.apk from bd3a4c3 review source with the private supplied AA and shared warehouse models. The isolated package sets its default scene to air_defense_test_map and uses its own test user-data directory. Android package com.commandofnations.test, versionCode 9, versionName 0.9-air-defense, ARM64, portrait, Compatibility renderer. The source project default campaign scene and existing Android preset are unchanged.
+
+Verified APK ZIP integrity, all ten imported AA models and their imported scenes, review scene script, ARM64 runtime and portrait manifest. apksigner verifies v2 and v3 signatures. Reimported the compact owner project and ran the ten-model facing/control check successfully. APK has not been run on an actual Android device. Existing app signing key was not available in workspace or connected Drive, so this APK uses a newly generated private debug signing key; installation over an older same-package app is not guaranteed. Do not tell the owner to uninstall their app or delete saves as a routine step.
+
+Verified owner Drive APK: https://drive.google.com/file/d/16FdQBk8yYmj3Wn469mnm4Wgk1ZRXT6VJ/view?usp=drivesdk (55,662,578 bytes)
+SHA256: 71b06e9daa1a38ce9997ebcbc10df8ef6cb6745e8db180eab088ffa907f8513d
+Owner Godot test ZIP: https://drive.google.com/file/d/1m9euv0xHVAPZzE7kCdQ4oOhpSTOckn2Z/view?usp=drivesdk (35,909,021 bytes)
+No public Git model files, no deployment or remote push.
