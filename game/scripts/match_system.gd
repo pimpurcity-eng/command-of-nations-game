@@ -58,7 +58,9 @@ func advance_battles(seconds: float) -> void :
 		var damage: Dictionary = {}
 		combat.advance(step, armies, damage, true)
 		air_combat.advance(step, armies, damage, true)
-		for unit in armies.units: unit.health = maxf(0, unit.health - damage.get(unit.id, 0.0))
+		for unit in armies.units:
+			var factor: = production.buildings.incoming_damage_factor(unit) if production != null and production.buildings != null else 1.0
+			unit.health = maxf(0, unit.health - damage.get(unit.id, 0.0) * factor)
 		remaining = maxf(0, remaining - step)
 func advance(seconds: float) -> void :
 	if not winner.is_empty() or seconds <= 0 or not at_war: return

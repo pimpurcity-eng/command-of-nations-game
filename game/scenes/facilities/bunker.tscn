@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/library/warehouse7_shared.glb" id="1"]
+[ext_resource type="Script" path="res://scripts/facility_paint.gd" id="2"]
+
+[node name="facility_bunker" type="Node3D"]
+script = ExtResource("2")
+paint_colour = Color(0.513725, 0.525490, 0.466667, 1)
+
+[node name="Original" parent="." instance=ExtResource("1")]

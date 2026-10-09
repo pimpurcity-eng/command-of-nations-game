@@ -21,6 +21,7 @@ func _reset_levels() -> void :
 		for definition in catalog: levels[city.id][definition.id] = initial_level(city, definition)
 func initial_level(place: Dictionary, definition: Dictionary) -> int:
 	if definition.capital_only and not is_capital(place): return 0
+	if definition.get("coastal_only", false) and not place.has("naval_spawn"): return 0
 	return int(definition.get("capital_starting_level", definition.get("starting_level", 1))) if is_capital(place) else int(definition.get("starting_level", 1))
 func city(id: String) -> Dictionary:
 	for entry in economy.cities:
@@ -57,6 +58,7 @@ func reason(city_id: String, building_id: String, country: String = "", check_re
 	if place.is_empty() or definition.is_empty(): return "Choose a city and building"
 	if not economy.controlled(place, country): return "Recover control of this city first"
 	if definition.capital_only and place.id != capitals.get(country, ""): return "Research centers are built in your capital"
+	if definition.get("coastal_only", false) and not place.has("naval_spawn"): return "Naval bases require a coastal city (Odesa or Rostov-on-Don)"
 	var target: = level(city_id, building_id) + 1
 	if target > definition.max_level: return "Maximum level reached"
 	var count: = 0
@@ -117,8 +119,9 @@ func advance(seconds: float) -> void :
 				for resource in ProductionSystem.RESOURCES: economy.stockpiles[country][resource] -= bill[resource]
 				job.paid = true
 			var total: = duration(job.building, job.level)
-			var step: = minf(remaining, total - job.progress)
-			job.progress += step
+			var speed: = construction_rate(place.id)
+			var step: = minf(remaining, (total - job.progress) / speed)
+			job.progress += step * speed
 			remaining -= step
 			if job.progress < total: break
 			levels[place.id][job.building] = int(job.level)
@@ -138,9 +141,10 @@ func validate(state: Variant) -> bool:
 		for key in saved:
 			if spec(key).is_empty(): return false
 		for definition in catalog:
-			var value = saved.get(definition.id, initial_level(place, definition) if definition.id == "airbase" else null)
+			var value = saved.get(definition.id, initial_level(place, definition) if definition.id == "airbase" or definition.get("save_default", false) else null)
 			if not _integer(value, initial_level(place, definition), definition.max_level): return false
 			if definition.capital_only and not is_capital(place) and value != 0: return false
+			if definition.get("coastal_only", false) and not place.has("naval_spawn") and value != 0: return false
 	var ids: Dictionary = {}
 	var counts: Dictionary = {}
 	var seen: Dictionary = {}
@@ -151,6 +155,7 @@ func validate(state: Variant) -> bool:
 		var place: = city(job.city)
 		var definition: = spec(job.building)
 		if place.is_empty() or definition.is_empty() or (definition.capital_only and not is_capital(place)): return false
+		if definition.get("coastal_only", false) and not place.has("naval_spawn"): return false
 		if job.get("country", place.country.to_lower()) not in economy.stockpiles: return false
 		if not _integer(job.get("level"), 1, definition.max_level) or job.level != state.levels[place.id].get(definition.id, initial_level(place, definition)) + 1: return false
 		var key: String = job.city + ":" + job.building
@@ -203,3 +208,24 @@ func reorder(id: int, direction: int, country: String = "") -> String:
 	jobs[peers[target]] = job
 	changed.emit()
 	return ""
+
+# Public effect helpers for the city screen: use these for income, production and ETAs.
+func resource_rate(city_id: String, resource: String) -> float:
+	for definition in catalog:
+		if definition.get("resource", "") == resource: return 1.0 + 0.25 * level(city_id, definition.id)
+	return 1.0
+func production_rate(city_id: String, equipment: Dictionary) -> float:
+	var special: String = {"Armor": "tank_plant", "Mechanized": "barracks", "Infantry": "barracks", "Navy": "naval_base"}.get(equipment.get("category", ""), "")
+	return rate(city_id, "factory") * (1.0 + 0.25 * level(city_id, special))
+func construction_rate(city_id: String) -> float:
+	return 1.0 + 0.15 * level(city_id, "infrastructure")
+func construction_time(city_id: String, building_id: String, target: int, progress: float = 0.0) -> float:
+	return maxf(0, duration(building_id, target) - progress) / construction_rate(city_id)
+func incoming_damage_factor(unit: Dictionary) -> float:
+	if unit.get("visual_kind", "") in ["fighter", "drone", "naval"]: return 1.0
+	var point: = Vector2(unit.node.position.x, unit.node.position.z)
+	var protection: = 0.0
+	for place in economy.cities:
+		if economy.controlled(place, unit.country) and point.distance_to(place.point) <= 0.6:
+			protection = maxf(protection, 0.2 * level(place.id, "bunker"))
+	return 1.0 - minf(0.6, protection)

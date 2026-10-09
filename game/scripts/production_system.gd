@@ -76,7 +76,9 @@ func advance(seconds: float) -> void :
 		if country != city.country.to_lower(): multiplier *= 0.25
 		var specialties: = ResourceSites.city_resources(city.name)
 		var bonus: float = ResourceSites.data().get("city_specialty_bonus", 0.0)
-		for resource in RESOURCES: stockpiles[country][resource] += income[resource] * seconds * multiplier * (1.0 + bonus if resource in specialties else 1.0)
+		for resource in RESOURCES:
+			var facility: = buildings.resource_rate(city.id, resource) if buildings != null else 1.0
+			stockpiles[country][resource] += income[resource] * seconds * multiplier * facility * (1.0 + bonus if resource in specialties else 1.0)
 	if resource_sites != null:
 		var earned: = resource_sites.income(seconds)
 		for country in earned:
@@ -103,7 +105,7 @@ func advance(seconds: float) -> void :
 				if not ready: break
 				for resource in RESOURCES: stockpiles[spec.country][resource] -= spec.cost[resource]
 				job.paid = true
-			var multiplier: = buildings.rate(city.id, "factory") if buildings != null else 1.0
+			var multiplier: = buildings.production_rate(city.id, spec) if buildings != null else 1.0
 			var step: = minf(remaining, (spec.seconds - job.progress) / multiplier)
 			job.progress += step * multiplier
 			remaining -= step

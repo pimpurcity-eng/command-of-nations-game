@@ -90,3 +90,21 @@ Feedback: resources like Call of War — one per province/city; planes fly anywh
 
 ### Claude — 2026-10-09 (Matthew: "units are not sitting right")
 - The terrain shader is unshaded (receives no sun shadows), so vehicles had no ground contact cue and looked like they hovered. `UnitShadow.update`: contact shadow under the hull, wider (1.25x, follows the model's city shrink), darker (0.7), spread slightly toward the viewer; `unit_shadow.gdshader` firmer core. Shadow height still ground + 0.04 (battle-effects test unchanged). All four suites pass. Android test build 0.5.
+
+## ChatGPT building expansion — 2026-10-09
+
+Base: shared branch `chatgpt/battle-effects`, commit `577393ce8edbb475b6767fb307f16e1a99858a03` (includes Claude's latest city/research UI and province resource sites).
+
+Scope: building data, effects, and recolored asset scene wrappers only. City/research screens, map/roads/terrain, city placement, units, camouflage and Android files have no edits in this handoff. The earlier interface draft is excluded to honor the ownership agreement.
+
+- Four original buildings retained. Ten additions: financial office, materials works, electronics factory, fuel depot, recruitment centre, barracks, tank plant, naval base, bunkers and infrastructure. All support three levels, queues, cancellation and saves. New buildings start at level 0.
+- Five resource facilities: +25% matching city resource output per level, layered over existing industry/specialty bonuses. Province resource-site output is unchanged.
+- Barracks: +25% mechanized/infantry production speed per level; tank plant: armor; naval base: ships. These are optional specialist bonuses, preserving existing equipment unlocks and initial available units. Naval bases are restricted to Odesa and Rostov-on-Don, including save validation.
+- Infrastructure: +15% construction speed per level. Bunkers: -20% incoming damage per level (max -60%) for friendly ground units within 0.6 of a city their country controls. Applied to simultaneous ground/air battle damage through MatchSystem; does not protect aircraft, drones or ships.
+- Old four-building saves migrate to unbuilt new facilities. Validation still rejects malformed original building data.
+- Four recovered warehouse models reused through `game/scenes/facilities/*.tscn`; `facility_paint.gd` applies role colors using shared cached materials. No model files or geometry modifications. Catalog `colour` metadata is also available for list previews. Existing thumbnail images are unchanged.
+- Exact costs, levels, color names and effects: `docs/BUILDING_CATALOG.md`.
+
+Validation: Godot 4.6.3 Compatibility — building expansion **37/0**, campaign **192/0**, touch **13/0**, battle effects **27/0**. Native city/list previews inspected, **0 render errors**, including no null-material errors. Screenshots are review previews, not a published game build; map preview temporarily sets all eligible buildings to level 1 for visibility.
+
+Claude UI follow-through (not edited here): group new buildings into economy/production/defense/infrastructure; use `definition.description` for new effect text and `definition.colour` for preview tint; city income display should multiply `buildings.resource_rate(city_id, resource)`; production ETA should use `buildings.production_rate(city_id, spec)`; construction ETA should use `buildings.construction_time(city_id, building_id, target, progress)` rather than raw duration. The current screens show base durations/income until these helpers are connected. Keep live publishing paused until Matthew reviews the screenshots.

@@ -2,7 +2,7 @@
   {
     "id": "factory",
     "name": "Military factory",
-    "asset_roster_id": "warehouse3",
+    "asset_roster_id": "facility_factory",
     "capital_only": false,
     "max_level": 3,
     "hours": 2,
@@ -13,13 +13,14 @@
       "fuel": 20,
       "manpower": 20
     },
-    "description": "Each level above 1 increases this city\u2019s unit production speed by 25%.",
-    "starting_level": 1
+    "description": "Each level above 1 increases this city’s unit production speed by 25%.",
+    "starting_level": 1,
+    "colour": "b96e53"
   },
   {
     "id": "industry",
     "name": "Industrial complex",
-    "asset_roster_id": "warehouse7",
+    "asset_roster_id": "facility_industry",
     "capital_only": false,
     "max_level": 3,
     "hours": 3,
@@ -30,13 +31,14 @@
       "fuel": 30,
       "manpower": 25
     },
-    "description": "Each level above 1 increases this city\u2019s income of all five resources by 25%.",
-    "starting_level": 1
+    "description": "Each level above 1 increases this city’s income of all five resources by 25%.",
+    "starting_level": 1,
+    "colour": "c7ab65"
   },
   {
     "id": "research_center",
     "name": "Research center",
-    "asset_roster_id": "warehouse11",
+    "asset_roster_id": "facility_research_center",
     "capital_only": true,
     "max_level": 3,
     "hours": 4,
@@ -48,12 +50,13 @@
       "manpower": 20
     },
     "description": "Capital only. Each level above 1 increases national research speed by 25%. Two research slots.",
-    "starting_level": 1
+    "starting_level": 1,
+    "colour": "a98ac2"
   },
   {
     "id": "airbase",
     "name": "Airbase",
-    "asset_roster_id": "warehouse1",
+    "asset_roster_id": "facility_airbase",
     "capital_only": false,
     "starting_level": 0,
     "capital_starting_level": 1,
@@ -66,6 +69,208 @@
       "fuel": 30,
       "manpower": 20
     },
-    "description": "Enables fighter production and provides a home base. Each extra level reduces refueling time by 25%."
+    "description": "Enables fighter production and provides a home base. Each extra level reduces refueling time by 25%.",
+    "colour": "819aaa"
+  },
+  {
+    "id": "finance",
+    "name": "Financial office",
+    "resource": "funds",
+    "group": "Resources",
+    "colour": "d0b966",
+    "asset_roster_id": "facility_finance",
+    "capital_only": false,
+    "max_level": 3,
+    "hours": 2,
+    "starting_level": 0,
+    "cost": {
+      "funds": 180,
+      "materials": 90,
+      "electronics": 20,
+      "fuel": 15,
+      "manpower": 15
+    },
+    "description": "Each level increases this city’s funds income by 25%.",
+    "save_default": true
+  },
+  {
+    "id": "material_works",
+    "name": "Materials works",
+    "resource": "materials",
+    "group": "Resources",
+    "colour": "ca8854",
+    "asset_roster_id": "facility_material_works",
+    "capital_only": false,
+    "max_level": 3,
+    "hours": 2,
+    "starting_level": 0,
+    "cost": {
+      "funds": 180,
+      "materials": 90,
+      "electronics": 20,
+      "fuel": 15,
+      "manpower": 15
+    },
+    "description": "Each level increases this city’s materials income by 25%.",
+    "save_default": true
+  },
+  {
+    "id": "electronics_plant",
+    "name": "Electronics factory",
+    "resource": "electronics",
+    "group": "Resources",
+    "colour": "63a9b5",
+    "asset_roster_id": "facility_electronics_plant",
+    "capital_only": false,
+    "max_level": 3,
+    "hours": 2,
+    "starting_level": 0,
+    "cost": {
+      "funds": 180,
+      "materials": 90,
+      "electronics": 20,
+      "fuel": 15,
+      "manpower": 15
+    },
+    "description": "Each level increases this city’s electronics income by 25%.",
+    "save_default": true
+  },
+  {
+    "id": "fuel_depot",
+    "name": "Fuel depot",
+    "resource": "fuel",
+    "group": "Resources",
+    "colour": "739374",
+    "asset_roster_id": "facility_fuel_depot",
+    "capital_only": false,
+    "max_level": 3,
+    "hours": 2,
+    "starting_level": 0,
+    "cost": {
+      "funds": 180,
+      "materials": 90,
+      "electronics": 20,
+      "fuel": 15,
+      "manpower": 15
+    },
+    "description": "Each level increases this city’s fuel income by 25%.",
+    "save_default": true
+  },
+  {
+    "id": "recruitment_center",
+    "name": "Recruitment centre",
+    "resource": "manpower",
+    "group": "Resources",
+    "colour": "7c91c0",
+    "asset_roster_id": "facility_recruitment_center",
+    "capital_only": false,
+    "max_level": 3,
+    "hours": 2,
+    "starting_level": 0,
+    "cost": {
+      "funds": 180,
+      "materials": 90,
+      "electronics": 20,
+      "fuel": 15,
+      "manpower": 15
+    },
+    "description": "Each level increases this city’s manpower income by 25%.",
+    "save_default": true
+  },
+  {
+    "id": "barracks",
+    "name": "Barracks",
+    "asset_roster_id": "facility_barracks",
+    "colour": "857947",
+    "capital_only": false,
+    "max_level": 3,
+    "hours": 2,
+    "cost": {
+      "funds": 180,
+      "materials": 100,
+      "electronics": 15,
+      "fuel": 15,
+      "manpower": 40
+    },
+    "description": "Each level increases mechanized / infantry production speed by 25%.",
+    "starting_level": 0,
+    "save_default": true
+  },
+  {
+    "id": "tank_plant",
+    "name": "Tank plant",
+    "asset_roster_id": "facility_tank_plant",
+    "colour": "9b6551",
+    "capital_only": false,
+    "max_level": 3,
+    "hours": 3,
+    "cost": {
+      "funds": 280,
+      "materials": 170,
+      "electronics": 45,
+      "fuel": 45,
+      "manpower": 30
+    },
+    "description": "Each level increases armored-unit production speed by 25%.",
+    "starting_level": 0,
+    "save_default": true
+  },
+  {
+    "id": "naval_base",
+    "name": "Naval base",
+    "asset_roster_id": "facility_naval_base",
+    "colour": "5c90aa",
+    "capital_only": false,
+    "max_level": 3,
+    "hours": 4,
+    "cost": {
+      "funds": 320,
+      "materials": 180,
+      "electronics": 55,
+      "fuel": 60,
+      "manpower": 35
+    },
+    "description": "Coastal cities only. Each level increases ship production speed by 25%.",
+    "starting_level": 0,
+    "save_default": true,
+    "coastal_only": true
+  },
+  {
+    "id": "bunker",
+    "name": "Bunkers",
+    "asset_roster_id": "facility_bunker",
+    "colour": "838677",
+    "capital_only": false,
+    "max_level": 3,
+    "hours": 3,
+    "cost": {
+      "funds": 220,
+      "materials": 180,
+      "electronics": 20,
+      "fuel": 20,
+      "manpower": 25
+    },
+    "description": "Each level reduces incoming damage to friendly ground units within 0.6 of a controlled city by 20%, up to 60%.",
+    "starting_level": 0,
+    "save_default": true
+  },
+  {
+    "id": "infrastructure",
+    "name": "Infrastructure",
+    "asset_roster_id": "facility_infrastructure",
+    "colour": "bd9763",
+    "capital_only": false,
+    "max_level": 3,
+    "hours": 2,
+    "cost": {
+      "funds": 200,
+      "materials": 140,
+      "electronics": 25,
+      "fuel": 20,
+      "manpower": 30
+    },
+    "description": "Each level increases this city’s construction speed by 15%.",
+    "starting_level": 0,
+    "save_default": true
   }
 ]
