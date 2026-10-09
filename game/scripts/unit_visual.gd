@@ -4,7 +4,7 @@ extends RefCounted
 ## Map footprint (longest horizontal side, before the 0.65 marker scale) per unit type, so
 ## every original model reads at a consistent size against the cities instead of keeping
 ## whatever scale its source file happened to use.
-const FOOTPRINT: = {"armor": 1.35, "ifv": 1.25, "artillery": 1.3, "air_defense": 1.3, "missile_launcher": 1.4, "fighter": 1.5, "drone": 1.1, "naval": 1.9}
+const FOOTPRINT: = {"bomber": 2.3, "armor": 1.35, "ifv": 1.25, "artillery": 1.3, "air_defense": 1.3, "missile_launcher": 1.4, "fighter": 1.5, "drone": 1.1, "naval": 1.9}
 ## Extra yaw (degrees) for source models that face backwards after long-axis alignment,
 ## keyed by model file prefix. Checked with tests/model_lineup.gd (all models face north).
 const YAW_FIX: = {"su57": 180.0, "f18a": 180.0, "destroyer": 180.0, "kclass": 180.0, "upload20ab": 180.0, "ad": 180.0}  # ad_*: owner weapons.zip air defence (+X forward)
@@ -61,11 +61,14 @@ static func create(kind: String, _faction: Color, equipment_id: String = "", lev
 		assembly.set_meta("missing_original_model", true)
 		return assembly
 	var vehicle: = (load(path) as PackedScene).instantiate() as Node3D
+	# Owner arsenal models are built from hundreds of parts; merge them per material so a
+	# tank is a handful of draw calls on phones (looks identical).
+	if path.contains("/arsenal/"): vehicle = merged(vehicle)
 	var spec: = EquipmentIdentity.spec(equipment_id)
 	var role: String = spec.get("role", "")
 	if role.is_empty(): role = spec.get("visual_kind", kind)
 	var keep_colors: bool = AssetRoster.appearance(spec.get("asset_roster_id", ""), spec.get("country", GameSession.player_country)).get("original_colors", false)
-	if path.contains("/airdefense/") or keep_colors: pass  # Preserve supplied original paint.
+	if owner_model(path) or keep_colors: pass  # Preserve supplied original paint.
 	elif spec.get("country", "") == "russia": paint_russian(vehicle, model_bounds(vehicle, 0.0))
 	elif spec.get("visual_kind", kind) in GROUND_KINDS: paint_camo(vehicle, model_bounds(vehicle, 0.0), UKRAINE_CAMO)
 	# The pivot carries the fitting transform; the source scene's own transform is kept.
@@ -93,7 +96,7 @@ static func _fit(pivot: Node3D, vehicle: Node3D, role: String, path: String) -> 
 	var yaw: = PI  # owner review 2026-10-09 ("undo"): guns face the direction of travel / target
 	if raw.size.x > raw.size.z * 1.1: yaw += PI * 0.5  # source model lies sideways
 	yaw += deg_to_rad(YAW_FIX.get(path.get_file().get_basename().get_slice("_", 0), 0.0))
-	if path.contains("/airdefense/"): yaw = PI * 0.5  # Source +X cab faces game -Z.
+	if owner_model(path): yaw = PI * 0.5  # Source +X cab faces game -Z.
 	var bounds: = model_bounds(vehicle, yaw)
 	var longest: = maxf(maxf(bounds.size.x, bounds.size.z), 0.001)
 	var factor: float = FOOTPRINT.get(role, 0.62) / longest
@@ -191,3 +194,40 @@ static func _enable_shadows(node: Node) -> void:
 	if node is GeometryInstance3D:
 		node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
 	for child in node.get_children(): _enable_shadows(child)
+
+## Models supplied by the owner (air defence and the tank/APC/aircraft arsenal): original
+## paint, +X forward.
+static func owner_model(path: String) -> bool:
+	return path.contains("/airdefense/") or path.contains("/arsenal/")
+
+## One MeshInstance3D holding every mesh of `source`, one surface per material.
+static var _merged_meshes: Dictionary = {}
+static func merged(source: Node3D) -> Node3D:
+	var key: = source.scene_file_path
+	var root: = Node3D.new()
+	root.name = source.name
+	var visual: = MeshInstance3D.new()
+	visual.name = "Merged"
+	if not key.is_empty() and _merged_meshes.has(key):
+		visual.mesh = _merged_meshes[key]
+	else:
+		var tools: = {}
+		var order: = []
+		for item in _meshes(source, Transform3D.IDENTITY):
+			var mesh_instance: MeshInstance3D = item[0]
+			for surface in mesh_instance.mesh.get_surface_count():
+				var material: = mesh_instance.get_active_material(surface)
+				if not tools.has(material):
+					var tool: = SurfaceTool.new()
+					tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+					tool.set_material(material)
+					tools[material] = tool
+					order.append(material)
+				tools[material].append_from(mesh_instance.mesh, surface, item[1])
+		var mesh: = ArrayMesh.new()
+		for material in order: tools[material].commit(mesh)
+		visual.mesh = mesh
+		if not key.is_empty(): _merged_meshes[key] = mesh
+	root.add_child(visual)
+	source.free()
+	return root

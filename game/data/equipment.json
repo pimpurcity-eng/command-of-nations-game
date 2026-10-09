@@ -266,5 +266,397 @@
       9,
       12
     ]
+  },
+  {
+    "id": "tanks_russia",
+    "country": "russia",
+    "name": "Main battle tanks",
+    "category": "Armor",
+    "visual_kind": "armor",
+    "research_branch": "Tanks",
+    "seconds": 45,
+    "cost": {
+      "funds": 280,
+      "materials": 95,
+      "electronics": 35,
+      "fuel": 40,
+      "manpower": 15
+    },
+    "research_tiers": [
+      {
+        "name": "T-62",
+        "improvement": "Baseline armour",
+        "model": "res://assets/library/arsenal/russia_t62.glb"
+      },
+      {
+        "name": "T-64",
+        "improvement": "Composite armour",
+        "model": "res://assets/library/arsenal/russia_t64.glb"
+      },
+      {
+        "name": "T-72B3",
+        "improvement": "Modern fire control",
+        "model": "res://assets/library/arsenal/russia_t72b3.glb"
+      },
+      {
+        "name": "T-80BVM",
+        "improvement": "Turbine speed",
+        "model": "res://assets/library/arsenal/russia_t80bvm.glb"
+      },
+      {
+        "name": "T-90A",
+        "improvement": "Best protection",
+        "model": "res://assets/library/arsenal/russia_t90a.glb"
+      }
+    ],
+    "building_requirements": {
+      "factory": 1
+    },
+    "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
+    "research_days": [
+      1,
+      4,
+      8,
+      12,
+      18
+    ]
+  },
+  {
+    "id": "apcs_russia",
+    "country": "russia",
+    "name": "Armoured personnel carriers",
+    "category": "Mechanized",
+    "visual_kind": "ifv",
+    "research_branch": "APCs",
+    "seconds": 28,
+    "cost": {
+      "funds": 160,
+      "materials": 60,
+      "electronics": 20,
+      "fuel": 25,
+      "manpower": 20
+    },
+    "research_tiers": [
+      {
+        "name": "BTR-60PB",
+        "improvement": "Baseline carrier",
+        "model": "res://assets/library/arsenal/russia_btr60pb.glb"
+      },
+      {
+        "name": "BTR-70",
+        "improvement": "Better engines",
+        "model": "res://assets/library/arsenal/russia_btr70.glb"
+      },
+      {
+        "name": "BTR-80",
+        "improvement": "Diesel and armour",
+        "model": "res://assets/library/arsenal/russia_btr80.glb"
+      },
+      {
+        "name": "BTR-82A",
+        "improvement": "30 mm cannon",
+        "model": "res://assets/library/arsenal/russia_btr82a.glb"
+      },
+      {
+        "name": "BTR-90",
+        "improvement": "Heavy firepower",
+        "model": "res://assets/library/arsenal/russia_btr90.glb"
+      }
+    ],
+    "building_requirements": {
+      "factory": 1
+    },
+    "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
+    "research_days": [
+      1,
+      4,
+      8,
+      12,
+      18
+    ]
+  },
+  {
+    "id": "bombers_russia",
+    "country": "russia",
+    "name": "Strategic bombers",
+    "category": "Bombers",
+    "visual_kind": "fighter",
+    "role": "bomber",
+    "research_branch": "Bombers",
+    "seconds": 80,
+    "cost": {
+      "funds": 420,
+      "materials": 110,
+      "electronics": 110,
+      "fuel": 120,
+      "manpower": 15
+    },
+    "building_requirements": {
+      "airbase": 1
+    },
+    "air_range": 22.0,
+    "air_speed": 2.2,
+    "air_damage": 2.0,
+    "ground_damage": 9.0,
+    "research_tiers": [
+      {
+        "name": "Tu-22M3",
+        "improvement": "Supersonic strike",
+        "model": "res://assets/library/arsenal/russia_tu22m3.glb"
+      },
+      {
+        "name": "Tu-22M3 \u00b7 upgraded",
+        "improvement": "Better payload",
+        "model": "res://assets/library/arsenal/russia_tu22m3.glb"
+      },
+      {
+        "name": "Tu-95MS",
+        "improvement": "Long range",
+        "model": "res://assets/library/arsenal/russia_tu95ms.glb"
+      },
+      {
+        "name": "Tu-95MS \u00b7 cruise missiles",
+        "improvement": "Stand-off missiles",
+        "model": "res://assets/library/arsenal/russia_tu95ms.glb"
+      },
+      {
+        "name": "Tu-160",
+        "improvement": "Heavy supersonic bomber",
+        "model": "res://assets/library/arsenal/russia_tu160.glb"
+      }
+    ],
+    "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
+    "research_days": [
+      1,
+      4,
+      8,
+      12,
+      18
+    ]
+  },
+  {
+    "id": "tanks_ukraine",
+    "country": "ukraine",
+    "name": "Main battle tanks",
+    "category": "Armor",
+    "visual_kind": "armor",
+    "research_branch": "Tanks",
+    "seconds": 45,
+    "cost": {
+      "funds": 280,
+      "materials": 95,
+      "electronics": 35,
+      "fuel": 40,
+      "manpower": 15
+    },
+    "research_tiers": [
+      {
+        "name": "Leopard 1",
+        "improvement": "Baseline armour",
+        "model": "res://assets/library/arsenal/euro_leopard1.glb"
+      },
+      {
+        "name": "AMX-30",
+        "improvement": "Lighter and faster",
+        "model": "res://assets/library/arsenal/euro_amx30.glb"
+      },
+      {
+        "name": "Challenger 2",
+        "improvement": "Heavy protection",
+        "model": "res://assets/library/arsenal/euro_challenger2.glb"
+      },
+      {
+        "name": "Leopard 2A6",
+        "improvement": "Long gun",
+        "model": "res://assets/library/arsenal/euro_leopard2a6.glb"
+      },
+      {
+        "name": "Leclerc",
+        "improvement": "Autoloader",
+        "model": "res://assets/library/arsenal/euro_leclerc.glb"
+      }
+    ],
+    "building_requirements": {
+      "factory": 1
+    },
+    "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
+    "research_days": [
+      1,
+      4,
+      8,
+      12,
+      18
+    ]
+  },
+  {
+    "id": "apcs_ukraine",
+    "country": "ukraine",
+    "name": "Armoured personnel carriers",
+    "category": "Mechanized",
+    "visual_kind": "ifv",
+    "research_branch": "APCs",
+    "seconds": 28,
+    "cost": {
+      "funds": 160,
+      "materials": 60,
+      "electronics": 20,
+      "fuel": 25,
+      "manpower": 20
+    },
+    "research_tiers": [
+      {
+        "name": "M113",
+        "improvement": "Baseline carrier",
+        "model": "res://assets/library/arsenal/euro_m113.glb"
+      },
+      {
+        "name": "VAB",
+        "improvement": "Wheeled speed",
+        "model": "res://assets/library/arsenal/euro_vab.glb"
+      },
+      {
+        "name": "Piranha V",
+        "improvement": "Modular armour",
+        "model": "res://assets/library/arsenal/euro_piranha_v.glb"
+      },
+      {
+        "name": "Patria AMV",
+        "improvement": "Mine protection",
+        "model": "res://assets/library/arsenal/euro_patria_amv.glb"
+      },
+      {
+        "name": "Boxer",
+        "improvement": "Heavy wheeled carrier",
+        "model": "res://assets/library/arsenal/euro_boxer.glb"
+      }
+    ],
+    "building_requirements": {
+      "factory": 1
+    },
+    "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
+    "research_days": [
+      1,
+      4,
+      8,
+      12,
+      18
+    ]
+  },
+  {
+    "id": "bombers_ukraine",
+    "country": "ukraine",
+    "name": "Bombers",
+    "category": "Bombers",
+    "visual_kind": "fighter",
+    "role": "bomber",
+    "research_branch": "Bombers",
+    "seconds": 80,
+    "cost": {
+      "funds": 420,
+      "materials": 110,
+      "electronics": 110,
+      "fuel": 120,
+      "manpower": 15
+    },
+    "building_requirements": {
+      "airbase": 1
+    },
+    "air_range": 20.0,
+    "air_speed": 2.3,
+    "air_damage": 2.0,
+    "ground_damage": 8.5,
+    "research_tiers": [
+      {
+        "name": "Mirage IV",
+        "improvement": "Supersonic strike",
+        "model": "res://assets/library/arsenal/euro_mirage_iv.glb"
+      },
+      {
+        "name": "Mirage IV \u00b7 upgraded",
+        "improvement": "Better payload",
+        "model": "res://assets/library/arsenal/euro_mirage_iv.glb"
+      },
+      {
+        "name": "Vulcan",
+        "improvement": "Long range",
+        "model": "res://assets/library/arsenal/euro_vulcan.glb"
+      },
+      {
+        "name": "Vulcan \u00b7 stand-off",
+        "improvement": "Stand-off weapons",
+        "model": "res://assets/library/arsenal/euro_vulcan.glb"
+      },
+      {
+        "name": "Aquila EB-1",
+        "improvement": "Stealth flying wing",
+        "model": "res://assets/library/arsenal/euro_aquila_eb1.glb"
+      }
+    ],
+    "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
+    "research_days": [
+      1,
+      4,
+      8,
+      12,
+      18
+    ]
+  },
+  {
+    "id": "strike_ukraine",
+    "country": "ukraine",
+    "name": "Strike fighters",
+    "category": "Fighters",
+    "visual_kind": "fighter",
+    "research_branch": "Strike",
+    "seconds": 60,
+    "cost": {
+      "funds": 300,
+      "materials": 80,
+      "electronics": 90,
+      "fuel": 80,
+      "manpower": 10
+    },
+    "building_requirements": {
+      "airbase": 1
+    },
+    "air_range": 16.0,
+    "air_speed": 3.0,
+    "air_damage": 8.0,
+    "ground_damage": 4.0,
+    "research_tiers": [
+      {
+        "name": "Tornado IDS",
+        "improvement": "Low-level strike",
+        "model": "res://assets/library/arsenal/euro_tornado_ids.glb"
+      },
+      {
+        "name": "Tornado IDS \u00b7 upgraded",
+        "improvement": "Precision weapons",
+        "model": "res://assets/library/arsenal/euro_tornado_ids.glb"
+      },
+      {
+        "name": "Rafale",
+        "improvement": "Multirole",
+        "model": "res://assets/library/arsenal/euro_rafale.glb"
+      },
+      {
+        "name": "Rafale \u00b7 upgraded",
+        "improvement": "Better radar",
+        "model": "res://assets/library/arsenal/euro_rafale.glb"
+      },
+      {
+        "name": "Eurofighter",
+        "improvement": "Air superiority",
+        "model": "res://assets/library/arsenal/euro_eurofighter.glb"
+      }
+    ],
+    "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
+    "research_days": [
+      1,
+      4,
+      8,
+      12,
+      18
+    ]
   }
 ]

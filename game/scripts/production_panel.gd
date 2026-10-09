@@ -74,7 +74,7 @@ func setup(system: ProductionSystem, units: UnitSystem, theme: Theme) -> void :
 	city_picker.item_selected.connect( func(_index: int): _show_details())
 	selectors.add_child(city_picker)
 	category_picker = OptionButton.new()
-	for title_text in ["All equipment", "Armor", "Mechanized", "Artillery", "Fighters", "Air defense", "Navy", "Missiles", "Drones"]: category_picker.add_item(title_text)
+	for title_text in ["All equipment", "Armor", "Mechanized", "Artillery", "Fighters", "Bombers", "Air defense", "Navy", "Missiles", "Drones"]: category_picker.add_item(title_text)
 	category_picker.custom_minimum_size.y = 48
 	category_picker.item_selected.connect( func(_index: int): _populate_equipment())
 	selectors.add_child(category_picker)

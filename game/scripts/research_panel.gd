@@ -5,7 +5,7 @@ extends CanvasLayer
 ## Two research slots at the top, then either the category banners or a category's tech tree:
 ## a column per equipment family and a row per level (labelled with the day it unlocks).
 ## Tapping a level shows its cost and the RESEARCH button in the bar at the bottom.
-const CATEGORIES: = ["Armor", "Mechanized", "Artillery", "Fighters", "Air defense", "Navy", "Missiles", "Drones"]
+const CATEGORIES: = ["Armor", "Mechanized", "Artillery", "Fighters", "Bombers", "Air defense", "Navy", "Missiles", "Drones"]
 const CELL: = Vector2(150, 150)
 var research: ResearchSystem
 var panel: PanelContainer

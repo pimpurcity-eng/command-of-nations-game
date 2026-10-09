@@ -8,7 +8,7 @@
       "color": "376bba",
       "statistics": {},
       "relations": {},
-      "starting_force_count": 5,
+      "starting_force_count": 17,
       "capital_city": "kyiv"
     },
     {
@@ -17,7 +17,7 @@
       "color": "ad4741",
       "statistics": {},
       "relations": {},
-      "starting_force_count": 5,
+      "starting_force_count": 16,
       "capital_city": "moscow"
     }
   ],
@@ -151,6 +151,308 @@
       ],
       "visual_kind": "air_defense",
       "equipment_id": "patriot_russia"
+    },
+    {
+      "id": "ukraine_armor_kyiv",
+      "name": "Kyiv tank group",
+      "country": "ukraine",
+      "longitude": 30.5234,
+      "latitude": 50.4501,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "armor",
+      "equipment_id": "tanks_ukraine"
+    },
+    {
+      "id": "ukraine_apc_kyiv",
+      "name": "Kyiv APC group",
+      "country": "ukraine",
+      "longitude": 30.5234,
+      "latitude": 50.4501,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "ifv",
+      "equipment_id": "apcs_ukraine"
+    },
+    {
+      "id": "ukraine_armor_lviv",
+      "name": "Lviv tank group",
+      "country": "ukraine",
+      "longitude": 24.0311,
+      "latitude": 49.8429,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "armor",
+      "equipment_id": "tanks_ukraine"
+    },
+    {
+      "id": "ukraine_apc_lviv",
+      "name": "Lviv APC group",
+      "country": "ukraine",
+      "longitude": 24.0311,
+      "latitude": 49.8429,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "ifv",
+      "equipment_id": "apcs_ukraine"
+    },
+    {
+      "id": "ukraine_armor_odesa",
+      "name": "Odesa tank group",
+      "country": "ukraine",
+      "longitude": 30.7233,
+      "latitude": 46.4825,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "armor",
+      "equipment_id": "tanks_ukraine"
+    },
+    {
+      "id": "ukraine_apc_odesa",
+      "name": "Odesa APC group",
+      "country": "ukraine",
+      "longitude": 30.7233,
+      "latitude": 46.4825,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "ifv",
+      "equipment_id": "apcs_ukraine"
+    },
+    {
+      "id": "ukraine_armor_kharkiv",
+      "name": "Kharkiv tank group",
+      "country": "ukraine",
+      "longitude": 36.2304,
+      "latitude": 49.9935,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "armor",
+      "equipment_id": "tanks_ukraine"
+    },
+    {
+      "id": "ukraine_apc_kharkiv",
+      "name": "Kharkiv APC group",
+      "country": "ukraine",
+      "longitude": 36.2304,
+      "latitude": 49.9935,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "ifv",
+      "equipment_id": "apcs_ukraine"
+    },
+    {
+      "id": "ukraine_armor_dnipro",
+      "name": "Dnipro tank group",
+      "country": "ukraine",
+      "longitude": 35.0462,
+      "latitude": 48.4647,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "armor",
+      "equipment_id": "tanks_ukraine"
+    },
+    {
+      "id": "ukraine_apc_dnipro",
+      "name": "Dnipro APC group",
+      "country": "ukraine",
+      "longitude": 35.0462,
+      "latitude": 48.4647,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "ifv",
+      "equipment_id": "apcs_ukraine"
+    },
+    {
+      "id": "russia_armor_moscow",
+      "name": "Moscow tank group",
+      "country": "russia",
+      "longitude": 37.6173,
+      "latitude": 55.7558,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "armor",
+      "equipment_id": "tanks_russia"
+    },
+    {
+      "id": "russia_apc_moscow",
+      "name": "Moscow APC group",
+      "country": "russia",
+      "longitude": 37.6173,
+      "latitude": 55.7558,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "ifv",
+      "equipment_id": "apcs_russia"
+    },
+    {
+      "id": "russia_armor_kursk",
+      "name": "Kursk tank group",
+      "country": "russia",
+      "longitude": 36.193,
+      "latitude": 51.7304,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "armor",
+      "equipment_id": "tanks_russia"
+    },
+    {
+      "id": "russia_apc_kursk",
+      "name": "Kursk APC group",
+      "country": "russia",
+      "longitude": 36.193,
+      "latitude": 51.7304,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "ifv",
+      "equipment_id": "apcs_russia"
+    },
+    {
+      "id": "russia_armor_belgorod",
+      "name": "Belgorod tank group",
+      "country": "russia",
+      "longitude": 36.5873,
+      "latitude": 50.5957,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "armor",
+      "equipment_id": "tanks_russia"
+    },
+    {
+      "id": "russia_apc_belgorod",
+      "name": "Belgorod APC group",
+      "country": "russia",
+      "longitude": 36.5873,
+      "latitude": 50.5957,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "ifv",
+      "equipment_id": "apcs_russia"
+    },
+    {
+      "id": "russia_armor_voronezh",
+      "name": "Voronezh tank group",
+      "country": "russia",
+      "longitude": 39.2003,
+      "latitude": 51.6608,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "armor",
+      "equipment_id": "tanks_russia"
+    },
+    {
+      "id": "russia_apc_voronezh",
+      "name": "Voronezh APC group",
+      "country": "russia",
+      "longitude": 39.2003,
+      "latitude": 51.6608,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "ifv",
+      "equipment_id": "apcs_russia"
+    },
+    {
+      "id": "russia_armor_rostov_on_don",
+      "name": "Rostov-on-Don tank group",
+      "country": "russia",
+      "longitude": 39.7015,
+      "latitude": 47.2357,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "armor",
+      "equipment_id": "tanks_russia"
+    },
+    {
+      "id": "russia_apc_rostov_on_don",
+      "name": "Rostov-on-Don APC group",
+      "country": "russia",
+      "longitude": 39.7015,
+      "latitude": 47.2357,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "visual_kind": "ifv",
+      "equipment_id": "apcs_russia"
+    },
+    {
+      "id": "russia_bombers_moscow",
+      "name": "Moscow bomber regiment",
+      "country": "russia",
+      "longitude": 37.6173,
+      "latitude": 55.7558,
+      "offset": [
+        1.2,
+        -0.6
+      ],
+      "visual_kind": "fighter",
+      "equipment_id": "bombers_russia",
+      "base_city": "moscow"
+    },
+    {
+      "id": "ukraine_bombers_kyiv",
+      "name": "Kyiv bomber squadron",
+      "country": "ukraine",
+      "longitude": 30.5234,
+      "latitude": 50.4501,
+      "offset": [
+        1.2,
+        -0.6
+      ],
+      "visual_kind": "fighter",
+      "equipment_id": "bombers_ukraine",
+      "base_city": "kyiv"
+    },
+    {
+      "id": "ukraine_strike_kyiv",
+      "name": "Kyiv strike squadron",
+      "country": "ukraine",
+      "longitude": 30.5234,
+      "latitude": 50.4501,
+      "offset": [
+        -1.2,
+        -0.6
+      ],
+      "visual_kind": "fighter",
+      "equipment_id": "strike_ukraine",
+      "base_city": "kyiv"
     }
   ]
 }
