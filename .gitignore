@@ -1,0 +1,4 @@
+
+# Local test builds (APKs contain unlicensed-for-publishing models)
+build/
+*.apk
