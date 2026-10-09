@@ -308,3 +308,8 @@ No public Git model files, no deployment or remote push.
 Replaced broad dark unit shadows with softer contact shadows sized to each fitted model's horizontal bounds, including city shrink. Reduced contact opacity from 0.70 to 0.38, removed the opaque core and large viewer offset. Source +X / game -Z model facing is unchanged. All ten AA fronts still pass the native seven-o'clock review check. Battle-effects suite 27/0; native render had no errors. Preview: docs/review/air_defense/Soft_Contact_Shadows.png. These source changes are not installed on the owner's phone or in the previously provided version9 APK.
 
 Read-only road connectivity audit: 72 province hubs belong to one connected land-road component, all city points are road endpoints, and Kaliningrad region is the only isolated province hub. tests/check_road_connectivity.gd logs component sizes, isolated provinces and city misses. No map/road edits.
+
+
+## 2026-10-09 — Thin road/path lines, owner request
+
+Reduced visible highway half-width 0.025→0.010 and local province-road half-width 0.022→0.009 (about 60% thinner). Only the rendered ribbons change; graph, centre points and travel routes are unchanged. Owner explicitly requested map line adjustment after sharing a Call of War reference. Native portrait review rendered with no errors and the ten-model heading check passed. Preview docs/review/air_defense/Thin_Road_Lines.png. This is a source preview, not installed on the phone.

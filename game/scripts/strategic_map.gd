@@ -279,7 +279,7 @@ func _add_connections() -> void :
 	highways.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var connections: = [["Lviv", "Kyiv"], ["Kyiv", "Kharkiv"], ["Kyiv", "Dnipro"], ["Dnipro", "Odesa"], ["Kharkiv", "Dnipro"], ["Moscow", "Kursk"], ["Moscow", "Voronezh"], ["Kursk", "Belgorod"], ["Voronezh", "Rostov-on-Don"]]
 	for pair in connections:
-		_road(highways, locations[pair[0]], locations[pair[1]], 0.025, 0.4, land)
+		_road(highways, locations[pair[0]], locations[pair[1]], 0.010, 0.4, land)
 		roads.append([locations[pair[0]], locations[pair[1]], 0.4])
 	_add_road_mesh(highways, Color("5e5b52"))
 	var local: = SurfaceTool.new()
@@ -287,7 +287,7 @@ func _add_connections() -> void :
 	var graph: = road_graph(territories)
 	province_hubs = graph.hubs
 	for edge in graph.edges:
-		_road(local, edge[0], edge[1], 0.022, edge[2], land)
+		_road(local, edge[0], edge[1], 0.009, edge[2], land)
 		roads.append(edge)
 	_add_province_posts(locations.values())
 	_add_road_mesh(local, Color("6a6456"))
