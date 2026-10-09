@@ -13,6 +13,18 @@ const INK: = Color("2a2a26")
 const GREEN: = Color("4f8a3a")
 const RED: = Color("b5413a")
 
+## Textured 9-patch from assets/interface/skin (tools/make_ui_skin.py).
+static func skin(name: String, corner: int = 8, margin: int = 0, tint: Color = Color.WHITE) -> StyleBoxTexture:
+	var style: = StyleBoxTexture.new()
+	style.texture = load("res://assets/interface/skin/" + name + ".png")
+	style.set_texture_margin_all(corner)
+	style.set_content_margin_all(margin)
+	style.modulate_color = tint
+	return style
+
+static func title_font() -> Font:
+	return StrategyTheme.font("Oswald", 600)
+
 static func box(color: Color, radius: int = 0, border: Color = Color(0, 0, 0, 0), width: int = 0, margin: int = 0) -> StyleBoxFlat:
 	var style: = StyleBoxFlat.new()
 	style.bg_color = color
@@ -27,6 +39,7 @@ static func label(text: String, size: int, color: Color = Color("efe6cf")) -> La
 	result.text = text
 	result.add_theme_font_size_override("font_size", size)
 	result.add_theme_color_override("font_color", color)
+	if size >= 18: result.add_theme_font_override("font", title_font())
 	return result
 
 ## Square framed button holding an icon (close, back).
@@ -34,7 +47,7 @@ static func square(kind: String) -> Button:
 	var button: = Button.new()
 	button.custom_minimum_size = Vector2(52, 52)
 	for state in ["normal", "hover", "pressed"]:
-		button.add_theme_stylebox_override(state, box(Color("2f3438") if state == "normal" else Color("3a4045"), 3, Color("8d7a4a"), 2))
+		button.add_theme_stylebox_override(state, skin("frame", 10, 0, Color.WHITE if state == "normal" else Color(1.15, 1.1, 1.0)))
 	var icon: = Icon.new(kind, GOLD, Vector2(52, 52))
 	icon.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	button.add_child(icon)
@@ -43,14 +56,16 @@ static func square(kind: String) -> Button:
 ## Dark header: optional back button, centred title, close button.
 static func header(title_text: String, with_back: bool) -> Dictionary:
 	var bar: = PanelContainer.new()
-	bar.add_theme_stylebox_override("panel", box(DARK, 0, Color(0, 0, 0, 0), 0, 8))
+	bar.add_theme_stylebox_override("panel", skin("header", 4, 8))
 	var row: = HBoxContainer.new()
 	bar.add_child(row)
 	var back: = square("back")
 	back.modulate.a = 1.0 if with_back else 0.0
 	back.disabled = not with_back
 	row.add_child(back)
-	var title: = label(title_text, 30, Color("f3e6c4"))
+	var title: = label(title_text, 32, Color("f3e6c4"))
+	title.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.7))
+	title.add_theme_constant_override("shadow_offset_y", 2)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	title.clip_text = true
@@ -64,7 +79,7 @@ static func status_box(kind: String) -> Dictionary:
 	var panel: = PanelContainer.new()
 	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	panel.custom_minimum_size.y = 84
-	panel.add_theme_stylebox_override("panel", box(DARKER, 4, LINE, 2, 8))
+	panel.add_theme_stylebox_override("panel", skin("inset", 10, 10))
 	var row: = HBoxContainer.new()
 	row.add_theme_constant_override("separation", 8)
 	panel.add_child(row)
@@ -80,7 +95,8 @@ static func status_box(kind: String) -> Dictionary:
 	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	column.alignment = BoxContainer.ALIGNMENT_CENTER
 	row.add_child(column)
-	var text: = label("", 15, Color("ece6d6"))
+	var text: = label("", 17, Color("ece6d6"))
+	text.add_theme_font_override("font", StrategyTheme.font("RobotoCondensed", 500))
 	text.clip_text = true
 	column.add_child(text)
 	var bar: = ProgressBar.new()
@@ -97,11 +113,8 @@ static func tab(caption: String, kind: String, selected: bool) -> Button:
 	var button: = Button.new()
 	button.custom_minimum_size = Vector2(84, 64)
 	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var normal: = box(Color("3a3e40") if selected else DARK)
-	if selected:
-		normal.border_color = GOLD
-		normal.border_width_bottom = 3
-	for state in ["normal", "hover", "pressed"]: button.add_theme_stylebox_override(state, normal)
+	for state in ["normal", "hover", "pressed"]:
+		button.add_theme_stylebox_override(state, skin("tab_on" if selected else "tab_off", 6, 0, Color.WHITE if state == "normal" or selected else Color(1.2, 1.2, 1.2)))
 	var column: = VBoxContainer.new()
 	column.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	column.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -111,7 +124,8 @@ static func tab(caption: String, kind: String, selected: bool) -> Button:
 		var icon: Control = StrategyHUD.Glyph.new(kind, GOLD, Vector2(28, 26)) if kind in ["produce", "research", "city", "flag"] else Icon.new(kind, GOLD, Vector2(28, 26))
 		icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 		column.add_child(icon)
-	var text: = label(caption, 13, GOLD if selected else Color("e3d9bd"))
+	var text: = label(caption, 14, GOLD if selected else Color("e3d9bd"))
+	text.add_theme_font_override("font", title_font())
 	text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	column.add_child(text)
@@ -121,9 +135,10 @@ static func tab(caption: String, kind: String, selected: bool) -> Button:
 static func action(caption: String, kind: String, color: Color = GREEN) -> Button:
 	var button: = Button.new()
 	button.custom_minimum_size = Vector2(118, 56)
+	var face: = "btn_red" if color == RED else ("btn_dark" if color == DARK else "btn_green")
 	for state in ["normal", "hover", "pressed", "disabled"]:
-		var fill: = color.lightened(0.1) if state == "hover" else (color.darkened(0.15) if state == "pressed" else (Color("8b8a80") if state == "disabled" else color))
-		button.add_theme_stylebox_override(state, box(fill, 4, fill.darkened(0.35), 2))
+		var texture: = "btn_grey" if state == "disabled" else (face + "_pressed" if state == "pressed" and face == "btn_green" else face)
+		button.add_theme_stylebox_override(state, skin(texture, 12, 0, Color(1.12, 1.12, 1.12) if state == "hover" else Color.WHITE))
 	var column: = VBoxContainer.new()
 	column.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	column.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -134,7 +149,10 @@ static func action(caption: String, kind: String, color: Color = GREEN) -> Butto
 		var icon: = Icon.new(kind, Color.WHITE, Vector2(24, 24))
 		icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 		column.add_child(icon)
-	var text: = label(caption, 12, Color.WHITE)
+	var text: = label(caption, 13, Color.WHITE)
+	text.add_theme_font_override("font", title_font())
+	text.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.55))
+	text.add_theme_constant_override("shadow_offset_y", 1)
 	text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	column.add_child(text)
@@ -182,6 +200,16 @@ class Icon extends Control:
 	func _draw() -> void:
 		var c: = size * 0.5
 		var u: = minf(size.x, size.y) / 24.0
+		if tint.get_luminance() > 0.5:
+			# Soft drop shadow under light icons so they read as embossed, not flat.
+			var keep: = tint
+			tint = Color(0, 0, 0, 0.45)
+			draw_set_transform(Vector2(1.2, 1.6) * u)
+			_shape(c, u)
+			draw_set_transform(Vector2.ZERO)
+			tint = keep
+		_shape(c, u)
+	func _shape(c: Vector2, u: float) -> void:
 		match kind:
 			"hammer":
 				draw_line(c + Vector2(-4, -2) * u, c + Vector2(5, 9) * u, tint, 2.6 * u)

@@ -35,7 +35,8 @@ func run() -> void:
 
 	# 2. Resource sites: placed in playable provinces, with city specialties, paying the controller.
 	var sites: ResourceSites = game.resource_sites
-	check(sites.sites.size() >= 40, "resource sites are scattered across the provinces (%d)" % sites.sites.size())
+	check(sites.sites.size() == game.map.province_hubs.size(), "one resource per province, like Call of War (%d sites, %d provinces)" % [sites.sites.size(), game.map.province_hubs.size()])
+	check(sites.sites.all(func(site: Dictionary): return site.point.distance_to(game.map.province_hubs[site.name]) <= 1.01), "each resource sits at its province centre")
 	var kinds: = {}
 	for site in sites.sites: kinds[site.resource] = true
 	check(kinds.has_all(["fuel", "materials", "electronics", "manpower"]), "oil, mines, plants and farmland are all present")

@@ -33,7 +33,7 @@ func setup(system: ResearchSystem, theme: Theme) -> void:
 	root.theme = theme
 	add_child(root)
 	panel = PanelContainer.new()
-	panel.add_theme_stylebox_override("panel", CowUI.box(CowUI.DARK))
+	panel.add_theme_stylebox_override("panel", CowUI.skin("panel_dark", 8))
 	root.add_child(panel)
 	var column: = VBoxContainer.new()
 	column.add_theme_constant_override("separation", 0)
@@ -83,9 +83,10 @@ func setup(system: ResearchSystem, theme: Theme) -> void:
 		if families.is_empty(): continue
 		var banner: = Button.new()
 		banner.custom_minimum_size.y = 118
-		banner.add_theme_stylebox_override("normal", CowUI.box(Color("e4e0d2"), 3, Color("8d8770"), 2))
-		banner.add_theme_stylebox_override("hover", CowUI.box(Color("eeeadc"), 3, CowUI.GOLD, 2))
-		banner.add_theme_stylebox_override("pressed", CowUI.box(Color("d6d1c0"), 3, CowUI.GOLD, 2))
+		var art: = "banner_" + GameSession.player_country
+		banner.add_theme_stylebox_override("normal", CowUI.skin(art, 6))
+		banner.add_theme_stylebox_override("hover", CowUI.skin(art, 6, 0, Color(1.06, 1.06, 1.06)))
+		banner.add_theme_stylebox_override("pressed", CowUI.skin(art, 6, 0, Color(0.92, 0.92, 0.92)))
 		banner.pressed.connect(func(): show_category(index))
 		var picture: = TextureRect.new()
 		picture.texture = UnitVisual.preview_texture(families[0].id)
@@ -99,7 +100,7 @@ func setup(system: ResearchSystem, theme: Theme) -> void:
 		picture.offset_right = -10
 		picture.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		banner.add_child(picture)
-		var name: = CowUI.label(CATEGORIES[index], 30, CowUI.INK)
+		var name: = CowUI.label(CATEGORIES[index], 34, CowUI.INK)
 		name.anchor_top = 1.0
 		name.anchor_bottom = 1.0
 		name.offset_left = 18
@@ -122,7 +123,7 @@ func setup(system: ResearchSystem, theme: Theme) -> void:
 	tab_scroll.add_child(tab_row)
 	var board: = PanelContainer.new()
 	board.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	board.add_theme_stylebox_override("panel", CowUI.box(Color("b9b4a3")))
+	board.add_theme_stylebox_override("panel", CowUI.skin("list", 8))
 	tree_view.add_child(board)
 	var board_column: = VBoxContainer.new()
 	board_column.add_theme_constant_override("separation", 0)
@@ -139,7 +140,7 @@ func setup(system: ResearchSystem, theme: Theme) -> void:
 	grid_scroll.add_child(grid)
 	# Selected technology: cost, time and RESEARCH.
 	var bar: = PanelContainer.new()
-	bar.add_theme_stylebox_override("panel", CowUI.box(CowUI.DARKER, 0, CowUI.LINE, 0, 8))
+	bar.add_theme_stylebox_override("panel", CowUI.skin("header", 4, 8))
 	tree_view.add_child(bar)
 	var bar_row: = HBoxContainer.new()
 	bar_row.add_theme_constant_override("separation", 10)
@@ -356,8 +357,12 @@ func _refresh() -> void:
 		var state: = _state(cell.id, cell.level)
 		var color: Color = {"done": Color("6f9a4a"), "active": Color("5b86b0"), "available": Color("d7b25a"), "locked": Color("8f8b7c")}[state]
 		var chosen: bool = cell.id == selected_id and cell.level == selected_level
-		for style_state in ["normal", "hover", "pressed"]:
-			cell.card.add_theme_stylebox_override(style_state, CowUI.box(color.lightened(0.08) if style_state == "hover" else color, 2, CowUI.GOLD if chosen else Color("3a3a34"), 4 if chosen else 2, 6))
+		var face: = CowUI.skin("btn_grey", 12, 6, Color(color.r * 1.75, color.g * 1.75, color.b * 1.75))
+		if chosen:
+			var ring: = CowUI.box(color.lightened(0.15), 6, CowUI.GOLD, 4, 6)
+			for style_state in ["normal", "hover", "pressed"]: cell.card.add_theme_stylebox_override(style_state, ring)
+		else:
+			for style_state in ["normal", "hover", "pressed"]: cell.card.add_theme_stylebox_override(style_state, face)
 		cell.card.modulate = Color(1, 1, 1, 0.7) if state == "locked" else Color.WHITE
 	# Selected technology.
 	detail.picture.texture = UnitVisual.preview_texture(selected_id)

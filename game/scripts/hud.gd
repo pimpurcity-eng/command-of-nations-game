@@ -99,7 +99,7 @@ func _ready() -> void :
 # ---------------------------------------------------------------- top bar
 func _build_top_bar(root: Control) -> void:
 	top_bar = PanelContainer.new()
-	top_bar.add_theme_stylebox_override("panel", _flat(BAR, 0, Vector4(8, 6, 8, 6), Color(0.85, 0.72, 0.4, 0.55), 0, 0, 1))
+	top_bar.add_theme_stylebox_override("panel", _skinned("header", Vector4(8, 6, 8, 6), 4))
 	top_bar.set_anchors_preset(Control.PRESET_TOP_WIDE)
 	root.add_child(top_bar)
 	var column: = VBoxContainer.new()
@@ -220,7 +220,7 @@ func _build_toolbar(root: Control) -> void:
 # ---------------------------------------------------------------- bottom sheet
 func _build_bottom(root: Control) -> void:
 	command_panel = PanelContainer.new()
-	command_panel.add_theme_stylebox_override("panel", _flat(BAR, 0, Vector4(8, 6, 8, 4), Color(0.85, 0.72, 0.4, 0.55), 0, 1, 0))
+	command_panel.add_theme_stylebox_override("panel", _skinned("header", Vector4(8, 6, 8, 4), 4))
 	command_panel.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
 	command_panel.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	root.add_child(command_panel)
@@ -350,6 +350,14 @@ func _flat(color: Color, radius: int = 6, margin: Vector4 = Vector4(6, 4, 6, 4),
 	style.border_width_top = top
 	style.border_width_bottom = bottom
 	return style
+## Textured skin piece (CowUI) with HUD content margins.
+func _skinned(name: String, margin: Vector4, corner: int = 10, tint: Color = Color.WHITE) -> StyleBoxTexture:
+	var style: = CowUI.skin(name, corner, 0, tint)
+	style.content_margin_left = margin.x
+	style.content_margin_top = margin.y
+	style.content_margin_right = margin.z
+	style.content_margin_bottom = margin.w
+	return style
 func _chip_label(text: String) -> Label:
 	var label: = Label.new()
 	label.text = text
@@ -363,7 +371,8 @@ func _small_button(text: String) -> Button:
 	button.custom_minimum_size = Vector2(58, 34)
 	button.add_theme_font_size_override("font_size", 14)
 	for state in ["normal", "hover", "pressed", "disabled"]:
-		button.add_theme_stylebox_override(state, _flat(Color("2c3235") if state != "pressed" else Color("45503f"), 5, Vector4(8, 2, 8, 2), Color(0.85, 0.72, 0.4, 0.6), 1, 1, 1))
+		button.add_theme_stylebox_override(state, _skinned("btn_dark", Vector4(8, 2, 8, 2), 10, Color(1.25, 1.25, 1.25) if state == "pressed" else Color.WHITE))
+	button.add_theme_font_override("font", CowUI.title_font())
 	return button
 func _square(kind: String) -> Button:
 	var button: = Button.new()
@@ -373,7 +382,7 @@ func _style_square(button: Button, kind: String) -> void:
 	button.custom_minimum_size = Vector2(44, 44)
 	button.flat = false
 	for state in ["normal", "hover", "pressed", "disabled"]:
-		button.add_theme_stylebox_override(state, _flat(Color(0.12, 0.135, 0.145, 0.88) if state != "pressed" else Color("45503f"), 6))
+		button.add_theme_stylebox_override(state, _skinned("frame", Vector4.ZERO, 10, Color(1.2, 1.15, 1.05) if state == "pressed" else Color.WHITE))
 	var glyph: = Glyph.new(kind, GOLD, Vector2(44, 44), 0.62)
 	glyph.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	glyph.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -389,10 +398,14 @@ func _style_order(button: Button, kind: String, text: String, color: Color) -> v
 	button.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
 	button.add_theme_font_size_override("font_size", 13)
 	button.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	# Glossy bevelled faces (tools/make_ui_skin.py): red Attack, green Move, metal otherwise.
+	var face: = "btn_red" if color.r > color.g * 1.4 else ("btn_green" if color.g > color.r * 1.25 else "btn_dark")
 	for state in ["normal", "hover", "pressed", "disabled"]:
-		var shade: = color if state == "normal" or state == "hover" else (color.lightened(0.15) if state == "pressed" else color.darkened(0.45))
-		var style: = _flat(shade, 6, Vector4(4, 30, 4, 4), Color(1, 1, 1, 0.18), 1, 1, 1)
-		button.add_theme_stylebox_override(state, style)
+		var texture: = "btn_grey" if state == "disabled" else face
+		button.add_theme_stylebox_override(state, _skinned(texture, Vector4(4, 30, 4, 4), 12, Color(1.15, 1.15, 1.15) if state == "pressed" else Color.WHITE))
+	button.add_theme_font_override("font", CowUI.title_font())
+	button.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.6))
+	button.add_theme_constant_override("shadow_offset_y", 1)
 	var glyph: = Glyph.new(kind, Color.WHITE, Vector2(28, 28))
 	glyph.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	glyph.anchor_left = 0.5
@@ -544,16 +557,20 @@ class Glyph extends Control:
 					var band: = Rect2(rect.position + Vector2(0, rect.size.y * i / colors.size()), Vector2(rect.size.x, rect.size.y / colors.size()))
 					draw_rect(band, colors[i])
 				draw_rect(rect, Color(0, 0, 0, 0.6), false, 1.5)
-			"funds":
+			"funds", "materials", "electronics", "fuel", "manpower":
+				# Shaded resource icons (tools/make_ui_skin.py), as in the menus.
+				var side: = minf(size.x, size.y) * 1.25
+				draw_texture_rect(ResourceSites.icon(kind), Rect2(c - Vector2(side, side) * 0.5, Vector2(side, side)), false)
+			"funds_vector":
 				draw_rect(Rect2(c - Vector2(11, 6) * u, Vector2(22, 12) * u), Color("4f9a45"))
 				draw_rect(Rect2(c - Vector2(11, 6) * u, Vector2(22, 12) * u), Color("2d5f28"), false, 1.5)
 				draw_circle(c, 3.2 * u, Color("9fd18f"))
-			"materials":
+			"materials_vector":
 				draw_rect(Rect2(c - Vector2(10, 9) * u, Vector2(20, 18) * u), Color("9a6b3c"))
 				draw_line(c + Vector2(-10, -9) * u, c + Vector2(10, 9) * u, Color("5e3d1d"), 1.6 * u)
 				draw_line(c + Vector2(10, -9) * u, c + Vector2(-10, 9) * u, Color("5e3d1d"), 1.6 * u)
 				draw_rect(Rect2(c - Vector2(10, 9) * u, Vector2(20, 18) * u), Color("5e3d1d"), false, 1.5)
-			"electronics":
+			"electronics_vector":
 				draw_rect(Rect2(c - Vector2(7, 7) * u, Vector2(14, 14) * u), Color("3d6b7a"))
 				for i in 3:
 					var o: = (-4 + i * 4) * u
@@ -561,11 +578,11 @@ class Glyph extends Control:
 					draw_line(c + Vector2(o, 7 * u), c + Vector2(o, 10 * u), Color("9fc4cf"), 1.5 * u)
 					draw_line(c + Vector2(-7 * u, o), c + Vector2(-10 * u, o), Color("9fc4cf"), 1.5 * u)
 					draw_line(c + Vector2(7 * u, o), c + Vector2(10 * u, o), Color("9fc4cf"), 1.5 * u)
-			"fuel":
+			"fuel_vector":
 				draw_colored_polygon(PackedVector2Array([c + Vector2(-7, -6) * u, c + Vector2(-2, -10) * u, c + Vector2(7, -10) * u, c + Vector2(7, 10) * u, c + Vector2(-7, 10) * u]), Color("c8352e"))
 				draw_line(c + Vector2(-4, -2) * u, c + Vector2(4, 7) * u, Color("ffb3a8"), 1.5 * u)
 				draw_line(c + Vector2(4, -2) * u, c + Vector2(-4, 7) * u, Color("ffb3a8"), 1.5 * u)
-			"manpower":
+			"manpower_vector":
 				draw_arc(c + Vector2(0, 3) * u, 9 * u, PI, TAU, 16, Color("7a8a4e"), 7 * u)
 				draw_line(c + Vector2(-12, 4) * u, c + Vector2(12, 4) * u, Color("55623a"), 2.5 * u)
 			"zoom_in", "zoom_out":

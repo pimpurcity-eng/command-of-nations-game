@@ -136,6 +136,7 @@ func sync_buildings() -> void :
 				var around: = TAU * (index + 0.5) / maxf(system.catalog.size(), 1.0) + float(city.name.hash() % 100) * 0.01
 				visual.position = Vector3(cos(around) * 1.08, 0.09, sin(around) * 1.08)
 				visual.rotation.y = -around
+				_paint_infrastructure(visual)
 				district.add_child(visual)
 			var infrastructure_world: = district.position + visual.position * district.scale
 			visual.position.y = 0.09 + (terrain.elevation(Vector2(infrastructure_world.x, infrastructure_world.z)) - district.position.y) / district.scale.y
@@ -250,10 +251,31 @@ func _city_mesh(parent: Node3D, mesh: Mesh, position: Vector3, material: Materia
 		batches[key] = tool
 	batches[key].append_from(mesh, 0, Transform3D(Basis.IDENTITY, position))
 	parent.set_meta("building_batches", batches)
+## Owner review: the factory/warehouse models were bare white. Their pale surfaces get
+## painted concrete walls and green-grey roofs; darker details keep their colour. Painted
+## materials are shared (cached) so destroyed or replaced buildings never free them in use.
+var _painted: Dictionary = {}
+func _paint_infrastructure(root: Node) -> void :
+	for node in root.find_children("*", "MeshInstance3D", true, false):
+		var mesh_instance: MeshInstance3D = node
+		if mesh_instance.mesh == null: continue
+		for surface in mesh_instance.mesh.get_surface_count():
+			var source: = mesh_instance.get_active_material(surface) as BaseMaterial3D
+			if source == null: continue
+			var key: = source.get_instance_id()
+			if not _painted.has(key):
+				var paint: = source.duplicate() as BaseMaterial3D
+				var tone: = source.albedo_color
+				if tone.get_luminance() > 0.55:
+					paint.albedo_color = Color("8d877a") if surface % 2 == 0 else Color("5f6b58")
+				else: paint.albedo_color = tone.darkened(0.15)
+				paint.roughness = 0.9
+				_painted[key] = paint
+			mesh_instance.set_surface_override_material(surface, _painted[key])
 func _facade(color: String, glass: String, roof: String, floor_height: float, bay: float, window_w: float, window_h: float, shine: float) -> ShaderMaterial:
 	var material: = ShaderMaterial.new()
 	material.shader = load("res://assets/building_facade.gdshader")
-	material.set_shader_parameter("facade", Color(color))
+	material.set_shader_parameter("facade", Color(color).darkened(0.1))  # weathered paint
 	material.set_shader_parameter("glass", Color(glass))
 	material.set_shader_parameter("roof", Color(roof))
 	material.set_shader_parameter("floor_height", floor_height)
@@ -286,22 +308,32 @@ func _build_city_district(district: Node3D, city: Dictionary, _ink: StandardMate
 	var park: = StandardMaterial3D.new()
 	park.albedo_color = Color("5f7046")
 	park.roughness = 1.0
-	var tiles: = StandardMaterial3D.new()
-	tiles.albedo_color = Color("6e5a4e")
-	tiles.roughness = 0.9
 	var towers: Array[ShaderMaterial] = [
-		_facade("2f3a44", "6f8ea6", "3b4248", 0.0105, 0.009, 0.86, 0.78, 1.0),
-		_facade("3c4a4f", "7aa0a8", "41484c", 0.0105, 0.010, 0.82, 0.74, 1.0),
-		_facade("4a4136", "a08a68", "3f3a34", 0.0105, 0.009, 0.84, 0.72, 0.9),
-		_facade("c9c7c0", "44515b", "6d6f70", 0.0115, 0.011, 0.55, 0.62, 0.4)]
+		_facade("2f3a44", "4f7593", "3b4248", 0.0105, 0.009, 0.86, 0.78, 1.0),
+		_facade("3c4a4f", "5d8a8f", "41484c", 0.0105, 0.010, 0.82, 0.74, 1.0),
+		_facade("4a4136", "8a6f45", "3f3a34", 0.0105, 0.009, 0.84, 0.72, 0.9),
+		_facade("8f8a80", "44515b", "5d5f60", 0.0115, 0.011, 0.55, 0.62, 0.4)]
+	# Owner review: "paint all the buildings" - painted Soviet-era blocks and houses instead
+	# of pale beige/white boxes.
 	var blocks: Array[ShaderMaterial] = [
-		_facade("cfc8b8", "3c4650", "8a8a86", 0.0125, 0.012, 0.42, 0.5, 0.0),
-		_facade("b9b6ad", "39424a", "7d7f7c", 0.0125, 0.012, 0.42, 0.5, 0.0),
-		_facade("d8cdb4", "414a52", "8d8a82", 0.0125, 0.013, 0.40, 0.48, 0.0),
-		_facade("a99178", "3a4047", "6f6a62", 0.0125, 0.012, 0.40, 0.5, 0.0)]
+		_facade("b98a52", "3c4650", "6f6a62", 0.0125, 0.012, 0.42, 0.5, 0.0),
+		_facade("a6604a", "39424a", "5e4a40", 0.0125, 0.012, 0.42, 0.5, 0.0),
+		_facade("7f9670", "414a52", "5d625a", 0.0125, 0.013, 0.40, 0.48, 0.0),
+		_facade("7c8ea3", "3a4047", "5a5f66", 0.0125, 0.012, 0.40, 0.5, 0.0),
+		_facade("c2a35c", "3c4650", "6a5f50", 0.0125, 0.012, 0.42, 0.5, 0.0),
+		_facade("8e5440", "3a4047", "4f4038", 0.0125, 0.012, 0.40, 0.5, 0.0)]
 	var houses: Array[ShaderMaterial] = [
-		_facade("ddd3bf", "3f4850", "8e5b47", 0.016, 0.016, 0.38, 0.42, 0.0),
-		_facade("c9b79c", "3f4850", "8e5b47", 0.016, 0.016, 0.38, 0.42, 0.0)]
+		_facade("d1b15e", "3f4850", "8e5b47", 0.016, 0.016, 0.38, 0.42, 0.0),
+		_facade("c98a6e", "3f4850", "8e5b47", 0.016, 0.016, 0.38, 0.42, 0.0),
+		_facade("9fb48a", "3f4850", "8e5b47", 0.016, 0.016, 0.38, 0.42, 0.0),
+		_facade("c9b48f", "3f4850", "8e5b47", 0.016, 0.016, 0.38, 0.42, 0.0),
+		_facade("a3634c", "3f4850", "8e5b47", 0.016, 0.016, 0.38, 0.42, 0.0)]
+	var roof_tiles: Array[StandardMaterial3D] = []
+	for color in ["8a3d2c", "6e4a36", "4f5f45", "5b4038"]:
+		var tile: = StandardMaterial3D.new()
+		tile.albedo_color = Color(color)
+		tile.roughness = 0.9
+		roof_tiles.append(tile)
 	var taken: Array = []  # [Vector2 position, radius]
 	var avenues: Array = []
 	var avenue_count: = rng.randi_range(4, 6)
@@ -376,15 +408,16 @@ func _build_city_district(district: Node3D, city: Dictionary, _ink: StandardMate
 		var height: = rng.randf_range(0.026, 0.05)
 		var turn: = -a + rng.randf_range(-0.2, 0.2)
 		var width: = rng.randf_range(0.032, 0.048)
-		_city_block(district, Vector3(width, height, width * 0.8), Vector3(point.x, 0.02 + height * 0.5, point.y), turn, houses[rng.randi_range(0, 1)])
+		_city_block(district, Vector3(width, height, width * 0.8), Vector3(point.x, 0.02 + height * 0.5, point.y), turn, houses[rng.randi_range(0, houses.size() - 1)])
 		var pitched: = PrismMesh.new()
 		pitched.size = Vector3(width + 0.006, 0.018, width * 0.8 + 0.006)
 		var batches: Dictionary = district.get_meta("building_batches", {})
-		var key: = tiles.get_instance_id()
+		var roof: StandardMaterial3D = roof_tiles[rng.randi_range(0, roof_tiles.size() - 1)]
+		var key: = roof.get_instance_id()
 		if not batches.has(key):
 			var tool: = SurfaceTool.new()
 			tool.begin(Mesh.PRIMITIVE_TRIANGLES)
-			tool.set_material(tiles)
+			tool.set_material(roof)
 			batches[key] = tool
 			district.set_meta("building_batches", batches)
 		batches[key].append_from(pitched, 0, Transform3D(Basis(Vector3.UP, turn), Vector3(point.x, 0.02 + height + 0.009, point.y)))

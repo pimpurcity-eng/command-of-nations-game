@@ -1,65 +1,330 @@
 {
- "note": "Resource sites (real producing regions) and city specialties. Rates are per simulation second, added to whoever controls the province. Owner review 2026-10-09: resources in cities and scattered across provinces.",
- "rates": {"fuel": 0.06, "materials": 0.09, "electronics": 0.04, "manpower": 0.05, "funds": 0.4},
+ "note": "One resource per province, like Call of War: the resource of the real producing site(s) inside the province ('sites' are geographic hints), else by land type ('by_landform'). Cities have one resource each. Rates are per simulation second for the province's controller. Owner review 2026-10-09.",
+ "rates": {
+  "fuel": 0.06,
+  "materials": 0.09,
+  "electronics": 0.04,
+  "manpower": 0.05,
+  "funds": 0.4
+ },
  "city_specialty_bonus": 0.5,
  "cities": {
-  "Kyiv": ["funds", "electronics", "manpower"],
-  "Lviv": ["funds", "materials"],
-  "Odesa": ["funds", "fuel"],
-  "Kharkiv": ["electronics", "materials"],
-  "Dnipro": ["materials", "electronics"],
-  "Moscow": ["funds", "electronics", "manpower"],
-  "Kursk": ["materials", "manpower"],
-  "Belgorod": ["materials", "funds"],
-  "Voronezh": ["electronics", "manpower"],
-  "Rostov-on-Don": ["fuel", "manpower"]
+  "Kyiv": [
+   "electronics"
+  ],
+  "Lviv": [
+   "materials"
+  ],
+  "Odesa": [
+   "fuel"
+  ],
+  "Kharkiv": [
+   "electronics"
+  ],
+  "Dnipro": [
+   "materials"
+  ],
+  "Moscow": [
+   "electronics"
+  ],
+  "Kursk": [
+   "materials"
+  ],
+  "Belgorod": [
+   "materials"
+  ],
+  "Voronezh": [
+   "electronics"
+  ],
+  "Rostov-on-Don": [
+   "fuel"
+  ]
  },
  "sites": [
-  {"name": "Shebelynka gas field", "resource": "fuel", "longitude": 36.6, "latitude": 49.45},
-  {"name": "Okhtyrka oil field", "resource": "fuel", "longitude": 34.9, "latitude": 50.3},
-  {"name": "Poltava gas field", "resource": "fuel", "longitude": 33.7, "latitude": 49.75},
-  {"name": "Boryslav oil field", "resource": "fuel", "longitude": 23.45, "latitude": 49.3},
-  {"name": "Dolyna oil field", "resource": "fuel", "longitude": 24.0, "latitude": 48.97},
-  {"name": "Abinsk oil field", "resource": "fuel", "longitude": 38.2, "latitude": 44.9},
-  {"name": "Maykop oil field", "resource": "fuel", "longitude": 40.1, "latitude": 44.6},
-  {"name": "Grozny oil field", "resource": "fuel", "longitude": 45.7, "latitude": 43.4},
-  {"name": "Astrakhan gas field", "resource": "fuel", "longitude": 47.6, "latitude": 46.6},
-  {"name": "Zhirnovsk oil field", "resource": "fuel", "longitude": 44.8, "latitude": 51.0},
-  {"name": "Kalmykia oil field", "resource": "fuel", "longitude": 44.6, "latitude": 46.2},
-  {"name": "Stavropol gas field", "resource": "fuel", "longitude": 42.4, "latitude": 45.2},
-  {"name": "Saratov oil field", "resource": "fuel", "longitude": 46.4, "latitude": 51.7},
-  {"name": "Kryvyi Rih iron ore", "resource": "materials", "longitude": 33.4, "latitude": 47.9},
-  {"name": "Donbas coal", "resource": "materials", "longitude": 37.9, "latitude": 48.05},
-  {"name": "Luhansk coal", "resource": "materials", "longitude": 39.3, "latitude": 48.6},
-  {"name": "Zaporizhzhia steelworks", "resource": "materials", "longitude": 35.1, "latitude": 47.8},
-  {"name": "Mariupol steelworks", "resource": "materials", "longitude": 37.55, "latitude": 47.1},
-  {"name": "Nikopol manganese", "resource": "materials", "longitude": 34.4, "latitude": 47.6},
-  {"name": "Gubkin iron ore", "resource": "materials", "longitude": 37.5, "latitude": 51.3},
-  {"name": "Zheleznogorsk iron ore", "resource": "materials", "longitude": 35.4, "latitude": 52.35},
-  {"name": "Lipetsk steelworks", "resource": "materials", "longitude": 39.6, "latitude": 52.6},
-  {"name": "Tula steelworks", "resource": "materials", "longitude": 37.6, "latitude": 54.1},
-  {"name": "Cherepovets steelworks", "resource": "materials", "longitude": 37.9, "latitude": 59.1},
-  {"name": "Kostroma timber", "resource": "materials", "longitude": 42.0, "latitude": 58.4},
-  {"name": "Polissia timber", "resource": "materials", "longitude": 27.0, "latitude": 51.5},
-  {"name": "Carpathian timber", "resource": "materials", "longitude": 24.3, "latitude": 48.45},
-  {"name": "Shakhty coal", "resource": "materials", "longitude": 40.2, "latitude": 47.7},
-  {"name": "Zelenograd electronics", "resource": "electronics", "longitude": 37.2, "latitude": 56.0},
-  {"name": "Nizhny Novgorod plants", "resource": "electronics", "longitude": 43.9, "latitude": 56.3},
-  {"name": "Kaluga plants", "resource": "electronics", "longitude": 36.25, "latitude": 54.5},
-  {"name": "Tver plants", "resource": "electronics", "longitude": 35.9, "latitude": 56.85},
-  {"name": "Veliky Novgorod plants", "resource": "electronics", "longitude": 31.3, "latitude": 58.5},
-  {"name": "Zaporizhzhia engine plant", "resource": "electronics", "longitude": 35.25, "latitude": 47.95},
-  {"name": "Poltava farmland", "resource": "manpower", "longitude": 34.0, "latitude": 49.3},
-  {"name": "Vinnytsia farmland", "resource": "manpower", "longitude": 28.5, "latitude": 49.2},
-  {"name": "Kherson farmland", "resource": "manpower", "longitude": 33.4, "latitude": 46.8},
-  {"name": "Kirovohrad farmland", "resource": "manpower", "longitude": 32.2, "latitude": 48.5},
-  {"name": "Cherkasy farmland", "resource": "manpower", "longitude": 31.6, "latitude": 49.3},
-  {"name": "Chernihiv farmland", "resource": "manpower", "longitude": 32.0, "latitude": 51.6},
-  {"name": "Kuban farmland", "resource": "manpower", "longitude": 39.6, "latitude": 45.6},
-  {"name": "Stavropol farmland", "resource": "manpower", "longitude": 43.2, "latitude": 45.6},
-  {"name": "Don farmland", "resource": "manpower", "longitude": 41.0, "latitude": 47.2},
-  {"name": "Tambov farmland", "resource": "manpower", "longitude": 41.5, "latitude": 52.7},
-  {"name": "Penza farmland", "resource": "manpower", "longitude": 45.0, "latitude": 53.2},
-  {"name": "Oryol farmland", "resource": "manpower", "longitude": 36.1, "latitude": 52.9}
- ]
+  {
+   "name": "Shebelynka gas field",
+   "resource": "fuel",
+   "longitude": 36.6,
+   "latitude": 49.45
+  },
+  {
+   "name": "Okhtyrka oil field",
+   "resource": "fuel",
+   "longitude": 34.9,
+   "latitude": 50.3
+  },
+  {
+   "name": "Poltava gas field",
+   "resource": "fuel",
+   "longitude": 33.7,
+   "latitude": 49.75
+  },
+  {
+   "name": "Boryslav oil field",
+   "resource": "fuel",
+   "longitude": 23.45,
+   "latitude": 49.3
+  },
+  {
+   "name": "Dolyna oil field",
+   "resource": "fuel",
+   "longitude": 24.0,
+   "latitude": 48.97
+  },
+  {
+   "name": "Abinsk oil field",
+   "resource": "fuel",
+   "longitude": 38.2,
+   "latitude": 44.9
+  },
+  {
+   "name": "Maykop oil field",
+   "resource": "fuel",
+   "longitude": 40.1,
+   "latitude": 44.6
+  },
+  {
+   "name": "Grozny oil field",
+   "resource": "fuel",
+   "longitude": 45.7,
+   "latitude": 43.4
+  },
+  {
+   "name": "Astrakhan gas field",
+   "resource": "fuel",
+   "longitude": 47.6,
+   "latitude": 46.6
+  },
+  {
+   "name": "Zhirnovsk oil field",
+   "resource": "fuel",
+   "longitude": 44.8,
+   "latitude": 51.0
+  },
+  {
+   "name": "Kalmykia oil field",
+   "resource": "fuel",
+   "longitude": 44.6,
+   "latitude": 46.2
+  },
+  {
+   "name": "Stavropol gas field",
+   "resource": "fuel",
+   "longitude": 42.4,
+   "latitude": 45.2
+  },
+  {
+   "name": "Saratov oil field",
+   "resource": "fuel",
+   "longitude": 46.4,
+   "latitude": 51.7
+  },
+  {
+   "name": "Kryvyi Rih iron ore",
+   "resource": "materials",
+   "longitude": 33.4,
+   "latitude": 47.9
+  },
+  {
+   "name": "Donbas coal",
+   "resource": "materials",
+   "longitude": 37.9,
+   "latitude": 48.05
+  },
+  {
+   "name": "Luhansk coal",
+   "resource": "materials",
+   "longitude": 39.3,
+   "latitude": 48.6
+  },
+  {
+   "name": "Zaporizhzhia steelworks",
+   "resource": "materials",
+   "longitude": 35.1,
+   "latitude": 47.8
+  },
+  {
+   "name": "Mariupol steelworks",
+   "resource": "materials",
+   "longitude": 37.55,
+   "latitude": 47.1
+  },
+  {
+   "name": "Nikopol manganese",
+   "resource": "materials",
+   "longitude": 34.4,
+   "latitude": 47.6
+  },
+  {
+   "name": "Gubkin iron ore",
+   "resource": "materials",
+   "longitude": 37.5,
+   "latitude": 51.3
+  },
+  {
+   "name": "Zheleznogorsk iron ore",
+   "resource": "materials",
+   "longitude": 35.4,
+   "latitude": 52.35
+  },
+  {
+   "name": "Lipetsk steelworks",
+   "resource": "materials",
+   "longitude": 39.6,
+   "latitude": 52.6
+  },
+  {
+   "name": "Tula steelworks",
+   "resource": "materials",
+   "longitude": 37.6,
+   "latitude": 54.1
+  },
+  {
+   "name": "Cherepovets steelworks",
+   "resource": "materials",
+   "longitude": 37.9,
+   "latitude": 59.1
+  },
+  {
+   "name": "Kostroma timber",
+   "resource": "materials",
+   "longitude": 42.0,
+   "latitude": 58.4
+  },
+  {
+   "name": "Polissia timber",
+   "resource": "materials",
+   "longitude": 27.0,
+   "latitude": 51.5
+  },
+  {
+   "name": "Carpathian timber",
+   "resource": "materials",
+   "longitude": 24.3,
+   "latitude": 48.45
+  },
+  {
+   "name": "Shakhty coal",
+   "resource": "materials",
+   "longitude": 40.2,
+   "latitude": 47.7
+  },
+  {
+   "name": "Zelenograd electronics",
+   "resource": "electronics",
+   "longitude": 37.2,
+   "latitude": 56.0
+  },
+  {
+   "name": "Nizhny Novgorod plants",
+   "resource": "electronics",
+   "longitude": 43.9,
+   "latitude": 56.3
+  },
+  {
+   "name": "Kaluga plants",
+   "resource": "electronics",
+   "longitude": 36.25,
+   "latitude": 54.5
+  },
+  {
+   "name": "Tver plants",
+   "resource": "electronics",
+   "longitude": 35.9,
+   "latitude": 56.85
+  },
+  {
+   "name": "Veliky Novgorod plants",
+   "resource": "electronics",
+   "longitude": 31.3,
+   "latitude": 58.5
+  },
+  {
+   "name": "Zaporizhzhia engine plant",
+   "resource": "electronics",
+   "longitude": 35.25,
+   "latitude": 47.95
+  },
+  {
+   "name": "Poltava farmland",
+   "resource": "manpower",
+   "longitude": 34.0,
+   "latitude": 49.3
+  },
+  {
+   "name": "Vinnytsia farmland",
+   "resource": "manpower",
+   "longitude": 28.5,
+   "latitude": 49.2
+  },
+  {
+   "name": "Kherson farmland",
+   "resource": "manpower",
+   "longitude": 33.4,
+   "latitude": 46.8
+  },
+  {
+   "name": "Kirovohrad farmland",
+   "resource": "manpower",
+   "longitude": 32.2,
+   "latitude": 48.5
+  },
+  {
+   "name": "Cherkasy farmland",
+   "resource": "manpower",
+   "longitude": 31.6,
+   "latitude": 49.3
+  },
+  {
+   "name": "Chernihiv farmland",
+   "resource": "manpower",
+   "longitude": 32.0,
+   "latitude": 51.6
+  },
+  {
+   "name": "Kuban farmland",
+   "resource": "manpower",
+   "longitude": 39.6,
+   "latitude": 45.6
+  },
+  {
+   "name": "Stavropol farmland",
+   "resource": "manpower",
+   "longitude": 43.2,
+   "latitude": 45.6
+  },
+  {
+   "name": "Don farmland",
+   "resource": "manpower",
+   "longitude": 41.0,
+   "latitude": 47.2
+  },
+  {
+   "name": "Tambov farmland",
+   "resource": "manpower",
+   "longitude": 41.5,
+   "latitude": 52.7
+  },
+  {
+   "name": "Penza farmland",
+   "resource": "manpower",
+   "longitude": 45.0,
+   "latitude": 53.2
+  },
+  {
+   "name": "Oryol farmland",
+   "resource": "manpower",
+   "longitude": 36.1,
+   "latitude": 52.9
+  }
+ ],
+ "by_landform": {
+  "forest": "materials",
+  "hills": "manpower",
+  "mountains": "materials",
+  "plains": "manpower",
+  "desert": "fuel",
+  "urban": "funds"
+ },
+ "forest_timber_latitude": 56.0
 }

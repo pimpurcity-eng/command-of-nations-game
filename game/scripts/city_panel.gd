@@ -34,7 +34,7 @@ func setup(system: BuildingSystem, theme: Theme) -> void:
 	root.theme = theme
 	add_child(root)
 	panel = PanelContainer.new()
-	panel.add_theme_stylebox_override("panel", CowUI.box(CowUI.DARK))
+	panel.add_theme_stylebox_override("panel", CowUI.skin("panel_dark", 8))
 	root.add_child(panel)
 	var column: = VBoxContainer.new()
 	column.add_theme_constant_override("separation", 0)
@@ -45,7 +45,7 @@ func setup(system: BuildingSystem, theme: Theme) -> void:
 	column.add_child(head.bar)
 	# Ownership and income.
 	var info: = PanelContainer.new()
-	info.add_theme_stylebox_override("panel", CowUI.box(CowUI.DARK, 0, Color(0, 0, 0, 0), 0, 8))
+	info.add_theme_stylebox_override("panel", CowUI.box(Color(0, 0, 0, 0), 0, Color(0, 0, 0, 0), 0, 8))
 	column.add_child(info)
 	var info_column: = VBoxContainer.new()
 	info.add_child(info_column)
@@ -92,7 +92,7 @@ func setup(system: BuildingSystem, theme: Theme) -> void:
 	# Building list.
 	var list_back: = PanelContainer.new()
 	list_back.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	list_back.add_theme_stylebox_override("panel", CowUI.box(CowUI.LIST))
+	list_back.add_theme_stylebox_override("panel", CowUI.skin("list", 8))
 	column.add_child(list_back)
 	var scroll: = ScrollContainer.new()
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -130,7 +130,7 @@ func _produce() -> void:
 
 func _add_row(definition: Dictionary) -> void:
 	var card: = PanelContainer.new()
-	card.add_theme_stylebox_override("panel", CowUI.box(CowUI.ROW, 0, Color("b4ae9a"), 1, 8))
+	card.add_theme_stylebox_override("panel", CowUI.skin("row", 6, 8))
 	list.add_child(card)
 	var row: = HBoxContainer.new()
 	row.add_theme_constant_override("separation", 10)
@@ -158,7 +158,7 @@ func _add_row(definition: Dictionary) -> void:
 	costs.add_theme_constant_override("separation", 12)
 	middle.add_child(costs)
 	var right: = PanelContainer.new()
-	right.add_theme_stylebox_override("panel", CowUI.box(Color("c4bfad"), 4, Color(0, 0, 0, 0), 0, 4))
+	right.add_theme_stylebox_override("panel", CowUI.box(Color(0.55, 0.52, 0.44, 0.22), 6, Color(0, 0, 0, 0), 0, 5))
 	row.add_child(right)
 	var right_column: = VBoxContainer.new()
 	right_column.alignment = BoxContainer.ALIGNMENT_CENTER

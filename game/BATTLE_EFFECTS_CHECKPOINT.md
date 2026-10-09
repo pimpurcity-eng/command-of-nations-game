@@ -79,3 +79,11 @@ Feedback: research separate from cities; menus (building) too complicated — ma
 - **Cities:** avenue asphalt strips removed (gaps kept as streets); map roads stop at the city edge (`CITY_EDGE`).
 - **ChatGPT, builds:** the city screen's building rows come from `buildings.json`; adding buildings there adds rows (sections in `CityPanel.SECTIONS`; unknown ids go under "Special").
 - Tests: `test_map_features.gd` 18/0, campaign 0 failures, battle effects 0 failures, touch 0 failures. Screenshot `docs/review/phone_round2.png`.
+
+### Claude — 2026-10-09 (Matthew's phone test, round 3)
+Feedback: resources like Call of War — one per province/city; planes fly anywhere in range (not on roads); paint all the buildings; menu layout good but looks like "Atari graphics".
+- **Resources:** `ResourceSites` now places exactly one resource per province, beside its centre (`_beside`, away from roads): city provinces use the city's single resource (`resource_sites.json` "cities"), others the majority of the real producing sites inside them ("sites" are now geographic hints), else land type ("by_landform"; forest south of 56°N counts as farmland). 73 provinces: 27 materials, 25 manpower, 13 fuel, 8 electronics.
+- **Planes:** confirmed already straight-line within range (`AirOperations.order`, waypoints = [destination]); roads-only applies to ground armies only. No change.
+- **Buildings painted:** coloured Soviet-era blocks, houses and roof tiles (weathered 10%); infrastructure models (warehouse/factory GLBs) get shared painted materials (`CitySystem._paint_infrastructure`).
+- **Menu skin:** `tools/make_ui_skin.py` → `assets/interface/skin/*.png` (bevelled buttons, brushed panels, inset wells, parchment rows, tabs, research banners) and shaded `res_*.png` icons; fonts Oswald + Roboto Condensed (OFL, `assets/fonts/`), set in `StrategyTheme`. `CowUI.skin()` used by city/research screens and HUD bars/buttons. `ResourceSites.icon()` returns in-memory copies (the imported money icon drew as a white square in the HUD on GL Compatibility).
+- Tests: `test_map_features.gd` 19/0 (one resource per province, at its centre); campaign, battle effects, touch 0 failures. Screenshot `docs/review/phone_round3.png`.

@@ -12,9 +12,22 @@ static func surface(name: String, margin: float = 12.0) -> StyleBoxTexture:
 	style.content_margin_top = 8
 	style.content_margin_bottom = 8
 	return style
+## Owner review: the default font looked like "Atari graphics". Roboto Condensed for text,
+## Oswald for titles and buttons (both SIL Open Font License, assets/fonts/OFL-*.txt).
+static var _fonts: Dictionary = {}
+static func font(family: String, weight: int) -> Font:
+	var key: = family + str(weight)
+	if not _fonts.has(key):
+		var variation: = FontVariation.new()
+		variation.base_font = load("res://assets/fonts/" + family + ".ttf")
+		variation.variation_opentype = {TextServerManager.get_primary_interface().name_to_tag("wght"): weight}
+		_fonts[key] = variation
+	return _fonts[key]
 static func create() -> Theme:
 	var theme: = Theme.new()
 	theme.default_font_size = 15
+	theme.default_font = font("RobotoCondensed", 500)
+	theme.set_font("font", "Button", font("Oswald", 500))
 	for type_name in ["Button", "OptionButton", "MenuButton"]:
 		for state in ["normal", "hover", "pressed", "disabled"]:
 			theme.set_stylebox(state, type_name, surface("button" if state == "normal" else state))

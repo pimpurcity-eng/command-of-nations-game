@@ -24,22 +24,64 @@ static func city_resources(city_name: String) -> Array:
 static func rate(resource: String) -> float:
 	return float(data().rates.get(resource, 0.0))
 
+static var _icons: Dictionary = {}
 static func icon(resource: String) -> Texture2D:
-	return load("res://assets/interface/res_" + resource + ".png")
+	# A plain in-memory copy per icon: the imported texture drew as a white square in the HUD
+	# top bar on the GL Compatibility renderer (money icon), while the copy draws correctly.
+	if not _icons.has(resource):
+		var source: Texture2D = load("res://assets/interface/res_" + resource + ".png")
+		_icons[resource] = ImageTexture.create_from_image(source.get_image())
+	return _icons[resource]
 
 func setup(map: StrategicMap, camera_rig: StrategyCamera) -> void:
 	terrain = map
 	rig = camera_rig
-	for entry in data().sites:
-		var point: = GeographicProjection.project(entry.longitude, entry.latitude)
-		var province: Dictionary = {}
-		for territory in terrain.territories:
-			if territory.playable and RegionData.contains(territory, point):
-				province = territory
-				break
-		if province.is_empty(): continue  # outside the playable map
-		sites.append({"name": entry.name, "resource": entry.resource, "point": point, "territory": province})
-	for site in sites: _build(site)
+	# Call of War: every province produces one resource, shown at its centre.
+	var hints: = []
+	for entry in data().sites: hints.append({"resource": entry.resource, "point": GeographicProjection.project(entry.longitude, entry.latitude)})
+	var city_names: = {}
+	for city in GeographicProjection.load_cities(): city_names[city.name] = city.point
+	for title in terrain.province_hubs:
+		var hub: Vector2 = terrain.province_hubs[title]
+		var parts: = terrain.territories.filter(func(t: Dictionary): return t.playable and t.title == title)
+		if parts.is_empty(): continue
+		var resource: = ""
+		var city_name: = ""
+		for name in city_names:
+			if city_names[name].distance_to(hub) < 0.5: city_name = name
+		if not city_name.is_empty(): resource = city_resources(city_name)[0]
+		else:
+			var votes: = {}
+			for hint in hints:
+				if parts.any(func(t: Dictionary): return RegionData.contains(t, hint.point)): votes[hint.resource] = votes.get(hint.resource, 0) + 1
+			for candidate in votes:
+				if resource.is_empty() or votes[candidate] > votes[resource]: resource = candidate
+			if resource.is_empty():
+				var geo: = GeographicProjection.unproject(hub)
+				var land: = TerrainProfile.landform(geo.x, geo.y)
+				# Only the northern taiga is timber country; forests further south are farmland.
+				if land == "forest" and geo.y < float(data().get("forest_timber_latitude", 0.0)): land = "plains"
+				resource = data().by_landform.get(land, "manpower")
+		var site: = {"name": title, "resource": resource, "point": _beside(hub, 1.0 if not city_name.is_empty() else 0.55), "territory": parts[0], "city": city_name}
+		sites.append(site)
+		_build(site)
+
+## A spot at `distance` from the province centre, on the side farthest from its roads.
+func _beside(hub: Vector2, distance: float) -> Vector2:
+	var road_points: = []
+	for road in terrain.roads:
+		if road[0].distance_to(hub) < 0.05 or road[1].distance_to(hub) < 0.05:
+			road_points.append_array(Array(StrategicMap.road_curve(road[0], road[1], road[2])))
+	var best: = hub + Vector2(distance, 0)
+	var clearance: = -1.0
+	for i in 12:
+		var candidate: = hub + Vector2.from_angle(TAU * i / 12.0) * distance
+		var nearest: = INF
+		for point in road_points: nearest = minf(nearest, point.distance_to(candidate))
+		if nearest > clearance:
+			clearance = nearest
+			best = candidate
+	return best
 
 ## Income per country this tick, added by ProductionSystem.advance.
 func income(seconds: float) -> Dictionary:
@@ -68,9 +110,10 @@ func _build(site: Dictionary) -> void:
 	var parts: = Parts.new()
 	match site.resource:
 		"fuel": _oil_field(parts)
-		"materials": _timber(parts) if str(site.name).contains("timber") else _mine(parts)
+		"materials": _timber(parts) if _forested(site.point) else _mine(parts)
 		"electronics": _factory(parts)
 		"manpower": _farm(parts)
+		"funds": _factory(parts)
 	parts.commit(anchor)
 	var badge: = Sprite3D.new()
 	badge.texture = icon(site.resource)
@@ -83,6 +126,10 @@ func _build(site: Dictionary) -> void:
 	badge.set_meta("site", site.name)
 	add_child(badge)
 	badges.append(badge)
+
+func _forested(point: Vector2) -> bool:
+	var geo: = GeographicProjection.unproject(point)
+	return TerrainProfile.landform(geo.x, geo.y) == "forest"
 
 # --- Installations (local units; the anchor scales them by 1.6) ---------------------------
 
