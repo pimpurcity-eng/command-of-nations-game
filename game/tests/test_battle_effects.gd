@@ -5,6 +5,7 @@ func check(ok: bool, message: String) -> void:
 	if not ok: failures.append(message)
 func _initialize() -> void: call_deferred("run")
 func run() -> void:
+	ArsenalFixture.use_archive()  # live arsenal is empty until the new weapons arrive
 	GameSession.player_country = "russia"
 	var game = load("res://scenes/main.tscn").instantiate()
 	root.add_child(game)

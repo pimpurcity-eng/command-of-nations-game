@@ -3,6 +3,8 @@ extends Node
 signal report(message: String)
 signal finished(country: String)
 signal unit_destroyed(unit: Dictionary)
+## Countries that have had at least one army on the map.
+var fielded: Dictionary = {}
 var production: ProductionSystem
 var ai: = CountryAI.new()
 var combat: = CombatSystem.new()
@@ -118,7 +120,12 @@ func advance(seconds: float) -> void :
 			return
 		var living: = false
 		for unit in armies.units:
-			if unit.country == country: living = true
+			if unit.country == country:
+				living = true
+				fielded[country] = true
+		# A side is only eliminated after it has fielded armies (the arsenal can be empty
+		# while new weapons are being made).
+		if not fielded.has(country): continue
 		if production != null:
 			for job in production.jobs:
 				if production.equipment(job.equipment).country != country: continue

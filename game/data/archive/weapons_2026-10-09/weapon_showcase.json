@@ -1,0 +1,395 @@
+[
+  {
+    "id": "armata",
+    "name": "T-14 Armata",
+    "kind": "ground",
+    "theme": "russian",
+    "model": "res://assets/library/armata_russian.glb",
+    "preview": "res://assets/library/armata_russian.png",
+    "temporary_recolor": false,
+    "source_model": "T-14 Armata",
+    "native_theme": [
+      "russian"
+    ]
+  },
+  {
+    "id": "abrams",
+    "name": "M1A2 Abrams",
+    "kind": "ground",
+    "theme": "european",
+    "model": "res://assets/library/abrams_european.glb",
+    "preview": "res://assets/library/abrams_european.png",
+    "temporary_recolor": false,
+    "source_model": "M1A2 Abrams",
+    "native_theme": [
+      "european"
+    ]
+  },
+  {
+    "id": "pl01",
+    "name": "PL-01 concept",
+    "kind": "ground",
+    "theme": "european",
+    "model": "res://assets/library/pl01_european.glb",
+    "preview": "res://assets/library/pl01_european.png",
+    "temporary_recolor": false,
+    "source_model": "PL-01 concept",
+    "native_theme": [
+      "european"
+    ]
+  },
+  {
+    "id": "patriot",
+    "name": "Patriot M903",
+    "kind": "ground",
+    "theme": "european",
+    "model": "res://assets/library/patriot_european.glb",
+    "preview": "res://assets/library/patriot_european.png",
+    "temporary_recolor": false,
+    "source_model": "Patriot M903",
+    "native_theme": [
+      "european"
+    ]
+  },
+  {
+    "id": "skyguard",
+    "name": "Skyguard launcher",
+    "kind": "ground",
+    "theme": "european",
+    "model": "res://assets/library/skyguard_european.glb",
+    "preview": "res://assets/library/skyguard_european.png",
+    "temporary_recolor": false,
+    "source_model": "Skyguard launcher",
+    "native_theme": [
+      "european"
+    ]
+  },
+  {
+    "id": "su57",
+    "name": "Su-57",
+    "kind": "aircraft",
+    "theme": "russian",
+    "model": "res://assets/library/su57_russian.glb",
+    "preview": "res://assets/library/su57_russian.png",
+    "temporary_recolor": false,
+    "source_model": "Su-57",
+    "native_theme": [
+      "russian"
+    ]
+  },
+  {
+    "id": "tomahawk",
+    "name": "Tomahawk",
+    "kind": "missile",
+    "theme": "russian",
+    "model": "res://assets/library/tomahawk_russian.glb",
+    "preview": "res://assets/library/tomahawk_russian.png",
+    "temporary_recolor": false,
+    "source_model": "Tomahawk",
+    "native_theme": [
+      "russian",
+      "european"
+    ]
+  },
+  {
+    "id": "jassm",
+    "name": "AGM JASSM",
+    "kind": "missile",
+    "theme": "russian",
+    "model": "res://assets/library/jassm_russian.glb",
+    "preview": "res://assets/library/jassm_russian.png",
+    "temporary_recolor": false,
+    "source_model": "AGM JASSM",
+    "native_theme": [
+      "russian",
+      "european"
+    ]
+  },
+  {
+    "id": "alcm",
+    "name": "AGM-86 ALCM",
+    "kind": "missile",
+    "theme": "russian",
+    "model": "res://assets/library/alcm_russian.glb",
+    "preview": "res://assets/library/alcm_russian.png",
+    "temporary_recolor": false,
+    "source_model": "AGM-86 ALCM",
+    "native_theme": [
+      "russian",
+      "european"
+    ]
+  },
+  {
+    "id": "harpoon",
+    "name": "Harpoon",
+    "kind": "missile",
+    "theme": "russian",
+    "model": "res://assets/library/harpoon_russian.glb",
+    "preview": "res://assets/library/harpoon_russian.png",
+    "temporary_recolor": false,
+    "source_model": "Harpoon",
+    "native_theme": [
+      "russian",
+      "european"
+    ]
+  },
+  {
+    "id": "destroyer",
+    "name": "Unidentified destroyer",
+    "kind": "naval",
+    "theme": "russian",
+    "model": "res://assets/library/destroyer_russian.glb",
+    "preview": "res://assets/library/destroyer_russian.png",
+    "temporary_recolor": false,
+    "source_model": "Unidentified destroyer",
+    "native_theme": [
+      "russian",
+      "european"
+    ]
+  },
+  {
+    "id": "kclass",
+    "name": "Historical K-class submarine",
+    "kind": "naval",
+    "theme": "european",
+    "model": "res://assets/library/kclass_european.glb",
+    "preview": "res://assets/library/kclass_european.png",
+    "temporary_recolor": false,
+    "source_model": "Historical K-class submarine",
+    "native_theme": [
+      "european"
+    ]
+  },
+  {
+    "id": "polaris",
+    "name": "Polaris A3 (historical)",
+    "kind": "missile",
+    "theme": "european",
+    "model": "res://assets/library/polaris_european.glb",
+    "preview": "res://assets/library/polaris_european.png",
+    "temporary_recolor": false,
+    "source_model": "Polaris A3 (historical)",
+    "native_theme": [
+      "european"
+    ]
+  },
+  {
+    "id": "t90m",
+    "name": "T-90M",
+    "kind": "ground",
+    "theme": "russian",
+    "model": "res://assets/library/t90m_original.glb",
+    "preview": "res://assets/library/t90m_original_preview.png",
+    "temporary_recolor": false,
+    "source_model": "T-90M",
+    "native_theme": [
+      "russian"
+    ]
+  },
+  {
+    "id": "f18a",
+    "name": "F/A-18 family",
+    "kind": "aircraft",
+    "theme": "european",
+    "model": "res://assets/library/f18a_european.glb",
+    "preview": "res://assets/library/f18a_european.png",
+    "temporary_recolor": false,
+    "source_model": "F/A-18 family",
+    "native_theme": [
+      "european"
+    ]
+  },
+  {
+    "id": "f18g",
+    "name": "EA-18G family",
+    "kind": "aircraft",
+    "theme": "european",
+    "model": "res://assets/library/f18g_european.glb",
+    "preview": "res://assets/library/f18g_european.png",
+    "temporary_recolor": false,
+    "source_model": "EA-18G family",
+    "native_theme": [
+      "european"
+    ]
+  },
+  {
+    "id": "f22",
+    "name": "F-22 family",
+    "kind": "aircraft",
+    "theme": "european",
+    "model": "res://assets/library/f22_european.glb",
+    "preview": "res://assets/library/f22_european.png",
+    "temporary_recolor": false,
+    "source_model": "F-22 family",
+    "native_theme": [
+      "european"
+    ]
+  },
+  {
+    "id": "f35",
+    "name": "F-35 family",
+    "kind": "aircraft",
+    "theme": "european",
+    "model": "res://assets/library/f35_european.glb",
+    "preview": "res://assets/library/f35_european.png",
+    "temporary_recolor": false,
+    "source_model": "F-35 family",
+    "native_theme": [
+      "european"
+    ]
+  },
+  {
+    "id": "drone",
+    "name": "Unidentified drone",
+    "kind": "aircraft",
+    "theme": "russian",
+    "model": "res://assets/library/drone_russian.glb",
+    "preview": "res://assets/library/drone_russian.png",
+    "temporary_recolor": false,
+    "source_model": "Unidentified drone",
+    "native_theme": [
+      "russian",
+      "european"
+    ]
+  },
+  {
+    "id": "unknown3284",
+    "name": "Unidentified UAV 3284",
+    "kind": "aircraft",
+    "theme": "russian",
+    "model": "res://assets/library/unknown3284_russian.glb",
+    "preview": "res://assets/library/unknown3284_russian.png",
+    "temporary_recolor": false,
+    "source_model": "Unidentified UAV 3284",
+    "native_theme": [
+      "russian",
+      "european"
+    ]
+  },
+  {
+    "id": "unknowna363",
+    "name": "Unidentified aircraft A363",
+    "kind": "aircraft",
+    "theme": "russian",
+    "model": "res://assets/library/unknowna363_russian.glb",
+    "preview": "res://assets/library/unknowna363_russian.png",
+    "temporary_recolor": false,
+    "source_model": "Unidentified aircraft A363",
+    "native_theme": [
+      "russian",
+      "european"
+    ]
+  },
+  {
+    "id": "unknownf493",
+    "name": "Unidentified helicopter F493",
+    "kind": "aircraft",
+    "theme": "russian",
+    "model": "res://assets/library/unknownf493_russian.glb",
+    "preview": "res://assets/library/unknownf493_russian.png",
+    "temporary_recolor": false,
+    "source_model": "Unidentified helicopter F493",
+    "native_theme": [
+      "russian",
+      "european"
+    ]
+  },
+  {
+    "id": "unknownfa32",
+    "name": "Unidentified attack aircraft FA32",
+    "kind": "aircraft",
+    "theme": "russian",
+    "model": "res://assets/library/unknownfa32_russian.glb",
+    "preview": "res://assets/library/unknownfa32_russian.png",
+    "temporary_recolor": false,
+    "source_model": "Unidentified attack aircraft FA32",
+    "native_theme": [
+      "russian",
+      "european"
+    ]
+  },
+  {
+    "id": "upload20ab",
+    "name": "Unidentified mobile missile launcher 20AB",
+    "kind": "ground",
+    "theme": "russian",
+    "model": "res://assets/library/upload20ab_original.glb",
+    "preview": "res://assets/library/upload20ab_original_preview.png",
+    "temporary_recolor": false,
+    "source_model": "Unidentified mobile missile launcher 20AB",
+    "native_theme": [
+      "russian",
+      "european"
+    ]
+  },
+  {
+    "id": "upload3b99",
+    "name": "Unidentified wheeled APC 3B99",
+    "kind": "ground",
+    "theme": "russian",
+    "model": "res://assets/library/upload3b99_original.glb",
+    "preview": "res://assets/library/upload3b99_original_preview.png",
+    "temporary_recolor": false,
+    "source_model": "Unidentified wheeled APC 3B99",
+    "native_theme": [
+      "russian",
+      "european"
+    ]
+  },
+  {
+    "id": "upload661a",
+    "name": "Original tracked vehicle 661A",
+    "kind": "ground",
+    "theme": "russian",
+    "model": "res://assets/library/upload661a_original.glb",
+    "preview": "res://assets/library/upload661a_original_preview.png",
+    "temporary_recolor": false,
+    "source_model": "Original tracked vehicle 661A",
+    "native_theme": [
+      "russian",
+      "european"
+    ]
+  },
+  {
+    "id": "upload7a7e",
+    "name": "Unidentified towed artillery 7A7E",
+    "kind": "ground",
+    "theme": "russian",
+    "model": "res://assets/library/upload7a7e_original.glb",
+    "preview": "res://assets/library/upload7a7e_original_preview.png",
+    "temporary_recolor": false,
+    "source_model": "Unidentified towed artillery 7A7E",
+    "native_theme": [
+      "russian",
+      "european"
+    ]
+  },
+  {
+    "id": "upload4d42",
+    "name": "Unidentified aircraft carrier 4D42",
+    "kind": "naval",
+    "theme": "russian",
+    "model": "res://assets/library/upload4d42_russian.glb",
+    "preview": "res://assets/library/upload4d42_russian.png",
+    "temporary_recolor": false,
+    "source_model": "Unidentified aircraft carrier 4D42",
+    "native_theme": [
+      "russian",
+      "european"
+    ]
+  },
+  {
+    "id": "uploadec7e",
+    "name": "Unidentified tank EC7E",
+    "kind": "ground",
+    "theme": "russian",
+    "model": "res://assets/library/uploadec7e_original.glb",
+    "preview": "res://assets/library/uploadec7e_original_preview.png",
+    "temporary_recolor": false,
+    "source_model": "Unidentified tank EC7E",
+    "native_theme": [
+      "russian",
+      "european"
+    ]
+  }
+]

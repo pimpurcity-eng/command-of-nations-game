@@ -11,6 +11,7 @@ func check(ok: bool, message: String) -> void:
 	else: print("PASS ", message)
 func _initialize() -> void: call_deferred("run")
 func run() -> void:
+	ArsenalFixture.use_archive()  # live arsenal is empty until the new weapons arrive
 	GameSession.player_country = "russia"
 	var game = load("res://scenes/main.tscn").instantiate()
 	root.add_child(game)
@@ -73,6 +74,27 @@ func run() -> void:
 	var hit: Dictionary = game.get_world_3d().direct_space_state.intersect_ray(ray)
 	check(not hit.is_empty() and absf(hit.position.y - game.map.elevation(Vector2(hill.x, hill.z))) < 0.01, "placement height equals the drawn ground")
 
+	# 3b. Ground armies stand on roads (aircraft and ships excepted).
+	var road_points: = []
+	for road in game.map.roads: road_points.append_array(Array(StrategicMap.road_curve(road[0], road[1], road[2])))
+	var off: = []
+	var stacked: = 0
+	var placed: = []
+	var foreign: = []
+	for unit in units.units:
+		if units.is_naval(unit) or units.air.is_air(unit) or stacks_leader_only(units, unit) == false: continue
+		var p: = Vector2(unit.node.position.x, unit.node.position.z)
+		if not road_points.any(func(r: Vector2): return r.distance_to(p) < 0.001): off.append(unit.name)
+		if placed.any(func(q: Vector2): return q.distance_to(p) < 0.5): stacked += 1
+		if units.navigation.controller_at(p) != unit.country: foreign.append(unit.name)
+		placed.append(p)
+	check(off.is_empty(), "every ground army starts on a road (off-road: %s)" % [off])
+	check(foreign.is_empty(), "every army starts on its own side of the border (%s)" % [foreign])
+	var hubs: Array = game.map.province_hubs.values()
+	var at_centre: = placed.filter(func(q: Vector2): return hubs.any(func(h: Vector2): return h.distance_to(q) < 0.001)).size()
+	var near_centre: = placed.filter(func(q: Vector2): return hubs.any(func(h: Vector2): return h.distance_to(q) < 1.6)).size()
+	check(at_centre > 0 and near_centre == placed.size(), "troops start at their city or province centre (%d at a centre, %d of %d beside one)" % [at_centre, near_centre, placed.size()])
+	check(stacked == 0, "armies line up along roads instead of stacking (%d overlapping)" % stacked)
 	# 4. Movement: an ordered tank visibly moves within 30 real seconds at 1x.
 	var tank: Dictionary = {}
 	for unit in units.units:
@@ -105,3 +127,5 @@ func run() -> void:
 	check(not game.city_panel.rows.has("research_center"), "the city menu has no research building")
 	print("RESULT failures=", failures.size())
 	quit(0 if failures.is_empty() else 1)
+func stacks_leader_only(units: UnitSystem, unit: Dictionary) -> bool:
+	return units.stacks.leader(units.stacks.members(unit)).id == unit.id

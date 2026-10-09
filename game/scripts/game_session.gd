@@ -2,6 +2,8 @@ class_name GameSession
 extends RefCounted
 static var player_country: String = "russia"
 static var weapons_test: bool = false
+## Scenario file (tests point this at data/archive/... while the arsenal is empty).
+static var scenario_path: String = "res://data/scenario_regional.json"
 static func opponent_country() -> String:
 	return "ukraine" if player_country == "russia" else "russia"
 const SAVE_VERSION: = 4
@@ -10,7 +12,7 @@ var countries: Dictionary = {}
 var production: ProductionSystem
 var match_rules: MatchSystem
 func _init() -> void :
-	scenario = JSON.parse_string(FileAccess.get_file_as_string("res://data/scenario_regional.json"))
+	scenario = JSON.parse_string(FileAccess.get_file_as_string(scenario_path))
 	for country in scenario.countries: countries[country.id] = country.duplicate(true)
 func capture(clock: SimulationClock, map: StrategicMap, units: UnitSystem, rig: StrategyCamera) -> Dictionary:
 	var territory_state: Dictionary = {}

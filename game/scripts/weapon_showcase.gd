@@ -1,6 +1,7 @@
 class_name WeaponShowcase
 extends CanvasLayer
-var entries: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/weapon_showcase.json"))
+static var source: String = "res://data/weapon_showcase.json"
+var entries: Array = JSON.parse_string(FileAccess.get_file_as_string(source))
 var models: Array[Node3D] = []
 var rig: StrategyCamera
 var title: Label
@@ -76,14 +77,17 @@ func setup(theme: Theme, simulation: SimulationClock) -> void :
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.pressed.connect( func():
 			match text:
-				"Previous": index = posmod(index - 1, entries.size());_refresh(true)
-				"Next": index = (index + 1) % entries.size();_refresh(true)
+				"Previous": if not entries.is_empty(): index = posmod(index - 1, entries.size());_refresh(true)
+				"Next": if not entries.is_empty(): index = (index + 1) % entries.size();_refresh(true)
 				"All": rig.target = Vector3.ZERO;rig.distance = 55
 				"Close": clock.paused = previous_pause;hide()
 			)
 		buttons.add_child(button)
 	hide()
 func _refresh(focus: bool) -> void :
+	if entries.is_empty():
+		title.text = "WEAPONS SHOWCASE\nNo weapons yet - the new arsenal is on its way"
+		return
 	var entry: Dictionary = entries[index]
 	title.text = "WEAPONS SHOWCASE · " + str(index + 1) + " / " + str(entries.size()) + "\n" + entry.name + " · " + entry.kind + " · " + entry.theme + "\nDrag to pan · Pinch to zoom · Models only; no battle orders"
 	if focus:

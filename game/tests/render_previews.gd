@@ -4,6 +4,7 @@ extends SceneTree
 ##   godot --path . --script tests/render_previews.gd
 func _initialize() -> void: call_deferred("run")
 func run() -> void:
+	ArsenalFixture.use_archive()  # live arsenal is empty until the new weapons arrive
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://assets/library/previews"))
 	var viewport: = SubViewport.new()
 	viewport.size = Vector2i(320, 240)

@@ -27,7 +27,14 @@ static func sample(point: Vector2, urban: bool = true) -> String:
 	# Polissia's marshes count as forest: the old repeating sin*cos "wetlands" pattern drew
 	# rectangular patches across Volyn, Rivne and Zhytomyr.
 	return landform(geo.x, geo.y)
-static func height(point: Vector2) -> float:
+## Owner review 2026-10-09: the map is totally flat (Call of War style) so units, roads,
+## cities and flags always sit exactly on the ground; hills and mountains are painted by the
+## terrain shader from relief_height() (shading, rock, snow) instead of raising the mesh.
+const FLAT_HEIGHT: = 0.2
+static func height(_point: Vector2) -> float:
+	return FLAT_HEIGHT
+## The landscape's virtual height: drives the painted relief only.
+static func relief_height(point: Vector2) -> float:
 	# Cities stand on level ground: blend towards the height at the city centre.
 	var raw: = _raw_height(point)
 	for city in cities:

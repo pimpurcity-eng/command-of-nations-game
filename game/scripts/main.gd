@@ -288,9 +288,11 @@ func _ready() -> void :
 	rig.target = Vector3(cities.cities[0].point.x, 0, cities.cities[0].point.y)
 	rig.distance = 12
 	rig._snap(1.0)
-	units.select_unit(10)
-	rig.target = Vector3(units.units[10].node.position.x, 0, units.units[10].node.position.z)
-	rig._snap(1.0)
+	# Start on the first army (was a fixed index 10); with an empty arsenal, stay on the city.
+	if units.units.size() > 10:
+		units.select_unit(10)
+		rig.target = Vector3(units.units[10].node.position.x, 0, units.units[10].node.position.z)
+		rig._snap(1.0)
 	match_rules = MatchSystem.new()
 	add_child(match_rules)
 	match_rules.setup(map, units, cities.cities, clock)
@@ -380,7 +382,9 @@ func _map_click(screen: Vector2, order: bool) -> void :
 	var city_hit: = cities.pick_screen(screen)
 	if not order and not order_mode:
 		var unit_hit: = units.pick_screen(rig.camera, screen)
-		if not unit_hit.is_empty() and (city_hit.is_empty() or unit_hit.distance < city_hit.distance):
+		# Armies win taps over the city under them (armies stand on roads through cities);
+		# the city is still opened from its name tag or by tapping elsewhere in it.
+		if not unit_hit.is_empty():
 			units.select_unit(unit_hit.index)
 			return
 	if not city_hit.is_empty():
@@ -580,7 +584,7 @@ func populate_weapons_test() -> void:
 	var counts: Dictionary = {}
 	var test_catalog: Array = []
 	for family in EquipmentIdentity.catalog:
-		var spawn_levels: Array = [1, 3] if family.get("research_branch", "") == "Short range" else [1, 3, 5] if family.category == "Air defense" else [1]
+		var spawn_levels: Array = [1, 3] if family.get("research_branch", "") == "Short range" else [1, 3, 5] if family.get("research_branch", "") == "Long range" else [1]
 		for spawn_level in spawn_levels:
 			var variant: Dictionary = family.duplicate(true)
 			variant.spawn_level = spawn_level

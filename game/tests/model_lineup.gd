@@ -4,6 +4,7 @@ extends SceneTree
 ##   godot --path . --script tests/model_lineup.gd -- <output.png> [russia|ukraine|all]
 func _initialize() -> void: call_deferred("run")
 func run() -> void:
+	ArsenalFixture.use_archive()  # live arsenal is empty until the new weapons arrive
 	var args: = OS.get_cmdline_user_args()
 	var out: String = args[0]
 	var only: String = args[1] if args.size() > 1 else "all"

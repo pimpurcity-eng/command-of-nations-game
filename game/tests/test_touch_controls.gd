@@ -39,6 +39,7 @@ func snap(name: String) -> void:
 	await frames(6)
 	root.get_texture().get_image().save_png(shots + "/" + name + ".png")
 func run() -> void:
+	ArsenalFixture.use_archive()  # live arsenal is empty until the new weapons arrive
 	var args: = OS.get_cmdline_user_args()
 	if args.size() > 0: shots = args[0]
 	root.size = Vector2i(540, 1200)

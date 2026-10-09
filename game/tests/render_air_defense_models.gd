@@ -51,14 +51,15 @@ func run() -> void:
 			var data: Dictionary = {"id": "lineup_" + str(i), "name": EquipmentIdentity.research_title(id, variants[i][1]), "country": country, "equipment_id": id, "visual_kind": "air_defense", "level": variants[i][1]}
 			game.units._spawn(data, capital.point + Vector2(1.4 + i * 0.95, 1.1), Color("c7caa0"))
 		for unit in game.units.units:
-			unit.heading = -0.45
+			unit.heading = atan2(0.5, -0.8660254 / sin(0.55))
+			unit.node.get_child(0).rotation.y = unit.heading
 			var animator: AirDefenseAnimator = unit.node.get_child(0).get_meta("air_defense_animator")
 			animator.animate(2.0)
 		game.units.select_unit(4)
 		game.rig.target = game.units.units[2].node.position
 		game.rig.distance = 7.5
 		game.rig.pitch = 0.55
-		game.rig.yaw = 0.25
+		game.rig.yaw = 0.0
 		game.rig._snap(1.0)
 		await capture("Russian_Air_Defense_Map" if country == "russia" else "European_Air_Defense_Map")
 		if OS.get_environment("AIR_RECORD") == "1":

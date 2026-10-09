@@ -44,6 +44,39 @@ func _leg(a: int, b: int) -> Array:
 	if link.a != a: points.reverse()
 	points.pop_front()
 	return points
+## Owner review: ground units stand only on roads ("units should be only on tracks except
+## air"). The nearest road point to `point` that keeps `spacing` from every point in `taken`
+## (other armies), so armies placed together line up along the road instead of stacking.
+func on_road(point: Vector2, taken: Array = [], spacing: float = 0.0, country: String = "") -> Vector2:
+	if graph == null: _build_graph()
+	var candidates: = []
+	for link in links:
+		for road_point in link.points: candidates.append(road_point)
+	candidates.sort_custom(func(a: Vector2, b: Vector2): return a.distance_squared_to(point) < b.distance_squared_to(point))
+	for road_point in candidates:
+		if taken.any(func(other: Vector2): return other.distance_to(road_point) < spacing): continue
+		# Stay on the army's own side of the border.
+		if not country.is_empty() and controller_at(road_point) != country: continue
+		return road_point
+	return candidates[0] if not candidates.is_empty() else point
+func controller_at(point: Vector2) -> String:
+	for territory in terrain.territories:
+		if territory.playable and RegionData.contains(territory, point): return territory.controller
+	return ""
+## A free road point roughly `distance` from `anchor` (used when an army splits).
+func beside_on_road(anchor: Vector2, distance: float, taken: Array = [], country: String = "") -> Vector2:
+	if graph == null: _build_graph()
+	var best: = anchor
+	var best_error: = INF
+	for link in links:
+		for road_point in link.points:
+			var error: = absf(anchor.distance_to(road_point) - distance)
+			if error >= best_error or anchor.distance_to(road_point) < distance * 0.5: continue
+			if taken.any(func(other: Vector2): return other.distance_to(road_point) < distance * 0.8): continue
+			if not country.is_empty() and controller_at(road_point) != country: continue
+			best_error = error
+			best = road_point
+	return best
 ## The province centre that an order to `point` goes to.
 func hub_for(point: Vector2) -> Vector2:
 	for territory in terrain.territories:

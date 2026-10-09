@@ -5,6 +5,7 @@ func check(ok: bool, message: String) -> void:
 	else: print("PASS ", message)
 func _initialize() -> void: call_deferred("run")
 func run() -> void:
+	ArsenalFixture.use_archive()  # live arsenal is empty until the new weapons arrive
 	for country in ["ukraine", "russia"]:
 		GameSession.player_country = country
 		GameSession.weapons_test = false
@@ -15,7 +16,7 @@ func run() -> void:
 		game.apply_player_country()
 		game.clock.paused = true
 		game.match_rules.ai_enabled = false
-		check(game.units.units.size() == 20, country + " original 20 armies")
+		check(game.units.units.size() == _scenario_armies(), country + " original %d armies" % _scenario_armies())
 		check(game.map.territories.size() == 145, country + " original 145 territories")
 		check(game.units.units[game.units.selected].country == country, country + " own army selected")
 		check(game.match_rules.ai.country == GameSession.opponent_country(), country + " opponent AI")
@@ -23,7 +24,12 @@ func run() -> void:
 		check(game.order_mode, country + " Move UI accepted")
 		var unit = game.units.units[game.units.selected]
 		var start = Vector2(unit.node.position.x, unit.node.position.z)
-		game.player_order(game.map.position_at(start + Vector2(0.35, 0.35)))
+		# Orders go to a province centre by road; aim at the nearest neighbouring centre
+		# (a short hop inside the army's own province now means "stay").
+		var hop: Vector2 = start
+		for hub in game.map.province_hubs.values():
+			if hub.distance_to(start) > 0.3 and (hop == start or hub.distance_to(start) < hop.distance_to(start)): hop = hub
+		game.player_order(game.map.position_at(hop))
 		check(unit.moving, country + " movement ordered")
 		game.units.advance(1.0)
 		check(start.distance_to(Vector2(unit.node.position.x, unit.node.position.z)) > 0, country + " army moved")
@@ -55,7 +61,7 @@ func run() -> void:
 		game.apply_player_country(false)
 		check(GameSession.player_country == country, country + " save restores country")
 		game.populate_weapons_test()
-		check(game.units.units.size() == EquipmentIdentity.catalog.size() + 6, country + " original families plus ten air-defense models")
+		check(game.units.units.size() == EquipmentIdentity.catalog.size(), country + " archived weapon families")
 		var ids = {}
 		for weapon in game.units.units:
 			check(not ids.has(weapon.equipment_id + ":" + str(weapon.level)), country + " unique " + weapon.equipment_id)
@@ -76,9 +82,13 @@ func run() -> void:
 		game.open_army_command("split")
 		check(game.army_selection.visible, country + " selection panel opens")
 		game.restore_campaign_forces()
-		check(game.units.units.size() == 20, country + " test mode returns to original forces")
+		check(game.units.units.size() == _scenario_armies(), country + " test mode returns to original forces")
 		check(game.units.fog_enabled, country + " campaign fog restored")
 		game.queue_free()
 		await process_frame
 	print("RESULT failures=", failures.size())
 	quit(0 if failures.is_empty() else 1)
+## Starting armies listed in the scenario (was a hard-coded 20; the owner's air-defence
+## batteries added 4 on 2026-10-09).
+func _scenario_armies() -> int:
+	return (JSON.parse_string(FileAccess.get_file_as_string(GameSession.scenario_path)).units as Array).size()

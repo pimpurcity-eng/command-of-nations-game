@@ -1,6 +1,7 @@
 extends SceneTree
 func _initialize() -> void: call_deferred("run")
 func run() -> void:
+	ArsenalFixture.use_archive()  # live arsenal is empty until the new weapons arrive
 	root.size = Vector2i(1000, 700)
 	GameSession.player_country = "russia"
 	var game = load("res://scenes/main.tscn").instantiate()

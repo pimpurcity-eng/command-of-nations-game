@@ -6,6 +6,7 @@ func shot(path: String) -> void:
 	for i in 8: await process_frame
 	root.get_texture().get_image().save_png(path)
 func run() -> void:
+	if OS.get_environment("ARSENAL") == "archive": ArsenalFixture.use_archive()
 	var out: String = OS.get_cmdline_user_args()[0]
 	root.size = Vector2i(540, 1200)
 	GameSession.player_country = "russia"
@@ -24,6 +25,6 @@ func run() -> void:
 	game.hud.research_requested.emit()
 	await shot(out + "/panel_research.png")
 	if game.research_panel.has_method("show_category"):
-		game.research_panel.show_category(0)
+		game.research_panel.show_category(int(OS.get_environment("RESEARCH_CATEGORY")) if OS.get_environment("RESEARCH_CATEGORY") != "" else 0)
 		await shot(out + "/panel_research_tree.png")
 	quit()
