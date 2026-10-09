@@ -7,7 +7,7 @@ extends RefCounted
 const FOOTPRINT: = {"armor": 1.35, "ifv": 1.25, "artillery": 1.3, "air_defense": 1.3, "missile_launcher": 1.4, "fighter": 1.5, "drone": 1.1, "naval": 1.9}
 ## Extra yaw (degrees) for source models that face backwards after long-axis alignment,
 ## keyed by model file prefix. Checked with tests/model_lineup.gd (all models face north).
-const YAW_FIX: = {"su57": 180.0, "f18a": 180.0, "destroyer": 180.0, "kclass": 180.0, "upload20ab": 180.0}
+const YAW_FIX: = {"su57": 180.0, "f18a": 180.0, "destroyer": 180.0, "kclass": 180.0}
 const RUSSIAN_CAMO: = "res://assets/materials/russian_blue_camo.png"
 static var _camo: Texture2D
 static var _camo_shader: Shader
@@ -62,6 +62,7 @@ static func create(kind: String, _faction: Color, equipment_id: String = "") -> 
 	pivot.add_child(vehicle)
 	_fit(pivot, vehicle, role, path)
 	assembly.add_child(pivot)
+	_enable_shadows(vehicle)
 	assembly.set_meta("missing_original_model", false)
 	return assembly
 
@@ -146,3 +147,13 @@ static func preview_texture(equipment_id: String) -> Texture2D:
 	if not path.is_empty() and ResourceLoader.exists(path): return load(path)
 	var country: String = EquipmentIdentity.spec(equipment_id).get("country", GameSession.player_country)
 	return load("res://assets/vehicles/" + country + "_flag.png")
+
+
+# The fitted model's front is -Z; the 20AB cab faces -Z without a 180-degree fix.
+static func firing_heading(_equipment_id: String, direction: Vector3) -> float:
+	return atan2(-direction.x, -direction.z)
+
+static func _enable_shadows(node: Node) -> void:
+	if node is GeometryInstance3D:
+		node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+	for child in node.get_children(): _enable_shadows(child)

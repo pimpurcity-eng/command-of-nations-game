@@ -6,6 +6,8 @@ const ROUND_SECONDS: = 1800.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
 const STACK_DAMAGE_LIMIT: = 10
 const MAX_ROUND_SECONDS: = ROUND_SECONDS * 4
 var cooldowns: Dictionary = {}
+func shot_effect(unit: Dictionary) -> String:
+	return "missile" if unit.visual_kind == "missile_launcher" else "artillery" if unit.visual_kind in ["artillery", "naval"] else "cannon" if unit.visual_kind == "armor" else "tracer"
 func key(group: Array) -> String:
 	return group[0].country + ":" + group[0].stack_id
 func alive(group: Array) -> Array:
@@ -112,17 +114,20 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 				for attacker in attackers:
 					var response: = potential(defenders, attacker.visual_kind, false, true) / attackers.size()
 					damage[attacker.id] = damage.get(attacker.id, 0.0) + response
+				for defender in defenders:
+					if potential([defender], attackers[0].visual_kind, false, true) > 0:
+						weapon_fired.emit(defender, attackers[0], shot_effect(defender))
 			if ranged and defenders[0].get("fire_mode", "at_will") == "return" and cooldowns.get(key(defenders), 0.0) <= 1e-06:
 				var answering: = eligible(defenders, distance)
 				if not answering.is_empty():
 					for attacker in attackers:
 						damage[attacker.id] = damage.get(attacker.id, 0.0) + potential(answering, attacker.visual_kind, true) / attackers.size()
 					cooldowns[key(defenders)] = ROUND_SECONDS
-					for defender in answering: weapon_fired.emit(defender, attackers[0], "artillery")
+					for defender in answering: weapon_fired.emit(defender, attackers[0], shot_effect(defender))
 			var rounds: = 1.0
 			for attacker in contributors:
-				if attacker.visual_kind in ["artillery", "missile_launcher", "naval"] and ranged_ready(attacker):
-					weapon_fired.emit(attacker, defenders[0], "missile" if attacker.visual_kind == "missile_launcher" else "artillery")
+				if potential([attacker], defenders[0].visual_kind, ranged) > 0:
+					weapon_fired.emit(attacker, defenders[0], shot_effect(attacker))
 				if attacker.visual_kind == "missile_launcher": rounds = maxf(rounds, EquipmentIdentity.spec(attacker.equipment_id).get("reload_rounds", 4.0))
 			cooldowns[attack[2]] = ROUND_SECONDS * rounds
 		if resolve_now:

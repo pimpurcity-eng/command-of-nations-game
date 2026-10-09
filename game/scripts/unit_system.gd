@@ -94,6 +94,7 @@ func _spawn(data: Dictionary, point: Vector2, color: Color) -> void :
 	var model: = UnitVisual.create(visual_kind, color, equipment_id)
 	model.scale = Vector3.ONE * 0.65
 	marker.add_child(model)
+	UnitShadow.create(marker)
 	var ring: = MeshInstance3D.new()
 	var shape: = TorusMesh.new()
 	shape.inner_radius = 0.76
@@ -413,6 +414,8 @@ func _process(delta: float) -> void :
 		var group: = stacks.members(unit)
 		unit.node.visible = stacks.leader(group).id == unit.id and visible_to_player(unit)
 		if not unit.node.visible: continue
+		var ground: = Vector3(unit.node.position.x, 0.15, unit.node.position.z) if is_naval(unit) else terrain.position_at(Vector2(unit.node.position.x, unit.node.position.z))
+		UnitShadow.update(unit, ground)
 		var chosen: = chosen_stacks.has(unit.stack_id)
 		unit.ring.material_override.albedo_color = Color("f5cf82") if chosen else unit.faction_color
 		unit.ring.scale = Vector3.ONE * (0.52 if chosen else 0.42)
@@ -564,3 +567,4 @@ func toggle_forced_march() -> int:
 		for member in stacks.members(leader): member.forced_march = enable
 	status_changed.emit("Forced march " + ("ON · speed +50%, loses 5 HP per game hour while moving" if enable else "OFF"))
 	return leaders.size()
+
