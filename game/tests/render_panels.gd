@@ -6,6 +6,7 @@ func shot(path: String) -> void:
 	for i in 8: await process_frame
 	root.get_texture().get_image().save_png(path)
 func run() -> void:
+	if OS.get_environment("ARSENAL") == "archive": ArsenalFixture.use_archive()
 	var out: String = OS.get_cmdline_user_args()[0]
 	root.size = Vector2i(540, 1200)
 	GameSession.player_country = "russia"

@@ -3,7 +3,7 @@ extends RefCounted
 signal changed
 signal unit_ready(spec: Dictionary)
 const RESOURCES: = ["funds", "materials", "electronics", "fuel", "manpower"]
-var catalog: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/equipment.json"))
+var catalog: Array = EquipmentIdentity.catalog  # one shared catalogue
 var stockpiles: Dictionary = {}
 var jobs: Array = []
 var next_id: = 1

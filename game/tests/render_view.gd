@@ -3,6 +3,7 @@ extends SceneTree
 ##   godot --path . --script tests/render_view.gd -- <out.png> <longitude> <latitude> [distance] [country]
 func _initialize() -> void: call_deferred("run")
 func run() -> void:
+	if OS.get_environment("ARSENAL") == "archive": ArsenalFixture.use_archive()
 	var args: = OS.get_cmdline_user_args()
 	root.size = Vector2i(540, 1200)
 	GameSession.player_country = args[4] if args.size() > 4 else "russia"

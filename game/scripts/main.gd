@@ -288,9 +288,11 @@ func _ready() -> void :
 	rig.target = Vector3(cities.cities[0].point.x, 0, cities.cities[0].point.y)
 	rig.distance = 12
 	rig._snap(1.0)
-	units.select_unit(10)
-	rig.target = Vector3(units.units[10].node.position.x, 0, units.units[10].node.position.z)
-	rig._snap(1.0)
+	# Start on the first army (was a fixed index 10); with an empty arsenal, stay on the city.
+	if units.units.size() > 10:
+		units.select_unit(10)
+		rig.target = Vector3(units.units[10].node.position.x, 0, units.units[10].node.position.z)
+		rig._snap(1.0)
 	match_rules = MatchSystem.new()
 	add_child(match_rules)
 	match_rules.setup(map, units, cities.cities, clock)

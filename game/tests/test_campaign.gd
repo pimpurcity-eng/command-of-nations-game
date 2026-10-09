@@ -5,6 +5,7 @@ func check(ok: bool, message: String) -> void:
 	else: print("PASS ", message)
 func _initialize() -> void: call_deferred("run")
 func run() -> void:
+	ArsenalFixture.use_archive()  # live arsenal is empty until the new weapons arrive
 	for country in ["ukraine", "russia"]:
 		GameSession.player_country = country
 		GameSession.weapons_test = false
@@ -23,7 +24,12 @@ func run() -> void:
 		check(game.order_mode, country + " Move UI accepted")
 		var unit = game.units.units[game.units.selected]
 		var start = Vector2(unit.node.position.x, unit.node.position.z)
-		game.player_order(game.map.position_at(start + Vector2(0.35, 0.35)))
+		# Orders go to a province centre by road; aim at the nearest neighbouring centre
+		# (a short hop inside the army's own province now means "stay").
+		var hop: Vector2 = start
+		for hub in game.map.province_hubs.values():
+			if hub.distance_to(start) > 0.3 and (hop == start or hub.distance_to(start) < hop.distance_to(start)): hop = hub
+		game.player_order(game.map.position_at(hop))
 		check(unit.moving, country + " movement ordered")
 		game.units.advance(1.0)
 		check(start.distance_to(Vector2(unit.node.position.x, unit.node.position.z)) > 0, country + " army moved")
@@ -83,4 +89,4 @@ func run() -> void:
 ## Starting armies listed in the scenario (was a hard-coded 20; the owner's air-defence
 ## batteries added 4 on 2026-10-09).
 func _scenario_armies() -> int:
-	return (JSON.parse_string(FileAccess.get_file_as_string("res://data/scenario_regional.json")).units as Array).size()
+	return (JSON.parse_string(FileAccess.get_file_as_string(GameSession.scenario_path)).units as Array).size()

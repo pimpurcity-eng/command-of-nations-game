@@ -11,6 +11,7 @@ func check(ok: bool, message: String) -> void:
 	else: print("PASS ", message)
 func _initialize() -> void: call_deferred("run")
 func run() -> void:
+	ArsenalFixture.use_archive()  # live arsenal is empty until the new weapons arrive
 	GameSession.player_country = "russia"
 	var game = load("res://scenes/main.tscn").instantiate()
 	root.add_child(game)
@@ -89,6 +90,10 @@ func run() -> void:
 		placed.append(p)
 	check(off.is_empty(), "every ground army starts on a road (off-road: %s)" % [off])
 	check(foreign.is_empty(), "every army starts on its own side of the border (%s)" % [foreign])
+	var hubs: Array = game.map.province_hubs.values()
+	var at_centre: = placed.filter(func(q: Vector2): return hubs.any(func(h: Vector2): return h.distance_to(q) < 0.001)).size()
+	var near_centre: = placed.filter(func(q: Vector2): return hubs.any(func(h: Vector2): return h.distance_to(q) < 1.6)).size()
+	check(at_centre > 0 and near_centre == placed.size(), "troops start at their city or province centre (%d at a centre, %d of %d beside one)" % [at_centre, near_centre, placed.size()])
 	check(stacked == 0, "armies line up along roads instead of stacking (%d overlapping)" % stacked)
 	# 4. Movement: an ordered tank visibly moves within 30 real seconds at 1x.
 	var tank: Dictionary = {}
