@@ -521,7 +521,7 @@ func patrol(position: Vector3) -> bool:
 
 func pick_screen(camera: Camera3D, screen: Vector2, enemies_only: bool = false) -> Dictionary:
 	var nearest: Dictionary = {}
-	var radius: = 24.0 * get_window().content_scale_factor
+	var radius: = 40.0 * get_window().content_scale_factor  # was 24: hard to hit on phones
 	for i in units.size():
 		if enemies_only and units[i].country == GameSession.player_country: continue
 		if not visible_to_player(units[i]): continue

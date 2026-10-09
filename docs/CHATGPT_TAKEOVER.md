@@ -40,14 +40,14 @@ here; nothing depends on Claude's workspace.
 `xvfb-run -a godot --path game --script tests/<name>.gd`.
 
 ## Android test app
-- See `docs/ANDROID_TEST_BUILDS.md`. Latest: **0.12-test, versionCode 12**, package
+- See `docs/ANDROID_TEST_BUILDS.md`. Latest: **0.13-test, versionCode 13**, package
   `com.commandofnations.test`, in Matthew's private repo `pimpurcity-eng/Command-of-nations-builds`
   (file `command-of-nations-test.apk`, must stay < 100 MB; the Android preset already
   excludes the archived models).
 - Claude's signing key could not be shared. ChatGPT signs with its own key from now on. The
-  first ChatGPT build will not install over Claude's 0.12: Matthew uninstalls the test app
+  first ChatGPT build will not install over Claude's 0.13: Matthew uninstalls the test app
   once, then installs ChatGPT's build; after that ChatGPT's updates install normally. Keep the
-  same key for every later build and use versionCode 13 or higher.
+  same key for every later build and use versionCode 14 or higher.
 
 ## Owner's standing requests (keep)
 Call of War look and feel; portrait Android; no labels on units; original model colours;

@@ -117,6 +117,34 @@ func run() -> void:
 	for step in 30: game.clock.advance(1.0)
 	var moved: = Vector2(tank.node.position.x, tank.node.position.z).distance_to(start)
 	check(moved > 0.3, "a tank moves visibly in 30 seconds (%.2f map units)" % moved)
+	# 4b. Attack (Call of War): Attack declares war; tapping an enemy army attacks it and
+	# combat follows.
+	game.match_rules.at_war = false
+	units.at_war = false
+	var attacker: Dictionary = {}
+	var victim: Dictionary = {}
+	for unit in units.units:
+		if unit.country == "russia" and unit.visual_kind == "armor" and not unit.moving and attacker.is_empty(): attacker = unit
+	var best: = INF
+	for unit in units.units:
+		if unit.country == "ukraine" and not units.air.is_air(unit) and not units.is_naval(unit) and not attacker.is_empty():
+			var d: float = unit.node.position.distance_to(attacker.node.position)
+			if d < best: best = d; victim = unit
+	units.select_unit(units.units.find(attacker))
+	game.hud.attack_requested.emit()
+	check(game.match_rules.at_war, "Attack declares war")
+	units.fog_enabled = false
+	var victim_screen: Vector2 = game.rig.camera.unproject_position(victim.node.global_position + Vector3.UP * 0.2)
+	game.rig.target = Vector3(victim.node.position.x, 0, victim.node.position.z)
+	game.rig._snap(1.0)
+	await process_frame
+	victim_screen = game.rig.camera.unproject_position(victim.node.global_position + Vector3.UP * 0.2)
+	game._map_click(victim_screen, false)
+	check(attacker.attack_target == victim.id, "tapping the enemy orders the attack")
+	var health_before: float = victim.health
+	game.clock.paused = false
+	for step in 900: game.clock.advance(1.0)
+	check(victim.health < health_before or not units.units.has(victim), "the attack reaches the enemy and deals damage")
 	# 5. Research is national: it runs at full speed even without the capital.
 	check(game.research.rate("russia") == 1.0, "research does not depend on a city")
 	for city in game.cities.cities:

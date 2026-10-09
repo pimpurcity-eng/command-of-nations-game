@@ -159,7 +159,9 @@ func _ready() -> void :
 	units.war_requested.connect( func():
 		if match_rules.winner.is_empty(): match_rules.declare_war())
 	hud.attack_requested.connect( func():
-		if not friendly_selected() or not match_rules.at_war: hud.show_status("Declare war and select your army first");return
+		if not friendly_selected(): hud.show_status("Select your army first");return
+		# Call of War: ordering an attack declares war.
+		if not match_rules.at_war and match_rules.winner.is_empty(): match_rules.declare_war()
 		rally_city = ""
 		attack_order = true
 		_set_order_mode(true)
@@ -296,8 +298,9 @@ func _ready() -> void :
 	rig.distance = 12
 	rig._snap(1.0)
 	# Start on the first army (was a fixed index 10); with an empty arsenal, stay on the city.
+	# Open the camera on an army, with nothing selected (a selected army would move on the
+	# first map tap).
 	if units.units.size() > 10:
-		units.select_unit(10)
 		rig.target = Vector3(units.units[10].node.position.x, 0, units.units[10].node.position.z)
 		rig._snap(1.0)
 	match_rules = MatchSystem.new()
@@ -381,19 +384,40 @@ func _map_click(screen: Vector2, order: bool) -> void :
 		return
 	if attack_order:
 		var enemy_hit: = units.pick_screen(rig.camera, screen, true)
-		if enemy_hit.is_empty() or units.units[enemy_hit.index].country == GameSession.player_country: hud.show_status("Choose a visible enemy army");return
-		if units.attack_many(units.units[enemy_hit.index]) > 0:
-			attack_order = false
-			_set_order_mode(false)
+		if not enemy_hit.is_empty() and units.units[enemy_hit.index].country != GameSession.player_country:
+			if units.attack_many(units.units[enemy_hit.index]) > 0:
+				attack_order = false
+				_set_order_mode(false)
+			return
+		# No army under the tap: advance on that province to take it.
+		attack_order = false
+		var target: = map.pick(rig.camera, screen)
+		if target.is_empty(): hud.show_status("Choose an enemy army or province");return
+		player_order(target.position)
 		return
 	var city_hit: = cities.pick_screen(screen)
 	if not order and not order_mode:
 		var unit_hit: = units.pick_screen(rig.camera, screen)
 		# Armies win taps over the city under them (armies stand on roads through cities);
-		# the city is still opened from its name tag or by tapping elsewhere in it.
+		# the city is opened from its name tag.
 		if not unit_hit.is_empty():
+			var tapped: Dictionary = units.units[unit_hit.index]
+			# Owner review (Call of War): with your army selected, tapping an enemy attacks it.
+			if friendly_selected() and tapped.country != GameSession.player_country:
+				if not match_rules.at_war and match_rules.winner.is_empty(): match_rules.declare_war()
+				if units.attack_many(tapped) > 0: hud.show_status("Attacking " + EquipmentIdentity.research_title(tapped.equipment_id, tapped.get("level", 1)))
+				return
 			units.select_unit(unit_hit.index)
 			return
+		# One-tap move: with your army selected, tapping the map or a city sends it there.
+		if friendly_selected():
+			var destination: = map.pick(rig.camera, screen)
+			if not city_hit.is_empty(): player_order(map.position_at(city_hit.city.point));return
+			if not destination.is_empty(): player_order(destination.position);return
+			if units.air.is_air(units.units[units.selected]):
+				var sky = Plane(Vector3.UP, 0).intersects_ray(rig.camera.project_ray_origin(screen), rig.camera.project_ray_normal(screen))
+				if sky != null: player_order(sky)
+				return
 	if not city_hit.is_empty():
 		if order: _set_order_mode(true)
 		cities.select_city(city_hit.city)
@@ -409,8 +433,8 @@ func _map_click(screen: Vector2, order: bool) -> void :
 	if order or order_mode:
 		player_order(hit.position)
 	else:
+		# Tapping empty map shows the province; it no longer grabs the nearest army.
 		map.select(hit.territory)
-		units.select_near(hit.position)
 
 func map_position(longitude: float, latitude: float) -> Vector3:
 	var point: = GeographicProjection.project(longitude, latitude)
