@@ -24,6 +24,6 @@ func run() -> void:
 	game.hud.research_requested.emit()
 	await shot(out + "/panel_research.png")
 	if game.research_panel.has_method("show_category"):
-		game.research_panel.show_category(0)
+		game.research_panel.show_category(int(OS.get_environment("RESEARCH_CATEGORY")) if OS.get_environment("RESEARCH_CATEGORY") != "" else 0)
 		await shot(out + "/panel_research_tree.png")
 	quit()

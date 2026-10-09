@@ -630,5 +630,110 @@
     "building_requirements": {
       "factory": 1
     }
+  },
+  {
+    "id": "strela10",
+    "country": "russia",
+    "name": "Strela-10 short-range SAM",
+    "category": "Air defense",
+    "visual_kind": "air_defense",
+    "asset_roster_id": "strela10",
+    "seconds": 30,
+    "cost": {
+      "funds": 150,
+      "materials": 50,
+      "electronics": 35,
+      "fuel": 20,
+      "manpower": 10
+    },
+    "building_requirements": {
+      "factory": 1
+    },
+    "aa_range": 1.8,
+    "aa_damage": 6.0
+  },
+  {
+    "id": "tor_m2",
+    "country": "russia",
+    "name": "Tor-M2 short-range SAM",
+    "category": "Air defense",
+    "visual_kind": "air_defense",
+    "asset_roster_id": "tor_m2",
+    "seconds": 40,
+    "cost": {
+      "funds": 210,
+      "materials": 65,
+      "electronics": 55,
+      "fuel": 25,
+      "manpower": 12
+    },
+    "building_requirements": {
+      "factory": 1
+    },
+    "aa_range": 2.4,
+    "aa_damage": 8.0
+  },
+  {
+    "id": "buk_m3",
+    "country": "russia",
+    "name": "Buk-M3 medium-range SAM",
+    "category": "Air defense",
+    "visual_kind": "air_defense",
+    "asset_roster_id": "buk_m3",
+    "seconds": 50,
+    "cost": {
+      "funds": 260,
+      "materials": 80,
+      "electronics": 75,
+      "fuel": 30,
+      "manpower": 15
+    },
+    "building_requirements": {
+      "factory": 1
+    },
+    "aa_range": 3.2,
+    "aa_damage": 10.0
+  },
+  {
+    "id": "s400",
+    "country": "russia",
+    "name": "S-400 Triumf long-range SAM",
+    "category": "Air defense",
+    "visual_kind": "air_defense",
+    "asset_roster_id": "s400",
+    "seconds": 65,
+    "cost": {
+      "funds": 340,
+      "materials": 100,
+      "electronics": 100,
+      "fuel": 35,
+      "manpower": 18
+    },
+    "building_requirements": {
+      "factory": 1
+    },
+    "aa_range": 4.5,
+    "aa_damage": 12.0
+  },
+  {
+    "id": "s500",
+    "country": "russia",
+    "name": "S-500 Prometey strategic SAM",
+    "category": "Air defense",
+    "visual_kind": "air_defense",
+    "asset_roster_id": "s500",
+    "seconds": 80,
+    "cost": {
+      "funds": 420,
+      "materials": 120,
+      "electronics": 130,
+      "fuel": 40,
+      "manpower": 20
+    },
+    "building_requirements": {
+      "factory": 1
+    },
+    "aa_range": 5.5,
+    "aa_damage": 14.0
   }
 ]

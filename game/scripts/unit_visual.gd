@@ -7,7 +7,7 @@ extends RefCounted
 const FOOTPRINT: = {"armor": 1.35, "ifv": 1.25, "artillery": 1.3, "air_defense": 1.3, "missile_launcher": 1.4, "fighter": 1.5, "drone": 1.1, "naval": 1.9}
 ## Extra yaw (degrees) for source models that face backwards after long-axis alignment,
 ## keyed by model file prefix. Checked with tests/model_lineup.gd (all models face north).
-const YAW_FIX: = {"su57": 180.0, "f18a": 180.0, "destroyer": 180.0, "kclass": 180.0, "upload20ab": 180.0}
+const YAW_FIX: = {"su57": 180.0, "f18a": 180.0, "destroyer": 180.0, "kclass": 180.0, "upload20ab": 180.0, "ad": 180.0}  # ad_*: owner weapons.zip air defence (+X forward)
 const RUSSIAN_CAMO: = "res://assets/materials/russian_blue_camo.png"
 ## Owner review (phone build): weapons must not look white. Ukrainian ground equipment gets
 ## a green/brown/black woodland scheme the same way Russian equipment gets the blue camo.
@@ -62,7 +62,11 @@ static func create(kind: String, _faction: Color, equipment_id: String = "") -> 
 	var spec: = EquipmentIdentity.spec(equipment_id)
 	var role: String = spec.get("role", "")
 	if role.is_empty(): role = spec.get("visual_kind", kind)
-	if spec.get("country", "") == "russia": paint_russian(vehicle, model_bounds(vehicle, 0.0))
+	# Owner review 2026-10-09: "keep the original colors from now on" - models flagged
+	# original_colors in asset_roster.json (owner-supplied weapons) keep their own paint.
+	var keep_colors: bool = AssetRoster.appearance(spec.get("asset_roster_id", ""), spec.get("country", GameSession.player_country)).get("original_colors", false)
+	if keep_colors: pass
+	elif spec.get("country", "") == "russia": paint_russian(vehicle, model_bounds(vehicle, 0.0))
 	elif spec.get("visual_kind", kind) in GROUND_KINDS: paint_camo(vehicle, model_bounds(vehicle, 0.0), UKRAINE_CAMO)
 	# The pivot carries the fitting transform; the source scene's own transform is kept.
 	var pivot: = Node3D.new()

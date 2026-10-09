@@ -17,7 +17,7 @@
       "color": "ad4741",
       "statistics": {},
       "relations": {},
-      "starting_force_count": 10,
+      "starting_force_count": 14,
       "capital_city": "moscow"
     }
   ],
@@ -182,7 +182,7 @@
     },
     {
       "id": "russia_start_3",
-      "name": "Kursk air defense",
+      "name": "Kursk S-400 battery",
       "country": "russia",
       "longitude": 36.193,
       "latitude": 51.7304,
@@ -191,7 +191,7 @@
         -0.8
       ],
       "visual_kind": "air_defense",
-      "equipment_id": "skyguard_russia"
+      "equipment_id": "s400"
     },
     {
       "id": "russia_start_4",
@@ -283,6 +283,58 @@
       ],
       "visual_kind": "armor",
       "equipment_id": "t90"
+    },
+    {
+      "id": "russia_start_ad1",
+      "name": "Moscow S-500 battery",
+      "country": "russia",
+      "longitude": 37.6173,
+      "latitude": 55.7558,
+      "offset": [
+        0.0,
+        1.0
+      ],
+      "visual_kind": "air_defense",
+      "equipment_id": "s500"
+    },
+    {
+      "id": "russia_start_ad2",
+      "name": "Belgorod Tor-M2 battery",
+      "country": "russia",
+      "longitude": 36.5873,
+      "latitude": 50.5957,
+      "offset": [
+        1.1,
+        -0.8
+      ],
+      "visual_kind": "air_defense",
+      "equipment_id": "tor_m2"
+    },
+    {
+      "id": "russia_start_ad3",
+      "name": "Voronezh Buk-M3 battery",
+      "country": "russia",
+      "longitude": 39.2003,
+      "latitude": 51.6608,
+      "offset": [
+        0.0,
+        1.0
+      ],
+      "visual_kind": "air_defense",
+      "equipment_id": "buk_m3"
+    },
+    {
+      "id": "russia_start_ad4",
+      "name": "Rostov-on-Don Strela-10 battery",
+      "country": "russia",
+      "longitude": 39.7015,
+      "latitude": 47.2357,
+      "offset": [
+        0.0,
+        -1.0
+      ],
+      "visual_kind": "air_defense",
+      "equipment_id": "strela10"
     }
   ]
 }

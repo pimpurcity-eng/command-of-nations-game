@@ -15,7 +15,7 @@ func run() -> void:
 		game.apply_player_country()
 		game.clock.paused = true
 		game.match_rules.ai_enabled = false
-		check(game.units.units.size() == 20, country + " original 20 armies")
+		check(game.units.units.size() == _scenario_armies(), country + " original %d armies" % _scenario_armies())
 		check(game.map.territories.size() == 145, country + " original 145 territories")
 		check(game.units.units[game.units.selected].country == country, country + " own army selected")
 		check(game.match_rules.ai.country == GameSession.opponent_country(), country + " opponent AI")
@@ -74,9 +74,13 @@ func run() -> void:
 		game.open_army_command("split")
 		check(game.army_selection.visible, country + " selection panel opens")
 		game.restore_campaign_forces()
-		check(game.units.units.size() == 20, country + " test mode returns to original forces")
+		check(game.units.units.size() == _scenario_armies(), country + " test mode returns to original forces")
 		check(game.units.fog_enabled, country + " campaign fog restored")
 		game.queue_free()
 		await process_frame
 	print("RESULT failures=", failures.size())
 	quit(0 if failures.is_empty() else 1)
+## Starting armies listed in the scenario (was a hard-coded 20; the owner's air-defence
+## batteries added 4 on 2026-10-09).
+func _scenario_armies() -> int:
+	return (JSON.parse_string(FileAccess.get_file_as_string("res://data/scenario_regional.json")).units as Array).size()

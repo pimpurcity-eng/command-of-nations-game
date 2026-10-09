@@ -90,3 +90,10 @@ Feedback: resources like Call of War — one per province/city; planes fly anywh
 
 ### Claude — 2026-10-09 (Matthew: "units are not sitting right")
 - The terrain shader is unshaded (receives no sun shadows), so vehicles had no ground contact cue and looked like they hovered. `UnitShadow.update`: contact shadow under the hull, wider (1.25x, follows the model's city shrink), darker (0.7), spread slightly toward the viewer; `unit_shadow.gdshader` firmer core. Shadow height still ground + 0.04 (battle-effects test unchanged). All four suites pass. Android test build 0.5.
+
+### Claude — 2026-10-09 (owner's weapons.zip: Russian air defence)
+- Matthew's `weapons.zip` (Drive): low-poly GLBs built by a script (`build_s500.py`, `vehicles.py`; scripts were read, not run). Models copied to `assets/library/ad_*.glb` (gitignored, like all models; pristine zip kept in `assets/library/source_weapons_zip/`). In game: **Strela-10, Tor-M2, Buk-M3, S-400, S-500 Prometey** (`equipment.json` ids `strela10`, `tor_m2`, `buk_m3`, `s400`, `s500`; roster entries in `asset_roster.json`). The zip's `ad_s500_radar.glb` and `ad_s500_launcher_4tube.glb` are in the library but not yet used — awaiting Matthew.
+- Models are +X forward; `UnitVisual.YAW_FIX["ad"] = 180` so cabs/fronts face the direction of travel (checked against the T-90 gun).
+- **Matthew: "keep the original colors from now on."** Roster appearances can set `"original_colors": true`; `UnitVisual.create` then skips the blue/woodland repaint. Set for all five new systems. Existing units unchanged.
+- Scenario: Kursk's Skyguard-derived battery is now an S-400; new starting batteries: Moscow S-500, Belgorod Tor-M2, Voronezh Buk-M3, Rostov-on-Don Strela-10 (Russia `starting_force_count` 14). **ChatGPT:** `tests/test_campaign.gd` no longer hard-codes 20 armies; it counts the scenario's units (`_scenario_armies()`).
+- Ranges/damage scale Strela-10 1.8/6 → S-500 5.5/14 (balance welcome). All suites pass. Screenshot `docs/review/new_air_defence.png`. Android test build 0.6.

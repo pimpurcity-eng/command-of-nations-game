@@ -1222,5 +1222,115 @@
         ]
       }
     }
+  },
+  {
+    "id": "s400",
+    "name": "S-400 Triumf",
+    "kind": "ground",
+    "source": "weapons.zip (owner, 2026-10-09)",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/ad_s400.glb",
+        "preview": "res://assets/library/previews/s400.png",
+        "temporary_recolor": false,
+        "source_model": "S-400 Triumf",
+        "native_theme": [
+          "russian"
+        ],
+        "original_colors": true
+      }
+    }
+  },
+  {
+    "id": "tor_m2",
+    "name": "Tor-M2",
+    "kind": "ground",
+    "source": "weapons.zip (owner, 2026-10-09)",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/ad_tor_m2.glb",
+        "preview": "res://assets/library/previews/tor_m2.png",
+        "temporary_recolor": false,
+        "source_model": "Tor-M2",
+        "native_theme": [
+          "russian"
+        ],
+        "original_colors": true
+      }
+    }
+  },
+  {
+    "id": "buk_m3",
+    "name": "Buk-M3",
+    "kind": "ground",
+    "source": "weapons.zip (owner, 2026-10-09)",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/ad_buk_m3.glb",
+        "preview": "res://assets/library/previews/buk_m3.png",
+        "temporary_recolor": false,
+        "source_model": "Buk-M3",
+        "native_theme": [
+          "russian"
+        ],
+        "original_colors": true
+      }
+    }
+  },
+  {
+    "id": "strela10",
+    "name": "Strela-10",
+    "kind": "ground",
+    "source": "weapons.zip (owner, 2026-10-09)",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/ad_strela10.glb",
+        "preview": "res://assets/library/previews/strela10.png",
+        "temporary_recolor": false,
+        "source_model": "Strela-10",
+        "native_theme": [
+          "russian"
+        ],
+        "original_colors": true
+      }
+    }
+  },
+  {
+    "id": "s500",
+    "name": "S-500 Prometey",
+    "kind": "ground",
+    "source": "weapons.zip (owner, 2026-10-09)",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/ad_s500_prometey.glb",
+        "preview": "res://assets/library/previews/s500.png",
+        "temporary_recolor": false,
+        "source_model": "S-500 Prometey",
+        "native_theme": [
+          "russian"
+        ],
+        "original_colors": true
+      }
+    }
   }
 ]
