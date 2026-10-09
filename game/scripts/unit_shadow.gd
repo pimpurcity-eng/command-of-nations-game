@@ -19,12 +19,16 @@ static func update(unit: Dictionary, ground: Vector3) -> void:
 	if not marker.has_meta("ground_shadow"): return
 	var shadow: MeshInstance3D = marker.get_meta("ground_shadow")
 	var height: = maxf(0, marker.position.y - ground.y)
-	# Directly under a vehicle on the ground (a constant offset read as hovering); aircraft
-	# shadows drift with altitude.
-	var offset: = Vector3(height * 0.1, 0.04, height * 0.08)
-	# Placed in map space: the marker tilts with the ground slope.
+	# The terrain is unshaded (it receives no sun shadows), so this soft shadow is what makes
+	# a vehicle read as resting on the ground: wider than the hull and spread a little toward
+	# the viewer (the camera looks north) so it frames the tracks instead of hiding behind
+	# the hull; aircraft shadows drift further with altitude.
+	var cast: = Vector3(0.05 + height * 0.1, 0.0, 0.06 + height * 0.08)
+	var offset: = cast + Vector3(0, 0.04, 0)
 	if shadow.is_inside_tree(): shadow.global_position = ground + offset
 	else: shadow.position = ground - marker.position + offset
 	shadow.rotation.y = unit.heading
-	shadow.scale = Vector3.ONE * (1.0 + minf(height, 2.0) * 0.15)
-	shadow.material_override.set_shader_parameter("opacity", 0.3 / (1.0 + height * 0.2))
+	# Follows the model's size (armies shrink inside cities).
+	var model_scale: = (marker.get_child(0) as Node3D).scale.x / 0.65 if marker.get_child_count() > 0 and marker.get_child(0) is Node3D else 1.0
+	shadow.scale = Vector3.ONE * (1.25 + minf(height, 2.0) * 0.15) * model_scale
+	shadow.material_override.set_shader_parameter("opacity", 0.7 / (1.0 + height * 0.3))
