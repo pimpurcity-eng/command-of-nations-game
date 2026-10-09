@@ -7,6 +7,7 @@ extends CanvasLayer
 ##               your armies is selected it is replaced by the army sheet with large
 ##               Stop / Split / Attack / Move buttons.
 ## Signals and the members used by main.gd are unchanged.
+signal account_requested
 signal cancel_order_requested
 signal delay_requested
 signal forced_march_requested
@@ -180,7 +181,7 @@ func _build_toolbar(root: Control) -> void:
 	# The full command list lives in this menu (opened from the "More" tab).
 	navigation_menu = MenuButton.new()
 	navigation_menu.visible = false
-	for title in ["Reset north", "Rotate left", "Rotate right", "Terrain / borders", "Speed 1x", "Speed 2x", "Speed 4x", "Save game", "Load game", "Equipment & production", "Army roster", "New match", "Add destination to selected army", "Merge nearby friendly armies", "Split selected units", "Army composition / battle info", "Declare war on Ukraine", "Technology / day unlocks", "Capital / construction", "Supply exchange", "All weapon models", "Select several armies", "Fire control", "Attack enemy army", "Victory progress", "Diplomacy", "Delay / synchronize arrival", "Forced march", "Upgrade selected army", "Rebase aircraft"]:
+	for title in ["Reset north", "Rotate left", "Rotate right", "Terrain / borders", "Speed 1x", "Speed 2x", "Speed 4x", "Save game", "Load game", "Equipment & production", "Army roster", "New match", "Add destination to selected army", "Merge nearby friendly armies", "Split selected units", "Army composition / battle info", "Declare war on Ukraine", "Technology / day unlocks", "Capital / construction", "Supply exchange", "All weapon models", "Select several armies", "Fire control", "Attack enemy army", "Victory progress", "Diplomacy", "Delay / synchronize arrival", "Forced march", "Upgrade selected army", "Rebase aircraft", "Player account"]:
 		navigation_menu.get_popup().add_item(title)
 	navigation_menu.get_popup().id_pressed.connect(func(index: int):
 		match index:
@@ -214,6 +215,7 @@ func _build_toolbar(root: Control) -> void:
 			27: forced_march_requested.emit()
 			28: upgrade_requested.emit()
 			29: rebase_requested.emit()
+			30: account_requested.emit()
 	)
 	root.add_child(navigation_menu)
 

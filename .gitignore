@@ -2,3 +2,6 @@
 # Local test builds (APKs contain unlicensed-for-publishing models)
 build/
 *.apk
+
+# Build-time account configuration (public values only; keep environment-specific setup local)
+game/config/accounts.cfg

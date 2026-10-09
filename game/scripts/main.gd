@@ -1,4 +1,5 @@
 extends Node3D
+var account_panel: AccountPanel
 var badges: UnitBadges
 var test_models: Node3D
 var fog: FogOfWar
@@ -100,6 +101,11 @@ func _ready() -> void :
 	clock.advanced.connect(units.advance)
 	hud = StrategyHUD.new()
 	add_child(hud)
+	hud.account_requested.connect(func():
+		if account_panel==null:
+			account_panel=AccountPanel.new();add_child(account_panel)
+		rig.reset_gestures()
+		account_panel.open())
 	clock.state_changed.connect(refresh_hud)
 	hud.pause_requested.connect( func():
 		if match_rules == null or match_rules.winner.is_empty(): clock.toggle_pause())
@@ -439,6 +445,7 @@ func load_game() -> void :
 	hud.show_status("Saved game restored")
 
 func _touch_over_ui(screen: Vector2) -> bool:
+	if account_panel != null and account_panel.overlay.visible: return true
 	if badges != null and badges.contains(screen): return true
 	if exchange_panel != null and exchange_panel.visible: return true
 	if weapon_showcase != null and weapon_showcase.visible: return true
