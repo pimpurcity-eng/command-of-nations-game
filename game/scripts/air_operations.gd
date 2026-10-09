@@ -120,7 +120,10 @@ func advance(unit: Dictionary, seconds: float) -> void :
 		point = point.move_toward(goal, step)
 		position(unit, point)
 		remaining -= step
-		unit.flight_used += step
+		# Owner review: a patrol stays over the chosen spot, circling, until given a new order;
+		# circling uses no endurance (only the flight out and back does).
+		var circling: bool = unit.flight_mode == "patrol" and point.distance_to(unit.patrol_center) <= PATROL_RADIUS + 0.05
+		if not circling: unit.flight_used += step
 		if unit.flight_used > budget(unit) + 0.001:
 			unit.health = 0
 			armies.status_changed.emit("Aircraft lost after exhausting its flight endurance")
@@ -143,7 +146,7 @@ func advance(unit: Dictionary, seconds: float) -> void :
 		elif unit.flight_mode == "fly":
 			return_home(unit)
 		else:
-			unit.patrol_phase = fmod(unit.patrol_phase + PI / 4, TAU)
+			unit.patrol_phase = fmod(unit.patrol_phase + PI / 12, TAU)  # smooth circle
 			unit.target = unit.patrol_center + Vector2.from_angle(unit.patrol_phase) * PATROL_RADIUS
 			unit.waypoints = [unit.target]
 	position(unit, point)

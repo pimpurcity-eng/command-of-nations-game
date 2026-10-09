@@ -65,8 +65,9 @@ func _ready() -> void :
 	# their hulls, so tanks looked like they were floating.
 	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
 	sun.directional_shadow_max_distance = 45.0
-	sun.shadow_bias = 0.02
-	sun.shadow_normal_bias = 0.5
+	# 0.02 / 0.5 caused shadow acne (thin stripes across vehicles on phones).
+	sun.shadow_bias = 0.08
+	sun.shadow_normal_bias = 1.2
 	add_child(sun)
 	var sea: = MeshInstance3D.new()
 	var plane: = PlaneMesh.new()

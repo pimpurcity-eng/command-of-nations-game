@@ -100,6 +100,9 @@ static func _fit(pivot: Node3D, vehicle: Node3D, role: String, path: String) -> 
 	var bounds: = model_bounds(vehicle, yaw)
 	var longest: = maxf(maxf(bounds.size.x, bounds.size.z), 0.001)
 	var factor: float = FOOTPRINT.get(role, 0.62) / longest
+	# Owner arsenal tanks/APCs keep their real relative size (an M113 is smaller than a
+	# Leopard): 0.145 map units per metre, ~1.35 for a 9.4 m tank.
+	if path.contains("/arsenal/") and role in ["armor", "ifv"]: factor = 0.145
 	var center: = bounds.get_center()
 	pivot.transform = Transform3D(Basis(Vector3.UP, yaw).scaled(Vector3.ONE * factor), Vector3(-center.x, -bounds.position.y, -center.z) * factor)
 

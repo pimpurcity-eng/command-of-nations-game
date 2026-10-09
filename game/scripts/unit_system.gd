@@ -324,7 +324,8 @@ func _draw_route() -> void :
 		var chosen: = key == selected_key
 		if leader.country != GameSession.player_country and not chosen: continue
 		var start: = Vector2(leader.node.position.x, leader.node.position.z)
-		if leader.moving:
+		# Owner review: planes fly freely and show no path line.
+		if leader.moving and not air.is_air(leader):
 			var points: Array = [start]
 			points.append_array(leader.waypoints)
 			if points.size() == 1: points.append(leader.target)
