@@ -47,7 +47,8 @@ float fbm(vec2 p) {
 }
 void vertex() {
 	world = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
-	altitude = VERTEX.y;
+	// The mesh is flat; the virtual altitude comes in the vertex colour (strategic_map.gd).
+	altitude = COLOR.r * 4.0;
 	slope = 1.0 - NORMAL.y;
 }
 void fragment() {

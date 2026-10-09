@@ -110,3 +110,8 @@ Feedback: resources like Call of War — one per province/city; planes fly anywh
 - **Start positions:** ground troops ignore scenario offsets and start at their city/province centre (`LandRoutes.hub_for`), others of the same place line up on the roads beside it; aircraft/ships keep offsets. New check in `test_map_features.gd`.
 - When the new weapons arrive: add them to `data/equipment.json`, `data/asset_roster.json` (with `"original_colors": true`), and starting armies to the scenario.
 - All four suites pass. Android test build 0.8 (no weapons).
+
+### Claude — 2026-10-09 (Matthew: flat map with the appearance of terrain)
+- The map is now totally flat (`TerrainProfile.height()` = `FLAT_HEIGHT` 0.2), Call of War style, so units, roads, cities and flags sit exactly on the ground. The former height function is `TerrainProfile.relief_height()` and only paints: `StrategicMap._subdivide` puts its slope in the vertex normal (rock on slopes) and its altitude in the vertex colour red channel (`terrain.gdshader`: `altitude = COLOR.r * 4.0`, snow caps); the relief texture shading is unchanged.
+- All four suites pass. Screenshot `docs/review/flat_map.png`.
+- Note: ChatGPT's `Command_of_Nations_Buildings_Handoff.zip` and `Command_of_Nations_Menu_Polish.zip` are in Matthew's Drive but not on this branch; not integrated (awaiting Matthew). The menu polish may overlap Claude's city/research/HUD skin work (`cow_ui.gd`, `city_panel.gd`, `research_panel.gd`, `hud.gd`).

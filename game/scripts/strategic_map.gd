@@ -131,11 +131,13 @@ func _subdivide(s: SurfaceTool, a: Vector2, b: Vector2, c: Vector2, depth: int) 
 		for point in [a, b, c]:
 			if not _surface_samples.has(point):
 
-				var dx: = elevation(point + Vector2(0.035, 0)) - elevation(point - Vector2(0.035, 0))
-				var dz: = elevation(point + Vector2(0, 0.035)) - elevation(point - Vector2(0, 0.035))
-				_surface_samples[point] = [position_at(point), Vector3( - dx / 0.07, 1.0, - dz / 0.07).normalized()]
+				# Flat ground; the virtual relief goes to the shader as the normal (rock on
+				# slopes) and the vertex colour's red channel (altitude / 4, snow caps).
+				var dx: = TerrainProfile.relief_height(point + Vector2(0.035, 0)) - TerrainProfile.relief_height(point - Vector2(0.035, 0))
+				var dz: = TerrainProfile.relief_height(point + Vector2(0, 0.035)) - TerrainProfile.relief_height(point - Vector2(0, 0.035))
+				_surface_samples[point] = [position_at(point), Vector3( - dx / 0.07, 1.0, - dz / 0.07).normalized(), TerrainProfile.relief_height(point)]
 			var sample: Array = _surface_samples[point]
-			s.set_color(Color("486c4d").lerp(Color("ddd3b1"), clampf(sample[0].y / 3.0, 0, 1)))
+			s.set_color(Color(clampf(sample[2] / 4.0, 0.0, 1.0), 0, 0))
 			s.set_normal(sample[1])
 			s.add_vertex(sample[0])
 		_register_ground(_surface_samples[a][0], _surface_samples[b][0], _surface_samples[c][0])
