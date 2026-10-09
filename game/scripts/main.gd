@@ -380,7 +380,9 @@ func _map_click(screen: Vector2, order: bool) -> void :
 	var city_hit: = cities.pick_screen(screen)
 	if not order and not order_mode:
 		var unit_hit: = units.pick_screen(rig.camera, screen)
-		if not unit_hit.is_empty() and (city_hit.is_empty() or unit_hit.distance < city_hit.distance):
+		# Armies win taps over the city under them (armies stand on roads through cities);
+		# the city is still opened from its name tag or by tapping elsewhere in it.
+		if not unit_hit.is_empty():
 			units.select_unit(unit_hit.index)
 			return
 	if not city_hit.is_empty():

@@ -58,12 +58,17 @@ func split_selected() -> void :
 	var anchor: = Vector2(chosen.node.position.x, chosen.node.position.z)
 	var destination: = anchor
 	var found: = false
-	for angle in 16:
-		var point: = anchor + Vector2.from_angle(angle * TAU / 16.0) * 0.55
-		if armies.routes_for(chosen).clear_segment(anchor, point):
-			destination = point
-			found = true
-			break
+	if not armies.is_naval(chosen):
+		# Ground armies split along the road (owner review: units only on roads).
+		destination = armies.navigation.beside_on_road(anchor, 0.55, armies.ground_positions(group), chosen.country)
+		found = destination.distance_to(anchor) > 0.2
+	else:
+		for angle in 16:
+			var point: = anchor + Vector2.from_angle(angle * TAU / 16.0) * 0.55
+			if armies.routes_for(chosen).clear_segment(anchor, point):
+				destination = point
+				found = true
+				break
 	if not found:
 		armies.status_changed.emit("No nearby navigable space to split this stack")
 		return
@@ -114,9 +119,13 @@ func split_units(ids: Array[String]) -> String:
 	var point: = anchor
 	if not armies.air.is_air(chosen):
 		var found: = false
-		for angle in 16:
-			var candidate: = anchor + Vector2.from_angle(angle * TAU / 16.0) * 0.55
-			if armies.routes_for(chosen).clear_segment(anchor, candidate): point = candidate;found = true;break
+		if not armies.is_naval(chosen):
+			point = armies.navigation.beside_on_road(anchor, 0.55, armies.ground_positions(group), chosen.country)
+			found = point.distance_to(anchor) > 0.2
+		else:
+			for angle in 16:
+				var candidate: = anchor + Vector2.from_angle(angle * TAU / 16.0) * 0.55
+				if armies.routes_for(chosen).clear_segment(anchor, candidate): point = candidate;found = true;break
 		if not found: return "No navigable space beside this army"
 	else:
 		if chosen.flight_mode != "grounded": return "Land aircraft before splitting the squadron"

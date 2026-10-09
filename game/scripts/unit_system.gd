@@ -34,6 +34,13 @@ func path_for(unit: Dictionary, start: Vector2, finish: Vector2) -> Array:
 func surface_position(unit: Dictionary, point: Vector2) -> Vector3:
 	if is_naval(unit): return Vector3(point.x, 0.15, point.y)
 	return footprint_ground(point)
+## Map positions of all ground armies (not aircraft or ships).
+func ground_positions(except: Array = []) -> Array:
+	var result: = []
+	for unit in units:
+		if unit in except or air.is_air(unit) or is_naval(unit): continue
+		result.append(Vector2(unit.node.position.x, unit.node.position.z))
+	return result
 func footprint_ground(point: Vector2) -> Vector3:
 	# Owner review: vehicles raised to the highest point under them looked like they were
 	# floating on slopes. They sit on the ground at their centre and tilt with the slope
@@ -96,7 +103,8 @@ func setup(map: StrategicMap, scenario: Dictionary) -> void :
 	air_range.visible = false
 	add_child(air_range)
 func _spawn(data: Dictionary, point: Vector2, color: Color) -> void :
-	if data.get("visual_kind", "armor") not in ["fighter", "naval"]: point = navigation.nearest_land(point)
+	if data.get("visual_kind", "armor") not in ["fighter", "naval"]:
+		point = navigation.on_road(navigation.nearest_land(point), ground_positions(), 0.7, data.get("country", ""))
 	var spec: = [data.name, point, color]
 	var marker: = Node3D.new()
 	marker.position = Vector3(point.x, 0.15, point.y) if data.get("visual_kind", "") == "naval" else footprint_ground(spec[1])

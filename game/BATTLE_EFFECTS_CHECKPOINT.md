@@ -97,3 +97,8 @@ Feedback: resources like Call of War — one per province/city; planes fly anywh
 - **Matthew: "keep the original colors from now on."** Roster appearances can set `"original_colors": true`; `UnitVisual.create` then skips the blue/woodland repaint. Set for all five new systems. Existing units unchanged.
 - Scenario: Kursk's Skyguard-derived battery is now an S-400; new starting batteries: Moscow S-500, Belgorod Tor-M2, Voronezh Buk-M3, Rostov-on-Don Strela-10 (Russia `starting_force_count` 14). **ChatGPT:** `tests/test_campaign.gd` no longer hard-codes 20 armies; it counts the scenario's units (`_scenario_armies()`).
 - Ranges/damage scale Strela-10 1.8/6 → S-500 5.5/14 (balance welcome). All suites pass. Screenshot `docs/review/new_air_defence.png`. Android test build 0.6.
+
+### Claude — 2026-10-09 (Matthew: "units should be only on tracks except air")
+- Ground armies now stand on roads, not only travel on them: `LandRoutes.on_road()` (nearest free road point, spacing 0.7 from other armies, on the army's own side of the border via `controller_at`) is used when spawning (start + production) and `beside_on_road()` when splitting (`ArmyStacks.split_selected` / `split_units`). Aircraft and ships unchanged. `UnitSystem.ground_positions()` helper.
+- Armies standing on a road through a city were hidden behind the city tap: `main._map_click` now gives an army under the tap priority over the city (city opens from its name tag or elsewhere).
+- Tests: `test_map_features.gd` 22/0 (start on roads, own side of border, no stacking); campaign, battle effects, touch 0 failures. Android test build 0.7.
