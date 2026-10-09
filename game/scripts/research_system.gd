@@ -33,15 +33,12 @@ func active(id: String) -> Dictionary:
 	for job in jobs:
 		if job.equipment == id: return job
 	return {}
-func rate(country: String) -> float:
-	return economy.buildings.research_rate(country) if economy.buildings != null else 1.0
-func capital_status(country: String = "") -> String:
-	if country.is_empty(): country = GameSession.player_country
-	if economy.buildings == null: return ""
-	var place: = economy.buildings.capital(country)
-	if place.is_empty(): return "No capital is configured for this country"
-	if rate(country) <= 0: return "Research paused: recover " + place.name + " and its research center"
-	return place.name + " research center · L" + str(economy.buildings.level(place.id, "research_center")) + " · " + str(int(rate(country) * 100)) + "% speed"
+## Owner review 2026-10-09: research is national and separate from the cities. It no
+## longer depends on a capital research-center building and is opened from the Research tab.
+func rate(_country: String) -> float:
+	return 1.0
+func capital_status(_country: String = "") -> String:
+	return "National research · " + str(SLOTS) + " research slots"
 func reason(id: String, target: int, country: String = "") -> String:
 	if country.is_empty(): country = GameSession.player_country
 	var spec: = economy.equipment(id)

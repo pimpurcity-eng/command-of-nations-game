@@ -15,8 +15,15 @@ var _city_points: = PackedVector2Array()
 ## height formula between their corners, which buried roads, sank tanks and split cities.
 ## After the ground is built, heights come from the drawn triangles (bucketed in a grid).
 const GROUND_CELL: = 0.5
+## Radius of a city's built-up area (district outline ~0.72 * 0.86-1.0); roads end here.
+const CITY_EDGE: = 0.62
 var _ground_cells: Dictionary = {}
 var _ground_ready: = false
+## Every road as [start, end, bend] (highways and local roads); armies travel only on these.
+var roads: Array = []
+## Province title -> centre (hub) where its roads meet and where it is captured.
+var province_hubs: Dictionary = {}
+var province_posts: Dictionary = {}
 func _ready() -> void :
 	noise.seed = 1874
 	noise.frequency = 0.13
@@ -269,15 +276,27 @@ func _add_connections() -> void :
 	var highways: = SurfaceTool.new()
 	highways.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var connections: = [["Lviv", "Kyiv"], ["Kyiv", "Kharkiv"], ["Kyiv", "Dnipro"], ["Dnipro", "Odesa"], ["Kharkiv", "Dnipro"], ["Moscow", "Kursk"], ["Moscow", "Voronezh"], ["Kursk", "Belgorod"], ["Voronezh", "Rostov-on-Don"]]
-	for pair in connections: _road(highways, locations[pair[0]], locations[pair[1]], 0.025, 0.4, land)
+	for pair in connections:
+		_road(highways, locations[pair[0]], locations[pair[1]], 0.025, 0.4, land)
+		roads.append([locations[pair[0]], locations[pair[1]], 0.4])
 	_add_road_mesh(highways, Color("5e5b52"))
 	var local: = SurfaceTool.new()
 	local.begin(Mesh.PRIMITIVE_TRIANGLES)
-	for edge in road_network(territories): _road(local, edge[0], edge[1], 0.022, edge[2], land)
+	var graph: = road_graph(territories)
+	province_hubs = graph.hubs
+	for edge in graph.edges:
+		_road(local, edge[0], edge[1], 0.022, edge[2], land)
+		roads.append(edge)
+	_add_province_posts(locations.values())
 	_add_road_mesh(local, Color("6a6456"))
 
 ## [start, end, bend] for the local road between every pair of neighbouring provinces.
 static func road_network(territory_list: Array) -> Array:
+	return road_graph(territory_list).edges
+
+## {"edges": [[start, end, bend], ...], "hubs": {province title: centre}}. The hub is the
+## centre of the province's largest piece: where its roads meet and where it is captured.
+static func road_graph(territory_list: Array) -> Dictionary:
 	# Owner review: a road to every province. Provinces that share a border are joined
 	# centre to centre; a road a-b is dropped when a common neighbour c is closer to both
 	# (the detour a-c-b replaces it), which keeps every province connected without clutter.
@@ -341,29 +360,97 @@ static func road_network(territory_list: Array) -> Array:
 		for j in centers.size():
 			if j != i and centers[j].distance_to(centers[i]) < 6.0 and (nearest < 0 or centers[j].distance_to(centers[i]) < centers[nearest].distance_to(centers[i])): nearest = j
 		if nearest >= 0: edges.append([centers[i], centers[nearest], 0.0])
-	return edges
+	return {"edges": edges, "hubs": main_part}
 
 static func _polygon_area(polygon: PackedVector2Array) -> float:
 	var area: = 0.0
 	for i in polygon.size(): area += polygon[i].cross(polygon[(i + 1) % polygon.size()])
 	return absf(area) * 0.5
 
+## A flag post at every province centre without a city (cities mark their own centre): the
+## point an army must hold to capture the province. The flag shows who controls it.
+func _add_province_posts(city_points: Array) -> void :
+	var flags: = {"russia": [Color("f2f2ee"), Color("2853a8"), Color("c8372d")], "ukraine": [Color("2f6bc7"), Color("f2c418")]}
+	for title in province_hubs:
+		var hub: Vector2 = province_hubs[title]
+		if city_points.any(func(city: Vector2): return city.distance_to(hub) < 0.5): continue
+		var post: = Node3D.new()
+		post.name = "ProvinceCentre_" + str(title).validate_node_name()
+		post.position = position_at(hub)
+		add_child(post)
+		var dark: = StandardMaterial3D.new()
+		dark.albedo_color = Color("2e302c")
+		var base: = MeshInstance3D.new()
+		var plinth: = CylinderMesh.new()
+		plinth.top_radius = 0.07
+		plinth.bottom_radius = 0.09
+		plinth.height = 0.04
+		plinth.radial_segments = 12
+		base.mesh = plinth
+		base.material_override = dark
+		base.position.y = 0.02
+		post.add_child(base)
+		var pole: = MeshInstance3D.new()
+		var stick: = CylinderMesh.new()
+		stick.top_radius = 0.007
+		stick.bottom_radius = 0.007
+		stick.height = 0.36
+		stick.radial_segments = 6
+		pole.mesh = stick
+		pole.material_override = dark
+		pole.position.y = 0.2
+		post.add_child(pole)
+		for country in flags:
+			var flag: = Node3D.new()
+			flag.name = country
+			flag.position = Vector3(0.075, 0.33, 0)
+			var stripes: Array = flags[country]
+			for i in stripes.size():
+				var stripe: = MeshInstance3D.new()
+				var cloth: = BoxMesh.new()
+				cloth.size = Vector3(0.14, 0.09 / stripes.size(), 0.006)
+				stripe.mesh = cloth
+				var paint: = StandardMaterial3D.new()
+				paint.albedo_color = stripes[i]
+				stripe.material_override = paint
+				stripe.position.y = 0.045 - 0.09 * (i + 0.5) / stripes.size()
+				flag.add_child(stripe)
+			post.add_child(flag)
+		province_posts[title] = post
+	_update_posts()
+func _update_posts() -> void :
+	for territory in territories:
+		if not territory.playable or not province_posts.has(territory.title): continue
+		var post: Node3D = province_posts[territory.title]
+		for flag in post.get_children():
+			if flag.name in ["russia", "ukraine"]: flag.visible = flag.name == territory.controller
+
+## Points along the road from start to end (both included), bowed sideways by `bend`.
+static func road_curve(start: Vector2, end: Vector2, bend: float) -> PackedVector2Array:
+	var normal: = Vector2( - (end - start).y, (end - start).x).normalized()
+	var count: = maxi(8, ceili(start.distance_to(end) / 0.2))
+	var points: = PackedVector2Array()
+	for i in count + 1:
+		var t: = i / float(count)
+		points.append(start.lerp(end, t) + normal * sin(t * PI) * bend)
+	return points
+
 ## Ribbon road from a to b with a gentle sideways bend, following the terrain; segments over
 ## water are skipped.
 func _road(surface: SurfaceTool, start: Vector2, end: Vector2, half_width: float, bend: float, land: Array) -> void :
-	var normal: = Vector2( - (end - start).y, (end - start).x).normalized()
-	var count: = maxi(8, ceili(start.distance_to(end) / 0.2))
-	for i in count:
-		var t: = i / float(count)
-		var next: = (i + 1) / float(count)
-		var a: = start.lerp(end, t) + normal * sin(t * PI) * bend
-		var b: = start.lerp(end, next) + normal * sin(next * PI) * bend
+	var curve: = road_curve(start, end, bend)
+	for i in curve.size() - 1:
+		var a: = curve[i]
+		var b: = curve[i + 1]
 		var on_land: = false
 		for polygon in land:
 			if Geometry2D.is_point_in_polygon((a + b) * 0.5, polygon):
 				on_land = true
 				break
 		if not on_land: continue
+		# Roads stop at the city edge instead of piling up through the city.
+		var middle: = (a + b) * 0.5
+		if _city_points.size() > 0 and Array(_city_points).any(func(city: Vector2): return city.distance_to(middle) < CITY_EDGE): continue
 		var side: = (b - a).orthogonal().normalized() * half_width
 		for point in [a - side, a + side, b + side, a - side, b + side, b - side]:
 			surface.add_vertex(position_at(point) + Vector3.UP * 0.04)
@@ -384,6 +471,7 @@ func update_relations(at_war: bool) -> void :
 	for territory in territories: signature += str(territory.controller)
 	if signature == relation_signature: return
 	relation_signature = signature
+	_update_posts()
 	for territory in territories:
 		if not territory.playable: continue
 		var material: ShaderMaterial = materials[territory.id]

@@ -280,9 +280,6 @@ func _build_city_district(district: Node3D, city: Dictionary, _ink: StandardMate
 	var rng: = RandomNumberGenerator.new()
 	rng.seed = city.name.hash()
 	var capital: bool = city.get("capital", false)
-	var asphalt: = StandardMaterial3D.new()
-	asphalt.albedo_color = Color("4d4c48")
-	asphalt.roughness = 1.0
 	var plaza: = StandardMaterial3D.new()
 	plaza.albedo_color = Color("b3ab98")
 	plaza.roughness = 1.0
@@ -312,8 +309,8 @@ func _build_city_district(district: Node3D, city: Dictionary, _ink: StandardMate
 	for i in avenue_count:
 		var angle: = base_angle + TAU * i / avenue_count + rng.randf_range(-0.2, 0.2)
 		avenues.append(angle)
-		var direction: = Vector2(cos(angle), sin(angle))
-		_city_block(district, Vector3(1.0, 0.01, 0.034), Vector3(direction.x * 0.52, 0.016, direction.y * 0.52), -angle, asphalt)
+		# Owner review: no extra road strips inside cities; the avenues stay as gaps between
+		# the buildings (streets) without asphalt bands radiating from the centre.
 	# Irregular city outline instead of a perfect circle.
 	var phase_a: = rng.randf() * TAU
 	var phase_b: = rng.randf() * TAU

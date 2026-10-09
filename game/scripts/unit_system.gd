@@ -35,13 +35,15 @@ func surface_position(unit: Dictionary, point: Vector2) -> Vector3:
 	if is_naval(unit): return Vector3(point.x, 0.15, point.y)
 	return footprint_ground(point)
 func footprint_ground(point: Vector2) -> Vector3:
-	# Rest on the highest ground under the vehicle's footprint so the hull's ends do not
-	# sink into slopes (the height was only sampled at the centre).
-	var y: = terrain.elevation(point)
-	for i in 8:
-		var offset: = Vector2.from_angle(TAU * i / 8.0) * 0.42
-		y = maxf(y, terrain.elevation(point + offset))
-	return Vector3(point.x, y + 0.02, point.y)
+	# Owner review: vehicles raised to the highest point under them looked like they were
+	# floating on slopes. They sit on the ground at their centre and tilt with the slope
+	# (ground_normal), so both ends touch the ground.
+	return terrain.position_at(point)
+## Slope of the ground under a vehicle (sampled over roughly its length).
+func ground_normal(point: Vector2) -> Vector3:
+	var dx: = terrain.elevation(point + Vector2(0.35, 0)) - terrain.elevation(point - Vector2(0.35, 0))
+	var dz: = terrain.elevation(point + Vector2(0, 0.35)) - terrain.elevation(point - Vector2(0, 0.35))
+	return Vector3( - dx / 0.7, 1.0, - dz / 0.7).normalized()
 var route: MeshInstance3D
 var destination_marker: MeshInstance3D
 var route_signature: = ""
@@ -182,6 +184,8 @@ func order(position: Vector3, append: bool = false) -> bool:
 	if path.is_empty():
 		status_changed.emit("No connected sea route. Ships cannot cross land." if is_naval(units[selected]) else "No connected land route. Ground units cannot cross water or neutral countries.")
 		return false
+	# Armies go to the province centre by road; the route's end is the real destination.
+	if not is_naval(units[selected]): destination = path.back()
 	if append and units[selected].moving:
 		if units[selected].waypoints.size() + path.size() > 256:
 			status_changed.emit("Route queue is full")
@@ -442,6 +446,9 @@ func _process(delta: float) -> void :
 		unit.ring.visible = chosen
 		var model: Node3D = unit.node.get_child(0)
 		model.rotation.y = lerp_angle(model.rotation.y, unit.heading, 1.0 - exp( - delta * 8.0))
+		if not is_naval(unit) and not air.is_air(unit):
+			var slope: = Quaternion(Vector3.UP, ground_normal(Vector2(unit.node.position.x, unit.node.position.z)))
+			unit.node.quaternion = unit.node.quaternion.slerp(slope, 1.0 - exp( - delta * 8.0))
 		# Owner review: armies inside a city shrink so they sit among the buildings.
 		var target_scale: = 0.65 * (CITY_SCALE if _in_city(Vector2(unit.node.position.x, unit.node.position.z)) else 1.0)
 		model.scale = model.scale.lerp(Vector3.ONE * target_scale, 1.0 - exp( - delta * 6.0))

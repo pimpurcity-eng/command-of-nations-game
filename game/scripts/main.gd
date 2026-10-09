@@ -60,6 +60,12 @@ func _ready() -> void :
 	sun.light_color = Color("fff1d5")
 	sun.light_energy = 1.3
 	sun.shadow_enabled = true
+	# Map-scale shadows: the defaults (100 m range, 0.1 bias) detached vehicle shadows from
+	# their hulls, so tanks looked like they were floating.
+	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
+	sun.directional_shadow_max_distance = 45.0
+	sun.shadow_bias = 0.02
+	sun.shadow_normal_bias = 0.5
 	add_child(sun)
 	var sea: = MeshInstance3D.new()
 	var plane: = PlaneMesh.new()

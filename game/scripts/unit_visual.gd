@@ -160,6 +160,9 @@ static func _is_hull_paint(color: Color) -> bool:
 	return luminance > 0.43 and luminance < 0.62 and color.s < 0.3
 
 static func preview_texture(equipment_id: String) -> Texture2D:
+	# Menu pictures rendered from the unit's own 3D model (tests/render_previews.gd).
+	var rendered: = "res://assets/library/previews/" + equipment_id + ".png"
+	if ResourceLoader.exists(rendered): return load(rendered)
 	var path: = preview_path(equipment_id)
 	if not path.is_empty() and ResourceLoader.exists(path): return load(path)
 	var country: String = EquipmentIdentity.spec(equipment_id).get("country", GameSession.player_country)

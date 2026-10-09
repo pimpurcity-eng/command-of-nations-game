@@ -19,7 +19,12 @@ static func update(unit: Dictionary, ground: Vector3) -> void:
 	if not marker.has_meta("ground_shadow"): return
 	var shadow: MeshInstance3D = marker.get_meta("ground_shadow")
 	var height: = maxf(0, marker.position.y - ground.y)
-	shadow.position = ground - marker.position + Vector3(0.1 + height * 0.1, 0.04, 0.08 + height * 0.08)
+	# Directly under a vehicle on the ground (a constant offset read as hovering); aircraft
+	# shadows drift with altitude.
+	var offset: = Vector3(height * 0.1, 0.04, height * 0.08)
+	# Placed in map space: the marker tilts with the ground slope.
+	if shadow.is_inside_tree(): shadow.global_position = ground + offset
+	else: shadow.position = ground - marker.position + offset
 	shadow.rotation.y = unit.heading
 	shadow.scale = Vector3.ONE * (1.0 + minf(height, 2.0) * 0.15)
 	shadow.material_override.set_shader_parameter("opacity", 0.3 / (1.0 + height * 0.2))

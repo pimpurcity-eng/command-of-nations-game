@@ -57,13 +57,15 @@ func run() -> void:
 
 	# 3. Ground: the height used for placement matches the drawn ground, and vehicles rest on it.
 	var units: UnitSystem = game.units
-	var buried: = 0
+	var off_ground: = 0
 	for unit in units.units:
 		if units.is_naval(unit) or units.air.is_air(unit): continue
 		var p: = Vector2(unit.node.position.x, unit.node.position.z)
-		for i in 8:
-			if game.map.elevation(p + Vector2.from_angle(TAU * i / 8.0) * 0.42) > unit.node.position.y + 0.001: buried += 1
-	check(buried == 0, "no vehicle footprint is below the ground (%d corners)" % buried)
+		if absf(unit.node.position.y - game.map.elevation(p)) > 0.001: off_ground += 1
+	check(off_ground == 0, "vehicles sit on the ground, not raised above it (%d off)" % off_ground)
+	var sloped: = Vector2(9.0, -14.0)
+	var normal: Vector3 = units.ground_normal(sloped)
+	check(normal.is_normalized() and normal.y > 0.5, "vehicles tilt with the ground slope")
 	var hill: Vector3 = game.map_position(36.5, 50.2)
 	var ray: = PhysicsRayQueryParameters3D.create(Vector3(hill.x, 50, hill.z), Vector3(hill.x, -50, hill.z))
 	await physics_frame
@@ -79,9 +81,26 @@ func run() -> void:
 	var goal: Vector3 = game.map_position(39.2, 51.66)  # Voronezh
 	game.player_order(goal)
 	check(tank.moving, "the move order is accepted")
+	var route_points: = []
+	for road in game.map.roads: route_points.append_array(Array(StrategicMap.road_curve(road[0], road[1], road[2])))
+	var off_road: = 0
+	for waypoint in tank.waypoints.slice(1):
+		var nearest: = INF
+		for point in route_points: nearest = minf(nearest, point.distance_to(waypoint))
+		if nearest > 0.001: off_road += 1
+	check(tank.waypoints.size() > 2 and off_road == 0, "the route follows the roads (%d of %d points off-road)" % [off_road, tank.waypoints.size()])
+	check(game.map.province_hubs.values().any(func(hub: Vector2): return hub.distance_to(tank.target) < 0.001), "armies travel to a province centre")
 	game.clock.paused = false
 	for step in 30: game.clock.advance(1.0)
 	var moved: = Vector2(tank.node.position.x, tank.node.position.z).distance_to(start)
 	check(moved > 0.3, "a tank moves visibly in 30 seconds (%.2f map units)" % moved)
+	# 5. Research is national: it runs at full speed even without the capital.
+	check(game.research.rate("russia") == 1.0, "research does not depend on a city")
+	for city in game.cities.cities:
+		if city.name == "Moscow":
+			for t in game.map.territories:
+				if t.id == city.sector: t.controller = "ukraine"
+	check(game.research.rate("russia") == 1.0, "losing the capital does not stop research")
+	check(not game.city_panel.rows.has("research_center"), "the city menu has no research building")
 	print("RESULT failures=", failures.size())
 	quit(0 if failures.is_empty() else 1)
