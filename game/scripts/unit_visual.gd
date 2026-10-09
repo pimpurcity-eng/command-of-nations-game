@@ -11,6 +11,10 @@ const YAW_FIX: = {"su57": 180.0, "f18a": 180.0, "destroyer": 180.0, "kclass": 18
 const RUSSIAN_CAMO: = "res://assets/materials/russian_blue_camo.png"
 static var _camo: Texture2D
 static var _camo_shader: Shader
+## Camouflage materials are created once and shared by every unit using the same model and
+## paint. Per-unit materials were freed together with a destroyed/replaced unit while the
+## GL Compatibility renderer still referenced them ('Parameter "material" is null').
+static var _camo_materials: Dictionary = {}
 
 static func asset_path(equipment_id: String) -> String:
 	# T-90M: the owner's original T90m.fbx. (The *_russian conversion lost the gun barrel.)
@@ -116,11 +120,16 @@ static func paint_russian(vehicle: Node, bounds: AABB) -> void:
 			var material: = mesh_instance.get_active_material(surface)
 			if not (material is BaseMaterial3D): continue
 			var base: = material as BaseMaterial3D
+			var key: = "%d:%.4f" % [base.get_instance_id(), tiles]
+			if _camo_materials.has(key):
+				mesh_instance.set_surface_override_material(surface, _camo_materials[key])
+				continue
 			if base.albedo_texture != null and base.resource_name.to_lower().contains("paint"):
 				# Converted models with a dedicated paint material: swap the pattern on its UVs.
 				var blue: = base.duplicate() as BaseMaterial3D
 				blue.albedo_texture = _camo
 				blue.albedo_color = Color.WHITE
+				_camo_materials[key] = blue
 				mesh_instance.set_surface_override_material(surface, blue)
 				continue
 			var textured: = base.albedo_texture != null
@@ -134,6 +143,7 @@ static func paint_russian(vehicle: Node, bounds: AABB) -> void:
 				camo.set_shader_parameter("original", base.albedo_texture)
 				camo.set_shader_parameter("original_tint", base.albedo_color)
 			camo.set_shader_parameter("roughness_value", base.roughness)
+			_camo_materials[key] = camo
 			mesh_instance.set_surface_override_material(surface, camo)
 
 ## Plain painted hull colours (olive/grey, mid luminance, sRGB as Godot reports them).
