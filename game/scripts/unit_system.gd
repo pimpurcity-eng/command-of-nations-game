@@ -480,6 +480,9 @@ func _process(delta: float) -> void :
 				var animator: AirDefenseAnimator = model.get_meta("air_defense_animator")
 				animator.moving = unit.moving
 				animator.animate(delta)
+			if model.has_meta("helicopter_animator"):
+				var rotor_animator: HelicopterAnimator = model.get_meta("helicopter_animator")
+				rotor_animator.animate(delta, unit.get("flight_mode", "grounded") != "grounded" and unit.health > 0)
 		model.rotation.y = lerp_angle(model.rotation.y, unit.heading, 1.0 - exp( - delta * 8.0))
 		if not is_naval(unit) and not air.is_air(unit):
 			var slope: = Quaternion(Vector3.UP, ground_normal(Vector2(unit.node.position.x, unit.node.position.z)))

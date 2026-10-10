@@ -658,5 +658,351 @@
       12,
       18
     ]
+  },
+  {
+    "id": "artillery_russia",
+    "country": "russia",
+    "name": "Artillery",
+    "category": "Artillery",
+    "visual_kind": "artillery",
+    "asset_roster_id": "artillery_russia",
+    "research_branch": "Artillery",
+    "seconds": 70,
+    "cost": {
+      "funds": 330,
+      "materials": 100,
+      "electronics": 65,
+      "fuel": 50,
+      "manpower": 20
+    },
+    "building_requirements": {
+      "factory": 1
+    },
+    "research_days": [
+      1,
+      4,
+      8,
+      12,
+      18
+    ],
+    "model_status": "Original supplied model (Weapons folder 2026-10-10)",
+    "research_tiers": [
+      {
+        "name": "2S1 Gvozdika",
+        "model": "res://assets/library/arsenal/russia_2s1_gvozdika.glb",
+        "improvement": "Baseline"
+      },
+      {
+        "name": "2S3 Akatsiya",
+        "model": "res://assets/library/arsenal/russia_2s3_akatsiya.glb",
+        "improvement": "+12% damage"
+      },
+      {
+        "name": "2S5 Giatsint",
+        "model": "res://assets/library/arsenal/russia_2s5_giatsint.glb",
+        "improvement": "+24% damage"
+      },
+      {
+        "name": "2S19 Msta-S",
+        "model": "res://assets/library/arsenal/russia_2s19_msta.glb",
+        "improvement": "+36% damage"
+      },
+      {
+        "name": "2S35 Koalitsiya-SV",
+        "model": "res://assets/library/arsenal/russia_2s35_koalitsiya.glb",
+        "improvement": "+48% damage"
+      }
+    ]
+  },
+  {
+    "id": "artillery_ukraine",
+    "country": "ukraine",
+    "name": "Artillery",
+    "category": "Artillery",
+    "visual_kind": "artillery",
+    "asset_roster_id": "artillery_ukraine",
+    "research_branch": "Artillery",
+    "seconds": 70,
+    "cost": {
+      "funds": 330,
+      "materials": 100,
+      "electronics": 65,
+      "fuel": 50,
+      "manpower": 20
+    },
+    "building_requirements": {
+      "factory": 1
+    },
+    "research_days": [
+      1,
+      4,
+      8,
+      12,
+      18
+    ],
+    "model_status": "Original supplied model (Weapons folder 2026-10-10)",
+    "research_tiers": [
+      {
+        "name": "FH70",
+        "model": "res://assets/library/arsenal/euro_fh70.glb",
+        "improvement": "Baseline"
+      },
+      {
+        "name": "2S1 Gvozdika (Poland)",
+        "model": "res://assets/library/arsenal/euro_gvozdika_pl.glb",
+        "improvement": "+12% damage"
+      },
+      {
+        "name": "CAESAR",
+        "model": "res://assets/library/arsenal/euro_caesar.glb",
+        "improvement": "+24% damage"
+      },
+      {
+        "name": "PzH 2000",
+        "model": "res://assets/library/arsenal/euro_pzh2000.glb",
+        "improvement": "+36% damage"
+      },
+      {
+        "name": "Archer",
+        "model": "res://assets/library/arsenal/euro_archer.glb",
+        "improvement": "+48% damage"
+      }
+    ]
+  },
+  {
+    "id": "rockets_russia",
+    "country": "russia",
+    "name": "Rocket artillery",
+    "category": "Missiles",
+    "visual_kind": "missile_launcher",
+    "asset_roster_id": "rockets_russia",
+    "research_branch": "Rockets",
+    "seconds": 70,
+    "cost": {
+      "funds": 330,
+      "materials": 100,
+      "electronics": 65,
+      "fuel": 50,
+      "manpower": 20
+    },
+    "building_requirements": {
+      "factory": 1
+    },
+    "research_days": [
+      1,
+      4,
+      8,
+      12,
+      18
+    ],
+    "model_status": "Original supplied model (Weapons folder 2026-10-10)",
+    "research_tiers": [
+      {
+        "name": "BM-21 Grad",
+        "model": "res://assets/library/arsenal/russia_bm21_grad.glb",
+        "improvement": "Baseline"
+      },
+      {
+        "name": "BM-27 Uragan",
+        "model": "res://assets/library/arsenal/russia_bm27_uragan.glb",
+        "improvement": "+12% damage"
+      },
+      {
+        "name": "BM-30 Smerch",
+        "model": "res://assets/library/arsenal/russia_bm30_smerch.glb",
+        "improvement": "+24% damage"
+      },
+      {
+        "name": "Tornado-G",
+        "model": "res://assets/library/arsenal/russia_tornado_g.glb",
+        "improvement": "+36% damage"
+      },
+      {
+        "name": "TOS-1A",
+        "model": "res://assets/library/arsenal/russia_tos1a.glb",
+        "improvement": "+48% damage"
+      }
+    ],
+    "strike_range": 3.5,
+    "reload_rounds": 2.0,
+    "strike_damage": 12.0
+  },
+  {
+    "id": "rockets_ukraine",
+    "country": "ukraine",
+    "name": "Rocket artillery",
+    "category": "Missiles",
+    "visual_kind": "missile_launcher",
+    "asset_roster_id": "rockets_ukraine",
+    "research_branch": "Rockets",
+    "seconds": 70,
+    "cost": {
+      "funds": 330,
+      "materials": 100,
+      "electronics": 65,
+      "fuel": 50,
+      "manpower": 20
+    },
+    "building_requirements": {
+      "factory": 1
+    },
+    "research_days": [
+      1,
+      4,
+      8,
+      12,
+      18
+    ],
+    "model_status": "Original supplied model (Weapons folder 2026-10-10)",
+    "research_tiers": [
+      {
+        "name": "LAR-160",
+        "model": "res://assets/library/arsenal/euro_lar160.glb",
+        "improvement": "Baseline"
+      },
+      {
+        "name": "RM-70 Vampire",
+        "model": "res://assets/library/arsenal/euro_rm70_vampire.glb",
+        "improvement": "+12% damage"
+      },
+      {
+        "name": "M270 MLRS",
+        "model": "res://assets/library/arsenal/euro_m270.glb",
+        "improvement": "+24% damage"
+      },
+      {
+        "name": "PULS",
+        "model": "res://assets/library/arsenal/euro_puls.glb",
+        "improvement": "+36% damage"
+      },
+      {
+        "name": "EuroPULS",
+        "model": "res://assets/library/arsenal/euro_europuls.glb",
+        "improvement": "+48% damage"
+      }
+    ],
+    "strike_range": 3.5,
+    "reload_rounds": 2.0,
+    "strike_damage": 12.0
+  },
+  {
+    "id": "helicopters_russia",
+    "country": "russia",
+    "name": "Helicopters",
+    "category": "Helicopters",
+    "visual_kind": "fighter",
+    "asset_roster_id": "helicopters_russia",
+    "research_branch": "Helicopters",
+    "seconds": 70,
+    "cost": {
+      "funds": 330,
+      "materials": 100,
+      "electronics": 65,
+      "fuel": 50,
+      "manpower": 20
+    },
+    "building_requirements": {
+      "airbase": 1
+    },
+    "research_days": [
+      1,
+      4,
+      8,
+      12,
+      18
+    ],
+    "model_status": "Original supplied model (Weapons folder 2026-10-10)",
+    "research_tiers": [
+      {
+        "name": "Mi-8 / Mi-17",
+        "model": "res://assets/library/arsenal/russia_mi8_mi17.glb",
+        "improvement": "Baseline"
+      },
+      {
+        "name": "Mi-24 / Mi-35",
+        "model": "res://assets/library/arsenal/russia_mi24_mi35.glb",
+        "improvement": "+12% damage"
+      },
+      {
+        "name": "Ka-50",
+        "model": "res://assets/library/arsenal/russia_ka50.glb",
+        "improvement": "+24% damage"
+      },
+      {
+        "name": "Mi-28N",
+        "model": "res://assets/library/arsenal/russia_mi28n.glb",
+        "improvement": "+36% damage"
+      },
+      {
+        "name": "Ka-52",
+        "model": "res://assets/library/arsenal/russia_ka52.glb",
+        "improvement": "+48% damage"
+      }
+    ],
+    "role": "helicopter",
+    "air_range": 10.0,
+    "air_speed": 1.8,
+    "air_damage": 2.0,
+    "ground_damage": 5.0
+  },
+  {
+    "id": "helicopters_ukraine",
+    "country": "ukraine",
+    "name": "Helicopters",
+    "category": "Helicopters",
+    "visual_kind": "fighter",
+    "asset_roster_id": "helicopters_ukraine",
+    "research_branch": "Helicopters",
+    "seconds": 70,
+    "cost": {
+      "funds": 330,
+      "materials": 100,
+      "electronics": 65,
+      "fuel": 50,
+      "manpower": 20
+    },
+    "building_requirements": {
+      "airbase": 1
+    },
+    "research_days": [
+      1,
+      4,
+      8,
+      12,
+      18
+    ],
+    "model_status": "Original supplied model (Weapons folder 2026-10-10)",
+    "research_tiers": [
+      {
+        "name": "Lynx",
+        "model": "res://assets/library/arsenal/euro_lynx.glb",
+        "improvement": "Baseline"
+      },
+      {
+        "name": "AW149",
+        "model": "res://assets/library/arsenal/euro_aw149.glb",
+        "improvement": "+12% damage"
+      },
+      {
+        "name": "NH90",
+        "model": "res://assets/library/arsenal/euro_nh90.glb",
+        "improvement": "+24% damage"
+      },
+      {
+        "name": "Tiger",
+        "model": "res://assets/library/arsenal/euro_tiger.glb",
+        "improvement": "+36% damage"
+      },
+      {
+        "name": "NH90 Block 2",
+        "model": "res://assets/library/arsenal/euro_nh90_block2.glb",
+        "improvement": "+48% damage"
+      }
+    ],
+    "role": "helicopter",
+    "air_range": 10.0,
+    "air_speed": 1.8,
+    "air_damage": 2.0,
+    "ground_damage": 5.0
   }
 ]

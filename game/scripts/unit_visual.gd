@@ -4,7 +4,7 @@ extends RefCounted
 ## Map footprint (longest horizontal side, before the 0.65 marker scale) per unit type, so
 ## every original model reads at a consistent size against the cities instead of keeping
 ## whatever scale its source file happened to use.
-const FOOTPRINT: = {"bomber": 2.3, "armor": 1.35, "ifv": 1.25, "artillery": 1.3, "air_defense": 1.3, "missile_launcher": 1.4, "fighter": 1.5, "drone": 1.1, "naval": 1.9}
+const FOOTPRINT: = {"helicopter": 1.6, "bomber": 2.3, "armor": 1.35, "ifv": 1.25, "artillery": 1.3, "air_defense": 1.3, "missile_launcher": 1.4, "fighter": 1.5, "drone": 1.1, "naval": 1.9}
 ## Extra yaw (degrees) for source models that face backwards after long-axis alignment,
 ## keyed by model file prefix. Checked with tests/model_lineup.gd (all models face north).
 const YAW_FIX: = {"su57": 180.0, "f18a": 180.0, "destroyer": 180.0, "kclass": 180.0, "upload20ab": 180.0, "ad": 180.0}  # ad_*: owner weapons.zip air defence (+X forward)
@@ -63,7 +63,11 @@ static func create(kind: String, _faction: Color, equipment_id: String = "", lev
 	var vehicle: = (load(path) as PackedScene).instantiate() as Node3D
 	# Owner arsenal models are built from hundreds of parts; merge them per material so a
 	# tank is a handful of draw calls on phones (looks identical).
-	if path.contains("/arsenal/"): vehicle = merged(vehicle)
+	var helicopter: HelicopterAnimator
+	if EquipmentIdentity.spec(equipment_id).get("role", "") == "helicopter":
+		helicopter = HelicopterAnimator.new()
+		vehicle = helicopter.prepare(vehicle)
+	elif path.contains("/arsenal/"): vehicle = merged(vehicle)
 	var spec: = EquipmentIdentity.spec(equipment_id)
 	var role: String = spec.get("role", "")
 	if role.is_empty(): role = spec.get("visual_kind", kind)
@@ -77,6 +81,9 @@ static func create(kind: String, _faction: Color, equipment_id: String = "", lev
 	pivot.add_child(vehicle)
 	_fit(pivot, vehicle, role, path)
 	assembly.add_child(pivot)
+	if helicopter != null:
+		assembly.add_child(helicopter)
+		assembly.set_meta("helicopter_animator", helicopter)
 	var fitted_bounds: AABB = model_bounds(pivot, 0.0)
 	assembly.set_meta("ground_shadow_size", Vector2(fitted_bounds.size.x, fitted_bounds.size.z) * 0.65)
 	_enable_shadows(vehicle)

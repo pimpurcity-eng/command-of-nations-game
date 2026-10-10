@@ -62,6 +62,9 @@ static func research_picture(id: String, level: int) -> Texture2D:
 		for pair in [["Strela-10", "strela10"], ["Tor-M2", "torm2"], ["Buk-M3", "bukm3"], ["S-400", "s400"], ["S-500", "s500"]]:
 			if tier_name.begins_with(pair[0]): drawing = pair[1]
 	var tier: Dictionary = EquipmentIdentity.research_tier(id, level)
+	var original_preview: String = str(tier.get("model", "")).trim_suffix(".glb") + ".png"
+	if str(tier.get("model", "")).contains("/arsenal/") and ResourceLoader.exists(original_preview):
+		return load(original_preview)
 	if str(tier.get("model", "")).contains("/nato_"): drawing = str(tier.model).get_file().get_basename().trim_prefix("nato_")
 	var path: String = "res://assets/interface/illustrations/" + drawing + ".png"
 	return load(path) if not drawing.is_empty() and ResourceLoader.exists(path) else equipment_picture(id)

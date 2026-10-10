@@ -5,7 +5,7 @@ extends CanvasLayer
 ## Two research slots at the top, then either the category banners or a category's tech tree:
 ## a column per equipment family and a row per level (labelled with the day it unlocks).
 ## Tapping a level shows its cost and the RESEARCH button in the bar at the bottom.
-const CATEGORIES: = ["Armor", "Mechanized", "Artillery", "Fighters", "Bombers", "Air defense", "Navy", "Missiles", "Drones"]
+const CATEGORIES: = ["Armor", "Mechanized", "Artillery", "Fighters", "Bombers", "Helicopters", "Air defense", "Navy", "Missiles", "Drones"]
 const CELL: = Vector2(150, 150)
 var research: ResearchSystem
 var panel: PanelContainer
@@ -262,11 +262,11 @@ func _build_tree() -> void:
 	cells.clear()
 	grid.columns = families.size() + 1
 	for level in range(1, 6):
-		var day_number: int = ResearchSystem.DAYS[level - 1]
+		var day_number: int = _system().unlock_day(families[0].id, level) if not families.is_empty() else ResearchSystem.DAYS[level - 1]
 		var day_cell: = PanelContainer.new()
 		day_cell.custom_minimum_size = Vector2(56, cell_size.y)
 		day_cell.add_theme_stylebox_override("panel", CowUI.box(Color("e6e9e7"), 14))
-		var shown: bool = level == 1 or ResearchSystem.DAYS[level - 2] != day_number
+		var shown: bool = level == 1 or (not families.is_empty() and _system().unlock_day(families[0].id, level - 1) != day_number)
 		var number: = CowUI.label(str(level) if air_tree else str(day_number) if shown else "", 34, CowUI.INK)
 		number.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		number.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -388,7 +388,11 @@ func _refresh() -> void:
 	detail.name.text = EquipmentIdentity.title(selected_id) + " · Level " + str(selected_level) + ("  (+" + str((selected_level - 1) * 12) + "% damage)" if selected_level > 1 else "")
 	var tier: Dictionary = EquipmentIdentity.research_tier(selected_id, selected_level)
 	if not tier.is_empty():
-		detail.name.text = EquipmentIdentity.research_title(selected_id, selected_level) + " · L" + str(selected_level) + "\n" + tier.improvement + " · Range " + str(tier.range) + " · AA " + str(tier.damage) + "\nAircraft & drones · " + EquipmentIdentity.spec(selected_id).model_status
+		detail.name.text = EquipmentIdentity.research_title(selected_id, selected_level) + " · L" + str(selected_level) + " · Day " + str(system.unlock_day(selected_id, selected_level))
+		if tier.has("range") and tier.has("damage"):
+			detail.name.text += "\n" + tier.get("improvement", "") + " · Range " + str(tier.range) + " · AA " + str(tier.damage) + "\nAircraft & drones · " + EquipmentIdentity.spec(selected_id).get("model_status", "")
+		else:
+			detail.name.text += "\n" + tier.get("improvement", "")
 	for child in detail.costs.get_children(): child.queue_free()
 	var caption: Label = detail.start.get_meta("caption")
 	var state: = _state(selected_id, selected_level)

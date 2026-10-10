@@ -16,7 +16,7 @@ func damage_value(unit: Dictionary, target_kind: String, defending: bool = false
 
 	var values: = {"armor": {"armor": 7.0, "ifv": 8.0, "artillery": 6.0, "air_defense": 8.0}, "ifv": {"armor": 4.0, "ifv": 6.0, "artillery": 7.0, "air_defense": 7.0}, "artillery": {"armor": 5.0, "ifv": 7.0, "artillery": 5.0, "air_defense": 6.0}, "air_defense": {"armor": 1.0, "ifv": 2.0, "artillery": 1.0, "air_defense": 2.0}}
 	if unit.visual_kind == "missile_launcher":
-		return (2.0 if defending else 22.0) * (0.2 + 0.8 * clampf(unit.health / 100.0, 0, 1)) * (1.0 + 0.12 * (unit.get("level", 1) - 1))
+		return (2.0 if defending else float(EquipmentIdentity.spec(unit.equipment_id).get("strike_damage", 22.0))) * (0.2 + 0.8 * clampf(unit.health / 100.0, 0, 1)) * (1.0 + 0.12 * (unit.get("level", 1) - 1))
 	if unit.visual_kind == "naval":
 		return (6.0 if target_kind == "naval" else 0.0) * (0.2 + 0.8 * clampf(unit.health / 100.0, 0, 1)) * (1.0 + 0.12 * (unit.get("level", 1) - 1))
 	if defending:

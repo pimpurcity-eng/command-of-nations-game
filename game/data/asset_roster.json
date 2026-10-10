@@ -1668,5 +1668,119 @@
         "original_colors": true
       }
     }
+  },
+  {
+    "id": "artillery_russia",
+    "name": "Artillery",
+    "kind": "ground",
+    "source": "Weapons/artillery_only.zip",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_2s1_gvozdika.glb",
+        "preview": "res://assets/library/arsenal/russia_2s1_gvozdika.png",
+        "temporary_recolor": false,
+        "original_colors": true,
+        "source_model": "2S1 Gvozdika"
+      }
+    }
+  },
+  {
+    "id": "artillery_ukraine",
+    "name": "Artillery",
+    "kind": "ground",
+    "source": "Weapons/artillery_only.zip",
+    "available_to": [
+      "ukraine"
+    ],
+    "shared_building": false,
+    "assets": {
+      "european": {
+        "model": "res://assets/library/arsenal/euro_fh70.glb",
+        "preview": "res://assets/library/arsenal/euro_fh70.png",
+        "temporary_recolor": false,
+        "original_colors": true,
+        "source_model": "FH70"
+      }
+    }
+  },
+  {
+    "id": "rockets_russia",
+    "name": "Rocket artillery",
+    "kind": "ground",
+    "source": "Weapons/rockets_only.zip",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_bm21_grad.glb",
+        "preview": "res://assets/library/arsenal/russia_bm21_grad.png",
+        "temporary_recolor": false,
+        "original_colors": true,
+        "source_model": "BM-21 Grad"
+      }
+    }
+  },
+  {
+    "id": "rockets_ukraine",
+    "name": "Rocket artillery",
+    "kind": "ground",
+    "source": "Weapons/rockets_only.zip",
+    "available_to": [
+      "ukraine"
+    ],
+    "shared_building": false,
+    "assets": {
+      "european": {
+        "model": "res://assets/library/arsenal/euro_lar160.glb",
+        "preview": "res://assets/library/arsenal/euro_lar160.png",
+        "temporary_recolor": false,
+        "original_colors": true,
+        "source_model": "LAR-160"
+      }
+    }
+  },
+  {
+    "id": "helicopters_russia",
+    "name": "Helicopters",
+    "kind": "air",
+    "source": "Weapons/helicopters_only.zip",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_mi8_mi17.glb",
+        "preview": "res://assets/library/arsenal/russia_mi8_mi17.png",
+        "temporary_recolor": false,
+        "original_colors": true,
+        "source_model": "Mi-8 / Mi-17"
+      }
+    }
+  },
+  {
+    "id": "helicopters_ukraine",
+    "name": "Helicopters",
+    "kind": "air",
+    "source": "Weapons/helicopters_only.zip",
+    "available_to": [
+      "ukraine"
+    ],
+    "shared_building": false,
+    "assets": {
+      "european": {
+        "model": "res://assets/library/arsenal/euro_lynx.glb",
+        "preview": "res://assets/library/arsenal/euro_lynx.png",
+        "temporary_recolor": false,
+        "original_colors": true,
+        "source_model": "Lynx"
+      }
+    }
   }
 ]
