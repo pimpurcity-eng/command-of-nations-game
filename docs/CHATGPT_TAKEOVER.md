@@ -5,7 +5,7 @@ here; nothing depends on Claude's workspace.
 
 ## Source of truth
 - Public repo `pimpurcity-eng/command-of-nations-game`, branch **`chatgpt/battle-effects`**,
-  head **`cef0781`** (or later). Clone it directly; no bundles needed.
+  head **`d334c94`** (or later). Clone it directly; no bundles needed.
 - Never merge into `main`, never publish, never delete original files, never overwrite
   another developer's work. Small commits, exact hashes, update `BATTLE_EFFECTS_CHECKPOINT.md`
   (root and `game/` copies are identical) at every handoff. Screenshots before publishing.
@@ -33,7 +33,7 @@ here; nothing depends on Claude's workspace.
 - Old arsenal archived in `data/archive/weapons_2026-10-09/`; tests use it via
   `tests/arsenal_fixture.gd`.
 
-## Tests (all pass at cef0781)
+## Tests (all pass at d334c94)
 `test_air_defense_models` 104/0, `test_air_defense_tree` 46/0, `test_building_expansion`,
 `test_player_accounts` 21/0, `test_campaign`, `test_battle_effects`, `test_touch_controls`,
 `test_map_features` — 0 failures. Run with
@@ -52,3 +52,13 @@ here; nothing depends on Claude's workspace.
 ## Owner's standing requests (keep)
 Call of War look and feel; portrait Android; no labels on units; original model colours;
 answer the owner's questions first; save (commit/push) after every job.
+
+## Offline package (no GitHub access needed)
+Matthew can upload two zips from his private builds repo instead of cloning:
+`chatgpt-package/command-of-nations-part1-code-weapons.zip` (all tracked files at the head
+above, plus `assets/vehicles`, `assets/library/airdefense`, `assets/library/arsenal`) and
+`chatgpt-package/command-of-nations-part2-models.zip` (the rest of `assets/library`, including
+the city buildings and the archived arsenal the tests use). Unzip both into one folder, so they
+merge into the same `game/` tree, then run `godot --headless --path game --import`.
+With no git history, run `git init`, commit everything as "base d334c94", and hand work back
+as `git format-patch` files against that base.
