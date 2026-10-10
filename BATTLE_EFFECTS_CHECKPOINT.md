@@ -379,3 +379,15 @@ Native More → Player account: registration/commander name, masked password con
 - Android com.commandofnations.test versionCode 16 / 0.16-weapons, ARM64 portrait, official 4.6.3 template, API 24 minimum / target 36. APK 92368437 bytes (<100 MB), SHA256 a351c671ee73134e07bd5fce065bd1334013133a51534e3574c45374d38b61f9. Same private signing certificate as 0.14/0.15: 0289d3b051ee5e71dd25bc707b459f0a1e5413faea920069aa8636dc95b84bf0; verified v2/v3. Install as an update without uninstalling 0.14 or 0.15. Next code >=17.
 - Final APK remaps resolve, all 101 live model imports present. Restored original Tomahawk projectile models AND their original material textures to export exclusions; actual missile-shot regression caught missing dependencies before delivery. Final extracted APK passes all-weapons 572/0 and roads failures=0 / 165 local roads. Derived research previews limited to 512px; original pictures and model materials untouched. Physical Android testing remains for the owner.
 - Both checkpoint copies identical, saved local commit and ordered format patches against base d334c94 (32cb5b242637d2f3e65c4a6fe4f234fdede4e9ac). No original file deletion, main merge, remote push or public model/APK/key upload. Private APK and source patch handoff saved separately from the persistent signing backup.
+
+
+### ChatGPT — 2026-10-10 update 0.17 candidate saved
+Ships slightly enlarged, waterline and full-hull tap selection corrected. Aircraft
+flight/attack lines removed. In-range artillery, missiles and fixed silos fire
+without closing to melee. Actual startup/weapons progress bars; map-based Armies
+selection and meeting point; consistent idle southwest heading. Reduced per-frame
+stack scans, flat-terrain samples and disabled-fog rasterization. All prior road,
+original-model, sizing and rotor jobs retained. Recovered exact d334c94 base tree
+ecb6180f43f30c16279da9a352eaae960889b39c after workspace reset. No originals deleted,
+no remote push/main merge. Validation/build re-run pending; candidate is not yet
+the deliverable APK. Private persistent signing key restored, not in Git.

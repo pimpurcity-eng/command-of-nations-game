@@ -11,6 +11,7 @@ var air: = AirOperations.new()
 var fire_control: = CombatSystem.new()
 var at_war: = false
 var fog_enabled: = true
+const SEA_WATERLINE: = -0.06
 const MARCH_HEALTH_PER_SECOND: = 5.0 / (3600.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND)
 func vision_radius(unit: Dictionary) -> float:
 	return 4.0 if unit.visual_kind in ["fighter", "naval"] else 3.0
@@ -33,7 +34,7 @@ func path_for(unit: Dictionary, start: Vector2, finish: Vector2) -> Array:
 	if stacks.members(unit).any(func(member): return EquipmentIdentity.spec(member.equipment_id).get("stationary", false)): return []
 	return sea_navigation.find_path(start, finish) if is_naval(unit) else navigation.find_path(start, finish, unit.visual_kind)
 func surface_position(unit: Dictionary, point: Vector2) -> Vector3:
-	if is_naval(unit): return Vector3(point.x, 0.15, point.y)
+	if is_naval(unit): return Vector3(point.x, SEA_WATERLINE, point.y)
 	return footprint_ground(point)
 ## Map positions of all ground armies (not aircraft or ships).
 func ground_positions(except: Array = []) -> Array:
@@ -49,9 +50,7 @@ func footprint_ground(point: Vector2) -> Vector3:
 	return terrain.position_at(point)
 ## Slope of the ground under a vehicle (sampled over roughly its length).
 func ground_normal(point: Vector2) -> Vector3:
-	var dx: = terrain.elevation(point + Vector2(0.35, 0)) - terrain.elevation(point - Vector2(0.35, 0))
-	var dz: = terrain.elevation(point + Vector2(0, 0.35)) - terrain.elevation(point - Vector2(0, 0.35))
-	return Vector3( - dx / 0.7, 1.0, - dz / 0.7).normalized()
+	return Vector3.UP  # Current map uses TerrainProfile.FLAT_HEIGHT.
 var route: MeshInstance3D
 var destination_marker: MeshInstance3D
 var route_signature: = ""
@@ -114,7 +113,7 @@ func _spawn(data: Dictionary, point: Vector2, color: Color) -> void :
 		point = navigation.on_road(centre, ground_positions(), 0.7, data.get("country", ""))
 	var spec: = [data.name, point, color]
 	var marker: = Node3D.new()
-	marker.position = Vector3(point.x, 0.15, point.y) if data.get("visual_kind", "") == "naval" else footprint_ground(spec[1])
+	marker.position = Vector3(point.x, SEA_WATERLINE, point.y) if data.get("visual_kind", "") == "naval" else footprint_ground(spec[1])
 	add_child(marker)
 	var visual_kind: String = data.get("visual_kind", "armor")
 	var equipment_id: = EquipmentIdentity.resolve(data)
@@ -322,7 +321,7 @@ func _draw_route() -> void :
 	var selected_key: = ""
 	if selected >= 0 and selected < units.size(): selected_key = units[selected].country + ":" + units[selected].stack_id
 	var orders: Array = []
-	var signature: = ""
+	var signature: = selected_key
 	for group in stacks.groups():
 		var leader: Dictionary = stacks.leader(group)
 		if not visible_to_player(leader): continue
@@ -337,7 +336,7 @@ func _draw_route() -> void :
 			if points.size() == 1: points.append(leader.target)
 			orders.append({"move": true, "chosen": chosen, "points": points, "unit": leader})
 			signature += key + str(start.snapped(Vector2.ONE * 0.08)) + str(leader.waypoints) + str(leader.target)
-		if not str(leader.get("attack_target", "")).is_empty():
+		if not air.is_air(leader) and not str(leader.get("attack_target", "")).is_empty():
 			var enemy: = find_id(leader.attack_target)
 			if not enemy.is_empty() and visible_to_player(enemy):
 				var finish: = Vector2(enemy.node.position.x, enemy.node.position.z)
@@ -432,11 +431,9 @@ func _in_city(point: Vector2) -> bool:
 	for city_point in _city_points:
 		if point.distance_to(city_point) < CITY_RADIUS: return true
 	return false
-## Idle armies start facing the opposing capital instead of all pointing north.
-func _facing_enemy(country: String, point: Vector2) -> float:
-	var goal: = GeographicProjection.project(30.52, 50.45) if country == "russia" else GeographicProjection.project(37.62, 55.75)
-	var direction: = goal - point
-	return atan2( - direction.x, - direction.y) if direction.length() > 0.01 else 0.0
+## Consistent southwest idle bearing; orders and combat turn to their actual targets.
+func _facing_enemy(_country: String, _point: Vector2) -> float:
+	return deg_to_rad(135.0)
 func _update_heading(unit: Dictionary) -> void :
 	var current: = Vector2(unit.node.position.x, unit.node.position.z)
 	var direction: Vector2 = (unit.waypoints[0] if not unit.waypoints.is_empty() else unit.target) - current
@@ -459,12 +456,17 @@ func _process(delta: float) -> void :
 		air_range.position = terrain.position_at(Vector2(aa_unit.node.position.x, aa_unit.node.position.z)) + Vector3.UP * 0.12
 	var chosen_stacks: Dictionary = {}
 	for leader in command_groups(): chosen_stacks[leader.stack_id] = true
+	var leader_ids: Dictionary = {}
+	for group in stacks.groups(): leader_ids[stacks.leader(group).id] = true
 	for unit in units:
-		var group: = stacks.members(unit)
-		unit.node.visible = stacks.leader(group).id == unit.id and visible_to_player(unit)
+		unit.node.visible = leader_ids.has(unit.id) and visible_to_player(unit)
 		if not unit.node.visible: continue
-		var ground: = Vector3(unit.node.position.x, 0.15, unit.node.position.z) if is_naval(unit) else terrain.position_at(Vector2(unit.node.position.x, unit.node.position.z))
-		UnitShadow.update(unit, ground)
+		var ground: = Vector3(unit.node.position.x, SEA_WATERLINE, unit.node.position.z) if is_naval(unit) else terrain.position_at(Vector2(unit.node.position.x, unit.node.position.z))
+		if is_naval(unit):
+			unit.node.position.y = SEA_WATERLINE
+			unit.node.get_meta("ground_shadow").hide()
+			unit.ring.global_position.y = 0.05
+		else: UnitShadow.update(unit, ground)
 		var chosen: = chosen_stacks.has(unit.stack_id)
 		unit.ring.material_override.albedo_color = Color("f5cf82") if chosen else unit.faction_color
 		unit.ring.scale = Vector3.ONE * (0.52 if chosen else 0.42)
@@ -530,14 +532,26 @@ func patrol(position: Vector3) -> bool:
 
 func pick_screen(camera: Camera3D, screen: Vector2, enemies_only: bool = false) -> Dictionary:
 	var nearest: Dictionary = {}
-	var radius: = 40.0 * get_window().content_scale_factor  # was 24: hard to hit on phones
+	var radius: = 40.0 * get_window().content_scale_factor
+	var leader_ids: Dictionary = {}
+	for group in stacks.groups(): leader_ids[stacks.leader(group).id] = true
 	for i in units.size():
 		if enemies_only and units[i].country == GameSession.player_country: continue
 		if not visible_to_player(units[i]): continue
-		if stacks.leader(stacks.members(units[i])).id != units[i].id: continue
+		if not leader_ids.has(units[i].id): continue
 		var anchor: Vector3 = units[i].node.global_position + Vector3.UP * 0.2
 		if camera.is_position_behind(anchor): continue
 		var distance: = camera.unproject_position(anchor).distance_to(screen)
+		if is_naval(units[i]):
+			var model: Node3D = units[i].node.get_child(0)
+			if model.has_meta("pick_bounds"):
+				var bounds: AABB = model.get_meta("pick_bounds")
+				var hull: PackedVector2Array = []
+				for corner in 8: hull.append(camera.unproject_position(model.global_transform * bounds.get_endpoint(corner)))
+				hull = Geometry2D.convex_hull(hull)
+				if Geometry2D.is_point_in_polygon(screen,hull): distance = 0.0
+				else:
+					for edge in hull.size(): distance = minf(distance,screen.distance_to(Geometry2D.get_closest_point_to_segment(screen,hull[edge],hull[(edge+1)%hull.size()])))
 		if distance < radius:
 			radius = distance
 			nearest = {"index": i, "distance": distance}
@@ -591,7 +605,19 @@ func set_fire_mode(mode: String) -> void :
 	status_changed.emit("Fire control: " + FireControlPanel.MODES[mode].title)
 func attack_selected(enemy: Dictionary) -> bool:
 	if selected < 0 or enemy.is_empty() or enemy.country == units[selected].country or not at_war: return false
-	var accepted: = order(enemy.node.position)
+	var army: Dictionary = units[selected]
+	var group: = stacks.members(army)
+	var distance: float = Vector2(army.node.position.x,army.node.position.z).distance_to(Vector2(enemy.node.position.x,enemy.node.position.z))
+	var in_range: bool = group.any(func(member):
+		var candidate: Dictionary = member.duplicate()
+		candidate.attack_target = enemy.id
+		return candidate.visual_kind in ["artillery","missile_launcher","naval"] and fire_control.attack_reach(candidate) >= distance)
+	var accepted: bool = in_range or order(enemy.node.position)
+	if in_range:
+		for member in group:
+			member.moving = false
+			member.waypoints.clear()
+			member.target = Vector2(member.node.position.x,member.node.position.z)
 	if accepted:
 		for member in stacks.members(units[selected]):
 			member.attack_target = enemy.id

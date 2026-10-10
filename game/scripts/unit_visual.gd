@@ -4,7 +4,7 @@ extends RefCounted
 ## Map footprint (longest horizontal side, before the 0.65 marker scale) per unit type, so
 ## every original model reads at a consistent size against the cities instead of keeping
 ## whatever scale its source file happened to use.
-const FOOTPRINT: = {"helicopter": 1.6, "bomber": 2.3, "armor": 1.35, "ifv": 1.25, "artillery": 1.3, "air_defense": 1.3, "missile_launcher": 1.4, "silo": 1.5, "fighter": 1.5, "drone": 1.1, "naval": 1.9, "submarine": 1.6, "carrier": 3.4}
+const FOOTPRINT: = {"helicopter": 1.6, "bomber": 2.3, "armor": 1.35, "ifv": 1.25, "artillery": 1.3, "air_defense": 1.3, "missile_launcher": 1.4, "silo": 1.5, "fighter": 1.5, "drone": 1.1, "naval": 2.2, "submarine": 1.85, "carrier": 3.9}
 ## Extra yaw (degrees) for source models that face backwards after long-axis alignment,
 ## keyed by model file prefix. Checked with tests/model_lineup.gd (all models face north).
 const YAW_FIX: = {"su57": 180.0, "f18a": 180.0, "destroyer": 180.0, "kclass": 180.0, "upload20ab": 180.0, "ad": 180.0}  # ad_*: owner weapons.zip air defence (+X forward)
@@ -93,6 +93,9 @@ static func create(kind: String, _faction: Color, equipment_id: String = "", lev
 		animator.configure(vehicle, path.get_file().get_basename())
 		assembly.set_meta("air_defense_animator", animator)
 		assembly.set_meta("visual_level", level)
+	assembly.set_meta("pick_bounds", model_bounds(assembly,0.0))
+	if spec.get("visual_kind",kind) == "naval":
+		for item in _meshes(assembly,Transform3D.IDENTITY): item[0].cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	assembly.set_meta("missing_original_model", false)
 	return assembly
 

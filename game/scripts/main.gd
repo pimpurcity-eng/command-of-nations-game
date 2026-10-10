@@ -36,6 +36,7 @@ var stack_dialog: ArmyDetailsPanel
 var result_dialog: AcceptDialog
 var append_order: = false
 var order_mode: = false
+var selecting_armies: = false
 var patrol_order: = false
 var clock: SimulationClock
 var match_rules: MatchSystem
@@ -147,7 +148,6 @@ func _ready() -> void :
 		units._draw_route()
 	map.territory_selected.connect(hud.show_territory)
 	units.status_changed.connect(hud.show_status)
-	units.unit_selected.connect(hud.show_unit)
 	hud.campaign_requested.connect(open_campaign)
 	hud.select_armies_requested.connect(open_army_selection)
 	hud.fire_control_requested.connect(open_fire_control)
@@ -236,6 +236,7 @@ func _ready() -> void :
 		if GameSession.weapons_test and GameSession.player_country != unit.country:
 			GameSession.player_country = unit.country
 			apply_player_country(false)
+		hud.show_unit(unit)
 		resource_country = GameSession.player_country
 		hud.show_resources(resource_country, production.stockpiles[resource_country]))
 	hud.show_resources(resource_country, production.stockpiles[resource_country])
@@ -328,25 +329,28 @@ func _ready() -> void :
 		mobile_start.setup(hud.get_child(0).theme, FileAccess.file_exists(SAVE_PATH))
 		mobile_start.continue_requested.connect( func():
 			load_game()
-			start_campaign_play())
+			start_campaign_play()
+			mobile_start.hide())
 		mobile_start.fresh_requested.connect(func():
 			if GameSession.weapons_test: restore_campaign_forces()
 			GameSession.weapons_test = false
 			match_rules.ai_enabled = true
 			GameSession.player_country = mobile_start.selected_country()
 			apply_player_country()
-			start_campaign_play())
+			start_campaign_play()
+			mobile_start.hide())
 		mobile_start.test_requested.connect(func():
 			GameSession.player_country = mobile_start.selected_country()
 			GameSession.weapons_test = true
-			populate_weapons_test()
+			await populate_weapons_test(true)
 			apply_player_country()
 			rig.target = Vector3(0, 0, 5)
 			rig.distance = 26
 			rig._snap(1.0)
 			clock.paused = true
 			refresh_hud()
-			hud.show_status("All original weapons · real campaign map · tap any army to control it. Tap Play to move."))
+			hud.show_status("All original weapons · real campaign map · tap any army to control it. Tap Play to move.")
+			mobile_start.hide())
 	if OS.has_feature("web"):
 		browser_callback = JavaScriptBridge.create_callback(_browser_hidden)
 		browser_resume_callback = JavaScriptBridge.create_callback(_browser_visible)
@@ -383,6 +387,32 @@ func _browser_visible(_arguments: Array) -> void :
 	rig.reset_gestures()
 	refresh_hud()
 func _map_click(screen: Vector2, order: bool) -> void :
+	if selecting_armies:
+		var picked: = units.pick_screen(rig.camera,screen)
+		if not picked.is_empty():
+			var army: Dictionary = units.units[picked.index]
+			if army.country != GameSession.player_country:
+				hud.show_status("Choose your armies, then tap their meeting point")
+				return
+			var ids: Array[String] = units.command_ids.duplicate()
+			if ids.has(army.id): ids.erase(army.id)
+			else: ids.append(army.id)
+			if ids.is_empty():
+				units.selected = -1
+				units.command_ids.clear()
+				hud.clear_unit_selection()
+				units._draw_route()
+			else: units.select_armies(ids)
+			hud.show_status(str(ids.size()) + " armies selected · tap more armies or a meeting point")
+			return
+		if units.command_ids.is_empty():
+			hud.show_status("Tap your armies first, then a meeting point")
+			return
+		var meeting = Plane(Vector3.UP,0).intersects_ray(rig.camera.project_ray_origin(screen),rig.camera.project_ray_normal(screen))
+		var province: = map.pick(rig.camera,screen)
+		if not province.is_empty(): meeting = province.position
+		if meeting != null: player_order(meeting)
+		return
 	if not rally_city.is_empty():
 		var destination = Plane(Vector3.UP, 0).intersects_ray(rig.camera.project_ray_origin(screen), rig.camera.project_ray_normal(screen))
 		var hit: = map.pick(rig.camera, screen)
@@ -489,10 +519,13 @@ func _touch_over_ui(screen: Vector2) -> bool:
 	return false
 
 func _set_order_mode(enabled: bool) -> void :
-	if not enabled: rally_city = ""
+	if not enabled:
+		rally_city = ""
+		selecting_armies = false
 	order_mode = enabled
 	if hud != null: hud.set_order_mode(enabled)
 func clear_army_selection() -> void:
+	selecting_armies = false
 	units.selected = -1
 	units.command_ids.clear()
 	units._draw_route()
@@ -616,7 +649,11 @@ func restore_campaign_forces() -> void:
 	units.fog_enabled = true
 	if test_models != null: test_models.queue_free(); test_models = null
 
-func populate_weapons_test() -> void:
+func populate_weapons_test(show_progress: bool = false) -> void:
+	var total: Dictionary = {}
+	if show_progress:
+		for family in EquipmentIdentity.catalog:
+			for tier in family.get("research_tiers",[]): total[tier.get("model",family.id)] = true
 	units.restore([])
 	if test_models != null: test_models.queue_free(); test_models = null
 	var city_data: Array = production.cities
@@ -653,6 +690,9 @@ func populate_weapons_test() -> void:
 				occupied_sea.append(point)
 			var data: = {"id": "weapons_test_" + family.id + "_l" + str(index + 1), "level": index + 1, "name": EquipmentIdentity.research_title(family.id, index + 1), "country": family.country, "equipment_id": family.id, "visual_kind": kind, "base_city": base.id}
 			units._spawn(data, point, Color("73bcff") if family.country == "ukraine" else Color("ef827c"))
+			if show_progress:
+				mobile_start.set_progress(95.0*units.units.size()/maxi(1,total.size()),"Preparing armies")
+				await get_tree().process_frame
 	units.fog_enabled = false
 	match_rules.ai_enabled = false
 	clock.paused = true
@@ -725,15 +765,14 @@ func start_campaign_play() -> void :
 	hud.show_status("Campaign running at " + str(int(clock.speed)) + "x · select a your army, then Move or Fly. Pause stops movement and builds.")
 
 func open_army_selection() -> void :
-	if army_selection == null:
-		army_selection = ArmySelectionPanel.new()
-		add_child(army_selection)
-		army_selection.setup(hud.get_child(0).theme)
-		army_selection.accepted.connect( func(ids: Array[String]):
-			_set_order_mode(false)
-			units.select_armies(ids)
-			hud.show_status(str(units.command_groups().size()) + " armies selected · tap Move for a shared destination"))
-	army_selection.open(units, units.command_ids)
+	if not friendly_selected(): hud.show_status("Select your army first");return
+	attack_order = false
+	append_order = false
+	patrol_order = false
+	rally_city = ""
+	_set_order_mode(true)
+	selecting_armies = true
+	hud.show_status("Tap armies to add or remove them, then tap a meeting point")
 func open_fire_control() -> void :
 	if friendly_selected() and units.air.is_air(units.units[units.selected]): hud.show_status("Aircraft use Fly, Patrol and Return orders");return
 	if not friendly_selected(): hud.show_status("Select one of your armies first");return

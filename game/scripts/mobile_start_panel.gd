@@ -11,6 +11,10 @@ var continue_button: Button
 var content: VBoxContainer
 var artwork: TextureRect
 var fresh_button: Button
+var test_button: Button
+var progress: ProgressBar
+var loading_label: Label
+var loading: = false
 var has_save: = false
 func setup(theme: Theme, saved: bool) -> void :
 	has_save = saved
@@ -76,22 +80,29 @@ func setup(theme: Theme, saved: bool) -> void :
 	country_picker.select(0 if GameSession.player_country == "ukraine" else 1)
 	country_picker.custom_minimum_size.y = 48
 	content.add_child(country_picker)
+	loading_label = Label.new()
+	loading_label.text = "Ready"
+	content.add_child(loading_label)
+	progress = ProgressBar.new()
+	progress.value = 100
+	progress.custom_minimum_size.y = 24
+	content.add_child(progress)
 	continue_button = Button.new()
 	continue_button.text = "CONTINUE CAMPAIGN"
 	continue_button.custom_minimum_size.y = 52
 	continue_button.disabled = not saved
 	continue_button.visible = saved
-	continue_button.pressed.connect( func(): continue_requested.emit();hide())
+	continue_button.pressed.connect( func(): request_start("continue"))
 	column.add_child(continue_button)
 	fresh_button = Button.new()
 	fresh_button.text = "START NEW CAMPAIGN" if saved else "START CAMPAIGN"
 	fresh_button.custom_minimum_size.y = 52
-	fresh_button.pressed.connect( func(): fresh_requested.emit();hide())
+	fresh_button.pressed.connect( func(): request_start("fresh"))
 	column.add_child(fresh_button)
-	var test_button: = Button.new()
+	test_button = Button.new()
 	test_button.text = "ALL WEAPONS · REAL MAP"
 	test_button.custom_minimum_size.y = 48
-	test_button.pressed.connect(func(): test_requested.emit(); hide())
+	test_button.pressed.connect(func(): request_start("test"))
 	column.add_child(test_button)
 	get_viewport().size_changed.connect(_layout)
 	_layout()
@@ -100,8 +111,27 @@ func _layout() -> void :
 	var portrait: = size.y > size.x
 	var art: = "res://assets/interface/campaign_hero_portrait.webp" if portrait else "res://assets/interface/campaign_hero_landscape.webp"
 	if ResourceLoader.exists(art): artwork.texture = load(art)
-	var height: = minf(540 if has_save else 480, size.y - 24)
+	var height: = minf(600 if has_save else 540, size.y - 24)
 	panel.position = Vector2(maxf(12, (size.x - 520) * 0.14), maxf(12, (size.y - height) * (0.25 if portrait else 0.5)))
 	var width: = minf(520, size.x - 24)
 	content.custom_minimum_size.x = maxf(0, width - 60)
 	panel.size = Vector2(width, height)
+
+func begin_loading() -> void:
+	loading = true
+	country_picker.disabled = true
+	continue_button.disabled = true
+	fresh_button.disabled = true
+	test_button.disabled = true
+	set_progress(0,"Loading campaign")
+func set_progress(value: float, message: String) -> void:
+	progress.value = value
+	loading_label.text = message
+func request_start(mode: String) -> void:
+	if loading: return
+	begin_loading()
+	await get_tree().process_frame
+	match mode:
+		"continue": continue_requested.emit()
+		"fresh": fresh_requested.emit()
+		"test": test_requested.emit()

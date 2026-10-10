@@ -21,6 +21,10 @@ func _process(delta: float) -> void :
 	refresh()
 func refresh(force: bool = false) -> void :
 	_update_sight_outline()
+	if not armies.fog_enabled:
+		for sector in terrain.territories: terrain.materials[sector.id].set_shader_parameter("fog_enabled",false)
+		signature = "disabled"
+		return
 	var next: = str(armies.fog_enabled)
 	var scouts: Array = []
 	for unit in armies.units:
@@ -31,13 +35,17 @@ func refresh(force: bool = false) -> void :
 	if force or next != signature:
 		signature = next
 		var image: = Image.create(SIZE, SIZE, false, Image.FORMAT_R8)
-		for y in SIZE:
-			for x in SIZE:
-				var point: = BOUNDS.position + Vector2((x + 0.5) / SIZE, (y + 0.5) / SIZE) * BOUNDS.size
-				var sight: = 0.0
-				for scout in scouts:
-					sight = maxf(sight, clampf((scout[1] - point.distance_to(scout[0])) / 0.8, 0, 1))
-				image.set_pixel(x, y, Color(sight, 0, 0))
+		image.fill(Color.BLACK)
+		for scout in scouts:
+			var center: Vector2 = scout[0]
+			var radius: float = scout[1]
+			var low: Vector2 = (center-Vector2.ONE*radius-BOUNDS.position)/BOUNDS.size*SIZE
+			var high: Vector2 = (center+Vector2.ONE*radius-BOUNDS.position)/BOUNDS.size*SIZE
+			for y in range(maxi(0,floori(low.y)),mini(SIZE,ceili(high.y))):
+				for x in range(maxi(0,floori(low.x)),mini(SIZE,ceili(high.x))):
+					var point: = BOUNDS.position + Vector2((x+0.5)/SIZE,(y+0.5)/SIZE)*BOUNDS.size
+					var sight: = clampf((radius-point.distance_to(center))/0.8,0,1)
+					if sight > image.get_pixel(x,y).r: image.set_pixel(x,y,Color(sight,0,0))
 		if mask == null: mask = ImageTexture.create_from_image(image)
 		else: mask.update(image)
 	for sector in terrain.territories:
