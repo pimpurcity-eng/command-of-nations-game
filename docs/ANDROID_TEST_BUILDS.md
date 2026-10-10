@@ -4,19 +4,22 @@ Owner: Matthew. Test builds only; never publish to a store.
 
 ## Current test build — 2026-10-10
 
-- **0.14-test, versionCode 14**, package `com.commandofnations.test`.
+- **0.15-roads, versionCode 15**, package `com.commandofnations.test`.
 - Godot 4.6.3 official Android debug template; ARM64 only, portrait,
   Compatibility renderer. Android 7.0 (API 24) minimum; template targets API 36.
 - Includes all 69 original live weapon models: ten AA, 29 tanks/APCs/aircraft,
   and 30 new artillery/helicopter/rocket models with their supplied pictures.
-- APK: **94,199,951 bytes** (<100 MB).
-- SHA256: `e396e898bc1ed384c6ebf4912d00682ba98615455f3600ace7a7676443bdae17`.
+- APK: **79,392,911 bytes** (<100 MB).
+- SHA256: `e7dfd61f2c7d0ffd554ea67f44c3d6ec0fb152f0def196016514bf27f821717f`.
 - APK ZIP integrity, package/version, portrait, ARM64 and v2/v3 signatures checked.
   Every packaged resource remap resolves; all 69 imported original models present.
 - Eight required native Xvfb suites pass with zero failures. Additional new-weapons
   suite: 239 checks, zero failures in both source and the extracted APK resources.
   Native packaged-game screenshot rendering has zero errors. An actual Android
   device has not been tested.
+
+Includes all 165 neighbouring-province roads (+75 direct links); road regression
+passes against the extracted APK. Update 0.14 directly without uninstalling.
 
 ## Signing and first installation
 
@@ -30,7 +33,7 @@ This key differs from Claude's 0.13 test app. As the owner's takeover instructio
 state, the first installation requires uninstalling Claude's same-package app
 once, then installing 0.14. Uninstalling removes that app's local saves. Later
 ChatGPT builds signed with this key can update 0.14 normally; do not uninstall or
-clear saves as a routine step. Use versionCode 15 or higher for the next build.
+clear saves as a routine step. Use versionCode 16 or higher for the next build.
 
 ## Rebuilding
 
