@@ -4,22 +4,23 @@ Owner: Matthew. Test builds only; never publish to a store.
 
 ## Current test build — 2026-10-10
 
-- **0.15-roads, versionCode 15**, package `com.commandofnations.test`.
+- **0.16-weapons, versionCode 16**, package `com.commandofnations.test`.
 - Godot 4.6.3 official Android debug template; ARM64 only, portrait,
-  Compatibility renderer. Android 7.0 (API 24) minimum; template targets API 36.
-- Includes all 69 original live weapon models: ten AA, 29 tanks/APCs/aircraft,
-  and 30 new artillery/helicopter/rocket models with their supplied pictures.
-- APK: **79,392,911 bytes** (<100 MB).
-- SHA256: `e7dfd61f2c7d0ffd554ea67f44c3d6ec0fb152f0def196016514bf27f821717f`.
-- APK ZIP integrity, package/version, portrait, ARM64 and v2/v3 signatures checked.
-  Every packaged resource remap resolves; all 69 imported original models present.
-- Eight required native Xvfb suites pass with zero failures. Additional new-weapons
-  suite: 239 checks, zero failures in both source and the extracted APK resources.
-  Native packaged-game screenshot rendering has zero errors. An actual Android
-  device has not been tested.
-
-Includes all 165 neighbouring-province roads (+75 direct links); road regression
-passes against the extracted APK. Update 0.14 directly without uninstalling.
+  Compatibility renderer. Android 7.0 / API 24 minimum; target API 36.
+- All 101 live original models: previous 69 plus 32 ships, drones and missiles.
+  All-weapons mode uses the real campaign map, 165 local roads, separate sea
+  berths and friendly airbase positions. Size, selection and live rotor fixes.
+- APK **92,368,437 bytes** (<100 MB), SHA256
+  `a351c671ee73134e07bd5fce065bd1334013133a51534e3574c45374d38b61f9`.
+- APK ZIP/manifest/signatures verified, all live models present, no broken remaps.
+  Original missile projectile models and material textures included.
+- Eight required native suites: failures=0. New weapons 239/0; real-map suite
+  572/0 in both source and final extracted APK. Road regression failures=0.
+  Native portrait review has no script/render errors. Android hardware testing
+  of this update remains for the owner.
+- Install directly over ChatGPT 0.14 or 0.15; retain saves and the same key.
+  On the start screen select **ALL WEAPONS · REAL MAP** to inspect/control either
+  faction's equipment. Starts paused: tap Play to execute movement orders.
 
 ## Signing and first installation
 
@@ -33,18 +34,21 @@ This key differs from Claude's 0.13 test app. As the owner's takeover instructio
 state, the first installation requires uninstalling Claude's same-package app
 once, then installing 0.14. Uninstalling removes that app's local saves. Later
 ChatGPT builds signed with this key can update 0.14 normally; do not uninstall or
-clear saves as a routine step. Use versionCode 16 or higher for the next build.
+clear saves as a routine step. Use versionCode 17 or higher for the next build.
 
 ## Rebuilding
 
 1. Install Godot 4.6.3 and its matching official Android export templates.
    This build used Java 17 and Android SDK build-tools 35.0.0 with Gradle disabled.
 2. Restore private original assets using `tools/install_air_defense.py`,
-   `tools/install_arsenal.py` and `tools/install_new_weapons.py`; retain building
+   `tools/install_arsenal.py`, `tools/install_new_weapons.py` and
+   `tools/install_naval_drone_missiles.py`; retain building
    models and their original building textures. Models are never public Git files.
 3. Run `godot --headless --path game --import` and all eight required suites
-   using `xvfb-run -a godot --path game --script tests/<name>.gd`. Also run
-   `test_new_weapons` after equipment changes.
+   using `xvfb-run -a godot --path game --script tests/<name>.gd`. After the
+   first import, run `python3 tools/configure_phone_previews.py`, then import
+   again before exporting. Also run `test_new_weapons`,
+   `test_all_weapons_map` and `test_province_connections`.
 4. Configure the editor's Android SDK/Java paths. Set the private environment
    variables `GODOT_ANDROID_KEYSTORE_DEBUG_PATH`,
    `GODOT_ANDROID_KEYSTORE_DEBUG_USER`, `GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD`.
@@ -56,9 +60,10 @@ clear saves as a routine step. Use versionCode 16 or higher for the next build.
 
 ## Export size exclusions
 
-The Android preset excludes obsolete root weapon GLBs, their unused original and
-recoloured weapon PNGs, the duplicate `weapons_2026_10_09` folder, and tests. It
-keeps live `airdefense/` and `arsenal/`, original warehouse buildings and their
-building textures, interface pictures and current game data. These exclusions
-change packaging only; no original file is deleted or modified. A custom shield
-and globe vector launcher icon replaces the exporter fallback icon.
+The Android preset excludes unused root vehicle models/textures, duplicated
+archived weapons, test scripts, reserve drone/catapult variants and unused missile
+launch pictures. It keeps every live arsenal/AA model, their original materials,
+shared building models/textures, and both original Tomahawk projectile models and
+material textures required by existing missile effects. All source originals stay
+private and unchanged. `configure_phone_previews.py` resizes derived research
+picture imports only, to 512 pixels. Model/material textures are not resized.

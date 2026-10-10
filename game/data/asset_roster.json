@@ -1782,5 +1782,233 @@
         "source_model": "Lynx"
       }
     }
+  },
+  {
+    "id": "fleet_russia",
+    "name": "Surface fleet",
+    "kind": "naval",
+    "source": "Owner supplied naval/drone/missile archives 2026-10-10",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_buyan_m.glb",
+        "preview": "res://assets/library/arsenal/russia_buyan_m.png",
+        "temporary_recolor": false,
+        "original_colors": true,
+        "source_model": "Buyan-M"
+      }
+    }
+  },
+  {
+    "id": "fleet_ukraine",
+    "name": "European surface fleet",
+    "kind": "naval",
+    "source": "Owner supplied naval/drone/missile archives 2026-10-10",
+    "available_to": [
+      "ukraine"
+    ],
+    "shared_building": false,
+    "assets": {
+      "european": {
+        "model": "res://assets/library/arsenal/euro_type23.glb",
+        "preview": "res://assets/library/arsenal/euro_type23.png",
+        "temporary_recolor": false,
+        "original_colors": true,
+        "source_model": "Type 23 Duke"
+      }
+    }
+  },
+  {
+    "id": "submarines_russia",
+    "name": "Submarines",
+    "kind": "naval",
+    "source": "Owner supplied naval/drone/missile archives 2026-10-10",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_kilo_sub.glb",
+        "preview": "res://assets/library/arsenal/russia_kilo_sub.png",
+        "temporary_recolor": false,
+        "original_colors": true,
+        "source_model": "Kilo class"
+      }
+    }
+  },
+  {
+    "id": "carriers_russia",
+    "name": "Aircraft carriers",
+    "kind": "naval",
+    "source": "Owner supplied naval/drone/missile archives 2026-10-10",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_admiral_kuznetsov.glb",
+        "preview": "res://assets/library/arsenal/russia_admiral_kuznetsov.png",
+        "temporary_recolor": false,
+        "original_colors": true,
+        "source_model": "Admiral Kuznetsov"
+      }
+    }
+  },
+  {
+    "id": "carriers_ukraine",
+    "name": "Aircraft carriers",
+    "kind": "naval",
+    "source": "Owner supplied naval/drone/missile archives 2026-10-10",
+    "available_to": [
+      "ukraine"
+    ],
+    "shared_building": false,
+    "assets": {
+      "european": {
+        "model": "res://assets/library/arsenal/euro_hms_queen_elizabeth.glb",
+        "preview": "res://assets/library/arsenal/euro_hms_queen_elizabeth.png",
+        "temporary_recolor": false,
+        "original_colors": true,
+        "source_model": "HMS Queen Elizabeth"
+      }
+    }
+  },
+  {
+    "id": "missiles_russia",
+    "name": "Mobile missiles",
+    "kind": "missile_launcher",
+    "source": "Owner supplied naval/drone/missile archives 2026-10-10",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_iskander_m.glb",
+        "preview": "res://assets/library/arsenal/russia_iskander_m_ready.png",
+        "temporary_recolor": false,
+        "original_colors": true,
+        "source_model": "Iskander-M"
+      }
+    }
+  },
+  {
+    "id": "missiles_ukraine",
+    "name": "European mobile missiles",
+    "kind": "missile_launcher",
+    "source": "Owner supplied naval/drone/missile archives 2026-10-10",
+    "available_to": [
+      "ukraine"
+    ],
+    "shared_building": false,
+    "assets": {
+      "european": {
+        "model": "res://assets/library/arsenal/euro_pluton.glb",
+        "preview": "res://assets/library/arsenal/euro_pluton_ready.png",
+        "temporary_recolor": false,
+        "original_colors": true,
+        "source_model": "Pluton"
+      }
+    }
+  },
+  {
+    "id": "silos_russia",
+    "name": "Fixed missile silos",
+    "kind": "missile_launcher",
+    "source": "Owner supplied naval/drone/missile archives 2026-10-10",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_avangard_silo.glb",
+        "preview": "res://assets/library/arsenal/russia_avangard_silo_ready.png",
+        "temporary_recolor": false,
+        "original_colors": true,
+        "source_model": "Avangard silo"
+      }
+    }
+  },
+  {
+    "id": "silos_ukraine",
+    "name": "European fixed missile silos",
+    "kind": "missile_launcher",
+    "source": "Owner supplied naval/drone/missile archives 2026-10-10",
+    "available_to": [
+      "ukraine"
+    ],
+    "shared_building": false,
+    "assets": {
+      "european": {
+        "model": "res://assets/library/arsenal/euro_s3_silo.glb",
+        "preview": "res://assets/library/arsenal/euro_s3_silo_ready.png",
+        "temporary_recolor": false,
+        "original_colors": true,
+        "source_model": "S3 silo"
+      }
+    }
+  },
+  {
+    "id": "drones_russia",
+    "name": "Reconnaissance and strike drones",
+    "kind": "fighter",
+    "source": "Owner supplied naval/drone/missile archives 2026-10-10",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_orlan10_drone_only.glb",
+        "preview": "res://assets/library/arsenal/russia_orlan10_drone_only.png",
+        "temporary_recolor": false,
+        "original_colors": true,
+        "source_model": "Orlan-10"
+      }
+    }
+  },
+  {
+    "id": "drones_ukraine",
+    "name": "European drones",
+    "kind": "fighter",
+    "source": "Owner supplied naval/drone/missile archives 2026-10-10",
+    "available_to": [
+      "ukraine"
+    ],
+    "shared_building": false,
+    "assets": {
+      "european": {
+        "model": "res://assets/library/arsenal/euro_camcopter_s100.glb",
+        "preview": "res://assets/library/arsenal/euro_camcopter_s100.png",
+        "temporary_recolor": false,
+        "original_colors": true,
+        "source_model": "Camcopter S-100"
+      }
+    }
+  },
+  {
+    "id": "loitering_russia",
+    "name": "Loitering strike drones",
+    "kind": "fighter",
+    "source": "Owner supplied naval/drone/missile archives 2026-10-10",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_lancet3_drone_only.glb",
+        "preview": "res://assets/library/arsenal/russia_lancet3_drone_only.png",
+        "temporary_recolor": false,
+        "original_colors": true,
+        "source_model": "Lancet-3"
+      }
+    }
   }
 ]

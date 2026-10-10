@@ -30,6 +30,7 @@ var sea_navigation: = SeaRoutes.new()
 func is_naval(unit: Dictionary) -> bool: return unit.visual_kind == "naval"
 func routes_for(unit: Dictionary) -> RefCounted: return sea_navigation if is_naval(unit) else navigation
 func path_for(unit: Dictionary, start: Vector2, finish: Vector2) -> Array:
+	if stacks.members(unit).any(func(member): return EquipmentIdentity.spec(member.equipment_id).get("stationary", false)): return []
 	return sea_navigation.find_path(start, finish) if is_naval(unit) else navigation.find_path(start, finish, unit.visual_kind)
 func surface_position(unit: Dictionary, point: Vector2) -> Vector3:
 	if is_naval(unit): return Vector3(point.x, 0.15, point.y)
@@ -64,7 +65,9 @@ func setup(map: StrategicMap, scenario: Dictionary) -> void :
 		var point: = GeographicProjection.project(data.longitude, data.latitude)
 		# Owner review: ground troops start in their city or province centre (no offsets);
 		# aircraft and ships keep the scenario offset.
-		if data.get("visual_kind", "armor") in ["fighter", "naval"]: point += Vector2(data.offset[0], data.offset[1])
+		if data.get("visual_kind", "armor") in ["fighter", "naval"]:
+			var offset: Array = data.get("offset", [0.0, 0.0])
+			point += Vector2(offset[0], offset[1])
 		var color: = Color.WHITE
 		for country in scenario.countries:
 			if country.id == data.country: color = Color(country.color).lightened(0.3)
@@ -177,6 +180,9 @@ func select_unit(index: int) -> void :
 func order(position: Vector3, append: bool = false) -> bool:
 	if selected < 0:
 		status_changed.emit("Select a unit before issuing a movement order")
+		return false
+	if stacks.members(units[selected]).any(func(member): return EquipmentIdentity.spec(member.equipment_id).get("stationary", false)):
+		status_changed.emit("Fixed missile silos cannot move; attack targets within their range")
 		return false
 	if air.is_air(units[selected]):
 		if append:
@@ -465,30 +471,30 @@ func _process(delta: float) -> void :
 		# Call of War: only the selected army gets a ring; the map tag shows ownership.
 		unit.ring.visible = chosen
 		var model: Node3D = unit.node.get_child(0)
+		if int(model.get_meta("visual_level", -1)) != int(unit.level):
+			var replacement: = UnitVisual.create(unit.visual_kind, unit.faction_color, unit.equipment_id, unit.level)
+			replacement.rotation = model.rotation
+			replacement.scale = model.scale
+			unit.node.remove_child(model)
+			model.queue_free()
+			unit.node.add_child(replacement)
+			unit.node.move_child(replacement, 0)
+			model = replacement
+			unit.name = EquipmentIdentity.research_title(unit.equipment_id, unit.level)
 		if unit.visual_kind == "air_defense":
-			if int(model.get_meta("visual_level", -1)) != int(unit.level):
-				var replacement: = UnitVisual.create(unit.visual_kind, unit.faction_color, unit.equipment_id, unit.level)
-				replacement.rotation = model.rotation
-				replacement.scale = model.scale
-				unit.node.remove_child(model)
-				model.queue_free()
-				unit.node.add_child(replacement)
-				unit.node.move_child(replacement, 0)
-				model = replacement
-				unit.name = EquipmentIdentity.research_title(unit.equipment_id, unit.level)
 			if model.has_meta("air_defense_animator"):
 				var animator: AirDefenseAnimator = model.get_meta("air_defense_animator")
 				animator.moving = unit.moving
 				animator.animate(delta)
-			if model.has_meta("helicopter_animator"):
-				var rotor_animator: HelicopterAnimator = model.get_meta("helicopter_animator")
-				rotor_animator.animate(delta, unit.get("flight_mode", "grounded") != "grounded" and unit.health > 0)
+		if model.has_meta("helicopter_animator"):
+			var rotor_animator: HelicopterAnimator = model.get_meta("helicopter_animator")
+			rotor_animator.animate(delta, unit.get("flight_mode", "grounded") != "grounded" and unit.health > 0)
 		model.rotation.y = lerp_angle(model.rotation.y, unit.heading, 1.0 - exp( - delta * 8.0))
 		if not is_naval(unit) and not air.is_air(unit):
 			var slope: = Quaternion(Vector3.UP, ground_normal(Vector2(unit.node.position.x, unit.node.position.z)))
 			unit.node.quaternion = unit.node.quaternion.slerp(slope, 1.0 - exp( - delta * 8.0))
-		# Owner review: armies inside a city shrink so they sit among the buildings.
-		var target_scale: = 0.65 * (CITY_SCALE if _in_city(Vector2(unit.node.position.x, unit.node.position.z)) else 1.0)
+		# Consistent map size while entering/leaving cities, including aircraft and ships.
+		var target_scale: = 0.65
 		model.scale = model.scale.lerp(Vector3.ONE * target_scale, 1.0 - exp( - delta * 6.0))
 		if unit.visual_kind == "air_defense": unit.ring.scale = Vector3.ONE * (0.52 if chosen else 0.42) * (model.scale.x / 0.65)
 		if unit.node.has_meta("detailed_sprite"):

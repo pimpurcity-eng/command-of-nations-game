@@ -233,6 +233,9 @@ func _ready() -> void :
 	production.changed.connect( func(): hud.show_resources(resource_country, production.stockpiles[resource_country]))
 	production.changed.connect(refresh_rally_markers)
 	units.unit_selected.connect( func(unit: Dictionary):
+		if GameSession.weapons_test and GameSession.player_country != unit.country:
+			GameSession.player_country = unit.country
+			apply_player_country(false)
 		resource_country = GameSession.player_country
 		hud.show_resources(resource_country, production.stockpiles[resource_country]))
 	hud.show_resources(resource_country, production.stockpiles[resource_country])
@@ -278,6 +281,7 @@ func _ready() -> void :
 		if order_mode:
 			player_order(map.position_at(city.point))
 			return
+		clear_army_selection()
 		for sector in map.territories:
 			if sector.id == city.sector: map.select(sector)
 		hud.inspecting_unit = false
@@ -328,6 +332,7 @@ func _ready() -> void :
 		mobile_start.fresh_requested.connect(func():
 			if GameSession.weapons_test: restore_campaign_forces()
 			GameSession.weapons_test = false
+			match_rules.ai_enabled = true
 			GameSession.player_country = mobile_start.selected_country()
 			apply_player_country()
 			start_campaign_play())
@@ -339,7 +344,9 @@ func _ready() -> void :
 			rig.target = Vector3(0, 0, 5)
 			rig.distance = 26
 			rig._snap(1.0)
-			start_campaign_play())
+			clock.paused = true
+			refresh_hud()
+			hud.show_status("All original weapons · real campaign map · tap any army to control it. Tap Play to move."))
 	if OS.has_feature("web"):
 		browser_callback = JavaScriptBridge.create_callback(_browser_hidden)
 		browser_resume_callback = JavaScriptBridge.create_callback(_browser_visible)
@@ -398,26 +405,15 @@ func _map_click(screen: Vector2, order: bool) -> void :
 	var city_hit: = cities.pick_screen(screen)
 	if not order and not order_mode:
 		var unit_hit: = units.pick_screen(rig.camera, screen)
-		# Armies win taps over the city under them (armies stand on roads through cities);
-		# the city is opened from its name tag.
+		# A tap on a city switches inspection; an explicit Move/Attack issues orders.
+		if not city_hit.is_empty() and (unit_hit.is_empty() or city_hit.distance + 8.0 * get_window().content_scale_factor < unit_hit.distance or int(unit_hit.index) == units.selected):
+			clear_army_selection()
+			cities.select_city(city_hit.city)
+			return
 		if not unit_hit.is_empty():
-			var tapped: Dictionary = units.units[unit_hit.index]
-			# Owner review (Call of War): with your army selected, tapping an enemy attacks it.
-			if friendly_selected() and tapped.country != GameSession.player_country:
-				if not match_rules.at_war and match_rules.winner.is_empty(): match_rules.declare_war()
-				if units.attack_many(tapped) > 0: hud.show_status("Attacking " + EquipmentIdentity.research_title(tapped.equipment_id, tapped.get("level", 1)))
-				return
 			units.select_unit(unit_hit.index)
 			return
-		# One-tap move: with your army selected, tapping the map or a city sends it there.
-		if friendly_selected():
-			var destination: = map.pick(rig.camera, screen)
-			if not city_hit.is_empty(): player_order(map.position_at(city_hit.city.point));return
-			if not destination.is_empty(): player_order(destination.position);return
-			if units.air.is_air(units.units[units.selected]):
-				var sky = Plane(Vector3.UP, 0).intersects_ray(rig.camera.project_ray_origin(screen), rig.camera.project_ray_normal(screen))
-				if sky != null: player_order(sky)
-				return
+		clear_army_selection()
 	if not city_hit.is_empty():
 		if order: _set_order_mode(true)
 		cities.select_city(city_hit.city)
@@ -452,8 +448,8 @@ func load_game() -> void :
 	session.restore(result.state, clock, map, units, rig)
 	apply_player_country(false)
 	units.fog_enabled = not GameSession.weapons_test
-	if GameSession.weapons_test: add_original_weapon_inspection()
-	elif test_models != null: test_models.queue_free(); test_models = null
+	match_rules.ai_enabled = not GameSession.weapons_test
+	if test_models != null: test_models.queue_free(); test_models = null
 	combat_effects.clear()
 	_set_order_mode(false)
 	if result_dialog != null: result_dialog.hide()
@@ -496,6 +492,15 @@ func _set_order_mode(enabled: bool) -> void :
 	if not enabled: rally_city = ""
 	order_mode = enabled
 	if hud != null: hud.set_order_mode(enabled)
+func clear_army_selection() -> void:
+	units.selected = -1
+	units.command_ids.clear()
+	units._draw_route()
+	attack_order = false
+	patrol_order = false
+	append_order = false
+	hud.clear_unit_selection()
+
 func player_order(destination: Vector3) -> void :
 	if not match_rules.winner.is_empty(): return
 	if not rally_city.is_empty():
@@ -537,7 +542,7 @@ func refresh_hud() -> void :
 			hud.detail.text = EquipmentIdentity.research_title(unit.equipment_id, unit.get("level", 1)).to_upper() + " · L" + str(unit.get("level", 1)) + """
 """ + unit.country.to_upper() + " · " + str(group.size()) + " UNITS · " + state
 			if units.air.is_air(unit):
-				hud.detail.text = EquipmentIdentity.title(unit.equipment_id) + " · " + unit.flight_mode.to_upper() + " · RADIUS " + str(int(units.air.radius(unit) * 40)) + " game km"
+				hud.detail.text = EquipmentIdentity.research_title(unit.equipment_id, unit.get("level", 1)) + " · " + unit.flight_mode.to_upper() + " · RADIUS " + str(int(units.air.radius(unit) * 40)) + " game km"
 				if unit.refuel_remaining > 0: hud.detail.text += " · REFUEL " + SimulationClock.duration(unit.refuel_remaining, clock.speed)
 			var next_round: = match_rules.combat.remaining_for(unit)
 			if next_round > 0:
@@ -602,7 +607,8 @@ func apply_player_country(focus: bool = true) -> void:
 func restore_campaign_forces() -> void:
 	units.restore([])
 	for data in session.scenario.units:
-		var point: = GeographicProjection.project(data.longitude, data.latitude) + Vector2(data.offset[0], data.offset[1])
+		var offset: Array = data.get("offset", [0.0, 0.0])
+		var point: = GeographicProjection.project(data.longitude, data.latitude) + Vector2(offset[0], offset[1])
 		var color: = Color.WHITE
 		for country in session.scenario.countries:
 			if country.id == data.country: color = Color(country.color).lightened(0.3)
@@ -612,30 +618,66 @@ func restore_campaign_forces() -> void:
 
 func populate_weapons_test() -> void:
 	units.restore([])
-	var city_data: = GeographicProjection.load_cities()
+	if test_models != null: test_models.queue_free(); test_models = null
+	var city_data: Array = production.cities
+	var represented: Dictionary = {}
 	var counts: Dictionary = {}
-	var test_catalog: Array = []
+	var occupied_sea: Array[Vector2] = []
+	var occupied_air: Array[Vector2] = []
 	for family in EquipmentIdentity.catalog:
-		var spawn_levels: Array = [1, 3] if family.get("research_branch", "") == "Short range" else [1, 3, 5] if family.get("research_branch", "") == "Long range" else [1]
-		for spawn_level in spawn_levels:
-			var variant: Dictionary = family.duplicate(true)
-			variant.spawn_level = spawn_level
-			test_catalog.append(variant)
-	for spec in test_catalog:
-		var bases: Array = city_data.filter(func(city: Dictionary): return city.country.to_lower() == spec.country and (spec.visual_kind != "naval" or city.has("naval_spawn")))
-		if bases.is_empty(): continue
-		var number: int = counts.get(spec.country, 0)
-		counts[spec.country] = number + 1
-		var base: Dictionary = bases[number % bases.size()]
-		var point: Vector2 = base.point + Vector2(-1.2 + float(number % 3) * 1.2, -1.2 - float(number / bases.size()) * 0.85)
-		if spec.visual_kind == "naval":
-			point = GeographicProjection.project(base.naval_spawn.longitude, base.naval_spawn.latitude)
-			point += Vector2(float(number % 2) * 0.3, 0.3)
-			if not units.sea_navigation.on_sea(point): point = GeographicProjection.project(base.naval_spawn.longitude, base.naval_spawn.latitude)
-		var data: = {"id": "weapons_test_" + spec.id + "_l" + str(spec.spawn_level), "level": spec.spawn_level, "name": spec.name, "country": spec.country, "equipment_id": spec.id, "visual_kind": spec.visual_kind, "base_city": base.id}
-		units._spawn(data, point, Color("73bcff") if spec.country == "ukraine" else Color("ef827c"))
+		var tiers: Array = family.get("research_tiers", [])
+		# Archived campaigns predate tier models; retain their one-army-per-family setup.
+		var tiered: bool = not tiers.is_empty()
+		if not tiered: tiers = [{"model": UnitVisual.asset_path(family.id)}]
+		for index in tiers.size():
+			var path: String = tiers[index].get("model", "")
+			var unique_key: String = path if tiered else family.id
+			if unique_key.is_empty() or represented.has(unique_key): continue
+			represented[unique_key] = true
+			var kind: String = family.visual_kind
+			var bases: Array = city_data.filter(func(city: Dictionary):
+				return city.country.to_lower() == family.country and (kind != "naval" or city.has("naval_spawn")) and (kind != "fighter" or units.air.available(city, family.country)))
+			if bases.is_empty(): continue
+			var key: String = family.country + ":" + kind
+			var number: int = counts.get(key, 0)
+			counts[key] = number + 1
+			var base: Dictionary = bases[number % bases.size()]
+			var slot: int = number / bases.size()
+			var point: Vector2 = base.point + Vector2(-2.0 + float(slot % 4) * 1.5, -1.8 - float(slot / 4) * 1.5)
+			if kind == "fighter":
+				point = weapons_test_air_slot(base.point, family.country, occupied_air, float(family.get("air_range",14.0)))
+				occupied_air.append(point)
+			if kind == "naval":
+				var anchor: = GeographicProjection.project(base.naval_spawn.longitude, base.naval_spawn.latitude)
+				point = weapons_test_sea_slot(anchor, occupied_sea)
+				occupied_sea.append(point)
+			var data: = {"id": "weapons_test_" + family.id + "_l" + str(index + 1), "level": index + 1, "name": EquipmentIdentity.research_title(family.id, index + 1), "country": family.country, "equipment_id": family.id, "visual_kind": kind, "base_city": base.id}
+			units._spawn(data, point, Color("73bcff") if family.country == "ukraine" else Color("ef827c"))
 	units.fog_enabled = false
-	add_original_weapon_inspection()
+	match_rules.ai_enabled = false
+	clock.paused = true
+
+func weapons_test_air_slot(anchor: Vector2, country: String, occupied: Array[Vector2], flight_range: float) -> Vector2:
+	for ring in range(0, 24):
+		var radius: float = float(ring) * 0.6
+		if radius + 0.7 > flight_range: break
+		for step in maxi(1, ring * 12):
+			var angle: float = TAU * float(step) / float(maxi(1, ring * 12))
+			var point: Vector2 = anchor + Vector2.from_angle(angle) * radius
+			if occupied.any(func(other): return other.distance_to(point) < 1.6): continue
+			if map.territories.any(func(territory): return territory.playable and territory.controller == country and RegionData.contains(territory,point)): return point
+	push_error("No friendly airbase inspection position within operating range")
+	return anchor
+
+func weapons_test_sea_slot(anchor: Vector2, occupied: Array[Vector2]) -> Vector2:
+	for ring in range(0, 32):
+		var radius: float = float(ring) * 0.8
+		for step in maxi(1, ring * 12):
+			var angle: float = TAU * float(step) / float(maxi(1, ring * 12))
+			var point: Vector2 = anchor + Vector2.from_angle(angle) * radius
+			if units.sea_navigation.on_sea(point) and not occupied.any(func(other): return other.distance_to(point) < 2.1): return point
+	push_error("No open sea berth for all-weapons map")
+	return anchor
 
 func add_original_weapon_inspection() -> void:
 	if test_models != null: test_models.queue_free()

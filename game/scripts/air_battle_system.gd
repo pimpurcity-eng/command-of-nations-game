@@ -7,6 +7,7 @@ func value(unit: Dictionary, name: String, defending: bool = false) -> float:
 	var base: float = EquipmentIdentity.spec(unit.equipment_id).get(name, 0.0)
 	var scaling: float = 1.0 + 0.12 * (unit.get("level", 1) - 1)
 	var tier: Dictionary = EquipmentIdentity.research_tier(unit.equipment_id, unit.get("level", 1))
+	base = float(tier.get(name, base))
 	if name == "aa_damage" and not tier.is_empty():
 		base = tier.damage
 		scaling = 1.0
@@ -40,6 +41,7 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 				var point: = Vector2(enemy.node.position.x, enemy.node.position.z)
 				if not armies.point_visible(point, unit.country): continue
 				if unit.get("flight_mode", "") == "attack" and enemy.id != unit.get("attack_target", ""): continue
+				if fighter and value(unit, "air_damage" if enemy.visual_kind == "fighter" else "ground_damage") <= 0: continue
 				var distance: = origin.distance_to(point)
 				if patrol and distance <= reach and Vector2(unit.node.position.x, unit.node.position.z).distance_to(unit.patrol_center) <= AirOperations.PATROL_RADIUS + 0.05: patrol_targets.append(enemy)
 				if distance <= reach and distance < nearest:
@@ -47,7 +49,7 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 					target = enemy
 			if target.is_empty() or (patrol and patrol_targets.is_empty()): continue
 			if not cooldowns.has(unit.id): cooldowns[unit.id] = 0.0
-			if patrol:
+			if patrol and not EquipmentIdentity.spec(unit.equipment_id).get("single_use", false):
 				for enemy in patrol_targets: strikes.append([unit, enemy, aa])
 			else: strikes.append([unit, target, aa])
 			wait = minf(wait, cooldowns[unit.id])
@@ -69,6 +71,7 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 			var stat: = "aa_damage" if strike[2] else ("air_damage" if enemy.visual_kind == "fighter" else "ground_damage")
 			damage[enemy.id] = damage.get(enemy.id, 0.0) + value(unit, stat) * (0.5 if unit.get("flight_mode", "") == "patrol" else 1.0)
 			weapon_fired.emit(unit, enemy, "interceptor" if strike[2] else "drone_strike" if EquipmentIdentity.spec(unit.equipment_id).get("role", "") == "drone" else "air_strike")
+			if not strike[2] and EquipmentIdentity.spec(unit.equipment_id).get("single_use", false): damage[unit.id] = damage.get(unit.id, 0.0) + unit.health
 			if not strike[2]:
 
 

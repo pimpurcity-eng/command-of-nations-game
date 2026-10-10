@@ -8,7 +8,7 @@
       "color": "376bba",
       "statistics": {},
       "relations": {},
-      "starting_force_count": 20,
+      "starting_force_count": 25,
       "capital_city": "kyiv"
     },
     {
@@ -17,7 +17,7 @@
       "color": "ad4741",
       "statistics": {},
       "relations": {},
-      "starting_force_count": 19,
+      "starting_force_count": 26,
       "capital_city": "moscow"
     }
   ],
@@ -533,6 +533,138 @@
       "visual_kind": "fighter",
       "equipment_id": "helicopters_ukraine",
       "base_city": "kyiv"
+    },
+    {
+      "id": "start_fleet_russia",
+      "name": "Buyan-M",
+      "country": "russia",
+      "equipment_id": "fleet_russia",
+      "visual_kind": "naval",
+      "level": 1,
+      "longitude": 37.5,
+      "latitude": 46.0,
+      "base_city": "rostov_on_don"
+    },
+    {
+      "id": "start_fleet_ukraine",
+      "name": "Type 23 Duke",
+      "country": "ukraine",
+      "equipment_id": "fleet_ukraine",
+      "visual_kind": "naval",
+      "level": 1,
+      "longitude": 30.9,
+      "latitude": 46.2,
+      "base_city": "odesa"
+    },
+    {
+      "id": "start_submarines_russia",
+      "name": "Kilo class",
+      "country": "russia",
+      "equipment_id": "submarines_russia",
+      "visual_kind": "naval",
+      "level": 1,
+      "longitude": 37.68,
+      "latitude": 46.0,
+      "base_city": "rostov_on_don"
+    },
+    {
+      "id": "start_carriers_russia",
+      "name": "Admiral Kuznetsov",
+      "country": "russia",
+      "equipment_id": "carriers_russia",
+      "visual_kind": "naval",
+      "level": 1,
+      "longitude": 37.86,
+      "latitude": 46.0,
+      "base_city": "rostov_on_don"
+    },
+    {
+      "id": "start_carriers_ukraine",
+      "name": "HMS Queen Elizabeth",
+      "country": "ukraine",
+      "equipment_id": "carriers_ukraine",
+      "visual_kind": "naval",
+      "level": 1,
+      "longitude": 31.08,
+      "latitude": 46.2,
+      "base_city": "odesa"
+    },
+    {
+      "id": "start_missiles_russia",
+      "name": "Iskander-M",
+      "country": "russia",
+      "equipment_id": "missiles_russia",
+      "visual_kind": "missile_launcher",
+      "level": 1,
+      "longitude": 39.2003,
+      "latitude": 51.6608,
+      "base_city": "voronezh"
+    },
+    {
+      "id": "start_missiles_ukraine",
+      "name": "Pluton",
+      "country": "ukraine",
+      "equipment_id": "missiles_ukraine",
+      "visual_kind": "missile_launcher",
+      "level": 1,
+      "longitude": 35.0462,
+      "latitude": 48.4647,
+      "base_city": "dnipro"
+    },
+    {
+      "id": "start_silos_russia",
+      "name": "Avangard silo",
+      "country": "russia",
+      "equipment_id": "silos_russia",
+      "visual_kind": "missile_launcher",
+      "level": 1,
+      "longitude": 37.6173,
+      "latitude": 55.7558,
+      "base_city": "moscow"
+    },
+    {
+      "id": "start_silos_ukraine",
+      "name": "S3 silo",
+      "country": "ukraine",
+      "equipment_id": "silos_ukraine",
+      "visual_kind": "missile_launcher",
+      "level": 1,
+      "longitude": 30.5234,
+      "latitude": 50.4501,
+      "base_city": "kyiv"
+    },
+    {
+      "id": "start_drones_russia",
+      "name": "Orlan-10",
+      "country": "russia",
+      "equipment_id": "drones_russia",
+      "visual_kind": "fighter",
+      "level": 1,
+      "longitude": 37.6173,
+      "latitude": 55.7558,
+      "base_city": "moscow"
+    },
+    {
+      "id": "start_drones_ukraine",
+      "name": "Camcopter S-100",
+      "country": "ukraine",
+      "equipment_id": "drones_ukraine",
+      "visual_kind": "fighter",
+      "level": 1,
+      "longitude": 30.5234,
+      "latitude": 50.4501,
+      "base_city": "kyiv"
+    },
+    {
+      "id": "start_loitering_russia",
+      "name": "Lancet-3",
+      "country": "russia",
+      "equipment_id": "loitering_russia",
+      "visual_kind": "fighter",
+      "level": 1,
+      "longitude": 37.6173,
+      "latitude": 55.7558,
+      "base_city": "moscow"
     }
   ]
 }

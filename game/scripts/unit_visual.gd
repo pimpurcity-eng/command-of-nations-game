@@ -4,7 +4,7 @@ extends RefCounted
 ## Map footprint (longest horizontal side, before the 0.65 marker scale) per unit type, so
 ## every original model reads at a consistent size against the cities instead of keeping
 ## whatever scale its source file happened to use.
-const FOOTPRINT: = {"helicopter": 1.6, "bomber": 2.3, "armor": 1.35, "ifv": 1.25, "artillery": 1.3, "air_defense": 1.3, "missile_launcher": 1.4, "fighter": 1.5, "drone": 1.1, "naval": 1.9}
+const FOOTPRINT: = {"helicopter": 1.6, "bomber": 2.3, "armor": 1.35, "ifv": 1.25, "artillery": 1.3, "air_defense": 1.3, "missile_launcher": 1.4, "silo": 1.5, "fighter": 1.5, "drone": 1.1, "naval": 1.9, "submarine": 1.6, "carrier": 3.4}
 ## Extra yaw (degrees) for source models that face backwards after long-axis alignment,
 ## keyed by model file prefix. Checked with tests/model_lineup.gd (all models face north).
 const YAW_FIX: = {"su57": 180.0, "f18a": 180.0, "destroyer": 180.0, "kclass": 180.0, "upload20ab": 180.0, "ad": 180.0}  # ad_*: owner weapons.zip air defence (+X forward)
@@ -64,7 +64,7 @@ static func create(kind: String, _faction: Color, equipment_id: String = "", lev
 	# Owner arsenal models are built from hundreds of parts; merge them per material so a
 	# tank is a handful of draw calls on phones (looks identical).
 	var helicopter: HelicopterAnimator
-	if EquipmentIdentity.spec(equipment_id).get("role", "") == "helicopter":
+	if EquipmentIdentity.spec(equipment_id).get("role", "") in ["helicopter", "drone"]:
 		helicopter = HelicopterAnimator.new()
 		vehicle = helicopter.prepare(vehicle)
 	elif path.contains("/arsenal/"): vehicle = merged(vehicle)
@@ -107,9 +107,6 @@ static func _fit(pivot: Node3D, vehicle: Node3D, role: String, path: String) -> 
 	var bounds: = model_bounds(vehicle, yaw)
 	var longest: = maxf(maxf(bounds.size.x, bounds.size.z), 0.001)
 	var factor: float = FOOTPRINT.get(role, 0.62) / longest
-	# Owner arsenal tanks/APCs keep their real relative size (an M113 is smaller than a
-	# Leopard): 0.145 map units per metre, ~1.35 for a 9.4 m tank.
-	if path.contains("/arsenal/") and role in ["armor", "ifv"]: factor = 0.145
 	var center: = bounds.get_center()
 	pivot.transform = Transform3D(Basis(Vector3.UP, yaw).scaled(Vector3.ONE * factor), Vector3(-center.x, -bounds.position.y, -center.z) * factor)
 

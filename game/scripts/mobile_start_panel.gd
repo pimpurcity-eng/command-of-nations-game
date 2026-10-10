@@ -89,7 +89,7 @@ func setup(theme: Theme, saved: bool) -> void :
 	fresh_button.pressed.connect( func(): fresh_requested.emit();hide())
 	column.add_child(fresh_button)
 	var test_button: = Button.new()
-	test_button.text = "ALL WEAPONS TEST MAP"
+	test_button.text = "ALL WEAPONS · REAL MAP"
 	test_button.custom_minimum_size.y = 48
 	test_button.pressed.connect(func(): test_requested.emit(); hide())
 	column.add_child(test_button)

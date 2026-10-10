@@ -1,6 +1,6 @@
 class_name HelicopterAnimator
 extends Node3D
-## Spin the supplied rotor geometry about its original pivot and local axis.
+## Spin supplied rotors/propellers about their original pivots and local axes.
 ## Merge the fuselage and each rotor separately for mobile draw calls.
 const ROTOR_NAMES: = ["MainRotor", "UpperRotor", "LowerRotor", "TailRotor"]
 var rotors: Array[Node3D] = []
@@ -27,7 +27,7 @@ func prepare(source: Node3D) -> Node3D:
 
 func _collect(node: Node3D, parent_transform: Transform3D, parts: Array) -> void:
 	var pose: = parent_transform * node.transform
-	if str(node.name) in ROTOR_NAMES:
+	if str(node.name) in ROTOR_NAMES or str(node.name).begins_with("Propeller"):
 		parts.append([node, pose])
 		return
 	for child in node.get_children():
@@ -38,4 +38,5 @@ func animate(delta: float, flying: bool) -> void:
 	phase = fmod(phase + delta * 30.0, TAU)
 	for i in rotors.size():
 		var direction: = -1.0 if str(rotors[i].name) == "UpperRotor" else 1.0
-		rotors[i].transform = Transform3D(rest[i].basis * Basis(Vector3.UP, phase * direction), rest[i].origin)
+		var axis: = Vector3.RIGHT if str(rotors[i].name).begins_with("Propeller") else Vector3.UP
+		rotors[i].transform = Transform3D(rest[i].basis * Basis(axis, phase * direction), rest[i].origin)
