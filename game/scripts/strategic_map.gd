@@ -299,9 +299,8 @@ static func road_network(territory_list: Array) -> Array:
 ## {"edges": [[start, end, bend], ...], "hubs": {province title: centre}}. The hub is the
 ## centre of the province's largest piece: where its roads meet and where it is captured.
 static func road_graph(territory_list: Array) -> Dictionary:
-	# Owner review: a road to every province. Provinces that share a border are joined
-	# centre to centre; a road a-b is dropped when a common neighbour c is closer to both
-	# (the detour a-c-b replaces it), which keeps every province connected without clutter.
+	# Every neighbouring province gets a direct centre-to-centre road, including side
+	# connections. A shorter detour through a third province must not remove that road.
 	# One road node per province (island parts join their main part); a city province and
 	# its surrounding region (Moscow, Kyiv, St. Petersburg) share one hub.
 	var main_part: Dictionary = {}  # title -> centre of its largest piece
@@ -345,16 +344,9 @@ static func road_graph(territory_list: Array) -> Dictionary:
 	for i in centers.size():
 		for j in neighbours[i]:
 			if j <= i: continue
-			var length: = centers[i].distance_to(centers[j])
-			var blocked: = false
-			for k in neighbours[i]:
-				if k != j and neighbours[j].has(k) and maxf(centers[k].distance_to(centers[i]), centers[k].distance_to(centers[j])) < length:
-					blocked = true
-					break
-			if not blocked:
-				edges.append([centers[i], centers[j], 0.12 * sin(float(i * 31 + j))])
-				connected[i] = true
-				connected[j] = true
+			edges.append([centers[i], centers[j], 0.12 * sin(float(i * 31 + j))])
+			connected[i] = true
+			connected[j] = true
 	# Enclaves (Kyiv City inside Kyiv region) share no outer border vertex: join the nearest.
 	for i in centers.size():
 		if connected.has(i): continue
