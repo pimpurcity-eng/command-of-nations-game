@@ -1,0 +1,90 @@
+[
+  {
+    "name": "Kyiv",
+    "country": "Ukraine",
+    "longitude": 30.5234,
+    "latitude": 50.4501,
+    "id": "kyiv",
+    "capital": true
+  },
+  {
+    "name": "Lviv",
+    "country": "Ukraine",
+    "longitude": 24.0311,
+    "latitude": 49.8429,
+    "id": "lviv",
+    "capital": false
+  },
+  {
+    "name": "Odesa",
+    "country": "Ukraine",
+    "longitude": 30.7233,
+    "latitude": 46.4825,
+    "id": "odesa",
+    "capital": false,
+    "naval_spawn": {
+      "longitude": 30.9,
+      "latitude": 46.2
+    }
+  },
+  {
+    "name": "Kharkiv",
+    "country": "Ukraine",
+    "longitude": 36.2304,
+    "latitude": 49.9935,
+    "id": "kharkiv",
+    "capital": false
+  },
+  {
+    "name": "Dnipro",
+    "country": "Ukraine",
+    "longitude": 35.0462,
+    "latitude": 48.4647,
+    "id": "dnipro",
+    "capital": false
+  },
+  {
+    "name": "Moscow",
+    "country": "Russia",
+    "longitude": 37.6173,
+    "latitude": 55.7558,
+    "id": "moscow",
+    "capital": true
+  },
+  {
+    "name": "Kursk",
+    "country": "Russia",
+    "longitude": 36.193,
+    "latitude": 51.7304,
+    "id": "kursk",
+    "capital": false
+  },
+  {
+    "name": "Belgorod",
+    "country": "Russia",
+    "longitude": 36.5873,
+    "latitude": 50.5957,
+    "id": "belgorod",
+    "capital": false
+  },
+  {
+    "name": "Voronezh",
+    "country": "Russia",
+    "longitude": 39.2003,
+    "latitude": 51.6608,
+    "id": "voronezh",
+    "capital": false
+  },
+  {
+    "name": "Rostov-on-Don",
+    "country": "Russia",
+    "longitude": 39.7015,
+    "latitude": 47.2357,
+    "id": "rostov_on_don",
+    "capital": false,
+    "naval_spawn": {
+      "longitude": 37.5,
+      "latitude": 46.0
+    }
+  }
+]

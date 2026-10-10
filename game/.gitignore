@@ -1,0 +1,9 @@
+# Godot cache
+.godot/
+
+# Original 3D models and their textures are NOT stored in this public repository
+# until their licences are verified. Copy them from the owner's Google Drive
+# (Command_of_Nations_Recovered_Source.zip -> recovered-game/assets/library and
+# assets/vehicles) into these folders before opening the project.
+assets/library/
+assets/vehicles/

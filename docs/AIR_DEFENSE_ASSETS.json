@@ -1,0 +1,16 @@
+{
+  "source_file": "weapons.airdefense.zip",
+  "drive_url": "https://drive.google.com/file/d/1GZy0URrrecdz8yUeXAj_S6B2uO7SCkya/view",
+  "models": {
+    "russia_strela10.glb": "c5149dc0dd40a798d3feaa3ae8299c78d909dd18e9a74fef635cf374c5a258fa",
+    "russia_tor_m2.glb": "87944070bcb188259198e3b6e942ab535c44057a6b0b4ed568d5a41da2a3bbe8",
+    "russia_buk_m3.glb": "0b594160c563a68e3212a39ec7a574b3738d69532d2e90fcf7d39dd8427bcb74",
+    "russia_s400.glb": "738d7385bd848028ad70428b086d9a985ec5c9ca45737d53c9641bf5cc208069",
+    "russia_s500_prometey.glb": "72ce890572c47e6fb7dbafd79119a6a87b9a85569b5c1542be9bf21bd88185c6",
+    "nato_roland.glb": "4836d391ba24a87a16192356d417b90d6f01d783f46345e6088a109ee18aed6c",
+    "nato_nasams.glb": "41edcdf689c55f1d5bb1c46cb564bae7c1486b4c50c3c2cc123f6d9c7da80ca4",
+    "nato_iris_t_slm.glb": "c0b10d8cbee71372fe3751cb03a94c3dc90f09c3483b2f2f506927f5db2d879f",
+    "nato_samp_t.glb": "47d5c679ca2778eb2854dc7f9a85842a19b1519f061bb7ab50ec01aee49d48bc",
+    "nato_aster30.glb": "7ece2ae2453075a92ef08ebf16763bf14e826efaf47374c594e68ee5ec9ef3d2"
+  }
+}

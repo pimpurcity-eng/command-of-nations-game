@@ -1,0 +1,39 @@
+{
+  "source_files": [
+    "Weapons/tanks_only.zip",
+    "Weapons/apcs_only.zip",
+    "Weapons/weapons.zip"
+  ],
+  "drive_folder": "https://drive.google.com/drive/folders/1x9-VOnxyQ2ErKC463Nos1UX5hxtWKoI7",
+  "models": {
+    "euro_amx30.glb": "7803d817c6f3c28537c36bda31b14ba0e90d5c7ec3fe40d5974772e28141ae75",
+    "euro_aquila_eb1.glb": "29905b9c5256bd604040f70356fdcb6c56e2b266ff73b873a698868f7f7140ad",
+    "euro_boxer.glb": "4372ffbeadbde368bc0b1440b86dd3a398a7bf3310d8996297b10e88cbae8975",
+    "euro_challenger2.glb": "4da099ab97aef9cbe20cc215715405ec84357b08882108d6c8c12903e5a507bd",
+    "euro_eurofighter.glb": "3adad489bca8de50ef22d71dd0572451abfbe2bf9a2d20c64fae05b05a293213",
+    "euro_leclerc.glb": "2f61c1e5cdd928b9664d27b0e6a7569c1c97e5bc347f07831b421b2ec12364c1",
+    "euro_leopard1.glb": "3311f9b484fac1f59c54a9563a52a40dc911c565aa0cffaf97ad4cdca3ee5e74",
+    "euro_leopard2a6.glb": "f09830586f996add6efed0c6f917687cc4611e03000b5541f99de7aa075fca8b",
+    "euro_m113.glb": "e57aa5945a3519fd9814b4391b3020090320e585e148d8d167795e4b05105d6e",
+    "euro_mirage_iv.glb": "6cd9effc92043ade6f1cdf3c961f5fdb44fe306f2f9f38cb32b645d67483765f",
+    "euro_patria_amv.glb": "2d21af25a33cd4b597a362f2a1fb5612697be4afcb64b8ed18fd0b67c0ce8d65",
+    "euro_piranha_v.glb": "e0ba3a753ebeda56060420381064df506fab204af0000304ae3a78a0c0a9298d",
+    "euro_rafale.glb": "74c74124026ccbc77216b58c801dc9e160cea89d2fe71173a2dc22be8f3ac99e",
+    "euro_tornado_ids.glb": "b3df1735da83ea5353e466ab2fb6fe035bec6d4b2efced226d8057a765885233",
+    "euro_vab.glb": "1c709fd18b115ec1f250b44661095318f32910d06a6c4c587f8f1f625066769b",
+    "euro_vulcan.glb": "05ea29fc6f4bd583f6bf353299ce7d1a039eaebc946fe3bc33c1a0526bac2c87",
+    "russia_btr60pb.glb": "48eaba16ccd2ca50f3fb6909d3d8fa23ca06962d5fc458295d79ce9cb7aeb2c9",
+    "russia_btr70.glb": "4fcf6c3b8a0c90e972e80ac87613215dc27d789f2b06fc01f65a1362f2fa5543",
+    "russia_btr80.glb": "31fe06ccef59b4ce87865d28f48e613db6230eb785633826dc4fa7bc3900213a",
+    "russia_btr82a.glb": "59358a86a9ccca97355b7941d585545de46e79a0681bd49c05cc6fcdc5abc1e1",
+    "russia_btr90.glb": "60b5e49662822a41049f2ab8a88ed0c8b5299ad84e420cfe2e7edbb7cbac3e12",
+    "russia_t62.glb": "de7c707d3dc0c8547b630da2874519781e33d0f0c55c8fa21004a492bcd8c6dd",
+    "russia_t64.glb": "10f0b15d1745317a10ef3d6e4533f60a7980f84c37de21cc4241927e3191822f",
+    "russia_t72b3.glb": "3ee1e61fc7d18beda7518bd5da06ccb4fcce006ad064365b8d64acc5d4d9c014",
+    "russia_t80bvm.glb": "95b9b9ddb8ce578940cb66436d67a2e74cbb55d75b50a4dc31833a9d46f88dbb",
+    "russia_t90a.glb": "8a727a9dbe41a754f927f6e6d7129c081ccc477f8687d83ca5286fbe4a713f8a",
+    "russia_tu160.glb": "d8d3ceb7032517a34a78d2da2fb38164dba44b7e5dea2c9886cccdb4485d9e0f",
+    "russia_tu22m3.glb": "1891a1661a36a0f385e79548d8bdf4d1fe4fb6619f2835956339279a423a6f12",
+    "russia_tu95ms.glb": "9e66f4c152aeadff22ae6dec6060a135ee2749b7aa4af197547ed3e6faff4f66"
+  }
+}
