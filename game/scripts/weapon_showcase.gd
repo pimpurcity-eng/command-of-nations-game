@@ -46,6 +46,8 @@ func setup(theme: Theme, simulation: SimulationClock) -> void :
 	material.albedo_color = Color("434f52")
 	floor.material_override = material
 	world.add_child(floor)
+	var columns: int = maxi(1, ceili(sqrt(float(entries.size()))))
+	var rows: int = maxi(1, ceili(float(entries.size()) / columns))
 	for entry in entries:
 		var original: = (load(entry.model) as PackedScene).instantiate() as Node3D
 		var model: = Node3D.new()
@@ -55,7 +57,7 @@ func setup(theme: Theme, simulation: SimulationClock) -> void :
 		var fit: = model.transform
 		model.transform = Transform3D.IDENTITY
 		merged.transform = fit * merged.transform
-		model.position = Vector3((models.size() % 6 - 2.5) * 4.0, 0.1, (int(models.size() / 6) - 2) * 4.0)
+		model.position = Vector3((models.size() % columns - (columns - 1) * 0.5) * 2.6, 0.1, (int(models.size() / columns) - (rows - 1) * 0.5) * 2.6)
 		model.scale = Vector3.ONE * 0.5
 		world.add_child(model)
 		models.append(model)
