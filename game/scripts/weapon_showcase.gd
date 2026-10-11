@@ -47,7 +47,14 @@ func setup(theme: Theme, simulation: SimulationClock) -> void :
 	floor.material_override = material
 	world.add_child(floor)
 	for entry in entries:
-		var model: = (load(entry.model) as PackedScene).instantiate() as Node3D
+		var original: = (load(entry.model) as PackedScene).instantiate() as Node3D
+		var model: = Node3D.new()
+		var merged: = UnitVisual.merged(original)
+		model.add_child(merged)
+		UnitVisual._fit(model, merged, "carrier" if entry.model.contains("kuznetsov") or entry.model.contains("queen_elizabeth") else "naval", entry.model)
+		var fit: = model.transform
+		model.transform = Transform3D.IDENTITY
+		merged.transform = fit * merged.transform
 		model.position = Vector3((models.size() % 6 - 2.5) * 4.0, 0.1, (int(models.size() / 6) - 2) * 4.0)
 		model.scale = Vector3.ONE * 0.5
 		world.add_child(model)

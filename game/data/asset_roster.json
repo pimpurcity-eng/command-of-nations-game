@@ -1795,7 +1795,6 @@
     "assets": {
       "russian": {
         "model": "res://assets/library/arsenal/russia_buyan_m.glb",
-        "preview": "res://assets/library/arsenal/russia_buyan_m.png",
         "temporary_recolor": false,
         "original_colors": true,
         "source_model": "Buyan-M"
@@ -1814,7 +1813,6 @@
     "assets": {
       "european": {
         "model": "res://assets/library/arsenal/euro_type23.glb",
-        "preview": "res://assets/library/arsenal/euro_type23.png",
         "temporary_recolor": false,
         "original_colors": true,
         "source_model": "Type 23 Duke"
@@ -1833,7 +1831,6 @@
     "assets": {
       "russian": {
         "model": "res://assets/library/arsenal/russia_kilo_sub.glb",
-        "preview": "res://assets/library/arsenal/russia_kilo_sub.png",
         "temporary_recolor": false,
         "original_colors": true,
         "source_model": "Kilo class"
@@ -1852,7 +1849,6 @@
     "assets": {
       "russian": {
         "model": "res://assets/library/arsenal/russia_admiral_kuznetsov.glb",
-        "preview": "res://assets/library/arsenal/russia_admiral_kuznetsov.png",
         "temporary_recolor": false,
         "original_colors": true,
         "source_model": "Admiral Kuznetsov"
@@ -1871,7 +1867,6 @@
     "assets": {
       "european": {
         "model": "res://assets/library/arsenal/euro_hms_queen_elizabeth.glb",
-        "preview": "res://assets/library/arsenal/euro_hms_queen_elizabeth.png",
         "temporary_recolor": false,
         "original_colors": true,
         "source_model": "HMS Queen Elizabeth"
@@ -2008,6 +2003,528 @@
         "temporary_recolor": false,
         "original_colors": true,
         "source_model": "Lancet-3"
+      }
+    }
+  },
+  {
+    "id": "fighters_russia",
+    "name": "Fighters",
+    "kind": "fighter",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_mig29smt.glb",
+        "preview": "res://assets/library/arsenal/russia_mig29smt.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "MiG-29SMT"
+      }
+    }
+  },
+  {
+    "id": "fighters_ukraine",
+    "name": "European fighters",
+    "kind": "fighter",
+    "available_to": [
+      "ukraine"
+    ],
+    "shared_building": false,
+    "assets": {
+      "european": {
+        "model": "res://assets/library/arsenal/euro_mirage2000.glb",
+        "preview": "res://assets/library/arsenal/euro_mirage2000.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "Mirage 2000"
+      }
+    }
+  },
+  {
+    "id": "infantry_russia",
+    "name": "Infantry",
+    "kind": "infantry",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_motor_rifleman.glb",
+        "preview": "res://assets/library/arsenal/russia_motor_rifleman.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "Motor riflemen"
+      }
+    }
+  },
+  {
+    "id": "infantry_ukraine",
+    "name": "Infantry",
+    "kind": "infantry",
+    "available_to": [
+      "ukraine"
+    ],
+    "shared_building": false,
+    "assets": {
+      "european": {
+        "model": "res://assets/library/arsenal/euro_uk_royal_marine.glb",
+        "preview": "res://assets/library/arsenal/euro_uk_royal_marine.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "Royal Marines"
+      }
+    }
+  },
+  {
+    "id": "kamaz5350_supply_russia",
+    "name": "KamAZ-5350 supply",
+    "kind": "support",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_kamaz5350_supply.glb",
+        "preview": "res://assets/library/arsenal/russia_kamaz5350_supply.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "KamAZ-5350 supply"
+      }
+    }
+  },
+  {
+    "id": "brem1m_recovery_russia",
+    "name": "BREM-1M recovery",
+    "kind": "support",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_brem1m_recovery.glb",
+        "preview": "res://assets/library/arsenal/russia_brem1m_recovery.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "BREM-1M recovery"
+      }
+    }
+  },
+  {
+    "id": "imr3m_engineer_russia",
+    "name": "IMR-3M engineer",
+    "kind": "support",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_imr3m_engineer.glb",
+        "preview": "res://assets/library/arsenal/russia_imr3m_engineer.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "IMR-3M engineer"
+      }
+    }
+  },
+  {
+    "id": "mtu72_bridgelayer_russia",
+    "name": "MTU-72 bridgelayer",
+    "kind": "support",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_mtu72_bridgelayer.glb",
+        "preview": "res://assets/library/arsenal/russia_mtu72_bridgelayer.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "MTU-72 bridgelayer"
+      }
+    }
+  },
+  {
+    "id": "ur77_mineclearing_russia",
+    "name": "UR-77 mine clearing",
+    "kind": "support",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_ur77_mineclearing.glb",
+        "preview": "res://assets/library/arsenal/russia_ur77_mineclearing.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "UR-77 mine clearing"
+      }
+    }
+  },
+  {
+    "id": "man_hx77_supply_ukraine",
+    "name": "MAN HX77 supply",
+    "kind": "support",
+    "available_to": [
+      "ukraine"
+    ],
+    "shared_building": false,
+    "assets": {
+      "european": {
+        "model": "res://assets/library/arsenal/euro_man_hx77_supply.glb",
+        "preview": "res://assets/library/arsenal/euro_man_hx77_supply.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "MAN HX77 supply"
+      }
+    }
+  },
+  {
+    "id": "buffel_recovery_ukraine",
+    "name": "Büffel recovery",
+    "kind": "support",
+    "available_to": [
+      "ukraine"
+    ],
+    "shared_building": false,
+    "assets": {
+      "european": {
+        "model": "res://assets/library/arsenal/euro_buffel_recovery.glb",
+        "preview": "res://assets/library/arsenal/euro_buffel_recovery.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "Büffel recovery"
+      }
+    }
+  },
+  {
+    "id": "kodiak_engineer_ukraine",
+    "name": "Kodiak engineer",
+    "kind": "support",
+    "available_to": [
+      "ukraine"
+    ],
+    "shared_building": false,
+    "assets": {
+      "european": {
+        "model": "res://assets/library/arsenal/euro_kodiak_engineer.glb",
+        "preview": "res://assets/library/arsenal/euro_kodiak_engineer.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "Kodiak engineer"
+      }
+    }
+  },
+  {
+    "id": "leguan_bridgelayer_ukraine",
+    "name": "Leguan bridgelayer",
+    "kind": "support",
+    "available_to": [
+      "ukraine"
+    ],
+    "shared_building": false,
+    "assets": {
+      "european": {
+        "model": "res://assets/library/arsenal/euro_leguan_bridgelayer.glb",
+        "preview": "res://assets/library/arsenal/euro_leguan_bridgelayer.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "Leguan bridgelayer"
+      }
+    }
+  },
+  {
+    "id": "trojan_breacher_ukraine",
+    "name": "Trojan breacher",
+    "kind": "support",
+    "available_to": [
+      "ukraine"
+    ],
+    "shared_building": false,
+    "assets": {
+      "european": {
+        "model": "res://assets/library/arsenal/euro_trojan_breacher.glb",
+        "preview": "res://assets/library/arsenal/euro_trojan_breacher.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "Trojan breacher"
+      }
+    }
+  },
+  {
+    "id": "2b14_mortar_82_russia",
+    "name": "2B14 82 mm mortar",
+    "kind": "artillery",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_2b14_mortar_82.glb",
+        "preview": "res://assets/library/arsenal/russia_2b14_mortar_82.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "2B14 82 mm mortar"
+      }
+    }
+  },
+  {
+    "id": "2b11_mortar_120_russia",
+    "name": "2B11 120 mm mortar",
+    "kind": "artillery",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_2b11_mortar_120.glb",
+        "preview": "res://assets/library/arsenal/russia_2b11_mortar_120.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "2B11 120 mm mortar"
+      }
+    }
+  },
+  {
+    "id": "d30_howitzer_russia",
+    "name": "D-30 howitzer",
+    "kind": "artillery",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_d30_howitzer.glb",
+        "preview": "res://assets/library/arsenal/russia_d30_howitzer.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "D-30 howitzer"
+      }
+    }
+  },
+  {
+    "id": "l16_mortar_81_ukraine",
+    "name": "L16 81 mm mortar",
+    "kind": "artillery",
+    "available_to": [
+      "ukraine"
+    ],
+    "shared_building": false,
+    "assets": {
+      "european": {
+        "model": "res://assets/library/arsenal/euro_l16_mortar_81.glb",
+        "preview": "res://assets/library/arsenal/euro_l16_mortar_81.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "L16 81 mm mortar"
+      }
+    }
+  },
+  {
+    "id": "mo120rt_mortar_ukraine",
+    "name": "MO-120-RT mortar",
+    "kind": "artillery",
+    "available_to": [
+      "ukraine"
+    ],
+    "shared_building": false,
+    "assets": {
+      "european": {
+        "model": "res://assets/library/arsenal/euro_mo120rt_mortar.glb",
+        "preview": "res://assets/library/arsenal/euro_mo120rt_mortar.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "MO-120-RT mortar"
+      }
+    }
+  },
+  {
+    "id": "l118_lightgun_ukraine",
+    "name": "L118 light gun",
+    "kind": "artillery",
+    "available_to": [
+      "ukraine"
+    ],
+    "shared_building": false,
+    "assets": {
+      "european": {
+        "model": "res://assets/library/arsenal/euro_l118_lightgun.glb",
+        "preview": "res://assets/library/arsenal/euro_l118_lightgun.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "L118 light gun"
+      }
+    }
+  },
+  {
+    "id": "il76md_russia",
+    "name": "Il-76MD transport",
+    "kind": "fighter",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_il76md.glb",
+        "preview": "res://assets/library/arsenal/russia_il76md.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "Il-76MD transport"
+      }
+    }
+  },
+  {
+    "id": "a50u_russia",
+    "name": "A-50U airborne radar",
+    "kind": "fighter",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_a50u.glb",
+        "preview": "res://assets/library/arsenal/russia_a50u.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "A-50U airborne radar"
+      }
+    }
+  },
+  {
+    "id": "yak130_russia",
+    "name": "Yak-130",
+    "kind": "fighter",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_yak130.glb",
+        "preview": "res://assets/library/arsenal/russia_yak130.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "Yak-130"
+      }
+    }
+  },
+  {
+    "id": "a400m_atlas_ukraine",
+    "name": "A400M Atlas transport",
+    "kind": "fighter",
+    "available_to": [
+      "ukraine"
+    ],
+    "shared_building": false,
+    "assets": {
+      "european": {
+        "model": "res://assets/library/arsenal/euro_a400m_atlas.glb",
+        "preview": "res://assets/library/arsenal/euro_a400m_atlas.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "A400M Atlas transport"
+      }
+    }
+  },
+  {
+    "id": "hawk_t2_ukraine",
+    "name": "Hawk T2",
+    "kind": "fighter",
+    "available_to": [
+      "ukraine"
+    ],
+    "shared_building": false,
+    "assets": {
+      "european": {
+        "model": "res://assets/library/arsenal/euro_hawk_t2.glb",
+        "preview": "res://assets/library/arsenal/euro_hawk_t2.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "Hawk T2"
+      }
+    }
+  },
+  {
+    "id": "advanced_tanks_russia",
+    "name": "T-14 Armata",
+    "kind": "armor",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_t14_armata.glb",
+        "preview": "res://assets/library/arsenal/russia_t14_armata.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "T-14 Armata"
+      }
+    }
+  },
+  {
+    "id": "advanced_tanks_ukraine",
+    "name": "KF51 Panther",
+    "kind": "armor",
+    "available_to": [
+      "ukraine"
+    ],
+    "shared_building": false,
+    "assets": {
+      "european": {
+        "model": "res://assets/library/arsenal/euro_kf51_panther.glb",
+        "preview": "res://assets/library/arsenal/euro_kf51_panther.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "KF51 Panther"
+      }
+    }
+  },
+  {
+    "id": "coastal_missiles_russia",
+    "name": "Coastal missiles",
+    "kind": "missile_launcher",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_bastion_p_launcher.glb",
+        "preview": "res://assets/library/arsenal/russia_bastion_p_launcher.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "P-800 Oniks"
+      }
+    }
+  },
+  {
+    "id": "coastal_missiles_ukraine",
+    "name": "Coastal missiles",
+    "kind": "missile_launcher",
+    "available_to": [
+      "ukraine"
+    ],
+    "shared_building": false,
+    "assets": {
+      "european": {
+        "model": "res://assets/library/arsenal/euro_nsm_coastal_launcher.glb",
+        "preview": "res://assets/library/arsenal/euro_nsm_coastal_launcher.png",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "NSM"
       }
     }
   }

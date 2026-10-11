@@ -7,6 +7,7 @@ const STACK_DAMAGE_LIMIT: = 10
 const MAX_ROUND_SECONDS: = ROUND_SECONDS * 4
 var cooldowns: Dictionary = {}
 func shot_effect(unit: Dictionary) -> String:
+	if EquipmentIdentity.research_tier(unit.equipment_id, unit.get("level", 1)).has("projectile_model"): return "missile"
 	return "missile" if unit.visual_kind == "missile_launcher" else "artillery" if unit.visual_kind in ["artillery", "naval"] else "cannon" if unit.visual_kind == "armor" else "tracer"
 func key(group: Array) -> String:
 	return group[0].country + ":" + group[0].stack_id
@@ -16,12 +17,17 @@ func damage_value(unit: Dictionary, target_kind: String, defending: bool = false
 
 	var values: = {"armor": {"armor": 7.0, "ifv": 8.0, "artillery": 6.0, "air_defense": 8.0}, "ifv": {"armor": 4.0, "ifv": 6.0, "artillery": 7.0, "air_defense": 7.0}, "artillery": {"armor": 5.0, "ifv": 7.0, "artillery": 5.0, "air_defense": 6.0}, "air_defense": {"armor": 1.0, "ifv": 2.0, "artillery": 1.0, "air_defense": 2.0}}
 	if unit.visual_kind == "missile_launcher":
+		if EquipmentIdentity.spec(unit.equipment_id).get("targets_naval", false) and target_kind != "naval": return 0.0
 		return (2.0 if defending else float(EquipmentIdentity.spec(unit.equipment_id).get("strike_damage", 22.0))) * (0.2 + 0.8 * clampf(unit.health / 100.0, 0, 1)) * (1.0 + 0.12 * (unit.get("level", 1) - 1))
 	if unit.visual_kind == "naval":
 		return (6.0 if target_kind == "naval" else 0.0) * (0.2 + 0.8 * clampf(unit.health / 100.0, 0, 1)) * (1.0 + 0.12 * (unit.get("level", 1) - 1))
 	if defending:
 		values = {"armor": {"armor": 6.0, "ifv": 7.0, "artillery": 5.0, "air_defense": 7.0}, "ifv": {"armor": 5.0, "ifv": 7.0, "artillery": 6.0, "air_defense": 6.0}, "artillery": {"armor": 2.0, "ifv": 3.0, "artillery": 2.0, "air_defense": 3.0}, "air_defense": {"armor": 2.0, "ifv": 3.0, "artillery": 2.0, "air_defense": 3.0}}
-	for role in values: values[role]["missile_launcher"] = values[role].get("artillery", 3.0)
+	values["infantry"] = {"armor": 1.5, "ifv": 2.5, "artillery": 5.0, "air_defense": 4.0, "infantry": 5.0, "support": 4.0}
+	for role in values:
+		values[role]["missile_launcher"] = values[role].get("artillery", 3.0)
+		values[role]["infantry"] = values[role].get("infantry", values[role].get("ifv", 3.0))
+		values[role]["support"] = values[role].get("support", values[role].get("artillery", 3.0))
 	return values.get(unit.visual_kind, {}).get(target_kind, 0.0) * (0.2 + 0.8 * clampf(unit.health / 100.0, 0, 1)) * (1.0 + 0.12 * (unit.get("level", 1) - 1))
 func ranged_ready(unit: Dictionary) -> bool:
 	return not unit.get("moving", false) or unit.get("fire_mode", "at_will") in ["offensive", "aggressive"] or not unit.get("attack_target", "").is_empty()
@@ -52,7 +58,9 @@ func target(group: Array, groups: Array, armies: UnitSystem = null) -> Array:
 	var nearest: = INF
 	var result: Array = []
 	for candidate in groups:
-		if candidate[0].visual_kind == "fighter" or (candidate[0].visual_kind == "naval") != (group[0].visual_kind == "naval"): continue
+		if candidate[0].visual_kind == "fighter": continue
+		var coastal: bool = group.any(func(member): return EquipmentIdentity.spec(member.equipment_id).get("targets_naval", false))
+		if (candidate[0].visual_kind == "naval") != (group[0].visual_kind == "naval") and not (coastal and candidate[0].visual_kind == "naval"): continue
 		var defenders: = alive(candidate)
 		if defenders.is_empty() or defenders[0].country == group[0].country: continue
 		var point: = Vector2(defenders[0].node.position.x, defenders[0].node.position.z)

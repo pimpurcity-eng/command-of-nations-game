@@ -702,6 +702,9 @@ func attack_selected(enemy: Dictionary) -> bool:
 	if selected < 0 or enemy.is_empty() or enemy.country == units[selected].country or not at_war: return false
 	var army: Dictionary = units[selected]
 	var group: = stacks.members(army)
+	if group.all(func(member): return EquipmentIdentity.spec(member.equipment_id).get("targets_naval", false)) and enemy.visual_kind != "naval":
+		status_changed.emit("Coastal missiles target ships")
+		return false
 	var distance: float = Vector2(army.node.position.x,army.node.position.z).distance_to(Vector2(enemy.node.position.x,enemy.node.position.z))
 	var in_range: bool = group.any(func(member):
 		var candidate: Dictionary = member.duplicate()

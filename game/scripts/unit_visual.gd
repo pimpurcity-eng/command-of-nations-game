@@ -12,7 +12,7 @@ const RUSSIAN_CAMO: = "res://assets/materials/russian_blue_camo.png"
 ## Owner review (phone build): weapons must not look white. Ukrainian ground equipment gets
 ## a green/brown/black woodland scheme the same way Russian equipment gets the blue camo.
 const UKRAINE_CAMO: = "res://assets/materials/ukraine_woodland_camo.png"
-const GROUND_KINDS: = ["armor", "ifv", "artillery", "air_defense", "missile_launcher"]
+const GROUND_KINDS: = ["armor", "ifv", "artillery", "air_defense", "missile_launcher", "infantry", "support"]
 static var _camo_shader: Shader
 ## Camouflage materials are created once and shared by every unit using the same model and
 ## paint. Per-unit materials were freed together with a destroyed/replaced unit while the
@@ -39,11 +39,11 @@ static func stand_in_path(equipment_id: String, kind: String) -> String:
 	var country: String = EquipmentIdentity.spec(equipment_id).get("country", GameSession.player_country)
 	var russian: = country == "russia"
 	match kind:
-		"armor": return "res://assets/library/t90m_original.glb" if russian else "res://assets/library/abrams_european.glb"
+		"armor": return "res://assets/library/arsenal/russia_t90a.glb" if russian else "res://assets/library/arsenal/euro_leclerc.glb"
 		"ifv": return "res://assets/library/upload661a_original.glb"
 		"artillery": return "res://assets/library/upload7a7e_original.glb"
 		"air_defense": return "res://assets/library/skyguard_" + ("russian" if russian else "european") + ".glb"
-		"fighter": return "res://assets/library/su57_russian.glb" if russian else "res://assets/library/f18a_european.glb"
+		"fighter": return "res://assets/library/arsenal/russia_su57.glb" if russian else "res://assets/library/arsenal/euro_mirage2000.glb"
 	return ""
 
 static func create(kind: String, _faction: Color, equipment_id: String = "", level: int = 1) -> Node3D:
@@ -125,7 +125,8 @@ static func _fit(pivot: Node3D, vehicle: Node3D, role: String, path: String) -> 
 	if owner_model(path): yaw = PI * 0.5  # Source +X cab faces game -Z.
 	var bounds: = model_bounds(vehicle, yaw)
 	var longest: = maxf(maxf(bounds.size.x, bounds.size.z), 0.001)
-	var factor: float = FOOTPRINT.get(role, 0.62) / longest
+	var footprint: float = 1.3 if role == "support" else 2.3 if role == "transport" else 0.42 if role == "infantry" else FOOTPRINT.get(role, 0.62)
+	var factor: float = footprint / longest
 	var center: = bounds.get_center()
 	pivot.transform = Transform3D(Basis(Vector3.UP, yaw).scaled(Vector3.ONE * factor), Vector3(-center.x, -bounds.position.y, -center.z) * factor)
 

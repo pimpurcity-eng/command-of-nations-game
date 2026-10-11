@@ -68,7 +68,8 @@ func on_shot(source: Dictionary, target_unit: Dictionary, effect: String) -> voi
 		muzzle_flash(source, start, direction, effect)
 	if not target_visible: return
 	if not source_visible: start = finish + (start - finish).normalized() * 1.5 + Vector3.UP
-	launch(start, finish, effect, source.country)
+	var tier: Dictionary = EquipmentIdentity.research_tier(source.equipment_id, source.get("level", 1))
+	launch(start, finish, effect, source.country, tier.get("projectile_model", ""))
 func smoke_puff(position: Vector3, dark: bool = false, size: float = 0.08) -> void:
 	if smoke_jobs.size() >= MAX_SMOKE: return
 	if armies != null and not armies.point_visible(Vector2(position.x, position.z)): return
@@ -113,19 +114,21 @@ func muzzle_flash(source: Dictionary, position: Vector3, direction: Vector3, eff
 	model.position = offset + recoil
 	muzzles.append({"node": root, "model": model, "offset": offset, "recoil": recoil, "age": 0.0})
 	smoke_puff(position, false, 0.06)
-func launch(start: Vector3, finish: Vector3, effect: String, country: String = "russia") -> void :
+func launch(start: Vector3, finish: Vector3, effect: String, country: String = "russia", projectile_model: String = "") -> void :
 	if projectiles.size() >= MAX_PROJECTILES: return
 	var root: = Node3D.new()
 	add_child(root)
 	root.position = start
 	if effect in ["missile", "interceptor"]:
-		if not flight_scenes.has(country):
-			var appearance: = AssetRoster.appearance("tomahawk", country)
-			flight_scenes[country] = load(appearance.model)
-		var body: Node3D = flight_scenes[country].instantiate()
-		body.scale = Vector3.ONE * 0.12
-		body.rotation.y = PI
-		root.add_child(body)
+		var path: String = projectile_model if not projectile_model.is_empty() else "res://assets/library/arsenal/russia_p800_oniks.glb" if country == "russia" else "res://assets/library/arsenal/euro_nsm.glb"
+		if not flight_scenes.has(path): flight_scenes[path] = load(path)
+		var original: Node3D = flight_scenes[path].instantiate()
+		var body: Node3D = UnitVisual.merged(original)
+		var pivot: = Node3D.new()
+		pivot.add_child(body)
+		UnitVisual._fit(pivot, body, "projectile", path)
+		root.add_child(pivot)
+		root.set_meta("projectile_model", path)
 	else:
 		var shell: = CylinderMesh.new()
 		shell.top_radius = 0.012

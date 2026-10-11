@@ -1,1 +1,1088 @@
-[]
+[
+  {
+    "name": "Euro A400M Atlas",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_a400m_atlas.glb"
+  },
+  {
+    "name": "Euro Amx30",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_amx30.glb"
+  },
+  {
+    "name": "Euro Aquila Eb1",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_aquila_eb1.glb"
+  },
+  {
+    "name": "Euro Archer",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_archer.glb"
+  },
+  {
+    "name": "Euro Aw149",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_aw149.glb"
+  },
+  {
+    "name": "Euro Boxer",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_boxer.glb"
+  },
+  {
+    "name": "Euro Buffel Recovery",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_buffel_recovery.glb"
+  },
+  {
+    "name": "Euro Caesar",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_caesar.glb"
+  },
+  {
+    "name": "Euro Camcopter S100",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_camcopter_s100.glb"
+  },
+  {
+    "name": "Euro Challenger2",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_challenger2.glb"
+  },
+  {
+    "name": "Euro Cv9030",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_cv9030.glb"
+  },
+  {
+    "name": "Euro De Ksk",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_de_ksk.glb"
+  },
+  {
+    "name": "Euro Efx Valour",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_efx_valour.glb"
+  },
+  {
+    "name": "Euro Eurodrone",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_eurodrone.glb"
+  },
+  {
+    "name": "Euro Eurofighter",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_eurofighter.glb"
+  },
+  {
+    "name": "Euro Europuls",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_europuls.glb"
+  },
+  {
+    "name": "Euro Exocet Mm40",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_exocet_mm40.glb"
+  },
+  {
+    "name": "Euro Fh70",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_fh70.glb"
+  },
+  {
+    "name": "Euro Fi Winter Sniper",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_fi_winter_sniper.glb"
+  },
+  {
+    "name": "Euro Fr Foreign Legion",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_fr_foreign_legion.glb"
+  },
+  {
+    "name": "Euro Fremm",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_fremm.glb"
+  },
+  {
+    "name": "Euro Fulgur Ebm",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_fulgur_ebm.glb"
+  },
+  {
+    "name": "Euro Gripen E",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_gripen_e.glb"
+  },
+  {
+    "name": "Euro Gvozdika Pl",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_gvozdika_pl.glb"
+  },
+  {
+    "name": "Euro Hades",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_hades.glb"
+  },
+  {
+    "name": "Euro Hawk T2",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_hawk_t2.glb"
+  },
+  {
+    "name": "Euro Hermes450",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_hermes450.glb"
+  },
+  {
+    "name": "Euro Hms Queen Elizabeth",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_hms_queen_elizabeth.glb"
+  },
+  {
+    "name": "Euro Horizon",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_horizon.glb"
+  },
+  {
+    "name": "Euro It Folgore Paratrooper",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_it_folgore_paratrooper.glb"
+  },
+  {
+    "name": "Euro Kf51 Panther",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_kf51_panther.glb"
+  },
+  {
+    "name": "Euro Kodiak Engineer",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_kodiak_engineer.glb"
+  },
+  {
+    "name": "Euro L118 Lightgun",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_l118_lightgun.glb"
+  },
+  {
+    "name": "Euro L16 Mortar 81",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_l16_mortar_81.glb"
+  },
+  {
+    "name": "Euro Lar160",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_lar160.glb"
+  },
+  {
+    "name": "Euro Leclerc",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_leclerc.glb"
+  },
+  {
+    "name": "Euro Leguan Bridgelayer",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_leguan_bridgelayer.glb"
+  },
+  {
+    "name": "Euro Leopard1",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_leopard1.glb"
+  },
+  {
+    "name": "Euro Leopard2A6",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_leopard2a6.glb"
+  },
+  {
+    "name": "Euro Lynx",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_lynx.glb"
+  },
+  {
+    "name": "Euro Lynx Kf41",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_lynx_kf41.glb"
+  },
+  {
+    "name": "Euro Man Hx77 Supply",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_man_hx77_supply.glb"
+  },
+  {
+    "name": "Euro Marder1A3",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_marder1a3.glb"
+  },
+  {
+    "name": "Euro Mirage2000",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_mirage2000.glb"
+  },
+  {
+    "name": "Euro Mirage Iv",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_mirage_iv.glb"
+  },
+  {
+    "name": "Euro Mo120Rt Mortar",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_mo120rt_mortar.glb"
+  },
+  {
+    "name": "Euro Neuron",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_neuron.glb"
+  },
+  {
+    "name": "Euro Ngf Fcas",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_ngf_fcas.glb"
+  },
+  {
+    "name": "Euro Nh90",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_nh90.glb"
+  },
+  {
+    "name": "Euro Nh90 Block2",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_nh90_block2.glb"
+  },
+  {
+    "name": "Euro Nsm",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_nsm.glb"
+  },
+  {
+    "name": "Euro Nsm Coastal Launcher",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_nsm_coastal_launcher.glb"
+  },
+  {
+    "name": "Euro Patria Amv",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_patria_amv.glb"
+  },
+  {
+    "name": "Euro Piranha V",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_piranha_v.glb"
+  },
+  {
+    "name": "Euro Pluton",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_pluton.glb"
+  },
+  {
+    "name": "Euro Puls",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_puls.glb"
+  },
+  {
+    "name": "Euro Puma",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_puma.glb"
+  },
+  {
+    "name": "Euro Pzh2000",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_pzh2000.glb"
+  },
+  {
+    "name": "Euro Rafale",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_rafale.glb"
+  },
+  {
+    "name": "Euro Rbs15 Mk3",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_rbs15_mk3.glb"
+  },
+  {
+    "name": "Euro Rm70 Vampire",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_rm70_vampire.glb"
+  },
+  {
+    "name": "Euro S3 Silo",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_s3_silo.glb"
+  },
+  {
+    "name": "Euro Sentinel Sr",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_sentinel_sr.glb"
+  },
+  {
+    "name": "Euro Storm Shadow",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_storm_shadow.glb"
+  },
+  {
+    "name": "Euro Taurus Kepd350",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_taurus_kepd350.glb"
+  },
+  {
+    "name": "Euro Tempest Gcap",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_tempest_gcap.glb"
+  },
+  {
+    "name": "Euro Tiger",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_tiger.glb"
+  },
+  {
+    "name": "Euro Tornado Ids",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_tornado_ids.glb"
+  },
+  {
+    "name": "Euro Trojan Breacher",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_trojan_breacher.glb"
+  },
+  {
+    "name": "Euro Type23",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_type23.glb"
+  },
+  {
+    "name": "Euro Type26",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_type26.glb"
+  },
+  {
+    "name": "Euro Uk Royal Marine",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_uk_royal_marine.glb"
+  },
+  {
+    "name": "Euro Vab",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_vab.glb"
+  },
+  {
+    "name": "Euro Vulcan",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_vulcan.glb"
+  },
+  {
+    "name": "Euro Warrior",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_warrior.glb"
+  },
+  {
+    "name": "Euro Watchkeeper",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_watchkeeper.glb"
+  },
+  {
+    "name": "Nato Aster30",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/nato_aster30.glb"
+  },
+  {
+    "name": "Nato Iris T Slm",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/nato_iris_t_slm.glb"
+  },
+  {
+    "name": "Nato Nasams",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/nato_nasams.glb"
+  },
+  {
+    "name": "Nato Roland",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/nato_roland.glb"
+  },
+  {
+    "name": "Nato Samp T",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/nato_samp_t.glb"
+  },
+  {
+    "name": "Russia 2B11 Mortar 120",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_2b11_mortar_120.glb"
+  },
+  {
+    "name": "Russia 2B14 Mortar 82",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_2b14_mortar_82.glb"
+  },
+  {
+    "name": "Russia 2S19 Msta",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_2s19_msta.glb"
+  },
+  {
+    "name": "Russia 2S1 Gvozdika",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_2s1_gvozdika.glb"
+  },
+  {
+    "name": "Russia 2S35 Koalitsiya",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_2s35_koalitsiya.glb"
+  },
+  {
+    "name": "Russia 2S3 Akatsiya",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_2s3_akatsiya.glb"
+  },
+  {
+    "name": "Russia 2S5 Giatsint",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_2s5_giatsint.glb"
+  },
+  {
+    "name": "Russia 3M22 Zircon",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_3m22_zircon.glb"
+  },
+  {
+    "name": "Russia A50U",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_a50u.glb"
+  },
+  {
+    "name": "Russia Admiral Gorshkov",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_admiral_gorshkov.glb"
+  },
+  {
+    "name": "Russia Admiral Kuznetsov",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_admiral_kuznetsov.glb"
+  },
+  {
+    "name": "Russia Avangard Silo",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_avangard_silo.glb"
+  },
+  {
+    "name": "Russia Bastion P Launcher",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_bastion_p_launcher.glb"
+  },
+  {
+    "name": "Russia Bm21 Grad",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_bm21_grad.glb"
+  },
+  {
+    "name": "Russia Bm27 Uragan",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_bm27_uragan.glb"
+  },
+  {
+    "name": "Russia Bm30 Smerch",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_bm30_smerch.glb"
+  },
+  {
+    "name": "Russia Bmd2",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_bmd2.glb"
+  },
+  {
+    "name": "Russia Bmd4M",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_bmd4m.glb"
+  },
+  {
+    "name": "Russia Bmp1",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_bmp1.glb"
+  },
+  {
+    "name": "Russia Bmp2",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_bmp2.glb"
+  },
+  {
+    "name": "Russia Bmp3",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_bmp3.glb"
+  },
+  {
+    "name": "Russia Brem1M Recovery",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_brem1m_recovery.glb"
+  },
+  {
+    "name": "Russia Btr60Pb",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_btr60pb.glb"
+  },
+  {
+    "name": "Russia Btr70",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_btr70.glb"
+  },
+  {
+    "name": "Russia Btr80",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_btr80.glb"
+  },
+  {
+    "name": "Russia Btr82A",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_btr82a.glb"
+  },
+  {
+    "name": "Russia Btr90",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_btr90.glb"
+  },
+  {
+    "name": "Russia Buk M3",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_buk_m3.glb"
+  },
+  {
+    "name": "Russia Buyan M",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_buyan_m.glb"
+  },
+  {
+    "name": "Russia D30 Howitzer",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_d30_howitzer.glb"
+  },
+  {
+    "name": "Russia Forpost",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_forpost.glb"
+  },
+  {
+    "name": "Russia Igla",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_igla.glb"
+  },
+  {
+    "name": "Russia Il76Md",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_il76md.glb"
+  },
+  {
+    "name": "Russia Imr3M Engineer",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_imr3m_engineer.glb"
+  },
+  {
+    "name": "Russia Inokhodets",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_inokhodets.glb"
+  },
+  {
+    "name": "Russia Iskander M",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_iskander_m.glb"
+  },
+  {
+    "name": "Russia Ka50",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_ka50.glb"
+  },
+  {
+    "name": "Russia Ka52",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_ka52.glb"
+  },
+  {
+    "name": "Russia Kalibr 3M14",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_kalibr_3m14.glb"
+  },
+  {
+    "name": "Russia Kamaz5350 Supply",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_kamaz5350_supply.glb"
+  },
+  {
+    "name": "Russia Kh101",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_kh101.glb"
+  },
+  {
+    "name": "Russia Kh59Mk2",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_kh59mk2.glb"
+  },
+  {
+    "name": "Russia Kilo Sub",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_kilo_sub.glb"
+  },
+  {
+    "name": "Russia Lancet3",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_lancet3.glb"
+  },
+  {
+    "name": "Russia Lancet3 Catapult Only",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_lancet3_catapult_only.glb"
+  },
+  {
+    "name": "Russia Lancet3 Drone Only",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_lancet3_drone_only.glb"
+  },
+  {
+    "name": "Russia Mi24 Mi35",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_mi24_mi35.glb"
+  },
+  {
+    "name": "Russia Mi28N",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_mi28n.glb"
+  },
+  {
+    "name": "Russia Mi8 Mi17",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_mi8_mi17.glb"
+  },
+  {
+    "name": "Russia Mig29Smt",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_mig29smt.glb"
+  },
+  {
+    "name": "Russia Mig31Bm",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_mig31bm.glb"
+  },
+  {
+    "name": "Russia Motor Rifleman",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_motor_rifleman.glb"
+  },
+  {
+    "name": "Russia Mtu72 Bridgelayer",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_mtu72_bridgelayer.glb"
+  },
+  {
+    "name": "Russia Naval Infantry",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_naval_infantry.glb"
+  },
+  {
+    "name": "Russia Orlan10",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_orlan10.glb"
+  },
+  {
+    "name": "Russia Orlan10 Catapult Only",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_orlan10_catapult_only.glb"
+  },
+  {
+    "name": "Russia Orlan10 Drone Only",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_orlan10_drone_only.glb"
+  },
+  {
+    "name": "Russia Osa Akm",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_osa_akm.glb"
+  },
+  {
+    "name": "Russia P800 Oniks",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_p800_oniks.glb"
+  },
+  {
+    "name": "Russia Pantsir S1",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_pantsir_s1.glb"
+  },
+  {
+    "name": "Russia S300",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_s300.glb"
+  },
+  {
+    "name": "Russia S400",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_s400.glb"
+  },
+  {
+    "name": "Russia S500 Prometey",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_s500_prometey.glb"
+  },
+  {
+    "name": "Russia S500 Prometey Deployed",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_s500_prometey_deployed.glb"
+  },
+  {
+    "name": "Russia Sarmat Silo",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_sarmat_silo.glb"
+  },
+  {
+    "name": "Russia Sirius",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_sirius.glb"
+  },
+  {
+    "name": "Russia Sniper",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_sniper.glb"
+  },
+  {
+    "name": "Russia Spetsnaz",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_spetsnaz.glb"
+  },
+  {
+    "name": "Russia Steregushchiy",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_steregushchiy.glb"
+  },
+  {
+    "name": "Russia Strela10",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_strela10.glb"
+  },
+  {
+    "name": "Russia Su34",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_su34.glb"
+  },
+  {
+    "name": "Russia Su35S",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_su35s.glb"
+  },
+  {
+    "name": "Russia Su57",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_su57.glb"
+  },
+  {
+    "name": "Russia T14 Armata",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_t14_armata.glb"
+  },
+  {
+    "name": "Russia T62",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_t62.glb"
+  },
+  {
+    "name": "Russia T64",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_t64.glb"
+  },
+  {
+    "name": "Russia T72B3",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_t72b3.glb"
+  },
+  {
+    "name": "Russia T80Bvm",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_t80bvm.glb"
+  },
+  {
+    "name": "Russia T90A",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_t90a.glb"
+  },
+  {
+    "name": "Russia Topol M",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_topol_m.glb"
+  },
+  {
+    "name": "Russia Tor M2",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_tor_m2.glb"
+  },
+  {
+    "name": "Russia Tornado G",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_tornado_g.glb"
+  },
+  {
+    "name": "Russia Tos1A",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_tos1a.glb"
+  },
+  {
+    "name": "Russia Tu160",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_tu160.glb"
+  },
+  {
+    "name": "Russia Tu22M3",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_tu22m3.glb"
+  },
+  {
+    "name": "Russia Tu95Ms",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_tu95ms.glb"
+  },
+  {
+    "name": "Russia Ur77 Mineclearing",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_ur77_mineclearing.glb"
+  },
+  {
+    "name": "Russia Vdv Paratrooper",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_vdv_paratrooper.glb"
+  },
+  {
+    "name": "Russia Yak130",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_yak130.glb"
+  },
+  {
+    "name": "Russia Yars",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_yars.glb"
+  },
+  {
+    "name": "Russia Yasen Sub",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_yasen_sub.glb"
+  },
+  {
+    "name": "Weapon Ak12",
+    "kind": "Weapon",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/weapon_ak12.glb"
+  },
+  {
+    "name": "Weapon Ak74M Gp25",
+    "kind": "Weapon",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/weapon_ak74m_gp25.glb"
+  },
+  {
+    "name": "Weapon Arx160",
+    "kind": "Weapon",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/weapon_arx160.glb"
+  },
+  {
+    "name": "Weapon As Val",
+    "kind": "Weapon",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/weapon_as_val.glb"
+  },
+  {
+    "name": "Weapon Hk416 Suppressed",
+    "kind": "Weapon",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/weapon_hk416_suppressed.glb"
+  },
+  {
+    "name": "Weapon Hk416F",
+    "kind": "Weapon",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/weapon_hk416f.glb"
+  },
+  {
+    "name": "Weapon L403",
+    "kind": "Weapon",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/weapon_l403.glb"
+  },
+  {
+    "name": "Weapon Sako Trg42",
+    "kind": "Weapon",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/weapon_sako_trg42.glb"
+  },
+  {
+    "name": "Weapon Sv98",
+    "kind": "Weapon",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/weapon_sv98.glb"
+  }
+]

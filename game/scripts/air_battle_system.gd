@@ -70,7 +70,8 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 			if not ready.has(unit.id): continue
 			var stat: = "aa_damage" if strike[2] else ("air_damage" if enemy.visual_kind == "fighter" else "ground_damage")
 			damage[enemy.id] = damage.get(enemy.id, 0.0) + value(unit, stat) * (0.5 if unit.get("flight_mode", "") == "patrol" else 1.0)
-			weapon_fired.emit(unit, enemy, "interceptor" if strike[2] else "drone_strike" if EquipmentIdentity.spec(unit.equipment_id).get("role", "") == "drone" else "air_strike")
+			var missile_loadout: bool = EquipmentIdentity.research_tier(unit.equipment_id, unit.get("level", 1)).has("projectile_model")
+			weapon_fired.emit(unit, enemy, "interceptor" if strike[2] else "missile" if missile_loadout else "drone_strike" if EquipmentIdentity.spec(unit.equipment_id).get("role", "") == "drone" else "air_strike")
 			if not strike[2] and EquipmentIdentity.spec(unit.equipment_id).get("single_use", false): damage[unit.id] = damage.get(unit.id, 0.0) + unit.health
 			if not strike[2]:
 
