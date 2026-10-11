@@ -60,7 +60,11 @@ func on_shot(source: Dictionary, target_unit: Dictionary, effect: String) -> voi
 		if effect == "missile":
 			source.heading = UnitVisual.firing_heading(source.equipment_id, direction)
 			source.node.get_child(0).rotation.y = source.heading
-		start += direction * 0.3
+			var launcher_model: Node3D = source.node.get_child(0)
+			if launcher_model.has_meta("missile_launch_point"):
+				var launch_point: Marker3D = launcher_model.get_meta("missile_launch_point")
+				start = launch_point.global_position
+		else: start += direction * 0.3
 		muzzle_flash(source, start, direction, effect)
 	if not target_visible: return
 	if not source_visible: start = finish + (start - finish).normalized() * 1.5 + Vector3.UP

@@ -444,13 +444,16 @@ func _map_click(screen: Vector2, order: bool) -> void :
 			units.select_unit(unit_hit.index)
 			return
 		clear_army_selection()
+	if (order or order_mode) and units.selected >= 0 and (units.air.is_air(units.units[units.selected]) or units.is_naval(units.units[units.selected])):
+		var destination = Plane(Vector3.UP, 0).intersects_ray(rig.camera.project_ray_origin(screen), rig.camera.project_ray_normal(screen))
+		if not city_hit.is_empty() and units.air.is_air(units.units[units.selected]):
+			var city: Dictionary = city_hit.city
+			destination = Vector3(city.point.x,0,city.point.y)
+		if destination != null: player_order(destination)
+		return
 	if not city_hit.is_empty():
 		if order: _set_order_mode(true)
 		cities.select_city(city_hit.city)
-		return
-	if (order or order_mode) and units.selected >= 0 and (units.air.is_air(units.units[units.selected]) or units.is_naval(units.units[units.selected])):
-		var destination = Plane(Vector3.UP, 0).intersects_ray(rig.camera.project_ray_origin(screen), rig.camera.project_ray_normal(screen))
-		if destination != null: player_order(destination)
 		return
 	var hit: = map.pick(rig.camera, screen)
 	if hit.is_empty():
@@ -547,6 +550,9 @@ func player_order(destination: Vector3) -> void :
 		return
 	var accepted: = units.patrol(destination) if patrol_order and units.air.is_air(units.units[units.selected]) else units.order_many(destination, append_order) > 0
 	if accepted:
+		if GameSession.weapons_test and clock.paused:
+			clock.paused = false
+			refresh_hud()
 		if clock.paused: hud.show_status("Order accepted · PAUSED · tap Play to begin movement")
 		_set_order_mode(false)
 		append_order = false

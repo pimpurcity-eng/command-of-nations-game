@@ -61,6 +61,15 @@ static func create(kind: String, _faction: Color, equipment_id: String = "", lev
 		assembly.set_meta("missing_original_model", true)
 		return assembly
 	var vehicle: = (load(path) as PackedScene).instantiate() as Node3D
+	var launch_tip: Vector3 = Vector3.ZERO
+	var has_launch_tip: bool = false
+	if kind == "missile_launcher":
+		for part in _meshes(vehicle, Transform3D.IDENTITY):
+			if str(part[0].name) == "Nose":
+				var nose: AABB = part[1] * part[0].get_aabb()
+				launch_tip = nose.get_center() + Vector3.RIGHT * nose.size.x * 0.5
+				has_launch_tip = true
+				break
 	# Owner arsenal models are built from hundreds of parts; merge them per material so a
 	# tank is a handful of draw calls on phones (looks identical).
 	var helicopter: HelicopterAnimator
@@ -81,6 +90,13 @@ static func create(kind: String, _faction: Color, equipment_id: String = "", lev
 	pivot.add_child(vehicle)
 	_fit(pivot, vehicle, role, path)
 	assembly.add_child(pivot)
+	if kind == "missile_launcher":
+		var launch_point: = Marker3D.new()
+		launch_point.name = "MissileLaunchPoint"
+		assembly.add_child(launch_point)
+		var launcher_bounds: AABB = model_bounds(pivot, 0.0)
+		launch_point.position = pivot.transform * launch_tip if has_launch_tip else launcher_bounds.get_center() + Vector3.UP * launcher_bounds.size.y * 0.5
+		assembly.set_meta("missile_launch_point", launch_point)
 	if helicopter != null:
 		assembly.add_child(helicopter)
 		assembly.set_meta("helicopter_animator", helicopter)

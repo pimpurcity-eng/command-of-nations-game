@@ -533,6 +533,8 @@ func patrol(position: Vector3) -> bool:
 func pick_screen(camera: Camera3D, screen: Vector2, enemies_only: bool = false) -> Dictionary:
 	var nearest: Dictionary = {}
 	var radius: = 40.0 * get_window().content_scale_factor
+	var model_hit: = false
+	var model_distance: = INF
 	var leader_ids: Dictionary = {}
 	for group in stacks.groups(): leader_ids[stacks.leader(group).id] = true
 	for i in units.size():
@@ -542,18 +544,26 @@ func pick_screen(camera: Camera3D, screen: Vector2, enemies_only: bool = false) 
 		var anchor: Vector3 = units[i].node.global_position + Vector3.UP * 0.2
 		if camera.is_position_behind(anchor): continue
 		var distance: = camera.unproject_position(anchor).distance_to(screen)
-		if is_naval(units[i]):
+		var inside_model: = false
+		var centre_distance: = INF
+		# Pick the displayed model, including airborne drones and wing tips.
+		if units[i].node.get_child_count() > 0:
 			var model: Node3D = units[i].node.get_child(0)
 			if model.has_meta("pick_bounds"):
 				var bounds: AABB = model.get_meta("pick_bounds")
 				var hull: PackedVector2Array = []
 				for corner in 8: hull.append(camera.unproject_position(model.global_transform * bounds.get_endpoint(corner)))
 				hull = Geometry2D.convex_hull(hull)
-				if Geometry2D.is_point_in_polygon(screen,hull): distance = 0.0
+				if Geometry2D.is_point_in_polygon(screen,hull):
+					distance = 0.0
+					inside_model = true
+					centre_distance = camera.unproject_position(model.to_global(bounds.get_center())).distance_to(screen)
 				else:
 					for edge in hull.size(): distance = minf(distance,screen.distance_to(Geometry2D.get_closest_point_to_segment(screen,hull[edge],hull[(edge+1)%hull.size()])))
-		if distance < radius:
+		if (inside_model and (not model_hit or centre_distance < model_distance)) or (not model_hit and distance < radius):
 			radius = distance
+			model_hit = inside_model
+			model_distance = centre_distance
 			nearest = {"index": i, "distance": distance}
 	return nearest
 
