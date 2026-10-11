@@ -50,6 +50,7 @@ const GOLD: = Color("f2c94c")
 const BAR: = Color(0.115, 0.13, 0.14, 0.94)
 
 var detail: Label
+var selection_title: Label
 var status: Label
 var command_panel: PanelContainer
 var top_bar: PanelContainer
@@ -229,6 +230,13 @@ func _build_bottom(root: Control) -> void:
 	var column: = VBoxContainer.new()
 	column.add_theme_constant_override("separation", 5)
 	command_panel.add_child(column)
+	selection_title = Label.new()
+	selection_title.text = "REGIONAL COMMAND"
+	selection_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	selection_title.add_theme_font_size_override("font_size", 28)
+	selection_title.add_theme_color_override("font_color", Color.WHITE)
+	selection_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	column.add_child(selection_title)
 
 	# Large order buttons (only for your own selected army).
 	action_row = HBoxContainer.new()
@@ -284,14 +292,14 @@ func _build_bottom(root: Control) -> void:
 	card.add_theme_constant_override("separation", 8)
 	column.add_child(card)
 	unit_portrait = TextureRect.new()
-	unit_portrait.custom_minimum_size = Vector2(64, 40)
+	unit_portrait.custom_minimum_size = Vector2(88, 56)
 	unit_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	unit_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	unit_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	card.add_child(unit_portrait)
 	detail = Label.new()
 	detail.text = "REGIONAL COMMAND"
 	detail.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	detail.add_theme_font_size_override("font_size", 14)
+	detail.add_theme_font_size_override("font_size", 18)
 	detail.add_theme_color_override("font_color", INK)
 	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	detail.max_lines_visible = 2
@@ -312,7 +320,7 @@ func _build_bottom(root: Control) -> void:
 	column.add_child(health_bar)
 	status = Label.new()
 	status.text = "Select an army or a city."
-	status.add_theme_font_size_override("font_size", 12)
+	status.add_theme_font_size_override("font_size", 16)
 	status.add_theme_color_override("font_color", MUTED)
 	status.max_lines_visible = 2
 	status.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
@@ -458,7 +466,8 @@ func _refresh_sheet() -> void:
 func show_territory(t: Dictionary) -> void :
 	inspecting_unit = false
 	health_bar.visible = false
-	detail.text = t.title.to_upper() + "  /  " + ("YOURS" if t.controller == GameSession.player_country else t.controller.to_upper()) + " · " + str(t.get("terrain", "plains")).to_upper()
+	selection_title.text = t.title.to_upper()
+	detail.text = ("YOURS" if t.controller == GameSession.player_country else t.controller.to_upper()) + " · " + str(t.get("terrain", "plains")).to_upper()
 	_refresh_sheet()
 func show_status(message: String) -> void :
 	status_message = message
@@ -494,8 +503,9 @@ func show_army_roster(units: Array) -> void :
 func show_unit(unit: Dictionary) -> void :
 	inspecting_unit = true
 	own_unit = unit.country == GameSession.player_country
+	selection_title.text = EquipmentIdentity.research_title(unit.equipment_id, unit.get("level", 1)).to_upper() + " · L" + str(unit.get("level", 1))
 	show_health(unit.health)
-	detail.text = EquipmentIdentity.research_title(unit.equipment_id, unit.get("level", 1)).to_upper() + " / " + unit.country.to_upper() + " · " + str(int(unit.health)) + "%"
+	detail.text = unit.country.to_upper() + " · " + str(int(unit.health)) + "% HEALTH"
 	unit_portrait.texture = CowUI.research_picture(unit.equipment_id, unit.get("level", 1))
 	move_button.disabled = not own_unit
 	stop_button.disabled = not own_unit
@@ -526,7 +536,8 @@ func clear_unit_selection() -> void :
 	own_unit = false
 	move_button.disabled = true
 	stop_button.disabled = true
-	detail.text = "REGIONAL COMMAND"
+	selection_title.text = "REGIONAL COMMAND"
+	detail.text = "Select an army or city"
 	_refresh_sheet()
 func show_resources(_country: String, stockpile: Dictionary) -> void :
 	for resource in ProductionSystem.RESOURCES:

@@ -288,7 +288,8 @@ func _ready() -> void :
 		hud.inspecting_unit = false
 		hud.health_bar.visible = false
 		var controller: = cities.controller_of(city)
-		hud.detail.text = city.name.to_upper() + "  /  " + ("YOURS · YOUR COUNTRY" if controller == GameSession.player_country else controller.to_upper()) + (" · CAPITAL" if buildings.is_capital(city) else "")
+		hud.selection_title.text = city.name.to_upper()
+		hud.detail.text = ("YOURS · YOUR COUNTRY" if controller == GameSession.player_country else controller.to_upper()) + (" · CAPITAL" if buildings.is_capital(city) else "")
 		hud.show_status("City hub · " + city.name)
 		if match_rules == null or match_rules.winner.is_empty(): city_panel.open(city))
 	hud.city_requested.connect( func(index: int):
@@ -578,10 +579,10 @@ func refresh_hud() -> void :
 			var hp: = 0.0
 			for member in group: hp += member.health
 			hud.show_health(hp / maxi(1, group.size()))
-			hud.detail.text = EquipmentIdentity.research_title(unit.equipment_id, unit.get("level", 1)).to_upper() + " · L" + str(unit.get("level", 1)) + """
-""" + unit.country.to_upper() + " · " + str(group.size()) + " UNITS · " + state
+			hud.selection_title.text = EquipmentIdentity.research_title(unit.equipment_id, unit.get("level", 1)).to_upper() + " · L" + str(unit.get("level", 1))
+			hud.detail.text = unit.country.to_upper() + " · " + str(group.size()) + " UNITS · " + state
 			if units.air.is_air(unit):
-				hud.detail.text = EquipmentIdentity.research_title(unit.equipment_id, unit.get("level", 1)) + " · " + unit.flight_mode.to_upper() + " · RADIUS " + str(int(units.air.radius(unit) * 40)) + " game km"
+				hud.detail.text = unit.country.to_upper() + " · " + unit.flight_mode.to_upper() + " · RADIUS " + str(int(units.air.radius(unit) * 40)) + " game km"
 				if unit.refuel_remaining > 0: hud.detail.text += " · REFUEL " + SimulationClock.duration(unit.refuel_remaining, clock.speed)
 			var next_round: = match_rules.combat.remaining_for(unit)
 			if next_round > 0:

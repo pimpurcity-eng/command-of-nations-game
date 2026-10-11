@@ -55,6 +55,77 @@ var route: MeshInstance3D
 var destination_marker: MeshInstance3D
 var route_signature: = ""
 var air_range: MeshInstance3D
+var order_markers: Dictionary = {}
+
+func _new_order_marker(kind: String) -> Node3D:
+	var marker: = Node3D.new()
+	marker.set_meta("order_kind",kind)
+	var color: = Color("ff796c") if kind == "missile" else Color("78d9ff")
+	var material: = StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.albedo_color = color
+	var ring: = MeshInstance3D.new()
+	var circle: = TorusMesh.new()
+	circle.inner_radius = 0.42
+	circle.outer_radius = 0.47
+	circle.rings = 32
+	circle.ring_segments = 4
+	ring.mesh = circle
+	ring.material_override = material
+	ring.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	marker.add_child(ring)
+	var icon: = MeshInstance3D.new()
+	var surface: = SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var polygons: Array = []
+	if kind == "patrol":
+		# Aircraft silhouette at the centre of its patrol circle.
+		polygons = [PackedVector2Array([Vector2(0,-0.3),Vector2(0.06,0.22),Vector2(-0.06,0.22)]),PackedVector2Array([Vector2(0,-0.12),Vector2(0.28,0.12),Vector2(-0.28,0.12)])]
+	else:
+		# Four target ticks leave the impact point visible.
+		for i in 4:
+			var angle: float = i*PI*0.5
+			var polygon: = PackedVector2Array()
+			for p in [Vector2(-0.03,0.13),Vector2(0.03,0.13),Vector2(0.03,0.34),Vector2(-0.03,0.34)]: polygon.append(p.rotated(angle))
+			polygons.append(polygon)
+	for polygon in polygons:
+		var indices: PackedInt32Array = Geometry2D.triangulate_polygon(polygon)
+		for index in indices: surface.add_vertex(Vector3(polygon[index].x,0.015,polygon[index].y))
+	icon.mesh = surface.commit()
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	icon.material_override = material
+	icon.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	marker.add_child(icon)
+	add_child(marker)
+	return marker
+
+func _update_order_markers() -> void:
+	var active: Dictionary = {}
+	for group in stacks.groups():
+		var unit: Dictionary = stacks.leader(group)
+		if unit.health <= 0 or unit.country != GameSession.player_country: continue
+		var kind: = ""
+		var point: = Vector2.ZERO
+		if air.is_air(unit) and unit.get("flight_mode", "grounded") == "patrol":
+			kind = "patrol"
+			point = unit.patrol_center
+		elif unit.visual_kind == "missile_launcher" and not unit.get("attack_target", "").is_empty():
+			var target: = find_id(unit.attack_target)
+			if target.is_empty() or target.health <= 0 or not visible_to_player(target): continue
+			kind = "missile"
+			point = Vector2(target.node.position.x,target.node.position.z)
+		if kind.is_empty(): continue
+		var key: String = unit.country + ":" + unit.stack_id
+		active[key] = true
+		if order_markers.has(key) and order_markers[key].get_meta("order_kind") != kind:
+			order_markers[key].queue_free()
+			order_markers.erase(key)
+		if not order_markers.has(key): order_markers[key] = _new_order_marker(kind)
+		order_markers[key].position = terrain.position_at(point)+Vector3.UP*0.08
+	for key in order_markers.keys():
+		if not active.has(key):
+			order_markers[key].queue_free()
+			order_markers.erase(key)
 func setup(map: StrategicMap, scenario: Dictionary) -> void :
 	stacks.armies = self
 	air.armies = self
@@ -315,6 +386,7 @@ func advance(delta: float) -> void :
 	_draw_route()
 func _draw_route() -> void :
 	if route == null: return
+	_update_order_markers()
 	# Call of War: every one of your moving armies shows its path; the selected one is
 	# brighter. Armies with an attack order show a red arc to their target.
 	destination_marker.visible = false
@@ -330,13 +402,13 @@ func _draw_route() -> void :
 		if leader.country != GameSession.player_country and not chosen: continue
 		var start: = Vector2(leader.node.position.x, leader.node.position.z)
 		# Owner review: planes fly freely and show no path line.
-		if leader.moving and not air.is_air(leader):
+		if leader.moving and not air.is_air(leader) and leader.visual_kind != "missile_launcher":
 			var points: Array = [start]
 			points.append_array(leader.waypoints)
 			if points.size() == 1: points.append(leader.target)
 			orders.append({"move": true, "chosen": chosen, "points": points, "unit": leader})
 			signature += key + str(start.snapped(Vector2.ONE * 0.08)) + str(leader.waypoints) + str(leader.target)
-		if not air.is_air(leader) and not str(leader.get("attack_target", "")).is_empty():
+		if not air.is_air(leader) and leader.visual_kind != "missile_launcher" and not str(leader.get("attack_target", "")).is_empty():
 			var enemy: = find_id(leader.attack_target)
 			if not enemy.is_empty() and visible_to_player(enemy):
 				var finish: = Vector2(enemy.node.position.x, enemy.node.position.z)
@@ -419,7 +491,10 @@ func restore(state: Array) -> void :
 				for waypoint in data.route: unit.waypoints.append(Vector2(waypoint[0], waypoint[1]))
 			else: unit.waypoints = [unit.target] if air.is_air(unit) else path_for(unit, point, unit.target)
 		if unit.moving and unit.waypoints.is_empty(): unit.moving = false
-		_update_heading(unit)
+		if unit.moving: _update_heading(unit)
+		elif unit.country == "ukraine":
+			unit.heading = _facing_enemy(unit.country,Vector2(unit.node.position.x,unit.node.position.z))
+			unit.node.get_child(0).rotation.y = unit.heading
 	_draw_route()
 
 const CITY_SCALE: = 0.55
@@ -431,9 +506,19 @@ func _in_city(point: Vector2) -> bool:
 	for city_point in _city_points:
 		if point.distance_to(city_point) < CITY_RADIUS: return true
 	return false
-## Consistent southwest idle bearing; orders and combat turn to their actual targets.
-func _facing_enemy(_country: String, _point: Vector2) -> float:
-	return deg_to_rad(135.0)
+## Ukrainian idle units face the nearest Russian city; orders face their destination.
+func _facing_enemy(country: String, point: Vector2) -> float:
+	if country != "ukraine": return deg_to_rad(135.0)
+	var nearest: = INF
+	var destination: = point + Vector2(1,-1)
+	for city in GeographicProjection.load_cities():
+		if city.country.to_lower() != "russia": continue
+		var distance: float = point.distance_squared_to(city.point)
+		if distance > 0.0001 and distance < nearest:
+			nearest = distance
+			destination = city.point
+	var direction: = destination - point
+	return atan2(-direction.x,-direction.y)
 func _update_heading(unit: Dictionary) -> void :
 	var current: = Vector2(unit.node.position.x, unit.node.position.z)
 	var direction: Vector2 = (unit.waypoints[0] if not unit.waypoints.is_empty() else unit.target) - current

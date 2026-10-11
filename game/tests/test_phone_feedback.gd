@@ -16,7 +16,7 @@ func run() -> void:
 	game.populate_weapons_test()
 	game.apply_player_country(false)
 	game.rig.set_process(false)
-	check(game.units.units.all(func(u):return is_equal_approx(u.heading,deg_to_rad(135.0))),"consistent idle heading")
+	check(game.units.units.all(func(u):return is_equal_approx(u.heading,game.units._facing_enemy(u.country,Vector2(u.node.position.x,u.node.position.z)))),"idle units face their opposing country")
 	for ship in game.units.units.filter(func(u):return u.visual_kind == "naval"):
 		game.rig.target = Vector3(ship.node.position.x,0,ship.node.position.z)
 		game.rig.distance = 8
