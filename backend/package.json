@@ -1,0 +1,11 @@
+{
+  "name": "warfront-mandate-backend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test gateway/server.test.mjs tests/migrations.test.mjs",
+    "start": "node gateway/server.mjs"
+  },
+  "engines": { "node": ">=22" },
+  "devDependencies": { "@electric-sql/pglite": "0.5.9" }
+}

@@ -14,6 +14,7 @@ var busy := false
 var refresh_retry_at := 0.0
 ## The signed-in commander's profile from the server (xp, games_played, wins, losses).
 var profile: Dictionary = {}
+var session_generation := 0
 var transport: Callable # Test injection only; production uses HTTPRequest.
 func _ready() -> void:
 	var config := ConfigFile.new()
@@ -52,12 +53,16 @@ func signup(email: String,password: String,commander: String) -> Dictionary:
 	return result
 func login(email: String,password: String) -> Dictionary:
 	if not email_valid(email) or password.is_empty():return failure("Enter your email and password.")
+	var generation := session_generation
 	var result:=await request("/token?grant_type=password",{"email":email.strip_edges(),"password":password})
+	if generation != session_generation:return failure("Your session changed. Try signing in again.")
 	if result.ok:return accept_session(result.data,false)
 	return result
 func verify(email: String,code: String,recovery: bool=false) -> Dictionary:
 	if not email_valid(email) or not code_valid(code):return failure("Enter the six-digit code from your email.")
+	var generation := session_generation
 	var result:=await request("/verify",{"email":email.strip_edges(),"token":code,"type":"recovery" if recovery else "email"})
+	if generation != session_generation:return failure("Your session changed. Request a new code.")
 	if result.ok:return accept_session(result.data,recovery)
 	return result
 func resend(email: String,recovery: bool=false) -> Dictionary:
@@ -73,7 +78,9 @@ func reset_password(password: String) -> Dictionary:
 	return result
 func refresh() -> Dictionary:
 	if refresh_token.is_empty():return failure("Please sign in again.")
+	var generation := session_generation
 	var result:=await request("/token?grant_type=refresh_token",{"refresh_token":refresh_token})
+	if generation != session_generation:return failure("Your session changed. Sign in again.")
 	if result.ok:return accept_session(result.data,recovery_pending)
 	if int(result.get("status",0)) in [400,401,403]:clear_session()
 	return result
@@ -83,6 +90,7 @@ func logout() -> Dictionary:
 	if token.is_empty():return {"ok":true,"data":{}}
 	return await request("/logout?scope=local",{},HTTPClient.METHOD_POST,token)
 func clear_session() -> void:
+	session_generation += 1
 	access_token="";refresh_token="";user={};profile={};expires_at=0;recovery_pending=false;session_changed.emit()
 ## Commander level from XP: level n needs 100*(n-1)^2 XP. Same formula as the server
 ## (backend/migrations/002_profiles_levels_deletion.sql, commander_level).
@@ -90,7 +98,9 @@ static func level_for(xp: int) -> int:return int(floor(sqrt(maxf(xp,0)/100.0)))+
 static func xp_for_level(level: int) -> int:return 100*(level-1)*(level-1)
 func load_profile() -> Dictionary:
 	if not signed_in():return failure("Sign in first.")
+	var generation := session_generation
 	var result:=await request("/rest/v1/player_profiles?select=commander_name,xp,games_played,wins,losses&id=eq."+str(user.id).uri_encode(),{},HTTPClient.METHOD_GET,access_token)
+	if generation != session_generation or not signed_in():return failure("Your session changed. Sign in again.")
 	if not result.ok:return result
 	var rows: Variant=result.data.get("rows",[])
 	if not (rows is Array) or rows.is_empty():return failure("Profile not found yet. Try again in a moment.")
@@ -98,23 +108,24 @@ func load_profile() -> Dictionary:
 ## Single-player result against the AI. The server rate-limits and caps the XP; when online
 ## matches arrive, the match server records results instead.
 func record_result(won: bool,minutes: int) -> Dictionary:
-	if not signed_in():return failure("Sign in to earn XP.")
-	var result:=await request("/rest/v1/rpc/record_match_result",{"won":won,"minutes":maxi(minutes,0)},HTTPClient.METHOD_POST,access_token)
-	if not result.ok:return result
-	var rows: Variant=result.data.get("rows",[])
-	if rows is Array and not rows.is_empty():profile.merge(rows[0],true)
-	return {"ok":true,"data":profile}
+	# Local campaigns are not a trusted source of competitive results.
+	# Multiplayer rewards are recorded by the match server, once per match.
+	return failure("Online XP is awarded for server-verified matches only.")
 ## Permanently deletes the account and everything stored with it (Google Play requirement).
 func delete_account() -> Dictionary:
 	if not signed_in():return failure("Sign in first.")
+	var generation := session_generation
 	var result:=await request("/rest/v1/rpc/delete_my_account",{},HTTPClient.METHOD_POST,access_token)
-	if result.ok:clear_session()
+	if result.ok and generation == session_generation:clear_session()
 	return result
 func accept_session(data: Dictionary,recovery: bool) -> Dictionary:
 	var raw_user: Variant=data.get("user",{})
 	var candidate: Dictionary=raw_user if raw_user is Dictionary else {}
 	if str(data.get("access_token","")).is_empty() or str(candidate.get("id","")).is_empty() or not confirmed(candidate):
 		clear_session();return failure("Confirm your email before signing in.")
+	if str(user.get("id", "")) != str(candidate.id) or recovery_pending != recovery:
+		session_generation += 1
+		profile.clear()
 	access_token=str(data.access_token);refresh_token=str(data.get("refresh_token",""));user=candidate
 	expires_at=float(Time.get_unix_time_from_system())+float(data.get("expires_in",3600));recovery_pending=recovery
 	session_changed.emit();return {"ok":true,"data":candidate}
