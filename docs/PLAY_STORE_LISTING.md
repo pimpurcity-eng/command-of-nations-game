@@ -1,10 +1,10 @@
-# Google Play listing and forms — Command of Nations
+# Google Play listing and forms — Warfront Mandate
 
 Draft for Play Console. Character limits are Google's.
 
 ## Store listing
 
-**App name** (max 30): `Command of Nations`
+**App name** (max 30): `Warfront Mandate: WW3`
 
 **Short description** (max 80):
 `Real-time grand strategy: build cities, research weapons and win the war.`
@@ -13,7 +13,7 @@ Draft for Play Console. Character limits are Google's.
 
 > Lead your nation in a modern real-time war.
 >
-> Command of Nations is a grand strategy game where every province matters. Build up your cities,
+> Warfront Mandate is a grand strategy game where every province matters. Build up your cities,
 > research new generations of tanks, aircraft and air defence, and move your armies along the
 > roads and across the front lines. Plan carefully: the war keeps moving even while you think.
 >
@@ -40,8 +40,8 @@ Draft for Play Console. Character limits are Google's.
 
 **Category:** Games → Strategy
 **Tags:** Strategy, War, Real-time strategy (choose from Google's list)
-**Contact email:** the support address on the domain
-**Privacy policy URL:** `https://YOUR-DOMAIN/privacy.html`
+**Contact email:** `support@warfrontmandate.com` (mailbox still to be created)
+**Privacy policy URL:** `https://warfrontmandate.com/privacy.html`
 
 ### Graphics needed
 | Asset | Size | Notes |
@@ -69,7 +69,7 @@ Expected result: about **Teen / PEGI 12** (decided by the questionnaire, not by 
 | Collection required? | Optional: only if the player creates an account |
 | Purpose | **Account management**, **App functionality** |
 | Encrypted in transit? | **Yes** (HTTPS) |
-| Users can request deletion? | **Yes**: in the app and at `https://YOUR-DOMAIN/delete-account.html` |
+| Users can request deletion? | **Yes**: in the app and at `https://warfrontmandate.com/delete-account.html` |
 | Ads / ads ID | **No** |
 
 ## App access (for Google's reviewers)
@@ -80,7 +80,7 @@ account (email + password) in **App content → App access**.
 ## Account deletion
 
 **App content → Data deletion:** in-app path *More → Player account → Delete account*; web URL
-`https://YOUR-DOMAIN/delete-account.html`.
+`https://warfrontmandate.com/delete-account.html`.
 
 ## Testing track
 

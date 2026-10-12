@@ -1,16 +1,12 @@
-# Command of Nations website
+# Warfront Mandate — policy pages
 
-Static pages for the game's domain: home, privacy policy (required by Google Play because the game
-has accounts) and account deletion (Google Play requires a web deletion page).
+`privacy.html` and `delete-account.html` for https://warfrontmandate.com, styled like the live
+landing page (`website/` on `chatgpt/warfront-mandate-hosting`). Google Play needs both: the
+privacy policy because the game has accounts, and a web page for account deletion.
 
-Before publishing, replace the placeholders everywhere:
+To publish: copy both files into `website/` on the hosting branch (owner approval first). Play
+Console URLs: https://warfrontmandate.com/privacy.html and
+https://warfrontmandate.com/delete-account.html.
 
-    SUPPORT_EMAIL   e.g. support@your-domain.com
-    EMAIL_PROVIDER  the email service chosen (e.g. Resend or Postmark)
-    EFFECTIVE_DATE  the date the policy goes live
-
-    sed -i 's/SUPPORT_EMAIL/support@your-domain.com/g; s/EMAIL_PROVIDER/Resend/g; s/EFFECTIVE_DATE/1 November 2026/g' site/*.html
-
-Hosting: Cloudflare Pages or GitHub Pages (free) with the domain pointed at it. In Play Console,
-use https://your-domain/privacy.html as the privacy policy URL and
-https://your-domain/delete-account.html as the account deletion URL.
+Before accounts go live: create the `support@warfrontmandate.com` mailbox (Cloudflare Email
+Routing can forward it for free) and re-read the policy against the services actually used.
