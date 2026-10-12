@@ -1,7 +1,10 @@
 extends Node
+## Android boot: keep the opening visible while the world initializes.
+## The old 0.23 loader pinned 29 weapon scenes in RAM before creating the entire
+## 3D world and 189 starting units; that raised peak memory and startup stalls.
 var panel: MobileStartPanel
-var loaded: Array[Resource] = []
 var audio: GameAudio
+
 func _ready() -> void:
 	audio = GameAudio.new()
 	add_child(audio)
@@ -9,42 +12,40 @@ func _ready() -> void:
 	panel = MobileStartPanel.new()
 	panel.audio = audio
 	add_child(panel)
-	panel.setup(StrategyTheme.create(),FileAccess.file_exists("user://regional_save.json"))
+	panel.setup(StrategyTheme.create(), FileAccess.file_exists("user://regional_save.json"))
 	panel.layer = 30
 	panel.begin_loading()
 	await get_tree().process_frame
-	var catalog: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/equipment.json"))
-	var scenario: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/scenario_regional.json"))
-	var paths: Array[String] = []
-	for unit in scenario.units:
-		for family in catalog:
-			if family.id != unit.get("equipment_id",""): continue
-			var tiers: Array = family.get("research_tiers",[])
-			if tiers.is_empty(): continue
-			var path: String = tiers[clampi(int(unit.get("level",1))-1,0,tiers.size()-1)].model
-			if not paths.has(path): paths.append(path)
-	paths.append("res://scenes/main.tscn")
-	for i in paths.size():
-		var path: String = paths[i]
-		if ResourceLoader.load_threaded_request(path) != OK:
-			panel.set_progress(panel.progress.value,"Unable to load campaign. Please restart.")
-			push_error("Startup resource failed: "+path)
-			return
-		var fraction: Array = []
-		while ResourceLoader.load_threaded_get_status(path,fraction) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
-			panel.set_progress(90.0*(i+float(fraction[0]))/paths.size(),"Loading campaign")
-			await get_tree().process_frame
-		if ResourceLoader.load_threaded_get_status(path) != ResourceLoader.THREAD_LOAD_LOADED:
-			panel.set_progress(panel.progress.value,"Unable to load campaign. Please restart.")
-			return
-		loaded.append(ResourceLoader.load_threaded_get(path))
-		panel.set_progress(90.0*(i+1)/paths.size(),"Loading campaign")
+	var path := "res://scenes/main.tscn"
+	if ResourceLoader.load_threaded_request(path) != OK:
+		panel.set_progress(0, "Unable to load campaign. Please restart.")
+		push_error("Could not start main scene request")
+		return
+	var fraction: Array = []
+	while ResourceLoader.load_threaded_get_status(path, fraction) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+		var amount: float = float(fraction[0]) if not fraction.is_empty() else 0.0
+		panel.set_progress(35.0 * amount, "Loading game")
 		await get_tree().process_frame
-	panel.set_progress(95,"Preparing map and forces")
+	if ResourceLoader.load_threaded_get_status(path) != ResourceLoader.THREAD_LOAD_LOADED:
+		panel.set_progress(panel.progress.value, "Unable to load campaign. Please restart.")
+		return
+	var scene := ResourceLoader.load_threaded_get(path) as PackedScene
+	if scene == null:
+		panel.set_progress(panel.progress.value, "Unable to load campaign. Please restart.")
+		return
+	panel.set_progress(40, "Preparing map")
 	await get_tree().process_frame
-	if get_tree().node_added.is_connected(audio._watch_button): get_tree().node_added.disconnect(audio._watch_button)
-	var game: Node = (loaded[-1] as PackedScene).instantiate()
+	if get_tree().node_added.is_connected(audio._watch_button):
+		get_tree().node_added.disconnect(audio._watch_button)
+	var game = scene.instantiate()
+	game.boot_progress.connect(func(done: int, total: int):
+		if is_instance_valid(panel):
+			panel.set_progress(40.0 + 55.0 * float(done) / maxi(total, 1), "Preparing armies")
+	)
 	get_tree().root.add_child(game)
 	get_tree().current_scene = game
-	panel.set_progress(100,"Ready")
+	# A signal emitted during synchronous _ready() must never be awaited late.
+	if not game.boot_finished:
+		await game.boot_ready
+	panel.set_progress(100, "Ready")
 	queue_free()

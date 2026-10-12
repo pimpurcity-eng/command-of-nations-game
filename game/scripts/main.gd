@@ -1,4 +1,7 @@
 extends Node3D
+signal boot_progress(completed: int, total: int)
+signal boot_ready
+var boot_finished: bool = false
 var match_started_msec := 0
 var account_panel: AccountPanel
 var audio: GameAudio
@@ -393,7 +396,11 @@ func _ready() -> void :
 	hud.show_status("PLANNING · Issue orders and queue production, then tap Play. Win by domination, economy or elimination.")
 	apply_player_country()
 	if GameSession.weapons_test: populate_weapons_test(); apply_player_country()
-	elif session.scenario.has("starting_tiers"): populate_campaign_forces();apply_player_country()
+	elif session.scenario.has("starting_tiers"):
+		# Keep Android's event loop responsive while creating the large starting force.
+		# Desktop/headless tests retain synchronous initialization.
+		await populate_campaign_forces(not OS.has_feature("headless"))
+		apply_player_country()
 	if true:
 		mobile_start = MobileStartPanel.new()
 		add_child(mobile_start)
@@ -406,7 +413,7 @@ func _ready() -> void :
 			start_campaign_play()
 			mobile_start.hide())
 		mobile_start.fresh_requested.connect(func():
-			if GameSession.weapons_test: restore_campaign_forces()
+			if GameSession.weapons_test: await restore_campaign_forces()
 			GameSession.weapons_test = false
 			match_rules.ai_enabled = true
 			GameSession.player_country = mobile_start.selected_country()
@@ -426,6 +433,8 @@ func _ready() -> void :
 			refresh_hud()
 			hud.show_status("All original weapons · real campaign map · tap your armies to control them; enemy units can be inspected. Tap Play to move.")
 			mobile_start.hide())
+	boot_finished = true
+	boot_ready.emit()
 	if OS.has_feature("web"):
 		browser_callback = JavaScriptBridge.create_callback(_browser_hidden)
 		browser_resume_callback = JavaScriptBridge.create_callback(_browser_visible)
@@ -854,7 +863,7 @@ func apply_player_country(focus: bool = true) -> void:
 
 func restore_campaign_forces() -> void:
 	if session.scenario.has("starting_tiers"):
-		populate_campaign_forces()
+		await populate_campaign_forces(not OS.has_feature("headless"))
 		return
 	units.restore([])
 	for data in session.scenario.units:
@@ -867,8 +876,10 @@ func restore_campaign_forces() -> void:
 	units.fog_enabled = true
 	if test_models != null: test_models.queue_free(); test_models = null
 
-func populate_campaign_forces() -> void:
+func populate_campaign_forces(staged: bool = false) -> void:
 	units.restore([])
+	var count_total: int = maxi(1, EquipmentIdentity.catalog.size() * session.scenario.get("starting_tiers", [1, 3, 5]).size())
+	var spawned: int = 0
 	var counts: Dictionary = {}
 	var occupied_sea: Array[Vector2] = []
 	var occupied_air: Array[Vector2] = []
@@ -890,6 +901,11 @@ func populate_campaign_forces() -> void:
 				occupied_air.append(point)
 			var data: = {"id":"campaign_"+family.id+"_l"+str(level),"name":EquipmentIdentity.research_title(family.id,level),"country":family.country,"equipment_id":family.id,"level":level,"visual_kind":kind,"base_city":base.id}
 			units._spawn(data,point,Color("ef827c") if family.country == "russia" else Color("73bcff"))
+			spawned += 1
+			if staged and spawned % 4 == 0:
+				boot_progress.emit(spawned, count_total)
+				await get_tree().process_frame
+	boot_progress.emit(count_total, count_total)
 	units.fog_enabled = true
 	fog.refresh(true)
 
