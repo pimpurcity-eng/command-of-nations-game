@@ -3,7 +3,8 @@ extends CanvasLayer
 signal continue_requested
 signal fresh_requested
 signal test_requested
-var doctrine_picker: OptionButton
+signal online_requested
+var online_button: Button
 var language_picker: OptionButton
 var country_picker: OptionButton
 var panel: PanelContainer
@@ -123,6 +124,9 @@ func setup(theme: Theme, saved: bool) -> void:
 	test_button = _button("ALL WEAPONS  /  TEST RANGE")
 	test_button.pressed.connect(func(): request_start("test"))
 	content.add_child(test_button)
+	online_button = _button("ONLINE MATCH")
+	online_button.pressed.connect(func(): request_start("online"))
+	content.add_child(online_button)
 	loading_label = _label("Ready to command", 18, Color("a4b7c3"))
 	content.add_child(loading_label)
 	progress = ProgressBar.new()
@@ -150,6 +154,12 @@ func setup(theme: Theme, saved: bool) -> void:
 		sound_button.pressed.connect(func(): audio.set_sound(not GameAudio.sound_enabled))
 		audio.settings_changed.connect(_show_audio)
 		content.add_child(switches)
+		if GameAudio.custom_menu_theme():
+			var credit := _label(GameAudio.MENU_THEME_CREDIT, 14, Color("c9bc98"))
+			credit.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+			credit.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			credit.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			content.add_child(credit)
 		_show_audio()
 	var settings_toggle := _button("CAMPAIGN SETTINGS")
 	settings_toggle.custom_minimum_size.y = 44
@@ -160,11 +170,6 @@ func setup(theme: Theme, saved: bool) -> void:
 	advanced.add_theme_constant_override("separation", 8)
 	content.add_child(advanced)
 	settings_toggle.pressed.connect(func(): advanced.visible = not advanced.visible)
-	doctrine_picker = OptionButton.new()
-	doctrine_picker.add_item("Doctrine: country default")
-	for id in Doctrine.DOCTRINES: doctrine_picker.add_item("Doctrine: " + Doctrine.DOCTRINES[id].name)
-	doctrine_picker.custom_minimum_size.y = 48
-	advanced.add_child(doctrine_picker)
 	language_picker = OptionButton.new()
 	language_picker.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
 	var languages := ["English", "Русский", "Українська", "Deutsch", "Français", "Español"]
@@ -220,7 +225,7 @@ func _layout() -> void:
 	footer.size = Vector2(size.x - margin * 2, 24)
 func begin_loading() -> void:
 	loading = true
-	if doctrine_picker != null: doctrine_picker.disabled = true
+	online_button.disabled = true
 	if language_picker != null: language_picker.disabled = true
 	country_picker.disabled = true
 	continue_button.disabled = true
@@ -238,11 +243,22 @@ func request_start(mode: String) -> void:
 		"continue": continue_requested.emit()
 		"fresh": fresh_requested.emit()
 		"test": test_requested.emit()
+		"online": online_requested.emit()
+## Back to the menu after a start that did not happen (e.g. the match server could not be reached).
+func cancel_loading(message: String) -> void:
+	loading = false
+	if language_picker != null: language_picker.disabled = false
+	country_picker.disabled = false
+	continue_button.disabled = not has_save
+	fresh_button.disabled = false
+	test_button.disabled = false
+	online_button.disabled = false
+	set_progress(100, message)
 
 func _show_audio() -> void:
 	music_button.text = "MUSIC: " + ("ON" if GameAudio.music_enabled else "OFF")
 	sound_button.text = "SOUND: " + ("ON" if GameAudio.sound_enabled else "OFF")
 
+## Doctrines come with the country (owner request 2026-10-12); there is no separate choice.
 func selected_doctrine() -> String:
-	if doctrine_picker == null or doctrine_picker.selected <= 0: return Doctrine.DEFAULTS.get(selected_country(), "european")
-	return Doctrine.DOCTRINES.keys()[doctrine_picker.selected-1]
+	return Doctrine.of(selected_country())

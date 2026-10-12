@@ -14,6 +14,19 @@ var armies: UnitSystem
 var cities: Array
 var clock: SimulationClock
 var ai_enabled: = true
+## Online matches: country -> CountryAI for every seat the AI is playing (empty seats and
+## players who have been away too long). Empty = the single-player opponent `ai`.
+var seat_ai: Dictionary = {}
+var online: = false
+func set_ai_countries(countries: Array) -> void:
+	for country in seat_ai.keys():
+		if not country in countries: seat_ai.erase(country)
+	for country in countries:
+		if not seat_ai.has(country):
+			seat_ai[country] = CountryAI.new()
+			seat_ai[country].country = country
+	ai_enabled = not seat_ai.is_empty()
+	diplomacy.ai_countries = countries.duplicate()
 var decision_timer: = 0.0
 var winner: = ""
 ## How the match was won: domination, economic, elimination or points (VictoryRules).
@@ -74,6 +87,9 @@ func _sync_war() -> void:
 	if war and not at_war: declare_war()
 	elif not war and at_war: ceasefire()
 func declare_war() -> void :
+	if MatchClient.active != null:
+		MatchClient.active.send("declare_war")
+		return
 	if at_war or not winner.is_empty(): return
 	diplomacy.set_war(GameSession.player_country, GameSession.opponent_country(), true)
 	at_war = true
@@ -130,7 +146,7 @@ func advance(seconds: float) -> void :
 	if seconds > 0: daily_provinces()
 	if not winner.is_empty() or seconds <= 0: return
 	diplomacy.now = clock.elapsed if clock != null else diplomacy.now + seconds
-	diplomacy.ai_countries = [GameSession.opponent_country()]
+	diplomacy.ai_countries = seat_ai.keys() if online else [GameSession.opponent_country()]
 	chronicle.advance(seconds)
 	for title in annexation.advance(seconds, terrain.territories): report.emit(title + " annexed")
 	for done in strategic.advance(seconds):
@@ -218,7 +234,10 @@ func advance(seconds: float) -> void :
 	if not ai_enabled: return
 	decision_timer += seconds
 	if decision_timer < 0.05: return
-	if clock.elapsed >= 2.5: ai.decide(armies, terrain, cities, production, decision_timer)
+	if clock.elapsed >= 2.5:
+		if seat_ai.is_empty(): ai.decide(armies, terrain, cities, production, decision_timer)
+		else:
+			for country in seat_ai: seat_ai[country].decide(armies, terrain, cities, production, decision_timer)
 	decision_timer = 0
 func _update_entrenchment(seconds: float) -> void:
 	for unit in armies.units:

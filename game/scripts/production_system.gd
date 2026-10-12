@@ -121,6 +121,7 @@ func controller(city: Dictionary) -> String:
 func controlled(city: Dictionary, country: String = "") -> bool:
 	return controller(city) == (city.country.to_lower() if country.is_empty() else country)
 func enqueue(equipment_id: String, city_name: String) -> String:
+	if MatchClient.active != null: return MatchClient.active.send("produce", {"equipment": equipment_id, "city": city_name})
 	var spec: = equipment(equipment_id)
 	if spec.is_empty(): return "Unknown equipment"
 	var city: Dictionary = {}

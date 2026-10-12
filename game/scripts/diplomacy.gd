@@ -24,6 +24,7 @@ var left_at: Dictionary = {}     # country -> time it last left a coalition
 var last_proposal: Dictionary = {}  # "from>to:kind" -> time
 var messages: Array = []         # {time, from, to, text}
 var ai_countries: Array = []
+var pending: Dictionary = {}     # "from>to:kind" -> time (proposals waiting for a player's answer)
 var now: = 0.0
 
 static func pair(a: String, b: String) -> String:
@@ -60,6 +61,9 @@ func right_of_way(mover: String, owner: String) -> bool:
 	return mover == owner or relation(mover, owner).right_of_way or (not coalition_of(mover).is_empty() and coalition_of(mover) == coalition_of(owner))
 
 func set_embargo(from: String, to: String, on: bool) -> void:
+	if MatchClient.active != null:
+		MatchClient.active.send("embargo", {"to": to, "on": on})
+		return
 	if on: embargoes[from + ">" + to] = true
 	else: embargoes.erase(from + ">" + to)
 	changed.emit()
@@ -80,6 +84,7 @@ func coalition_of(country: String) -> String:
 	return ""
 
 func create_coalition(name: String, leader: String) -> String:
+	if MatchClient.active != null: return MatchClient.active.send("coalition_create", {"name": name})
 	name = name.strip_edges()
 	if name.length() < 3 or name.length() > 24: return "Coalition names have 3–24 characters"
 	if coalitions.has(name): return "That name is taken"
@@ -91,6 +96,7 @@ func create_coalition(name: String, leader: String) -> String:
 	return ""
 
 func join(name: String, country: String) -> String:
+	if MatchClient.active != null: return MatchClient.active.send("coalition_join", {"name": name})
 	if not coalitions.has(name): return "No such coalition"
 	if not coalition_of(country).is_empty(): return "Leave your coalition first"
 	if now - float(left_at.get(country, -INF)) < REJOIN_DAYS * DAY: return "You left a coalition less than %d days ago" % int(REJOIN_DAYS)
@@ -101,6 +107,9 @@ func join(name: String, country: String) -> String:
 	return ""
 
 func leave(country: String, quiet: bool = false) -> void:
+	if MatchClient.active != null and not quiet:
+		MatchClient.active.send("coalition_leave")
+		return
 	var name: = coalition_of(country)
 	if name.is_empty(): return
 	coalitions[name].members.erase(country)
@@ -110,6 +119,9 @@ func leave(country: String, quiet: bool = false) -> void:
 	if not quiet: changed.emit()
 
 func post(from: String, to: String, text: String) -> void:
+	if MatchClient.active != null:
+		MatchClient.active.send("chat", {"to": to, "text": text})
+		return
 	text = text.strip_edges().left(300)
 	if text.is_empty(): return
 	messages.append({"time": now, "from": from, "to": to, "text": text})
@@ -125,11 +137,15 @@ func inbox(country: String) -> Array:
 ## "coalition". Players answer later; AI countries answer at once by how the war is going.
 ## Returns {"accepted": bool, "message": String}.
 func propose(from: String, to: String, kind: String, standing: Dictionary = {}) -> Dictionary:
+	if MatchClient.active != null:
+		MatchClient.active.send("propose", {"to": to, "kind": kind})
+		return {"accepted": false, "message": "Proposal sent"}
 	var key: = "%s>%s:%s" % [from, to, kind]
 	if now - float(last_proposal.get(key, -INF)) < PROPOSAL_COOLDOWN:
 		return {"accepted": false, "message": "Wait a few hours before asking again"}
 	last_proposal[key] = now
 	if not to in ai_countries:
+		pending[key] = now
 		post(from, to, "Proposal: " + kind.replace("_", " "))
 		return {"accepted": false, "message": "Proposal sent"}
 	var answer: = _ai_answer(from, to, kind, standing)
@@ -142,6 +158,25 @@ func propose(from: String, to: String, kind: String, standing: Dictionary = {}) 
 	post(to, from, answer.message)
 	changed.emit()
 	return answer
+
+## A player answers another player's proposal (online matches).
+func answer(responder: String, proposer: String, kind: String, accept: bool) -> String:
+	var key: = "%s>%s:%s" % [proposer, responder, kind]
+	if not pending.has(key): return "No such proposal"
+	pending.erase(key)
+	if accept:
+		match kind:
+			"peace": set_war(proposer, responder, false)
+			"right_of_way": relation(proposer, responder).right_of_way = true
+			"shared_vision": relation(proposer, responder).shared_vision = true
+			"coalition":
+				var name: = coalition_of(proposer)
+				if name.is_empty() or not coalition_of(responder).is_empty(): return "That coalition offer has lapsed"
+				coalitions[name].members.append(responder)
+		agreed.emit(proposer, responder, kind)
+	post(responder, proposer, ("Accepted: " if accept else "Declined: ") + kind.replace("_", " "))
+	changed.emit()
+	return ""
 
 ## The AI accepts peace when it is losing (the proposer holds more victory points and the war
 ## has lasted at least half a day); right of way and shared vision only after two days of peace.
@@ -161,7 +196,7 @@ func _ai_answer(from: String, to: String, kind: String, standing: Dictionary) ->
 	return {"accepted": false, "message": "We do not understand."}
 
 func snapshot() -> Dictionary:
-	return {"relations": relations.duplicate(true), "embargoes": embargoes.duplicate(), "coalitions": coalitions.duplicate(true), "left_at": left_at.duplicate(), "messages": messages.duplicate(true), "now": now}
+	return {"pending": pending.duplicate(), "relations": relations.duplicate(true), "embargoes": embargoes.duplicate(), "coalitions": coalitions.duplicate(true), "left_at": left_at.duplicate(), "messages": messages.duplicate(true), "now": now}
 
 func restore(state: Dictionary) -> void:
 	relations = state.get("relations", {}).duplicate(true)
@@ -169,4 +204,5 @@ func restore(state: Dictionary) -> void:
 	coalitions = state.get("coalitions", {}).duplicate(true)
 	left_at = state.get("left_at", {}).duplicate()
 	messages = state.get("messages", []).duplicate(true)
+	pending = state.get("pending", {}).duplicate()
 	now = float(state.get("now", 0.0))

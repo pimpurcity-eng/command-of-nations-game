@@ -783,6 +783,7 @@ func select_armies(ids: Array[String]) -> void :
 	unit_selected.emit(units[selected])
 	_draw_route()
 func order_many(destination: Vector3, append: bool = false) -> int:
+	if MatchClient.active != null: return MatchClient.active.send_units("move", command_ids, {"x": destination.x, "z": destination.z, "append": append})
 	var original: = selected
 	var leaders: = command_groups()
 	var accepted: = 0
@@ -794,6 +795,9 @@ func order_many(destination: Vector3, append: bool = false) -> int:
 	status_changed.emit(str(accepted) + " / " + str(leaders.size()) + " armies ordered" + (" · blocked armies keep their previous orders" if accepted < leaders.size() else ""))
 	return accepted
 func stop_many() -> void :
+	if MatchClient.active != null:
+		MatchClient.active.send_units("stop", command_ids)
+		return
 	var original: = selected
 	for leader in command_groups():
 		selected = units.find(leader)
@@ -831,6 +835,7 @@ func attack_selected(enemy: Dictionary) -> bool:
 	return accepted
 
 func attack_many(enemy: Dictionary) -> int:
+	if MatchClient.active != null: return MatchClient.active.send_units("attack", command_ids, {"target": enemy.get("id", "")})
 	var original: = selected
 	var leaders: = command_groups()
 	var accepted: = 0
@@ -841,6 +846,76 @@ func attack_many(enemy: Dictionary) -> int:
 	_draw_route()
 	status_changed.emit(str(accepted) + " / " + str(leaders.size()) + " armies ordered to attack")
 	return accepted
+
+## Online matches (server side): orders from a player's client, checked against the sender's
+## country. Works on stack leaders like the touch commands; returns how many armies accepted.
+func command(country: String, ids: Array, op: String, point: Vector2 = Vector2.ZERO, enemy_id: String = "", append: bool = false) -> int:
+	var original: = selected
+	var original_ids: = command_ids.duplicate()
+	var done: Dictionary = {}
+	var accepted: = 0
+	var enemy: = find_id(enemy_id) if not enemy_id.is_empty() else {}
+	for id in ids.slice(0, 64):
+		var unit: = find_id(str(id))
+		if unit.is_empty() or unit.country != country or unit.health <= 0: continue
+		var leader: = stacks.leader(stacks.members(unit))
+		var key: String = leader.country + ":" + leader.stack_id
+		if done.has(key): continue
+		done[key] = true
+		selected = units.find(leader)
+		match op:
+			"move": if order(Vector3(point.x, 0, point.y), append): accepted += 1
+			"stop":
+				stop_selected()
+				accepted += 1
+			"attack": if not enemy.is_empty() and enemy.country != country and unit_visible(enemy, country) and attack_selected(enemy): accepted += 1
+	selected = original if original < units.size() else -1
+	command_ids.assign(original_ids)
+	return accepted
+
+## Online matches (client side): replaces the armies on this phone with what the server says
+## this player can see. Positions glide towards the server's (see MatchClient).
+func apply_remote(entries: Array) -> void:
+	var selected_id: String = units[selected].id if selected >= 0 and selected < units.size() else ""
+	var seen: Dictionary = {}
+	for data in entries:
+		seen[data.id] = true
+		var unit: = find_id(data.id)
+		var point: = Vector2(data.position[0], data.position[1])
+		if unit.is_empty():
+			_spawn(data, point, Color("73bcff") if data.country == "ukraine" else Color("ef827c"))
+			unit = units[-1]
+			unit.node.position = Vector3(point.x, unit.node.position.y, point.y)
+		unit.net_position = point
+		unit.target = Vector2(data.target[0], data.target[1])
+		unit.moving = data.moving
+		unit.health = float(data.get("health", 100.0))
+		unit.stack_id = data.get("stack_id", unit.stack_id)
+		unit.level = data.get("level", unit.level)
+		unit.attack_target = data.get("attack_target", "")
+		unit.waypoints.clear()
+		for waypoint in data.get("route", []): unit.waypoints.append(Vector2(waypoint[0], waypoint[1]))
+		if air.is_air(unit):
+			for key in ["base_city", "flight_mode", "flight_used", "refuel_remaining", "patrol_phase"]:
+				if data.has(key): unit[key] = data[key]
+		_update_heading(unit)
+	for i in range(units.size() - 1, -1, -1):
+		if seen.has(units[i].id): continue
+		units[i].node.queue_free()
+		units.remove_at(i)
+	selected = -1
+	for i in units.size():
+		if units[i].id == selected_id: selected = i
+	command_ids.assign(command_ids.filter(func(id: String): return seen.has(id)))
+	_draw_route()
+
+## Glides armies towards their last server position (called every frame by MatchClient).
+func glide(delta: float) -> void:
+	for unit in units:
+		if not unit.has("net_position"): continue
+		var goal: = Vector3(unit.net_position.x, unit.node.position.y, unit.net_position.y)
+		unit.node.position = unit.node.position.lerp(goal, clampf(delta * 4.0, 0.0, 1.0))
+		if unit.node.get_child_count() > 0: unit.node.get_child(0).rotation.y = unit.heading
 
 func travel_time(unit: Dictionary) -> float:
 	if not unit.moving or air.is_air(unit): return 0.0

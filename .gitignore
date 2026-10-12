@@ -5,3 +5,6 @@ build/
 
 # Build-time account configuration (public values only; keep environment-specific setup local)
 game/config/accounts.cfg
+
+# Licensed music (bought; permission to use in the game, not to redistribute). Not in public Git.
+game/assets/audio/start_theme.*

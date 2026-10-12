@@ -166,7 +166,7 @@ func _diplomacy() -> void:
 	_action(send, "Send", func():
 		var target: String = targets[to.selected]
 		talks.post(me, target, text.text)
-		if target in talks.ai_countries:
+		if target in talks.ai_countries and MatchClient.active == null:
 			talks.post(target, me, "We will answer on the battlefield." if talks.at_war(me, target) else "Your message has been noted, " + me.capitalize() + "."))
 	content.add_child(send)
 func _action(row: HBoxContainer, caption: String, action: Callable, disabled: bool = false) -> void:
