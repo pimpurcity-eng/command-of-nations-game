@@ -1,0 +1,15 @@
+# One persistent match. Copy the service block (new name, port and WM_MATCH) for more matches.
+services:
+  match-main:
+    build: { context: .., dockerfile: server/Dockerfile }
+    restart: unless-stopped
+    ports: ["127.0.0.1:8910:8910"]
+    environment:
+      WM_MATCH: main
+      WM_INACTIVE: "600"
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
+    volumes: ["match-main:/home/warfront/.local/share/godot"]
+    stop_grace_period: 30s
+volumes:
+  match-main:
