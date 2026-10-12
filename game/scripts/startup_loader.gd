@@ -1,8 +1,13 @@
 extends Node
 var panel: MobileStartPanel
 var loaded: Array[Resource] = []
+var audio: GameAudio
 func _ready() -> void:
+	audio = GameAudio.new()
+	add_child(audio)
+	audio.play_music("menu_theme")
 	panel = MobileStartPanel.new()
+	panel.audio = audio
 	add_child(panel)
 	panel.setup(StrategyTheme.create(),FileAccess.file_exists("user://regional_save.json"))
 	panel.layer = 30

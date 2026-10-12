@@ -1,5 +1,6 @@
 extends Node3D
 var account_panel: AccountPanel
+var audio: GameAudio
 var badges: UnitBadges
 var test_models: Node3D
 var fog: FogOfWar
@@ -94,6 +95,10 @@ func _ready() -> void :
 	add_child(map)
 	rig = StrategyCamera.new()
 	add_child(rig)
+	audio = GameAudio.new()
+	add_child(audio)
+	audio.rig = rig
+	audio.play_music("menu_theme")
 	units = UnitSystem.new()
 	add_child(units)
 	session = GameSession.new()
@@ -105,6 +110,7 @@ func _ready() -> void :
 	add_child(clock)
 	clock.advanced.connect(units.advance)
 	hud = StrategyHUD.new()
+	hud.audio = audio
 	add_child(hud)
 	hud.account_requested.connect(func():
 		if account_panel==null:
@@ -233,10 +239,15 @@ func _ready() -> void :
 	railway.name = "Railways"
 	map.add_child(railway)
 	railway.setup(cities,buildings)
+	buildings.completed.connect(func(city_id: String, _building: String):
+		for city in cities.cities:
+			if city.id == city_id and cities.controller_of(city) == GameSession.player_country: audio.play("build_complete"))
 	research = ResearchSystem.new()
 	research.setup(production, clock, units)
 	production.research = research
 	clock.advanced.connect(research.advance)
+	research.completed.connect(func(_equipment: String, country: String):
+		if country == GameSession.player_country: audio.play("research_complete"))
 	session.production = production
 	production.unit_ready.connect(units.spawn_produced)
 	production.changed.connect( func(): hud.show_resources(resource_country, production.stockpiles[resource_country]))
@@ -333,11 +344,14 @@ func _ready() -> void :
 	combat_effects = CombatEffects.new()
 	add_child(combat_effects)
 	combat_effects.setup(units, clock, match_rules)
+	combat_effects.audio = audio
 	match_rules.production = production
 	session.match_rules = match_rules
 	match_rules.report.connect(hud.show_status)
 	match_rules.report.connect(func(_message: String): railway.refresh())
 	match_rules.finished.connect(show_result)
+	match_rules.finished.connect(func(country: String): audio.play("victory" if country == GameSession.player_country else "defeat"))
+	match_rules.report.connect(_report_sound)
 	clock.advanced.connect(match_rules.advance)
 	units.status_changed.connect( func(_message: String): refresh_hud())
 	hud.show_status("PLANNING · Issue orders and queue production, then tap Play. Capture 3 enemy city provinces.")
@@ -347,6 +361,7 @@ func _ready() -> void :
 	if true:
 		mobile_start = MobileStartPanel.new()
 		add_child(mobile_start)
+		mobile_start.audio = audio
 		mobile_start.setup(hud.get_child(0).theme, FileAccess.file_exists(SAVE_PATH))
 		mobile_start.continue_requested.connect( func():
 			load_game()
@@ -638,6 +653,10 @@ func refresh_hud() -> void :
 		if hud.inspecting_unit: hud.clear_unit_selection()
 		hud.move_button.disabled = true
 		hud.stop_button.disabled = true
+## Event sounds from the match reports: war declared, provinces/cities captured.
+func _report_sound(message: String) -> void:
+	if message.begins_with("WAR DECLARED"): audio.play("war_declared")
+	elif " captured by " in message: audio.play("city_captured")
 func show_result(country: String) -> void :
 	_set_order_mode(false)
 	city_panel.hide()
@@ -827,6 +846,7 @@ func show_stack_info() -> void :
 
 func start_campaign_play() -> void :
 	if not match_rules.winner.is_empty(): return
+	audio.play_music("battle_theme")
 	clock.paused = false
 	refresh_hud()
 	hud.show_status("Campaign running at " + str(int(clock.speed)) + "x · select a your army, then Move or Fly. Pause stops movement and builds.")

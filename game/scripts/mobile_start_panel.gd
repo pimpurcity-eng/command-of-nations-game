@@ -15,6 +15,9 @@ var loading_label: Label
 var branding: VBoxContainer
 var heading: Label
 var footer: Label
+var audio: GameAudio
+var music_button: Button
+var sound_button: Button
 var loading := false
 var has_save := false
 func selected_country() -> String:
@@ -131,6 +134,21 @@ func setup(theme: Theme, saved: bool) -> void:
 	fill.bg_color = Color("d9b477")
 	progress.add_theme_stylebox_override("fill", fill)
 	content.add_child(progress)
+	if audio != null:
+		var switches := HBoxContainer.new()
+		switches.add_theme_constant_override("separation", 12)
+		music_button = _button("MUSIC: ON")
+		sound_button = _button("SOUND: ON")
+		for button in [music_button, sound_button]:
+			button.custom_minimum_size.y = 48
+			button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			button.add_theme_font_size_override("font_size", 18)
+			switches.add_child(button)
+		music_button.pressed.connect(func(): audio.set_music(not GameAudio.music_enabled))
+		sound_button.pressed.connect(func(): audio.set_sound(not GameAudio.sound_enabled))
+		audio.settings_changed.connect(_show_audio)
+		content.add_child(switches)
+		_show_audio()
 	footer = _label("WARFRONTMANDATE.COM", 16, Color("91a6b3"))
 	footer.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	screen.add_child(footer)
@@ -141,7 +159,7 @@ func _layout() -> void:
 	var portrait := size.y > size.x
 	var margin := clampf(size.x * 0.065, 20, 48)
 	var width := minf(624, size.x - margin * 2)
-	var height := minf(490 if has_save else 410, size.y * 0.55)
+	var height := minf((550 if has_save else 470) if audio != null else (490 if has_save else 410), size.y * 0.55)
 	var small := size.x < 500
 	for child in content.get_children():
 		if child is Button:
@@ -183,3 +201,7 @@ func request_start(mode: String) -> void:
 		"continue": continue_requested.emit()
 		"fresh": fresh_requested.emit()
 		"test": test_requested.emit()
+
+func _show_audio() -> void:
+	music_button.text = "MUSIC: " + ("ON" if GameAudio.music_enabled else "OFF")
+	sound_button.text = "SOUND: " + ("ON" if GameAudio.sound_enabled else "OFF")

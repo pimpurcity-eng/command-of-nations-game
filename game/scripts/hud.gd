@@ -10,6 +10,8 @@ extends CanvasLayer
 signal construct_requested
 var selected_territory: Dictionary = {}
 var build_tab: Button
+## Sound/Music switches in the More menu (main sets this).
+var audio: GameAudio
 signal account_requested
 signal cancel_order_requested
 signal delay_requested
@@ -186,8 +188,9 @@ func _build_toolbar(root: Control) -> void:
 	# The full command list lives in this menu (opened from the "More" tab).
 	navigation_menu = MenuButton.new()
 	navigation_menu.visible = false
-	for title in ["Reset north", "Rotate left", "Rotate right", "Terrain / borders", "Speed 1x", "Speed 2x", "Speed 4x", "Save game", "Load game", "Equipment & production", "Army roster", "New match", "Add destination to selected army", "Merge nearby friendly armies", "Split selected units", "Army composition / battle info", "Declare war on Ukraine", "Technology / day unlocks", "Capital / construction", "Supply exchange", "All weapon models", "Select several armies", "Fire control", "Attack enemy army", "Victory progress", "Diplomacy", "Delay / synchronize arrival", "Forced march", "Upgrade selected army", "Rebase aircraft", "Player account"]:
+	for title in ["Reset north", "Rotate left", "Rotate right", "Terrain / borders", "Speed 1x", "Speed 2x", "Speed 4x", "Save game", "Load game", "Equipment & production", "Army roster", "New match", "Add destination to selected army", "Merge nearby friendly armies", "Split selected units", "Army composition / battle info", "Declare war on Ukraine", "Technology / day unlocks", "Capital / construction", "Supply exchange", "All weapon models", "Select several armies", "Fire control", "Attack enemy army", "Victory progress", "Diplomacy", "Delay / synchronize arrival", "Forced march", "Upgrade selected army", "Rebase aircraft", "Player account", "Sound: ON", "Music: ON"]:
 		navigation_menu.get_popup().add_item(title)
+	navigation_menu.get_popup().about_to_popup.connect(_show_audio_items)
 	navigation_menu.get_popup().id_pressed.connect(func(index: int):
 		match index:
 			0: home_requested.emit()
@@ -221,6 +224,8 @@ func _build_toolbar(root: Control) -> void:
 			28: upgrade_requested.emit()
 			29: rebase_requested.emit()
 			30: account_requested.emit()
+			31: if audio != null: audio.set_sound(not GameAudio.sound_enabled)
+			32: if audio != null: audio.set_music(not GameAudio.music_enabled)
 	)
 	root.add_child(navigation_menu)
 
@@ -665,3 +670,8 @@ class Glyph extends Control:
 				draw_arc(c + Vector2(0, -3) * u, 6 * u, PI, TAU, 10, tint, 2 * u)
 			"research":
 				draw_colored_polygon(PackedVector2Array([c + Vector2(-3, -11) * u, c + Vector2(3, -11) * u, c + Vector2(3, -3) * u, c + Vector2(10, 10) * u, c + Vector2(-10, 10) * u, c + Vector2(-3, -3) * u]), tint)
+
+func _show_audio_items() -> void:
+	var popup: = navigation_menu.get_popup()
+	popup.set_item_text(31, "Sound: " + ("ON" if GameAudio.sound_enabled else "OFF"))
+	popup.set_item_text(32, "Music: " + ("ON" if GameAudio.music_enabled else "OFF"))
