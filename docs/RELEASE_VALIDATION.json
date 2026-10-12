@@ -1,0 +1,19 @@
+{
+  "version_code": 20,
+  "version_name": "0.20-consolidated",
+  "source_commit": "c453187d89925728621bfd148a2f47311a446641",
+  "apk_bytes": 110187892,
+  "apk_sha256": "3bebe234942f68447d727d7890521820527500c1507a5ae80325d00ff115bdf0",
+  "certificate_sha256": "0289d3b051ee5e71dd25bc707b459f0a1e5413faea920069aa8636dc95b84bf0",
+  "package": "com.commandofnations.test",
+  "source_suites_passed": 17,
+  "packaged_checks": 1053,
+  "physical_android_tested": false,
+  "native_render_size": "720x1440",
+  "godot_version": "4.6.3",
+  "minimum_sdk": 24,
+  "target_sdk": 36,
+  "architecture": "arm64-v8a",
+  "note": "Native renders and source suites verified. Packaged game validation recorded separately before delivery. Full shared multiplayer and all audit features are not included.",
+  "fresh_package_check": "1053 checks, zero failures"
+}
