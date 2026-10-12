@@ -47,6 +47,34 @@ static func stand_in_path(equipment_id: String, kind: String) -> String:
 		"missile_launcher": return "res://assets/library/arsenal/russia_iskander_m.glb" if russian else "res://assets/library/arsenal/euro_pluton.glb"
 	return ""
 
+## Fast, low-memory stand-in used during Android map startup and when a unit is
+## off-camera. The real owner-supplied model is loaded only when needed on-screen.
+static func lightweight(kind: String, faction: Color, _equipment_id: String = "", level: int = 1) -> Node3D:
+	var assembly := Node3D.new()
+	assembly.set_meta("visual_level", level)
+	assembly.set_meta("startup_lightweight", true)
+	assembly.set_meta("missing_original_model", false)
+	assembly.set_meta("ground_shadow_size", Vector2(0.9, 0.9))
+	assembly.set_meta("pick_bounds", AABB(Vector3(-0.42, 0, -0.42), Vector3(0.84, 0.7, 0.84)))
+	var mesh := MeshInstance3D.new()
+	mesh.name = "LowMemoryMarker"
+	var shape := BoxMesh.new()
+	shape.size = Vector3(0.52, 0.26, 0.8)
+	if kind in ["fighter", "bomber", "helicopter", "drone", "radar_aircraft"]:
+		shape.size = Vector3(0.85, 0.14, 0.85)
+	elif kind in ["naval", "carrier", "submarine"]:
+		shape.size = Vector3(0.36, 0.2, 1.05)
+	elif kind == "infantry":
+		shape.size = Vector3(0.2, 0.45, 0.2)
+	mesh.mesh = shape
+	var material := StandardMaterial3D.new()
+	material.albedo_color = faction
+	material.roughness = 0.85
+	mesh.material_override = material
+	mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	assembly.add_child(mesh)
+	return assembly
+
 static func create(kind: String, _faction: Color, equipment_id: String = "", level: int = 1) -> Node3D:
 	var assembly: = Node3D.new()
 	assembly.set_meta("visual_level", level)

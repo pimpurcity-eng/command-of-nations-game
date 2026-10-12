@@ -57,6 +57,9 @@ var match_rules: MatchSystem
 var session: GameSession
 const SAVE_PATH: = "user://regional_save.json"
 func _ready() -> void :
+	# Prevent costly detail loading/rendering before the portrait start screen is ready.
+	# The start-screen CanvasLayer remains visible independently of the 3D scene.
+	if OS.has_feature("mobile"): visible = false
 	var menu_scroll: = MenuTouchScroll.new()
 	add_child(menu_scroll)
 	if OS.has_feature("web"):

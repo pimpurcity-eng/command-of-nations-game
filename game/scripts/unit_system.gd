@@ -12,6 +12,10 @@ var fire_control: = CombatSystem.new()
 var at_war: = false
 var fog_enabled: = true
 const SEA_WATERLINE: = -0.06
+# Only a small number of original high-detail vehicles are resident on Android.
+# All armies retain their gameplay data and low-cost selection markers.
+const MOBILE_MAX_DETAILED_UNITS := 12
+var _mobile_visual_refresh_budget := 1
 const MARCH_HEALTH_PER_SECOND: = 5.0 / (3600.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND)
 func vision_radius(unit: Dictionary) -> float:
 	var spec: = EquipmentIdentity.spec(unit.equipment_id)
@@ -231,7 +235,11 @@ func _spawn(data: Dictionary, point: Vector2, color: Color) -> void :
 	var visual_kind: String = data.get("visual_kind", "armor")
 	var equipment_id: = EquipmentIdentity.resolve(data)
 	if visual_kind == "air_defense": spec[0] = EquipmentIdentity.research_title(equipment_id, int(data.get("level", 1)))
-	var model: = UnitVisual.create(visual_kind, color, equipment_id, int(data.get("level", 1)))
+	var model: Node3D
+	if OS.has_feature("mobile"):
+		model = UnitVisual.lightweight(visual_kind, color, equipment_id, int(data.get("level", 1)))
+	else:
+		model = UnitVisual.create(visual_kind, color, equipment_id, int(data.get("level", 1)))
 	model.scale = Vector3.ONE * 0.65
 	marker.add_child(model)
 	UnitShadow.create(marker)
@@ -579,7 +587,20 @@ func _update_heading(unit: Dictionary) -> void :
 	var direction: Vector2 = (unit.waypoints[0] if not unit.waypoints.is_empty() else unit.target) - current
 	if direction.length_squared() > 0.0001:
 		unit.heading = atan2( - direction.x, - direction.y)
+## Keep the new detailed model at child zero: combat, selection and shadows use it.
+func _replace_visual(unit: Dictionary, replacement: Node3D) -> void:
+	var old: Node3D = unit.node.get_child(0)
+	replacement.rotation = old.rotation
+	replacement.scale = old.scale
+	unit.node.remove_child(old)
+	old.queue_free()
+	unit.node.add_child(replacement)
+	unit.node.move_child(replacement, 0)
+
 func _process(delta: float) -> void :
+	# Do not load 3D vehicles behind the campaign's start menu on phones.
+	if OS.has_feature("mobile") and get_parent() is Node3D and not (get_parent() as Node3D).visible:
+		return
 	if air_range != null:
 		air_range.visible = selected >= 0 and air.is_air(units[selected])
 		if air_range.visible:
@@ -600,11 +621,40 @@ func _process(delta: float) -> void :
 	for group in stacks.groups(): leader_ids[stacks.leader(group).id] = true
 	var camera: = get_viewport().get_camera_3d()
 	var view: = get_viewport().get_visible_rect().grow(160)
+	var mobile: bool = OS.has_feature("mobile")
+	var detailed: int = 0
+	var upgrades_left: int = _mobile_visual_refresh_budget
 	for unit in units:
-		unit.node.visible = leader_ids.has(unit.id) and visible_to_player(unit)
-		if not unit.node.visible: continue
-		# Hidden-by-camera models need no per-frame rotor, shadow or transform work.
-		if camera != null and (camera.is_position_behind(unit.node.position) or not view.has_point(camera.unproject_position(unit.node.position))): continue
+		# Off-screen units should not force fog calculations or keep heavyweight models.
+		var on_screen: bool = camera == null or (not camera.is_position_behind(unit.node.position) and view.has_point(camera.unproject_position(unit.node.position)))
+		var is_leader: bool = leader_ids.has(unit.id)
+		if not on_screen or not is_leader:
+			unit.node.visible = false
+			if mobile and not unit.node.get_child(0).get_meta("startup_lightweight", false):
+				_replace_visual(unit, UnitVisual.lightweight(unit.visual_kind, unit.faction_color, unit.equipment_id, unit.level))
+			continue
+		unit.node.visible = visible_to_player(unit)
+		if not unit.node.visible:
+			if mobile and not unit.node.get_child(0).get_meta("startup_lightweight", false):
+				_replace_visual(unit, UnitVisual.lightweight(unit.visual_kind, unit.faction_color, unit.equipment_id, unit.level))
+			continue
+		if mobile:
+			var visual: Node3D = unit.node.get_child(0)
+			if not visual.get_meta("startup_lightweight", false):
+				if detailed < MOBILE_MAX_DETAILED_UNITS:
+					detailed += 1
+				else:
+					_replace_visual(unit, UnitVisual.lightweight(unit.visual_kind, unit.faction_color, unit.equipment_id, unit.level))
+			elif upgrades_left > 0 and detailed < MOBILE_MAX_DETAILED_UNITS and not visual.get_meta("missing_original_model", false):
+				# One expensive model import per frame; missing originals are not retried forever.
+				var replacement: Node3D = UnitVisual.create(unit.visual_kind, unit.faction_color, unit.equipment_id, unit.level)
+				if replacement.get_meta("missing_original_model", false):
+					visual.set_meta("missing_original_model", true)
+					replacement.free()
+				else:
+					_replace_visual(unit, replacement)
+					detailed += 1
+				upgrades_left -= 1
 		var ground: = Vector3(unit.node.position.x, SEA_WATERLINE, unit.node.position.z) if is_naval(unit) else terrain.position_at(Vector2(unit.node.position.x, unit.node.position.z))
 		if is_naval(unit):
 			unit.node.position.y = SEA_WATERLINE
