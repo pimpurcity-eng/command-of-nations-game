@@ -14,7 +14,9 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [application]
 
-config/name="Command of Nations"
+config/name="Warfront Mandate: WW3"
+config/use_custom_user_dir=true
+config/custom_user_dir_name="Command of Nations"
 config/icon="res://assets/interface/app_icon.svg"
 run/main_scene="res://scenes/startup.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")

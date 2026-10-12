@@ -39,7 +39,7 @@ func button(text: String,action: Callable) -> void:
 func build(page: String) -> void:
 	mode=page;inputs.clear()
 	for item in fields.get_children():fields.remove_child(item);item.queue_free()
-	label_text("COMMAND OF NATIONS",24).modulate=Color("c9ad73")
+	label_text("WARFRONT MANDATE: WW3",24).modulate=Color("c9ad73")
 	var titles: Dictionary={"login":"Welcome back, Commander","signup":"Create your commander account","verify":"Confirm your email","recover":"Reset your password","recovery_code":"Check your email","new_password":"Choose a new password","profile":"Commander account"}
 	label_text(titles[page],40)
 	if page=="profile":
