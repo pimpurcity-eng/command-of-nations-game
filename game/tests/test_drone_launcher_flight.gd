@@ -43,6 +43,8 @@ func run():
 		check(not game.clock.paused and heli.flight_mode == "fly",heli.id+" order starts test flight")
 		game.clock.advance(0.25)
 		check(heli.node.position.distance_to(origin)>0.01,heli.id+" moves on map")
+		game.rig.target = heli.node.position
+		game.rig._snap(1.0)
 		var rotor: HelicopterAnimator = heli.node.get_child(0).get_meta("helicopter_animator")
 		var old: float = rotor.phase
 		game.units._process(0.1)

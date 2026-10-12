@@ -28,6 +28,7 @@ static func update(unit: Dictionary, ground: Vector3) -> void:
 	# Follows the model's size (armies shrink inside cities).
 	var model_scale: = (marker.get_child(0) as Node3D).scale.x / 0.65 if marker.get_child_count() > 0 and marker.get_child(0) is Node3D else 1.0
 	if marker.get_child_count() > 0 and marker.get_child(0).has_meta("ground_shadow_size"):
-		(shadow.mesh as QuadMesh).size = marker.get_child(0).get_meta("ground_shadow_size") * 1.05
+		var size: Vector2 = marker.get_child(0).get_meta("ground_shadow_size") * 1.05
+		if (shadow.mesh as QuadMesh).size != size: (shadow.mesh as QuadMesh).size = size
 	shadow.scale = Vector3.ONE * (1.0 + minf(height, 2.0) * 0.1) * model_scale
 	shadow.material_override.set_shader_parameter("opacity", 0.38 / (1.0 + height * 0.5))

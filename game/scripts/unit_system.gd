@@ -305,6 +305,12 @@ func order(position: Vector3, append: bool = false) -> bool:
 func advance(delta: float) -> void :
 	if delta <= 0 or not is_finite(delta): return
 	var army_groups: = stacks.groups()
+	var nearby: Dictionary = {}
+	for candidate in units:
+		if air.is_air(candidate): continue
+		var cell: = Vector2i(floori(candidate.node.position.x / 1.1), floori(candidate.node.position.z / 1.1))
+		if not nearby.has(cell): nearby[cell] = []
+		nearby[cell].append(candidate)
 	if not at_war:
 		for group in army_groups:
 			var leader: = stacks.leader(group)
@@ -327,8 +333,13 @@ func advance(delta: float) -> void :
 		unit.engaged = false
 		var current: = Vector2(unit.node.position.x, unit.node.position.z)
 		var reach: = 1.1
-		for enemy in units:
-			if at_war and not air.is_air(enemy) and is_naval(enemy) == is_naval(unit) and enemy.country != unit.country and visible_to_country(enemy,unit.country) and current.distance_to(Vector2(enemy.node.position.x, enemy.node.position.z)) <= reach:
+		var neighbours: Array = []
+		if at_war:
+			var cell: = Vector2i(floori(current.x / 1.1), floori(current.y / 1.1))
+			for dx in range(-1,2):
+				for dy in range(-1,2): neighbours.append_array(nearby.get(cell + Vector2i(dx,dy), []))
+		for enemy in neighbours:
+			if at_war and not air.is_air(enemy) and is_naval(enemy) == is_naval(unit) and enemy.country != unit.country and current.distance_squared_to(Vector2(enemy.node.position.x, enemy.node.position.z)) <= reach * reach and visible_to_country(enemy,unit.country):
 				unit.engaged = true
 				break
 		for member in group: member.engaged = unit.engaged
@@ -486,6 +497,7 @@ func snapshot() -> Array:
 func restore(state: Array) -> void :
 	for unit in units: unit.node.queue_free()
 	units.clear()
+	stacks.invalidate()
 	selected = -1
 	command_ids.clear()
 	for data in state:
@@ -553,9 +565,13 @@ func _process(delta: float) -> void :
 	for leader in command_groups(): chosen_stacks[leader.stack_id] = true
 	var leader_ids: Dictionary = {}
 	for group in stacks.groups(): leader_ids[stacks.leader(group).id] = true
+	var camera: = get_viewport().get_camera_3d()
+	var view: = get_viewport().get_visible_rect().grow(160)
 	for unit in units:
 		unit.node.visible = leader_ids.has(unit.id) and visible_to_player(unit)
 		if not unit.node.visible: continue
+		# Hidden-by-camera models need no per-frame rotor, shadow or transform work.
+		if camera != null and (camera.is_position_behind(unit.node.position) or not view.has_point(camera.unproject_position(unit.node.position))): continue
 		var ground: = Vector3(unit.node.position.x, SEA_WATERLINE, unit.node.position.z) if is_naval(unit) else terrain.position_at(Vector2(unit.node.position.x, unit.node.position.z))
 		if is_naval(unit):
 			unit.node.position.y = SEA_WATERLINE
@@ -596,7 +612,6 @@ func _process(delta: float) -> void :
 		if unit.visual_kind == "air_defense": unit.ring.scale = Vector3.ONE * (0.52 if chosen else 0.42) * (model.scale.x / 0.65)
 		if unit.node.has_meta("detailed_sprite"):
 			var sprite: Sprite3D = unit.node.get_meta("detailed_sprite")
-			var camera: = get_viewport().get_camera_3d()
 			var relative: = wrapf(unit.heading - camera.rotation.y, - PI, PI)
 			sprite.frame = [1, 2, 3, 0][int(floor((relative + PI) / (PI * 0.5))) % 4]
 

@@ -39,7 +39,7 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 				if enemy.health <= 0 or enemy.country == unit.country: continue
 				if aa and (enemy.visual_kind != "fighter" or enemy.flight_mode == "grounded"): continue
 				var point: = Vector2(enemy.node.position.x, enemy.node.position.z)
-				if not armies.point_visible(point, unit.country): continue
+				if origin.distance_squared_to(point) > reach * reach: continue
 				if not armies.visible_to_country(enemy,unit.country): continue
 				if unit.get("flight_mode", "") == "attack" and enemy.id != unit.get("attack_target", ""): continue
 				if fighter and value(unit, "air_damage" if enemy.visual_kind == "fighter" else "ground_damage") <= 0: continue

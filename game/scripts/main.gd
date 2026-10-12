@@ -185,7 +185,7 @@ func _ready() -> void :
 	hud.army_roster_requested.connect( func(): hud.show_army_roster(units.units))
 	hud.move_requested.connect( func():
 		if units.selected < 0 or units.units[units.selected].country != GameSession.player_country:
-			hud.show_status("Select a your army. Ukraine is controlled by AI.")
+			hud.show_status("Select an army belonging to your country.")
 			return
 		append_order = false
 		patrol_order = false
@@ -234,9 +234,6 @@ func _ready() -> void :
 	production.changed.connect( func(): hud.show_resources(resource_country, production.stockpiles[resource_country]))
 	production.changed.connect(refresh_rally_markers)
 	units.unit_selected.connect( func(unit: Dictionary):
-		if GameSession.weapons_test and GameSession.player_country != unit.country:
-			GameSession.player_country = unit.country
-			apply_player_country(false)
 		hud.show_unit(unit)
 		resource_country = GameSession.player_country
 		hud.show_resources(resource_country, production.stockpiles[resource_country]))
@@ -390,6 +387,11 @@ func _browser_visible(_arguments: Array) -> void :
 	refresh_hud()
 func _map_click(screen: Vector2, order: bool) -> void :
 	if selecting_armies:
+		# City hubs are destinations even when a garrison overlaps their model.
+		var meeting_city: = cities.pick_screen(screen)
+		if not meeting_city.is_empty() and not units.command_ids.is_empty():
+			player_order(map.position_at(meeting_city.city.point))
+			return
 		var picked: = units.pick_screen(rig.camera,screen)
 		if not picked.is_empty():
 			var army: Dictionary = units.units[picked.index]
@@ -425,6 +427,7 @@ func _map_click(screen: Vector2, order: bool) -> void :
 		var enemy_hit: = units.pick_screen(rig.camera, screen, true)
 		if not enemy_hit.is_empty() and units.units[enemy_hit.index].country != GameSession.player_country:
 			if units.attack_many(units.units[enemy_hit.index]) > 0:
+				if GameSession.weapons_test: clock.paused = false
 				attack_order = false
 				_set_order_mode(false)
 			return
@@ -548,7 +551,7 @@ func player_order(destination: Vector3) -> void :
 		_set_order_mode(false)
 		return
 	if units.selected < 0 or units.units[units.selected].country != GameSession.player_country:
-		hud.show_status("Ukraine is controlled by AI. Select a your army.")
+		hud.show_status("Select an army belonging to your country.")
 		return
 	var accepted: = units.patrol(destination) if patrol_order and units.air.is_air(units.units[units.selected]) else units.order_many(destination, append_order) > 0
 	if accepted:

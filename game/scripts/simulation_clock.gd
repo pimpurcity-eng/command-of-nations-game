@@ -11,9 +11,18 @@ var elapsed: = 0.0
 var speed: = 1.0
 var paused: = true
 var hud_elapsed: = 0.0
+var frame_accumulator: = 0.0
 func _process(delta: float) -> void :
 
-	advance(minf(delta, 0.25))
+	if paused:
+		frame_accumulator = 0.0
+		return
+	# Preserve elapsed time while dispatching strategic rules at 10 Hz.
+	frame_accumulator += minf(delta, 0.25)
+	if frame_accumulator < 0.1: return
+	var elapsed_frame: = frame_accumulator
+	frame_accumulator = 0.0
+	advance(elapsed_frame)
 func advance(real_seconds: float) -> void :
 	if paused or real_seconds <= 0: return
 	var seconds: = real_seconds * speed / REAL_SECONDS_PER_SIM_SECOND

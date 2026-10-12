@@ -86,6 +86,7 @@ var own_unit: = false
 var _speed: = 1.0
 
 func _ready() -> void :
+	layer = 3  # Map labels stay behind the command panels.
 	var root: = Control.new()
 	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -223,7 +224,7 @@ func _build_toolbar(root: Control) -> void:
 # ---------------------------------------------------------------- bottom sheet
 func _build_bottom(root: Control) -> void:
 	command_panel = PanelContainer.new()
-	command_panel.add_theme_stylebox_override("panel", _skinned("header", Vector4(8, 6, 8, 4), 4))
+	command_panel.add_theme_stylebox_override("panel", _skinned("header", Vector4(10, 10, 10, 8), 4))
 	command_panel.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
 	command_panel.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	root.add_child(command_panel)
@@ -233,7 +234,7 @@ func _build_bottom(root: Control) -> void:
 	selection_title = Label.new()
 	selection_title.text = "REGIONAL COMMAND"
 	selection_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	selection_title.add_theme_font_size_override("font_size", 28)
+	selection_title.add_theme_font_size_override("font_size", 32)
 	selection_title.add_theme_color_override("font_color", Color.WHITE)
 	selection_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	column.add_child(selection_title)
@@ -292,17 +293,17 @@ func _build_bottom(root: Control) -> void:
 	card.add_theme_constant_override("separation", 8)
 	column.add_child(card)
 	unit_portrait = TextureRect.new()
-	unit_portrait.custom_minimum_size = Vector2(88, 56)
+	unit_portrait.custom_minimum_size = Vector2(112, 80)
 	unit_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	unit_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	card.add_child(unit_portrait)
 	detail = Label.new()
 	detail.text = "REGIONAL COMMAND"
 	detail.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	detail.add_theme_font_size_override("font_size", 18)
+	detail.add_theme_font_size_override("font_size", 22)
 	detail.add_theme_color_override("font_color", INK)
 	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	detail.max_lines_visible = 2
+	detail.max_lines_visible = 3
 	detail.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	card.add_child(detail)
 	close_button = _square("close")
@@ -320,7 +321,7 @@ func _build_bottom(root: Control) -> void:
 	column.add_child(health_bar)
 	status = Label.new()
 	status.text = "Select an army or a city."
-	status.add_theme_font_size_override("font_size", 16)
+	status.add_theme_font_size_override("font_size", 18)
 	status.add_theme_color_override("font_color", MUTED)
 	status.max_lines_visible = 2
 	status.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
@@ -403,10 +404,10 @@ func _order_button(kind: String, text: String, color: Color) -> Button:
 	return button
 func _style_order(button: Button, kind: String, text: String, color: Color) -> void:
 	button.text = text
-	button.custom_minimum_size = Vector2(54, 64)
+	button.custom_minimum_size = Vector2(54, 76)
 	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	button.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
-	button.add_theme_font_size_override("font_size", 13)
+	button.add_theme_font_size_override("font_size", 15)
 	button.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	# Glossy bevelled faces (tools/make_ui_skin.py): red Attack, green Move, metal otherwise.
 	var face: = "btn_red" if color.r > color.g * 1.4 else ("btn_green" if color.g > color.r * 1.25 else "btn_dark")
@@ -428,9 +429,9 @@ func _style_order(button: Button, kind: String, text: String, color: Color) -> v
 func _tab(kind: String, text: String) -> Button:
 	var button: = Button.new()
 	button.text = text
-	button.custom_minimum_size = Vector2(0, 60)
+	button.custom_minimum_size = Vector2(0, 72)
 	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	button.add_theme_font_size_override("font_size", 12)
+	button.add_theme_font_size_override("font_size", 15)
 	button.add_theme_color_override("font_color", INK)
 	for state in ["normal", "hover", "pressed", "disabled"]:
 		button.add_theme_stylebox_override(state, _flat(Color(0, 0, 0, 0) if state != "pressed" else Color(1, 1, 1, 0.08), 0, Vector4(0, 30, 0, 2)))

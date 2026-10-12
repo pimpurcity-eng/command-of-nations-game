@@ -391,3 +391,7 @@ original-model, sizing and rotor jobs retained. Recovered exact d334c94 base tre
 ecb6180f43f30c16279da9a352eaae960889b39c after workspace reset. No originals deleted,
 no remote push/main merge. Validation/build re-run pending; candidate is not yet
 the deliverable APK. Private persistent signing key restored, not in Git.
+
+## 12 October 2026 — 0.21 phone repair
+
+Existing 0.20 game repaired on a separate phone-fixes branch. See docs/PHONE_FIXES_0_21.md and RELEASE_VALIDATION_0_21.json for exact fixes and source/packaged checks. Same Android package and certificate; no source or models published externally. Physical Android performance still requires device testing.

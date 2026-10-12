@@ -64,16 +64,19 @@ func target(group: Array, groups: Array, armies: UnitSystem = null) -> Array:
 	var origin: = Vector2(group[0].node.position.x, group[0].node.position.z)
 	var nearest: = INF
 	var result: Array = []
+	var reach: = 0.0
+	for member in group: reach = maxf(reach, attack_reach(member))
+	if reach <= 0.0: return []
+	var coastal: bool = group.any(func(member): return EquipmentIdentity.spec(member.equipment_id).get("targets_naval", false))
+	var shore: bool = group.any(func(member):return EquipmentIdentity.spec(member.equipment_id).get("shore_bombardment",false))
 	for candidate in groups:
-		if candidate[0].visual_kind == "fighter": continue
-		var coastal: bool = group.any(func(member): return EquipmentIdentity.spec(member.equipment_id).get("targets_naval", false))
-		var shore: bool = group.any(func(member):return EquipmentIdentity.spec(member.equipment_id).get("shore_bombardment",false))
+		if candidate[0].visual_kind == "fighter" or candidate[0].country == group[0].country: continue
 		if (candidate[0].visual_kind == "naval") != (group[0].visual_kind == "naval") and not (coastal and candidate[0].visual_kind == "naval") and not (shore and group[0].visual_kind == "naval"): continue
 		var defenders: = alive(candidate)
 		if defenders.is_empty() or defenders[0].country == group[0].country: continue
 		var point: = Vector2(defenders[0].node.position.x, defenders[0].node.position.z)
 		var distance: = origin.distance_to(point)
-		if armies != null and not armies.point_visible(point, group[0].country): continue
+		if distance > reach + 1e-06: continue
 		if armies != null and not armies.visible_to_country(defenders[0],group[0].country): continue
 		var explicit: bool = group[0].get("attack_target", "") in defenders.map( func(unit: Dictionary): return unit.id)
 		if group[0].get("fire_mode", "at_will") in ["return", "hold"] and not explicit: continue
@@ -85,6 +88,11 @@ func target(group: Array, groups: Array, armies: UnitSystem = null) -> Array:
 func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resolve_now: bool = false) -> void :
 	if not is_finite(seconds) or seconds < 0 or (seconds == 0 and not resolve_now) or not armies.at_war: return
 	var groups: = armies.stacks.groups()
+	var spatial: Dictionary = {}
+	for group in groups:
+		var cell: = Vector2i(floori(group[0].node.position.x / 4.0), floori(group[0].node.position.z / 4.0))
+		if not spatial.has(cell): spatial[cell] = []
+		spatial[cell].append(group)
 	var existing: Dictionary = {}
 	for group in groups:
 		existing[key(group)] = true
@@ -100,7 +108,16 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 		for group in groups:
 			var living: = alive(group)
 			if living.is_empty(): continue
-			var defenders: = target(living, groups, armies)
+			var reach: = 0.0
+			for unit in living: reach = maxf(reach, attack_reach(unit))
+			if reach <= 0.0: continue
+			var origin: = Vector2(living[0].node.position.x, living[0].node.position.z)
+			var low: = Vector2i(floori((origin.x-reach)/4.0),floori((origin.y-reach)/4.0))
+			var high: = Vector2i(floori((origin.x+reach)/4.0),floori((origin.y+reach)/4.0))
+			var candidates: Array = []
+			for x in range(low.x,high.x+1):
+				for y in range(low.y,high.y+1): candidates.append_array(spatial.get(Vector2i(x,y), []))
+			var defenders: = target(living, candidates, armies)
 			if defenders.is_empty(): continue
 			attacks.append([living, defenders, key(group)])
 			wait = minf(wait, cooldowns[key(group)])

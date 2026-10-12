@@ -68,7 +68,7 @@ static func create(kind: String, _faction: Color, equipment_id: String = "", lev
 		for part in _meshes(vehicle, Transform3D.IDENTITY):
 			if str(part[0].name) == "Nose":
 				var nose: AABB = part[1] * part[0].get_aabb()
-				launch_tip = nose.get_center() + Vector3.RIGHT * nose.size.x * 0.5
+				launch_tip = part[1] * (part[0].get_aabb().get_center() + Vector3.RIGHT * part[0].get_aabb().size.x * 0.5)
 				has_launch_tip = true
 				break
 	# Owner arsenal models are built from hundreds of parts; merge them per material so a
@@ -97,6 +97,7 @@ static func create(kind: String, _faction: Color, equipment_id: String = "", lev
 		assembly.add_child(launch_point)
 		var launcher_bounds: AABB = model_bounds(pivot, 0.0)
 		launch_point.position = pivot.transform * launch_tip if has_launch_tip else launcher_bounds.get_center() + Vector3.UP * launcher_bounds.size.y * 0.5
+		if role == "silo": launch_point.position = pivot.transform * Vector3(0, 0.7, 0)
 		assembly.set_meta("missile_launch_point", launch_point)
 	if helicopter != null:
 		assembly.add_child(helicopter)
@@ -129,7 +130,7 @@ static func _fit(pivot: Node3D, vehicle: Node3D, role: String, path: String) -> 
 	var footprint: float = FOOTPRINT.get(role, 0.62)
 	var factor: float = footprint / longest
 	var center: = bounds.get_center()
-	pivot.transform = Transform3D(Basis(Vector3.UP, yaw).scaled(Vector3.ONE * factor), Vector3(-center.x, -bounds.position.y, -center.z) * factor)
+	pivot.transform = Transform3D(Basis(Vector3.UP, yaw).scaled(Vector3.ONE * factor), Vector3(-center.x, 0.0 if role == "silo" else -bounds.position.y, -center.z) * factor)
 
 ## Bounds of every mesh under (and including) `vehicle`, after turning it by `yaw`.
 static func model_bounds(vehicle: Node3D, yaw: float) -> AABB:

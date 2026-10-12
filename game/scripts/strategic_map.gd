@@ -461,7 +461,7 @@ func _add_road_mesh(surface: SurfaceTool, color: Color) -> void :
 	add_child(roads)
 
 func update_relations(at_war: bool) -> void :
-	var signature: = str(at_war)
+	var signature: = GameSession.player_country + str(at_war)
 	for territory in territories: signature += str(territory.controller)
 	if signature == relation_signature: return
 	relation_signature = signature

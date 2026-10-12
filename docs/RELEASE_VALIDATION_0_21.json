@@ -1,0 +1,21 @@
+{
+  "version_code": 21,
+  "version_name": "0.21-phone-repair",
+  "package": "com.commandofnations.test",
+  "apk_bytes": 116417346,
+  "apk_sha256": "a7840afb1e06cc518e825dd652f328adaff000f390889662e41ad05384f73d33",
+  "certificate_sha256": "0289d3b051ee5e71dd25bc707b459f0a1e5413faea920069aa8636dc95b84bf0",
+  "source_suites_passed": 10,
+  "physical_android_tested": false,
+  "renders": "720x1440 native Compatibility",
+  "benchmark_units": 143,
+  "before_sim_update_ms": 245.535,
+  "after_sim_update_ms": 25.944,
+  "simulation_dispatch_hz": 10,
+  "packaged_phone_checks": 10,
+  "packaged_resource_checks": 1687,
+  "signatures": [
+    "v2",
+    "v3"
+  ]
+}

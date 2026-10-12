@@ -97,6 +97,7 @@ func advance_battles(seconds: float) -> void :
 		combat.advance(step, armies, damage, true)
 		air_combat.advance(step, armies, damage, true)
 		for unit in armies.units:
+			if not damage.has(unit.id) or damage[unit.id] <= 0.0: continue
 			var factor: = production.buildings.incoming_damage_factor(unit) if production != null and production.buildings != null else 1.0
 			unit.health = maxf(0, unit.health - damage.get(unit.id, 0.0) * factor)
 		remaining = maxf(0, remaining - step)
@@ -126,16 +127,25 @@ func advance(seconds: float) -> void :
 					armies.select_unit(index)
 					break
 		armies._draw_route()
+	# Capture only tests armies beside the hub, rather than every army in every province.
+	var nearby: Dictionary = {}
+	for unit in armies.units:
+		if unit.visual_kind in ["fighter", "naval"]: continue
+		var cell: = Vector2i(floori(unit.node.position.x / CAPTURE_RADIUS), floori(unit.node.position.z / CAPTURE_RADIUS))
+		if not nearby.has(cell): nearby[cell] = []
+		nearby[cell].append(unit)
 	for territory in terrain.territories:
 		if not territory.playable: continue
 		var occupant: = ""
 		var contested: = false
-		for unit in armies.units:
-			if unit.visual_kind in ["fighter", "naval"]: continue
+		var cell: = Vector2i(floori(territory.center.x / CAPTURE_RADIUS), floori(territory.center.y / CAPTURE_RADIUS))
+		var candidates: Array = []
+		for dx in range(-1,2):
+			for dy in range(-1,2): candidates.append_array(nearby.get(cell + Vector2i(dx,dy), []))
+		for unit in candidates:
 			var point: = Vector2(unit.node.position.x, unit.node.position.z)
+			if point.distance_squared_to(territory.center) > CAPTURE_RADIUS * CAPTURE_RADIUS: continue
 			if not RegionData.contains(territory, point): continue
-
-			if point.distance_to(territory.center) > CAPTURE_RADIUS: continue
 			if occupant.is_empty(): occupant = unit.country
 			elif occupant != unit.country: contested = true
 		if contested or occupant.is_empty() or occupant == territory.controller:

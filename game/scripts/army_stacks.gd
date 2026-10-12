@@ -1,17 +1,24 @@
 class_name ArmyStacks
 extends RefCounted
 var armies: UnitSystem
+var _groups: Dictionary = {}
+var _frame: int = -1
+var _count: int = -1
+func invalidate() -> void:
+	_frame = -1
 func groups() -> Array:
-	var by_id: Dictionary = {}
-	for unit in armies.units:
-		var key: String = unit.country + ":" + unit.stack_id
-		if not by_id.has(key): by_id[key] = []
-		by_id[key].append(unit)
-	return by_id.values()
+	if _frame != Engine.get_process_frames() or _count != armies.units.size():
+		_groups.clear()
+		for unit in armies.units:
+			var key: String = unit.country + ":" + unit.stack_id
+			if not _groups.has(key): _groups[key] = []
+			_groups[key].append(unit)
+		_frame = Engine.get_process_frames()
+		_count = armies.units.size()
+	return _groups.values()
 func members(unit: Dictionary) -> Array:
-	for group in groups():
-		if group[0].stack_id == unit.stack_id and group[0].country == unit.country: return group
-	return []
+	groups()
+	return _groups.get(unit.country + ":" + unit.stack_id, [])
 func leader(group: Array) -> Dictionary:
 	var result: Dictionary = group[0]
 	for unit in group:
@@ -36,6 +43,7 @@ func join(a: Dictionary, b: Dictionary) -> bool:
 		unit.stack_id = a.stack_id
 		unit.node.position = a.node.position
 		unit.target = anchor
+	invalidate()
 	return true
 func merge_near_selected() -> void :
 	if armies.selected < 0: return
@@ -76,6 +84,7 @@ func split_selected() -> void :
 	while has_stack(detached.stack_id, detached): detached.stack_id += "_split"
 	detached.node.position = armies.surface_position(detached, destination)
 	detached.target = destination
+	invalidate()
 	armies.select_unit(armies.units.find(chosen))
 	armies.status_changed.emit("One unit detached from the army stack")
 func has_stack(id: String, except_unit: Dictionary) -> bool:
@@ -142,5 +151,6 @@ func split_units(ids: Array[String]) -> String:
 		unit.forced_march = false
 		unit.node.position = armies.surface_position(unit, point)
 		if armies.air.is_air(unit): armies.air.position(unit, point)
+	invalidate()
 	armies.select_unit(armies.units.find(leader(detached)))
 	return ""

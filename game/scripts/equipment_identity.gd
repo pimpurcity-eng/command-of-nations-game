@@ -1,10 +1,14 @@
 class_name EquipmentIdentity
 extends RefCounted
-static var catalog: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/equipment.json"))
+static var _by_id: Dictionary = {}
+static var catalog: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/equipment.json")):
+	set(value):
+		catalog = value
+		_by_id.clear()
 static func spec(id: String) -> Dictionary:
-	for equipment in catalog:
-		if equipment.id == id: return equipment
-	return {}
+	if _by_id.is_empty():
+		for equipment in catalog: _by_id[equipment.id] = equipment
+	return _by_id.get(id, {})
 static func resolve(data: Dictionary) -> String:
 	if not spec(data.get("equipment_id", "")).is_empty(): return data.equipment_id
 	var name: String = data.get("name", "").to_lower()
