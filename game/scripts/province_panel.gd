@@ -26,12 +26,14 @@ func setup(system: BuildingSystem,theme: Theme) -> void:
  for kind in ProvinceConstruction.ALLOWED:
   var card: = PanelContainer.new();card.add_theme_stylebox_override("panel",CowUI.skin("row",8,12));list.add_child(card)
   var inner: = VBoxContainer.new();inner.add_theme_constant_override("separation",8);card.add_child(inner)
-  var name: = CowUI.label("",24,CowUI.INK);inner.add_child(name)
+  var heading_row: = HBoxContainer.new();inner.add_child(heading_row)
+  var picture: = TextureRect.new();picture.custom_minimum_size=Vector2(118,80);picture.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;picture.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED;heading_row.add_child(picture)
+  var name: = CowUI.label("",24,CowUI.INK);name.size_flags_horizontal=Control.SIZE_EXPAND_FILL;name.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;heading_row.add_child(name)
   var effect: = CowUI.label(EFFECTS[kind],18,CowUI.INK);effect.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;inner.add_child(effect)
   var row: = HBoxContainer.new();inner.add_child(row)
   var costs: = CowUI.label("",16,CowUI.INK);costs.size_flags_horizontal=Control.SIZE_EXPAND_FILL;costs.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;row.add_child(costs)
   var button: = CowUI.action("CONSTRUCT","hammer");button.pressed.connect(func():message.text=buildings.provinces.schedule(province_id,kind);refresh());row.add_child(button)
-  rows[kind]={"name":name,"costs":costs,"button":button}
+  rows[kind]={"name":name,"picture":picture,"costs":costs,"button":button}
  queue=VBoxContainer.new();list.add_child(queue)
  message=CowUI.label("",18,CowUI.GOLD);message.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;column.add_child(message)
  buildings.changed.connect(func():if visible:refresh())
@@ -57,6 +59,7 @@ func refresh() -> void:
  for kind in rows:
   var row: Dictionary=rows[kind];var current: = buildings.provinces.level(province_id,kind)
   row.name.text=ProvinceConstruction.NAMES[kind]+" · Level "+str(current)
+  row.picture.texture=FacilityVisual.preview(buildings.spec(kind),place.country.to_lower(),mini(current+1,int(buildings.spec(kind).max_level)),true)
   var bill: = buildings.cost(kind,current+1);var parts: PackedStringArray=[]
   for resource in bill:
    if bill[resource]>0:parts.append(resource.capitalize()+" "+str(int(bill[resource])))

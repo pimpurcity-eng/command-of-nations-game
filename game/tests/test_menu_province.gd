@@ -78,7 +78,7 @@ func run():
  var forged=state.duplicate(true);forged.provinces.levels[province.id].industry=99
  check(not game.buildings.validate(forged),"invalid rural building levels rejected")
  check(CowUI.equipment_picture("apcs_russia").resource_path==str(EquipmentIdentity.research_tier("apcs_russia",1).model).trim_suffix(".glb")+".png","APC thumbnail uses actual model, not Russian flag")
- check(CowUI.equipment_picture("fleet_russia").resource_path==str(EquipmentIdentity.research_tier("fleet_russia",1).model).trim_suffix(".glb")+".png","naval thumbnail uses actual ship")
+ check(CowUI.equipment_picture("fleet_russia").resource_path==str(EquipmentIdentity.research_tier("fleet_russia",1).preview),"naval thumbnail uses actual ship")
  var research_system=game.research
  game.clock.elapsed=(game.research.upgrade_day("tanks_russia",1)-1)*86400.0/SimulationClock.REAL_SECONDS_PER_SIM_SECOND
  research_system.jobs.clear()

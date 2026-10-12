@@ -1084,5 +1084,431 @@
     "kind": "Weapon",
     "theme": "Europe",
     "model": "res://assets/library/arsenal/weapon_sv98.glb"
+  },
+  {
+    "name": "Civil Container T1 Feeder",
+    "kind": "Transport model",
+    "theme": "Civilian",
+    "model": "res://assets/library/transport/civil_container_t1_feeder.glb"
+  },
+  {
+    "name": "Civil Container T2 Panamax",
+    "kind": "Transport model",
+    "theme": "Civilian",
+    "model": "res://assets/library/transport/civil_container_t2_panamax.glb"
+  },
+  {
+    "name": "Civil Container T3 Ulcv",
+    "kind": "Transport model",
+    "theme": "Civilian",
+    "model": "res://assets/library/transport/civil_container_t3_ulcv.glb"
+  },
+  {
+    "name": "Civil Tanker T1 Coastal",
+    "kind": "Transport model",
+    "theme": "Civilian",
+    "model": "res://assets/library/transport/civil_tanker_t1_coastal.glb"
+  },
+  {
+    "name": "Civil Tanker T2 Aframax",
+    "kind": "Transport model",
+    "theme": "Civilian",
+    "model": "res://assets/library/transport/civil_tanker_t2_aframax.glb"
+  },
+  {
+    "name": "Civil Tanker T3 Vlcc",
+    "kind": "Transport model",
+    "theme": "Civilian",
+    "model": "res://assets/library/transport/civil_tanker_t3_vlcc.glb"
+  },
+  {
+    "name": "Train Boxcar",
+    "kind": "Transport model",
+    "theme": "Civilian",
+    "model": "res://assets/library/transport/train_boxcar.glb"
+  },
+  {
+    "name": "Train Container Flatcar",
+    "kind": "Transport model",
+    "theme": "Civilian",
+    "model": "res://assets/library/transport/train_container_flatcar.glb"
+  },
+  {
+    "name": "Train Diesel Locomotive",
+    "kind": "Transport model",
+    "theme": "Civilian",
+    "model": "res://assets/library/transport/train_diesel_locomotive.glb"
+  },
+  {
+    "name": "Train Flatcar Empty",
+    "kind": "Transport model",
+    "theme": "Civilian",
+    "model": "res://assets/library/transport/train_flatcar_empty.glb"
+  },
+  {
+    "name": "Train Flatcar Tank Europe",
+    "kind": "Transport model",
+    "theme": "Civilian",
+    "model": "res://assets/library/transport/train_flatcar_tank_europe.glb"
+  },
+  {
+    "name": "Train Flatcar Tank Russia",
+    "kind": "Transport model",
+    "theme": "Civilian",
+    "model": "res://assets/library/transport/train_flatcar_tank_russia.glb"
+  },
+  {
+    "name": "Train Tank Car",
+    "kind": "Transport model",
+    "theme": "Civilian",
+    "model": "res://assets/library/transport/train_tank_car.glb"
+  },
+  {
+    "name": "Train Track Section",
+    "kind": "Transport model",
+    "theme": "Civilian",
+    "model": "res://assets/library/transport/train_track_section.glb"
+  },
+  {
+    "name": "Aircraft Factory L1",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/aircraft_factory_l1.glb"
+  },
+  {
+    "name": "Aircraft Factory L2",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/aircraft_factory_l2.glb"
+  },
+  {
+    "name": "Aircraft Factory L3",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/aircraft_factory_l3.glb"
+  },
+  {
+    "name": "Aircraft Factory L4",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/aircraft_factory_l4.glb"
+  },
+  {
+    "name": "Aircraft Factory L5",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/aircraft_factory_l5.glb"
+  },
+  {
+    "name": "Barracks",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/barracks.glb"
+  },
+  {
+    "name": "Capital",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/capital.glb"
+  },
+  {
+    "name": "City Walls L1",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/city_walls_l1.glb"
+  },
+  {
+    "name": "City Walls L2",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/city_walls_l2.glb"
+  },
+  {
+    "name": "City Walls L3",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/city_walls_l3.glb"
+  },
+  {
+    "name": "City Walls L4",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/city_walls_l4.glb"
+  },
+  {
+    "name": "City Walls L5",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/city_walls_l5.glb"
+  },
+  {
+    "name": "Industry",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/industry.glb"
+  },
+  {
+    "name": "Naval Base",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/naval_base.glb"
+  },
+  {
+    "name": "Ordnance Factory",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/ordnance_factory.glb"
+  },
+  {
+    "name": "Province Airport L1",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/province_airport_l1.glb"
+  },
+  {
+    "name": "Province Airport L2",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/province_airport_l2.glb"
+  },
+  {
+    "name": "Province Airport L3",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/province_airport_l3.glb"
+  },
+  {
+    "name": "Province Airport L4",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/province_airport_l4.glb"
+  },
+  {
+    "name": "Province Airport L5",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/province_airport_l5.glb"
+  },
+  {
+    "name": "Rail Buffer Stop",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/rail_buffer_stop.glb"
+  },
+  {
+    "name": "Rail Crossing",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/rail_crossing.glb"
+  },
+  {
+    "name": "Rail Curve",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/rail_curve.glb"
+  },
+  {
+    "name": "Rail Level Crossing",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/rail_level_crossing.glb"
+  },
+  {
+    "name": "Rail Straight",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/rail_straight.glb"
+  },
+  {
+    "name": "Rail Switch",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/rail_switch.glb"
+  },
+  {
+    "name": "Recruitment Center",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/recruitment_center.glb"
+  },
+  {
+    "name": "Resource Food",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/resource_food.glb"
+  },
+  {
+    "name": "Resource Metal",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/resource_metal.glb"
+  },
+  {
+    "name": "Resource Oil",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/resource_oil.glb"
+  },
+  {
+    "name": "Resource Rare Earth",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/resource_rare_earth.glb"
+  },
+  {
+    "name": "Road Crossroads",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/road_crossroads.glb"
+  },
+  {
+    "name": "Road Curve",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/road_curve.glb"
+  },
+  {
+    "name": "Road Dead End",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/road_dead_end.glb"
+  },
+  {
+    "name": "Road Straight",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/road_straight.glb"
+  },
+  {
+    "name": "Road T Junction",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/road_t_junction.glb"
+  },
+  {
+    "name": "Tank Plant",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/tank_plant.glb"
+  },
+  {
+    "name": "Train Station",
+    "kind": "Building model",
+    "theme": "Buildings",
+    "model": "res://assets/library/buildings_oct12/train_station.glb"
+  },
+  {
+    "name": "Euro Carrier T1 Starting Clemenceau",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_carrier_t1_starting_clemenceau.glb"
+  },
+  {
+    "name": "Euro Carrier T2 Mid Charles De Gaulle",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_carrier_t2_mid_charles_de_gaulle.glb"
+  },
+  {
+    "name": "Euro Corvette T1 Starting Minerva",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_corvette_t1_starting_minerva.glb"
+  },
+  {
+    "name": "Euro Corvette T2 Mid K130 Braunschweig",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_corvette_t2_mid_k130_braunschweig.glb"
+  },
+  {
+    "name": "Euro Corvette T3 Modern Visby",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_corvette_t3_modern_visby.glb"
+  },
+  {
+    "name": "Euro Destroyer T1 Starting Type42",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_destroyer_t1_starting_type42.glb"
+  },
+  {
+    "name": "Euro Destroyer T3 Modern Type45 Daring",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_destroyer_t3_modern_type45_daring.glb"
+  },
+  {
+    "name": "Euro Submarine T1 Starting Type209",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_submarine_t1_starting_type209.glb"
+  },
+  {
+    "name": "Euro Submarine T2 Mid Type212A",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_submarine_t2_mid_type212a.glb"
+  },
+  {
+    "name": "Euro Submarine T3 Modern Astute",
+    "kind": "Equipment",
+    "theme": "Europe",
+    "model": "res://assets/library/arsenal/euro_submarine_t3_modern_astute.glb"
+  },
+  {
+    "name": "Russia Carrier T1 Starting Kiev",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_carrier_t1_starting_kiev.glb"
+  },
+  {
+    "name": "Russia Carrier T3 Modern Shtorm",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_carrier_t3_modern_shtorm.glb"
+  },
+  {
+    "name": "Russia Corvette T1 Starting Grisha",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_corvette_t1_starting_grisha.glb"
+  },
+  {
+    "name": "Russia Destroyer T1 Starting Sovremenny",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_destroyer_t1_starting_sovremenny.glb"
+  },
+  {
+    "name": "Russia Destroyer T2 Mid Slava",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_destroyer_t2_mid_slava.glb"
+  },
+  {
+    "name": "Russia Destroyer T3 Modern Lider",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_destroyer_t3_modern_lider.glb"
+  },
+  {
+    "name": "Russia Frigate T1 Starting Krivak",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_frigate_t1_starting_krivak.glb"
+  },
+  {
+    "name": "Russia Frigate T2 Mid Admiral Grigorovich",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_frigate_t2_mid_admiral_grigorovich.glb"
+  },
+  {
+    "name": "Russia Submarine T2 Mid Akula",
+    "kind": "Equipment",
+    "theme": "Russia",
+    "model": "res://assets/library/arsenal/russia_submarine_t2_mid_akula.glb"
   }
 ]

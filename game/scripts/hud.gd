@@ -515,7 +515,7 @@ func show_unit(unit: Dictionary) -> void :
 	if build_tab != null: build_tab.text = "Produce"
 	inspecting_unit = true
 	own_unit = unit.country == GameSession.player_country
-	selection_title.text = EquipmentIdentity.research_title(unit.equipment_id, unit.get("level", 1)).to_upper() + " · L" + str(unit.get("level", 1))
+	selection_title.text = EquipmentIdentity.research_title(unit.equipment_id, unit.get("level", 1)).to_upper() + " · L" + str(int(unit.get("level", 1)))
 	show_health(unit.health)
 	detail.text = unit.country.to_upper() + " · " + str(int(unit.health)) + "% HEALTH"
 	unit_portrait.texture = CowUI.research_picture(unit.equipment_id, unit.get("level", 1))

@@ -143,7 +143,7 @@ func _add_row(definition: Dictionary) -> void:
 	image.custom_minimum_size = Vector2(88, 80)
 	image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	image.texture = load(AssetRoster.appearance(definition.asset_roster_id, GameSession.player_country).preview)
+	image.texture = load(definition.get("preview", AssetRoster.appearance(definition.asset_roster_id, GameSession.player_country).preview))
 	frame.add_child(image)
 	var middle: = VBoxContainer.new()
 	middle.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -176,7 +176,7 @@ func _add_row(definition: Dictionary) -> void:
 		message.text = (definition.name + " construction planned") if error.is_empty() else error
 		_refresh())
 	right_column.add_child(button)
-	rows[definition.id] = {"card":card, "name": name_label, "costs": costs, "time": time, "button": button}
+	rows[definition.id] = {"card":card, "picture":image, "name": name_label, "costs": costs, "time": time, "button": button}
 
 func _effect(definition: Dictionary) -> String:
 	match definition.id:
@@ -252,7 +252,7 @@ func _refresh() -> void:
 		for job in buildings.economy.jobs:
 			if job.city != place.name or buildings.economy.equipment(job.equipment).country != GameSession.player_country: continue
 			var spec: Dictionary = buildings.economy.equipment(job.equipment)
-			var seconds: float = (spec.seconds - job.progress) / buildings.rate(city_id, "factory")
+			var seconds: float = (spec.seconds - job.progress) / buildings.production_rate(city_id, spec)
 			production.text.text = EquipmentIdentity.title(job.equipment) + "  ·  " + ("paused" if paused else SimulationClock.duration(seconds))
 			production.picture.texture = CowUI.equipment_picture(job.equipment)
 			production.picture.visible = true
@@ -270,6 +270,7 @@ func _refresh() -> void:
 		row.card.visible = not definition.get("coastal_only", false) or place.has("naval_spawn")
 		if not row.card.visible: continue
 		var current: = buildings.level(city_id, id)
+		row.picture.texture = FacilityVisual.preview(definition,place.country.to_lower(),mini(current+1,int(definition.max_level)))
 		var target: = current + 1 + jobs.filter(func(j: Dictionary): return j.building == id).size()
 		row.name.text = definition.name + " Lvl. " + str(current)
 		for child in row.costs.get_children(): child.queue_free()

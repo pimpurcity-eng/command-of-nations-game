@@ -10,7 +10,7 @@ func _initialize(): call_deferred("run")
 func run():
 	var control: = CombatSystem.new()
 	var catalog: Array = EquipmentIdentity.catalog
-	check(catalog.size() == 58, "all new families are present")
+	check(catalog.size() == 63, "all new families are present")
 	var ids: Dictionary = {}
 	for spec in catalog:
 		check(not ids.has(spec.id), "unique equipment ID " + spec.id)

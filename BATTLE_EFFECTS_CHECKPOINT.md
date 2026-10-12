@@ -399,3 +399,7 @@ Existing 0.20 game repaired on a separate phone-fixes branch. See docs/PHONE_FIX
 ## 12 October 2026 — menu/province candidate
 
 Based on 0.21; five shared research/production groups, touch scrolling, intermediate research upgrades, 1/3/5 starting tiers, coastal-only naval UI, and rural construction without production. See docs/MENU_PROVINCE_CANDIDATE.md for tested behavior and pending ships/building cuts. No new APK delivered.
+
+## 12 October 2026 — 0.22 menus, new navy and buildings
+
+Earlier 0.21 phone regression rechecked before incorporating the menu/province candidate. Installed the owner’s October 12 naval, civilian transport, military/civic and rail/road building archives. Added five naval classes per country, original fitted facilities, resource installations, and station/track visuals over friendly land routes. See docs/UPDATE_0_22.md and RELEASE_VALIDATION_0_22.json. Existing family IDs/saves retained, no public source/model/key upload or main merge. Civilian cargo, running trains, complete carrier air operations and physical Android testing remain outstanding.

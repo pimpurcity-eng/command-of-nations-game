@@ -1236,14 +1236,15 @@
     "shared_building": true,
     "assets": {
       "shared": {
-        "model": "res://scenes/facilities/factory.tscn",
-        "preview": "res://assets/library/warehouse3_shared.png",
+        "model": "res://assets/library/buildings_oct12/ordnance_factory.glb",
+        "preview": "res://assets/library/buildings_oct12/ordnance_factory_menu.png",
         "temporary_recolor": true,
         "source_model": "Warehouse 3",
         "native_theme": [
           "russian",
           "european"
-        ]
+        ],
+        "original_colors": true
       }
     }
   },
@@ -1260,14 +1261,15 @@
     "shared_building": true,
     "assets": {
       "shared": {
-        "model": "res://scenes/facilities/industry.tscn",
-        "preview": "res://assets/library/warehouse7_shared.png",
+        "model": "res://assets/library/buildings_oct12/industry.glb",
+        "preview": "res://assets/library/buildings_oct12/industry_menu.png",
         "temporary_recolor": true,
         "source_model": "Warehouse 7",
         "native_theme": [
           "russian",
           "european"
-        ]
+        ],
+        "original_colors": true
       }
     }
   },
@@ -1308,14 +1310,15 @@
     "shared_building": true,
     "assets": {
       "shared": {
-        "model": "res://scenes/facilities/airbase.tscn",
-        "preview": "res://assets/library/warehouse1_shared.png",
+        "model": "res://assets/library/buildings_oct12/aircraft_factory_l1.glb",
+        "preview": "res://assets/library/buildings_oct12/aircraft_factory_l1_menu.png",
         "temporary_recolor": true,
         "source_model": "Warehouse 1",
         "native_theme": [
           "russian",
           "european"
-        ]
+        ],
+        "original_colors": true
       }
     }
   },
@@ -1428,14 +1431,15 @@
     "shared_building": true,
     "assets": {
       "shared": {
-        "model": "res://scenes/facilities/recruitment_center.tscn",
-        "preview": "res://assets/library/warehouse1_shared.png",
+        "model": "res://assets/library/buildings_oct12/recruitment_center.glb",
+        "preview": "res://assets/library/buildings_oct12/recruitment_center_menu.png",
         "temporary_recolor": true,
         "source_model": "Warehouse 1",
         "native_theme": [
           "russian",
           "european"
-        ]
+        ],
+        "original_colors": true
       }
     }
   },
@@ -1452,14 +1456,15 @@
     "shared_building": true,
     "assets": {
       "shared": {
-        "model": "res://scenes/facilities/barracks.tscn",
-        "preview": "res://assets/library/warehouse1_shared.png",
+        "model": "res://assets/library/buildings_oct12/barracks.glb",
+        "preview": "res://assets/library/buildings_oct12/barracks_menu.png",
         "temporary_recolor": true,
         "source_model": "Warehouse 1",
         "native_theme": [
           "russian",
           "european"
-        ]
+        ],
+        "original_colors": true
       }
     }
   },
@@ -1476,14 +1481,15 @@
     "shared_building": true,
     "assets": {
       "shared": {
-        "model": "res://scenes/facilities/tank_plant.tscn",
-        "preview": "res://assets/library/warehouse3_shared.png",
+        "model": "res://assets/library/buildings_oct12/tank_plant.glb",
+        "preview": "res://assets/library/buildings_oct12/tank_plant_menu.png",
         "temporary_recolor": true,
         "source_model": "Warehouse 3",
         "native_theme": [
           "russian",
           "european"
-        ]
+        ],
+        "original_colors": true
       }
     }
   },
@@ -1500,14 +1506,15 @@
     "shared_building": true,
     "assets": {
       "shared": {
-        "model": "res://scenes/facilities/naval_base.tscn",
-        "preview": "res://assets/library/warehouse7_shared.png",
+        "model": "res://assets/library/buildings_oct12/naval_base.glb",
+        "preview": "res://assets/library/buildings_oct12/naval_base_menu.png",
         "temporary_recolor": true,
         "source_model": "Warehouse 7",
         "native_theme": [
           "russian",
           "european"
-        ]
+        ],
+        "original_colors": true
       }
     }
   },
@@ -1524,14 +1531,15 @@
     "shared_building": true,
     "assets": {
       "shared": {
-        "model": "res://scenes/facilities/bunker.tscn",
-        "preview": "res://assets/library/warehouse7_shared.png",
+        "model": "res://assets/library/buildings_oct12/city_walls_l1.glb",
+        "preview": "res://assets/library/buildings_oct12/city_walls_l1_menu.png",
         "temporary_recolor": true,
         "source_model": "Warehouse 7",
         "native_theme": [
           "russian",
           "european"
-        ]
+        ],
+        "original_colors": true
       }
     }
   },
@@ -1548,14 +1556,15 @@
     "shared_building": true,
     "assets": {
       "shared": {
-        "model": "res://scenes/facilities/infrastructure.tscn",
-        "preview": "res://assets/library/warehouse11_shared.png",
+        "model": "res://assets/library/buildings_oct12/train_station.glb",
+        "preview": "res://assets/library/buildings_oct12/train_station_menu.png",
         "temporary_recolor": true,
         "source_model": "Warehouse 11",
         "native_theme": [
           "russian",
           "european"
-        ]
+        ],
+        "original_colors": true
       }
     }
   },
@@ -1780,96 +1789,6 @@
         "temporary_recolor": false,
         "original_colors": true,
         "source_model": "Lynx"
-      }
-    }
-  },
-  {
-    "id": "fleet_russia",
-    "name": "Surface fleet",
-    "kind": "naval",
-    "source": "Owner supplied naval/drone/missile archives 2026-10-10",
-    "available_to": [
-      "russia"
-    ],
-    "shared_building": false,
-    "assets": {
-      "russian": {
-        "model": "res://assets/library/arsenal/russia_buyan_m.glb",
-        "temporary_recolor": false,
-        "original_colors": true,
-        "source_model": "Buyan-M"
-      }
-    }
-  },
-  {
-    "id": "fleet_ukraine",
-    "name": "European surface fleet",
-    "kind": "naval",
-    "source": "Owner supplied naval/drone/missile archives 2026-10-10",
-    "available_to": [
-      "ukraine"
-    ],
-    "shared_building": false,
-    "assets": {
-      "european": {
-        "model": "res://assets/library/arsenal/euro_type23.glb",
-        "temporary_recolor": false,
-        "original_colors": true,
-        "source_model": "Type 23 Duke"
-      }
-    }
-  },
-  {
-    "id": "submarines_russia",
-    "name": "Submarines",
-    "kind": "naval",
-    "source": "Owner supplied naval/drone/missile archives 2026-10-10",
-    "available_to": [
-      "russia"
-    ],
-    "shared_building": false,
-    "assets": {
-      "russian": {
-        "model": "res://assets/library/arsenal/russia_kilo_sub.glb",
-        "temporary_recolor": false,
-        "original_colors": true,
-        "source_model": "Kilo class"
-      }
-    }
-  },
-  {
-    "id": "carriers_russia",
-    "name": "Aircraft carriers",
-    "kind": "naval",
-    "source": "Owner supplied naval/drone/missile archives 2026-10-10",
-    "available_to": [
-      "russia"
-    ],
-    "shared_building": false,
-    "assets": {
-      "russian": {
-        "model": "res://assets/library/arsenal/russia_admiral_kuznetsov.glb",
-        "temporary_recolor": false,
-        "original_colors": true,
-        "source_model": "Admiral Kuznetsov"
-      }
-    }
-  },
-  {
-    "id": "carriers_ukraine",
-    "name": "Aircraft carriers",
-    "kind": "naval",
-    "source": "Owner supplied naval/drone/missile archives 2026-10-10",
-    "available_to": [
-      "ukraine"
-    ],
-    "shared_building": false,
-    "assets": {
-      "european": {
-        "model": "res://assets/library/arsenal/euro_hms_queen_elizabeth.glb",
-        "temporary_recolor": false,
-        "original_colors": true,
-        "source_model": "HMS Queen Elizabeth"
       }
     }
   },
@@ -2525,6 +2444,176 @@
         "original_colors": true,
         "temporary_recolor": false,
         "source_model": "NSM"
+      }
+    }
+  },
+  {
+    "id": "fleet_russia",
+    "name": "Frigates",
+    "kind": "naval",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_frigate_t1_starting_krivak.glb",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "Krivak"
+      }
+    }
+  },
+  {
+    "id": "fleet_ukraine",
+    "name": "Frigates",
+    "kind": "naval",
+    "available_to": [
+      "ukraine"
+    ],
+    "shared_building": false,
+    "assets": {
+      "european": {
+        "model": "res://assets/library/arsenal/euro_type23.glb",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "Type 23 Duke"
+      }
+    }
+  },
+  {
+    "id": "destroyers_russia",
+    "name": "Destroyers",
+    "kind": "naval",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_destroyer_t1_starting_sovremenny.glb",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "Sovremenny"
+      }
+    }
+  },
+  {
+    "id": "destroyers_ukraine",
+    "name": "Destroyers",
+    "kind": "naval",
+    "available_to": [
+      "ukraine"
+    ],
+    "shared_building": false,
+    "assets": {
+      "european": {
+        "model": "res://assets/library/arsenal/euro_destroyer_t1_starting_type42.glb",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "Type 42"
+      }
+    }
+  },
+  {
+    "id": "corvettes_russia",
+    "name": "Corvettes",
+    "kind": "naval",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_corvette_t1_starting_grisha.glb",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "Grisha"
+      }
+    }
+  },
+  {
+    "id": "corvettes_ukraine",
+    "name": "Corvettes",
+    "kind": "naval",
+    "available_to": [
+      "ukraine"
+    ],
+    "shared_building": false,
+    "assets": {
+      "european": {
+        "model": "res://assets/library/arsenal/euro_corvette_t1_starting_minerva.glb",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "Minerva"
+      }
+    }
+  },
+  {
+    "id": "submarines_russia",
+    "name": "Submarines",
+    "kind": "naval",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_kilo_sub.glb",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "Kilo"
+      }
+    }
+  },
+  {
+    "id": "submarines_ukraine",
+    "name": "Submarines",
+    "kind": "naval",
+    "available_to": [
+      "ukraine"
+    ],
+    "shared_building": false,
+    "assets": {
+      "european": {
+        "model": "res://assets/library/arsenal/euro_submarine_t1_starting_type209.glb",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "Type 209"
+      }
+    }
+  },
+  {
+    "id": "carriers_russia",
+    "name": "Aircraft carriers",
+    "kind": "naval",
+    "available_to": [
+      "russia"
+    ],
+    "shared_building": false,
+    "assets": {
+      "russian": {
+        "model": "res://assets/library/arsenal/russia_carrier_t1_starting_kiev.glb",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "Kiev"
+      }
+    }
+  },
+  {
+    "id": "carriers_ukraine",
+    "name": "Aircraft carriers",
+    "kind": "naval",
+    "available_to": [
+      "ukraine"
+    ],
+    "shared_building": false,
+    "assets": {
+      "european": {
+        "model": "res://assets/library/arsenal/euro_carrier_t1_starting_clemenceau.glb",
+        "original_colors": true,
+        "temporary_recolor": false,
+        "source_model": "Clemenceau"
       }
     }
   }

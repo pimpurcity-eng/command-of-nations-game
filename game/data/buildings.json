@@ -15,7 +15,16 @@
     },
     "description": "Produces artillery, air defence, missiles and ground support. Each level above 1 increases their production speed by 25%.",
     "starting_level": 1,
-    "colour": "b96e53"
+    "colour": "b96e53",
+    "model_tiers": [
+      "res://assets/library/buildings_oct12/ordnance_factory.glb",
+      "res://assets/library/buildings_oct12/ordnance_factory.glb",
+      "res://assets/library/buildings_oct12/ordnance_factory.glb",
+      "res://assets/library/buildings_oct12/ordnance_factory.glb",
+      "res://assets/library/buildings_oct12/ordnance_factory.glb"
+    ],
+    "preview": "res://assets/library/buildings_oct12/ordnance_factory_menu.png",
+    "original_colors": true
   },
   {
     "id": "industry",
@@ -33,7 +42,16 @@
     },
     "description": "Each level above 1 increases this city\u2019s currency, manpower and main commodity income by 25%.",
     "starting_level": 1,
-    "colour": "c7ab65"
+    "colour": "c7ab65",
+    "model_tiers": [
+      "res://assets/library/buildings_oct12/industry.glb",
+      "res://assets/library/buildings_oct12/industry.glb",
+      "res://assets/library/buildings_oct12/industry.glb",
+      "res://assets/library/buildings_oct12/industry.glb",
+      "res://assets/library/buildings_oct12/industry.glb"
+    ],
+    "preview": "res://assets/library/buildings_oct12/industry_menu.png",
+    "original_colors": true
   },
   {
     "id": "research_center",
@@ -60,7 +78,7 @@
     "capital_only": false,
     "starting_level": 0,
     "capital_starting_level": 1,
-    "max_level": 3,
+    "max_level": 5,
     "hours": 3,
     "cost": {
       "funds": 220,
@@ -70,7 +88,23 @@
       "manpower": 20
     },
     "description": "Enables fighter production and provides a home base. Each extra level reduces refueling time by 25%.",
-    "colour": "819aaa"
+    "colour": "819aaa",
+    "model_tiers": [
+      "res://assets/library/buildings_oct12/aircraft_factory_l1.glb",
+      "res://assets/library/buildings_oct12/aircraft_factory_l2.glb",
+      "res://assets/library/buildings_oct12/aircraft_factory_l3.glb",
+      "res://assets/library/buildings_oct12/aircraft_factory_l4.glb",
+      "res://assets/library/buildings_oct12/aircraft_factory_l5.glb"
+    ],
+    "preview": "res://assets/library/buildings_oct12/aircraft_factory_l1_menu.png",
+    "original_colors": true,
+    "rural_model_tiers": [
+      "res://assets/library/buildings_oct12/province_airport_l1.glb",
+      "res://assets/library/buildings_oct12/province_airport_l2.glb",
+      "res://assets/library/buildings_oct12/province_airport_l3.glb",
+      "res://assets/library/buildings_oct12/province_airport_l4.glb",
+      "res://assets/library/buildings_oct12/province_airport_l5.glb"
+    ]
   },
   {
     "id": "finance",
@@ -175,7 +209,16 @@
       "manpower": 15
     },
     "description": "Each level increases this city\u2019s manpower income by 25%.",
-    "save_default": true
+    "save_default": true,
+    "model_tiers": [
+      "res://assets/library/buildings_oct12/recruitment_center.glb",
+      "res://assets/library/buildings_oct12/recruitment_center.glb",
+      "res://assets/library/buildings_oct12/recruitment_center.glb",
+      "res://assets/library/buildings_oct12/recruitment_center.glb",
+      "res://assets/library/buildings_oct12/recruitment_center.glb"
+    ],
+    "preview": "res://assets/library/buildings_oct12/recruitment_center_menu.png",
+    "original_colors": true
   },
   {
     "id": "barracks",
@@ -194,7 +237,16 @@
     },
     "description": "Produces infantry. Each level above 1 increases infantry production speed by 25%.",
     "starting_level": 0,
-    "save_default": true
+    "save_default": true,
+    "model_tiers": [
+      "res://assets/library/buildings_oct12/barracks.glb",
+      "res://assets/library/buildings_oct12/barracks.glb",
+      "res://assets/library/buildings_oct12/barracks.glb",
+      "res://assets/library/buildings_oct12/barracks.glb",
+      "res://assets/library/buildings_oct12/barracks.glb"
+    ],
+    "preview": "res://assets/library/buildings_oct12/barracks_menu.png",
+    "original_colors": true
   },
   {
     "id": "tank_plant",
@@ -213,7 +265,16 @@
     },
     "description": "Produces tanks and mechanized vehicles. Each level above 1 increases their production speed by 25%.",
     "starting_level": 0,
-    "save_default": true
+    "save_default": true,
+    "model_tiers": [
+      "res://assets/library/buildings_oct12/tank_plant.glb",
+      "res://assets/library/buildings_oct12/tank_plant.glb",
+      "res://assets/library/buildings_oct12/tank_plant.glb",
+      "res://assets/library/buildings_oct12/tank_plant.glb",
+      "res://assets/library/buildings_oct12/tank_plant.glb"
+    ],
+    "preview": "res://assets/library/buildings_oct12/tank_plant_menu.png",
+    "original_colors": true
   },
   {
     "id": "naval_base",
@@ -233,7 +294,16 @@
     "description": "Coastal cities only. Each level increases ship production speed by 25%.",
     "starting_level": 0,
     "save_default": true,
-    "coastal_only": true
+    "coastal_only": true,
+    "model_tiers": [
+      "res://assets/library/buildings_oct12/naval_base.glb",
+      "res://assets/library/buildings_oct12/naval_base.glb",
+      "res://assets/library/buildings_oct12/naval_base.glb",
+      "res://assets/library/buildings_oct12/naval_base.glb",
+      "res://assets/library/buildings_oct12/naval_base.glb"
+    ],
+    "preview": "res://assets/library/buildings_oct12/naval_base_menu.png",
+    "original_colors": true
   },
   {
     "id": "bunker",
@@ -241,7 +311,7 @@
     "asset_roster_id": "facility_bunker",
     "colour": "838677",
     "capital_only": false,
-    "max_level": 3,
+    "max_level": 5,
     "hours": 3,
     "cost": {
       "funds": 220,
@@ -252,11 +322,20 @@
     },
     "description": "Each level reduces incoming damage to friendly ground units within 0.6 of a controlled city by 20%, up to 60%.",
     "starting_level": 0,
-    "save_default": true
+    "save_default": true,
+    "model_tiers": [
+      "res://assets/library/buildings_oct12/city_walls_l1.glb",
+      "res://assets/library/buildings_oct12/city_walls_l2.glb",
+      "res://assets/library/buildings_oct12/city_walls_l3.glb",
+      "res://assets/library/buildings_oct12/city_walls_l4.glb",
+      "res://assets/library/buildings_oct12/city_walls_l5.glb"
+    ],
+    "preview": "res://assets/library/buildings_oct12/city_walls_l1_menu.png",
+    "original_colors": true
   },
   {
     "id": "infrastructure",
-    "name": "Infrastructure",
+    "name": "Rail station & logistics",
     "asset_roster_id": "facility_infrastructure",
     "colour": "bd9763",
     "capital_only": false,
@@ -269,8 +348,22 @@
       "fuel": 20,
       "manpower": 30
     },
-    "description": "Each level increases this city\u2019s construction speed by 15%.",
+    "description": "City train station. Connects to nearby friendly completed stations by rail and improves construction speed by 15% per level. Rural provinces build roads and logistics instead.",
     "starting_level": 0,
-    "save_default": true
+    "save_default": true,
+    "model_tiers": [
+      "res://assets/library/buildings_oct12/train_station.glb",
+      "res://assets/library/buildings_oct12/train_station.glb",
+      "res://assets/library/buildings_oct12/train_station.glb",
+      "res://assets/library/buildings_oct12/train_station.glb",
+      "res://assets/library/buildings_oct12/train_station.glb"
+    ],
+    "preview": "res://assets/library/buildings_oct12/train_station_menu.png",
+    "original_colors": true,
+    "rural_model_tiers": [
+      "res://assets/library/buildings_oct12/road_straight.glb",
+      "res://assets/library/buildings_oct12/road_straight.glb",
+      "res://assets/library/buildings_oct12/road_straight.glb"
+    ]
   }
 ]

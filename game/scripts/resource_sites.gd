@@ -111,14 +111,16 @@ func _build(site: Dictionary) -> void:
 	anchor.rotation.y = float(abs(str(site.name).hash()) % 628) / 100.0
 	anchor.scale = Vector3.ONE * 1.6
 	add_child(anchor)
-	var parts: = Parts.new()
-	match site.resource:
-		"fuel": _oil_field(parts)
-		"materials": _timber(parts) if _forested(site.point) else _mine(parts)
-		"electronics": _factory(parts)
-		"manpower": _farm(parts)
-		"funds": _factory(parts)
-	parts.commit(anchor)
+	var original: String = {"fuel":"resource_oil","materials":"resource_metal","electronics":"resource_rare_earth"}.get(site.resource,"")
+	if not original.is_empty():
+		var source: String = "res://assets/library/buildings_oct12/"+original+".glb"
+		var model: = UnitVisual.merged((load(source) as PackedScene).instantiate() as Node3D)
+		var bounds: = UnitVisual.model_bounds(model,0.0)
+		var factor: = 0.42/maxf(maxf(bounds.size.x,bounds.size.z),0.001)
+		var center: = bounds.get_center()
+		model.transform = Transform3D(Basis.IDENTITY.scaled(Vector3.ONE*factor),Vector3(-center.x,-bounds.position.y,-center.z)*factor)
+		anchor.add_child(model)
+		anchor.set_meta("original_resource_model",source)
 	var badge: = Sprite3D.new()
 	badge.texture = icon(site.resource)
 	badge.billboard = BaseMaterial3D.BILLBOARD_ENABLED

@@ -229,6 +229,10 @@ func _ready() -> void :
 	resource_sites.provinces = buildings.provinces
 	units.air.economy = production
 	cities.setup_buildings(buildings)
+	var railway: = RailwayMap.new()
+	railway.name = "Railways"
+	map.add_child(railway)
+	railway.setup(cities,buildings)
 	research = ResearchSystem.new()
 	research.setup(production, clock, units)
 	production.research = research
@@ -332,6 +336,7 @@ func _ready() -> void :
 	match_rules.production = production
 	session.match_rules = match_rules
 	match_rules.report.connect(hud.show_status)
+	match_rules.report.connect(func(_message: String): railway.refresh())
 	match_rules.finished.connect(show_result)
 	clock.advanced.connect(match_rules.advance)
 	units.status_changed.connect( func(_message: String): refresh_hud())

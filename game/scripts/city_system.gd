@@ -129,15 +129,17 @@ func sync_buildings() -> void :
 			if current == 0:
 				if visual != null: visual.hide()
 				continue
+			var model_path: = FacilityVisual.path(definition, city.country.to_lower(), current)
+			if visual != null and visual.get_meta("facility_model", "") != model_path:
+				district.remove_child(visual);visual.queue_free();visual = null
 			if visual == null:
-				var appearance: = AssetRoster.appearance(definition.asset_roster_id, city.country.to_lower())
-				visual = (load(appearance.model) as PackedScene).instantiate() as Node3D
+				visual = FacilityVisual.create(definition, city.country.to_lower(), current)
 				visual.name = name
 				# Spread around the city edge instead of a straight row south of it.
 				var around: = TAU * (index + 0.5) / maxf(system.catalog.size(), 1.0) + float(city.name.hash() % 100) * 0.01
 				visual.position = Vector3(cos(around) * 1.08, 0.09, sin(around) * 1.08)
 				visual.rotation.y = -around
-				_paint_infrastructure(visual)
+				if not visual.get_meta("original_colors", false): _paint_infrastructure(visual)
 				district.add_child(visual)
 			var infrastructure_world: = district.position + visual.position * district.scale
 			visual.position.y = 0.09 + (terrain.elevation(Vector2(infrastructure_world.x, infrastructure_world.z)) - district.position.y) / district.scale.y
@@ -159,14 +161,17 @@ func sync_province_buildings(system: BuildingSystem) -> void:
 				add_child(group);rural_districts[id] = group
 			var group: Node3D = rural_districts[id]
 			var visual: = group.get_node_or_null(NodePath(kind)) as Node3D
+			var definition: = system.spec(kind)
+			var model_path: = FacilityVisual.path(definition, place.country.to_lower(), current, true)
+			if visual != null and visual.get_meta("facility_model", "") != model_path:
+				group.remove_child(visual);visual.queue_free();visual = null
 			if visual == null:
-				var definition: = system.spec(kind)
-				var appearance: = AssetRoster.appearance(definition.asset_roster_id,place.country.to_lower())
-				visual = (load(appearance.model) as PackedScene).instantiate() as Node3D
+				visual = FacilityVisual.create(definition, place.country.to_lower(), current, true)
 				visual.name = kind
 				var angle: = TAU*index/ProvinceConstruction.ALLOWED.size()
 				visual.position = Vector3(cos(angle)*0.28,0.03,sin(angle)*0.28)
-				_paint_infrastructure(visual);group.add_child(visual)
+				if not visual.get_meta("original_colors", false): _paint_infrastructure(visual)
+				group.add_child(visual)
 			visual.scale = Vector3.ONE*(0.13+0.015*(current-1))
 			visual.set_meta("building_level",current)
 	# Restoring an older save also removes later, unsaved province structures.
