@@ -31,7 +31,7 @@ Claude work integrated from `6fb592203a9b2599dab5a6e9cc6f0e57e7afd793`: 37 origi
 | Accounts | 28 | Passed |
 | Naval movement | 125 | Passed |
 
-Native Godot Compatibility rendering inspected separately for the opening, six research groups, model/upgrade tree, city buildings, unit health and coast. No physical Android device was available for this build. APK verification, exact exported-resource comparison, and preservation of the prior runtime/certificate are recorded separately.
+Native Godot Compatibility rendering inspected separately for the opening, six research groups, model/upgrade tree, city buildings, unit health and coast. No physical Android device was available for this build. The signed APK verifies with v2/v3 signatures and the existing certificate. All 3,160 exported entries match the APK byte-for-byte; classes.dex and both ARM64 libraries match 0.22 unchanged. Android version code 23, name 0.23-warfront-ww3, package com.commandofnations.test and launcher label Warfront Mandate were verified. Packaged owner-rule checks are recorded separately.
 
 ## Optimized files checked
 

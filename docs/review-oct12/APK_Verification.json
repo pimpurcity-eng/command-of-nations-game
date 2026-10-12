@@ -1,0 +1,16 @@
+{
+  "sha256": "884a1360e2ee8cc1e2fc61c48dd1784c7f6334e863023eec17bfd400be90cded",
+  "bytes": 166844642,
+  "packaged_entries_verified": 3160,
+  "unchanged_runtime_entries": [
+    "classes.dex",
+    "lib/arm64-v8a/libc++_shared.so",
+    "lib/arm64-v8a/libgodot_android.so"
+  ],
+  "manifest": {
+    "versionCode": 23,
+    "versionName": "0.23-warfront-ww3",
+    "package": "com.commandofnations.test",
+    "label": "Warfront Mandate"
+  }
+}

@@ -1,0 +1,283 @@
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+PASS three units of each family
+PASS six requested research groups
+PASS model upgrades between major variants: patriot_russia
+PASS model upgrades between major variants: skyguard_russia
+PASS model upgrades between major variants: patriot_ukraine
+PASS model upgrades between major variants: skyguard_ukraine
+PASS model upgrades between major variants: tanks_russia
+PASS model upgrades between major variants: apcs_russia
+PASS model upgrades between major variants: bombers_russia
+PASS model upgrades between major variants: tanks_ukraine
+PASS model upgrades between major variants: apcs_ukraine
+PASS model upgrades between major variants: bombers_ukraine
+PASS model upgrades between major variants: strike_ukraine
+PASS model upgrades between major variants: artillery_russia
+PASS model upgrades between major variants: artillery_ukraine
+PASS model upgrades between major variants: rockets_russia
+PASS model upgrades between major variants: rockets_ukraine
+PASS model upgrades between major variants: helicopters_russia
+PASS model upgrades between major variants: helicopters_ukraine
+PASS model upgrades between major variants: missiles_russia
+PASS model upgrades between major variants: missiles_ukraine
+PASS model upgrades between major variants: silos_russia
+PASS model upgrades between major variants: silos_ukraine
+PASS model upgrades between major variants: drones_russia
+PASS model upgrades between major variants: drones_ukraine
+PASS model upgrades between major variants: loitering_russia
+PASS model upgrades between major variants: fighters_russia
+PASS model upgrades between major variants: fighters_ukraine
+PASS model upgrades between major variants: infantry_russia
+PASS model upgrades between major variants: infantry_ukraine
+PASS model upgrades between major variants: kamaz5350_supply_russia
+PASS model upgrades between major variants: brem1m_recovery_russia
+PASS model upgrades between major variants: imr3m_engineer_russia
+PASS model upgrades between major variants: mtu72_bridgelayer_russia
+PASS model upgrades between major variants: ur77_mineclearing_russia
+PASS model upgrades between major variants: man_hx77_supply_ukraine
+PASS model upgrades between major variants: buffel_recovery_ukraine
+PASS model upgrades between major variants: kodiak_engineer_ukraine
+PASS model upgrades between major variants: leguan_bridgelayer_ukraine
+PASS model upgrades between major variants: trojan_breacher_ukraine
+PASS model upgrades between major variants: 2b14_mortar_82_russia
+PASS model upgrades between major variants: 2b11_mortar_120_russia
+PASS model upgrades between major variants: d30_howitzer_russia
+PASS model upgrades between major variants: l16_mortar_81_ukraine
+PASS model upgrades between major variants: mo120rt_mortar_ukraine
+PASS model upgrades between major variants: l118_lightgun_ukraine
+PASS model upgrades between major variants: il76md_russia
+PASS model upgrades between major variants: a50u_russia
+PASS model upgrades between major variants: yak130_russia
+PASS model upgrades between major variants: a400m_atlas_ukraine
+PASS model upgrades between major variants: hawk_t2_ukraine
+PASS model upgrades between major variants: advanced_tanks_russia
+PASS model upgrades between major variants: advanced_tanks_ukraine
+PASS model upgrades between major variants: coastal_missiles_russia
+PASS model upgrades between major variants: coastal_missiles_ukraine
+PASS model upgrades between major variants: fleet_russia
+PASS model upgrades between major variants: fleet_ukraine
+PASS model upgrades between major variants: destroyers_russia
+PASS model upgrades between major variants: destroyers_ukraine
+PASS model upgrades between major variants: corvettes_russia
+PASS model upgrades between major variants: corvettes_ukraine
+PASS model upgrades between major variants: submarines_russia
+PASS model upgrades between major variants: submarines_ukraine
+PASS model upgrades between major variants: carriers_russia
+PASS model upgrades between major variants: carriers_ukraine
+PASS different branch research days
+PASS economy research has usable projects
+PASS starting buildings: Kyiv / factory
+PASS starting buildings: Kyiv / industry
+PASS starting buildings: Kyiv / research_center
+PASS starting buildings: Kyiv / airbase
+PASS starting buildings: Kyiv / finance
+PASS starting buildings: Kyiv / material_works
+PASS starting buildings: Kyiv / electronics_plant
+PASS starting buildings: Kyiv / fuel_depot
+PASS starting buildings: Kyiv / recruitment_center
+PASS starting buildings: Kyiv / barracks
+PASS starting buildings: Kyiv / tank_plant
+PASS starting buildings: Kyiv / naval_base
+PASS starting buildings: Kyiv / bunker
+PASS starting buildings: Kyiv / infrastructure
+PASS starting buildings: Kyiv / train_station
+PASS starting buildings: Kyiv / capitol
+PASS starting buildings: Kyiv / missile_factory
+PASS starting buildings: Lviv / factory
+PASS starting buildings: Lviv / industry
+PASS starting buildings: Lviv / research_center
+PASS starting buildings: Lviv / airbase
+PASS starting buildings: Lviv / finance
+PASS starting buildings: Lviv / material_works
+PASS starting buildings: Lviv / electronics_plant
+PASS starting buildings: Lviv / fuel_depot
+PASS starting buildings: Lviv / recruitment_center
+PASS starting buildings: Lviv / barracks
+PASS starting buildings: Lviv / tank_plant
+PASS starting buildings: Lviv / naval_base
+PASS starting buildings: Lviv / bunker
+PASS starting buildings: Lviv / infrastructure
+PASS starting buildings: Lviv / train_station
+PASS starting buildings: Lviv / capitol
+PASS starting buildings: Lviv / missile_factory
+PASS starting buildings: Odesa / factory
+PASS starting buildings: Odesa / industry
+PASS starting buildings: Odesa / research_center
+PASS starting buildings: Odesa / airbase
+PASS starting buildings: Odesa / finance
+PASS starting buildings: Odesa / material_works
+PASS starting buildings: Odesa / electronics_plant
+PASS starting buildings: Odesa / fuel_depot
+PASS starting buildings: Odesa / recruitment_center
+PASS starting buildings: Odesa / barracks
+PASS starting buildings: Odesa / tank_plant
+PASS starting buildings: Odesa / naval_base
+PASS starting buildings: Odesa / bunker
+PASS starting buildings: Odesa / infrastructure
+PASS starting buildings: Odesa / train_station
+PASS starting buildings: Odesa / capitol
+PASS starting buildings: Odesa / missile_factory
+PASS starting buildings: Kharkiv / factory
+PASS starting buildings: Kharkiv / industry
+PASS starting buildings: Kharkiv / research_center
+PASS starting buildings: Kharkiv / airbase
+PASS starting buildings: Kharkiv / finance
+PASS starting buildings: Kharkiv / material_works
+PASS starting buildings: Kharkiv / electronics_plant
+PASS starting buildings: Kharkiv / fuel_depot
+PASS starting buildings: Kharkiv / recruitment_center
+PASS starting buildings: Kharkiv / barracks
+PASS starting buildings: Kharkiv / tank_plant
+PASS starting buildings: Kharkiv / naval_base
+PASS starting buildings: Kharkiv / bunker
+PASS starting buildings: Kharkiv / infrastructure
+PASS starting buildings: Kharkiv / train_station
+PASS starting buildings: Kharkiv / capitol
+PASS starting buildings: Kharkiv / missile_factory
+PASS starting buildings: Dnipro / factory
+PASS starting buildings: Dnipro / industry
+PASS starting buildings: Dnipro / research_center
+PASS starting buildings: Dnipro / airbase
+PASS starting buildings: Dnipro / finance
+PASS starting buildings: Dnipro / material_works
+PASS starting buildings: Dnipro / electronics_plant
+PASS starting buildings: Dnipro / fuel_depot
+PASS starting buildings: Dnipro / recruitment_center
+PASS starting buildings: Dnipro / barracks
+PASS starting buildings: Dnipro / tank_plant
+PASS starting buildings: Dnipro / naval_base
+PASS starting buildings: Dnipro / bunker
+PASS starting buildings: Dnipro / infrastructure
+PASS starting buildings: Dnipro / train_station
+PASS starting buildings: Dnipro / capitol
+PASS starting buildings: Dnipro / missile_factory
+PASS starting buildings: Moscow / factory
+PASS starting buildings: Moscow / industry
+PASS starting buildings: Moscow / research_center
+PASS starting buildings: Moscow / airbase
+PASS starting buildings: Moscow / finance
+PASS starting buildings: Moscow / material_works
+PASS starting buildings: Moscow / electronics_plant
+PASS starting buildings: Moscow / fuel_depot
+PASS starting buildings: Moscow / recruitment_center
+PASS starting buildings: Moscow / barracks
+PASS starting buildings: Moscow / tank_plant
+PASS starting buildings: Moscow / naval_base
+PASS starting buildings: Moscow / bunker
+PASS starting buildings: Moscow / infrastructure
+PASS starting buildings: Moscow / train_station
+PASS starting buildings: Moscow / capitol
+PASS starting buildings: Moscow / missile_factory
+PASS starting buildings: Kursk / factory
+PASS starting buildings: Kursk / industry
+PASS starting buildings: Kursk / research_center
+PASS starting buildings: Kursk / airbase
+PASS starting buildings: Kursk / finance
+PASS starting buildings: Kursk / material_works
+PASS starting buildings: Kursk / electronics_plant
+PASS starting buildings: Kursk / fuel_depot
+PASS starting buildings: Kursk / recruitment_center
+PASS starting buildings: Kursk / barracks
+PASS starting buildings: Kursk / tank_plant
+PASS starting buildings: Kursk / naval_base
+PASS starting buildings: Kursk / bunker
+PASS starting buildings: Kursk / infrastructure
+PASS starting buildings: Kursk / train_station
+PASS starting buildings: Kursk / capitol
+PASS starting buildings: Kursk / missile_factory
+PASS starting buildings: Belgorod / factory
+PASS starting buildings: Belgorod / industry
+PASS starting buildings: Belgorod / research_center
+PASS starting buildings: Belgorod / airbase
+PASS starting buildings: Belgorod / finance
+PASS starting buildings: Belgorod / material_works
+PASS starting buildings: Belgorod / electronics_plant
+PASS starting buildings: Belgorod / fuel_depot
+PASS starting buildings: Belgorod / recruitment_center
+PASS starting buildings: Belgorod / barracks
+PASS starting buildings: Belgorod / tank_plant
+PASS starting buildings: Belgorod / naval_base
+PASS starting buildings: Belgorod / bunker
+PASS starting buildings: Belgorod / infrastructure
+PASS starting buildings: Belgorod / train_station
+PASS starting buildings: Belgorod / capitol
+PASS starting buildings: Belgorod / missile_factory
+PASS starting buildings: Voronezh / factory
+PASS starting buildings: Voronezh / industry
+PASS starting buildings: Voronezh / research_center
+PASS starting buildings: Voronezh / airbase
+PASS starting buildings: Voronezh / finance
+PASS starting buildings: Voronezh / material_works
+PASS starting buildings: Voronezh / electronics_plant
+PASS starting buildings: Voronezh / fuel_depot
+PASS starting buildings: Voronezh / recruitment_center
+PASS starting buildings: Voronezh / barracks
+PASS starting buildings: Voronezh / tank_plant
+PASS starting buildings: Voronezh / naval_base
+PASS starting buildings: Voronezh / bunker
+PASS starting buildings: Voronezh / infrastructure
+PASS starting buildings: Voronezh / train_station
+PASS starting buildings: Voronezh / capitol
+PASS starting buildings: Voronezh / missile_factory
+PASS starting buildings: Rostov-on-Don / factory
+PASS starting buildings: Rostov-on-Don / industry
+PASS starting buildings: Rostov-on-Don / research_center
+PASS starting buildings: Rostov-on-Don / airbase
+PASS starting buildings: Rostov-on-Don / finance
+PASS starting buildings: Rostov-on-Don / material_works
+PASS starting buildings: Rostov-on-Don / electronics_plant
+PASS starting buildings: Rostov-on-Don / fuel_depot
+PASS starting buildings: Rostov-on-Don / recruitment_center
+PASS starting buildings: Rostov-on-Don / barracks
+PASS starting buildings: Rostov-on-Don / tank_plant
+PASS starting buildings: Rostov-on-Don / naval_base
+PASS starting buildings: Rostov-on-Don / bunker
+PASS starting buildings: Rostov-on-Don / infrastructure
+PASS starting buildings: Rostov-on-Don / train_station
+PASS starting buildings: Rostov-on-Don / capitol
+PASS starting buildings: Rostov-on-Don / missile_factory
+PASS production lists controlled cities only
+PASS unscouted enemy construction inventory hidden
+PASS province train stations allowed
+PASS province factories rejected
+PASS no units produced in provinces
+PASS inland naval bases rejected
+PASS coastal naval base allowed
+PASS missile factory available
+PASS new building save validates
+PASS old building save remains compatible
+PASS economy and military research save validates
+PASS ship starts on visible water: campaign_fleet_russia_l1.0
+PASS ship starts on visible water: campaign_fleet_russia_l3.0
+PASS ship starts on visible water: campaign_fleet_russia_l5.0
+PASS ship starts on visible water: campaign_fleet_ukraine_l1.0
+PASS ship starts on visible water: campaign_fleet_ukraine_l3.0
+PASS ship starts on visible water: campaign_fleet_ukraine_l5.0
+PASS ship starts on visible water: campaign_destroyers_russia_l1.0
+PASS ship starts on visible water: campaign_destroyers_russia_l3.0
+PASS ship starts on visible water: campaign_destroyers_russia_l5.0
+PASS ship starts on visible water: campaign_destroyers_ukraine_l1.0
+PASS ship starts on visible water: campaign_destroyers_ukraine_l3.0
+PASS ship starts on visible water: campaign_destroyers_ukraine_l5.0
+PASS ship starts on visible water: campaign_corvettes_russia_l1.0
+PASS ship starts on visible water: campaign_corvettes_russia_l3.0
+PASS ship starts on visible water: campaign_corvettes_russia_l5.0
+PASS ship starts on visible water: campaign_corvettes_ukraine_l1.0
+PASS ship starts on visible water: campaign_corvettes_ukraine_l3.0
+PASS ship starts on visible water: campaign_corvettes_ukraine_l5.0
+PASS ship starts on visible water: campaign_submarines_russia_l1.0
+PASS ship starts on visible water: campaign_submarines_russia_l3.0
+PASS ship starts on visible water: campaign_submarines_russia_l5.0
+PASS ship starts on visible water: campaign_submarines_ukraine_l1.0
+PASS ship starts on visible water: campaign_submarines_ukraine_l3.0
+PASS ship starts on visible water: campaign_submarines_ukraine_l5.0
+PASS ship starts on visible water: campaign_carriers_russia_l1.0
+PASS ship starts on visible water: campaign_carriers_russia_l3.0
+PASS ship starts on visible water: campaign_carriers_russia_l5.0
+PASS ship starts on visible water: campaign_carriers_ukraine_l1.0
+PASS ship starts on visible water: campaign_carriers_ukraine_l3.0
+PASS ship starts on visible water: campaign_carriers_ukraine_l5.0
+PASS sea routes reject a start on visible land
+PASS unit level and health visible on map
+RESULT checks=280 failures=0
