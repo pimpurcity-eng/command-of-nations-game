@@ -1,0 +1,6 @@
+# Caddy terminates TLS (free automatic certificates) so phones connect with wss://.
+# DNS: an A record play.warfrontmandate.com → the server's IP address (Cloudflare: DNS only, grey cloud,
+# or orange cloud with WebSockets on).
+play.warfrontmandate.com {
+	reverse_proxy 127.0.0.1:8910
+}

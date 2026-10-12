@@ -71,6 +71,7 @@ func reason(city_id: String, building_id: String, country: String = "", check_re
 		if check_resources and economy.stockpiles[country][resource] < cost(building_id, target)[resource]: return "Insufficient " + resource
 	return ""
 func enqueue(city_id: String, building_id: String, country: String = "") -> String:
+	if MatchClient.active != null: return MatchClient.active.send("build", {"city": city_id, "building": building_id})
 	if country.is_empty(): country = GameSession.player_country
 	var error: = reason(city_id, building_id, country)
 	if not error.is_empty(): return error

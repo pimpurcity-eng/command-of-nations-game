@@ -5,8 +5,8 @@ signal fresh_requested
 signal test_requested
 signal europe_requested
 signal world_requested
+signal online_requested
 var country_picker: OptionButton
-var doctrine_picker: OptionButton
 var language_picker: OptionButton
 ## Languages with translations (translations/ui.csv, tools/make_translations.py).
 const LANGUAGES: = [["en", "English"], ["ru", "Русский"], ["uk", "Українська"], ["de", "Deutsch"], ["fr", "Français"], ["es", "Español"]]
@@ -23,10 +23,6 @@ func _choose_language(index: int) -> void:
 	settings.load(SETTINGS_PATH)
 	settings.set_value("general", "locale", code)
 	settings.save(SETTINGS_PATH)
-## The doctrine the player chose (Doctrine.DOCTRINES); "" keeps the country's default.
-func selected_doctrine() -> String:
-	if doctrine_picker == null or doctrine_picker.selected <= 0: return Doctrine.DEFAULTS.get(selected_country(), "european")
-	return Doctrine.DOCTRINES.keys()[doctrine_picker.selected - 1]
 func selected_country() -> String:
 	return "ukraine" if country_picker.selected == 0 else "russia"
 var panel: PanelContainer
@@ -104,12 +100,6 @@ func setup(theme: Theme, saved: bool) -> void :
 	country_picker.select(0 if GameSession.player_country == "ukraine" else 1)
 	country_picker.custom_minimum_size.y = 48
 	content.add_child(country_picker)
-	doctrine_picker = OptionButton.new()
-	doctrine_picker.add_item("Doctrine: country default")
-	for id in Doctrine.DOCTRINES: doctrine_picker.add_item("Doctrine: " + Doctrine.DOCTRINES[id].name + " · " + Doctrine.DOCTRINES[id].summary)
-	doctrine_picker.custom_minimum_size.y = 48
-	doctrine_picker.clip_text = true
-	content.add_child(doctrine_picker)
 	language_picker = OptionButton.new()
 	language_picker.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
 	for language in LANGUAGES: language_picker.add_item("🌐 " + language[1])
@@ -125,18 +115,22 @@ func setup(theme: Theme, saved: bool) -> void :
 	continue_button.disabled = not saved
 	continue_button.visible = saved
 	continue_button.pressed.connect( func(): continue_requested.emit();hide())
-	column.add_child(continue_button)
+	content.add_child(continue_button)
 	fresh_button = Button.new()
 	fresh_button.text = "START NEW CAMPAIGN" if saved else "START CAMPAIGN"
 	fresh_button.custom_minimum_size.y = 52
 	fresh_button.pressed.connect( func(): fresh_requested.emit();hide())
-	column.add_child(fresh_button)
+	content.add_child(fresh_button)
+	var online_button: = Button.new()
+	online_button.text = "ONLINE MATCH · PLAY OTHER COMMANDERS"
+	online_button.custom_minimum_size.y = 52
+	online_button.pressed.connect(func(): online_requested.emit())
+	content.add_child(online_button)
 	var test_button: = Button.new()
 	test_button.text = "ALL WEAPONS TEST MAP"
 	test_button.custom_minimum_size.y = 48
 	test_button.pressed.connect(func(): test_requested.emit(); hide())
-	column.add_child(test_button)
-	_start_music(column)
+	content.add_child(test_button)
 	var europe_button: = Button.new()
 	europe_button.text = "EUROPE MAP · 20 PLAYERS (PREVIEW)"
 	europe_button.custom_minimum_size.y = 48
@@ -146,7 +140,7 @@ func setup(theme: Theme, saved: bool) -> void :
 		await get_tree().process_frame
 		await get_tree().process_frame
 		europe_requested.emit())
-	column.add_child(europe_button)
+	content.add_child(europe_button)
 	var world_button: = Button.new()
 	world_button.text = "WORLD MAP · 100 PLAYERS (PREVIEW)"
 	world_button.custom_minimum_size.y = 48
@@ -156,10 +150,11 @@ func setup(theme: Theme, saved: bool) -> void :
 		await get_tree().process_frame
 		await get_tree().process_frame
 		world_requested.emit())
-	column.add_child(world_button)
+	content.add_child(world_button)
+	_start_music(content)
 	get_viewport().size_changed.connect(_layout)
 	_layout()
-func _start_music(column: VBoxContainer) -> void:
+func _start_music(content: VBoxContainer) -> void:
 	if audio == null: return
 	var row: = HBoxContainer.new()
 	row.add_theme_constant_override("separation", 10)
@@ -172,7 +167,16 @@ func _start_music(column: VBoxContainer) -> void:
 	music_button.pressed.connect(func(): audio.set_music(not GameAudio.music_enabled))
 	sound_button.pressed.connect(func(): audio.set_sound(not GameAudio.sound_enabled))
 	audio.settings_changed.connect(_show_audio)
-	column.add_child(row)
+	content.add_child(row)
+	if GameAudio.custom_menu_theme():
+		var credit: = Label.new()
+		credit.text = GameAudio.MENU_THEME_CREDIT
+		credit.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+		credit.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		credit.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		credit.add_theme_font_size_override("font_size", 12)
+		credit.add_theme_color_override("font_color", Color("c9bc98"))
+		content.add_child(credit)
 	_show_audio()
 func _show_audio() -> void:
 	music_button.text = "MUSIC: " + ("ON" if GameAudio.music_enabled else "OFF")
@@ -182,7 +186,8 @@ func _layout() -> void :
 	var portrait: = size.y > size.x
 	var art: = "res://assets/interface/campaign_hero_portrait.webp" if portrait else "res://assets/interface/campaign_hero_landscape.webp"
 	if ResourceLoader.exists(art): artwork.texture = load(art)
-	var height: = minf(660 if has_save else 600, size.y - 24)
+	# Everything scrolls inside the panel; it is tall enough to show the main buttons at once.
+	var height: = minf(820.0 if portrait else 660.0, size.y - 24)
 	panel.position = Vector2(maxf(12, (size.x - 520) * 0.14), maxf(12, (size.y - height) * (0.25 if portrait else 0.5)))
 	var width: = minf(520, size.x - 24)
 	content.custom_minimum_size.x = maxf(0, width - 60)

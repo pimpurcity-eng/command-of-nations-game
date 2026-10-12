@@ -378,9 +378,9 @@ func _ready() -> void :
 			if GameSession.weapons_test: restore_campaign_forces()
 			GameSession.weapons_test = false
 			GameSession.player_country = mobile_start.selected_country()
-			Doctrine.choose(GameSession.player_country, mobile_start.selected_doctrine())
 			apply_player_country()
 			start_campaign_play())
+		mobile_start.online_requested.connect(join_online)
 		mobile_start.europe_requested.connect(func(): get_tree().change_scene_to_file("res://scenes/europe_map.tscn"))
 		mobile_start.world_requested.connect(func(): get_tree().change_scene_to_file("res://scenes/world_map.tscn"))
 		mobile_start.test_requested.connect(func():
@@ -632,6 +632,9 @@ func launch_strategic(kind: String) -> void:
 	if target == Vector2.INF:
 		hud.show_status("Tap a target province or enemy army first")
 		return
+	if MatchClient.active != null:
+		hud.show_status(MatchClient.active.send("strategic_launch", {"kind": kind, "x": target.x, "z": target.y}))
+		return
 	var result: = match_rules.strategic.launch(GameSession.player_country, kind, target, units, map.territories)
 	hud.show_status(result.message)
 	if not result.ok: return
@@ -657,6 +660,10 @@ func retreat_selected() -> void:
 		hud.show_status("Select one of your armies to retreat")
 		return
 	var unit: Dictionary = units.units[units.selected]
+	if MatchClient.active != null:
+		MatchClient.active.send_units("retreat", units.command_ids)
+		hud.show_status("RETREAT ordered")
+		return
 	var group: Array = units.stacks.members(unit)
 	var destination: = match_rules.retreat(group, Vector2(unit.node.position.x, unit.node.position.z))
 	if destination == Vector2.INF:
@@ -669,6 +676,9 @@ func annex_selected() -> void:
 	var territory: = _selected_territory()
 	if territory.is_empty():
 		hud.show_status("Tap a captured province first")
+		return
+	if MatchClient.active != null:
+		hud.show_status(MatchClient.active.send("annex", {"territory": territory.id}))
 		return
 	var points: = VictoryRules.province_points(map.territories, match_rules.cities)
 	var error: = match_rules.annexation.start(territory, GameSession.player_country, production.stockpiles[GameSession.player_country], points)
@@ -856,6 +866,34 @@ func show_stack_info() -> void :
 		add_child(stack_dialog)
 		stack_dialog.setup(hud.get_child(0).theme)
 	stack_dialog.open(units, map)
+
+## Online matches (owner request 2026-10-12): the server address is in user://settings.cfg
+## [online] server_url (default below, set up per docs/MULTIPLAYER_SERVER.md) and match.
+const ONLINE_SERVER: = "wss://play.warfrontmandate.com"
+var online: MatchClient
+func join_online() -> void:
+	if account_panel == null:
+		account_panel = AccountPanel.new()
+		add_child(account_panel)
+		await get_tree().process_frame
+	if not account_panel.auth.signed_in():
+		hud.show_status("Sign in to your account to play online")
+		account_panel.open()
+		return
+	var settings: = ConfigFile.new()
+	settings.load(GameAudio.SETTINGS_PATH)
+	if online != null: online.leave(); online.queue_free()
+	online = MatchClient.new()
+	add_child(online)
+	online.welcomed.connect(func(_state: Dictionary):
+		online.attach(self)
+		mobile_start.hide()
+		audio.play_music("battle_theme")
+		hud.show_status("ONLINE · you command " + online.country.capitalize() + " · the AI covers you while you are away"))
+	online.closed.connect(func(reason: String):
+		hud.show_status("Disconnected from the match" + (": " + reason if not reason.is_empty() else "") + " · tap Online Match to rejoin"))
+	var error: = online.connect_to(str(settings.get_value("online", "server_url", ONLINE_SERVER)), account_panel.auth.access_token, str(settings.get_value("online", "match", "main")), mobile_start.selected_country())
+	hud.show_status("Connecting to the match server…" if error == OK else "Could not reach the match server")
 
 func start_campaign_play() -> void :
 	if not match_rules.winner.is_empty(): return

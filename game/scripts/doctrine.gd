@@ -1,7 +1,8 @@
 class_name Doctrine
 extends RefCounted
 ## Military doctrines (owner request 2026-10-12, Conflict of Nations style). Each country follows
-## one; the player picks theirs on the start screen, AI countries get their country's default.
+## one, set by the country (owner: "Doctrines are determined by country picked"): picking a
+## country on the start screen picks its doctrine. There is no separate doctrine choice.
 ## - WESTERN: air power, navy and air defence +15%; fighters and bombers are stealthy; ground
 ##   forces -5%.
 ## - EUROPEAN: every army defends +10%; research is 15% faster.
@@ -14,13 +15,9 @@ const DOCTRINES: = {
 const DEFAULTS: = {"russia": "eastern", "ukraine": "european", "united_states": "western", "united_kingdom": "western", "france": "european", "germany": "european", "china": "eastern"}
 const AIR: = ["fighter", "bomber", "drone", "helicopter"]
 const HEAVY: = ["armor", "artillery", "missile_launcher"]
-static var chosen: Dictionary = {}
 
 static func of(country: String) -> String:
-	return chosen.get(country, DEFAULTS.get(country, "european"))
-
-static func choose(country: String, doctrine: String) -> void:
-	if DOCTRINES.has(doctrine): chosen[country] = doctrine
+	return DEFAULTS.get(country, "european")
 
 ## Combat strength factor for a unit attacking ("attack") or defending ("defense").
 static func combat_factor(unit: Dictionary, effect: String) -> float:
@@ -43,8 +40,9 @@ static func research_factor(country: String) -> float:
 static func stealth(unit: Dictionary) -> bool:
 	return of(str(unit.get("country", ""))) == "western" and unit.get("visual_kind", "") in AIR
 
+## Saves no longer carry doctrines (older saves with a picked doctrine load with the country's own).
 static func snapshot() -> Dictionary:
-	return chosen.duplicate()
+	return {}
 
-static func restore(state: Dictionary) -> void:
-	chosen = state.duplicate()
+static func restore(_state: Dictionary) -> void:
+	pass

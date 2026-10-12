@@ -36,6 +36,7 @@ func reason(country: String, kind: String, day: int, stockpile: Dictionary) -> S
 	return ""
 
 func build(country: String, kind: String, day: int, stockpile: Dictionary) -> String:
+	if MatchClient.active != null: return MatchClient.active.send("strategic_build", {"kind": kind})
 	var why: = reason(country, kind, day, stockpile)
 	if not why.is_empty(): return why
 	for resource in WEAPONS[kind].cost: stockpile[resource] -= WEAPONS[kind].cost[resource]

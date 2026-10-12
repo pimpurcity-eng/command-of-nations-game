@@ -62,6 +62,7 @@ func reason(id: String, target: int, country: String = "") -> String:
 		if economy.stockpiles[country][resource] < cost(id, target)[resource]: return "Insufficient " + resource
 	return ""
 func start(id: String, target: int, country: String = "") -> String:
+	if MatchClient.active != null: return MatchClient.active.send("research", {"id": id, "target": target})
 	if country.is_empty(): country = GameSession.player_country
 	var error: = reason(id, target, country)
 	if not error.is_empty(): return error

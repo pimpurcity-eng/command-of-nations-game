@@ -11,6 +11,12 @@ const SFX_DIR: = "res://assets/audio/sfx/"
 const MUSIC_DIR: = "res://assets/audio/music/"
 ## A licensed start-screen track, if the owner adds one, replaces the synthesized menu theme.
 const CUSTOM_MENU_THEME: = ["res://assets/audio/start_theme.ogg", "res://assets/audio/start_theme.mp3"]
+## Credit shown on the start screen while the start theme is the licensed track
+## (owner, 2026-10-12: bought, used with the artist's permission on condition of credit).
+const MENU_THEME_CREDIT: = "Music: “Bersærkere” by RAVNIR (Gudlaus, 2026) · used with permission"
+
+static func custom_menu_theme() -> bool:
+	return CUSTOM_MENU_THEME.any(func(path: String): return ResourceLoader.exists(path))
 ## Per-sound loudness (dB) so weapons, alerts and clicks sit together in the mix.
 const VOLUME: = {
 	"tank_cannon": -3.0, "autocannon": -6.0, "artillery": -2.0, "naval_gun": -2.0,

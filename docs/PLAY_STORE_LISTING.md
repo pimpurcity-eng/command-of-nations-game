@@ -87,3 +87,7 @@ account (email + password) in **App content → App access**.
 New personal developer accounts must run a **closed test with at least 12 testers for 14 days in
 a row** before applying for production. Add testers by email list or Google Group, keep them opted
 in for the full 14 days.
+
+## Credits
+
+Start-menu music: “Bersærkere” by RAVNIR (album *Gudlaus*, 2026), used with the artist's permission. Credit must stay in the listing and in the game (see docs/AUDIO_LICENCES.md).

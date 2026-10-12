@@ -5,3 +5,7 @@ build/
 
 # Build-time account configuration (public values only; keep environment-specific setup local)
 game/config/accounts.cfg
+
+# Licensed music (bought; permission to use in the game, not to redistribute). Kept in the private
+# builds repo: Command-of-nations-builds/music/. Copy into game/assets/audio/ before building.
+game/assets/audio/start_theme.*
