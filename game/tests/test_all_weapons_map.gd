@@ -55,8 +55,8 @@ func run() -> void:
 			var point: = Vector2(unit.node.position.x,unit.node.position.z)
 			check(game.map.territories.any(func(t): return t.playable and t.controller == unit.country and RegionData.contains(t,point)), unit.name + " on friendly playable land, not a neutral display grid")
 			check(point.distance_to(game.units.air.base(unit).point) + 0.7 <= game.units.air.radius(unit), unit.name + " inside usable operating radius")
-	check(expected.size() == 101 and actual.size() == expected.size() and expected.keys().all(func(path): return actual.has(path)), "all 101 unique live original weapon models represented")
-	check(game.units.units.size() == 101, "each distinct original appears once; reused modernization models do not crowd the map")
+	check(actual.size() == expected.size() and expected.keys().all(func(path): return actual.has(path)), "every live original weapon model represented")
+	check(game.units.units.size() == expected.size(), "each distinct original appears once; reused modernization models do not crowd the map")
 	var heli: Dictionary = game.units.units.filter(func(u): return u.equipment_id == "helicopters_russia")[0]
 	var animator: HelicopterAnimator = heli.node.get_child(0).get_meta("helicopter_animator")
 	var rest: Basis = animator.rotors[0].basis

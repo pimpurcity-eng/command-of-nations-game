@@ -29,7 +29,7 @@
         "model": "res://assets/library/airdefense/russia_buk_m3.glb"
       },
       {
-        "name": "Buk-M3 · radar",
+        "name": "Buk-M3 \u00b7 radar",
         "range": 3.8,
         "damage": 11.5,
         "improvement": "Better target tracking",
@@ -43,7 +43,7 @@
         "model": "res://assets/library/airdefense/russia_s400.glb"
       },
       {
-        "name": "S-400 · guidance",
+        "name": "S-400 \u00b7 guidance",
         "range": 4.5,
         "damage": 14.5,
         "improvement": "Improved guidance",
@@ -64,7 +64,12 @@
       8,
       12,
       18
-    ]
+    ],
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.0,
+      "manpower": 0.3
+    }
   },
   {
     "id": "skyguard_russia",
@@ -96,7 +101,7 @@
         "model": "res://assets/library/airdefense/russia_strela10.glb"
       },
       {
-        "name": "Strela-10 · guidance",
+        "name": "Strela-10 \u00b7 guidance",
         "range": 2.5,
         "damage": 8,
         "improvement": "Better target tracking",
@@ -110,14 +115,14 @@
         "model": "res://assets/library/airdefense/russia_tor_m2.glb"
       },
       {
-        "name": "Tor-M2 · radar",
+        "name": "Tor-M2 \u00b7 radar",
         "range": 2.8,
         "damage": 10,
         "improvement": "Improved guidance",
         "model": "res://assets/library/airdefense/russia_tor_m2.glb"
       },
       {
-        "name": "Tor-M2 · interception",
+        "name": "Tor-M2 \u00b7 interception",
         "range": 3.0,
         "damage": 11,
         "improvement": "Advanced interception",
@@ -131,7 +136,12 @@
       6,
       9,
       12
-    ]
+    ],
+    "upkeep": {
+      "funds": 20.0,
+      "fuel": 2.0,
+      "manpower": 0.3
+    }
   },
   {
     "id": "patriot_ukraine",
@@ -163,7 +173,7 @@
         "model": "res://assets/library/airdefense/nato_iris_t_slm.glb"
       },
       {
-        "name": "IRIS-T · radar",
+        "name": "IRIS-T \u00b7 radar",
         "range": 3.8,
         "damage": 11.5,
         "improvement": "Better target tracking",
@@ -177,7 +187,7 @@
         "model": "res://assets/library/airdefense/nato_samp_t.glb"
       },
       {
-        "name": "SAMP/T · guidance",
+        "name": "SAMP/T \u00b7 guidance",
         "range": 4.5,
         "damage": 14.5,
         "improvement": "Improved guidance",
@@ -198,7 +208,12 @@
       8,
       12,
       18
-    ]
+    ],
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.0,
+      "manpower": 0.3
+    }
   },
   {
     "id": "skyguard_ukraine",
@@ -230,7 +245,7 @@
         "model": "res://assets/library/airdefense/nato_roland.glb"
       },
       {
-        "name": "Roland · tracking",
+        "name": "Roland \u00b7 tracking",
         "range": 2.5,
         "damage": 8,
         "improvement": "Better target tracking",
@@ -244,14 +259,14 @@
         "model": "res://assets/library/airdefense/nato_nasams.glb"
       },
       {
-        "name": "NASAMS · radar",
+        "name": "NASAMS \u00b7 radar",
         "range": 2.8,
         "damage": 10,
         "improvement": "Improved guidance",
         "model": "res://assets/library/airdefense/nato_nasams.glb"
       },
       {
-        "name": "NASAMS · interception",
+        "name": "NASAMS \u00b7 interception",
         "range": 3.0,
         "damage": 11,
         "improvement": "Advanced interception",
@@ -265,7 +280,12 @@
       6,
       9,
       12
-    ]
+    ],
+    "upkeep": {
+      "funds": 20.0,
+      "fuel": 2.0,
+      "manpower": 0.3
+    }
   },
   {
     "id": "tanks_russia",
@@ -319,7 +339,12 @@
       8,
       12,
       18
-    ]
+    ],
+    "upkeep": {
+      "funds": 28.0,
+      "fuel": 3.2,
+      "manpower": 0.3
+    }
   },
   {
     "id": "apcs_russia",
@@ -373,7 +398,12 @@
       8,
       12,
       18
-    ]
+    ],
+    "upkeep": {
+      "funds": 16.0,
+      "fuel": 2.0,
+      "manpower": 0.4
+    }
   },
   {
     "id": "bombers_russia",
@@ -405,7 +435,7 @@
         "model": "res://assets/library/arsenal/russia_tu22m3.glb"
       },
       {
-        "name": "Tu-22M3 · upgraded",
+        "name": "Tu-22M3 \u00b7 upgraded",
         "improvement": "Better payload",
         "model": "res://assets/library/arsenal/russia_tu22m3.glb"
       },
@@ -416,7 +446,7 @@
         "projectile_model": "res://assets/library/arsenal/russia_kh101.glb"
       },
       {
-        "name": "Tu-95MS · cruise missiles",
+        "name": "Tu-95MS \u00b7 cruise missiles",
         "improvement": "Stand-off missiles",
         "model": "res://assets/library/arsenal/russia_tu95ms.glb",
         "projectile_model": "res://assets/library/arsenal/russia_kh101.glb"
@@ -435,7 +465,12 @@
       8,
       12,
       18
-    ]
+    ],
+    "upkeep": {
+      "funds": 42.0,
+      "fuel": 9.6,
+      "manpower": 0.3
+    }
   },
   {
     "id": "tanks_ukraine",
@@ -489,7 +524,12 @@
       8,
       12,
       18
-    ]
+    ],
+    "upkeep": {
+      "funds": 28.0,
+      "fuel": 3.2,
+      "manpower": 0.3
+    }
   },
   {
     "id": "apcs_ukraine",
@@ -544,7 +584,12 @@
       8,
       12,
       18
-    ]
+    ],
+    "upkeep": {
+      "funds": 16.0,
+      "fuel": 2.0,
+      "manpower": 0.4
+    }
   },
   {
     "id": "bombers_ukraine",
@@ -576,7 +621,7 @@
         "model": "res://assets/library/arsenal/euro_mirage_iv.glb"
       },
       {
-        "name": "Mirage IV · upgraded",
+        "name": "Mirage IV \u00b7 upgraded",
         "improvement": "Better payload",
         "model": "res://assets/library/arsenal/euro_mirage_iv.glb"
       },
@@ -586,7 +631,7 @@
         "model": "res://assets/library/arsenal/euro_vulcan.glb"
       },
       {
-        "name": "Vulcan · stand-off",
+        "name": "Vulcan \u00b7 stand-off",
         "improvement": "Stand-off weapons",
         "model": "res://assets/library/arsenal/euro_vulcan.glb"
       },
@@ -603,7 +648,12 @@
       8,
       12,
       18
-    ]
+    ],
+    "upkeep": {
+      "funds": 42.0,
+      "fuel": 9.6,
+      "manpower": 0.3
+    }
   },
   {
     "id": "strike_ukraine",
@@ -635,7 +685,7 @@
         "projectile_model": "res://assets/library/arsenal/euro_taurus_kepd350.glb"
       },
       {
-        "name": "Tornado IDS · upgraded",
+        "name": "Tornado IDS \u00b7 upgraded",
         "improvement": "Precision weapons",
         "model": "res://assets/library/arsenal/euro_tornado_ids.glb",
         "projectile_model": "res://assets/library/arsenal/euro_taurus_kepd350.glb"
@@ -647,7 +697,7 @@
         "projectile_model": "res://assets/library/arsenal/euro_storm_shadow.glb"
       },
       {
-        "name": "Rafale · upgraded",
+        "name": "Rafale \u00b7 upgraded",
         "improvement": "Better radar",
         "model": "res://assets/library/arsenal/euro_rafale.glb",
         "projectile_model": "res://assets/library/arsenal/euro_storm_shadow.glb"
@@ -665,7 +715,12 @@
       8,
       12,
       18
-    ]
+    ],
+    "upkeep": {
+      "funds": 30.0,
+      "fuel": 6.4,
+      "manpower": 0.2
+    }
   },
   {
     "id": "artillery_russia",
@@ -720,7 +775,12 @@
         "model": "res://assets/library/arsenal/russia_2s35_koalitsiya.glb",
         "improvement": "+48% damage"
       }
-    ]
+    ],
+    "upkeep": {
+      "funds": 33.0,
+      "fuel": 4.0,
+      "manpower": 0.4
+    }
   },
   {
     "id": "artillery_ukraine",
@@ -775,7 +835,12 @@
         "model": "res://assets/library/arsenal/euro_archer.glb",
         "improvement": "+48% damage"
       }
-    ]
+    ],
+    "upkeep": {
+      "funds": 33.0,
+      "fuel": 4.0,
+      "manpower": 0.4
+    }
   },
   {
     "id": "rockets_russia",
@@ -833,7 +898,12 @@
     ],
     "strike_range": 3.5,
     "reload_rounds": 2.0,
-    "strike_damage": 12.0
+    "strike_damage": 12.0,
+    "upkeep": {
+      "funds": 33.0,
+      "fuel": 4.0,
+      "manpower": 0.4
+    }
   },
   {
     "id": "rockets_ukraine",
@@ -874,7 +944,7 @@
         "improvement": "+12% damage"
       },
       {
-        "name": "RM-70 Vampire · modernization",
+        "name": "RM-70 Vampire \u00b7 modernization",
         "model": "res://assets/library/arsenal/euro_rm70_vampire.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_rm70_vampire.png"
@@ -892,7 +962,12 @@
     ],
     "strike_range": 3.5,
     "reload_rounds": 2.0,
-    "strike_damage": 12.0
+    "strike_damage": 12.0,
+    "upkeep": {
+      "funds": 33.0,
+      "fuel": 4.0,
+      "manpower": 0.4
+    }
   },
   {
     "id": "helicopters_russia",
@@ -952,7 +1027,12 @@
     "air_range": 10.0,
     "air_speed": 1.8,
     "air_damage": 2.0,
-    "ground_damage": 5.0
+    "ground_damage": 5.0,
+    "upkeep": {
+      "funds": 33.0,
+      "fuel": 4.0,
+      "manpower": 0.4
+    }
   },
   {
     "id": "helicopters_ukraine",
@@ -1012,7 +1092,12 @@
     "air_range": 10.0,
     "air_speed": 1.8,
     "air_damage": 2.0,
-    "ground_damage": 5.0
+    "ground_damage": 5.0,
+    "upkeep": {
+      "funds": 33.0,
+      "fuel": 4.0,
+      "manpower": 0.4
+    }
   },
   {
     "id": "fleet_russia",
@@ -1031,7 +1116,8 @@
       "manpower": 25
     },
     "building_requirements": {
-      "factory": 1
+      "factory": 1,
+      "naval_base": 1
     },
     "research_days": [
       1,
@@ -1061,13 +1147,13 @@
         "projectile_model": "res://assets/library/arsenal/russia_3m22_zircon.glb"
       },
       {
-        "name": "Admiral Gorshkov · radar",
+        "name": "Admiral Gorshkov \u00b7 radar",
         "improvement": "Modernization level 4; combat effectiveness +36%",
         "model": "res://assets/library/arsenal/russia_admiral_gorshkov.glb",
         "projectile_model": "res://assets/library/arsenal/russia_3m22_zircon.glb"
       },
       {
-        "name": "Admiral Gorshkov · advanced",
+        "name": "Admiral Gorshkov \u00b7 advanced",
         "improvement": "Modernization level 5; combat effectiveness +48%",
         "model": "res://assets/library/arsenal/russia_admiral_gorshkov.glb",
         "projectile_model": "res://assets/library/arsenal/russia_3m22_zircon.glb"
@@ -1075,7 +1161,16 @@
     ],
     "requires_port": true,
     "sea_speed": 1.2,
-    "sea_range": 3.0
+    "sea_range": 3.0,
+    "upkeep": {
+      "funds": 40.0,
+      "fuel": 4.8,
+      "manpower": 0.5
+    },
+    "sonar_range": 2.2,
+    "aa_damage": 4,
+    "aa_range": 2.5,
+    "shore_bombardment": true
   },
   {
     "id": "fleet_ukraine",
@@ -1094,7 +1189,8 @@
       "manpower": 25
     },
     "building_requirements": {
-      "factory": 1
+      "factory": 1,
+      "naval_base": 1
     },
     "research_days": [
       1,
@@ -1138,7 +1234,16 @@
     ],
     "requires_port": true,
     "sea_speed": 1.2,
-    "sea_range": 3.0
+    "sea_range": 3.0,
+    "upkeep": {
+      "funds": 40.0,
+      "fuel": 4.8,
+      "manpower": 0.5
+    },
+    "sonar_range": 2.2,
+    "aa_damage": 4,
+    "aa_range": 2.5,
+    "shore_bombardment": true
   },
   {
     "id": "submarines_russia",
@@ -1157,7 +1262,8 @@
       "manpower": 25
     },
     "building_requirements": {
-      "factory": 1
+      "factory": 1,
+      "naval_base": 1
     },
     "research_days": [
       1,
@@ -1175,7 +1281,7 @@
         "projectile_model": "res://assets/library/arsenal/russia_kalibr_3m14.glb"
       },
       {
-        "name": "Kilo · modernization",
+        "name": "Kilo \u00b7 modernization",
         "improvement": "Modernization level 2; combat effectiveness +12%",
         "model": "res://assets/library/arsenal/russia_kilo_sub.glb",
         "projectile_model": "res://assets/library/arsenal/russia_kalibr_3m14.glb"
@@ -1187,13 +1293,13 @@
         "projectile_model": "res://assets/library/arsenal/russia_p800_oniks.glb"
       },
       {
-        "name": "Yasen · sensors",
+        "name": "Yasen \u00b7 sensors",
         "improvement": "Modernization level 4; combat effectiveness +36%",
         "model": "res://assets/library/arsenal/russia_yasen_sub.glb",
         "projectile_model": "res://assets/library/arsenal/russia_p800_oniks.glb"
       },
       {
-        "name": "Yasen · advanced",
+        "name": "Yasen \u00b7 advanced",
         "improvement": "Modernization level 5; combat effectiveness +48%",
         "model": "res://assets/library/arsenal/russia_yasen_sub.glb",
         "projectile_model": "res://assets/library/arsenal/russia_p800_oniks.glb"
@@ -1201,7 +1307,16 @@
     ],
     "requires_port": true,
     "sea_speed": 1.0,
-    "sea_range": 2.5
+    "sea_range": 2.5,
+    "upkeep": {
+      "funds": 40.0,
+      "fuel": 4.8,
+      "manpower": 0.5
+    },
+    "sonar_range": 1.5,
+    "aa_damage": 0,
+    "aa_range": 2.5,
+    "shore_bombardment": false
   },
   {
     "id": "carriers_russia",
@@ -1220,7 +1335,8 @@
       "manpower": 25
     },
     "building_requirements": {
-      "factory": 1
+      "factory": 1,
+      "naval_base": 1
     },
     "research_days": [
       1,
@@ -1237,29 +1353,38 @@
         "model": "res://assets/library/arsenal/russia_admiral_kuznetsov.glb"
       },
       {
-        "name": "Admiral Kuznetsov · upgrade 2",
+        "name": "Admiral Kuznetsov \u00b7 upgrade 2",
         "improvement": "Modernization level 2; combat effectiveness +12%",
         "model": "res://assets/library/arsenal/russia_admiral_kuznetsov.glb"
       },
       {
-        "name": "Admiral Kuznetsov · upgrade 3",
+        "name": "Admiral Kuznetsov \u00b7 upgrade 3",
         "improvement": "Modernization level 3; combat effectiveness +24%",
         "model": "res://assets/library/arsenal/russia_admiral_kuznetsov.glb"
       },
       {
-        "name": "Admiral Kuznetsov · upgrade 4",
+        "name": "Admiral Kuznetsov \u00b7 upgrade 4",
         "improvement": "Modernization level 4; combat effectiveness +36%",
         "model": "res://assets/library/arsenal/russia_admiral_kuznetsov.glb"
       },
       {
-        "name": "Admiral Kuznetsov · upgrade 5",
+        "name": "Admiral Kuznetsov \u00b7 upgrade 5",
         "improvement": "Modernization level 5; combat effectiveness +48%",
         "model": "res://assets/library/arsenal/russia_admiral_kuznetsov.glb"
       }
     ],
     "requires_port": true,
     "sea_speed": 0.9,
-    "sea_range": 2.8
+    "sea_range": 2.8,
+    "upkeep": {
+      "funds": 40.0,
+      "fuel": 4.8,
+      "manpower": 0.5
+    },
+    "sonar_range": 0,
+    "aa_damage": 6,
+    "aa_range": 2.5,
+    "shore_bombardment": false
   },
   {
     "id": "carriers_ukraine",
@@ -1278,7 +1403,8 @@
       "manpower": 25
     },
     "building_requirements": {
-      "factory": 1
+      "factory": 1,
+      "naval_base": 1
     },
     "research_days": [
       1,
@@ -1295,29 +1421,38 @@
         "model": "res://assets/library/arsenal/euro_hms_queen_elizabeth.glb"
       },
       {
-        "name": "HMS Queen Elizabeth · upgrade 2",
+        "name": "HMS Queen Elizabeth \u00b7 upgrade 2",
         "improvement": "Modernization level 2; combat effectiveness +12%",
         "model": "res://assets/library/arsenal/euro_hms_queen_elizabeth.glb"
       },
       {
-        "name": "HMS Queen Elizabeth · upgrade 3",
+        "name": "HMS Queen Elizabeth \u00b7 upgrade 3",
         "improvement": "Modernization level 3; combat effectiveness +24%",
         "model": "res://assets/library/arsenal/euro_hms_queen_elizabeth.glb"
       },
       {
-        "name": "HMS Queen Elizabeth · upgrade 4",
+        "name": "HMS Queen Elizabeth \u00b7 upgrade 4",
         "improvement": "Modernization level 4; combat effectiveness +36%",
         "model": "res://assets/library/arsenal/euro_hms_queen_elizabeth.glb"
       },
       {
-        "name": "HMS Queen Elizabeth · upgrade 5",
+        "name": "HMS Queen Elizabeth \u00b7 upgrade 5",
         "improvement": "Modernization level 5; combat effectiveness +48%",
         "model": "res://assets/library/arsenal/euro_hms_queen_elizabeth.glb"
       }
     ],
     "requires_port": true,
     "sea_speed": 0.9,
-    "sea_range": 2.8
+    "sea_range": 2.8,
+    "upkeep": {
+      "funds": 40.0,
+      "fuel": 4.8,
+      "manpower": 0.5
+    },
+    "sonar_range": 0,
+    "aa_damage": 6,
+    "aa_range": 2.5,
+    "shore_bombardment": false
   },
   {
     "id": "missiles_russia",
@@ -1366,13 +1501,13 @@
         "preview": "res://assets/library/arsenal/russia_yars_ready.png"
       },
       {
-        "name": "Yars · guidance",
+        "name": "Yars \u00b7 guidance",
         "improvement": "Modernization level 4; combat effectiveness +36%",
         "model": "res://assets/library/arsenal/russia_yars.glb",
         "preview": "res://assets/library/arsenal/russia_yars_ready.png"
       },
       {
-        "name": "Yars · advanced",
+        "name": "Yars \u00b7 advanced",
         "improvement": "Modernization level 5; combat effectiveness +48%",
         "model": "res://assets/library/arsenal/russia_yars.glb",
         "preview": "res://assets/library/arsenal/russia_yars_ready.png"
@@ -1380,7 +1515,12 @@
     ],
     "strike_range": 6.0,
     "strike_damage": 18.0,
-    "reload_rounds": 3.0
+    "reload_rounds": 3.0,
+    "upkeep": {
+      "funds": 40.0,
+      "fuel": 4.8,
+      "manpower": 0.5
+    }
   },
   {
     "id": "missiles_ukraine",
@@ -1435,7 +1575,7 @@
         "preview": "res://assets/library/arsenal/euro_fulgur_ebm_ready.png"
       },
       {
-        "name": "Fulgur · guidance",
+        "name": "Fulgur \u00b7 guidance",
         "improvement": "Modernization level 5; combat effectiveness +48%",
         "model": "res://assets/library/arsenal/euro_fulgur_ebm.glb",
         "preview": "res://assets/library/arsenal/euro_fulgur_ebm_ready.png"
@@ -1443,7 +1583,12 @@
     ],
     "strike_range": 6.0,
     "strike_damage": 18.0,
-    "reload_rounds": 3.0
+    "reload_rounds": 3.0,
+    "upkeep": {
+      "funds": 40.0,
+      "fuel": 4.8,
+      "manpower": 0.5
+    }
   },
   {
     "id": "silos_russia",
@@ -1480,7 +1625,7 @@
         "preview": "res://assets/library/arsenal/russia_avangard_silo_ready.png"
       },
       {
-        "name": "Avangard · guidance",
+        "name": "Avangard \u00b7 guidance",
         "improvement": "Modernization level 2; combat effectiveness +12%",
         "model": "res://assets/library/arsenal/russia_avangard_silo.glb",
         "preview": "res://assets/library/arsenal/russia_avangard_silo_ready.png"
@@ -1492,13 +1637,13 @@
         "preview": "res://assets/library/arsenal/russia_sarmat_silo_ready.png"
       },
       {
-        "name": "Sarmat · guidance",
+        "name": "Sarmat \u00b7 guidance",
         "improvement": "Modernization level 4; combat effectiveness +36%",
         "model": "res://assets/library/arsenal/russia_sarmat_silo.glb",
         "preview": "res://assets/library/arsenal/russia_sarmat_silo_ready.png"
       },
       {
-        "name": "Sarmat · advanced",
+        "name": "Sarmat \u00b7 advanced",
         "improvement": "Modernization level 5; combat effectiveness +48%",
         "model": "res://assets/library/arsenal/russia_sarmat_silo.glb",
         "preview": "res://assets/library/arsenal/russia_sarmat_silo_ready.png"
@@ -1507,7 +1652,12 @@
     "stationary": true,
     "strike_range": 8.0,
     "strike_damage": 22.0,
-    "reload_rounds": 4.0
+    "reload_rounds": 4.0,
+    "upkeep": {
+      "funds": 40.0,
+      "fuel": 4.8,
+      "manpower": 0.5
+    }
   },
   {
     "id": "silos_ukraine",
@@ -1544,25 +1694,25 @@
         "preview": "res://assets/library/arsenal/euro_s3_silo_ready.png"
       },
       {
-        "name": "S3 · guidance",
+        "name": "S3 \u00b7 guidance",
         "improvement": "Modernization level 2; combat effectiveness +12%",
         "model": "res://assets/library/arsenal/euro_s3_silo.glb",
         "preview": "res://assets/library/arsenal/euro_s3_silo_ready.png"
       },
       {
-        "name": "S3 · hardening",
+        "name": "S3 \u00b7 hardening",
         "improvement": "Modernization level 3; combat effectiveness +24%",
         "model": "res://assets/library/arsenal/euro_s3_silo.glb",
         "preview": "res://assets/library/arsenal/euro_s3_silo_ready.png"
       },
       {
-        "name": "S3 · electronics",
+        "name": "S3 \u00b7 electronics",
         "improvement": "Modernization level 4; combat effectiveness +36%",
         "model": "res://assets/library/arsenal/euro_s3_silo.glb",
         "preview": "res://assets/library/arsenal/euro_s3_silo_ready.png"
       },
       {
-        "name": "S3 · advanced",
+        "name": "S3 \u00b7 advanced",
         "improvement": "Modernization level 5; combat effectiveness +48%",
         "model": "res://assets/library/arsenal/euro_s3_silo.glb",
         "preview": "res://assets/library/arsenal/euro_s3_silo_ready.png"
@@ -1571,7 +1721,12 @@
     "stationary": true,
     "strike_range": 8.0,
     "strike_damage": 22.0,
-    "reload_rounds": 4.0
+    "reload_rounds": 4.0,
+    "upkeep": {
+      "funds": 40.0,
+      "fuel": 4.8,
+      "manpower": 0.5
+    }
   },
   {
     "id": "drones_russia",
@@ -1634,7 +1789,7 @@
         "air_damage": 0
       },
       {
-        "name": "Sirius · advanced",
+        "name": "Sirius \u00b7 advanced",
         "improvement": "Modernization level 5; combat effectiveness +48%",
         "model": "res://assets/library/arsenal/russia_sirius.glb",
         "preview": "res://assets/library/arsenal/russia_sirius.png",
@@ -1645,7 +1800,12 @@
     "air_range": 12.0,
     "air_speed": 2.2,
     "air_damage": 0.0,
-    "ground_damage": 4.0
+    "ground_damage": 4.0,
+    "upkeep": {
+      "funds": 40.0,
+      "fuel": 4.8,
+      "manpower": 0.5
+    }
   },
   {
     "id": "drones_ukraine",
@@ -1719,7 +1879,12 @@
     "air_range": 12.0,
     "air_speed": 2.2,
     "air_damage": 0.0,
-    "ground_damage": 4.0
+    "ground_damage": 4.0,
+    "upkeep": {
+      "funds": 40.0,
+      "fuel": 4.8,
+      "manpower": 0.5
+    }
   },
   {
     "id": "loitering_russia",
@@ -1756,25 +1921,25 @@
         "preview": "res://assets/library/arsenal/russia_lancet3_drone_only.png"
       },
       {
-        "name": "Lancet · guidance",
+        "name": "Lancet \u00b7 guidance",
         "improvement": "Modernization level 2; combat effectiveness +12%",
         "model": "res://assets/library/arsenal/russia_lancet3_drone_only.glb",
         "preview": "res://assets/library/arsenal/russia_lancet3_drone_only.png"
       },
       {
-        "name": "Lancet · optics",
+        "name": "Lancet \u00b7 optics",
         "improvement": "Modernization level 3; combat effectiveness +24%",
         "model": "res://assets/library/arsenal/russia_lancet3_drone_only.glb",
         "preview": "res://assets/library/arsenal/russia_lancet3_drone_only.png"
       },
       {
-        "name": "Lancet · electronics",
+        "name": "Lancet \u00b7 electronics",
         "improvement": "Modernization level 4; combat effectiveness +36%",
         "model": "res://assets/library/arsenal/russia_lancet3_drone_only.glb",
         "preview": "res://assets/library/arsenal/russia_lancet3_drone_only.png"
       },
       {
-        "name": "Lancet · advanced",
+        "name": "Lancet \u00b7 advanced",
         "improvement": "Modernization level 5; combat effectiveness +48%",
         "model": "res://assets/library/arsenal/russia_lancet3_drone_only.glb",
         "preview": "res://assets/library/arsenal/russia_lancet3_drone_only.png"
@@ -1784,7 +1949,12 @@
     "air_speed": 2.0,
     "air_damage": 0.0,
     "ground_damage": 7.0,
-    "single_use": true
+    "single_use": true,
+    "upkeep": {
+      "funds": 40.0,
+      "fuel": 4.8,
+      "manpower": 0.5
+    }
   },
   {
     "id": "fighters_russia",
@@ -1850,7 +2020,12 @@
     "air_range": 14.0,
     "air_damage": 10.0,
     "ground_damage": 7.0,
-    "requires_airbase": true
+    "requires_airbase": true,
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    }
   },
   {
     "id": "fighters_ukraine",
@@ -1892,7 +2067,7 @@
         "preview": "res://assets/library/arsenal/euro_gripen_e.png"
       },
       {
-        "name": "Gripen E · sensors",
+        "name": "Gripen E \u00b7 sensors",
         "model": "res://assets/library/arsenal/euro_gripen_e.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_gripen_e.png"
@@ -1915,7 +2090,12 @@
     "air_range": 14.0,
     "air_damage": 10.0,
     "ground_damage": 7.0,
-    "requires_airbase": true
+    "requires_airbase": true,
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    }
   },
   {
     "id": "infantry_russia",
@@ -1975,7 +2155,12 @@
         "preview": "res://assets/library/arsenal/russia_spetsnaz.png"
       }
     ],
-    "model_status": "Original supplied model"
+    "model_status": "Original supplied model",
+    "upkeep": {
+      "funds": 12.0,
+      "fuel": 0.4,
+      "manpower": 1.2
+    }
   },
   {
     "id": "infantry_ukraine",
@@ -2035,7 +2220,12 @@
         "preview": "res://assets/library/arsenal/euro_de_ksk.png"
       }
     ],
-    "model_status": "Original supplied model"
+    "model_status": "Original supplied model",
+    "upkeep": {
+      "funds": 12.0,
+      "fuel": 0.4,
+      "manpower": 1.2
+    }
   },
   {
     "id": "kamaz5350_supply_russia",
@@ -2071,31 +2261,36 @@
         "preview": "res://assets/library/arsenal/russia_kamaz5350_supply.png"
       },
       {
-        "name": "KamAZ-5350 supply · L2",
+        "name": "KamAZ-5350 supply \u00b7 L2",
         "model": "res://assets/library/arsenal/russia_kamaz5350_supply.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_kamaz5350_supply.png"
       },
       {
-        "name": "KamAZ-5350 supply · L3",
+        "name": "KamAZ-5350 supply \u00b7 L3",
         "model": "res://assets/library/arsenal/russia_kamaz5350_supply.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_kamaz5350_supply.png"
       },
       {
-        "name": "KamAZ-5350 supply · L4",
+        "name": "KamAZ-5350 supply \u00b7 L4",
         "model": "res://assets/library/arsenal/russia_kamaz5350_supply.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_kamaz5350_supply.png"
       },
       {
-        "name": "KamAZ-5350 supply · L5",
+        "name": "KamAZ-5350 supply \u00b7 L5",
         "model": "res://assets/library/arsenal/russia_kamaz5350_supply.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_kamaz5350_supply.png"
       }
     ],
-    "model_status": "Original supplied model"
+    "model_status": "Original supplied model",
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    }
   },
   {
     "id": "brem1m_recovery_russia",
@@ -2131,31 +2326,36 @@
         "preview": "res://assets/library/arsenal/russia_brem1m_recovery.png"
       },
       {
-        "name": "BREM-1M recovery · L2",
+        "name": "BREM-1M recovery \u00b7 L2",
         "model": "res://assets/library/arsenal/russia_brem1m_recovery.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_brem1m_recovery.png"
       },
       {
-        "name": "BREM-1M recovery · L3",
+        "name": "BREM-1M recovery \u00b7 L3",
         "model": "res://assets/library/arsenal/russia_brem1m_recovery.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_brem1m_recovery.png"
       },
       {
-        "name": "BREM-1M recovery · L4",
+        "name": "BREM-1M recovery \u00b7 L4",
         "model": "res://assets/library/arsenal/russia_brem1m_recovery.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_brem1m_recovery.png"
       },
       {
-        "name": "BREM-1M recovery · L5",
+        "name": "BREM-1M recovery \u00b7 L5",
         "model": "res://assets/library/arsenal/russia_brem1m_recovery.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_brem1m_recovery.png"
       }
     ],
-    "model_status": "Original supplied model"
+    "model_status": "Original supplied model",
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    }
   },
   {
     "id": "imr3m_engineer_russia",
@@ -2191,31 +2391,36 @@
         "preview": "res://assets/library/arsenal/russia_imr3m_engineer.png"
       },
       {
-        "name": "IMR-3M engineer · L2",
+        "name": "IMR-3M engineer \u00b7 L2",
         "model": "res://assets/library/arsenal/russia_imr3m_engineer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_imr3m_engineer.png"
       },
       {
-        "name": "IMR-3M engineer · L3",
+        "name": "IMR-3M engineer \u00b7 L3",
         "model": "res://assets/library/arsenal/russia_imr3m_engineer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_imr3m_engineer.png"
       },
       {
-        "name": "IMR-3M engineer · L4",
+        "name": "IMR-3M engineer \u00b7 L4",
         "model": "res://assets/library/arsenal/russia_imr3m_engineer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_imr3m_engineer.png"
       },
       {
-        "name": "IMR-3M engineer · L5",
+        "name": "IMR-3M engineer \u00b7 L5",
         "model": "res://assets/library/arsenal/russia_imr3m_engineer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_imr3m_engineer.png"
       }
     ],
-    "model_status": "Original supplied model"
+    "model_status": "Original supplied model",
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    }
   },
   {
     "id": "mtu72_bridgelayer_russia",
@@ -2251,31 +2456,36 @@
         "preview": "res://assets/library/arsenal/russia_mtu72_bridgelayer.png"
       },
       {
-        "name": "MTU-72 bridgelayer · L2",
+        "name": "MTU-72 bridgelayer \u00b7 L2",
         "model": "res://assets/library/arsenal/russia_mtu72_bridgelayer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_mtu72_bridgelayer.png"
       },
       {
-        "name": "MTU-72 bridgelayer · L3",
+        "name": "MTU-72 bridgelayer \u00b7 L3",
         "model": "res://assets/library/arsenal/russia_mtu72_bridgelayer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_mtu72_bridgelayer.png"
       },
       {
-        "name": "MTU-72 bridgelayer · L4",
+        "name": "MTU-72 bridgelayer \u00b7 L4",
         "model": "res://assets/library/arsenal/russia_mtu72_bridgelayer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_mtu72_bridgelayer.png"
       },
       {
-        "name": "MTU-72 bridgelayer · L5",
+        "name": "MTU-72 bridgelayer \u00b7 L5",
         "model": "res://assets/library/arsenal/russia_mtu72_bridgelayer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_mtu72_bridgelayer.png"
       }
     ],
-    "model_status": "Original supplied model"
+    "model_status": "Original supplied model",
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    }
   },
   {
     "id": "ur77_mineclearing_russia",
@@ -2311,31 +2521,36 @@
         "preview": "res://assets/library/arsenal/russia_ur77_mineclearing.png"
       },
       {
-        "name": "UR-77 mine clearing · L2",
+        "name": "UR-77 mine clearing \u00b7 L2",
         "model": "res://assets/library/arsenal/russia_ur77_mineclearing.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_ur77_mineclearing.png"
       },
       {
-        "name": "UR-77 mine clearing · L3",
+        "name": "UR-77 mine clearing \u00b7 L3",
         "model": "res://assets/library/arsenal/russia_ur77_mineclearing.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_ur77_mineclearing.png"
       },
       {
-        "name": "UR-77 mine clearing · L4",
+        "name": "UR-77 mine clearing \u00b7 L4",
         "model": "res://assets/library/arsenal/russia_ur77_mineclearing.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_ur77_mineclearing.png"
       },
       {
-        "name": "UR-77 mine clearing · L5",
+        "name": "UR-77 mine clearing \u00b7 L5",
         "model": "res://assets/library/arsenal/russia_ur77_mineclearing.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_ur77_mineclearing.png"
       }
     ],
-    "model_status": "Original supplied model"
+    "model_status": "Original supplied model",
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    }
   },
   {
     "id": "man_hx77_supply_ukraine",
@@ -2371,36 +2586,41 @@
         "preview": "res://assets/library/arsenal/euro_man_hx77_supply.png"
       },
       {
-        "name": "MAN HX77 supply · L2",
+        "name": "MAN HX77 supply \u00b7 L2",
         "model": "res://assets/library/arsenal/euro_man_hx77_supply.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_man_hx77_supply.png"
       },
       {
-        "name": "MAN HX77 supply · L3",
+        "name": "MAN HX77 supply \u00b7 L3",
         "model": "res://assets/library/arsenal/euro_man_hx77_supply.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_man_hx77_supply.png"
       },
       {
-        "name": "MAN HX77 supply · L4",
+        "name": "MAN HX77 supply \u00b7 L4",
         "model": "res://assets/library/arsenal/euro_man_hx77_supply.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_man_hx77_supply.png"
       },
       {
-        "name": "MAN HX77 supply · L5",
+        "name": "MAN HX77 supply \u00b7 L5",
         "model": "res://assets/library/arsenal/euro_man_hx77_supply.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_man_hx77_supply.png"
       }
     ],
-    "model_status": "Original supplied model"
+    "model_status": "Original supplied model",
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    }
   },
   {
     "id": "buffel_recovery_ukraine",
     "country": "ukraine",
-    "name": "Büffel recovery",
+    "name": "B\u00fcffel recovery",
     "category": "Support",
     "visual_kind": "support",
     "role": "support",
@@ -2425,37 +2645,42 @@
     ],
     "research_tiers": [
       {
-        "name": "Büffel recovery",
+        "name": "B\u00fcffel recovery",
         "model": "res://assets/library/arsenal/euro_buffel_recovery.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_buffel_recovery.png"
       },
       {
-        "name": "Büffel recovery · L2",
+        "name": "B\u00fcffel recovery \u00b7 L2",
         "model": "res://assets/library/arsenal/euro_buffel_recovery.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_buffel_recovery.png"
       },
       {
-        "name": "Büffel recovery · L3",
+        "name": "B\u00fcffel recovery \u00b7 L3",
         "model": "res://assets/library/arsenal/euro_buffel_recovery.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_buffel_recovery.png"
       },
       {
-        "name": "Büffel recovery · L4",
+        "name": "B\u00fcffel recovery \u00b7 L4",
         "model": "res://assets/library/arsenal/euro_buffel_recovery.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_buffel_recovery.png"
       },
       {
-        "name": "Büffel recovery · L5",
+        "name": "B\u00fcffel recovery \u00b7 L5",
         "model": "res://assets/library/arsenal/euro_buffel_recovery.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_buffel_recovery.png"
       }
     ],
-    "model_status": "Original supplied model"
+    "model_status": "Original supplied model",
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    }
   },
   {
     "id": "kodiak_engineer_ukraine",
@@ -2491,31 +2716,36 @@
         "preview": "res://assets/library/arsenal/euro_kodiak_engineer.png"
       },
       {
-        "name": "Kodiak engineer · L2",
+        "name": "Kodiak engineer \u00b7 L2",
         "model": "res://assets/library/arsenal/euro_kodiak_engineer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_kodiak_engineer.png"
       },
       {
-        "name": "Kodiak engineer · L3",
+        "name": "Kodiak engineer \u00b7 L3",
         "model": "res://assets/library/arsenal/euro_kodiak_engineer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_kodiak_engineer.png"
       },
       {
-        "name": "Kodiak engineer · L4",
+        "name": "Kodiak engineer \u00b7 L4",
         "model": "res://assets/library/arsenal/euro_kodiak_engineer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_kodiak_engineer.png"
       },
       {
-        "name": "Kodiak engineer · L5",
+        "name": "Kodiak engineer \u00b7 L5",
         "model": "res://assets/library/arsenal/euro_kodiak_engineer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_kodiak_engineer.png"
       }
     ],
-    "model_status": "Original supplied model"
+    "model_status": "Original supplied model",
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    }
   },
   {
     "id": "leguan_bridgelayer_ukraine",
@@ -2551,31 +2781,36 @@
         "preview": "res://assets/library/arsenal/euro_leguan_bridgelayer.png"
       },
       {
-        "name": "Leguan bridgelayer · L2",
+        "name": "Leguan bridgelayer \u00b7 L2",
         "model": "res://assets/library/arsenal/euro_leguan_bridgelayer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_leguan_bridgelayer.png"
       },
       {
-        "name": "Leguan bridgelayer · L3",
+        "name": "Leguan bridgelayer \u00b7 L3",
         "model": "res://assets/library/arsenal/euro_leguan_bridgelayer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_leguan_bridgelayer.png"
       },
       {
-        "name": "Leguan bridgelayer · L4",
+        "name": "Leguan bridgelayer \u00b7 L4",
         "model": "res://assets/library/arsenal/euro_leguan_bridgelayer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_leguan_bridgelayer.png"
       },
       {
-        "name": "Leguan bridgelayer · L5",
+        "name": "Leguan bridgelayer \u00b7 L5",
         "model": "res://assets/library/arsenal/euro_leguan_bridgelayer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_leguan_bridgelayer.png"
       }
     ],
-    "model_status": "Original supplied model"
+    "model_status": "Original supplied model",
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    }
   },
   {
     "id": "trojan_breacher_ukraine",
@@ -2611,31 +2846,36 @@
         "preview": "res://assets/library/arsenal/euro_trojan_breacher.png"
       },
       {
-        "name": "Trojan breacher · L2",
+        "name": "Trojan breacher \u00b7 L2",
         "model": "res://assets/library/arsenal/euro_trojan_breacher.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_trojan_breacher.png"
       },
       {
-        "name": "Trojan breacher · L3",
+        "name": "Trojan breacher \u00b7 L3",
         "model": "res://assets/library/arsenal/euro_trojan_breacher.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_trojan_breacher.png"
       },
       {
-        "name": "Trojan breacher · L4",
+        "name": "Trojan breacher \u00b7 L4",
         "model": "res://assets/library/arsenal/euro_trojan_breacher.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_trojan_breacher.png"
       },
       {
-        "name": "Trojan breacher · L5",
+        "name": "Trojan breacher \u00b7 L5",
         "model": "res://assets/library/arsenal/euro_trojan_breacher.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_trojan_breacher.png"
       }
     ],
-    "model_status": "Original supplied model"
+    "model_status": "Original supplied model",
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    }
   },
   {
     "id": "2b14_mortar_82_russia",
@@ -2671,31 +2911,36 @@
         "preview": "res://assets/library/arsenal/russia_2b14_mortar_82.png"
       },
       {
-        "name": "2B14 82 mm mortar · L2",
+        "name": "2B14 82 mm mortar \u00b7 L2",
         "model": "res://assets/library/arsenal/russia_2b14_mortar_82.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_2b14_mortar_82.png"
       },
       {
-        "name": "2B14 82 mm mortar · L3",
+        "name": "2B14 82 mm mortar \u00b7 L3",
         "model": "res://assets/library/arsenal/russia_2b14_mortar_82.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_2b14_mortar_82.png"
       },
       {
-        "name": "2B14 82 mm mortar · L4",
+        "name": "2B14 82 mm mortar \u00b7 L4",
         "model": "res://assets/library/arsenal/russia_2b14_mortar_82.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_2b14_mortar_82.png"
       },
       {
-        "name": "2B14 82 mm mortar · L5",
+        "name": "2B14 82 mm mortar \u00b7 L5",
         "model": "res://assets/library/arsenal/russia_2b14_mortar_82.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_2b14_mortar_82.png"
       }
     ],
-    "model_status": "Original supplied model"
+    "model_status": "Original supplied model",
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    }
   },
   {
     "id": "2b11_mortar_120_russia",
@@ -2731,31 +2976,36 @@
         "preview": "res://assets/library/arsenal/russia_2b11_mortar_120.png"
       },
       {
-        "name": "2B11 120 mm mortar · L2",
+        "name": "2B11 120 mm mortar \u00b7 L2",
         "model": "res://assets/library/arsenal/russia_2b11_mortar_120.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_2b11_mortar_120.png"
       },
       {
-        "name": "2B11 120 mm mortar · L3",
+        "name": "2B11 120 mm mortar \u00b7 L3",
         "model": "res://assets/library/arsenal/russia_2b11_mortar_120.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_2b11_mortar_120.png"
       },
       {
-        "name": "2B11 120 mm mortar · L4",
+        "name": "2B11 120 mm mortar \u00b7 L4",
         "model": "res://assets/library/arsenal/russia_2b11_mortar_120.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_2b11_mortar_120.png"
       },
       {
-        "name": "2B11 120 mm mortar · L5",
+        "name": "2B11 120 mm mortar \u00b7 L5",
         "model": "res://assets/library/arsenal/russia_2b11_mortar_120.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_2b11_mortar_120.png"
       }
     ],
-    "model_status": "Original supplied model"
+    "model_status": "Original supplied model",
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    }
   },
   {
     "id": "d30_howitzer_russia",
@@ -2791,31 +3041,36 @@
         "preview": "res://assets/library/arsenal/russia_d30_howitzer.png"
       },
       {
-        "name": "D-30 howitzer · L2",
+        "name": "D-30 howitzer \u00b7 L2",
         "model": "res://assets/library/arsenal/russia_d30_howitzer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_d30_howitzer.png"
       },
       {
-        "name": "D-30 howitzer · L3",
+        "name": "D-30 howitzer \u00b7 L3",
         "model": "res://assets/library/arsenal/russia_d30_howitzer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_d30_howitzer.png"
       },
       {
-        "name": "D-30 howitzer · L4",
+        "name": "D-30 howitzer \u00b7 L4",
         "model": "res://assets/library/arsenal/russia_d30_howitzer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_d30_howitzer.png"
       },
       {
-        "name": "D-30 howitzer · L5",
+        "name": "D-30 howitzer \u00b7 L5",
         "model": "res://assets/library/arsenal/russia_d30_howitzer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_d30_howitzer.png"
       }
     ],
-    "model_status": "Original supplied model"
+    "model_status": "Original supplied model",
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    }
   },
   {
     "id": "l16_mortar_81_ukraine",
@@ -2851,31 +3106,36 @@
         "preview": "res://assets/library/arsenal/euro_l16_mortar_81.png"
       },
       {
-        "name": "L16 81 mm mortar · L2",
+        "name": "L16 81 mm mortar \u00b7 L2",
         "model": "res://assets/library/arsenal/euro_l16_mortar_81.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_l16_mortar_81.png"
       },
       {
-        "name": "L16 81 mm mortar · L3",
+        "name": "L16 81 mm mortar \u00b7 L3",
         "model": "res://assets/library/arsenal/euro_l16_mortar_81.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_l16_mortar_81.png"
       },
       {
-        "name": "L16 81 mm mortar · L4",
+        "name": "L16 81 mm mortar \u00b7 L4",
         "model": "res://assets/library/arsenal/euro_l16_mortar_81.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_l16_mortar_81.png"
       },
       {
-        "name": "L16 81 mm mortar · L5",
+        "name": "L16 81 mm mortar \u00b7 L5",
         "model": "res://assets/library/arsenal/euro_l16_mortar_81.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_l16_mortar_81.png"
       }
     ],
-    "model_status": "Original supplied model"
+    "model_status": "Original supplied model",
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    }
   },
   {
     "id": "mo120rt_mortar_ukraine",
@@ -2911,31 +3171,36 @@
         "preview": "res://assets/library/arsenal/euro_mo120rt_mortar.png"
       },
       {
-        "name": "MO-120-RT mortar · L2",
+        "name": "MO-120-RT mortar \u00b7 L2",
         "model": "res://assets/library/arsenal/euro_mo120rt_mortar.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_mo120rt_mortar.png"
       },
       {
-        "name": "MO-120-RT mortar · L3",
+        "name": "MO-120-RT mortar \u00b7 L3",
         "model": "res://assets/library/arsenal/euro_mo120rt_mortar.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_mo120rt_mortar.png"
       },
       {
-        "name": "MO-120-RT mortar · L4",
+        "name": "MO-120-RT mortar \u00b7 L4",
         "model": "res://assets/library/arsenal/euro_mo120rt_mortar.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_mo120rt_mortar.png"
       },
       {
-        "name": "MO-120-RT mortar · L5",
+        "name": "MO-120-RT mortar \u00b7 L5",
         "model": "res://assets/library/arsenal/euro_mo120rt_mortar.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_mo120rt_mortar.png"
       }
     ],
-    "model_status": "Original supplied model"
+    "model_status": "Original supplied model",
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    }
   },
   {
     "id": "l118_lightgun_ukraine",
@@ -2971,31 +3236,36 @@
         "preview": "res://assets/library/arsenal/euro_l118_lightgun.png"
       },
       {
-        "name": "L118 light gun · L2",
+        "name": "L118 light gun \u00b7 L2",
         "model": "res://assets/library/arsenal/euro_l118_lightgun.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_l118_lightgun.png"
       },
       {
-        "name": "L118 light gun · L3",
+        "name": "L118 light gun \u00b7 L3",
         "model": "res://assets/library/arsenal/euro_l118_lightgun.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_l118_lightgun.png"
       },
       {
-        "name": "L118 light gun · L4",
+        "name": "L118 light gun \u00b7 L4",
         "model": "res://assets/library/arsenal/euro_l118_lightgun.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_l118_lightgun.png"
       },
       {
-        "name": "L118 light gun · L5",
+        "name": "L118 light gun \u00b7 L5",
         "model": "res://assets/library/arsenal/euro_l118_lightgun.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_l118_lightgun.png"
       }
     ],
-    "model_status": "Original supplied model"
+    "model_status": "Original supplied model",
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    }
   },
   {
     "id": "il76md_russia",
@@ -3031,25 +3301,25 @@
         "preview": "res://assets/library/arsenal/russia_il76md.png"
       },
       {
-        "name": "Il-76MD transport · L2",
+        "name": "Il-76MD transport \u00b7 L2",
         "model": "res://assets/library/arsenal/russia_il76md.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_il76md.png"
       },
       {
-        "name": "Il-76MD transport · L3",
+        "name": "Il-76MD transport \u00b7 L3",
         "model": "res://assets/library/arsenal/russia_il76md.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_il76md.png"
       },
       {
-        "name": "Il-76MD transport · L4",
+        "name": "Il-76MD transport \u00b7 L4",
         "model": "res://assets/library/arsenal/russia_il76md.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_il76md.png"
       },
       {
-        "name": "Il-76MD transport · L5",
+        "name": "Il-76MD transport \u00b7 L5",
         "model": "res://assets/library/arsenal/russia_il76md.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_il76md.png"
@@ -3060,7 +3330,12 @@
     "air_range": 16.0,
     "requires_airbase": true,
     "air_damage": 0.0,
-    "ground_damage": 0.0
+    "ground_damage": 0.0,
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    }
   },
   {
     "id": "a50u_russia",
@@ -3068,7 +3343,7 @@
     "name": "A-50U airborne radar",
     "category": "Support",
     "visual_kind": "fighter",
-    "role": "transport",
+    "role": "radar_aircraft",
     "asset_roster_id": "a50u_russia",
     "seconds": 60,
     "cost": {
@@ -3096,25 +3371,25 @@
         "preview": "res://assets/library/arsenal/russia_a50u.png"
       },
       {
-        "name": "A-50U airborne radar · L2",
+        "name": "A-50U airborne radar \u00b7 L2",
         "model": "res://assets/library/arsenal/russia_a50u.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_a50u.png"
       },
       {
-        "name": "A-50U airborne radar · L3",
+        "name": "A-50U airborne radar \u00b7 L3",
         "model": "res://assets/library/arsenal/russia_a50u.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_a50u.png"
       },
       {
-        "name": "A-50U airborne radar · L4",
+        "name": "A-50U airborne radar \u00b7 L4",
         "model": "res://assets/library/arsenal/russia_a50u.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_a50u.png"
       },
       {
-        "name": "A-50U airborne radar · L5",
+        "name": "A-50U airborne radar \u00b7 L5",
         "model": "res://assets/library/arsenal/russia_a50u.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_a50u.png"
@@ -3125,7 +3400,12 @@
     "air_range": 16.0,
     "requires_airbase": true,
     "air_damage": 0.0,
-    "ground_damage": 0.0
+    "ground_damage": 0.0,
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    }
   },
   {
     "id": "yak130_russia",
@@ -3161,25 +3441,25 @@
         "preview": "res://assets/library/arsenal/russia_yak130.png"
       },
       {
-        "name": "Yak-130 · L2",
+        "name": "Yak-130 \u00b7 L2",
         "model": "res://assets/library/arsenal/russia_yak130.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_yak130.png"
       },
       {
-        "name": "Yak-130 · L3",
+        "name": "Yak-130 \u00b7 L3",
         "model": "res://assets/library/arsenal/russia_yak130.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_yak130.png"
       },
       {
-        "name": "Yak-130 · L4",
+        "name": "Yak-130 \u00b7 L4",
         "model": "res://assets/library/arsenal/russia_yak130.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_yak130.png"
       },
       {
-        "name": "Yak-130 · L5",
+        "name": "Yak-130 \u00b7 L5",
         "model": "res://assets/library/arsenal/russia_yak130.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_yak130.png"
@@ -3190,7 +3470,12 @@
     "air_range": 16.0,
     "requires_airbase": true,
     "air_damage": 2.0,
-    "ground_damage": 3.0
+    "ground_damage": 3.0,
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    }
   },
   {
     "id": "a400m_atlas_ukraine",
@@ -3226,25 +3511,25 @@
         "preview": "res://assets/library/arsenal/euro_a400m_atlas.png"
       },
       {
-        "name": "A400M Atlas transport · L2",
+        "name": "A400M Atlas transport \u00b7 L2",
         "model": "res://assets/library/arsenal/euro_a400m_atlas.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_a400m_atlas.png"
       },
       {
-        "name": "A400M Atlas transport · L3",
+        "name": "A400M Atlas transport \u00b7 L3",
         "model": "res://assets/library/arsenal/euro_a400m_atlas.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_a400m_atlas.png"
       },
       {
-        "name": "A400M Atlas transport · L4",
+        "name": "A400M Atlas transport \u00b7 L4",
         "model": "res://assets/library/arsenal/euro_a400m_atlas.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_a400m_atlas.png"
       },
       {
-        "name": "A400M Atlas transport · L5",
+        "name": "A400M Atlas transport \u00b7 L5",
         "model": "res://assets/library/arsenal/euro_a400m_atlas.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_a400m_atlas.png"
@@ -3255,7 +3540,12 @@
     "air_range": 16.0,
     "requires_airbase": true,
     "air_damage": 0.0,
-    "ground_damage": 0.0
+    "ground_damage": 0.0,
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    }
   },
   {
     "id": "hawk_t2_ukraine",
@@ -3291,25 +3581,25 @@
         "preview": "res://assets/library/arsenal/euro_hawk_t2.png"
       },
       {
-        "name": "Hawk T2 · L2",
+        "name": "Hawk T2 \u00b7 L2",
         "model": "res://assets/library/arsenal/euro_hawk_t2.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_hawk_t2.png"
       },
       {
-        "name": "Hawk T2 · L3",
+        "name": "Hawk T2 \u00b7 L3",
         "model": "res://assets/library/arsenal/euro_hawk_t2.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_hawk_t2.png"
       },
       {
-        "name": "Hawk T2 · L4",
+        "name": "Hawk T2 \u00b7 L4",
         "model": "res://assets/library/arsenal/euro_hawk_t2.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_hawk_t2.png"
       },
       {
-        "name": "Hawk T2 · L5",
+        "name": "Hawk T2 \u00b7 L5",
         "model": "res://assets/library/arsenal/euro_hawk_t2.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_hawk_t2.png"
@@ -3320,7 +3610,12 @@
     "air_range": 16.0,
     "requires_airbase": true,
     "air_damage": 2.0,
-    "ground_damage": 3.0
+    "ground_damage": 3.0,
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    }
   },
   {
     "id": "advanced_tanks_russia",
@@ -3356,31 +3651,36 @@
         "preview": "res://assets/library/arsenal/russia_t14_armata.png"
       },
       {
-        "name": "T-14 Armata · L2",
+        "name": "T-14 Armata \u00b7 L2",
         "model": "res://assets/library/arsenal/russia_t14_armata.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_t14_armata.png"
       },
       {
-        "name": "T-14 Armata · L3",
+        "name": "T-14 Armata \u00b7 L3",
         "model": "res://assets/library/arsenal/russia_t14_armata.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_t14_armata.png"
       },
       {
-        "name": "T-14 Armata · L4",
+        "name": "T-14 Armata \u00b7 L4",
         "model": "res://assets/library/arsenal/russia_t14_armata.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_t14_armata.png"
       },
       {
-        "name": "T-14 Armata · L5",
+        "name": "T-14 Armata \u00b7 L5",
         "model": "res://assets/library/arsenal/russia_t14_armata.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_t14_armata.png"
       }
     ],
-    "model_status": "Original supplied model"
+    "model_status": "Original supplied model",
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    }
   },
   {
     "id": "advanced_tanks_ukraine",
@@ -3416,31 +3716,36 @@
         "preview": "res://assets/library/arsenal/euro_kf51_panther.png"
       },
       {
-        "name": "KF51 Panther · L2",
+        "name": "KF51 Panther \u00b7 L2",
         "model": "res://assets/library/arsenal/euro_kf51_panther.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_kf51_panther.png"
       },
       {
-        "name": "KF51 Panther · L3",
+        "name": "KF51 Panther \u00b7 L3",
         "model": "res://assets/library/arsenal/euro_kf51_panther.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_kf51_panther.png"
       },
       {
-        "name": "KF51 Panther · L4",
+        "name": "KF51 Panther \u00b7 L4",
         "model": "res://assets/library/arsenal/euro_kf51_panther.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_kf51_panther.png"
       },
       {
-        "name": "KF51 Panther · L5",
+        "name": "KF51 Panther \u00b7 L5",
         "model": "res://assets/library/arsenal/euro_kf51_panther.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_kf51_panther.png"
       }
     ],
-    "model_status": "Original supplied model"
+    "model_status": "Original supplied model",
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    }
   },
   {
     "id": "coastal_missiles_russia",
@@ -3477,7 +3782,7 @@
         "projectile_model": "res://assets/library/arsenal/russia_p800_oniks.glb"
       },
       {
-        "name": "Oniks · guidance",
+        "name": "Oniks \u00b7 guidance",
         "model": "res://assets/library/arsenal/russia_bastion_p_launcher.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_bastion_p_launcher.png",
@@ -3491,14 +3796,14 @@
         "projectile_model": "res://assets/library/arsenal/russia_3m22_zircon.glb"
       },
       {
-        "name": "Zircon · guidance",
+        "name": "Zircon \u00b7 guidance",
         "model": "res://assets/library/arsenal/russia_bastion_p_launcher.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_bastion_p_launcher.png",
         "projectile_model": "res://assets/library/arsenal/russia_3m22_zircon.glb"
       },
       {
-        "name": "Zircon · advanced",
+        "name": "Zircon \u00b7 advanced",
         "model": "res://assets/library/arsenal/russia_bastion_p_launcher.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_bastion_p_launcher.png",
@@ -3509,7 +3814,12 @@
     "strike_range": 8.0,
     "strike_damage": 22.0,
     "reload_rounds": 4.0,
-    "targets_naval": true
+    "targets_naval": true,
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    }
   },
   {
     "id": "coastal_missiles_ukraine",
@@ -3546,28 +3856,28 @@
         "projectile_model": "res://assets/library/arsenal/euro_nsm.glb"
       },
       {
-        "name": "NSM · guidance",
+        "name": "NSM \u00b7 guidance",
         "model": "res://assets/library/arsenal/euro_nsm_coastal_launcher.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_nsm_coastal_launcher.png",
         "projectile_model": "res://assets/library/arsenal/euro_nsm.glb"
       },
       {
-        "name": "NSM · sensors",
+        "name": "NSM \u00b7 sensors",
         "model": "res://assets/library/arsenal/euro_nsm_coastal_launcher.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_nsm_coastal_launcher.png",
         "projectile_model": "res://assets/library/arsenal/euro_nsm.glb"
       },
       {
-        "name": "NSM · electronics",
+        "name": "NSM \u00b7 electronics",
         "model": "res://assets/library/arsenal/euro_nsm_coastal_launcher.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_nsm_coastal_launcher.png",
         "projectile_model": "res://assets/library/arsenal/euro_nsm.glb"
       },
       {
-        "name": "NSM · advanced",
+        "name": "NSM \u00b7 advanced",
         "model": "res://assets/library/arsenal/euro_nsm_coastal_launcher.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_nsm_coastal_launcher.png",
@@ -3578,6 +3888,11 @@
     "strike_range": 8.0,
     "strike_damage": 22.0,
     "reload_rounds": 4.0,
-    "targets_naval": true
+    "targets_naval": true,
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    }
   }
 ]

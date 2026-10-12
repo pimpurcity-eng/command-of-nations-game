@@ -210,14 +210,13 @@ func _refresh() -> void:
 	var captured: bool = controlled and place.country.to_lower() != GameSession.player_country
 	title.text = ("★ " if buildings.is_capital(place) else "") + place.name
 	summary.text = ("YOURS · " + ("captured city · income 25%" if captured else ("capital" if buildings.is_capital(place) else "core city"))) if controlled else ("Controlled by " + buildings.economy.controller(place).capitalize())
+	summary.text += " · MORALE " + str(roundi(buildings.economy.morale_factor(place)*100.0)) + "%"
 	# Income per hour at 1x (industry level, specialties, capture penalty).
 	for child in income_row.get_children(): child.queue_free()
 	var specialties: = ResourceSites.city_resources(place.name)
-	var base: = {"funds": 1.0, "materials": 0.18, "electronics": 0.08, "fuel": 0.12, "manpower": 0.1}
-	var multiplier: = buildings.rate(city_id, "industry") * (0.25 if captured else 1.0)
-	var bonus: float = ResourceSites.data().get("city_specialty_bonus", 0.0)
+	var income: = buildings.economy.city_income(place)
 	for resource in ProductionSystem.RESOURCES:
-		var item: = CowUI.cost(resource, base[resource] * multiplier * (1.0 + bonus if resource in specialties else 1.0) * SECONDS_PER_HOUR, true)
+		var item: = CowUI.cost(resource, income[resource] * SECONDS_PER_HOUR, true)
 		var amount: Label = item.get_child(1)
 		amount.text = "+" + amount.text + "/h"
 		amount.add_theme_color_override("font_color", CowUI.GOLD if resource in specialties else Color("d9d3c0"))

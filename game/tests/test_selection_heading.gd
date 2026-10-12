@@ -22,7 +22,7 @@ func run():
 	check(hud.selection_title.size.x <= root.size.x and hud.selection_title.get_visible_line_count() == hud.selection_title.get_line_count(),"long names wrap without clipping")
 	hud.show_territory({"title":"Kursk","controller":"russia","terrain":"hills"})
 	check(hud.selection_title.text == "KURSK","place name uses the large heading")
-	check(hud.detail.text == "YOURS · HILLS","place information stays separate from its name")
+	check(hud.detail.text == "YOURS · HILLS · MORALE 100%","place information and morale stay separate from its name")
 	hud.clear_unit_selection()
 	check(hud.selection_title.text == "REGIONAL COMMAND","clearing selection removes stale name")
 	print("RESULT checks=8 failures=",failures)

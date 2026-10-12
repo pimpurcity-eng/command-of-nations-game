@@ -14,7 +14,16 @@ var fog_enabled: = true
 const SEA_WATERLINE: = -0.06
 const MARCH_HEALTH_PER_SECOND: = 5.0 / (3600.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND)
 func vision_radius(unit: Dictionary) -> float:
+	var spec: = EquipmentIdentity.spec(unit.equipment_id)
+	if spec.get("role","") == "radar_aircraft": return 7.0 + float(unit.get("level",1)-1)*0.5
+	if unit.visual_kind == "naval": return 3.0 + float(unit.get("level",1)-1)*0.25
 	return 4.0 if unit.visual_kind in ["fighter", "naval"] else 3.0
+func visible_to_country(unit: Dictionary, country: String) -> bool:
+	if unit.country == country or not fog_enabled: return true
+	var point: = Vector2(unit.node.position.x,unit.node.position.z)
+	if not point_visible(point,country): return false
+	if EquipmentIdentity.spec(unit.equipment_id).get("role","") != "submarine": return true
+	return units.any(func(scout):return scout.country == country and scout.health>0 and Vector2(scout.node.position.x,scout.node.position.z).distance_to(point)<=float(EquipmentIdentity.spec(scout.equipment_id).get("sonar_range",0.0)))
 func point_visible(point: Vector2, country: String = "") -> bool:
 	if country.is_empty(): country = GameSession.player_country
 	if not fog_enabled: return true
@@ -24,7 +33,7 @@ func point_visible(point: Vector2, country: String = "") -> bool:
 		if origin.distance_to(point) <= vision_radius(scout): return true
 	return false
 func visible_to_player(unit: Dictionary) -> bool:
-	return unit.country == GameSession.player_country or point_visible(Vector2(unit.node.position.x, unit.node.position.z))
+	return visible_to_country(unit,GameSession.player_country)
 var terrain: StrategicMap
 var navigation: = LandRoutes.new()
 var sea_navigation: = SeaRoutes.new()
@@ -267,6 +276,7 @@ func order(position: Vector3, append: bool = false) -> bool:
 			status_changed.emit("Modernization in progress; this army cannot move yet")
 			return false
 	var destination: = Vector2(position.x, position.z)
+	if is_naval(units[selected]): destination = sea_navigation.coastal_destination(destination)
 	var current: = Vector2(units[selected].node.position.x, units[selected].node.position.z)
 	var origin: Vector2 = units[selected].target if append and units[selected].moving else current
 	var path: Array = path_for(units[selected], origin, destination)
@@ -318,7 +328,7 @@ func advance(delta: float) -> void :
 		var current: = Vector2(unit.node.position.x, unit.node.position.z)
 		var reach: = 1.1
 		for enemy in units:
-			if at_war and not air.is_air(enemy) and is_naval(enemy) == is_naval(unit) and enemy.country != unit.country and current.distance_to(Vector2(enemy.node.position.x, enemy.node.position.z)) <= reach:
+			if at_war and not air.is_air(enemy) and is_naval(enemy) == is_naval(unit) and enemy.country != unit.country and visible_to_country(enemy,unit.country) and current.distance_to(Vector2(enemy.node.position.x, enemy.node.position.z)) <= reach:
 				unit.engaged = true
 				break
 		for member in group: member.engaged = unit.engaged

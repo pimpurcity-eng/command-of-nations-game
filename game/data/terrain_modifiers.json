@@ -34,6 +34,16 @@
       "speed": 1,
       "attack": 1.0,
       "defense": 1
+    },
+    "infantry": {
+      "speed": 0.8,
+      "attack": 1.0,
+      "defense": 1.0
+    },
+    "support": {
+      "speed": 1.1,
+      "attack": 1.05,
+      "defense": 1.0
     }
   },
   "forest": {
@@ -71,6 +81,16 @@
       "speed": 0.7,
       "attack": 1.0,
       "defense": 1.05
+    },
+    "infantry": {
+      "speed": 0.7,
+      "attack": 1.25,
+      "defense": 1.2
+    },
+    "support": {
+      "speed": 0.85,
+      "attack": 1.05,
+      "defense": 1.25
     }
   },
   "hills": {
@@ -108,6 +128,16 @@
       "speed": 0.8,
       "attack": 1.0,
       "defense": 1.1
+    },
+    "infantry": {
+      "speed": 0.7,
+      "attack": 1.0,
+      "defense": 1.2
+    },
+    "support": {
+      "speed": 0.9,
+      "attack": 1,
+      "defense": 1.15
     }
   },
   "mountains": {
@@ -145,6 +175,16 @@
       "speed": 0.6,
       "attack": 1.0,
       "defense": 1.1
+    },
+    "infantry": {
+      "speed": 0.8,
+      "attack": 1.0,
+      "defense": 1.0
+    },
+    "support": {
+      "speed": 0.7,
+      "attack": 0.85,
+      "defense": 1.2
     }
   },
   "wetlands": {
@@ -182,6 +222,16 @@
       "speed": 0.5,
       "attack": 1.0,
       "defense": 0.95
+    },
+    "infantry": {
+      "speed": 0.8,
+      "attack": 1.0,
+      "defense": 1.0
+    },
+    "support": {
+      "speed": 0.65,
+      "attack": 0.8,
+      "defense": 1.1
     }
   },
   "urban": {
@@ -219,6 +269,16 @@
       "speed": 0.65,
       "attack": 1.0,
       "defense": 1.15
+    },
+    "infantry": {
+      "speed": 0.8,
+      "attack": 1.25,
+      "defense": 1.4
+    },
+    "support": {
+      "speed": 0.8,
+      "attack": 1.1,
+      "defense": 1.35
     }
   },
   "desert": {
@@ -254,6 +314,16 @@
     },
     "missile_launcher": {
       "speed": 0.85,
+      "attack": 1.0,
+      "defense": 0.95
+    },
+    "infantry": {
+      "speed": 0.8,
+      "attack": 1.0,
+      "defense": 1.0
+    },
+    "support": {
+      "speed": 1.0,
       "attack": 1.0,
       "defense": 0.95
     }

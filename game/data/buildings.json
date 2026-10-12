@@ -31,7 +31,7 @@
       "fuel": 30,
       "manpower": 25
     },
-    "description": "Each level above 1 increases this city’s income of all five resources by 25%.",
+    "description": "Each level above 1 increases this city’s currency, manpower and main commodity income by 25%.",
     "starting_level": 1,
     "colour": "c7ab65"
   },
@@ -49,7 +49,7 @@
       "fuel": 15,
       "manpower": 20
     },
-    "description": "Capital only. Each level above 1 increases national research speed by 25%. Two research slots.",
+    "description": "Research is national and independent of this legacy building. Two research slots.",
     "starting_level": 1,
     "colour": "a98ac2"
   },

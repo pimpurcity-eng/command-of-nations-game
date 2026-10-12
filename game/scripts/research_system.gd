@@ -111,8 +111,8 @@ func upgrade(unit: Dictionary) -> String:
 		duration_seconds = maxf(duration_seconds, spec.seconds * 0.5)
 	if eligible.is_empty(): return "This army already has the highest researched levels"
 	for resource in ProductionSystem.RESOURCES:
-		if economy.stockpiles.russia[resource] < bill[resource]: return "Insufficient " + resource
-	for resource in ProductionSystem.RESOURCES: economy.stockpiles.russia[resource] -= bill[resource]
+		if economy.stockpiles[GameSession.player_country][resource] < bill[resource]: return "Insufficient " + resource
+	for resource in ProductionSystem.RESOURCES: economy.stockpiles[GameSession.player_country][resource] -= bill[resource]
 	for member in eligible:
 		member.upgrade_remaining = duration_seconds
 		member.upgrade_target = level(member.equipment_id)

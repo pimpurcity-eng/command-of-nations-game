@@ -216,9 +216,11 @@ func resource_rate(city_id: String, resource: String) -> float:
 	return 1.0
 func production_rate(city_id: String, equipment: Dictionary) -> float:
 	var special: String = {"Armor": "tank_plant", "Mechanized": "barracks", "Infantry": "barracks", "Navy": "naval_base"}.get(equipment.get("category", ""), "")
-	return rate(city_id, "factory") * (1.0 + 0.25 * level(city_id, special))
+	return rate(city_id, "factory") * (1.0 + 0.25 * level(city_id, special)) * morale_speed(city_id)
+func morale_speed(city_id: String) -> float:
+	return clampf(economy.morale_factor(city(city_id))/0.8,0.25,1.0)
 func construction_rate(city_id: String) -> float:
-	return 1.0 + 0.15 * level(city_id, "infrastructure")
+	return (1.0 + 0.15 * level(city_id, "infrastructure")) * morale_speed(city_id)
 func construction_time(city_id: String, building_id: String, target: int, progress: float = 0.0) -> float:
 	return maxf(0, duration(building_id, target) - progress) / construction_rate(city_id)
 func incoming_damage_factor(unit: Dictionary) -> float:

@@ -141,7 +141,7 @@ func launch(start: Vector3, finish: Vector3, effect: String, country: String = "
 		body.material_override = ink(Color("ffe4ab"))
 		body.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		root.add_child(body)
-	var glow: = sphere(root, 0.025, Color("ffbc62"))
+	var glow: = sphere(root, 0.06 if effect in ["missile","interceptor"] else 0.025, Color("ffbc62"))
 	glow.position.z = 0.12
 	var trail: = MeshInstance3D.new()
 	var tube: = CylinderMesh.new()
@@ -157,6 +157,7 @@ func launch(start: Vector3, finish: Vector3, effect: String, country: String = "
 	root.add_child(trail)
 	trail.visible = false
 	var duration: = clampf(start.distance_to(finish) * 0.15 + 0.65, 0.8, 2.0)
+	if effect in ["missile","interceptor"]: duration = clampf(start.distance_to(finish)*0.25+2.0,2.4,4.0)
 	if effect in ["cannon", "tracer"]: duration = clampf(start.distance_to(finish) * 0.08, 0.12, 0.4)
 	projectiles.append({"node": root, "start": start, "finish": finish, "effect": effect, "age": 0.0, "trail_age": 0.0, "duration": duration})
 func trajectory(job: Dictionary, fraction: float) -> Vector3:

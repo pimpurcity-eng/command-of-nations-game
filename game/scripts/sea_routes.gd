@@ -45,6 +45,15 @@ func find_path(start: Vector2, finish: Vector2) -> Array:
 		anchor = result[last]
 		i = last + 1
 	return simplified if simplified.size() <= 256 else []
+## Shore taps can land just inside the coast mask. Snap within a small radius, never
+## route through land or teleport a ship to another body of water.
+func coastal_destination(point: Vector2) -> Vector2:
+	if on_sea(point): return point
+	for ring in range(1,7):
+		for step in 24:
+			var candidate: = point+Vector2.from_angle(float(step)*TAU/24.0)*float(ring)*0.05
+			if on_sea(candidate): return candidate
+	return point
 func _build_graph() -> void :
 	graph = AStar2D.new()
 	var cells: Dictionary = {}

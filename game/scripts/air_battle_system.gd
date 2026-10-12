@@ -8,7 +8,7 @@ func value(unit: Dictionary, name: String, defending: bool = false) -> float:
 	var scaling: float = 1.0 + 0.12 * (unit.get("level", 1) - 1)
 	var tier: Dictionary = EquipmentIdentity.research_tier(unit.equipment_id, unit.get("level", 1))
 	base = float(tier.get(name, base))
-	if name == "aa_damage" and not tier.is_empty():
+	if name == "aa_damage" and tier.has("damage"):
 		base = tier.damage
 		scaling = 1.0
 	return TerrainRules.unit_factor(unit, "defense" if defending else "attack") * base * (0.2 + 0.8 * clampf(unit.health / 100.0, 0, 1)) * scaling
@@ -27,10 +27,10 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 		for unit in armies.units:
 			if unit.health <= 0 or unit.get("upgrade_remaining", 0.0) > 0: continue
 			var fighter: bool = unit.visual_kind == "fighter" and unit.get("flight_mode", "grounded") != "grounded"
-			var aa: bool = unit.visual_kind == "air_defense"
+			var aa: bool = unit.visual_kind == "air_defense" or (unit.visual_kind == "naval" and value(unit,"aa_damage")>0)
 			if not fighter and not aa: continue
 			var patrol: bool = fighter and unit.flight_mode == "patrol"
-			var reach: float = AirOperations.PATROL_RADIUS if patrol else 1.2 if fighter else EquipmentIdentity.air_defense_range(unit)
+			var reach: float = AirOperations.PATROL_RADIUS if patrol else 1.2 if fighter else float(EquipmentIdentity.spec(unit.equipment_id).get("aa_range",2.5)) if unit.visual_kind == "naval" else EquipmentIdentity.air_defense_range(unit)
 			var origin: Vector2 = unit.patrol_center if patrol else Vector2(unit.node.position.x, unit.node.position.z)
 			var nearest: = INF
 			var patrol_targets: Array = []
@@ -40,6 +40,7 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 				if aa and (enemy.visual_kind != "fighter" or enemy.flight_mode == "grounded"): continue
 				var point: = Vector2(enemy.node.position.x, enemy.node.position.z)
 				if not armies.point_visible(point, unit.country): continue
+				if not armies.visible_to_country(enemy,unit.country): continue
 				if unit.get("flight_mode", "") == "attack" and enemy.id != unit.get("attack_target", ""): continue
 				if fighter and value(unit, "air_damage" if enemy.visual_kind == "fighter" else "ground_damage") <= 0: continue
 				var distance: = origin.distance_to(point)
@@ -77,7 +78,7 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 
 
 				for defender in armies.stacks.members(enemy):
-					if defender.visual_kind == "air_defense" and defender.health > 0:
+					if defender.visual_kind in ["air_defense","naval"] and defender.health > 0 and value(defender,"aa_damage")>0:
 						damage[unit.id] = damage.get(unit.id, 0.0) + value(defender, "aa_damage", true)
 						weapon_fired.emit(defender, unit, "interceptor")
 			cooldowns[unit.id] = ROUND_SECONDS * (0.5 if unit.get("flight_mode", "") == "patrol" else 1.0)

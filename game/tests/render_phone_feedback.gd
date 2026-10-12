@@ -37,6 +37,7 @@ func run() -> void:
 	game.units.attack_selected(enemy)
 	game.match_rules.advance_battles(0.001)
 	game.combat_effects.advance_visual(0.4)
+	game.combat_effects.set_process(false)
 	await capture(game,launcher,9,"Missile_Actual_Launch.png")
 	print("REVIEW real missile projectiles=",game.combat_effects.projectiles.size())
 	game.queue_free()

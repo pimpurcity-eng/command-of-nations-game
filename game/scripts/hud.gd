@@ -467,7 +467,7 @@ func show_territory(t: Dictionary) -> void :
 	inspecting_unit = false
 	health_bar.visible = false
 	selection_title.text = t.title.to_upper()
-	detail.text = ("YOURS" if t.controller == GameSession.player_country else t.controller.to_upper()) + " · " + str(t.get("terrain", "plains")).to_upper()
+	detail.text = ("YOURS" if t.controller == GameSession.player_country else t.controller.to_upper()) + " · " + str(t.get("terrain", "plains")).to_upper() + " · MORALE " + str(roundi(float(t.get("morale",100.0 if t.get("owner",t.controller) == t.controller else 25.0)))) + "%"
 	_refresh_sheet()
 func show_status(message: String) -> void :
 	status_message = message

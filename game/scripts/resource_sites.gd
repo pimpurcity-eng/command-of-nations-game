@@ -7,7 +7,7 @@ extends Node3D
 ## Data: res://data/resource_sites.json. Owner review 2026-10-09: "there has to be resources
 ## in cities, and some scattered across some provinces".
 const DATA_PATH: = "res://data/resource_sites.json"
-const ICON_DISTANCE: = 30.0
+const ICON_DISTANCE: = 65.0
 static var _data: Dictionary = {}
 var sites: Array = []  # {name, resource, point: Vector2, territory: Dictionary}
 var terrain: StrategicMap
@@ -36,46 +36,46 @@ static func icon(resource: String) -> Texture2D:
 func setup(map: StrategicMap, camera_rig: StrategyCamera) -> void:
 	terrain = map
 	rig = camera_rig
-	# Call of War: every province produces one resource, shown at its centre.
+	# Selected rural provinces have commodities. Currency/recruitment are province income,
+	# not commodity installations. Cities are accounted for once by ProductionSystem.
 	var hints: = []
 	for entry in data().sites: hints.append({"resource": entry.resource, "point": GeographicProjection.project(entry.longitude, entry.latitude)})
-	var city_names: = {}
-	for city in GeographicProjection.load_cities(): city_names[city.name] = city.point
+	var city_data: = GeographicProjection.load_cities()
 	for title in terrain.province_hubs:
 		var hub: Vector2 = terrain.province_hubs[title]
 		var parts: = terrain.territories.filter(func(t: Dictionary): return t.playable and t.title == title)
 		if parts.is_empty(): continue
 		var resource: = ""
 		var city_name: = ""
-		for name in city_names:
-			if city_names[name].distance_to(hub) < 0.5: city_name = name
-		if not city_name.is_empty(): resource = city_resources(city_name)[0]
+		for city in city_data:
+			if parts.any(func(part: Dictionary):return part.id == city.get("sector", "") or city.point.distance_to(hub)<0.5): city_name = city.name
+		if not city_name.is_empty() and not city_resources(city_name).is_empty(): resource = city_resources(city_name)[0]
 		else:
 			var votes: = {}
 			for hint in hints:
 				if parts.any(func(t: Dictionary): return RegionData.contains(t, hint.point)): votes[hint.resource] = votes.get(hint.resource, 0) + 1
 			for candidate in votes:
 				if resource.is_empty() or votes[candidate] > votes[resource]: resource = candidate
-			if resource.is_empty():
-				var geo: = GeographicProjection.unproject(hub)
-				var land: = TerrainProfile.landform(geo.x, geo.y)
-				# Only the northern taiga is timber country; forests further south are farmland.
-				if land == "forest" and geo.y < float(data().get("forest_timber_latitude", 0.0)): land = "plains"
-				resource = data().by_landform.get(land, "manpower")
-		var site: = {"name": title, "resource": resource, "point": _beside(hub, 1.0 if not city_name.is_empty() else 0.55), "territory": parts[0], "city": city_name}
+		if resource not in ["fuel", "materials", "electronics"]: continue
+		var point: = _beside(hub, 1.0 if not city_name.is_empty() else 0.55, parts)
+		var territory: Dictionary = parts[0]
+		for part in parts:
+			if RegionData.contains(part,point): territory = part;break
+		var site: = {"name": title, "resource": resource, "point": point, "territory": territory, "city": city_name}
 		sites.append(site)
 		_build(site)
 
 ## A spot at `distance` from the province centre, on the side farthest from its roads.
-func _beside(hub: Vector2, distance: float) -> Vector2:
+func _beside(hub: Vector2, distance: float, parts: Array = []) -> Vector2:
 	var road_points: = []
 	for road in terrain.roads:
 		if road[0].distance_to(hub) < 0.05 or road[1].distance_to(hub) < 0.05:
 			road_points.append_array(Array(StrategicMap.road_curve(road[0], road[1], road[2])))
-	var best: = hub + Vector2(distance, 0)
+	var best: = hub
 	var clearance: = -1.0
 	for i in 12:
 		var candidate: = hub + Vector2.from_angle(TAU * i / 12.0) * distance
+		if not parts.is_empty() and not parts.any(func(t: Dictionary):return RegionData.contains(t,candidate)): continue
 		var nearest: = INF
 		for point in road_points: nearest = minf(nearest, point.distance_to(candidate))
 		if nearest > clearance:
@@ -87,9 +87,12 @@ func _beside(hub: Vector2, distance: float) -> Vector2:
 func income(seconds: float) -> Dictionary:
 	var result: = {}
 	for site in sites:
+		if not site.city.is_empty(): continue
 		var controller: String = site.territory.controller
 		if not result.has(controller): result[controller] = {}
-		result[controller][site.resource] = result[controller].get(site.resource, 0.0) + rate(site.resource) * seconds
+		var ownership: = 1.0 if controller == site.territory.owner else 0.25
+		var morale: = float(site.territory.get("morale",100.0 if ownership == 1.0 else 25.0))/100.0
+		result[controller][site.resource] = result[controller].get(site.resource, 0.0) + rate(site.resource) * seconds * ownership * morale
 	return result
 
 func _process(_delta: float) -> void:

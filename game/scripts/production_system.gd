@@ -11,6 +11,72 @@ const PLAN_LIMIT: = 8
 var rally_points: Dictionary = {}
 var cities: Array
 var terrain: StrategicMap
+var armies: UnitSystem
+const CITY_BASE: = {"funds": 1.0, "materials": 0.18, "electronics": 0.08, "fuel": 0.12, "manpower": 0.1}
+const DAY_SECONDS: = 86400.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
+var shortage_resources: Dictionary = {}
+func province(city: Dictionary) -> Dictionary:
+	for territory in terrain.territories:
+		if territory.id == city.sector: return territory
+	return {}
+func morale_factor(city: Dictionary) -> float:
+	var region: = province(city)
+	return float(region.get("morale",100.0 if controller(city) == city.country.to_lower() else 25.0))/100.0
+func city_income(city: Dictionary) -> Dictionary:
+	var result: Dictionary = {}
+	var multiplier: = buildings.rate(city.id,"industry") if buildings != null else 1.0
+	if controller(city) != city.country.to_lower(): multiplier *= 0.25
+	multiplier *= morale_factor(city)
+	var specialties: = ResourceSites.city_resources(city.name)
+	for resource in RESOURCES:
+		var facility: = buildings.resource_rate(city.id,resource) if buildings != null else 1.0
+		result[resource] = CITY_BASE[resource] * multiplier * facility * (1.0 if resource in ["funds","manpower"] else 1.5 if resource in specialties else 0.0)
+	return result
+func gross_income() -> Dictionary:
+	var result: Dictionary = {}
+	for country in stockpiles:
+		result[country] = {}
+		for resource in RESOURCES: result[country][resource] = 0.0
+	var city_titles: Dictionary = {}
+	for city in cities:
+		var country: = controller(city)
+		if not result.has(country): continue
+		var region: = province(city)
+		city_titles[region.get("title","")] = true
+		var income: = city_income(city)
+		for resource in RESOURCES: result[country][resource] += income[resource]
+	var counted: Dictionary = {}
+	for region in terrain.territories:
+		if not region.playable or counted.has(region.title) or city_titles.has(region.title): continue
+		counted[region.title] = true
+		if not result.has(region.controller): continue
+		var multiplier: = (1.0 if region.controller == region.owner else 0.25) * float(region.get("morale",100.0 if region.controller == region.owner else 25.0))/100.0
+		result[region.controller].funds += 0.08 * multiplier
+		result[region.controller].manpower += 0.012 * multiplier
+	if resource_sites != null:
+		var sites_income: = resource_sites.income(1.0)
+		for country in sites_income:
+			if result.has(country):
+				for resource in sites_income[country]: result[country][resource] += sites_income[country][resource]
+	return result
+func upkeep() -> Dictionary:
+	var result: Dictionary = {}
+	for country in stockpiles:
+		result[country] = {}
+		for resource in RESOURCES: result[country][resource] = 0.0
+	if armies == null or GameSession.weapons_test: return result
+	for unit in armies.units:
+		if unit.health <= 0 or not result.has(unit.country): continue
+		var spec: = equipment(unit.equipment_id)
+		if spec.is_empty(): continue
+		for resource in RESOURCES: result[unit.country][resource] += float(spec.get("upkeep",{}).get(resource,0.0))/DAY_SECONDS
+	return result
+func net_income() -> Dictionary:
+	var result: = gross_income()
+	var maintenance: = upkeep()
+	for country in result:
+		for resource in RESOURCES: result[country][resource] -= maintenance[country][resource]
+	return result
 ## Resource sites in the provinces (oil fields, mines, plants, farmland); optional.
 var resource_sites: ResourceSites
 var _building_ref: WeakRef
@@ -68,22 +134,14 @@ func cancel(id: int) -> void :
 		return
 func advance(seconds: float) -> void :
 	if seconds <= 0: return
-	var income: = {"funds": 1.0, "materials": 0.18, "electronics": 0.08, "fuel": 0.12, "manpower": 0.1}
-	for city in cities:
-		var country: = controller(city)
-		if not stockpiles.has(country): continue
-		var multiplier: = buildings.rate(city.id, "industry") if buildings != null else 1.0
-		if country != city.country.to_lower(): multiplier *= 0.25
-		var specialties: = ResourceSites.city_resources(city.name)
-		var bonus: float = ResourceSites.data().get("city_specialty_bonus", 0.0)
+	var income: = net_income()
+	shortage_resources.clear()
+	for country in stockpiles:
+		shortage_resources[country] = []
 		for resource in RESOURCES:
-			var facility: = buildings.resource_rate(city.id, resource) if buildings != null else 1.0
-			stockpiles[country][resource] += income[resource] * seconds * multiplier * facility * (1.0 + bonus if resource in specialties else 1.0)
-	if resource_sites != null:
-		var earned: = resource_sites.income(seconds)
-		for country in earned:
-			if not stockpiles.has(country): continue
-			for resource in earned[country]: stockpiles[country][resource] += earned[country][resource]
+			var balance: float = stockpiles[country][resource] + income[country][resource]*seconds
+			if balance < 0: shortage_resources[country].append(resource)
+			stockpiles[country][resource] = maxf(0.0,balance)
 
 	for city in cities:
 		var remaining: = seconds

@@ -70,6 +70,11 @@ func setup(economy: ProductionSystem, theme: Theme) -> void :
 func _refresh() -> void :
 	stock.text = ""
 	for resource in ProductionSystem.RESOURCES: stock.text += resource.capitalize() + ": " + str(int(exchange.economy.stockpiles[GameSession.player_country][resource])) + "  "
+	stock.text += "\nNet income after army upkeep (1×):\n"
+	var income: Dictionary = exchange.economy.net_income()[GameSession.player_country]
+	for resource in ProductionSystem.RESOURCES: stock.text += resource.capitalize() + " " + ("+" if income[resource]>=0 else "") + "%.1f/h  " % (income[resource]*30.0)
+	var shortages: Array = exchange.economy.shortage_resources.get(GameSession.player_country,[])
+	if not shortages.is_empty(): stock.text += "\nSHORTAGE: " + ", ".join(shortages)
 func _layout() -> void :
 	var size: = get_viewport().get_visible_rect().size
 	panel.position = Vector2(maxf(12, (size.x - 550) * 0.5), 12)

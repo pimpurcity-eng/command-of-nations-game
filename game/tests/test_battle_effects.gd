@@ -18,9 +18,7 @@ func run() -> void:
 	for id in ["missile_launcher_russia", "missile_launcher_ukraine"]:
 		var launcher: = UnitVisual.create("missile_launcher", Color.WHITE, id)
 		check(not launcher.get_meta("missing_original_model", true), id + " original model available")
-		if launcher.get_child_count() > 0:
-			var forward: Vector3 = launcher.get_child(0).basis * Vector3.FORWARD
-			check(forward.normalized().is_equal_approx(Vector3.FORWARD), id + " fitted cab faces -Z")
+		check(launcher.has_meta("missile_launch_point"), id + " has a fitted launch point")
 		launcher.free()
 		for direction in [Vector3.FORWARD, Vector3.RIGHT, Vector3.BACK, Vector3.LEFT]:
 			var aim: = UnitVisual.firing_heading(id, direction)

@@ -6,6 +6,9 @@ const ROUND_SECONDS: = 1800.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
 const STACK_DAMAGE_LIMIT: = 10
 const MAX_ROUND_SECONDS: = ROUND_SECONDS * 4
 var cooldowns: Dictionary = {}
+func target_class(unit: Dictionary) -> String:
+	if unit.visual_kind != "naval": return unit.visual_kind
+	return "submarine" if EquipmentIdentity.spec(unit.equipment_id).get("role", "") == "submarine" else "carrier" if EquipmentIdentity.spec(unit.equipment_id).get("role", "") == "carrier" else "naval"
 func shot_effect(unit: Dictionary) -> String:
 	if EquipmentIdentity.research_tier(unit.equipment_id, unit.get("level", 1)).has("projectile_model"): return "missile"
 	return "missile" if unit.visual_kind == "missile_launcher" else "artillery" if unit.visual_kind in ["artillery", "naval"] else "cannon" if unit.visual_kind == "armor" else "tracer"
@@ -17,10 +20,14 @@ func damage_value(unit: Dictionary, target_kind: String, defending: bool = false
 
 	var values: = {"armor": {"armor": 7.0, "ifv": 8.0, "artillery": 6.0, "air_defense": 8.0}, "ifv": {"armor": 4.0, "ifv": 6.0, "artillery": 7.0, "air_defense": 7.0}, "artillery": {"armor": 5.0, "ifv": 7.0, "artillery": 5.0, "air_defense": 6.0}, "air_defense": {"armor": 1.0, "ifv": 2.0, "artillery": 1.0, "air_defense": 2.0}}
 	if unit.visual_kind == "missile_launcher":
-		if EquipmentIdentity.spec(unit.equipment_id).get("targets_naval", false) and target_kind != "naval": return 0.0
+		if EquipmentIdentity.spec(unit.equipment_id).get("targets_naval", false) and target_kind not in ["naval", "submarine", "carrier"]: return 0.0
 		return (2.0 if defending else float(EquipmentIdentity.spec(unit.equipment_id).get("strike_damage", 22.0))) * (0.2 + 0.8 * clampf(unit.health / 100.0, 0, 1)) * (1.0 + 0.12 * (unit.get("level", 1) - 1))
 	if unit.visual_kind == "naval":
-		return (6.0 if target_kind == "naval" else 0.0) * (0.2 + 0.8 * clampf(unit.health / 100.0, 0, 1)) * (1.0 + 0.12 * (unit.get("level", 1) - 1))
+		var role: String = EquipmentIdentity.spec(unit.equipment_id).get("role","naval")
+		var targets: Dictionary = {"naval":{"naval":8.0,"submarine":6.0,"carrier":10.0},"submarine":{"naval":12.0,"submarine":8.0,"carrier":16.0},"carrier":{"naval":2.0,"submarine":1.0,"carrier":2.0}}.get(role,{})
+		var base: float = targets.get(target_kind,0.0)
+		if target_kind not in ["naval","submarine","carrier"] and EquipmentIdentity.spec(unit.equipment_id).get("shore_bombardment",false): base = 4.0 if not defending else 0.0
+		return base * (0.2 + 0.8 * clampf(unit.health / 100.0, 0, 1)) * (1.0 + 0.12 * (unit.get("level", 1) - 1))
 	if defending:
 		values = {"armor": {"armor": 6.0, "ifv": 7.0, "artillery": 5.0, "air_defense": 7.0}, "ifv": {"armor": 5.0, "ifv": 7.0, "artillery": 6.0, "air_defense": 6.0}, "artillery": {"armor": 2.0, "ifv": 3.0, "artillery": 2.0, "air_defense": 3.0}, "air_defense": {"armor": 2.0, "ifv": 3.0, "artillery": 2.0, "air_defense": 3.0}}
 	values["infantry"] = {"armor": 1.5, "ifv": 2.5, "artillery": 5.0, "air_defense": 4.0, "infantry": 5.0, "support": 4.0}
@@ -60,12 +67,14 @@ func target(group: Array, groups: Array, armies: UnitSystem = null) -> Array:
 	for candidate in groups:
 		if candidate[0].visual_kind == "fighter": continue
 		var coastal: bool = group.any(func(member): return EquipmentIdentity.spec(member.equipment_id).get("targets_naval", false))
-		if (candidate[0].visual_kind == "naval") != (group[0].visual_kind == "naval") and not (coastal and candidate[0].visual_kind == "naval"): continue
+		var shore: bool = group.any(func(member):return EquipmentIdentity.spec(member.equipment_id).get("shore_bombardment",false))
+		if (candidate[0].visual_kind == "naval") != (group[0].visual_kind == "naval") and not (coastal and candidate[0].visual_kind == "naval") and not (shore and group[0].visual_kind == "naval"): continue
 		var defenders: = alive(candidate)
 		if defenders.is_empty() or defenders[0].country == group[0].country: continue
 		var point: = Vector2(defenders[0].node.position.x, defenders[0].node.position.z)
 		var distance: = origin.distance_to(point)
 		if armies != null and not armies.point_visible(point, group[0].country): continue
+		if armies != null and not armies.visible_to_country(defenders[0],group[0].country): continue
 		var explicit: bool = group[0].get("attack_target", "") in defenders.map( func(unit: Dictionary): return unit.id)
 		if group[0].get("fire_mode", "at_will") in ["return", "hold"] and not explicit: continue
 		var priority: = 0.0 if explicit else distance
@@ -114,13 +123,13 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 			var ranged: = distance > 1.1
 			var contributors: = eligible(attackers, distance)
 			for defender in defenders:
-				var strike: = potential(contributors, defender.visual_kind, ranged) / defenders.size()
+				var strike: = potential(contributors, target_class(defender), ranged) / defenders.size()
 				damage[defender.id] = damage.get(defender.id, 0.0) + strike
-			if not ranged and defenders[0].get("fire_mode", "at_will") != "hold":
+			if not ranged:
 
 
 				for attacker in attackers:
-					var response: = potential(defenders, attacker.visual_kind, false, true) / attackers.size()
+					var response: = potential(defenders, target_class(attacker), false, true) / attackers.size()
 					damage[attacker.id] = damage.get(attacker.id, 0.0) + response
 				for defender in defenders:
 					if potential([defender], attackers[0].visual_kind, false, true) > 0:
@@ -129,12 +138,12 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 				var answering: = eligible(defenders, distance)
 				if not answering.is_empty():
 					for attacker in attackers:
-						damage[attacker.id] = damage.get(attacker.id, 0.0) + potential(answering, attacker.visual_kind, true) / attackers.size()
+						damage[attacker.id] = damage.get(attacker.id, 0.0) + potential(answering, target_class(attacker), true) / attackers.size()
 					cooldowns[key(defenders)] = ROUND_SECONDS
 					for defender in answering: weapon_fired.emit(defender, attackers[0], shot_effect(defender))
 			var rounds: = 1.0
 			for attacker in contributors:
-				if potential([attacker], defenders[0].visual_kind, ranged) > 0:
+				if potential([attacker], target_class(defenders[0]), ranged) > 0:
 					weapon_fired.emit(attacker, defenders[0], shot_effect(attacker))
 				if attacker.visual_kind == "missile_launcher": rounds = maxf(rounds, EquipmentIdentity.spec(attacker.equipment_id).get("reload_rounds", 4.0))
 			cooldowns[attack[2]] = ROUND_SECONDS * rounds

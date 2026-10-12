@@ -215,6 +215,7 @@ func _ready() -> void :
 	badges.badge_clicked.connect(func(index: int): units.select_unit(index))
 	production = ProductionSystem.new()
 	production.setup(map, cities.cities, session.countries)
+	production.armies = units
 	resource_sites = ResourceSites.new()
 	add_child(resource_sites)
 	resource_sites.setup(map, rig)
@@ -561,6 +562,10 @@ func player_order(destination: Vector3) -> void :
 
 func refresh_hud() -> void :
 	if hud == null: return
+	if production != null and not production.stockpiles.is_empty():
+		var income: Dictionary = production.net_income()[GameSession.player_country]
+		for resource in ProductionSystem.RESOURCES:
+			hud.resource_values[resource].tooltip_text = resource.capitalize()+" · net "+("+" if income[resource]>=0 else "")+"%.1f/h" % (income[resource]*30.0)+" at 1× (after upkeep)"
 	if match_rules != null:
 		hud.city_scores = match_rules.city_score()
 		map.update_relations(match_rules.at_war)

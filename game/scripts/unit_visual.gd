@@ -4,7 +4,7 @@ extends RefCounted
 ## Map footprint (longest horizontal side, before the 0.65 marker scale) per unit type, so
 ## every original model reads at a consistent size against the cities instead of keeping
 ## whatever scale its source file happened to use.
-const FOOTPRINT: = {"helicopter": 1.6, "bomber": 2.3, "armor": 1.35, "ifv": 1.25, "artillery": 1.3, "air_defense": 1.3, "missile_launcher": 1.4, "silo": 1.5, "fighter": 1.5, "drone": 1.1, "naval": 2.2, "submarine": 1.85, "carrier": 3.9}
+const FOOTPRINT: = {"helicopter": 1.6, "bomber": 2.3, "armor": 1.35, "ifv": 1.25, "artillery": 1.3, "air_defense": 1.3, "missile_launcher": 1.4, "silo": 1.5, "fighter": 1.5, "drone": 1.1, "naval": 2.2, "submarine": 1.85, "carrier": 3.9, "support": 1.3, "transport": 2.3, "radar_aircraft": 2.3, "infantry": 0.42}
 ## Extra yaw (degrees) for source models that face backwards after long-axis alignment,
 ## keyed by model file prefix. Checked with tests/model_lineup.gd (all models face north).
 const YAW_FIX: = {"su57": 180.0, "f18a": 180.0, "destroyer": 180.0, "kclass": 180.0, "upload20ab": 180.0, "ad": 180.0}  # ad_*: owner weapons.zip air defence (+X forward)
@@ -44,6 +44,7 @@ static func stand_in_path(equipment_id: String, kind: String) -> String:
 		"artillery": return "res://assets/library/upload7a7e_original.glb"
 		"air_defense": return "res://assets/library/skyguard_" + ("russian" if russian else "european") + ".glb"
 		"fighter": return "res://assets/library/arsenal/russia_su57.glb" if russian else "res://assets/library/arsenal/euro_mirage2000.glb"
+		"missile_launcher": return "res://assets/library/arsenal/russia_iskander_m.glb" if russian else "res://assets/library/arsenal/euro_pluton.glb"
 	return ""
 
 static func create(kind: String, _faction: Color, equipment_id: String = "", level: int = 1) -> Node3D:
@@ -125,7 +126,7 @@ static func _fit(pivot: Node3D, vehicle: Node3D, role: String, path: String) -> 
 	if owner_model(path): yaw = PI * 0.5  # Source +X cab faces game -Z.
 	var bounds: = model_bounds(vehicle, yaw)
 	var longest: = maxf(maxf(bounds.size.x, bounds.size.z), 0.001)
-	var footprint: float = 1.3 if role == "support" else 2.3 if role == "transport" else 0.42 if role == "infantry" else FOOTPRINT.get(role, 0.62)
+	var footprint: float = FOOTPRINT.get(role, 0.62)
 	var factor: float = footprint / longest
 	var center: = bounds.get_center()
 	pivot.transform = Transform3D(Basis(Vector3.UP, yaw).scaled(Vector3.ONE * factor), Vector3(-center.x, -bounds.position.y, -center.z) * factor)

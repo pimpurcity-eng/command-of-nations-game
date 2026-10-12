@@ -17,6 +17,42 @@ var ai_enabled: = true
 var decision_timer: = 0.0
 var winner: = ""
 var at_war: = false
+var last_day: = 1
+func daily_provinces() -> void:
+	var today: = 1 + int(clock.elapsed/ProductionSystem.DAY_SECONDS)
+	while last_day < today:
+		last_day += 1
+		var seen: Dictionary = {}
+		for territory in terrain.territories:
+			if not territory.playable or seen.has(territory.title): continue
+			seen[territory.title] = true
+			var morale: = float(territory.get("morale",100.0 if territory.controller == territory.owner else 25.0))
+			var garrison: = armies.units.any(func(u):return u.health>0 and u.country == territory.controller and u.visual_kind not in ["fighter","naval"] and Vector2(u.node.position.x,u.node.position.z).distance_to(territory.center)<CAPTURE_RADIUS)
+			if at_war and territory.controller != territory.owner and morale < 30.0 and not garrison:
+				var random: = RandomNumberGenerator.new()
+				random.seed = abs((territory.id+str(last_day)).hash())
+				if random.randf()<0.2:
+					change_control(territory,territory.owner)
+					report.emit(territory.title+" revolted · station a garrison while morale is low")
+			var target: = 100.0 if territory.controller == territory.owner else 80.0
+			if production != null and production.buildings != null:
+				var capital: = production.buildings.capital(territory.controller)
+				if not capital.is_empty() and not production.controlled(capital,territory.controller): target -= 20.0
+			var next_morale: = clampf(morale+(target-morale)*0.15,0,100)
+			for part in terrain.territories:
+				if part.playable and part.title == territory.title: part.morale = next_morale
+		for unit in armies.units:
+			if unit.engaged or unit.get("flight_mode", "grounded") != "grounded": continue
+			var point: = Vector2(unit.node.position.x,unit.node.position.z)
+			if unit.visual_kind == "naval" or terrain.territories.any(func(t):return t.playable and t.controller == unit.country and RegionData.contains(t,point)):
+				unit.health = minf(100,unit.health+(100-unit.health)*0.15)
+		report.emit("Day "+str(last_day)+" · province morale and army recovery updated")
+func change_control(territory: Dictionary, country: String) -> void:
+	for part in terrain.territories:
+		if not part.playable or part.title != territory.title: continue
+		part.controller = country
+		part.morale = 25.0
+		capture_progress.erase(part.id)
 func declare_war() -> void :
 	if at_war or not winner.is_empty(): return
 	at_war = true
@@ -65,6 +101,7 @@ func advance_battles(seconds: float) -> void :
 			unit.health = maxf(0, unit.health - damage.get(unit.id, 0.0) * factor)
 		remaining = maxf(0, remaining - step)
 func advance(seconds: float) -> void :
+	if seconds > 0: daily_provinces()
 	if not winner.is_empty() or seconds <= 0 or not at_war: return
 	advance_battles(seconds)
 	var selected_stack: = ""
@@ -109,7 +146,7 @@ func advance(seconds: float) -> void :
 		progress.seconds += seconds
 		capture_progress[territory.id] = progress
 		if progress.seconds < 6: continue
-		territory.controller = occupant
+		change_control(territory,occupant)
 		terrain.update_relations(at_war)
 		capture_progress.erase(territory.id)
 		report.emit(territory.title + " captured by " + occupant.capitalize())
@@ -152,8 +189,9 @@ func end_match(country: String) -> void :
 	report.emit(country.capitalize() + " wins. Choose New match to play again.")
 	finished.emit(country)
 func snapshot() -> Dictionary:
-	return {"air_cooldowns": air_combat.snapshot(), "combat_cooldowns": combat.snapshot(), "at_war": at_war, "winner": winner, "decision_timer": decision_timer, "recruitment_timer": ai.recruitment_timer, "capture_progress": capture_progress.duplicate(true)}
+	return {"last_day": last_day, "air_cooldowns": air_combat.snapshot(), "combat_cooldowns": combat.snapshot(), "at_war": at_war, "winner": winner, "decision_timer": decision_timer, "recruitment_timer": ai.recruitment_timer, "capture_progress": capture_progress.duplicate(true)}
 func restore(state: Dictionary) -> void :
+	last_day = int(state.get("last_day",1+int(clock.elapsed/ProductionSystem.DAY_SECONDS)))
 	combat.restore(state.get("combat_cooldowns", {}))
 	air_combat.restore(state.get("air_cooldowns", {}))
 	at_war = state.get("at_war", true)

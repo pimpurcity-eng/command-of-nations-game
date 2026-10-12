@@ -34,7 +34,10 @@ func run() -> void:
 			if not game.mobile_start.visible: break
 			if game.mobile_start.progress.value > 10 and game.mobile_start.progress.value < 90: partial = true
 		check(partial,"weapons preparation shows real progress")
-		check(not game.mobile_start.visible and game.units.units.size() == 101,"all weapons loading completes")
+		var expected: Dictionary = {}
+		for family in EquipmentIdentity.catalog:
+			for tier in family.research_tiers: expected[tier.model] = true
+		check(not game.mobile_start.visible and game.units.units.size() == expected.size(),"all current weapons loading completes")
 		game.queue_free()
 		await process_frame
 	print("RESULT failures=",failures)

@@ -18,7 +18,7 @@ func capture(clock: SimulationClock, map: StrategicMap, units: UnitSystem, rig: 
 	var territory_state: Dictionary = {}
 	for territory in map.territories:
 		if territory.playable:
-			territory_state[territory.id] = {"owner": territory.owner, "controller": territory.controller}
+			territory_state[territory.id] = {"owner": territory.owner, "controller": territory.controller, "morale": territory.get("morale", 100.0 if territory.owner == territory.controller else 25.0)}
 	return {"player_country": player_country, "weapons_test": weapons_test, "match": match_rules.snapshot(), "version": SAVE_VERSION, "scenario": scenario.id, "clock": clock.snapshot(), "countries": countries.duplicate(true), "territories": territory_state, "units": units.snapshot(), "production": production.snapshot(), "camera": {"target": [rig.target.x, rig.target.z], "distance": rig.distance, "yaw": rig.yaw, "pitch": rig.pitch}}
 func write_save(path: String, state: Dictionary) -> String:
 	var file: = FileAccess.open(path + ".tmp", FileAccess.WRITE)
@@ -101,13 +101,14 @@ func validate(state: Variant, map: StrategicMap, units: UnitSystem) -> String:
 		count += 1
 		var region = regions.get(territory.id)
 		if not region is Dictionary or not countries.has(region.get("owner")) or not countries.has(region.get("controller")): return "Invalid saved territory control"
+		if not _number(region.get("morale", 100.0 if region.owner == region.controller else 25.0), 0, 100): return "Invalid province morale"
 	if regions.size() != count: return "Saved territory set does not match scenario"
 	var saved_units = state.get("units")
 	if not saved_units is Array or saved_units.size() < 0 or saved_units.size() > 2000: return "Invalid saved units"
 	var unit_ids: Dictionary = {}
 	var stack_state: Dictionary = {}
 	for unit in saved_units:
-		if not unit is Dictionary or not unit.get("id") is String or unit_ids.has(unit.id) or not countries.has(unit.get("country")) or not unit.get("name") is String or unit.name.length() > 80 or unit.get("visual_kind") not in ["armor", "ifv", "artillery", "fighter", "air_defense", "naval", "missile_launcher"] or not _point(unit.get("position")) or not _point(unit.get("target")) or not unit.get("moving") is bool: return "Invalid saved unit"
+		if not unit is Dictionary or not unit.get("id") is String or unit_ids.has(unit.id) or not countries.has(unit.get("country")) or not unit.get("name") is String or unit.name.length() > 80 or unit.get("visual_kind") not in ["armor", "ifv", "artillery", "fighter", "air_defense", "naval", "missile_launcher", "infantry", "support"] or not _point(unit.get("position")) or not _point(unit.get("target")) or not unit.get("moving") is bool: return "Invalid saved unit"
 		if unit.get("fire_mode", "at_will") not in FireControlPanel.MODES or not unit.get("attack_target", "") is String or unit.get("attack_target", "").length() > 128: return "Invalid saved fire control"
 		if not unit.get("forced_march", false) is bool or not _number(unit.get("delay_remaining", 0.0), 0, 720): return "Invalid saved movement settings"
 		if unit.visual_kind == "fighter" and (unit.get("forced_march", false) or unit.get("delay_remaining", 0.0) > 0): return "Invalid aircraft movement settings"
@@ -119,7 +120,7 @@ func validate(state: Variant, map: StrategicMap, units: UnitSystem) -> String:
 		if not _number(level, 1, 5) or level != floor(level) or not _number(target_level, level, 5) or target_level != floor(target_level) or not _number(unit.get("upgrade_remaining", 0.0), 0, 1000): return "Invalid unit modernization"
 		if unit.get("upgrade_remaining", 0.0) > 0 and (unit.moving or target_level <= level): return "Invalid active modernization"
 		if unit.visual_kind == "fighter":
-			if unit.get("flight_mode") not in ["grounded", "fly", "patrol", "return", "attack"] or not _number(unit.get("flight_used"), 0, 48) or not _number(unit.get("refuel_remaining"), 0, AirOperations.REFUEL_SECONDS) or not _number(unit.get("patrol_phase"), 0, TAU) or not _point(unit.get("patrol_center")): return "Invalid saved aircraft"
+			if unit.get("flight_mode") not in ["grounded", "fly", "patrol", "return", "attack"] or not _number(unit.get("flight_used"), 0, float(EquipmentIdentity.spec(unit.equipment_id).get("air_range",14.0))*3.0) or not _number(unit.get("refuel_remaining"), 0, AirOperations.REFUEL_SECONDS) or not _number(unit.get("patrol_phase"), 0, TAU) or not _point(unit.get("patrol_center")): return "Invalid saved aircraft"
 			var home: = production.buildings.city(str(unit.get("base_city", "")))
 			if home.is_empty() or (unit.flight_mode != "attack" and (unit.flight_mode == "grounded") == unit.moving): return "Invalid aircraft home or orders"
 		if unit.has("route"):
@@ -144,6 +145,7 @@ func validate(state: Variant, map: StrategicMap, units: UnitSystem) -> String:
 		if not _number(unit.get("health"), 0.001, 100): return "Invalid saved unit health"
 	if not production.validate(state.get("production")): return "Invalid saved production"
 	var match_state = state.get("match")
+	if match_state is Dictionary and (not _number(match_state.get("last_day",1),1,1000000000) or match_state.get("last_day",1) != floor(match_state.get("last_day",1))): return "Invalid saved day"
 	if not match_state is Dictionary or match_state.get("winner") not in ["", "russia", "ukraine"] or not _number(match_state.get("decision_timer"), 0, 5) or not _number(match_state.get("recruitment_timer"), 0, 20) or not match_state.get("capture_progress") is Dictionary: return "Invalid saved match"
 	if match_state.has("combat_cooldowns"):
 		if not match_state.combat_cooldowns is Dictionary or match_state.combat_cooldowns.size() > 1000: return "Invalid battle timers"
@@ -169,6 +171,7 @@ func restore(state: Dictionary, clock: SimulationClock, map: StrategicMap, units
 		if not territory.playable: continue
 		territory.owner = state.territories[territory.id].owner
 		territory.controller = state.territories[territory.id].controller
+		territory.morale = state.territories[territory.id].get("morale", 100.0 if territory.owner == territory.controller else 25.0)
 	units.restore(state.units)
 	production.restore(state.production)
 	rig.target = Vector3(state.camera.target[0], 0, state.camera.target[1])
