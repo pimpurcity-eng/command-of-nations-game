@@ -1,0 +1,81 @@
+# Builds, tests, signs and publishes the Warfront Mandate Android APK.
+# Run it from the repo's Actions tab ("Run workflow"). Output: a GitHub Release with the APK as a direct download.
+# Needs these repository secrets (Settings -> Secrets and variables -> Actions):
+#   ANDROID_KEYSTORE_BASE64   base64 of the ORIGINAL release .keystore/.jks used for the installed app
+#   ANDROID_KEYSTORE_ALIAS    key alias
+#   ANDROID_KEYSTORE_PASSWORD keystore / key password
+name: Android release build
+on:
+  workflow_dispatch:
+    inputs:
+      version_name: {description: "Version name shown to players", default: "0.23.1", required: true}
+      version_code: {description: "Android versionCode (must be higher than the installed build)", default: "24", required: true}
+      godot_version: {description: "Godot version", default: "4.6.3", required: true}
+      preset: {description: "Export preset name in export_presets.cfg", default: "Android", required: true}
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with: {lfs: true}
+      - uses: actions/setup-java@v4
+        with: {distribution: temurin, java-version: "17"}
+      - name: Locate Godot project
+        run: |
+          P=$(dirname "$(find . -name project.godot -not -path './.git/*' | head -1)")
+          test -n "$P" || { echo "::error::project.godot not found - push the full 0.23 game source first"; exit 1; }
+          echo "PROJ=$P" >> $GITHUB_ENV
+          grep -q "name=\"${{ inputs.preset }}\"" "$P/export_presets.cfg" || { echo "::error::Export preset '${{ inputs.preset }}' missing from $P/export_presets.cfg"; exit 1; }
+      - name: Install Godot ${{ inputs.godot_version }} + export templates
+        run: |
+          V=${{ inputs.godot_version }}
+          B=https://github.com/godotengine/godot/releases/download/$V-stable
+          curl -fsSL -o g.zip $B/Godot_v$V-stable_linux.x86_64.zip && unzip -q g.zip && mv Godot_v$V-stable_linux.x86_64 /usr/local/bin/godot
+          curl -fsSL -o t.tpz $B/Godot_v$V-stable_export_templates.tpz
+          mkdir -p ~/.local/share/godot/export_templates/$V.stable && unzip -q t.tpz -d /tmp/tpl && mv /tmp/tpl/templates/* ~/.local/share/godot/export_templates/$V.stable/
+          godot --version
+      - name: Configure Android SDK for Godot
+        run: |
+          mkdir -p ~/.config/godot
+          V=${{ inputs.godot_version }}; MM=$(echo $V | cut -d. -f1-2)
+          printf '[gd_resource type="EditorSettings" format=3]\n[resource]\nexport/android/android_sdk_path = "%s"\nexport/android/java_sdk_path = "%s"\n' "$ANDROID_SDK_ROOT" "$JAVA_HOME" > ~/.config/godot/editor_settings-$MM.tres
+      - name: Import project
+        run: godot --headless --path "$PROJ" --import || godot --headless --path "$PROJ" --editor --quit
+      - name: Run Godot tests
+        run: |
+          fail=0
+          for t in test_startup_progress.gd test_campaign.gd test_phone_regression.gd; do
+            f=$(find "$PROJ" -name "$t" | head -1); [ -z "$f" ] && { echo "::warning::$t not found"; continue; }
+            rel=res://${f#$PROJ/}
+            echo "== $rel"; timeout 600 godot --headless --path "$PROJ" --script "$rel" 2>&1 | tee "/tmp/$t.log"
+            st=${PIPESTATUS[0]}
+            if [ $st -ne 0 ] || grep -qE "SCRIPT ERROR|Parse Error|FAILED" "/tmp/$t.log"; then echo "::error::$t failed"; fail=1; fi
+          done
+          exit $fail
+      - name: Set version
+        run: |
+          C="$PROJ/export_presets.cfg"
+          sed -i -E 's/^version\/code=.*/version\/code=${{ inputs.version_code }}/; s/^version\/name=".*"/version\/name="${{ inputs.version_name }}"/' "$C"
+          grep -E "^(package/unique_name|version/code|version/name)=" "$C"
+      - name: Export signed APK
+        env:
+          KS_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          test -n "$KS_B64" || { echo "::error::ANDROID_KEYSTORE_BASE64 secret missing - the APK must be signed with the original key to update the installed game"; exit 1; }
+          echo "$KS_B64" | base64 -d > $RUNNER_TEMP/release.keystore
+          export GODOT_ANDROID_KEYSTORE_RELEASE_PATH=$RUNNER_TEMP/release.keystore
+          export GODOT_ANDROID_KEYSTORE_RELEASE_USER="${{ secrets.ANDROID_KEYSTORE_ALIAS }}"
+          export GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD="${{ secrets.ANDROID_KEYSTORE_PASSWORD }}"
+          mkdir -p dist
+          godot --headless --path "$PROJ" --export-release "${{ inputs.preset }}" "$GITHUB_WORKSPACE/dist/Warfront_Mandate_${{ inputs.version_name }}.apk"
+          BT=$(ls -d $ANDROID_SDK_ROOT/build-tools/* | sort -V | tail -1)
+          $BT/apksigner verify --print-certs dist/*.apk | tee dist/signature.txt
+          $BT/aapt2 dump badging dist/*.apk | head -1 | tee dist/package.txt
+      - name: Publish release
+        env: {GH_TOKEN: "${{ github.token }}"}
+        run: |
+          gh release create "v${{ inputs.version_name }}" dist/*.apk --title "Warfront Mandate ${{ inputs.version_name }}" \
+            --notes "Android update (versionCode ${{ inputs.version_code }}). Install over the existing app - do not uninstall, saves are kept. $(cat dist/package.txt)"
