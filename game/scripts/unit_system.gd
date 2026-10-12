@@ -23,7 +23,37 @@ func point_visible(point: Vector2, country: String = "") -> bool:
 		if origin.distance_to(point) <= vision_radius(scout): return true
 	return false
 func visible_to_player(unit: Dictionary) -> bool:
-	return unit.country == GameSession.player_country or point_visible(Vector2(unit.node.position.x, unit.node.position.z))
+	return unit_visible(unit)
+## Stealth and radar (owner request 2026-10-12, Conflict of Nations style): stealth units
+## (stealth jets, submarines, Western-doctrine aircraft) are seen only within an enemy's radar
+## range or up close; only ships' sonar finds submarines.
+const CLOSE_RANGE: = 0.8
+const STEALTH_WORDS: = ["stealth", "su57", "su_57", "f35", "f_35", "f22", "f_22", "b2_", "b_2", "submarine"]
+func stealthy(unit: Dictionary) -> bool:
+	if not unit.has("stealth"):
+		var spec: = EquipmentIdentity.spec(str(unit.get("equipment_id", "")))
+		var text: = (str(unit.get("equipment_id", "")) + "|" + str(spec.get("name", "")) + "|" + str(spec.get("family", ""))).to_lower().replace("-", "_").replace(" ", "_")
+		unit.stealth = spec.get("stealth", false) or STEALTH_WORDS.any(func(word: String): return text.contains(word))
+	return unit.stealth or Doctrine.stealth(unit)
+func is_submarine(unit: Dictionary) -> bool:
+	return str(unit.get("equipment_id", "")).to_lower().contains("submarine") or EquipmentIdentity.spec(str(unit.get("equipment_id", ""))).get("submarine", false)
+func radar_range(scout: Dictionary, target: Dictionary) -> float:
+	if is_submarine(target): return 3.0 if scout.visual_kind == "naval" else 0.0
+	match scout.visual_kind:
+		"air_defense": return 4.5
+		"naval", "fighter": return 3.0
+	return 0.0
+func unit_visible(unit: Dictionary, country: String = "") -> bool:
+	if country.is_empty(): country = GameSession.player_country
+	if unit.country == country: return true
+	var point: = Vector2(unit.node.position.x, unit.node.position.z)
+	if not stealthy(unit): return point_visible(point, country)
+	if not fog_enabled: return true
+	for scout in units:
+		if scout.country != country or scout.health <= 0: continue
+		var distance: = Vector2(scout.node.position.x, scout.node.position.z).distance_to(point)
+		if distance <= CLOSE_RANGE or distance <= radar_range(scout, unit): return true
+	return false
 var terrain: StrategicMap
 var navigation: = LandRoutes.new()
 var sea_navigation: = SeaRoutes.new()
@@ -260,7 +290,7 @@ func advance(delta: float) -> void :
 			var enemy: = find_id(unit.attack_target)
 			if enemy.is_empty() or enemy.health <= 0:
 				for member in group: member.attack_target = ""
-			elif point_visible(Vector2(enemy.node.position.x, enemy.node.position.z), unit.country):
+			elif unit_visible(enemy, unit.country):
 				var enemy_point: = Vector2(enemy.node.position.x, enemy.node.position.z)
 				if enemy_point.distance_to(unit.target) > 0.25:
 					var pursuit: = path_for(unit, current, enemy_point)

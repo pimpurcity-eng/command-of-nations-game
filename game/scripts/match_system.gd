@@ -23,6 +23,8 @@ var victory: = VictoryRules.new()
 var chronicle: = WarChronicle.new()
 ## Occupied and annexed land.
 var annexation: = Annexation.new()
+## Chemical and nuclear missiles.
+var strategic: = StrategicWeapons.new()
 ## Entrenchment (Conflict of Nations style): an army that has stood still for ENTRENCH_TIME at
 ## the centre of a province its country holds digs in and defends ENTRENCH_BONUS harder.
 const ENTRENCH_TIME: = VictoryRules.DAY / 12.0
@@ -80,6 +82,8 @@ func advance(seconds: float) -> void :
 	if not winner.is_empty() or seconds <= 0: return
 	chronicle.advance(seconds)
 	for title in annexation.advance(seconds, terrain.territories): report.emit(title + " annexed")
+	for done in strategic.advance(seconds):
+		report.emit("%s completed a %s" % [str(done[0]).capitalize(), StrategicWeapons.WEAPONS[done[1]].name.to_lower()])
 	_update_entrenchment(seconds)
 	# Victory is checked in peace too (economic victory, time limit).
 	var result: = victory.evaluate(self, seconds)
@@ -203,7 +207,7 @@ func end_match(country: String, kind: String = "elimination") -> void :
 	report.emit(VICTORY_NAMES.get(kind, "VICTORY") + " · " + country.capitalize() + " wins. Choose New match to play again.")
 	finished.emit(country)
 func snapshot() -> Dictionary:
-	return {"air_cooldowns": air_combat.snapshot(), "combat_cooldowns": combat.snapshot(), "at_war": at_war, "winner": winner, "decision_timer": decision_timer, "recruitment_timer": ai.recruitment_timer, "capture_progress": capture_progress.duplicate(true), "victory_type": victory_type, "victory": victory.snapshot(), "chronicle": chronicle.snapshot(), "annexation": annexation.snapshot()}
+	return {"air_cooldowns": air_combat.snapshot(), "combat_cooldowns": combat.snapshot(), "at_war": at_war, "winner": winner, "decision_timer": decision_timer, "recruitment_timer": ai.recruitment_timer, "capture_progress": capture_progress.duplicate(true), "victory_type": victory_type, "victory": victory.snapshot(), "chronicle": chronicle.snapshot(), "annexation": annexation.snapshot(), "strategic": strategic.snapshot(), "doctrines": Doctrine.snapshot()}
 func restore(state: Dictionary) -> void :
 	combat.restore(state.get("combat_cooldowns", {}))
 	air_combat.restore(state.get("air_cooldowns", {}))
@@ -217,3 +221,5 @@ func restore(state: Dictionary) -> void :
 	victory.restore(state.get("victory", {}))
 	chronicle.restore(state.get("chronicle", {}))
 	annexation.restore(state.get("annexation", {}))
+	strategic.restore(state.get("strategic", {}))
+	if state.has("doctrines"): Doctrine.restore(state.doctrines)

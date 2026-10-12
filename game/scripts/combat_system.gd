@@ -57,7 +57,7 @@ func target(group: Array, groups: Array, armies: UnitSystem = null) -> Array:
 		if defenders.is_empty() or defenders[0].country == group[0].country: continue
 		var point: = Vector2(defenders[0].node.position.x, defenders[0].node.position.z)
 		var distance: = origin.distance_to(point)
-		if armies != null and not armies.point_visible(point, group[0].country): continue
+		if armies != null and not armies.unit_visible(defenders[0], group[0].country): continue
 		var explicit: bool = group[0].get("attack_target", "") in defenders.map( func(unit: Dictionary): return unit.id)
 		if group[0].get("fire_mode", "at_will") in ["return", "hold"] and not explicit: continue
 		var priority: = 0.0 if explicit else distance

@@ -5,6 +5,7 @@ var content: VBoxContainer
 var rules: MatchSystem
 var buildings: BuildingSystem
 var tab: = "victory"
+signal strategic_launch_requested(kind: String)
 func setup(match_rules: MatchSystem, infrastructure: BuildingSystem, theme: Theme) -> void :
 	rules = match_rules
 	buildings = infrastructure
@@ -24,7 +25,7 @@ func setup(match_rules: MatchSystem, infrastructure: BuildingSystem, theme: Them
 	panel.add_child(column)
 	var tabs: = HBoxContainer.new()
 	column.add_child(tabs)
-	for entry in [["Victory", "victory"], ["News", "news"], ["Battles", "battles"], ["Diplomacy", "diplomacy"], ["Close", "close"]]:
+	for entry in [["Victory", "victory"], ["News", "news"], ["Battles", "battles"], ["Diplomacy", "diplomacy"], ["Arsenal", "strategic"], ["Close", "close"]]:
 		var button: = Button.new()
 		button.text = entry[0]
 		button.custom_minimum_size.y = 48
@@ -74,6 +75,9 @@ func _refresh() -> void :
 		for i in range(rules.chronicle.battles.size() - 1, -1, -1):
 			_label(WarChronicle.summary(rules.chronicle.battles[i]))
 		return
+	if tab == "strategic":
+		_strategic()
+		return
 	if tab == "victory":
 		_label("VICTORY PROGRESS", true)
 		if not rules.winner.is_empty(): _label(MatchSystem.VICTORY_NAMES.get(rules.victory_type, "VICTORY") + " · " + rules.winner.capitalize() + " has won this campaign.", true)
@@ -115,6 +119,42 @@ func _refresh() -> void :
 			rules.terrain.update_relations(rules.at_war)
 			_refresh())
 		content.add_child(action)
+func _strategic() -> void:
+	var me: = GameSession.player_country
+	_label("DOCTRINES", true)
+	for country in buildings.economy.stockpiles.keys():
+		var id: = Doctrine.of(country)
+		_label("%s%s · %s: %s" % [country.capitalize(), " (you)" if country == me else "", Doctrine.DOCTRINES[id].name, Doctrine.DOCTRINES[id].summary])
+	_label("STRATEGIC WEAPONS", true)
+	_label("Tap a target province or enemy army on the map, then launch. Upgraded air defence (level %d+) within range can shoot missiles down. Strikes hit every army in the blast, including yours. Nuclear fallout cuts nearby output to %d%% for 3 days." % [StrategicWeapons.ABM_LEVEL, roundi(StrategicWeapons.FALLOUT_OUTPUT * 100)])
+	var day: = 1 + int(rules.clock.elapsed / VictoryRules.DAY) if rules.clock != null else 1
+	for kind in StrategicWeapons.WEAPONS:
+		var weapon: Dictionary = StrategicWeapons.WEAPONS[kind]
+		var cost: = []
+		for resource in weapon.cost:
+			if weapon.cost[resource] > 0: cost.append("%s %s" % [_short(weapon.cost[resource]), resource])
+		_label("%s · ready: %d · cost %s · builds in %.1f days" % [weapon.name, rules.strategic.count(me, kind), ", ".join(cost), weapon.build / VictoryRules.DAY])
+		var row: = HBoxContainer.new()
+		var build: = Button.new()
+		var why: = rules.strategic.reason(me, kind, day, buildings.economy.stockpiles[me])
+		build.text = "Build" if why.is_empty() else why
+		build.disabled = not why.is_empty() or not rules.winner.is_empty()
+		build.custom_minimum_size.y = 48
+		build.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		build.pressed.connect(func():
+			rules.strategic.build(me, kind, day, buildings.economy.stockpiles[me])
+			_refresh())
+		var fire: = Button.new()
+		fire.text = "Launch at target"
+		fire.disabled = rules.strategic.count(me, kind) <= 0 or not rules.at_war or not rules.winner.is_empty()
+		fire.custom_minimum_size.y = 48
+		fire.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		fire.pressed.connect(func():
+			hide()
+			strategic_launch_requested.emit(kind))
+		row.add_child(build)
+		row.add_child(fire)
+		content.add_child(row)
 func _bar(caption: String, fraction: float) -> void:
 	_label(caption)
 	var bar: = ProgressBar.new()

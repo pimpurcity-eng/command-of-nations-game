@@ -86,12 +86,14 @@ func _beside(hub: Vector2, distance: float) -> Vector2:
 ## Income per country this tick, added by ProductionSystem.advance.
 ## Occupied sites produce less until annexed (set by main).
 var annexation: Annexation
+var strategic: StrategicWeapons
 func income(seconds: float) -> Dictionary:
 	var result: = {}
 	for site in sites:
 		var controller: String = site.territory.controller
 		if not result.has(controller): result[controller] = {}
 		var factor: = annexation.output(site.territory.id, site.territory.owner, controller) if annexation != null else 1.0
+		if strategic != null: factor *= strategic.output(site.territory.id)
 		result[controller][site.resource] = result[controller].get(site.resource, 0.0) + rate(site.resource) * seconds * factor
 	return result
 

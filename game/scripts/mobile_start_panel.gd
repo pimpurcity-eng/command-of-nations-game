@@ -6,6 +6,11 @@ signal test_requested
 signal europe_requested
 signal world_requested
 var country_picker: OptionButton
+var doctrine_picker: OptionButton
+## The doctrine the player chose (Doctrine.DOCTRINES); "" keeps the country's default.
+func selected_doctrine() -> String:
+	if doctrine_picker == null or doctrine_picker.selected <= 0: return Doctrine.DEFAULTS.get(selected_country(), "european")
+	return Doctrine.DOCTRINES.keys()[doctrine_picker.selected - 1]
 func selected_country() -> String:
 	return "ukraine" if country_picker.selected == 0 else "russia"
 var panel: PanelContainer
@@ -82,6 +87,12 @@ func setup(theme: Theme, saved: bool) -> void :
 	country_picker.select(0 if GameSession.player_country == "ukraine" else 1)
 	country_picker.custom_minimum_size.y = 48
 	content.add_child(country_picker)
+	doctrine_picker = OptionButton.new()
+	doctrine_picker.add_item("Doctrine: country default")
+	for id in Doctrine.DOCTRINES: doctrine_picker.add_item("Doctrine: " + Doctrine.DOCTRINES[id].name + " · " + Doctrine.DOCTRINES[id].summary)
+	doctrine_picker.custom_minimum_size.y = 48
+	doctrine_picker.clip_text = true
+	content.add_child(doctrine_picker)
 	continue_button = Button.new()
 	continue_button.text = "CONTINUE CAMPAIGN"
 	continue_button.custom_minimum_size.y = 52

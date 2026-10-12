@@ -103,7 +103,7 @@ func advance(unit: Dictionary, seconds: float) -> void :
 	if unit.flight_mode == "attack":
 		var target: = armies.find_id(unit.get("attack_target", ""))
 		if target.is_empty() or target.health <= 0: return_home(unit)
-		elif armies.point_visible(Vector2(target.node.position.x, target.node.position.z), unit.country):
+		elif armies.unit_visible(target, unit.country):
 			var destination: = Vector2(target.node.position.x, target.node.position.z)
 			if base(unit).point.distance_to(destination) > radius(unit): return_home(unit)
 			else: unit.target = destination;unit.waypoints = [destination];unit.moving = true

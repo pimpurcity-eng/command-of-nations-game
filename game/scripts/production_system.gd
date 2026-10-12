@@ -9,6 +9,8 @@ var stockpiles: Dictionary = {}
 var earned: Dictionary = {}
 ## Occupied land produces less until annexed (MatchSystem.annexation, set by main).
 var annexation: Annexation
+## Nuclear fallout cuts output (MatchSystem.strategic, set by main).
+var strategic: StrategicWeapons
 var jobs: Array = []
 var next_id: = 1
 const PLAN_LIMIT: = 8
@@ -79,6 +81,7 @@ func advance(seconds: float) -> void :
 		var multiplier: = buildings.rate(city.id, "industry") if buildings != null else 1.0
 		if country != city.country.to_lower():
 			multiplier *= annexation.output(city.get("sector", ""), city.country.to_lower(), country) if annexation != null else 0.25
+		if strategic != null: multiplier *= strategic.output(city.get("sector", ""))
 		var specialties: = ResourceSites.city_resources(city.name)
 		var bonus: float = ResourceSites.data().get("city_specialty_bonus", 0.0)
 		for resource in RESOURCES:

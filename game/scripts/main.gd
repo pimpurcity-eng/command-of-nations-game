@@ -324,6 +324,8 @@ func _ready() -> void :
 	production.annexation = match_rules.annexation
 	resource_sites.annexation = match_rules.annexation
 	map.annexation = match_rules.annexation
+	production.strategic = match_rules.strategic
+	resource_sites.strategic = match_rules.strategic
 	add_child(match_rules)
 	match_rules.setup(map, units, cities.cities, clock)
 	combat_effects = CombatEffects.new()
@@ -354,6 +356,7 @@ func _ready() -> void :
 			if GameSession.weapons_test: restore_campaign_forces()
 			GameSession.weapons_test = false
 			GameSession.player_country = mobile_start.selected_country()
+			Doctrine.choose(GameSession.player_country, mobile_start.selected_doctrine())
 			apply_player_country()
 			start_campaign_play())
 		mobile_start.europe_requested.connect(func(): get_tree().change_scene_to_file("res://scenes/europe_map.tscn"))
@@ -591,6 +594,39 @@ func refresh_hud() -> void :
 		if hud.inspecting_unit: hud.clear_unit_selection()
 		hud.move_button.disabled = true
 		hud.stop_button.disabled = true
+## Strategic weapons: launch a chemical or nuclear missile from the capital at the selected
+## province (or the selected enemy army). Missile defence near the target may shoot it down.
+func launch_strategic(kind: String) -> void:
+	if not match_rules.at_war:
+		hud.show_status("Strategic weapons can only be used at war")
+		return
+	var target: = Vector2.INF
+	if units.selected >= 0 and units.units[units.selected].country != GameSession.player_country:
+		var enemy: Dictionary = units.units[units.selected]
+		target = Vector2(enemy.node.position.x, enemy.node.position.z)
+	else:
+		var territory: = _selected_territory()
+		if not territory.is_empty(): target = territory.center
+	if target == Vector2.INF:
+		hud.show_status("Tap a target province or enemy army first")
+		return
+	var result: = match_rules.strategic.launch(GameSession.player_country, kind, target, units, map.territories)
+	hud.show_status(result.message)
+	if not result.ok: return
+	match_rules.report.emit("%s launched a %s · %s" % [GameSession.player_country.capitalize(), StrategicWeapons.WEAPONS[kind].name.to_lower(), result.message])
+	var start: = Vector3(target.x + 6.0, 1.0, target.y + 6.0)
+	for city in cities.cities:
+		if city.get("capital", false) and city.country.to_lower() == GameSession.player_country: start = Vector3(city.point.x, 0.6, city.point.y)
+	audio.play("ballistic_missile")
+	var finish: = Vector3(target.x, map.elevation(target), target.y)
+	combat_effects.launch(start, finish + Vector3.UP * 0.2, "missile", GameSession.player_country)
+	if not result.intercepted:
+		var radius: float = StrategicWeapons.WEAPONS[kind].radius
+		get_tree().create_timer(1.6).timeout.connect(func():
+			for i in (7 if kind == "nuclear" else 4):
+				var angle: = TAU * i / 7.0
+				combat_effects.explode(finish + Vector3(cos(angle), 0.1, sin(angle)) * radius * (0.0 if i == 0 else 0.6), true))
+	refresh_hud()
 ## Retreat: the selected army pulls back to the nearest friendly province centre.
 func retreat_selected() -> void:
 	if not friendly_selected():
@@ -783,6 +819,7 @@ func open_campaign(page: String) -> void :
 		campaign_panel = CampaignPanel.new()
 		add_child(campaign_panel)
 		campaign_panel.setup(match_rules, buildings, hud.get_child(0).theme)
+		campaign_panel.strategic_launch_requested.connect(launch_strategic)
 	campaign_panel.open(page)
 
 func open_army_command(action: String) -> void :

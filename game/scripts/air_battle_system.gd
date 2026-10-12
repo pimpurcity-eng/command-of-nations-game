@@ -38,7 +38,7 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 				if enemy.health <= 0 or enemy.country == unit.country: continue
 				if aa and (enemy.visual_kind != "fighter" or enemy.flight_mode == "grounded"): continue
 				var point: = Vector2(enemy.node.position.x, enemy.node.position.z)
-				if not armies.point_visible(point, unit.country): continue
+				if not armies.unit_visible(enemy, unit.country): continue
 				if unit.get("flight_mode", "") == "attack" and enemy.id != unit.get("attack_target", ""): continue
 				var distance: = origin.distance_to(point)
 				if patrol and distance <= reach and Vector2(unit.node.position.x, unit.node.position.z).distance_to(unit.patrol_center) <= AirOperations.PATROL_RADIUS + 0.05: patrol_targets.append(enemy)

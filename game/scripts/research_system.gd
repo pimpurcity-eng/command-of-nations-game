@@ -40,8 +40,8 @@ func active(id: String) -> Dictionary:
 	return {}
 ## Owner review 2026-10-09: research is national and separate from the cities. It no
 ## longer depends on a capital research-center building and is opened from the Research tab.
-func rate(_country: String) -> float:
-	return 1.0
+func rate(country: String) -> float:
+	return Doctrine.research_factor(country)
 func capital_status(_country: String = "") -> String:
 	return "National research · " + str(SLOTS) + " research slots"
 func reason(id: String, target: int, country: String = "") -> String:
