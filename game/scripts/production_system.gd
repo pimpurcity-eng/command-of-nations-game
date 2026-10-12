@@ -7,6 +7,8 @@ var catalog: Array = EquipmentIdentity.catalog  # one shared catalogue
 var stockpiles: Dictionary = {}
 ## Gross income earned so far per country and resource (economic victory, newspaper).
 var earned: Dictionary = {}
+## Occupied land produces less until annexed (MatchSystem.annexation, set by main).
+var annexation: Annexation
 var jobs: Array = []
 var next_id: = 1
 const PLAN_LIMIT: = 8
@@ -75,7 +77,8 @@ func advance(seconds: float) -> void :
 		var country: = controller(city)
 		if not stockpiles.has(country): continue
 		var multiplier: = buildings.rate(city.id, "industry") if buildings != null else 1.0
-		if country != city.country.to_lower(): multiplier *= 0.25
+		if country != city.country.to_lower():
+			multiplier *= annexation.output(city.get("sector", ""), city.country.to_lower(), country) if annexation != null else 0.25
 		var specialties: = ResourceSites.city_resources(city.name)
 		var bonus: float = ResourceSites.data().get("city_specialty_bonus", 0.0)
 		for resource in RESOURCES:

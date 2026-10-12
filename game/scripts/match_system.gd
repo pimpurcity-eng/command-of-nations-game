@@ -21,6 +21,12 @@ var victory_type: = ""
 var victory: = VictoryRules.new()
 ## Battle reports and the daily newspaper.
 var chronicle: = WarChronicle.new()
+## Occupied and annexed land.
+var annexation: = Annexation.new()
+## Entrenchment (Conflict of Nations style): an army that has stood still for ENTRENCH_TIME at
+## the centre of a province its country holds digs in and defends ENTRENCH_BONUS harder.
+const ENTRENCH_TIME: = VictoryRules.DAY / 12.0
+const ENTRENCH_BONUS: = 1.25
 var at_war: = false
 func declare_war() -> void :
 	if at_war or not winner.is_empty(): return
@@ -73,6 +79,8 @@ func advance_battles(seconds: float) -> void :
 func advance(seconds: float) -> void :
 	if not winner.is_empty() or seconds <= 0: return
 	chronicle.advance(seconds)
+	for title in annexation.advance(seconds, terrain.territories): report.emit(title + " annexed")
+	_update_entrenchment(seconds)
 	# Victory is checked in peace too (economic victory, time limit).
 	var result: = victory.evaluate(self, seconds)
 	if not result.is_empty():
@@ -148,6 +156,38 @@ func advance(seconds: float) -> void :
 	if decision_timer < 0.05: return
 	if clock.elapsed >= 2.5: ai.decide(armies, terrain, cities, production, decision_timer)
 	decision_timer = 0
+func _update_entrenchment(seconds: float) -> void:
+	for unit in armies.units:
+		if unit.get("moving", false) or unit.visual_kind in ["fighter", "naval"] or not unit.has("node"):
+			unit.dug_in = 0.0
+			unit.entrenched = false
+			continue
+		var point: = Vector2(unit.node.position.x, unit.node.position.z)
+		var at_centre: = false
+		for title in terrain.province_hubs:
+			if terrain.province_hubs[title].distance_to(point) <= CAPTURE_RADIUS:
+				at_centre = true
+				break
+		unit.dug_in = unit.get("dug_in", 0.0) + seconds if at_centre else 0.0
+		unit.entrenched = unit.dug_in >= ENTRENCH_TIME
+## Retreat (Conflict of Nations style): the army pulls back to the nearest province centre its
+## country holds, at the cost of RETREAT_DAMAGE of its health, and stops firing on the way.
+const RETREAT_DAMAGE: = 0.1
+func retreat(group: Array, from: Vector2) -> Vector2:
+	var best: = Vector2.INF
+	for t in terrain.territories:
+		if not t.playable or t.controller != group[0].country or not terrain.province_hubs.has(t.title): continue
+		var hub: Vector2 = terrain.province_hubs[t.title]
+		if hub.distance_to(from) < 0.8: continue
+		if best == Vector2.INF or hub.distance_to(from) < best.distance_to(from): best = hub
+	if best == Vector2.INF: return best
+	for unit in group:
+		if at_war and unit.get("engaged", false): unit.health = maxf(1.0, unit.health * (1.0 - RETREAT_DAMAGE))
+		unit.attack_target = ""
+		unit.fire_mode = "hold"
+		unit.entrenched = false
+		unit.dug_in = 0.0
+	return best
 func city_score() -> Dictionary:
 	var score: = {"russia": 0, "ukraine": 0}
 	for city in cities:
@@ -163,7 +203,7 @@ func end_match(country: String, kind: String = "elimination") -> void :
 	report.emit(VICTORY_NAMES.get(kind, "VICTORY") + " · " + country.capitalize() + " wins. Choose New match to play again.")
 	finished.emit(country)
 func snapshot() -> Dictionary:
-	return {"air_cooldowns": air_combat.snapshot(), "combat_cooldowns": combat.snapshot(), "at_war": at_war, "winner": winner, "decision_timer": decision_timer, "recruitment_timer": ai.recruitment_timer, "capture_progress": capture_progress.duplicate(true), "victory_type": victory_type, "victory": victory.snapshot(), "chronicle": chronicle.snapshot()}
+	return {"air_cooldowns": air_combat.snapshot(), "combat_cooldowns": combat.snapshot(), "at_war": at_war, "winner": winner, "decision_timer": decision_timer, "recruitment_timer": ai.recruitment_timer, "capture_progress": capture_progress.duplicate(true), "victory_type": victory_type, "victory": victory.snapshot(), "chronicle": chronicle.snapshot(), "annexation": annexation.snapshot()}
 func restore(state: Dictionary) -> void :
 	combat.restore(state.get("combat_cooldowns", {}))
 	air_combat.restore(state.get("air_cooldowns", {}))
@@ -176,3 +216,4 @@ func restore(state: Dictionary) -> void :
 	victory_type = state.get("victory_type", "")
 	victory.restore(state.get("victory", {}))
 	chronicle.restore(state.get("chronicle", {}))
+	annexation.restore(state.get("annexation", {}))

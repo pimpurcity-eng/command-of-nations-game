@@ -5,5 +5,7 @@ static func multiplier(kind: String, terrain: String, effect: String) -> float:
 	return rules.get(terrain, {}).get(kind, {}).get(effect, 1.0)
 static func unit_factor(unit: Dictionary, effect: String) -> float:
 	if not unit.has("node") or unit.visual_kind in ["fighter", "naval"]: return 1.0
+	if effect == "defense" and unit.get("entrenched", false):
+		return MatchSystem.ENTRENCH_BONUS * multiplier(unit.visual_kind, TerrainProfile.sample(Vector2(unit.node.position.x, unit.node.position.z)), effect)
 	var point: = Vector2(unit.node.position.x, unit.node.position.z)
 	return multiplier(unit.visual_kind, TerrainProfile.sample(point), effect)

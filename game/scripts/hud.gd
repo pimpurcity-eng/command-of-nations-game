@@ -39,6 +39,8 @@ signal speed_requested(speed: float)
 signal save_requested
 signal load_requested
 signal stop_requested
+signal retreat_requested
+signal annex_requested
 signal move_requested
 signal patrol_requested
 signal unit_requested(index: int)
@@ -185,7 +187,7 @@ func _build_toolbar(root: Control) -> void:
 	# The full command list lives in this menu (opened from the "More" tab).
 	navigation_menu = MenuButton.new()
 	navigation_menu.visible = false
-	for title in ["Reset north", "Rotate left", "Rotate right", "Terrain / borders", "Speed 1x", "Speed 2x", "Speed 4x", "Save game", "Load game", "Equipment & production", "Army roster", "New match", "Add destination to selected army", "Merge nearby friendly armies", "Split selected units", "Army composition / battle info", "Declare war on Ukraine", "Technology / day unlocks", "Capital / construction", "Supply exchange", "All weapon models", "Select several armies", "Fire control", "Attack enemy army", "Victory progress", "Diplomacy", "Delay / synchronize arrival", "Forced march", "Upgrade selected army", "Rebase aircraft", "Player account", "Sound: ON", "Music: ON", "War newspaper", "Battle reports"]:
+	for title in ["Reset north", "Rotate left", "Rotate right", "Terrain / borders", "Speed 1x", "Speed 2x", "Speed 4x", "Save game", "Load game", "Equipment & production", "Army roster", "New match", "Add destination to selected army", "Merge nearby friendly armies", "Split selected units", "Army composition / battle info", "Declare war on Ukraine", "Technology / day unlocks", "Capital / construction", "Supply exchange", "All weapon models", "Select several armies", "Fire control", "Attack enemy army", "Victory progress", "Diplomacy", "Delay / synchronize arrival", "Forced march", "Upgrade selected army", "Rebase aircraft", "Player account", "Sound: ON", "Music: ON", "War newspaper", "Battle reports", "Retreat selected army", "Annex selected province"]:
 		navigation_menu.get_popup().add_item(title)
 	navigation_menu.get_popup().about_to_popup.connect(_show_audio_items)
 	navigation_menu.get_popup().id_pressed.connect(func(index: int):
@@ -225,6 +227,8 @@ func _build_toolbar(root: Control) -> void:
 			32: if audio != null: audio.set_music(not GameAudio.music_enabled)
 			33: campaign_requested.emit("news")
 			34: campaign_requested.emit("battles")
+			35: retreat_requested.emit()
+			36: annex_requested.emit()
 	)
 	root.add_child(navigation_menu)
 
@@ -271,7 +275,7 @@ func _build_bottom(root: Control) -> void:
 	action_row.add_child(cancel_button)
 	orders_menu = MenuButton.new()
 	_style_order(orders_menu, "more", "More", Color("3a3f42"))
-	for title in ["Army details", "Attack enemy", "Fire control", "Add destination", "Merge nearby", "Split units", "Select armies", "Delay / sync arrival", "Forced march", "Upgrade army", "Rebase aircraft"]: orders_menu.get_popup().add_item(title)
+	for title in ["Army details", "Attack enemy", "Fire control", "Add destination", "Merge nearby", "Split units", "Select armies", "Delay / sync arrival", "Forced march", "Upgrade army", "Rebase aircraft", "Retreat"]: orders_menu.get_popup().add_item(title)
 	orders_menu.get_popup().id_pressed.connect(func(index: int):
 		match index:
 			0: stack_info_requested.emit()
@@ -285,6 +289,7 @@ func _build_bottom(root: Control) -> void:
 			8: forced_march_requested.emit()
 			9: upgrade_requested.emit()
 			10: rebase_requested.emit()
+			11: retreat_requested.emit()
 	)
 	action_row.add_child(orders_menu)
 

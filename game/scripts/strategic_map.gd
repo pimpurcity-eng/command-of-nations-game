@@ -564,8 +564,12 @@ func _add_road_mesh(surface: SurfaceTool, color: Color) -> void :
 	roads.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(roads)
 
+## Annexed land loses its occupation stripes (set by main).
+var annexation: Annexation
+func _occupied(t: Dictionary) -> bool:
+	return t.controller != t.owner and (annexation == null or annexation.annexed.get(t.id, "") != t.controller)
 func update_relations(at_war: bool) -> void :
-	var signature: = str(at_war)
+	var signature: = str(at_war) + (str(annexation.annexed.size()) if annexation != null else "")
 	for territory in territories: signature += str(territory.controller)
 	if signature == relation_signature: return
 	relation_signature = signature
@@ -574,9 +578,9 @@ func update_relations(at_war: bool) -> void :
 		if not territory.playable: continue
 		var material: ShaderMaterial = materials[territory.id]
 		if not MapDefinition.is_regional():
-			material.set_shader_parameter("occupied", territory.controller != territory.owner)
+			material.set_shader_parameter("occupied", _occupied(territory))
 			material.set_shader_parameter("country_tint", _country_tint(territory))
 			continue
 		material.set_shader_parameter("hostile", at_war and territory.controller != GameSession.player_country)
-		material.set_shader_parameter("occupied", territory.controller != territory.owner)
+		material.set_shader_parameter("occupied", _occupied(territory))
 		material.set_shader_parameter("country_tint", Color("c5b77e") if territory.controller == GameSession.player_country else Color("8a9872"))

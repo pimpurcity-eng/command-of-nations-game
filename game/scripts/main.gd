@@ -152,6 +152,9 @@ func _ready() -> void :
 		units.selected = -1
 		units._draw_route()
 	map.territory_selected.connect(hud.show_territory)
+	map.territory_selected.connect(_annex_hint)
+	hud.retreat_requested.connect(retreat_selected)
+	hud.annex_requested.connect(annex_selected)
 	units.status_changed.connect(hud.show_status)
 	units.unit_selected.connect(hud.show_unit)
 	hud.campaign_requested.connect(open_campaign)
@@ -318,6 +321,9 @@ func _ready() -> void :
 		rig.target = Vector3(units.units[10].node.position.x, 0, units.units[10].node.position.z)
 		rig._snap(1.0)
 	match_rules = MatchSystem.new()
+	production.annexation = match_rules.annexation
+	resource_sites.annexation = match_rules.annexation
+	map.annexation = match_rules.annexation
 	add_child(match_rules)
 	match_rules.setup(map, units, cities.cities, clock)
 	combat_effects = CombatEffects.new()
@@ -585,6 +591,41 @@ func refresh_hud() -> void :
 		if hud.inspecting_unit: hud.clear_unit_selection()
 		hud.move_button.disabled = true
 		hud.stop_button.disabled = true
+## Retreat: the selected army pulls back to the nearest friendly province centre.
+func retreat_selected() -> void:
+	if not friendly_selected():
+		hud.show_status("Select one of your armies to retreat")
+		return
+	var unit: Dictionary = units.units[units.selected]
+	var group: Array = units.stacks.members(unit)
+	var destination: = match_rules.retreat(group, Vector2(unit.node.position.x, unit.node.position.z))
+	if destination == Vector2.INF:
+		hud.show_status("No friendly province to retreat to")
+		return
+	units.order_many(Vector3(destination.x, 0, destination.y))
+	hud.show_status("RETREAT · pulling back, not firing" + (" · retreating under fire costs 10% health" if match_rules.at_war else ""))
+## Annexation: the selected (occupied) province produces more after a day and a payment.
+func annex_selected() -> void:
+	var territory: = _selected_territory()
+	if territory.is_empty():
+		hud.show_status("Tap a captured province first")
+		return
+	var points: = VictoryRules.province_points(map.territories, match_rules.cities)
+	var error: = match_rules.annexation.start(territory, GameSession.player_country, production.stockpiles[GameSession.player_country], points)
+	hud.show_status(("ANNEXING " + territory.title + " · ready in one game day · output %d%% → %d%%" % [roundi(Annexation.OCCUPIED_OUTPUT * 100), roundi(Annexation.ANNEXED_OUTPUT * 100)]) if error.is_empty() else error)
+	refresh_hud()
+func _selected_territory() -> Dictionary:
+	for t in map.territories:
+		if t.id == map.selected_id: return t
+	return {}
+func _annex_hint(t: Dictionary) -> void:
+	if not t.get("playable", false) or t.controller != GameSession.player_country or t.owner == GameSession.player_country: return
+	var annex: = match_rules.annexation
+	if annex.annexed.get(t.id, "") == t.controller: hud.show_status(t.title + " · ANNEXED · output %d%%" % roundi(Annexation.ANNEXED_OUTPUT * 100))
+	elif annex.jobs.has(t.id): hud.show_status(t.title + " · annexation in progress")
+	else:
+		var points: = VictoryRules.province_points(map.territories, match_rules.cities)
+		hud.show_status(t.title + " · OCCUPIED · output %d%% · More → Annex for %d funds" % [roundi(Annexation.OCCUPIED_OUTPUT * 100), roundi(annex.cost(t, points))])
 ## Event sounds from the match reports: war declared, provinces/cities captured.
 func _report_sound(message: String) -> void:
 	if message.begins_with("WAR DECLARED"): audio.play("war_declared")
