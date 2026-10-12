@@ -13,7 +13,7 @@ func contains(screen: Vector2) -> bool:
 	return false
 ## No labels or tags on units (owner request): units are recognised by their 3D models.
 ## The selected army's details are in the army panel.
-const SHOW_TAGS: = false
+const SHOW_TAGS: = true
 func _process(_delta: float) -> void :
 	if armies == null: return
 	if not SHOW_TAGS:
@@ -23,7 +23,7 @@ func _process(_delta: float) -> void :
 	if camera == null: return
 	var transform: = get_final_transform().affine_inverse()
 	var size: = transform * get_viewport().get_visible_rect().size
-	var bottom: = 182.0 if size.y > size.x else 164.0
+	var bottom: = 248.0 if size.y > size.x else 164.0
 	var top: = 132.0 if size.x > size.y and size.y < 600 else 168.0
 	if top == 132:
 		bottom = 124
@@ -47,12 +47,12 @@ func _process(_delta: float) -> void :
 			# the selected army's names are shown in the army panel.
 			var button: = Button.new()
 			button.text = ""
-			button.icon = UnitVisual.preview_texture(unit.equipment_id)
+			button.icon = null
 			button.expand_icon = true
-			button.custom_minimum_size = Vector2(0, 26)
+			button.custom_minimum_size = Vector2(66, 32)
 			button.add_theme_constant_override("icon_max_width", 22)
 			button.add_theme_constant_override("h_separation", 3)
-			button.add_theme_font_size_override("font_size", 13)
+			button.add_theme_font_size_override("font_size", 18)
 			var style: = StyleBoxFlat.new()
 			style.bg_color = Color("eeece4")
 			style.set_corner_radius_all(3)
@@ -93,17 +93,20 @@ func _process(_delta: float) -> void :
 		var group: = armies.stacks.members(unit)
 		if armies.stacks.leader(group).id != unit.id or not armies.visible_to_player(unit): continue
 		var selected: bool = armies.selected >= 0 and armies.units[armies.selected].stack_id == unit.stack_id and armies.units[armies.selected].country == unit.country
-		button.text = str(group.size())
+		button.text = "L" + str(int(unit.get("level",1)))
 		var missing: bool = unit.node.get_child(0).get_meta("missing_original_model", false)
 		button.tooltip_text = unit.country.capitalize() + " · " + armies.stacks.summary(unit)
 		if missing: button.tooltip_text += " · Original model not recovered"
 		var hostile: bool = armies.at_war and unit.country != GameSession.player_country
 		var tag: StyleBoxFlat = button.get_meta("style")
-		tag.bg_color = Color("f2c94c") if selected else (Color("c8453b") if hostile else (Color("eeece4") if unit.country == GameSession.player_country else Color("b9bdb3")))
-		button.add_theme_color_override("font_color", Color.WHITE if hostile and not selected else Color("1d2224"))
+		tag.bg_color = Color(0.6,0.47,0.19,0.88) if selected else (Color(0.32,0.08,0.06,0.8) if hostile else Color(0.035,0.06,0.07,0.82))
+		button.add_theme_color_override("font_color", Color("fff4d9"))
 		var hp: = 0.0
 		for member in group: hp += member.health
-		button.get_node("Health").value = hp / group.size()
+		var health: ProgressBar = button.get_node("Health")
+		health.value = hp / group.size()
+		var fill: StyleBoxFlat = health.get_theme_stylebox("fill")
+		fill.bg_color = Color("d65448") if health.value < 30 else Color("dfba58") if health.value < 60 else Color("5fb04a")
 		var anchor: Vector3 = unit.node.global_position + Vector3.UP * 0.15
 		if camera.is_position_behind(anchor): continue
 		var point: = transform * camera.unproject_position(anchor)

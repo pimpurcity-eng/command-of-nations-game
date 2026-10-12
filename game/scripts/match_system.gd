@@ -16,6 +16,21 @@ var clock: SimulationClock
 var ai_enabled: = true
 var decision_timer: = 0.0
 var winner: = ""
+## How the match was won: domination, economic, elimination or points (VictoryRules).
+var victory_type: = ""
+var victory: = VictoryRules.new()
+## Battle reports and the daily newspaper.
+var chronicle: = WarChronicle.new()
+## Occupied and annexed land.
+var annexation: = Annexation.new()
+## Chemical and nuclear missiles.
+var strategic: = StrategicWeapons.new()
+## Relations, coalitions and messages.
+var diplomacy: = Diplomacy.new()
+## Entrenchment (Conflict of Nations style): an army that has stood still for ENTRENCH_TIME at
+## the centre of a province its country holds digs in and defends ENTRENCH_BONUS harder.
+const ENTRENCH_TIME: = VictoryRules.DAY / 12.0
+const ENTRENCH_BONUS: = 1.25
 var at_war: = false
 var last_day: = 1
 func daily_provinces() -> void:
@@ -53,14 +68,21 @@ func change_control(territory: Dictionary, country: String) -> void:
 		part.controller = country
 		part.morale = 25.0
 		capture_progress.erase(part.id)
+## Keeps the campaign's war flag in step with diplomacy (an accepted peace ends the war).
+func _sync_war() -> void:
+	var war: = diplomacy.at_war(GameSession.player_country, GameSession.opponent_country())
+	if war and not at_war: declare_war()
+	elif not war and at_war: ceasefire()
 func declare_war() -> void :
 	if at_war or not winner.is_empty(): return
+	diplomacy.set_war(GameSession.player_country, GameSession.opponent_country(), true)
 	at_war = true
 	armies.at_war = true
 	report.emit("WAR DECLARED · " + GameSession.opponent_country().capitalize() + " AI will defend and counterattack")
 func ceasefire() -> void :
 	if not at_war or not winner.is_empty(): return
 	at_war = false
+	diplomacy.set_war(GameSession.player_country, GameSession.opponent_country(), false)
 	armies.at_war = false
 	capture_progress.clear()
 	for unit in armies.units:
@@ -80,6 +102,9 @@ func setup(map: StrategicMap, units: UnitSystem, city_data: Array, time: Simulat
 	armies = units
 	cities = city_data
 	clock = time
+	chronicle.setup(self)
+	armies.diplomacy = diplomacy
+	diplomacy.changed.connect(_sync_war)
 
 func advance_battles(seconds: float) -> void :
 	if not is_finite(seconds) or seconds <= 0 or not armies.at_war: return
@@ -103,7 +128,20 @@ func advance_battles(seconds: float) -> void :
 		remaining = maxf(0, remaining - step)
 func advance(seconds: float) -> void :
 	if seconds > 0: daily_provinces()
-	if not winner.is_empty() or seconds <= 0 or not at_war: return
+	if not winner.is_empty() or seconds <= 0: return
+	diplomacy.now = clock.elapsed if clock != null else diplomacy.now + seconds
+	diplomacy.ai_countries = [GameSession.opponent_country()]
+	chronicle.advance(seconds)
+	for title in annexation.advance(seconds, terrain.territories): report.emit(title + " annexed")
+	for done in strategic.advance(seconds):
+		report.emit("%s completed a %s" % [str(done[0]).capitalize(), StrategicWeapons.WEAPONS[done[1]].name.to_lower()])
+	_update_entrenchment(seconds)
+	# Victory is checked in peace too (economic victory, time limit).
+	var result: = victory.evaluate(self, seconds)
+	if not result.is_empty():
+		end_match(result[0], result[1])
+		return
+	if not at_war: return
 	advance_battles(seconds)
 	var selected_stack: = ""
 	var selected_country: = ""
@@ -160,11 +198,7 @@ func advance(seconds: float) -> void :
 		terrain.update_relations(at_war)
 		capture_progress.erase(territory.id)
 		report.emit(territory.title + " captured by " + occupant.capitalize())
-	var score: = city_score()
 	for country in ["ukraine", "russia"]:
-		if score[country] >= 3:
-			end_match(country)
-			return
 		var living: = false
 		for unit in armies.units:
 			if unit.country == country:
@@ -179,27 +213,61 @@ func advance(seconds: float) -> void :
 				for city in cities:
 					if city.name == job.city and production.controlled(city, country): living = true
 		if not living:
-			end_match("russia" if country == "ukraine" else "ukraine")
+			end_match("russia" if country == "ukraine" else "ukraine", "elimination")
 			return
 	if not ai_enabled: return
 	decision_timer += seconds
 	if decision_timer < 0.05: return
 	if clock.elapsed >= 2.5: ai.decide(armies, terrain, cities, production, decision_timer)
 	decision_timer = 0
+func _update_entrenchment(seconds: float) -> void:
+	for unit in armies.units:
+		if unit.get("moving", false) or unit.visual_kind in ["fighter", "naval"] or not unit.has("node"):
+			unit.dug_in = 0.0
+			unit.entrenched = false
+			continue
+		var point: = Vector2(unit.node.position.x, unit.node.position.z)
+		var at_centre: = false
+		for title in terrain.province_hubs:
+			if terrain.province_hubs[title].distance_to(point) <= CAPTURE_RADIUS:
+				at_centre = true
+				break
+		unit.dug_in = unit.get("dug_in", 0.0) + seconds if at_centre else 0.0
+		unit.entrenched = unit.dug_in >= ENTRENCH_TIME
+## Retreat (Conflict of Nations style): the army pulls back to the nearest province centre its
+## country holds, at the cost of RETREAT_DAMAGE of its health, and stops firing on the way.
+const RETREAT_DAMAGE: = 0.1
+func retreat(group: Array, from: Vector2) -> Vector2:
+	var best: = Vector2.INF
+	for t in terrain.territories:
+		if not t.playable or t.controller != group[0].country or not terrain.province_hubs.has(t.title): continue
+		var hub: Vector2 = terrain.province_hubs[t.title]
+		if hub.distance_to(from) < 0.8: continue
+		if best == Vector2.INF or hub.distance_to(from) < best.distance_to(from): best = hub
+	if best == Vector2.INF: return best
+	for unit in group:
+		if at_war and unit.get("engaged", false): unit.health = maxf(1.0, unit.health * (1.0 - RETREAT_DAMAGE))
+		unit.attack_target = ""
+		unit.fire_mode = "hold"
+		unit.entrenched = false
+		unit.dug_in = 0.0
+	return best
 func city_score() -> Dictionary:
 	var score: = {"russia": 0, "ukraine": 0}
 	for city in cities:
 		for territory in terrain.territories:
 			if territory.id == city.sector and territory.controller != city.country.to_lower(): score[territory.controller] += 1
 	return score
-func end_match(country: String) -> void :
+const VICTORY_NAMES: = {"domination": "DOMINATION VICTORY", "economic": "ECONOMIC VICTORY", "elimination": "VICTORY BY ELIMINATION", "points": "VICTORY ON POINTS"}
+func end_match(country: String, kind: String = "elimination") -> void :
 	winner = country
+	victory_type = kind
 	clock.paused = true
 	clock.state_changed.emit()
-	report.emit(country.capitalize() + " wins. Choose New match to play again.")
+	report.emit(VICTORY_NAMES.get(kind, "VICTORY") + " · " + country.capitalize() + " wins. Choose New match to play again.")
 	finished.emit(country)
 func snapshot() -> Dictionary:
-	return {"last_day": last_day, "air_cooldowns": air_combat.snapshot(), "combat_cooldowns": combat.snapshot(), "at_war": at_war, "winner": winner, "decision_timer": decision_timer, "recruitment_timer": ai.recruitment_timer, "capture_progress": capture_progress.duplicate(true)}
+	return {"last_day": last_day, "air_cooldowns": air_combat.snapshot(), "combat_cooldowns": combat.snapshot(), "at_war": at_war, "winner": winner, "decision_timer": decision_timer, "recruitment_timer": ai.recruitment_timer, "capture_progress": capture_progress.duplicate(true), "victory_type": victory_type, "victory": victory.snapshot(), "chronicle": chronicle.snapshot(), "annexation": annexation.snapshot(), "strategic": strategic.snapshot(), "doctrines": Doctrine.snapshot(), "diplomacy": diplomacy.snapshot()}
 func restore(state: Dictionary) -> void :
 	last_day = int(state.get("last_day",1+int(clock.elapsed/ProductionSystem.DAY_SECONDS)))
 	combat.restore(state.get("combat_cooldowns", {}))
@@ -210,3 +278,11 @@ func restore(state: Dictionary) -> void :
 	decision_timer = state.decision_timer
 	ai.recruitment_timer = state.recruitment_timer
 	capture_progress = state.capture_progress.duplicate(true)
+	victory_type = state.get("victory_type", "")
+	victory.restore(state.get("victory", {}))
+	chronicle.restore(state.get("chronicle", {}))
+	annexation.restore(state.get("annexation", {}))
+	strategic.restore(state.get("strategic", {}))
+	if state.has("doctrines"): Doctrine.restore(state.doctrines)
+	diplomacy.restore(state.get("diplomacy", {}))
+	diplomacy.relation(GameSession.player_country, GameSession.opponent_country()).war = at_war

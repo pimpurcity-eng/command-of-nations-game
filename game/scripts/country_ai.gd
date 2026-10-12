@@ -29,7 +29,7 @@ func decide(armies: UnitSystem, terrain: StrategicMap, cities: Array, production
 
 		for enemy in armies.units:
 			var enemy_point: = Vector2(enemy.node.position.x, enemy.node.position.z)
-			if enemy.health > 0 and enemy.country != country and armies.point_visible(enemy_point, country) and ( not armies.is_naval(unit) or armies.is_naval(enemy)) and point.distance_to(enemy_point) < 6: targets.append(enemy_point)
+			if enemy.health > 0 and enemy.country != country and armies.unit_visible(enemy, country) and ( not armies.is_naval(unit) or armies.is_naval(enemy)) and point.distance_to(enemy_point) < 6: targets.append(enemy_point)
 		if targets.is_empty():
 			for city in cities:
 				for territory in terrain.territories:

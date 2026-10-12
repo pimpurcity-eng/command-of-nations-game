@@ -1,0 +1,24 @@
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+PASS the opponent is an AI country
+PASS declaring war sets the relation to war
+PASS the AI refuses peace straight after war starts
+PASS a winning AI refuses peace
+PASS a losing AI accepts peace and the war ends
+PASS right of way needs a period of peace
+PASS after two days of peace the AI shares vision
+PASS the same proposal cannot be spammed
+PASS with shared vision Russia sees around Ukrainian armies
+PASS without it, that area is hidden
+PASS war cancels agreements and restarts the campaign war
+PASS an embargo makes the market 25% dearer (375 vs 300)
+PASS coalition names need 3+ characters
+PASS a coalition can be created
+PASS a country at war with a member cannot join
+PASS coalition members share vision and right of way
+PASS leaving blocks rejoining for three days
+PASS after three days a country may rejoin
+PASS the inbox holds public, private and coalition messages
+PASS diplomacy is saved
+PASS the Diplomacy page shows relations, coalition and chat
+RESULT failures=0

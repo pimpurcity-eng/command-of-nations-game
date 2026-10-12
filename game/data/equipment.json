@@ -29,10 +29,10 @@
         "model": "res://assets/library/airdefense/russia_buk_m3.glb"
       },
       {
-        "name": "Buk-M3 · radar",
+        "name": "Buk-M3 \u00b7 upgrade",
         "range": 3.8,
         "damage": 11.5,
-        "improvement": "Better target tracking",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/airdefense/russia_buk_m3.glb"
       },
       {
@@ -43,10 +43,10 @@
         "model": "res://assets/library/airdefense/russia_s400.glb"
       },
       {
-        "name": "S-400 · guidance",
+        "name": "S-400 Triumf \u00b7 upgrade",
         "range": 4.5,
         "damage": 14.5,
-        "improvement": "Improved guidance",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/airdefense/russia_s400.glb"
       },
       {
@@ -102,10 +102,10 @@
         "model": "res://assets/library/airdefense/russia_strela10.glb"
       },
       {
-        "name": "Strela-10 · guidance",
+        "name": "Strela-10 \u00b7 upgrade",
         "range": 2.5,
         "damage": 8,
-        "improvement": "Better target tracking",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/airdefense/russia_strela10.glb"
       },
       {
@@ -116,14 +116,14 @@
         "model": "res://assets/library/airdefense/russia_tor_m2.glb"
       },
       {
-        "name": "Tor-M2 · radar",
+        "name": "Tor-M2 \u00b7 upgrade",
         "range": 2.8,
         "damage": 10,
-        "improvement": "Improved guidance",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/airdefense/russia_tor_m2.glb"
       },
       {
-        "name": "Tor-M2 · interception",
+        "name": "Tor-M2 \u00b7 interception",
         "range": 3.0,
         "damage": 11,
         "improvement": "Advanced interception",
@@ -136,7 +136,7 @@
       3,
       6,
       9,
-      12
+      14
     ],
     "upkeep": {
       "funds": 20.0,
@@ -175,10 +175,10 @@
         "model": "res://assets/library/airdefense/nato_iris_t_slm.glb"
       },
       {
-        "name": "IRIS-T · radar",
+        "name": "IRIS-T SLM \u00b7 upgrade",
         "range": 3.8,
         "damage": 11.5,
-        "improvement": "Better target tracking",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/airdefense/nato_iris_t_slm.glb"
       },
       {
@@ -189,10 +189,10 @@
         "model": "res://assets/library/airdefense/nato_samp_t.glb"
       },
       {
-        "name": "SAMP/T · guidance",
+        "name": "SAMP/T \u00b7 upgrade",
         "range": 4.5,
         "damage": 14.5,
-        "improvement": "Improved guidance",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/airdefense/nato_samp_t.glb"
       },
       {
@@ -248,10 +248,10 @@
         "model": "res://assets/library/airdefense/nato_roland.glb"
       },
       {
-        "name": "Roland · tracking",
+        "name": "Roland \u00b7 upgrade",
         "range": 2.5,
         "damage": 8,
-        "improvement": "Better target tracking",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/airdefense/nato_roland.glb"
       },
       {
@@ -262,14 +262,14 @@
         "model": "res://assets/library/airdefense/nato_nasams.glb"
       },
       {
-        "name": "NASAMS · radar",
+        "name": "NASAMS \u00b7 upgrade",
         "range": 2.8,
         "damage": 10,
-        "improvement": "Improved guidance",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/airdefense/nato_nasams.glb"
       },
       {
-        "name": "NASAMS · interception",
+        "name": "NASAMS \u00b7 interception",
         "range": 3.0,
         "damage": 11,
         "improvement": "Advanced interception",
@@ -282,7 +282,7 @@
       3,
       6,
       9,
-      12
+      14
     ],
     "upkeep": {
       "funds": 20.0,
@@ -313,9 +313,9 @@
         "model": "res://assets/library/arsenal/russia_t62.glb"
       },
       {
-        "name": "T-64",
-        "improvement": "Composite armour",
-        "model": "res://assets/library/arsenal/russia_t64.glb"
+        "name": "T-62 \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_t62.glb"
       },
       {
         "name": "T-72B3",
@@ -323,9 +323,9 @@
         "model": "res://assets/library/arsenal/russia_t72b3.glb"
       },
       {
-        "name": "T-80BVM",
-        "improvement": "Turbine speed",
-        "model": "res://assets/library/arsenal/russia_t80bvm.glb"
+        "name": "T-72B3 \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_t72b3.glb"
       },
       {
         "name": "T-90A",
@@ -339,10 +339,10 @@
     "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
     "research_days": [
       1,
-      4,
-      8,
-      12,
-      18
+      6,
+      10,
+      14,
+      20
     ],
     "upkeep": {
       "funds": 28.0,
@@ -373,9 +373,9 @@
         "model": "res://assets/library/arsenal/russia_btr60pb.glb"
       },
       {
-        "name": "BTR-70",
-        "improvement": "Better engines",
-        "model": "res://assets/library/arsenal/russia_btr70.glb"
+        "name": "BTR-60PB \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_btr60pb.glb"
       },
       {
         "name": "BTR-80",
@@ -383,9 +383,9 @@
         "model": "res://assets/library/arsenal/russia_btr80.glb"
       },
       {
-        "name": "BTR-82A",
-        "improvement": "30 mm cannon",
-        "model": "res://assets/library/arsenal/russia_btr82a.glb"
+        "name": "BTR-80 \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_btr80.glb"
       },
       {
         "name": "BTR-90",
@@ -399,9 +399,9 @@
     "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
     "research_days": [
       1,
-      4,
-      8,
-      12,
+      5,
+      9,
+      13,
       18
     ],
     "upkeep": {
@@ -441,8 +441,8 @@
         "model": "res://assets/library/arsenal/russia_tu22m3.glb"
       },
       {
-        "name": "Tu-22M3 · upgraded",
-        "improvement": "Better payload",
+        "name": "Tu-22M3 \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/russia_tu22m3.glb"
       },
       {
@@ -452,8 +452,8 @@
         "projectile_model": "res://assets/library/arsenal/russia_kh101.glb"
       },
       {
-        "name": "Tu-95MS · cruise missiles",
-        "improvement": "Stand-off missiles",
+        "name": "Tu-95MS \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/russia_tu95ms.glb",
         "projectile_model": "res://assets/library/arsenal/russia_kh101.glb"
       },
@@ -467,10 +467,10 @@
     "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
     "research_days": [
       1,
-      4,
-      8,
-      12,
-      18
+      5,
+      10,
+      15,
+      22
     ],
     "upkeep": {
       "funds": 42.0,
@@ -501,9 +501,9 @@
         "model": "res://assets/library/arsenal/euro_leopard1.glb"
       },
       {
-        "name": "AMX-30",
-        "improvement": "Lighter and faster",
-        "model": "res://assets/library/arsenal/euro_amx30.glb"
+        "name": "Leopard 1 \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_leopard1.glb"
       },
       {
         "name": "Challenger 2",
@@ -511,9 +511,9 @@
         "model": "res://assets/library/arsenal/euro_challenger2.glb"
       },
       {
-        "name": "Leopard 2A6",
-        "improvement": "Long gun",
-        "model": "res://assets/library/arsenal/euro_leopard2a6.glb"
+        "name": "Challenger 2 \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_challenger2.glb"
       },
       {
         "name": "Leclerc",
@@ -562,8 +562,8 @@
         "preview": "res://assets/library/arsenal/euro_vab.png"
       },
       {
-        "name": "VAB",
-        "improvement": "Wheeled speed",
+        "name": "VAB \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_vab.glb"
       },
       {
@@ -572,9 +572,9 @@
         "model": "res://assets/library/arsenal/euro_piranha_v.glb"
       },
       {
-        "name": "Patria AMV",
-        "improvement": "Mine protection",
-        "model": "res://assets/library/arsenal/euro_patria_amv.glb"
+        "name": "Piranha V \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_piranha_v.glb"
       },
       {
         "name": "Boxer",
@@ -591,7 +591,7 @@
       4,
       8,
       12,
-      18
+      17
     ],
     "upkeep": {
       "funds": 16.0,
@@ -630,8 +630,8 @@
         "model": "res://assets/library/arsenal/euro_mirage_iv.glb"
       },
       {
-        "name": "Mirage IV · upgraded",
-        "improvement": "Better payload",
+        "name": "Mirage IV \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_mirage_iv.glb"
       },
       {
@@ -640,8 +640,8 @@
         "model": "res://assets/library/arsenal/euro_vulcan.glb"
       },
       {
-        "name": "Vulcan · stand-off",
-        "improvement": "Stand-off weapons",
+        "name": "Vulcan \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_vulcan.glb"
       },
       {
@@ -653,10 +653,10 @@
     "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
     "research_days": [
       1,
-      4,
-      8,
-      12,
-      18
+      6,
+      11,
+      16,
+      23
     ],
     "upkeep": {
       "funds": 42.0,
@@ -695,8 +695,8 @@
         "projectile_model": "res://assets/library/arsenal/euro_taurus_kepd350.glb"
       },
       {
-        "name": "Tornado IDS · upgraded",
-        "improvement": "Precision weapons",
+        "name": "Tornado IDS \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_tornado_ids.glb",
         "projectile_model": "res://assets/library/arsenal/euro_taurus_kepd350.glb"
       },
@@ -707,8 +707,8 @@
         "projectile_model": "res://assets/library/arsenal/euro_storm_shadow.glb"
       },
       {
-        "name": "Rafale · upgraded",
-        "improvement": "Better radar",
+        "name": "Rafale \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_rafale.glb",
         "projectile_model": "res://assets/library/arsenal/euro_storm_shadow.glb"
       },
@@ -721,10 +721,10 @@
     "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
     "research_days": [
       1,
-      4,
-      8,
-      12,
-      18
+      6,
+      10,
+      14,
+      20
     ],
     "upkeep": {
       "funds": 30.0,
@@ -754,9 +754,9 @@
     },
     "research_days": [
       1,
-      4,
-      8,
-      12,
+      6,
+      9,
+      13,
       18
     ],
     "model_status": "Original supplied model (Weapons folder 2026-10-10)",
@@ -767,9 +767,9 @@
         "improvement": "Baseline"
       },
       {
-        "name": "2S3 Akatsiya",
-        "model": "res://assets/library/arsenal/russia_2s3_akatsiya.glb",
-        "improvement": "+12% damage"
+        "name": "2S1 Gvozdika \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/russia_2s1_gvozdika.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness"
       },
       {
         "name": "2S5 Giatsint",
@@ -777,9 +777,9 @@
         "improvement": "+24% damage"
       },
       {
-        "name": "2S19 Msta-S",
-        "model": "res://assets/library/arsenal/russia_2s19_msta.glb",
-        "improvement": "+36% damage"
+        "name": "2S5 Giatsint \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/russia_2s5_giatsint.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness"
       },
       {
         "name": "2S35 Koalitsiya-SV",
@@ -816,9 +816,9 @@
     "research_days": [
       1,
       4,
-      8,
-      12,
-      18
+      7,
+      11,
+      16
     ],
     "model_status": "Original supplied model (Weapons folder 2026-10-10)",
     "research_tiers": [
@@ -828,9 +828,9 @@
         "improvement": "Baseline"
       },
       {
-        "name": "2S1 Gvozdika (Poland)",
-        "model": "res://assets/library/arsenal/euro_gvozdika_pl.glb",
-        "improvement": "+12% damage"
+        "name": "FH70 \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/euro_fh70.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness"
       },
       {
         "name": "CAESAR",
@@ -838,9 +838,9 @@
         "improvement": "+24% damage"
       },
       {
-        "name": "PzH 2000",
-        "model": "res://assets/library/arsenal/euro_pzh2000.glb",
-        "improvement": "+36% damage"
+        "name": "CAESAR \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/euro_caesar.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness"
       },
       {
         "name": "Archer",
@@ -872,14 +872,14 @@
       "manpower": 20
     },
     "building_requirements": {
-      "factory": 1
+      "missile_factory": 1
     },
     "research_days": [
       1,
-      4,
-      8,
-      12,
-      18
+      5,
+      10,
+      16,
+      23
     ],
     "model_status": "Original supplied model (Weapons folder 2026-10-10)",
     "research_tiers": [
@@ -889,9 +889,9 @@
         "improvement": "Baseline"
       },
       {
-        "name": "BM-27 Uragan",
-        "model": "res://assets/library/arsenal/russia_bm27_uragan.glb",
-        "improvement": "+12% damage"
+        "name": "BM-21 Grad \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/russia_bm21_grad.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness"
       },
       {
         "name": "BM-30 Smerch",
@@ -899,9 +899,9 @@
         "improvement": "+24% damage"
       },
       {
-        "name": "Tornado-G",
-        "model": "res://assets/library/arsenal/russia_tornado_g.glb",
-        "improvement": "+36% damage"
+        "name": "BM-30 Smerch \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/russia_bm30_smerch.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness"
       },
       {
         "name": "TOS-1A",
@@ -936,14 +936,14 @@
       "manpower": 20
     },
     "building_requirements": {
-      "factory": 1
+      "missile_factory": 1
     },
     "research_days": [
       1,
-      4,
-      8,
-      12,
-      18
+      6,
+      11,
+      17,
+      24
     ],
     "model_status": "Original supplied model (Weapons folder 2026-10-10)",
     "research_tiers": [
@@ -953,20 +953,20 @@
         "improvement": "Baseline"
       },
       {
-        "name": "RM-70 Vampire",
-        "model": "res://assets/library/arsenal/euro_rm70_vampire.glb",
-        "improvement": "+12% damage"
+        "name": "LAR-160 \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/euro_lar160.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness"
       },
       {
-        "name": "RM-70 Vampire · modernization",
+        "name": "RM-70 Vampire \u00b7 modernization",
         "model": "res://assets/library/arsenal/euro_rm70_vampire.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_rm70_vampire.png"
       },
       {
-        "name": "PULS",
-        "model": "res://assets/library/arsenal/euro_puls.glb",
-        "improvement": "+36% damage"
+        "name": "RM-70 Vampire \u00b7 modernization \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/euro_rm70_vampire.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness"
       },
       {
         "name": "EuroPULS",
@@ -1008,7 +1008,7 @@
       4,
       8,
       12,
-      18
+      17
     ],
     "model_status": "Original supplied model (Weapons folder 2026-10-10)",
     "research_tiers": [
@@ -1018,9 +1018,9 @@
         "improvement": "Baseline"
       },
       {
-        "name": "Mi-24 / Mi-35",
-        "model": "res://assets/library/arsenal/russia_mi24_mi35.glb",
-        "improvement": "+12% damage"
+        "name": "Mi-8 / Mi-17 \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/russia_mi8_mi17.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness"
       },
       {
         "name": "Ka-50",
@@ -1028,9 +1028,9 @@
         "improvement": "+24% damage"
       },
       {
-        "name": "Mi-28N",
-        "model": "res://assets/library/arsenal/russia_mi28n.glb",
-        "improvement": "+36% damage"
+        "name": "Ka-50 \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/russia_ka50.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness"
       },
       {
         "name": "Ka-52",
@@ -1071,9 +1071,9 @@
     },
     "research_days": [
       1,
-      4,
-      8,
-      12,
+      5,
+      9,
+      13,
       18
     ],
     "model_status": "Original supplied model (Weapons folder 2026-10-10)",
@@ -1084,9 +1084,9 @@
         "improvement": "Baseline"
       },
       {
-        "name": "AW149",
-        "model": "res://assets/library/arsenal/euro_aw149.glb",
-        "improvement": "+12% damage"
+        "name": "Lynx \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/euro_lynx.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness"
       },
       {
         "name": "NH90",
@@ -1094,9 +1094,9 @@
         "improvement": "+24% damage"
       },
       {
-        "name": "Tiger",
-        "model": "res://assets/library/arsenal/euro_tiger.glb",
-        "improvement": "+36% damage"
+        "name": "NH90 \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/euro_nh90.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness"
       },
       {
         "name": "NH90 Block 2",
@@ -1133,14 +1133,14 @@
       "manpower": 25
     },
     "building_requirements": {
-      "factory": 1
+      "missile_factory": 1
     },
     "research_days": [
       1,
-      4,
-      8,
+      7,
       12,
-      18
+      18,
+      25
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -1151,9 +1151,9 @@
         "preview": "res://assets/library/arsenal/russia_iskander_m_ready.png"
       },
       {
-        "name": "Topol-M",
-        "improvement": "Modernization level 2; combat effectiveness +12%",
-        "model": "res://assets/library/arsenal/russia_topol_m.glb",
+        "name": "Iskander-M \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_iskander_m.glb",
         "preview": "res://assets/library/arsenal/russia_topol_m_ready.png"
       },
       {
@@ -1163,13 +1163,13 @@
         "preview": "res://assets/library/arsenal/russia_yars_ready.png"
       },
       {
-        "name": "Yars · guidance",
-        "improvement": "Modernization level 4; combat effectiveness +36%",
+        "name": "Yars RS-24 \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/russia_yars.glb",
         "preview": "res://assets/library/arsenal/russia_yars_ready.png"
       },
       {
-        "name": "Yars · advanced",
+        "name": "Yars \u00b7 advanced",
         "improvement": "Modernization level 5; combat effectiveness +48%",
         "model": "res://assets/library/arsenal/russia_yars.glb",
         "preview": "res://assets/library/arsenal/russia_yars_ready.png"
@@ -1202,14 +1202,14 @@
       "manpower": 25
     },
     "building_requirements": {
-      "factory": 1
+      "missile_factory": 1
     },
     "research_days": [
       1,
-      4,
-      8,
-      12,
-      18
+      5,
+      10,
+      16,
+      23
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -1220,9 +1220,9 @@
         "preview": "res://assets/library/arsenal/euro_pluton_ready.png"
       },
       {
-        "name": "Hades",
-        "improvement": "Modernization level 2; combat effectiveness +12%",
-        "model": "res://assets/library/arsenal/euro_hades.glb",
+        "name": "Pluton \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_pluton.glb",
         "preview": "res://assets/library/arsenal/euro_hades_ready.png"
       },
       {
@@ -1232,13 +1232,13 @@
         "preview": "res://assets/library/arsenal/euro_sentinel_sr_ready.png"
       },
       {
-        "name": "Fulgur EBM",
-        "improvement": "Modernization level 4; combat effectiveness +36%",
-        "model": "res://assets/library/arsenal/euro_fulgur_ebm.glb",
+        "name": "Sentinel SR \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_sentinel_sr.glb",
         "preview": "res://assets/library/arsenal/euro_fulgur_ebm_ready.png"
       },
       {
-        "name": "Fulgur · guidance",
+        "name": "Fulgur \u00b7 guidance",
         "improvement": "Modernization level 5; combat effectiveness +48%",
         "model": "res://assets/library/arsenal/euro_fulgur_ebm.glb",
         "preview": "res://assets/library/arsenal/euro_fulgur_ebm_ready.png"
@@ -1271,14 +1271,14 @@
       "manpower": 25
     },
     "building_requirements": {
-      "factory": 1
+      "missile_factory": 1
     },
     "research_days": [
       1,
-      4,
-      8,
-      12,
-      18
+      5,
+      10,
+      16,
+      23
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -1289,8 +1289,8 @@
         "preview": "res://assets/library/arsenal/russia_avangard_silo_ready.png"
       },
       {
-        "name": "Avangard · guidance",
-        "improvement": "Modernization level 2; combat effectiveness +12%",
+        "name": "Avangard silo \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/russia_avangard_silo.glb",
         "preview": "res://assets/library/arsenal/russia_avangard_silo_ready.png"
       },
@@ -1301,13 +1301,13 @@
         "preview": "res://assets/library/arsenal/russia_sarmat_silo_ready.png"
       },
       {
-        "name": "Sarmat · guidance",
-        "improvement": "Modernization level 4; combat effectiveness +36%",
+        "name": "Sarmat silo \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/russia_sarmat_silo.glb",
         "preview": "res://assets/library/arsenal/russia_sarmat_silo_ready.png"
       },
       {
-        "name": "Sarmat · advanced",
+        "name": "Sarmat \u00b7 advanced",
         "improvement": "Modernization level 5; combat effectiveness +48%",
         "model": "res://assets/library/arsenal/russia_sarmat_silo.glb",
         "preview": "res://assets/library/arsenal/russia_sarmat_silo_ready.png"
@@ -1341,14 +1341,14 @@
       "manpower": 25
     },
     "building_requirements": {
-      "factory": 1
+      "missile_factory": 1
     },
     "research_days": [
       1,
-      4,
-      8,
-      12,
-      18
+      6,
+      11,
+      17,
+      24
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -1359,25 +1359,25 @@
         "preview": "res://assets/library/arsenal/euro_s3_silo_ready.png"
       },
       {
-        "name": "S3 · guidance",
-        "improvement": "Modernization level 2; combat effectiveness +12%",
+        "name": "S3 silo \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_s3_silo.glb",
         "preview": "res://assets/library/arsenal/euro_s3_silo_ready.png"
       },
       {
-        "name": "S3 · hardening",
+        "name": "S3 \u00b7 hardening",
         "improvement": "Modernization level 3; combat effectiveness +24%",
         "model": "res://assets/library/arsenal/euro_s3_silo.glb",
         "preview": "res://assets/library/arsenal/euro_s3_silo_ready.png"
       },
       {
-        "name": "S3 · electronics",
-        "improvement": "Modernization level 4; combat effectiveness +36%",
+        "name": "S3 \u00b7 hardening \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_s3_silo.glb",
         "preview": "res://assets/library/arsenal/euro_s3_silo_ready.png"
       },
       {
-        "name": "S3 · advanced",
+        "name": "S3 \u00b7 advanced",
         "improvement": "Modernization level 5; combat effectiveness +48%",
         "model": "res://assets/library/arsenal/euro_s3_silo.glb",
         "preview": "res://assets/library/arsenal/euro_s3_silo_ready.png"
@@ -1416,9 +1416,9 @@
     "research_days": [
       1,
       4,
-      8,
-      12,
-      18
+      7,
+      10,
+      14
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -1431,9 +1431,9 @@
         "air_damage": 0
       },
       {
-        "name": "Forpost",
-        "improvement": "Modernization level 2; combat effectiveness +12%",
-        "model": "res://assets/library/arsenal/russia_forpost.glb",
+        "name": "Orlan-10 \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_orlan10_drone_only.glb",
         "preview": "res://assets/library/arsenal/russia_forpost.png",
         "ground_damage": 2,
         "air_damage": 0
@@ -1447,15 +1447,15 @@
         "air_damage": 0
       },
       {
-        "name": "Sirius",
-        "improvement": "Modernization level 4; combat effectiveness +36%",
-        "model": "res://assets/library/arsenal/russia_sirius.glb",
+        "name": "Inokhodets / Orion \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_inokhodets.glb",
         "preview": "res://assets/library/arsenal/russia_sirius.png",
         "ground_damage": 6,
         "air_damage": 0
       },
       {
-        "name": "Sirius · advanced",
+        "name": "Sirius \u00b7 advanced",
         "improvement": "Modernization level 5; combat effectiveness +48%",
         "model": "res://assets/library/arsenal/russia_sirius.glb",
         "preview": "res://assets/library/arsenal/russia_sirius.png",
@@ -1495,10 +1495,10 @@
     },
     "research_days": [
       1,
-      4,
+      5,
       8,
-      12,
-      18
+      11,
+      15
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -1511,9 +1511,9 @@
         "air_damage": 0
       },
       {
-        "name": "Watchkeeper",
-        "improvement": "Modernization level 2; combat effectiveness +12%",
-        "model": "res://assets/library/arsenal/euro_watchkeeper.glb",
+        "name": "Camcopter S-100 \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_camcopter_s100.glb",
         "preview": "res://assets/library/arsenal/euro_watchkeeper.png",
         "ground_damage": 2,
         "air_damage": 0
@@ -1527,9 +1527,9 @@
         "air_damage": 0
       },
       {
-        "name": "Eurodrone",
-        "improvement": "Modernization level 4; combat effectiveness +36%",
-        "model": "res://assets/library/arsenal/euro_eurodrone.glb",
+        "name": "Hermes 450 \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_hermes450.glb",
         "preview": "res://assets/library/arsenal/euro_eurodrone.png",
         "ground_damage": 6,
         "air_damage": 0
@@ -1575,10 +1575,10 @@
     },
     "research_days": [
       1,
-      4,
+      5,
       8,
-      12,
-      18
+      11,
+      15
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -1589,25 +1589,25 @@
         "preview": "res://assets/library/arsenal/russia_lancet3_drone_only.png"
       },
       {
-        "name": "Lancet · guidance",
-        "improvement": "Modernization level 2; combat effectiveness +12%",
+        "name": "Lancet-3 \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/russia_lancet3_drone_only.glb",
         "preview": "res://assets/library/arsenal/russia_lancet3_drone_only.png"
       },
       {
-        "name": "Lancet · optics",
+        "name": "Lancet \u00b7 optics",
         "improvement": "Modernization level 3; combat effectiveness +24%",
         "model": "res://assets/library/arsenal/russia_lancet3_drone_only.glb",
         "preview": "res://assets/library/arsenal/russia_lancet3_drone_only.png"
       },
       {
-        "name": "Lancet · electronics",
-        "improvement": "Modernization level 4; combat effectiveness +36%",
+        "name": "Lancet \u00b7 optics \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/russia_lancet3_drone_only.glb",
         "preview": "res://assets/library/arsenal/russia_lancet3_drone_only.png"
       },
       {
-        "name": "Lancet · advanced",
+        "name": "Lancet \u00b7 advanced",
         "improvement": "Modernization level 5; combat effectiveness +48%",
         "model": "res://assets/library/arsenal/russia_lancet3_drone_only.glb",
         "preview": "res://assets/library/arsenal/russia_lancet3_drone_only.png"
@@ -1659,9 +1659,9 @@
         "preview": "res://assets/library/arsenal/russia_mig29smt.png"
       },
       {
-        "name": "MiG-31BM",
-        "model": "res://assets/library/arsenal/russia_mig31bm.glb",
-        "improvement": "Supplied equipment",
+        "name": "MiG-29SMT \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/russia_mig29smt.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_mig31bm.png"
       },
       {
@@ -1672,9 +1672,9 @@
         "projectile_model": "res://assets/library/arsenal/russia_kh59mk2.glb"
       },
       {
-        "name": "Su-35S",
-        "model": "res://assets/library/arsenal/russia_su35s.glb",
-        "improvement": "Supplied equipment",
+        "name": "Su-34 \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/russia_su34.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_su35s.png"
       },
       {
@@ -1731,21 +1731,21 @@
         "preview": "res://assets/library/arsenal/euro_mirage2000.png"
       },
       {
-        "name": "Gripen E",
+        "name": "Mirage 2000 \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/euro_mirage2000.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/euro_gripen_e.png"
+      },
+      {
+        "name": "Gripen E \u00b7 sensors",
         "model": "res://assets/library/arsenal/euro_gripen_e.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_gripen_e.png"
       },
       {
-        "name": "Gripen E · sensors",
+        "name": "Gripen E \u00b7 sensors \u00b7 upgrade",
         "model": "res://assets/library/arsenal/euro_gripen_e.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/euro_gripen_e.png"
-      },
-      {
-        "name": "NGF / FCAS",
-        "model": "res://assets/library/arsenal/euro_ngf_fcas.glb",
-        "improvement": "Supplied equipment",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_ngf_fcas.png"
       },
       {
@@ -1790,9 +1790,9 @@
     "research_days": [
       1,
       4,
-      8,
-      12,
-      18
+      7,
+      10,
+      13
     ],
     "research_tiers": [
       {
@@ -1802,9 +1802,9 @@
         "preview": "res://assets/library/arsenal/russia_motor_rifleman.png"
       },
       {
-        "name": "Naval infantry",
-        "model": "res://assets/library/arsenal/russia_naval_infantry.glb",
-        "improvement": "Supplied equipment",
+        "name": "Motor riflemen \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/russia_motor_rifleman.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_naval_infantry.png"
       },
       {
@@ -1814,9 +1814,9 @@
         "preview": "res://assets/library/arsenal/russia_vdv_paratrooper.png"
       },
       {
-        "name": "Snipers",
-        "model": "res://assets/library/arsenal/russia_sniper.glb",
-        "improvement": "Supplied equipment",
+        "name": "VDV paratroopers \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/russia_vdv_paratrooper.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_sniper.png"
       },
       {
@@ -1856,9 +1856,9 @@
     "research_days": [
       1,
       4,
-      8,
-      12,
-      18
+      7,
+      10,
+      13
     ],
     "research_tiers": [
       {
@@ -1868,9 +1868,9 @@
         "preview": "res://assets/library/arsenal/euro_uk_royal_marine.png"
       },
       {
-        "name": "Foreign Legion",
-        "model": "res://assets/library/arsenal/euro_fr_foreign_legion.glb",
-        "improvement": "Supplied equipment",
+        "name": "Royal Marines \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/euro_uk_royal_marine.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_fr_foreign_legion.png"
       },
       {
@@ -1880,9 +1880,9 @@
         "preview": "res://assets/library/arsenal/euro_it_folgore_paratrooper.png"
       },
       {
-        "name": "Winter snipers",
-        "model": "res://assets/library/arsenal/euro_fi_winter_sniper.glb",
-        "improvement": "Supplied equipment",
+        "name": "Folgore paratroopers \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/euro_it_folgore_paratrooper.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_fi_winter_sniper.png"
       },
       {
@@ -1921,10 +1921,10 @@
     },
     "research_days": [
       1,
-      4,
-      8,
-      12,
-      18
+      6,
+      10,
+      14,
+      20
     ],
     "research_tiers": [
       {
@@ -1934,25 +1934,25 @@
         "preview": "res://assets/library/arsenal/russia_kamaz5350_supply.png"
       },
       {
-        "name": "KamAZ-5350 supply · L2",
+        "name": "KamAZ-5350 supply \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/russia_kamaz5350_supply.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/russia_kamaz5350_supply.png"
+      },
+      {
+        "name": "KamAZ-5350 supply \u00b7 L3",
         "model": "res://assets/library/arsenal/russia_kamaz5350_supply.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_kamaz5350_supply.png"
       },
       {
-        "name": "KamAZ-5350 supply · L3",
+        "name": "KamAZ-5350 supply \u00b7 L3 \u00b7 upgrade",
         "model": "res://assets/library/arsenal/russia_kamaz5350_supply.glb",
-        "improvement": "Supplied equipment",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_kamaz5350_supply.png"
       },
       {
-        "name": "KamAZ-5350 supply · L4",
-        "model": "res://assets/library/arsenal/russia_kamaz5350_supply.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_kamaz5350_supply.png"
-      },
-      {
-        "name": "KamAZ-5350 supply · L5",
+        "name": "KamAZ-5350 supply \u00b7 L5",
         "model": "res://assets/library/arsenal/russia_kamaz5350_supply.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_kamaz5350_supply.png"
@@ -1987,10 +1987,10 @@
     },
     "research_days": [
       1,
-      4,
-      8,
-      12,
-      18
+      6,
+      10,
+      14,
+      20
     ],
     "research_tiers": [
       {
@@ -2000,25 +2000,25 @@
         "preview": "res://assets/library/arsenal/russia_brem1m_recovery.png"
       },
       {
-        "name": "BREM-1M recovery · L2",
+        "name": "BREM-1M recovery \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/russia_brem1m_recovery.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/russia_brem1m_recovery.png"
+      },
+      {
+        "name": "BREM-1M recovery \u00b7 L3",
         "model": "res://assets/library/arsenal/russia_brem1m_recovery.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_brem1m_recovery.png"
       },
       {
-        "name": "BREM-1M recovery · L3",
+        "name": "BREM-1M recovery \u00b7 L3 \u00b7 upgrade",
         "model": "res://assets/library/arsenal/russia_brem1m_recovery.glb",
-        "improvement": "Supplied equipment",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_brem1m_recovery.png"
       },
       {
-        "name": "BREM-1M recovery · L4",
-        "model": "res://assets/library/arsenal/russia_brem1m_recovery.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_brem1m_recovery.png"
-      },
-      {
-        "name": "BREM-1M recovery · L5",
+        "name": "BREM-1M recovery \u00b7 L5",
         "model": "res://assets/library/arsenal/russia_brem1m_recovery.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_brem1m_recovery.png"
@@ -2066,25 +2066,25 @@
         "preview": "res://assets/library/arsenal/russia_imr3m_engineer.png"
       },
       {
-        "name": "IMR-3M engineer · L2",
+        "name": "IMR-3M engineer \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/russia_imr3m_engineer.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/russia_imr3m_engineer.png"
+      },
+      {
+        "name": "IMR-3M engineer \u00b7 L3",
         "model": "res://assets/library/arsenal/russia_imr3m_engineer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_imr3m_engineer.png"
       },
       {
-        "name": "IMR-3M engineer · L3",
+        "name": "IMR-3M engineer \u00b7 L3 \u00b7 upgrade",
         "model": "res://assets/library/arsenal/russia_imr3m_engineer.glb",
-        "improvement": "Supplied equipment",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_imr3m_engineer.png"
       },
       {
-        "name": "IMR-3M engineer · L4",
-        "model": "res://assets/library/arsenal/russia_imr3m_engineer.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_imr3m_engineer.png"
-      },
-      {
-        "name": "IMR-3M engineer · L5",
+        "name": "IMR-3M engineer \u00b7 L5",
         "model": "res://assets/library/arsenal/russia_imr3m_engineer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_imr3m_engineer.png"
@@ -2132,25 +2132,25 @@
         "preview": "res://assets/library/arsenal/russia_mtu72_bridgelayer.png"
       },
       {
-        "name": "MTU-72 bridgelayer · L2",
+        "name": "MTU-72 bridgelayer \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/russia_mtu72_bridgelayer.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/russia_mtu72_bridgelayer.png"
+      },
+      {
+        "name": "MTU-72 bridgelayer \u00b7 L3",
         "model": "res://assets/library/arsenal/russia_mtu72_bridgelayer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_mtu72_bridgelayer.png"
       },
       {
-        "name": "MTU-72 bridgelayer · L3",
+        "name": "MTU-72 bridgelayer \u00b7 L3 \u00b7 upgrade",
         "model": "res://assets/library/arsenal/russia_mtu72_bridgelayer.glb",
-        "improvement": "Supplied equipment",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_mtu72_bridgelayer.png"
       },
       {
-        "name": "MTU-72 bridgelayer · L4",
-        "model": "res://assets/library/arsenal/russia_mtu72_bridgelayer.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_mtu72_bridgelayer.png"
-      },
-      {
-        "name": "MTU-72 bridgelayer · L5",
+        "name": "MTU-72 bridgelayer \u00b7 L5",
         "model": "res://assets/library/arsenal/russia_mtu72_bridgelayer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_mtu72_bridgelayer.png"
@@ -2185,10 +2185,10 @@
     },
     "research_days": [
       1,
-      4,
-      8,
-      12,
-      18
+      5,
+      9,
+      13,
+      19
     ],
     "research_tiers": [
       {
@@ -2198,25 +2198,25 @@
         "preview": "res://assets/library/arsenal/russia_ur77_mineclearing.png"
       },
       {
-        "name": "UR-77 mine clearing · L2",
+        "name": "UR-77 mine clearing \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/russia_ur77_mineclearing.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/russia_ur77_mineclearing.png"
+      },
+      {
+        "name": "UR-77 mine clearing \u00b7 L3",
         "model": "res://assets/library/arsenal/russia_ur77_mineclearing.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_ur77_mineclearing.png"
       },
       {
-        "name": "UR-77 mine clearing · L3",
+        "name": "UR-77 mine clearing \u00b7 L3 \u00b7 upgrade",
         "model": "res://assets/library/arsenal/russia_ur77_mineclearing.glb",
-        "improvement": "Supplied equipment",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_ur77_mineclearing.png"
       },
       {
-        "name": "UR-77 mine clearing · L4",
-        "model": "res://assets/library/arsenal/russia_ur77_mineclearing.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_ur77_mineclearing.png"
-      },
-      {
-        "name": "UR-77 mine clearing · L5",
+        "name": "UR-77 mine clearing \u00b7 L5",
         "model": "res://assets/library/arsenal/russia_ur77_mineclearing.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_ur77_mineclearing.png"
@@ -2251,10 +2251,10 @@
     },
     "research_days": [
       1,
-      4,
-      8,
-      12,
-      18
+      5,
+      9,
+      13,
+      19
     ],
     "research_tiers": [
       {
@@ -2264,25 +2264,25 @@
         "preview": "res://assets/library/arsenal/euro_man_hx77_supply.png"
       },
       {
-        "name": "MAN HX77 supply · L2",
+        "name": "MAN HX77 supply \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/euro_man_hx77_supply.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/euro_man_hx77_supply.png"
+      },
+      {
+        "name": "MAN HX77 supply \u00b7 L3",
         "model": "res://assets/library/arsenal/euro_man_hx77_supply.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_man_hx77_supply.png"
       },
       {
-        "name": "MAN HX77 supply · L3",
+        "name": "MAN HX77 supply \u00b7 L3 \u00b7 upgrade",
         "model": "res://assets/library/arsenal/euro_man_hx77_supply.glb",
-        "improvement": "Supplied equipment",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_man_hx77_supply.png"
       },
       {
-        "name": "MAN HX77 supply · L4",
-        "model": "res://assets/library/arsenal/euro_man_hx77_supply.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/euro_man_hx77_supply.png"
-      },
-      {
-        "name": "MAN HX77 supply · L5",
+        "name": "MAN HX77 supply \u00b7 L5",
         "model": "res://assets/library/arsenal/euro_man_hx77_supply.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_man_hx77_supply.png"
@@ -2299,7 +2299,7 @@
   {
     "id": "buffel_recovery_ukraine",
     "country": "ukraine",
-    "name": "Büffel recovery",
+    "name": "B\u00fcffel recovery",
     "category": "Support",
     "visual_kind": "support",
     "role": "support",
@@ -2317,38 +2317,38 @@
     },
     "research_days": [
       1,
-      4,
-      8,
-      12,
-      18
+      6,
+      10,
+      14,
+      20
     ],
     "research_tiers": [
       {
-        "name": "Büffel recovery",
+        "name": "B\u00fcffel recovery",
         "model": "res://assets/library/arsenal/euro_buffel_recovery.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_buffel_recovery.png"
       },
       {
-        "name": "Büffel recovery · L2",
+        "name": "B\u00fcffel recovery \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/euro_buffel_recovery.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/euro_buffel_recovery.png"
+      },
+      {
+        "name": "B\u00fcffel recovery \u00b7 L3",
         "model": "res://assets/library/arsenal/euro_buffel_recovery.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_buffel_recovery.png"
       },
       {
-        "name": "Büffel recovery · L3",
+        "name": "B\u00fcffel recovery \u00b7 L3 \u00b7 upgrade",
         "model": "res://assets/library/arsenal/euro_buffel_recovery.glb",
-        "improvement": "Supplied equipment",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_buffel_recovery.png"
       },
       {
-        "name": "Büffel recovery · L4",
-        "model": "res://assets/library/arsenal/euro_buffel_recovery.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/euro_buffel_recovery.png"
-      },
-      {
-        "name": "Büffel recovery · L5",
+        "name": "B\u00fcffel recovery \u00b7 L5",
         "model": "res://assets/library/arsenal/euro_buffel_recovery.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_buffel_recovery.png"
@@ -2383,10 +2383,10 @@
     },
     "research_days": [
       1,
-      4,
-      8,
-      12,
-      18
+      6,
+      10,
+      14,
+      20
     ],
     "research_tiers": [
       {
@@ -2396,25 +2396,25 @@
         "preview": "res://assets/library/arsenal/euro_kodiak_engineer.png"
       },
       {
-        "name": "Kodiak engineer · L2",
+        "name": "Kodiak engineer \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/euro_kodiak_engineer.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/euro_kodiak_engineer.png"
+      },
+      {
+        "name": "Kodiak engineer \u00b7 L3",
         "model": "res://assets/library/arsenal/euro_kodiak_engineer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_kodiak_engineer.png"
       },
       {
-        "name": "Kodiak engineer · L3",
+        "name": "Kodiak engineer \u00b7 L3 \u00b7 upgrade",
         "model": "res://assets/library/arsenal/euro_kodiak_engineer.glb",
-        "improvement": "Supplied equipment",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_kodiak_engineer.png"
       },
       {
-        "name": "Kodiak engineer · L4",
-        "model": "res://assets/library/arsenal/euro_kodiak_engineer.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/euro_kodiak_engineer.png"
-      },
-      {
-        "name": "Kodiak engineer · L5",
+        "name": "Kodiak engineer \u00b7 L5",
         "model": "res://assets/library/arsenal/euro_kodiak_engineer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_kodiak_engineer.png"
@@ -2462,25 +2462,25 @@
         "preview": "res://assets/library/arsenal/euro_leguan_bridgelayer.png"
       },
       {
-        "name": "Leguan bridgelayer · L2",
+        "name": "Leguan bridgelayer \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/euro_leguan_bridgelayer.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/euro_leguan_bridgelayer.png"
+      },
+      {
+        "name": "Leguan bridgelayer \u00b7 L3",
         "model": "res://assets/library/arsenal/euro_leguan_bridgelayer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_leguan_bridgelayer.png"
       },
       {
-        "name": "Leguan bridgelayer · L3",
+        "name": "Leguan bridgelayer \u00b7 L3 \u00b7 upgrade",
         "model": "res://assets/library/arsenal/euro_leguan_bridgelayer.glb",
-        "improvement": "Supplied equipment",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_leguan_bridgelayer.png"
       },
       {
-        "name": "Leguan bridgelayer · L4",
-        "model": "res://assets/library/arsenal/euro_leguan_bridgelayer.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/euro_leguan_bridgelayer.png"
-      },
-      {
-        "name": "Leguan bridgelayer · L5",
+        "name": "Leguan bridgelayer \u00b7 L5",
         "model": "res://assets/library/arsenal/euro_leguan_bridgelayer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_leguan_bridgelayer.png"
@@ -2528,25 +2528,25 @@
         "preview": "res://assets/library/arsenal/euro_trojan_breacher.png"
       },
       {
-        "name": "Trojan breacher · L2",
+        "name": "Trojan breacher \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/euro_trojan_breacher.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/euro_trojan_breacher.png"
+      },
+      {
+        "name": "Trojan breacher \u00b7 L3",
         "model": "res://assets/library/arsenal/euro_trojan_breacher.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_trojan_breacher.png"
       },
       {
-        "name": "Trojan breacher · L3",
+        "name": "Trojan breacher \u00b7 L3 \u00b7 upgrade",
         "model": "res://assets/library/arsenal/euro_trojan_breacher.glb",
-        "improvement": "Supplied equipment",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_trojan_breacher.png"
       },
       {
-        "name": "Trojan breacher · L4",
-        "model": "res://assets/library/arsenal/euro_trojan_breacher.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/euro_trojan_breacher.png"
-      },
-      {
-        "name": "Trojan breacher · L5",
+        "name": "Trojan breacher \u00b7 L5",
         "model": "res://assets/library/arsenal/euro_trojan_breacher.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_trojan_breacher.png"
@@ -2581,10 +2581,10 @@
     },
     "research_days": [
       1,
-      4,
+      5,
       8,
       12,
-      18
+      17
     ],
     "research_tiers": [
       {
@@ -2594,25 +2594,25 @@
         "preview": "res://assets/library/arsenal/russia_2b14_mortar_82.png"
       },
       {
-        "name": "2B14 82 mm mortar · L2",
+        "name": "2B14 82 mm mortar \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/russia_2b14_mortar_82.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/russia_2b14_mortar_82.png"
+      },
+      {
+        "name": "2B14 82 mm mortar \u00b7 L3",
         "model": "res://assets/library/arsenal/russia_2b14_mortar_82.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_2b14_mortar_82.png"
       },
       {
-        "name": "2B14 82 mm mortar · L3",
+        "name": "2B14 82 mm mortar \u00b7 L3 \u00b7 upgrade",
         "model": "res://assets/library/arsenal/russia_2b14_mortar_82.glb",
-        "improvement": "Supplied equipment",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_2b14_mortar_82.png"
       },
       {
-        "name": "2B14 82 mm mortar · L4",
-        "model": "res://assets/library/arsenal/russia_2b14_mortar_82.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_2b14_mortar_82.png"
-      },
-      {
-        "name": "2B14 82 mm mortar · L5",
+        "name": "2B14 82 mm mortar \u00b7 L5",
         "model": "res://assets/library/arsenal/russia_2b14_mortar_82.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_2b14_mortar_82.png"
@@ -2647,10 +2647,10 @@
     },
     "research_days": [
       1,
-      4,
+      5,
       8,
       12,
-      18
+      17
     ],
     "research_tiers": [
       {
@@ -2660,25 +2660,25 @@
         "preview": "res://assets/library/arsenal/russia_2b11_mortar_120.png"
       },
       {
-        "name": "2B11 120 mm mortar · L2",
+        "name": "2B11 120 mm mortar \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/russia_2b11_mortar_120.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/russia_2b11_mortar_120.png"
+      },
+      {
+        "name": "2B11 120 mm mortar \u00b7 L3",
         "model": "res://assets/library/arsenal/russia_2b11_mortar_120.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_2b11_mortar_120.png"
       },
       {
-        "name": "2B11 120 mm mortar · L3",
+        "name": "2B11 120 mm mortar \u00b7 L3 \u00b7 upgrade",
         "model": "res://assets/library/arsenal/russia_2b11_mortar_120.glb",
-        "improvement": "Supplied equipment",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_2b11_mortar_120.png"
       },
       {
-        "name": "2B11 120 mm mortar · L4",
-        "model": "res://assets/library/arsenal/russia_2b11_mortar_120.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_2b11_mortar_120.png"
-      },
-      {
-        "name": "2B11 120 mm mortar · L5",
+        "name": "2B11 120 mm mortar \u00b7 L5",
         "model": "res://assets/library/arsenal/russia_2b11_mortar_120.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_2b11_mortar_120.png"
@@ -2713,9 +2713,9 @@
     },
     "research_days": [
       1,
-      4,
-      8,
-      12,
+      6,
+      9,
+      13,
       18
     ],
     "research_tiers": [
@@ -2726,25 +2726,25 @@
         "preview": "res://assets/library/arsenal/russia_d30_howitzer.png"
       },
       {
-        "name": "D-30 howitzer · L2",
+        "name": "D-30 howitzer \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/russia_d30_howitzer.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/russia_d30_howitzer.png"
+      },
+      {
+        "name": "D-30 howitzer \u00b7 L3",
         "model": "res://assets/library/arsenal/russia_d30_howitzer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_d30_howitzer.png"
       },
       {
-        "name": "D-30 howitzer · L3",
+        "name": "D-30 howitzer \u00b7 L3 \u00b7 upgrade",
         "model": "res://assets/library/arsenal/russia_d30_howitzer.glb",
-        "improvement": "Supplied equipment",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_d30_howitzer.png"
       },
       {
-        "name": "D-30 howitzer · L4",
-        "model": "res://assets/library/arsenal/russia_d30_howitzer.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_d30_howitzer.png"
-      },
-      {
-        "name": "D-30 howitzer · L5",
+        "name": "D-30 howitzer \u00b7 L5",
         "model": "res://assets/library/arsenal/russia_d30_howitzer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_d30_howitzer.png"
@@ -2779,9 +2779,9 @@
     },
     "research_days": [
       1,
-      4,
-      8,
-      12,
+      6,
+      9,
+      13,
       18
     ],
     "research_tiers": [
@@ -2792,25 +2792,25 @@
         "preview": "res://assets/library/arsenal/euro_l16_mortar_81.png"
       },
       {
-        "name": "L16 81 mm mortar · L2",
+        "name": "L16 81 mm mortar \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/euro_l16_mortar_81.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/euro_l16_mortar_81.png"
+      },
+      {
+        "name": "L16 81 mm mortar \u00b7 L3",
         "model": "res://assets/library/arsenal/euro_l16_mortar_81.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_l16_mortar_81.png"
       },
       {
-        "name": "L16 81 mm mortar · L3",
+        "name": "L16 81 mm mortar \u00b7 L3 \u00b7 upgrade",
         "model": "res://assets/library/arsenal/euro_l16_mortar_81.glb",
-        "improvement": "Supplied equipment",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_l16_mortar_81.png"
       },
       {
-        "name": "L16 81 mm mortar · L4",
-        "model": "res://assets/library/arsenal/euro_l16_mortar_81.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/euro_l16_mortar_81.png"
-      },
-      {
-        "name": "L16 81 mm mortar · L5",
+        "name": "L16 81 mm mortar \u00b7 L5",
         "model": "res://assets/library/arsenal/euro_l16_mortar_81.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_l16_mortar_81.png"
@@ -2846,9 +2846,9 @@
     "research_days": [
       1,
       4,
-      8,
-      12,
-      18
+      7,
+      11,
+      16
     ],
     "research_tiers": [
       {
@@ -2858,25 +2858,25 @@
         "preview": "res://assets/library/arsenal/euro_mo120rt_mortar.png"
       },
       {
-        "name": "MO-120-RT mortar · L2",
+        "name": "MO-120-RT mortar \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/euro_mo120rt_mortar.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/euro_mo120rt_mortar.png"
+      },
+      {
+        "name": "MO-120-RT mortar \u00b7 L3",
         "model": "res://assets/library/arsenal/euro_mo120rt_mortar.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_mo120rt_mortar.png"
       },
       {
-        "name": "MO-120-RT mortar · L3",
+        "name": "MO-120-RT mortar \u00b7 L3 \u00b7 upgrade",
         "model": "res://assets/library/arsenal/euro_mo120rt_mortar.glb",
-        "improvement": "Supplied equipment",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_mo120rt_mortar.png"
       },
       {
-        "name": "MO-120-RT mortar · L4",
-        "model": "res://assets/library/arsenal/euro_mo120rt_mortar.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/euro_mo120rt_mortar.png"
-      },
-      {
-        "name": "MO-120-RT mortar · L5",
+        "name": "MO-120-RT mortar \u00b7 L5",
         "model": "res://assets/library/arsenal/euro_mo120rt_mortar.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_mo120rt_mortar.png"
@@ -2912,9 +2912,9 @@
     "research_days": [
       1,
       4,
-      8,
-      12,
-      18
+      7,
+      11,
+      16
     ],
     "research_tiers": [
       {
@@ -2924,25 +2924,25 @@
         "preview": "res://assets/library/arsenal/euro_l118_lightgun.png"
       },
       {
-        "name": "L118 light gun · L2",
+        "name": "L118 light gun \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/euro_l118_lightgun.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/euro_l118_lightgun.png"
+      },
+      {
+        "name": "L118 light gun \u00b7 L3",
         "model": "res://assets/library/arsenal/euro_l118_lightgun.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_l118_lightgun.png"
       },
       {
-        "name": "L118 light gun · L3",
+        "name": "L118 light gun \u00b7 L3 \u00b7 upgrade",
         "model": "res://assets/library/arsenal/euro_l118_lightgun.glb",
-        "improvement": "Supplied equipment",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_l118_lightgun.png"
       },
       {
-        "name": "L118 light gun · L4",
-        "model": "res://assets/library/arsenal/euro_l118_lightgun.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/euro_l118_lightgun.png"
-      },
-      {
-        "name": "L118 light gun · L5",
+        "name": "L118 light gun \u00b7 L5",
         "model": "res://assets/library/arsenal/euro_l118_lightgun.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_l118_lightgun.png"
@@ -2977,10 +2977,10 @@
     },
     "research_days": [
       1,
-      4,
-      8,
-      12,
-      18
+      5,
+      9,
+      13,
+      19
     ],
     "research_tiers": [
       {
@@ -2990,25 +2990,25 @@
         "preview": "res://assets/library/arsenal/russia_il76md.png"
       },
       {
-        "name": "Il-76MD transport · L2",
+        "name": "Il-76MD transport \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/russia_il76md.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/russia_il76md.png"
+      },
+      {
+        "name": "Il-76MD transport \u00b7 L3",
         "model": "res://assets/library/arsenal/russia_il76md.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_il76md.png"
       },
       {
-        "name": "Il-76MD transport · L3",
+        "name": "Il-76MD transport \u00b7 L3 \u00b7 upgrade",
         "model": "res://assets/library/arsenal/russia_il76md.glb",
-        "improvement": "Supplied equipment",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_il76md.png"
       },
       {
-        "name": "Il-76MD transport · L4",
-        "model": "res://assets/library/arsenal/russia_il76md.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_il76md.png"
-      },
-      {
-        "name": "Il-76MD transport · L5",
+        "name": "Il-76MD transport \u00b7 L5",
         "model": "res://assets/library/arsenal/russia_il76md.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_il76md.png"
@@ -3048,10 +3048,10 @@
     },
     "research_days": [
       1,
-      4,
-      8,
-      12,
-      18
+      5,
+      9,
+      13,
+      19
     ],
     "research_tiers": [
       {
@@ -3061,25 +3061,25 @@
         "preview": "res://assets/library/arsenal/russia_a50u.png"
       },
       {
-        "name": "A-50U airborne radar · L2",
+        "name": "A-50U airborne radar \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/russia_a50u.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/russia_a50u.png"
+      },
+      {
+        "name": "A-50U airborne radar \u00b7 L3",
         "model": "res://assets/library/arsenal/russia_a50u.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_a50u.png"
       },
       {
-        "name": "A-50U airborne radar · L3",
+        "name": "A-50U airborne radar \u00b7 L3 \u00b7 upgrade",
         "model": "res://assets/library/arsenal/russia_a50u.glb",
-        "improvement": "Supplied equipment",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_a50u.png"
       },
       {
-        "name": "A-50U airborne radar · L4",
-        "model": "res://assets/library/arsenal/russia_a50u.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_a50u.png"
-      },
-      {
-        "name": "A-50U airborne radar · L5",
+        "name": "A-50U airborne radar \u00b7 L5",
         "model": "res://assets/library/arsenal/russia_a50u.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_a50u.png"
@@ -3119,10 +3119,10 @@
     },
     "research_days": [
       1,
-      4,
-      8,
-      12,
-      18
+      6,
+      10,
+      14,
+      20
     ],
     "research_tiers": [
       {
@@ -3132,25 +3132,25 @@
         "preview": "res://assets/library/arsenal/russia_yak130.png"
       },
       {
-        "name": "Yak-130 · L2",
+        "name": "Yak-130 \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/russia_yak130.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/russia_yak130.png"
+      },
+      {
+        "name": "Yak-130 \u00b7 L3",
         "model": "res://assets/library/arsenal/russia_yak130.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_yak130.png"
       },
       {
-        "name": "Yak-130 · L3",
+        "name": "Yak-130 \u00b7 L3 \u00b7 upgrade",
         "model": "res://assets/library/arsenal/russia_yak130.glb",
-        "improvement": "Supplied equipment",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_yak130.png"
       },
       {
-        "name": "Yak-130 · L4",
-        "model": "res://assets/library/arsenal/russia_yak130.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_yak130.png"
-      },
-      {
-        "name": "Yak-130 · L5",
+        "name": "Yak-130 \u00b7 L5",
         "model": "res://assets/library/arsenal/russia_yak130.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_yak130.png"
@@ -3190,10 +3190,10 @@
     },
     "research_days": [
       1,
-      4,
-      8,
-      12,
-      18
+      6,
+      10,
+      14,
+      20
     ],
     "research_tiers": [
       {
@@ -3203,25 +3203,25 @@
         "preview": "res://assets/library/arsenal/euro_a400m_atlas.png"
       },
       {
-        "name": "A400M Atlas transport · L2",
+        "name": "A400M Atlas transport \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/euro_a400m_atlas.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/euro_a400m_atlas.png"
+      },
+      {
+        "name": "A400M Atlas transport \u00b7 L3",
         "model": "res://assets/library/arsenal/euro_a400m_atlas.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_a400m_atlas.png"
       },
       {
-        "name": "A400M Atlas transport · L3",
+        "name": "A400M Atlas transport \u00b7 L3 \u00b7 upgrade",
         "model": "res://assets/library/arsenal/euro_a400m_atlas.glb",
-        "improvement": "Supplied equipment",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_a400m_atlas.png"
       },
       {
-        "name": "A400M Atlas transport · L4",
-        "model": "res://assets/library/arsenal/euro_a400m_atlas.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/euro_a400m_atlas.png"
-      },
-      {
-        "name": "A400M Atlas transport · L5",
+        "name": "A400M Atlas transport \u00b7 L5",
         "model": "res://assets/library/arsenal/euro_a400m_atlas.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_a400m_atlas.png"
@@ -3274,25 +3274,25 @@
         "preview": "res://assets/library/arsenal/euro_hawk_t2.png"
       },
       {
-        "name": "Hawk T2 · L2",
+        "name": "Hawk T2 \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/euro_hawk_t2.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/euro_hawk_t2.png"
+      },
+      {
+        "name": "Hawk T2 \u00b7 L3",
         "model": "res://assets/library/arsenal/euro_hawk_t2.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_hawk_t2.png"
       },
       {
-        "name": "Hawk T2 · L3",
+        "name": "Hawk T2 \u00b7 L3 \u00b7 upgrade",
         "model": "res://assets/library/arsenal/euro_hawk_t2.glb",
-        "improvement": "Supplied equipment",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_hawk_t2.png"
       },
       {
-        "name": "Hawk T2 · L4",
-        "model": "res://assets/library/arsenal/euro_hawk_t2.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/euro_hawk_t2.png"
-      },
-      {
-        "name": "Hawk T2 · L5",
+        "name": "Hawk T2 \u00b7 L5",
         "model": "res://assets/library/arsenal/euro_hawk_t2.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_hawk_t2.png"
@@ -3345,25 +3345,25 @@
         "preview": "res://assets/library/arsenal/russia_t14_armata.png"
       },
       {
-        "name": "T-14 Armata · L2",
+        "name": "T-14 Armata \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/russia_t14_armata.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/russia_t14_armata.png"
+      },
+      {
+        "name": "T-14 Armata \u00b7 L3",
         "model": "res://assets/library/arsenal/russia_t14_armata.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_t14_armata.png"
       },
       {
-        "name": "T-14 Armata · L3",
+        "name": "T-14 Armata \u00b7 L3 \u00b7 upgrade",
         "model": "res://assets/library/arsenal/russia_t14_armata.glb",
-        "improvement": "Supplied equipment",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_t14_armata.png"
       },
       {
-        "name": "T-14 Armata · L4",
-        "model": "res://assets/library/arsenal/russia_t14_armata.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_t14_armata.png"
-      },
-      {
-        "name": "T-14 Armata · L5",
+        "name": "T-14 Armata \u00b7 L5",
         "model": "res://assets/library/arsenal/russia_t14_armata.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_t14_armata.png"
@@ -3398,10 +3398,10 @@
     },
     "research_days": [
       1,
-      4,
-      8,
-      12,
-      18
+      5,
+      9,
+      13,
+      19
     ],
     "research_tiers": [
       {
@@ -3411,25 +3411,25 @@
         "preview": "res://assets/library/arsenal/euro_kf51_panther.png"
       },
       {
-        "name": "KF51 Panther · L2",
+        "name": "KF51 Panther \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/euro_kf51_panther.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/euro_kf51_panther.png"
+      },
+      {
+        "name": "KF51 Panther \u00b7 L3",
         "model": "res://assets/library/arsenal/euro_kf51_panther.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_kf51_panther.png"
       },
       {
-        "name": "KF51 Panther · L3",
+        "name": "KF51 Panther \u00b7 L3 \u00b7 upgrade",
         "model": "res://assets/library/arsenal/euro_kf51_panther.glb",
-        "improvement": "Supplied equipment",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_kf51_panther.png"
       },
       {
-        "name": "KF51 Panther · L4",
-        "model": "res://assets/library/arsenal/euro_kf51_panther.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/euro_kf51_panther.png"
-      },
-      {
-        "name": "KF51 Panther · L5",
+        "name": "KF51 Panther \u00b7 L5",
         "model": "res://assets/library/arsenal/euro_kf51_panther.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_kf51_panther.png"
@@ -3460,14 +3460,14 @@
       "manpower": 30
     },
     "building_requirements": {
-      "factory": 1
+      "missile_factory": 1
     },
     "research_days": [
       1,
-      4,
-      8,
-      12,
-      18
+      6,
+      11,
+      17,
+      24
     ],
     "research_tiers": [
       {
@@ -3478,9 +3478,9 @@
         "projectile_model": "res://assets/library/arsenal/russia_p800_oniks.glb"
       },
       {
-        "name": "Oniks · guidance",
+        "name": "P-800 Oniks \u00b7 upgrade",
         "model": "res://assets/library/arsenal/russia_bastion_p_launcher.glb",
-        "improvement": "Supplied equipment",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_bastion_p_launcher.png",
         "projectile_model": "res://assets/library/arsenal/russia_p800_oniks.glb"
       },
@@ -3492,14 +3492,14 @@
         "projectile_model": "res://assets/library/arsenal/russia_3m22_zircon.glb"
       },
       {
-        "name": "Zircon · guidance",
+        "name": "3M22 Zircon \u00b7 upgrade",
         "model": "res://assets/library/arsenal/russia_bastion_p_launcher.glb",
-        "improvement": "Supplied equipment",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_bastion_p_launcher.png",
         "projectile_model": "res://assets/library/arsenal/russia_3m22_zircon.glb"
       },
       {
-        "name": "Zircon · advanced",
+        "name": "Zircon \u00b7 advanced",
         "model": "res://assets/library/arsenal/russia_bastion_p_launcher.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_bastion_p_launcher.png",
@@ -3535,14 +3535,14 @@
       "manpower": 30
     },
     "building_requirements": {
-      "factory": 1
+      "missile_factory": 1
     },
     "research_days": [
       1,
-      4,
-      8,
+      7,
       12,
-      18
+      18,
+      25
     ],
     "research_tiers": [
       {
@@ -3553,28 +3553,28 @@
         "projectile_model": "res://assets/library/arsenal/euro_nsm.glb"
       },
       {
-        "name": "NSM · guidance",
+        "name": "NSM \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/euro_nsm_coastal_launcher.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/euro_nsm_coastal_launcher.png",
+        "projectile_model": "res://assets/library/arsenal/euro_nsm.glb"
+      },
+      {
+        "name": "NSM \u00b7 sensors",
         "model": "res://assets/library/arsenal/euro_nsm_coastal_launcher.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_nsm_coastal_launcher.png",
         "projectile_model": "res://assets/library/arsenal/euro_nsm.glb"
       },
       {
-        "name": "NSM · sensors",
+        "name": "NSM \u00b7 sensors \u00b7 upgrade",
         "model": "res://assets/library/arsenal/euro_nsm_coastal_launcher.glb",
-        "improvement": "Supplied equipment",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_nsm_coastal_launcher.png",
         "projectile_model": "res://assets/library/arsenal/euro_nsm.glb"
       },
       {
-        "name": "NSM · electronics",
-        "model": "res://assets/library/arsenal/euro_nsm_coastal_launcher.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/euro_nsm_coastal_launcher.png",
-        "projectile_model": "res://assets/library/arsenal/euro_nsm.glb"
-      },
-      {
-        "name": "NSM · advanced",
+        "name": "NSM \u00b7 advanced",
         "model": "res://assets/library/arsenal/euro_nsm_coastal_launcher.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_nsm_coastal_launcher.png",
@@ -3614,10 +3614,10 @@
     },
     "research_days": [
       1,
-      4,
-      8,
-      12,
-      18
+      6,
+      11,
+      16,
+      22
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -3628,9 +3628,9 @@
         "preview": "res://assets/library/arsenal/russia_frigate_t1_starting_krivak_oct12_preview.png"
       },
       {
-        "name": "Krivak · systems upgrade",
+        "name": "Krivak \u00b7 upgrade",
         "model": "res://assets/library/arsenal/russia_frigate_t1_starting_krivak.glb",
-        "improvement": "Improved sensors and fire control",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_frigate_t1_starting_krivak_oct12_preview.png"
       },
       {
@@ -3640,9 +3640,9 @@
         "preview": "res://assets/library/arsenal/russia_frigate_t2_mid_admiral_grigorovich_oct12_preview.png"
       },
       {
-        "name": "Admiral Grigorovich · systems upgrade",
+        "name": "Admiral Grigorovich \u00b7 upgrade",
         "model": "res://assets/library/arsenal/russia_frigate_t2_mid_admiral_grigorovich.glb",
-        "improvement": "Improved sensors and fire control",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_frigate_t2_mid_admiral_grigorovich_oct12_preview.png"
       },
       {
@@ -3689,9 +3689,9 @@
     "research_days": [
       1,
       4,
-      8,
-      12,
-      18
+      9,
+      14,
+      20
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -3702,9 +3702,9 @@
         "preview": "res://assets/library/arsenal/euro_type23_oct12_preview.png"
       },
       {
-        "name": "Type 23 Duke · systems upgrade",
+        "name": "Type 23 Duke \u00b7 upgrade",
         "model": "res://assets/library/arsenal/euro_type23.glb",
-        "improvement": "Improved sensors and fire control",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_type23_oct12_preview.png"
       },
       {
@@ -3714,9 +3714,9 @@
         "preview": "res://assets/library/arsenal/euro_fremm_oct12_preview.png"
       },
       {
-        "name": "FREMM Aquitaine · systems upgrade",
+        "name": "FREMM Aquitaine \u00b7 upgrade",
         "model": "res://assets/library/arsenal/euro_fremm.glb",
-        "improvement": "Improved sensors and fire control",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_fremm_oct12_preview.png"
       },
       {
@@ -3763,9 +3763,9 @@
     "research_days": [
       1,
       4,
-      8,
-      12,
-      18
+      9,
+      14,
+      20
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -3776,9 +3776,9 @@
         "preview": "res://assets/library/arsenal/russia_destroyer_t1_starting_sovremenny_oct12_preview.png"
       },
       {
-        "name": "Sovremenny · systems upgrade",
+        "name": "Sovremenny \u00b7 upgrade",
         "model": "res://assets/library/arsenal/russia_destroyer_t1_starting_sovremenny.glb",
-        "improvement": "Improved sensors and fire control",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_destroyer_t1_starting_sovremenny_oct12_preview.png"
       },
       {
@@ -3788,9 +3788,9 @@
         "preview": "res://assets/library/arsenal/russia_destroyer_t2_mid_slava_oct12_preview.png"
       },
       {
-        "name": "Slava · systems upgrade",
+        "name": "Slava \u00b7 upgrade",
         "model": "res://assets/library/arsenal/russia_destroyer_t2_mid_slava.glb",
-        "improvement": "Improved sensors and fire control",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_destroyer_t2_mid_slava_oct12_preview.png"
       },
       {
@@ -3836,10 +3836,10 @@
     },
     "research_days": [
       1,
-      4,
-      8,
-      12,
-      18
+      5,
+      10,
+      15,
+      21
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -3850,9 +3850,9 @@
         "preview": "res://assets/library/arsenal/euro_destroyer_t1_starting_type42_oct12_preview.png"
       },
       {
-        "name": "Type 42 · systems upgrade",
+        "name": "Type 42 \u00b7 upgrade",
         "model": "res://assets/library/arsenal/euro_destroyer_t1_starting_type42.glb",
-        "improvement": "Improved sensors and fire control",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_destroyer_t1_starting_type42_oct12_preview.png"
       },
       {
@@ -3862,9 +3862,9 @@
         "preview": "res://assets/library/arsenal/euro_horizon_oct12_preview.png"
       },
       {
-        "name": "Horizon Andrea Doria · systems upgrade",
+        "name": "Horizon Andrea Doria \u00b7 upgrade",
         "model": "res://assets/library/arsenal/euro_horizon.glb",
-        "improvement": "Improved sensors and fire control",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_horizon_oct12_preview.png"
       },
       {
@@ -3910,10 +3910,10 @@
     },
     "research_days": [
       1,
-      4,
-      8,
-      12,
-      18
+      5,
+      10,
+      15,
+      21
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -3924,9 +3924,9 @@
         "preview": "res://assets/library/arsenal/russia_corvette_t1_starting_grisha_oct12_preview.png"
       },
       {
-        "name": "Grisha · systems upgrade",
+        "name": "Grisha \u00b7 upgrade",
         "model": "res://assets/library/arsenal/russia_corvette_t1_starting_grisha.glb",
-        "improvement": "Improved sensors and fire control",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_corvette_t1_starting_grisha_oct12_preview.png"
       },
       {
@@ -3936,9 +3936,9 @@
         "preview": "res://assets/library/arsenal/russia_buyan_m_oct12_preview.png"
       },
       {
-        "name": "Buyan-M · systems upgrade",
+        "name": "Buyan-M \u00b7 upgrade",
         "model": "res://assets/library/arsenal/russia_buyan_m.glb",
-        "improvement": "Improved sensors and fire control",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_buyan_m_oct12_preview.png"
       },
       {
@@ -3984,10 +3984,10 @@
     },
     "research_days": [
       1,
-      4,
-      8,
-      12,
-      18
+      6,
+      11,
+      16,
+      22
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -3998,9 +3998,9 @@
         "preview": "res://assets/library/arsenal/euro_corvette_t1_starting_minerva_oct12_preview.png"
       },
       {
-        "name": "Minerva · systems upgrade",
+        "name": "Minerva \u00b7 upgrade",
         "model": "res://assets/library/arsenal/euro_corvette_t1_starting_minerva.glb",
-        "improvement": "Improved sensors and fire control",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_corvette_t1_starting_minerva_oct12_preview.png"
       },
       {
@@ -4010,9 +4010,9 @@
         "preview": "res://assets/library/arsenal/euro_corvette_t2_mid_k130_braunschweig_oct12_preview.png"
       },
       {
-        "name": "K130 Braunschweig · systems upgrade",
+        "name": "K130 Braunschweig \u00b7 upgrade",
         "model": "res://assets/library/arsenal/euro_corvette_t2_mid_k130_braunschweig.glb",
-        "improvement": "Improved sensors and fire control",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_corvette_t2_mid_k130_braunschweig_oct12_preview.png"
       },
       {
@@ -4058,10 +4058,10 @@
     },
     "research_days": [
       1,
-      4,
-      8,
-      12,
-      18
+      6,
+      11,
+      16,
+      22
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -4072,9 +4072,9 @@
         "preview": "res://assets/library/arsenal/russia_kilo_sub_oct12_preview.png"
       },
       {
-        "name": "Kilo · systems upgrade",
+        "name": "Kilo \u00b7 upgrade",
         "model": "res://assets/library/arsenal/russia_kilo_sub.glb",
-        "improvement": "Improved sensors and fire control",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_kilo_sub_oct12_preview.png"
       },
       {
@@ -4084,9 +4084,9 @@
         "preview": "res://assets/library/arsenal/russia_submarine_t2_mid_akula_oct12_preview.png"
       },
       {
-        "name": "Akula · systems upgrade",
+        "name": "Akula \u00b7 upgrade",
         "model": "res://assets/library/arsenal/russia_submarine_t2_mid_akula.glb",
-        "improvement": "Improved sensors and fire control",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_submarine_t2_mid_akula_oct12_preview.png"
       },
       {
@@ -4133,9 +4133,9 @@
     "research_days": [
       1,
       4,
-      8,
-      12,
-      18
+      9,
+      14,
+      20
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -4146,9 +4146,9 @@
         "preview": "res://assets/library/arsenal/euro_submarine_t1_starting_type209_oct12_preview.png"
       },
       {
-        "name": "Type 209 · systems upgrade",
+        "name": "Type 209 \u00b7 upgrade",
         "model": "res://assets/library/arsenal/euro_submarine_t1_starting_type209.glb",
-        "improvement": "Improved sensors and fire control",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_submarine_t1_starting_type209_oct12_preview.png"
       },
       {
@@ -4158,9 +4158,9 @@
         "preview": "res://assets/library/arsenal/euro_submarine_t2_mid_type212a_oct12_preview.png"
       },
       {
-        "name": "Type 212A · systems upgrade",
+        "name": "Type 212A \u00b7 upgrade",
         "model": "res://assets/library/arsenal/euro_submarine_t2_mid_type212a.glb",
-        "improvement": "Improved sensors and fire control",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_submarine_t2_mid_type212a_oct12_preview.png"
       },
       {
@@ -4207,9 +4207,9 @@
     "research_days": [
       1,
       4,
-      8,
-      12,
-      18
+      9,
+      14,
+      20
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -4220,9 +4220,9 @@
         "preview": "res://assets/library/arsenal/russia_carrier_t1_starting_kiev_oct12_preview.png"
       },
       {
-        "name": "Kiev · systems upgrade",
+        "name": "Kiev \u00b7 upgrade",
         "model": "res://assets/library/arsenal/russia_carrier_t1_starting_kiev.glb",
-        "improvement": "Improved sensors and fire control",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_carrier_t1_starting_kiev_oct12_preview.png"
       },
       {
@@ -4232,9 +4232,9 @@
         "preview": "res://assets/library/arsenal/russia_admiral_kuznetsov_oct12_preview.png"
       },
       {
-        "name": "Admiral Kuznetsov · systems upgrade",
+        "name": "Admiral Kuznetsov \u00b7 upgrade",
         "model": "res://assets/library/arsenal/russia_admiral_kuznetsov.glb",
-        "improvement": "Improved sensors and fire control",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_admiral_kuznetsov_oct12_preview.png"
       },
       {
@@ -4280,10 +4280,10 @@
     },
     "research_days": [
       1,
-      4,
-      8,
-      12,
-      18
+      5,
+      10,
+      15,
+      21
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -4294,9 +4294,9 @@
         "preview": "res://assets/library/arsenal/euro_carrier_t1_starting_clemenceau_oct12_preview.png"
       },
       {
-        "name": "Clemenceau · systems upgrade",
+        "name": "Clemenceau \u00b7 upgrade",
         "model": "res://assets/library/arsenal/euro_carrier_t1_starting_clemenceau.glb",
-        "improvement": "Improved sensors and fire control",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_carrier_t1_starting_clemenceau_oct12_preview.png"
       },
       {
@@ -4306,9 +4306,9 @@
         "preview": "res://assets/library/arsenal/euro_carrier_t2_mid_charles_de_gaulle_oct12_preview.png"
       },
       {
-        "name": "Charles de Gaulle · systems upgrade",
+        "name": "Charles de Gaulle \u00b7 upgrade",
         "model": "res://assets/library/arsenal/euro_carrier_t2_mid_charles_de_gaulle.glb",
-        "improvement": "Improved sensors and fire control",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_carrier_t2_mid_charles_de_gaulle_oct12_preview.png"
       },
       {

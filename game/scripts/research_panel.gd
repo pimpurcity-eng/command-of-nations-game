@@ -215,7 +215,7 @@ func _system() -> ResearchSystem:
 	return research
 
 func _families(index: int) -> Array:
-	var result: Array = _system().economy.catalog.filter(func(spec: Dictionary): return spec.country == GameSession.player_country and ProductionGroups.index(spec) == index)
+	var result: Array = (_system().economy.catalog + EconomyResearch.catalog()).filter(func(spec: Dictionary): return spec.country == GameSession.player_country and ProductionGroups.index(spec) == index)
 	result.sort_custom(func(a, b):
 		if a.category == "Air defense" and b.category == "Air defense": return a.get("aa_range",0.0) < b.get("aa_range",0.0)
 		if a.category == "Air defense" or b.category == "Air defense": return a.category == "Air defense"
@@ -324,7 +324,7 @@ func _build_tree() -> void:
 			var tier: = EquipmentIdentity.research_tier(spec.id, level)
 			var previous_tier: = EquipmentIdentity.research_tier(spec.id, maxi(1,level-1))
 			var upgrade: bool = level > 1 and tier.get("model", "") == previous_tier.get("model", "")
-			var ribbon: = CowUI.label(("UPGRADE · " if upgrade else "") + EquipmentIdentity.research_title(spec.id, level) + "\nDay " + str(_system().unlock_day(spec.id, level)), 16, Color("fff7e5"))
+			var ribbon: = CowUI.label(("UPGRADE · " if upgrade else "") + EquipmentIdentity.research_title(spec.id, level).trim_suffix(" · upgrade") + "\nDay " + str(_system().unlock_day(spec.id, level)), 16, Color("fff7e5"))
 			ribbon.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			ribbon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			ribbon.add_theme_stylebox_override("normal", CowUI.box(Color(0.06, 0.08, 0.09, 0.86), 8, Color.TRANSPARENT, 0, 3))
@@ -339,7 +339,7 @@ func _build_tree() -> void:
 			grid.add_child(cell)
 			cells.append({"card": card, "id": spec.id, "level": level})
 
-		if level < 5: _append_upgrades(families,level,cell_size)
+		# Levels 2 and 4 are upgrades between the three models.
 
 func _append_upgrades(families: Array, level: int, cell_size: Vector2) -> void:
 	var label_cell: = Control.new()

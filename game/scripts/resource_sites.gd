@@ -12,6 +12,7 @@ static var _data: Dictionary = {}
 var sites: Array = []  # {name, resource, point: Vector2, territory: Dictionary}
 var terrain: StrategicMap
 var rig: StrategyCamera
+var armies: UnitSystem
 var provinces: ProvinceConstruction
 var badges: Array[Sprite3D] = []
 
@@ -85,21 +86,30 @@ func _beside(hub: Vector2, distance: float, parts: Array = []) -> Vector2:
 	return best
 
 ## Income per country this tick, added by ProductionSystem.advance.
+## Occupied sites produce less until annexed (set by main).
+var annexation: Annexation
+var strategic: StrategicWeapons
 func income(seconds: float) -> Dictionary:
 	var result: = {}
 	for site in sites:
 		if not site.city.is_empty(): continue
 		var controller: String = site.territory.controller
 		if not result.has(controller): result[controller] = {}
-		var ownership: = 1.0 if controller == site.territory.owner else 0.25
-		var morale: = float(site.territory.get("morale",100.0 if ownership == 1.0 else 25.0))/100.0
-		result[controller][site.resource] = result[controller].get(site.resource, 0.0) + rate(site.resource) * seconds * ownership * morale * (provinces.income_factor(site.territory.title) if provinces != null else 1.0)
+		var factor: = annexation.output(site.territory.id, site.territory.owner, controller) if annexation != null else (1.0 if controller == site.territory.owner else 0.25)
+		factor *= float(site.territory.get("morale",100.0 if controller == site.territory.owner else 25.0))/100.0
+		if provinces != null: factor *= provinces.income_factor(site.territory.title)
+		if strategic != null: factor *= strategic.output(site.territory.id)
+		result[controller][site.resource] = result[controller].get(site.resource, 0.0) + rate(site.resource) * seconds * factor
 	return result
 
 func _process(_delta: float) -> void:
 	if rig == null: return
 	var show: = rig.rendered_distance < ICON_DISTANCE
 	for badge in badges: badge.visible = show
+	if armies != null:
+		for site in sites:
+			var installation := get_node_or_null("Site_" + str(site.name).validate_node_name()) as Node3D
+			if installation != null: installation.visible = site.territory.controller == GameSession.player_country or armies.point_visible(site.point)
 
 func _build(site: Dictionary) -> void:
 	var anchor: = Node3D.new()

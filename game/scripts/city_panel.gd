@@ -9,8 +9,8 @@ signal rally_requested(city_id: String)
 signal production_requested(city_name: String)
 signal research_requested  # kept for compatibility; research is opened from the HUD tab
 const SECONDS_PER_HOUR: = 3600.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
-const HIDDEN_BUILDINGS: = ["research_center"]  # research is national, not a city building
-const SECTIONS: = [["Economy", ["industry", "finance", "material_works", "electronics_plant", "fuel_depot", "recruitment_center"]], ["Unit production", ["barracks", "tank_plant", "factory", "airbase", "naval_base"]], ["Defence & roads", ["bunker", "infrastructure"]]]
+const HIDDEN_BUILDINGS: = ["research_center", "finance", "material_works", "electronics_plant", "fuel_depot"]  # research is national, not a city building
+const SECTIONS := [["Economy", ["industry", "recruitment_center", "train_station", "capitol"]], ["Unit production", ["barracks", "tank_plant", "factory", "missile_factory", "airbase", "naval_base"]], ["Defence & roads", ["bunker", "infrastructure"]]]
 var clock: SimulationClock
 var buildings: BuildingSystem
 var panel: PanelContainer
@@ -180,7 +180,7 @@ func _add_row(definition: Dictionary) -> void:
 
 func _effect(definition: Dictionary) -> String:
 	match definition.id:
-		"factory": return "Artillery, air defence, missiles & support"
+		"factory": return "Artillery, air defence & support"
 		"industry": return "+25% city income per level"
 		"tank_plant": return "Tanks & mechanized vehicles"
 		"barracks": return "Infantry production"
@@ -210,7 +210,9 @@ func _refresh() -> void:
 	var place: = buildings.city(city_id)
 	if place.is_empty(): return
 	var controlled: = buildings.economy.controlled(place, GameSession.player_country)
-	var own: bool = place.country.to_lower() == GameSession.player_country or controlled
+	var own: bool = controlled
+	var scouted := controlled or (buildings.economy.armies != null and buildings.economy.armies.point_visible(place.point))
+	list.visible = scouted
 	var captured: bool = controlled and place.country.to_lower() != GameSession.player_country
 	title.text = ("★ " if buildings.is_capital(place) else "") + place.name
 	summary.text = ("YOURS · " + ("captured city · income 25%" if captured else ("capital" if buildings.is_capital(place) else "core city"))) if controlled else ("Controlled by " + buildings.economy.controller(place).capitalize())

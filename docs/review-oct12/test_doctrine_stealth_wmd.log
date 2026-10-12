@@ -1,0 +1,26 @@
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+PASS countries start with their default doctrine
+PASS the start screen offers Western, European and Eastern doctrines
+PASS Eastern tanks attack +15%, European armies defend +10%
+PASS European research is 15% faster
+PASS Western aircraft are stronger and stealthy
+PASS a stealth jet inside normal vision stays hidden without radar
+PASS up close a stealth jet is seen
+PASS air-defence radar reveals stealth aircraft
+PASS ordinary units are seen by normal vision
+PASS submarines are not found by land radar (only by ships' sonar)
+PASS nuclear missiles unlock late (day 25)
+PASS building a nuclear missile costs a fortune
+PASS the missile is ready after two days
+PASS basic air defence cannot stop missiles
+PASS a nuclear strike devastates the army it hits (100 → 24)
+PASS the missile is spent and leaves fallout
+PASS fallout cuts output to 20%
+PASS upgraded air defence can shoot missiles down
+PASS every launch spends a missile (intercepted: [true, true, false])
+PASS fallout, stockpiles and doctrines are saved
+PASS the Arsenal page shows doctrines and strategic weapons
+RESULT failures=0
+WARNING: ObjectDB instances leaked at exit (run with --verbose for details).
+     at: cleanup (core/object/object.cpp:2641)

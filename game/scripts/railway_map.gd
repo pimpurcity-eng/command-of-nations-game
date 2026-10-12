@@ -16,7 +16,7 @@ func refresh() -> void:
 	var stations: Array = []
 	var signature: String = ""
 	for place in cities.cities:
-		var level: = buildings.level(place.id,"infrastructure")
+		var level: = buildings.level(place.id,"train_station")
 		if level <= 0: continue
 		var country: = cities.armies.navigation.controller_at(place.point)
 		stations.append({"place":place,"country":country})

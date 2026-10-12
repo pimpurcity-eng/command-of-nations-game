@@ -9,6 +9,7 @@ static var catalog: Array = JSON.parse_string(FileAccess.get_file_as_string("res
 		catalog = value
 		_by_id.clear()
 static func spec(id: String) -> Dictionary:
+	if id.begins_with("economy_"): return EconomyResearch.spec(id)
 	if _by_id.is_empty():
 		for equipment in catalog: _by_id[equipment.id] = equipment
 	return _by_id.get(id, {})

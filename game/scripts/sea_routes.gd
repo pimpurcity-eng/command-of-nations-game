@@ -3,10 +3,12 @@ extends RefCounted
 
 const CELL: = 0.5
 const LIMIT: = 59.0
+var terrain: StrategicMap
 var mask: Image
 var graph: AStar2D
 func on_sea(point: Vector2) -> bool:
 	if absf(point.x) > LIMIT or absf(point.y) > LIMIT: return false
+	if terrain != null and terrain._ground_ready: return not terrain.on_land(point)
 	if mask == null: mask = (load("res://assets/coast_mask.png") as Texture2D).get_image()
 	var uv: = (point + Vector2(60, 60)) / 120.0
 	return mask.get_pixel(clampi(int(uv.x * (mask.get_width() - 1)), 0, mask.get_width() - 1), clampi(int(uv.y * (mask.get_height() - 1)), 0, mask.get_height() - 1)).r < 0.5
@@ -49,7 +51,7 @@ func find_path(start: Vector2, finish: Vector2) -> Array:
 ## route through land or teleport a ship to another body of water.
 func coastal_destination(point: Vector2) -> Vector2:
 	if on_sea(point): return point
-	for ring in range(1,7):
+	for ring in range(1,21):
 		for step in 24:
 			var candidate: = point+Vector2.from_angle(float(step)*TAU/24.0)*float(ring)*0.05
 			if on_sea(candidate): return candidate

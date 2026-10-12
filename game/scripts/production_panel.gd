@@ -158,7 +158,7 @@ func _populate() -> void :
 	city_picker.clear()
 	city_names.clear()
 	for city in production.cities:
-		if city.country.to_lower() == _country() or production.controlled(city, _country()):
+		if production.controlled(city, _country()):
 			city_names.append(city.name)
 			city_picker.add_item(city.name + (" · CAPITAL" if city.get("capital", false) and city.country.to_lower() == _country() else ""))
 	_populate_equipment()

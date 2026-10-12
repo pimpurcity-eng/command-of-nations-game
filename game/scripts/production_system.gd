@@ -5,6 +5,12 @@ signal unit_ready(spec: Dictionary)
 const RESOURCES: = ["funds", "materials", "electronics", "fuel", "manpower"]
 var catalog: Array = EquipmentIdentity.catalog  # one shared catalogue
 var stockpiles: Dictionary = {}
+## Gross income earned so far per country and resource (economic victory, newspaper).
+var earned: Dictionary = {}
+## Occupied land produces less until annexed (MatchSystem.annexation, set by main).
+var annexation: Annexation
+## Nuclear fallout cuts output (MatchSystem.strategic, set by main).
+var strategic: StrategicWeapons
 var jobs: Array = []
 var next_id: = 1
 const PLAN_LIMIT: = 8
@@ -25,12 +31,13 @@ func morale_factor(city: Dictionary) -> float:
 func city_income(city: Dictionary) -> Dictionary:
 	var result: Dictionary = {}
 	var multiplier: = buildings.rate(city.id,"industry") if buildings != null else 1.0
-	if controller(city) != city.country.to_lower(): multiplier *= 0.25
-	multiplier *= morale_factor(city)
+	if controller(city) != city.country.to_lower(): multiplier *= annexation.output(city.get("sector",""),city.country.to_lower(),controller(city)) if annexation != null else 0.25
+	if strategic != null: multiplier *= strategic.output(city.get("sector",""))
+	multiplier *= morale_factor(city) * EconomyResearch.factor(controller(city),"industry")
 	var specialties: = ResourceSites.city_resources(city.name)
 	for resource in RESOURCES:
 		var facility: = buildings.resource_rate(city.id,resource) if buildings != null else 1.0
-		result[resource] = CITY_BASE[resource] * multiplier * facility * (1.0 if resource in ["funds","manpower"] else 1.5 if resource in specialties else 0.0)
+		result[resource] = CITY_BASE[resource] * multiplier * facility * (EconomyResearch.factor(controller(city),"recruitment_center") if resource == "manpower" else 1.0) * (1.0 if resource in ["funds","manpower"] else 1.5 if resource in specialties else 0.0)
 	return result
 func gross_income() -> Dictionary:
 	var result: Dictionary = {}
@@ -103,6 +110,7 @@ func setup(map: StrategicMap, city_data: Array, countries: Dictionary) -> void :
 	for id in countries:
 		stockpiles[id] = {"funds": 1000.0, "materials": 400.0, "electronics": 150.0, "fuel": 250.0, "manpower": 200.0}
 func equipment(id: String) -> Dictionary:
+	if id.begins_with("economy_"): return EconomyResearch.spec(id)
 	for spec in catalog:
 		if spec.id == id: return spec
 	return {}
@@ -144,6 +152,9 @@ func cancel(id: int) -> void :
 		return
 func advance(seconds: float) -> void :
 	if seconds <= 0: return
+	var gross := gross_income()
+	for country in gross:
+		for resource in RESOURCES: _earn(country,resource,gross[country][resource]*seconds)
 	var income: = net_income()
 	shortage_resources.clear()
 	for country in stockpiles:
@@ -184,6 +195,9 @@ func advance(seconds: float) -> void :
 			if rally_points.has(city.id) and rally_points[city.id].country == spec.country: completed_unit.rally_point = rally_points[city.id].point.duplicate()
 			unit_ready.emit(completed_unit)
 	changed.emit()
+func _earn(country: String, resource: String, amount: float) -> void:
+	if not earned.has(country): earned[country] = {}
+	earned[country][resource] = earned[country].get(resource, 0.0) + amount
 func snapshot() -> Dictionary:
 	var state: = {"stockpiles": stockpiles.duplicate(true), "jobs": jobs.duplicate(true), "next_id": next_id, "rally_points": rally_points.duplicate(true)}
 	if research != null: state.research = research.snapshot()

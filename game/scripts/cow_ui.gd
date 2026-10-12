@@ -41,6 +41,7 @@ static func icon_texture(kind: String) -> Texture2D:
 	return _icons[kind]
 
 static func equipment_picture(id: String) -> Texture2D:
+	if id.begins_with("economy_"): return research_picture(id,1)
 	var air_drawing: String = {"skyguard_russia": "strela10", "patriot_russia": "bukm3", "skyguard_ukraine": "roland", "patriot_ukraine": "iris_t_slm"}.get(id, "")
 	var air_path: String = "res://assets/interface/illustrations/" + air_drawing + ".png"
 	if not air_drawing.is_empty() and ResourceLoader.exists(air_path): return load(air_path)
@@ -62,6 +63,9 @@ static func equipment_picture(id: String) -> Texture2D:
 	return UnitVisual.preview_texture(id)
 
 static func research_picture(id: String, level: int) -> Texture2D:
+	if id.begins_with("economy_"):
+		var spec := EconomyResearch.spec(id)
+		return FacilityVisual.preview(spec,spec.country,level)
 	var tier_name: String = EquipmentIdentity.research_title(id, level)
 	var drawing: String = ""
 	if id.ends_with("_russia"):

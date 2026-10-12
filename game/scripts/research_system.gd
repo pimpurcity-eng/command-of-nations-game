@@ -18,7 +18,8 @@ func setup(production: ProductionSystem, time: SimulationClock, units: UnitSyste
 	armies = units
 	refinements.clear()
 	EquipmentIdentity.refinements = refinements
-	for spec in economy.catalog: levels[spec.id] = 1
+	for spec in economy.catalog + EconomyResearch.catalog(): levels[spec.id] = 1
+	EconomyResearch.levels = levels
 
 func day() -> int:
 	return 1 + int(clock.elapsed * SimulationClock.REAL_SECONDS_PER_SIM_SECOND / 86400.0)
@@ -42,8 +43,8 @@ func active(id: String) -> Dictionary:
 	return {}
 ## Owner review 2026-10-09: research is national and separate from the cities. It no
 ## longer depends on a capital research-center building and is opened from the Research tab.
-func rate(_country: String) -> float:
-	return 1.0
+func rate(country: String) -> float:
+	return Doctrine.research_factor(country)
 func capital_status(_country: String = "") -> String:
 	return "National research · " + str(SLOTS) + " research slots"
 func reason(id: String, target: int, country: String = "") -> String:
@@ -136,7 +137,7 @@ func advance(seconds: float) -> void :
 			jobs.remove_at(i)
 			finished_any = true
 
-	for spec in economy.catalog:
+	for spec in economy.catalog + EconomyResearch.catalog():
 		if spec.country == GameSession.opponent_country() and level(spec.id) < 5 and reason(spec.id, level(spec.id) + 1, GameSession.opponent_country()).is_empty():
 			start(spec.id, level(spec.id) + 1, GameSession.opponent_country())
 	if finished_any: changed.emit()

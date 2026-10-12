@@ -8,6 +8,7 @@ var public_key := ""
 var access_token := ""
 var refresh_token := ""
 var user: Dictionary = {}
+var profile: Dictionary = {}
 var expires_at := 0.0
 var recovery_pending := false
 var busy := false
@@ -81,8 +82,47 @@ func logout() -> Dictionary:
 	if token.is_empty():return {"ok":true,"data":{}}
 	return await request("/logout?scope=local",{},HTTPClient.METHOD_POST,token)
 func clear_session() -> void:
-	access_token="";refresh_token="";user={};expires_at=0;recovery_pending=false;session_changed.emit()
+	access_token="";refresh_token="";user={};profile={};expires_at=0;recovery_pending=false;session_changed.emit()
+## Commander level from XP: level n needs 100*(n-1)^2 XP. Same formula as the server
+## (backend/migrations/002_profiles_levels_deletion.sql, commander_level).
+static func level_for(xp: int) -> int:return int(floor(sqrt(maxf(xp,0)/100.0)))+1
+static func xp_for_level(level: int) -> int:return 100*(level-1)*(level-1)
+func load_profile() -> Dictionary:
+	if not signed_in():return failure("Sign in first.")
+	var profile_user := str(user.get("id",""))
+	var result:=await request("/rest/v1/player_profiles?select=commander_name,xp,games_played,wins,losses&id=eq."+str(user.id).uri_encode(),{},HTTPClient.METHOD_GET,access_token)
+	if not result.ok:return result
+	var rows: Variant=result.data.get("rows",[])
+	if not (rows is Array) or rows.is_empty():return failure("Profile not found yet. Try again in a moment.")
+	if not signed_in() or str(user.get("id","")) != profile_user: return failure("Account changed.")
+	profile=rows[0];return {"ok":true,"data":profile}
+## Single-player result against the AI. The server rate-limits and caps the XP; when online
+## matches arrive, the match server records results instead.
+func record_result(won: bool,minutes: int) -> Dictionary:
+	if not signed_in():return failure("Sign in to earn XP.")
+	var result:=await request("/rest/v1/rpc/record_match_result",{"won":won,"minutes":maxi(minutes,0)},HTTPClient.METHOD_POST,access_token)
+	if not result.ok:return result
+	var rows: Variant=result.data.get("rows",[])
+	if rows is Array and not rows.is_empty():profile.merge(rows[0],true)
+	return {"ok":true,"data":profile}
+## Achievements go to the account (server accepts known ids once each, migration 003).
+func unlock_achievement(code: String) -> Dictionary:
+	if not signed_in():return failure("Sign in first.")
+	return await request("/rest/v1/rpc/unlock_achievement",{"code":code},HTTPClient.METHOD_POST,access_token)
+## The public leaderboard: [{place, commander_name, level, xp, wins}].
+func leaderboard(how_many: int=50) -> Dictionary:
+	if not signed_in():return failure("Sign in to see the leaderboard.")
+	var result:=await request("/rest/v1/rpc/top_commanders",{"how_many":how_many},HTTPClient.METHOD_POST,access_token)
+	if not result.ok:return result
+	return {"ok":true,"data":{"rows":result.data.get("rows",[])}}
+## Permanently deletes the account and everything stored with it (Google Play requirement).
+func delete_account() -> Dictionary:
+	if not signed_in():return failure("Sign in first.")
+	var result:=await request("/rest/v1/rpc/delete_my_account",{},HTTPClient.METHOD_POST,access_token)
+	if result.ok:clear_session()
+	return result
 func accept_session(data: Dictionary,recovery: bool) -> Dictionary:
+	if str(data.get("user",{}).get("id","")) != str(user.get("id","")): profile.clear()
 	var raw_user: Variant=data.get("user",{})
 	var candidate: Dictionary=raw_user if raw_user is Dictionary else {}
 	if str(data.get("access_token","")).is_empty() or str(candidate.get("id","")).is_empty() or not confirmed(candidate):

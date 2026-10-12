@@ -27,7 +27,7 @@ func run():
  game.research_panel.open();game.research_panel.show_category(2)
  for i in 4:await process_frame
  var research=game.research_panel
- check(ResearchPanel.CATEGORIES.size()==5,"five production-building research groups")
+ check(ResearchPanel.CATEGORIES.size()==6,"six research groups")
  var families=research._families(2)
  check(families.any(func(f):return f.category=="Air defense") and families.any(func(f):return f.category=="Artillery"),"artillery and air defence together in Support Factory")
  var card=research.cells[0].card
@@ -45,7 +45,7 @@ func run():
  var start=list.get_global_transform_with_canvas()*Vector2(200,280)
  drag(start,start-Vector2(0,200));await process_frame
  check(list.get_v_scroll_bar().value>50,"production equipment list responds to finger swipe")
- check(game.production_panel.category_picker.item_count==6,"production uses same five groups plus All")
+ check(game.production_panel.category_picker.item_count==7,"production uses same six groups plus All")
  game.production_panel.category_picker.select(5);game.production_panel._populate_equipment()
  check(game.production_panel.filtered.is_empty(),"no inland naval production options")
  game.production_panel.hide()

@@ -29,6 +29,8 @@ signal add_destination_requested
 signal declare_war_requested
 signal new_match_requested
 var city_scores: = {"russia": 0, "ukraine": 0}
+## The player's progress toward a domination victory (0..1).
+var domination: = 0.0
 signal army_roster_requested
 signal research_requested
 signal weapon_showcase_requested
@@ -40,6 +42,8 @@ signal speed_requested(speed: float)
 signal save_requested
 signal load_requested
 signal stop_requested
+signal retreat_requested
+signal annex_requested
 signal move_requested
 signal patrol_requested
 signal unit_requested(index: int)
@@ -146,7 +150,7 @@ func _build_top_bar(root: Control) -> void:
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	second.add_child(spacer)
-	score_label = _chip_label("★ 0/3")
+	score_label = _chip_label("★ 0%")
 	score_label.add_theme_color_override("font_color", GOLD)
 	second.add_child(score_label)
 	speed_button = _small_button("» 1x")
@@ -188,7 +192,7 @@ func _build_toolbar(root: Control) -> void:
 	# The full command list lives in this menu (opened from the "More" tab).
 	navigation_menu = MenuButton.new()
 	navigation_menu.visible = false
-	for title in ["Reset north", "Rotate left", "Rotate right", "Terrain / borders", "Speed 1x", "Speed 2x", "Speed 4x", "Save game", "Load game", "Equipment & production", "Army roster", "New match", "Add destination to selected army", "Merge nearby friendly armies", "Split selected units", "Army composition / battle info", "Declare war on Ukraine", "Technology / day unlocks", "Capital / construction", "Supply exchange", "All weapon models", "Select several armies", "Fire control", "Attack enemy army", "Victory progress", "Diplomacy", "Delay / synchronize arrival", "Forced march", "Upgrade selected army", "Rebase aircraft", "Player account", "Sound: ON", "Music: ON"]:
+	for title in ["Reset north", "Rotate left", "Rotate right", "Terrain / borders", "Speed 1x", "Speed 2x", "Speed 4x", "Save game", "Load game", "Equipment & production", "Army roster", "New match", "Add destination to selected army", "Merge nearby friendly armies", "Split selected units", "Army composition / battle info", "Declare war on Ukraine", "Technology / day unlocks", "Capital / construction", "Supply exchange", "All weapon models", "Select several armies", "Fire control", "Attack enemy army", "Victory progress", "Diplomacy", "Delay / synchronize arrival", "Forced march", "Upgrade selected army", "Rebase aircraft", "Player account", "Sound: ON", "Music: ON", "War newspaper", "Battle reports", "Retreat selected army", "Annex selected province", "Doctrine & strategic weapons"]:
 		navigation_menu.get_popup().add_item(title)
 	navigation_menu.get_popup().about_to_popup.connect(_show_audio_items)
 	navigation_menu.get_popup().id_pressed.connect(func(index: int):
@@ -226,6 +230,11 @@ func _build_toolbar(root: Control) -> void:
 			30: account_requested.emit()
 			31: if audio != null: audio.set_sound(not GameAudio.sound_enabled)
 			32: if audio != null: audio.set_music(not GameAudio.music_enabled)
+			33: campaign_requested.emit("news")
+			34: campaign_requested.emit("battles")
+			35: retreat_requested.emit()
+			36: annex_requested.emit()
+			37: campaign_requested.emit("strategic")
 	)
 	root.add_child(navigation_menu)
 
@@ -279,7 +288,7 @@ func _build_bottom(root: Control) -> void:
 	action_row.add_child(cancel_button)
 	orders_menu = MenuButton.new()
 	_style_order(orders_menu, "more", "More", Color("3a3f42"))
-	for title in ["Army details", "Attack enemy", "Fire control", "Add destination", "Merge nearby", "Split units", "Select armies", "Delay / sync arrival", "Forced march", "Upgrade army", "Rebase aircraft"]: orders_menu.get_popup().add_item(title)
+	for title in ["Army details", "Attack enemy", "Fire control", "Add destination", "Merge nearby", "Split units", "Select armies", "Delay / sync arrival", "Forced march", "Upgrade army", "Rebase aircraft", "Retreat"]: orders_menu.get_popup().add_item(title)
 	orders_menu.get_popup().id_pressed.connect(func(index: int):
 		match index:
 			0: stack_info_requested.emit()
@@ -293,6 +302,7 @@ func _build_bottom(root: Control) -> void:
 			8: forced_march_requested.emit()
 			9: upgrade_requested.emit()
 			10: rebase_requested.emit()
+			11: retreat_requested.emit()
 	)
 	action_row.add_child(orders_menu)
 
@@ -493,9 +503,8 @@ func show_clock(elapsed: float, speed: float, paused: bool) -> void :
 	time_label.text = "Day %d · %02d:%02d" % [1 + seconds / 86400, (seconds % 86400) / 3600, (seconds % 3600) / 60]
 	_speed = speed
 	speed_button.text = "» %dx" % int(speed)
-	var mine: int = city_scores.get(GameSession.player_country, 0)
-	score_label.text = "★ %d/3" % mine
-	score_label.tooltip_text = "City captures · Russia %d/3 · Ukraine %d/3" % [city_scores.russia, city_scores.ukraine]
+	score_label.text = "★ %d%%" % roundi(100.0 * clampf(domination, 0.0, 1.0))
+	score_label.tooltip_text = "Progress to domination victory · More → Victory progress"
 	var at_war: = navigation_menu.text.begins_with("War")
 	war_label.text = "AT WAR" if at_war else "PEACE"
 	war_label.add_theme_color_override("font_color", Color("ff8f80") if at_war else MUTED)

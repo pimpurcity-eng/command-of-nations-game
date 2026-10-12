@@ -3,6 +3,8 @@ extends CanvasLayer
 signal continue_requested
 signal fresh_requested
 signal test_requested
+var doctrine_picker: OptionButton
+var language_picker: OptionButton
 var country_picker: OptionButton
 var panel: PanelContainer
 var continue_button: Button
@@ -149,6 +151,39 @@ func setup(theme: Theme, saved: bool) -> void:
 		audio.settings_changed.connect(_show_audio)
 		content.add_child(switches)
 		_show_audio()
+	var settings_toggle := _button("CAMPAIGN SETTINGS")
+	settings_toggle.custom_minimum_size.y = 44
+	settings_toggle.add_theme_font_size_override("font_size", 18)
+	content.add_child(settings_toggle)
+	var advanced := VBoxContainer.new()
+	advanced.visible = false
+	advanced.add_theme_constant_override("separation", 8)
+	content.add_child(advanced)
+	settings_toggle.pressed.connect(func(): advanced.visible = not advanced.visible)
+	doctrine_picker = OptionButton.new()
+	doctrine_picker.add_item("Doctrine: country default")
+	for id in Doctrine.DOCTRINES: doctrine_picker.add_item("Doctrine: " + Doctrine.DOCTRINES[id].name)
+	doctrine_picker.custom_minimum_size.y = 48
+	advanced.add_child(doctrine_picker)
+	language_picker = OptionButton.new()
+	language_picker.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+	var languages := ["English", "Русский", "Українська", "Deutsch", "Français", "Español"]
+	var codes := ["en", "ru", "uk", "de", "fr", "es"]
+	var preferences := ConfigFile.new()
+	preferences.load("user://settings.cfg")
+	var locale: String = preferences.get_value("general", "locale", "en")
+	TranslationServer.set_locale(locale)
+	for i in codes.size():
+		language_picker.add_item(languages[i])
+		if codes[i] == locale: language_picker.select(i)
+	language_picker.custom_minimum_size.y = 48
+	advanced.add_child(language_picker)
+	language_picker.item_selected.connect(func(i: int):
+		TranslationServer.set_locale(codes[i])
+		var file := ConfigFile.new()
+		file.load("user://settings.cfg")
+		file.set_value("general", "locale", codes[i])
+		file.save("user://settings.cfg"))
 	footer = _label("WARFRONTMANDATE.COM", 16, Color("91a6b3"))
 	footer.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	screen.add_child(footer)
@@ -159,7 +194,7 @@ func _layout() -> void:
 	var portrait := size.y > size.x
 	var margin := clampf(size.x * 0.065, 20, 48)
 	var width := minf(624, size.x - margin * 2)
-	var height := minf((550 if has_save else 470) if audio != null else (490 if has_save else 410), size.y * 0.55)
+	var height := minf((604 if has_save else 524) if audio != null else (544 if has_save else 464), size.y * 0.55)
 	var small := size.x < 500
 	for child in content.get_children():
 		if child is Button:
@@ -185,6 +220,8 @@ func _layout() -> void:
 	footer.size = Vector2(size.x - margin * 2, 24)
 func begin_loading() -> void:
 	loading = true
+	if doctrine_picker != null: doctrine_picker.disabled = true
+	if language_picker != null: language_picker.disabled = true
 	country_picker.disabled = true
 	continue_button.disabled = true
 	fresh_button.disabled = true
@@ -205,3 +242,7 @@ func request_start(mode: String) -> void:
 func _show_audio() -> void:
 	music_button.text = "MUSIC: " + ("ON" if GameAudio.music_enabled else "OFF")
 	sound_button.text = "SOUND: " + ("ON" if GameAudio.sound_enabled else "OFF")
+
+func selected_doctrine() -> String:
+	if doctrine_picker == null or doctrine_picker.selected <= 0: return Doctrine.DEFAULTS.get(selected_country(), "european")
+	return Doctrine.DOCTRINES.keys()[doctrine_picker.selected-1]

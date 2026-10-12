@@ -1,7 +1,7 @@
 [
   {
     "id": "factory",
-    "name": "Support factory",
+    "name": "Ordnance factory",
     "asset_roster_id": "facility_factory",
     "capital_only": false,
     "max_level": 3,
@@ -13,8 +13,8 @@
       "fuel": 20,
       "manpower": 20
     },
-    "description": "Produces artillery, air defence, missiles and ground support. Each level above 1 increases their production speed by 25%.",
-    "starting_level": 1,
+    "description": "Produces artillery, air defence and support units.",
+    "starting_level": 0,
     "colour": "b96e53",
     "model_tiers": [
       "res://assets/library/buildings_oct12/ordnance_factory.glb",
@@ -24,7 +24,8 @@
       "res://assets/library/buildings_oct12/ordnance_factory.glb"
     ],
     "preview": "res://assets/library/buildings_oct12/ordnance_factory_menu.png",
-    "original_colors": true
+    "original_colors": true,
+    "capital_starting_level": 0
   },
   {
     "id": "industry",
@@ -41,7 +42,7 @@
       "manpower": 25
     },
     "description": "Each level above 1 increases this city\u2019s currency, manpower and main commodity income by 25%.",
-    "starting_level": 1,
+    "starting_level": 0,
     "colour": "c7ab65",
     "model_tiers": [
       "res://assets/library/buildings_oct12/industry.glb",
@@ -51,7 +52,8 @@
       "res://assets/library/buildings_oct12/industry.glb"
     ],
     "preview": "res://assets/library/buildings_oct12/industry_menu.png",
-    "original_colors": true
+    "original_colors": true,
+    "capital_starting_level": 0
   },
   {
     "id": "research_center",
@@ -68,8 +70,10 @@
       "manpower": 20
     },
     "description": "Research is national and independent of this legacy building. Two research slots.",
-    "starting_level": 1,
-    "colour": "a98ac2"
+    "starting_level": 0,
+    "colour": "a98ac2",
+    "capital_starting_level": 0,
+    "retired": true
   },
   {
     "id": "airbase",
@@ -77,7 +81,7 @@
     "asset_roster_id": "facility_airbase",
     "capital_only": false,
     "starting_level": 0,
-    "capital_starting_level": 1,
+    "capital_starting_level": 0,
     "max_level": 5,
     "hours": 3,
     "cost": {
@@ -125,7 +129,9 @@
       "manpower": 15
     },
     "description": "Each level increases this city\u2019s funds income by 25%.",
-    "save_default": true
+    "save_default": true,
+    "capital_starting_level": 0,
+    "retired": true
   },
   {
     "id": "material_works",
@@ -146,7 +152,9 @@
       "manpower": 15
     },
     "description": "Each level increases this city\u2019s materials income by 25%.",
-    "save_default": true
+    "save_default": true,
+    "capital_starting_level": 0,
+    "retired": true
   },
   {
     "id": "electronics_plant",
@@ -167,7 +175,9 @@
       "manpower": 15
     },
     "description": "Each level increases this city\u2019s electronics income by 25%.",
-    "save_default": true
+    "save_default": true,
+    "capital_starting_level": 0,
+    "retired": true
   },
   {
     "id": "fuel_depot",
@@ -188,7 +198,9 @@
       "manpower": 15
     },
     "description": "Each level increases this city\u2019s fuel income by 25%.",
-    "save_default": true
+    "save_default": true,
+    "capital_starting_level": 0,
+    "retired": true
   },
   {
     "id": "recruitment_center",
@@ -218,7 +230,8 @@
       "res://assets/library/buildings_oct12/recruitment_center.glb"
     ],
     "preview": "res://assets/library/buildings_oct12/recruitment_center_menu.png",
-    "original_colors": true
+    "original_colors": true,
+    "capital_starting_level": 0
   },
   {
     "id": "barracks",
@@ -246,7 +259,8 @@
       "res://assets/library/buildings_oct12/barracks.glb"
     ],
     "preview": "res://assets/library/buildings_oct12/barracks_menu.png",
-    "original_colors": true
+    "original_colors": true,
+    "capital_starting_level": 0
   },
   {
     "id": "tank_plant",
@@ -274,7 +288,8 @@
       "res://assets/library/buildings_oct12/tank_plant.glb"
     ],
     "preview": "res://assets/library/buildings_oct12/tank_plant_menu.png",
-    "original_colors": true
+    "original_colors": true,
+    "capital_starting_level": 0
   },
   {
     "id": "naval_base",
@@ -303,7 +318,8 @@
       "res://assets/library/buildings_oct12/naval_base.glb"
     ],
     "preview": "res://assets/library/buildings_oct12/naval_base_menu.png",
-    "original_colors": true
+    "original_colors": true,
+    "capital_starting_level": 0
   },
   {
     "id": "bunker",
@@ -331,11 +347,44 @@
       "res://assets/library/buildings_oct12/city_walls_l5.glb"
     ],
     "preview": "res://assets/library/buildings_oct12/city_walls_l1_menu.png",
-    "original_colors": true
+    "original_colors": true,
+    "capital_starting_level": 0
   },
   {
     "id": "infrastructure",
-    "name": "Rail station & logistics",
+    "name": "Road infrastructure",
+    "asset_roster_id": "facility_infrastructure",
+    "colour": "bd9763",
+    "capital_only": false,
+    "max_level": 3,
+    "hours": 2,
+    "cost": {
+      "funds": 200,
+      "materials": 140,
+      "electronics": 25,
+      "fuel": 20,
+      "manpower": 30
+    },
+    "description": "City train station. Connects to nearby friendly completed stations by rail and improves construction speed by 15% per level. Rural provinces build roads and logistics instead.",
+    "starting_level": 0,
+    "save_default": true,
+    "model_tiers": [
+      "res://assets/library/buildings_oct12/road_straight.glb",
+      "res://assets/library/buildings_oct12/road_straight.glb",
+      "res://assets/library/buildings_oct12/road_straight.glb"
+    ],
+    "preview": "res://assets/library/buildings_oct12/train_station_menu.png",
+    "original_colors": true,
+    "rural_model_tiers": [
+      "res://assets/library/buildings_oct12/road_straight.glb",
+      "res://assets/library/buildings_oct12/road_straight.glb",
+      "res://assets/library/buildings_oct12/road_straight.glb"
+    ],
+    "capital_starting_level": 0
+  },
+  {
+    "id": "train_station",
+    "name": "Train station",
     "asset_roster_id": "facility_infrastructure",
     "colour": "bd9763",
     "capital_only": false,
@@ -364,6 +413,59 @@
       "res://assets/library/buildings_oct12/road_straight.glb",
       "res://assets/library/buildings_oct12/road_straight.glb",
       "res://assets/library/buildings_oct12/road_straight.glb"
+    ],
+    "capital_starting_level": 1
+  },
+  {
+    "id": "capitol",
+    "name": "Capitol",
+    "asset_roster_id": "facility_research_center",
+    "capital_only": false,
+    "max_level": 1,
+    "hours": 4,
+    "cost": {
+      "funds": 300,
+      "materials": 100,
+      "electronics": 70,
+      "fuel": 15,
+      "manpower": 20
+    },
+    "description": "Moves your national capital to this city when construction completes.",
+    "starting_level": 0,
+    "colour": "a98ac2",
+    "capital_starting_level": 0,
+    "save_default": true,
+    "model_tiers": [
+      "res://assets/library/buildings_oct12/capital.glb"
     ]
+  },
+  {
+    "id": "missile_factory",
+    "name": "Missile factory",
+    "asset_roster_id": "facility_factory",
+    "capital_only": false,
+    "max_level": 3,
+    "hours": 2,
+    "cost": {
+      "funds": 200,
+      "materials": 100,
+      "electronics": 30,
+      "fuel": 20,
+      "manpower": 20
+    },
+    "description": "Produces ballistic and cruise missile launchers. Uses the ordnance building model until the supplied missile-factory model arrives.",
+    "starting_level": 0,
+    "colour": "b96e53",
+    "model_tiers": [
+      "res://assets/library/buildings_oct12/ordnance_factory.glb",
+      "res://assets/library/buildings_oct12/ordnance_factory.glb",
+      "res://assets/library/buildings_oct12/ordnance_factory.glb",
+      "res://assets/library/buildings_oct12/ordnance_factory.glb",
+      "res://assets/library/buildings_oct12/ordnance_factory.glb"
+    ],
+    "preview": "res://assets/library/buildings_oct12/ordnance_factory_menu.png",
+    "original_colors": true,
+    "capital_starting_level": 0,
+    "save_default": true
   }
 ]

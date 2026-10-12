@@ -1,0 +1,22 @@
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+PASS every country starts with victory points and no foreign land
+PASS the top bar shows domination progress
+PASS domination needs the land held for a game hour, not a moment
+PASS holding 60% of foreign points for an hour wins by domination (["russia", "domination"])
+PASS six days of economic dominance is not enough
+PASS dropping below the treasury target resets the count
+PASS 80% of income, 250k funds and the capital for 7 days wins an economic victory (["russia", "economic"])
+PASS being merely richer (62% of income) does not count
+PASS after the time limit the most points wins (["russia", "points"])
+PASS the match records how it was won
+PASS fighting in one place is one battle
+PASS the battle report lists shots and losses: Battle of Moskovsskaya region (day 1): Russia fired 5, lost 0; Ukraine fired 1, lost 1 (Leopard 2)
+PASS a newspaper is printed when the day ends
+PASS the newspaper headline and standings: Day 1: Kharkiv region falls to Russia
+PASS news and battle reports are saved with the game
+PASS the victory page opens
+PASS the news page opens
+PASS the battles page opens
+PASS the diplomacy page opens
+RESULT failures=0

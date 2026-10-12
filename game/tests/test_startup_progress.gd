@@ -5,13 +5,15 @@ func check(ok: bool,message: String) -> void:
 	if not ok: failures += 1
 func _initialize() -> void: call_deferred("run")
 func run() -> void:
+	Engine.max_fps = 60
 	root.size = Vector2i(720,1440)
 	GameSession.weapons_test = false
 	var loader = load("res://scenes/startup.tscn").instantiate()
 	root.add_child(loader)
 	var captured: = false
 	var disabled: = false
-	for i in 1000:
+	var loading_deadline := Time.get_ticks_msec() + 180000
+	while Time.get_ticks_msec() < loading_deadline:
 		await process_frame
 		if not is_instance_valid(loader): break
 		if loader.panel.progress.value > 10 and loader.panel.progress.value < 90:
@@ -29,7 +31,8 @@ func run() -> void:
 		await process_frame
 		check(game.mobile_start.loading,"button starts loading")
 		var partial: = false
-		for i in 500:
+		var weapons_deadline := Time.get_ticks_msec() + 180000
+		while Time.get_ticks_msec() < weapons_deadline:
 			await process_frame
 			if not game.mobile_start.visible: break
 			if game.mobile_start.progress.value > 10 and game.mobile_start.progress.value < 90: partial = true

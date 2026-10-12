@@ -1,0 +1,13 @@
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+PASS inspecting enemy preserves Russia player flag
+PASS Russia remains friendly after enemy selection
+PASS city model tap completes group selection
+PASS all three armies move to city
+PASS city label sends group to city
+PASS silo shaft below ground, surface pad stays low
+PASS silo launch point at surface hatch
+PASS larger selected unit portrait and readable details
+PASS Attack starts missile order from paused weapons map
+PASS actual combat launches projectile from launcher muzzle
+RESULT checks=10 failures=0

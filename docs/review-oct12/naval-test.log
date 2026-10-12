@@ -1,0 +1,128 @@
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+PASS weapons_test_fleet_russia_l1 has an accessible water destination
+PASS weapons_test_fleet_russia_l1 accepts sea movement
+PASS weapons_test_fleet_russia_l1 moves on water
+PASS weapons_test_fleet_russia_l1 stays on water
+PASS weapons_test_fleet_russia_l3 has an accessible water destination
+PASS weapons_test_fleet_russia_l3 accepts sea movement
+PASS weapons_test_fleet_russia_l3 moves on water
+PASS weapons_test_fleet_russia_l3 stays on water
+PASS weapons_test_fleet_russia_l5 has an accessible water destination
+PASS weapons_test_fleet_russia_l5 accepts sea movement
+PASS weapons_test_fleet_russia_l5 moves on water
+PASS weapons_test_fleet_russia_l5 stays on water
+PASS weapons_test_fleet_ukraine_l1 has an accessible water destination
+PASS weapons_test_fleet_ukraine_l1 accepts sea movement
+PASS weapons_test_fleet_ukraine_l1 moves on water
+PASS weapons_test_fleet_ukraine_l1 stays on water
+PASS weapons_test_fleet_ukraine_l3 has an accessible water destination
+PASS weapons_test_fleet_ukraine_l3 accepts sea movement
+PASS weapons_test_fleet_ukraine_l3 moves on water
+PASS weapons_test_fleet_ukraine_l3 stays on water
+PASS weapons_test_fleet_ukraine_l5 has an accessible water destination
+PASS weapons_test_fleet_ukraine_l5 accepts sea movement
+PASS weapons_test_fleet_ukraine_l5 moves on water
+PASS weapons_test_fleet_ukraine_l5 stays on water
+PASS weapons_test_destroyers_russia_l1 has an accessible water destination
+PASS weapons_test_destroyers_russia_l1 accepts sea movement
+PASS weapons_test_destroyers_russia_l1 moves on water
+PASS weapons_test_destroyers_russia_l1 stays on water
+PASS weapons_test_destroyers_russia_l3 has an accessible water destination
+PASS weapons_test_destroyers_russia_l3 accepts sea movement
+PASS weapons_test_destroyers_russia_l3 moves on water
+PASS weapons_test_destroyers_russia_l3 stays on water
+PASS weapons_test_destroyers_russia_l5 has an accessible water destination
+PASS weapons_test_destroyers_russia_l5 accepts sea movement
+PASS weapons_test_destroyers_russia_l5 moves on water
+PASS weapons_test_destroyers_russia_l5 stays on water
+PASS weapons_test_destroyers_ukraine_l1 has an accessible water destination
+PASS weapons_test_destroyers_ukraine_l1 accepts sea movement
+PASS weapons_test_destroyers_ukraine_l1 moves on water
+PASS weapons_test_destroyers_ukraine_l1 stays on water
+PASS weapons_test_destroyers_ukraine_l3 has an accessible water destination
+PASS weapons_test_destroyers_ukraine_l3 accepts sea movement
+PASS weapons_test_destroyers_ukraine_l3 moves on water
+PASS weapons_test_destroyers_ukraine_l3 stays on water
+PASS weapons_test_destroyers_ukraine_l5 has an accessible water destination
+PASS weapons_test_destroyers_ukraine_l5 accepts sea movement
+PASS weapons_test_destroyers_ukraine_l5 moves on water
+PASS weapons_test_destroyers_ukraine_l5 stays on water
+PASS weapons_test_corvettes_russia_l1 has an accessible water destination
+PASS weapons_test_corvettes_russia_l1 accepts sea movement
+PASS weapons_test_corvettes_russia_l1 moves on water
+PASS weapons_test_corvettes_russia_l1 stays on water
+PASS weapons_test_corvettes_russia_l3 has an accessible water destination
+PASS weapons_test_corvettes_russia_l3 accepts sea movement
+PASS weapons_test_corvettes_russia_l3 moves on water
+PASS weapons_test_corvettes_russia_l3 stays on water
+PASS weapons_test_corvettes_russia_l5 has an accessible water destination
+PASS weapons_test_corvettes_russia_l5 accepts sea movement
+PASS weapons_test_corvettes_russia_l5 moves on water
+PASS weapons_test_corvettes_russia_l5 stays on water
+PASS weapons_test_corvettes_ukraine_l1 has an accessible water destination
+PASS weapons_test_corvettes_ukraine_l1 accepts sea movement
+PASS weapons_test_corvettes_ukraine_l1 moves on water
+PASS weapons_test_corvettes_ukraine_l1 stays on water
+PASS weapons_test_corvettes_ukraine_l3 has an accessible water destination
+PASS weapons_test_corvettes_ukraine_l3 accepts sea movement
+PASS weapons_test_corvettes_ukraine_l3 moves on water
+PASS weapons_test_corvettes_ukraine_l3 stays on water
+PASS weapons_test_corvettes_ukraine_l5 has an accessible water destination
+PASS weapons_test_corvettes_ukraine_l5 accepts sea movement
+PASS weapons_test_corvettes_ukraine_l5 moves on water
+PASS weapons_test_corvettes_ukraine_l5 stays on water
+PASS weapons_test_submarines_russia_l1 has an accessible water destination
+PASS weapons_test_submarines_russia_l1 accepts sea movement
+PASS weapons_test_submarines_russia_l1 moves on water
+PASS weapons_test_submarines_russia_l1 stays on water
+PASS weapons_test_submarines_russia_l3 has an accessible water destination
+PASS weapons_test_submarines_russia_l3 accepts sea movement
+PASS weapons_test_submarines_russia_l3 moves on water
+PASS weapons_test_submarines_russia_l3 stays on water
+PASS weapons_test_submarines_russia_l5 has an accessible water destination
+PASS weapons_test_submarines_russia_l5 accepts sea movement
+PASS weapons_test_submarines_russia_l5 moves on water
+PASS weapons_test_submarines_russia_l5 stays on water
+PASS weapons_test_submarines_ukraine_l1 has an accessible water destination
+PASS weapons_test_submarines_ukraine_l1 accepts sea movement
+PASS weapons_test_submarines_ukraine_l1 moves on water
+PASS weapons_test_submarines_ukraine_l1 stays on water
+PASS weapons_test_submarines_ukraine_l3 has an accessible water destination
+PASS weapons_test_submarines_ukraine_l3 accepts sea movement
+PASS weapons_test_submarines_ukraine_l3 moves on water
+PASS weapons_test_submarines_ukraine_l3 stays on water
+PASS weapons_test_submarines_ukraine_l5 has an accessible water destination
+PASS weapons_test_submarines_ukraine_l5 accepts sea movement
+PASS weapons_test_submarines_ukraine_l5 moves on water
+PASS weapons_test_submarines_ukraine_l5 stays on water
+PASS weapons_test_carriers_russia_l1 has an accessible water destination
+PASS weapons_test_carriers_russia_l1 accepts sea movement
+PASS weapons_test_carriers_russia_l1 moves on water
+PASS weapons_test_carriers_russia_l1 stays on water
+PASS weapons_test_carriers_russia_l3 has an accessible water destination
+PASS weapons_test_carriers_russia_l3 accepts sea movement
+PASS weapons_test_carriers_russia_l3 moves on water
+PASS weapons_test_carriers_russia_l3 stays on water
+PASS weapons_test_carriers_russia_l5 has an accessible water destination
+PASS weapons_test_carriers_russia_l5 accepts sea movement
+PASS weapons_test_carriers_russia_l5 moves on water
+PASS weapons_test_carriers_russia_l5 stays on water
+PASS weapons_test_carriers_ukraine_l1 has an accessible water destination
+PASS weapons_test_carriers_ukraine_l1 accepts sea movement
+PASS weapons_test_carriers_ukraine_l1 moves on water
+PASS weapons_test_carriers_ukraine_l1 stays on water
+PASS weapons_test_carriers_ukraine_l3 has an accessible water destination
+PASS weapons_test_carriers_ukraine_l3 accepts sea movement
+PASS weapons_test_carriers_ukraine_l3 moves on water
+PASS weapons_test_carriers_ukraine_l3 stays on water
+PASS weapons_test_carriers_ukraine_l5 has an accessible water destination
+PASS weapons_test_carriers_ukraine_l5 accepts sea movement
+PASS weapons_test_carriers_ukraine_l5 moves on water
+PASS weapons_test_carriers_ukraine_l5 stays on water
+PASS ordinary sight does not reveal a submarine
+PASS surface escort sonar reveals submarine
+PASS submarine has a distinct carrier counter
+PASS surface missile ship can bombard ground units
+PASS surface ship provides air defense
+RESULT checks=125 failures=0

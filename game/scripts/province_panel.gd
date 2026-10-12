@@ -11,7 +11,7 @@ var queue: VBoxContainer
 var message: Label
 var rows: Dictionary = {}
 var ui_timer: = 0.0
-const EFFECTS: = {"industry":"+25% province output per level", "bunker":"20% less damage per level at the province centre", "infrastructure":"+10% ground travel and +15% construction speed per level", "airbase":"Aircraft may rebase and refuel here. No unit production."}
+const EFFECTS: = {"industry":"+25% province output per level", "bunker":"20% less damage per level at the province centre", "infrastructure":"+10% ground travel and +15% construction speed per level", "airbase":"Aircraft may rebase and refuel here. No unit production.","train_station":"Rail logistics station. No unit production.","naval_base":"Coastal naval facilities. No unit production."}
 func setup(system: BuildingSystem,theme: Theme) -> void:
  buildings=system;layer=12
  var root: = Control.new();root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);root.theme=theme;add_child(root)

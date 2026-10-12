@@ -56,7 +56,27 @@ func run() -> void:
 	auth.busy=true;var before:=calls.size();r=await auth.login("tester@example.org","password")
 	check(not r.ok and calls.size()==before,"Concurrent account requests are rejected")
 	auth.busy=false
-	var panel:=AccountPanel.new();root.add_child(panel);panel.open()
+	# Profiles, levels, results and deletion (migration 002).
+	check(PlayerAuth.level_for(0)==1 and PlayerAuth.level_for(99)==1 and PlayerAuth.level_for(100)==2 and PlayerAuth.level_for(400)==3,"Levels follow 100*(n-1)^2 XP like the server")
+	r=await auth.record_result(true,30)
+	check(not r.ok and calls.size()==before,"Signed-out players cannot report results")
+	auth.accept_session(session(),false)
+	reply={"ok":true,"data":{"rows":[{"commander_name":"Tester","xp":450,"games_played":3,"wins":2,"losses":1}]}}
+	r=await auth.load_profile()
+	check(r.ok and calls[-1][0].begins_with("/rest/v1/player_profiles?") and calls[-1][2]==HTTPClient.METHOD_GET and calls[-1][3]=="test_access" and auth.profile.xp==450,"Profile loads own row with the player token")
+	reply={"ok":true,"data":{"rows":[{"xp":575,"level":3,"games_played":4,"wins":3,"losses":1}]}}
+	r=await auth.record_result(true,25)
+	check(r.ok and calls[-1][0]=="/rest/v1/rpc/record_match_result" and calls[-1][1].won and calls[-1][1].minutes==25 and auth.profile.xp==575 and auth.profile.commander_name=="Tester","Results go through the server function, which returns the new XP")
+	var panel:=AccountPanel.new();root.add_child(panel);panel.auth.queue_free();panel.auth=auth
+	panel.build("profile")
+	check(panel.fields.get_children().any(func(n): return n is ProgressBar) and panel.fields.get_children().any(func(n): return n is Label and n.text=="LEVEL 3 · SERGEANT"),"Profile shows level, rank and XP bar")
+	panel.build("delete");panel.inputs.confirm_delete.text="delete";before=calls.size();await panel.delete_account()
+	check(calls.size()==before and auth.signed_in(),"Deletion needs DELETE typed exactly")
+	reply={"ok":true,"data":{}};panel.inputs.confirm_delete.text="DELETE";await panel.delete_account()
+	check(calls[-1][0]=="/rest/v1/rpc/delete_my_account" and not auth.signed_in() and auth.profile.is_empty() and panel.mode=="login","Deleting the account calls the server and signs out")
+	panel.queue_free()
+	auth=PlayerAuth.new();root.add_child(auth);auth.transport=mock;auth.base_url="https://example.supabase.co";auth.public_key="sb_publishable_example"
+	panel=AccountPanel.new();root.add_child(panel);panel.open()
 	check(panel.mode=="login" and panel.overlay.visible,"Native account panel opens without configuration")
 	panel.build("signup");check(panel.inputs.has("confirm") and panel.inputs.password.secret,"Registration has masked password confirmation")
 	panel.build("recovery_code");check(panel.inputs.has("code"),"Recovery screen accepts email codes")

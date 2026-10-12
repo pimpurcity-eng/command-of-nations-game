@@ -42,6 +42,7 @@ func _ready() -> void:
 		await get_tree().process_frame
 	panel.set_progress(95,"Preparing map and forces")
 	await get_tree().process_frame
+	if get_tree().node_added.is_connected(audio._watch_button): get_tree().node_added.disconnect(audio._watch_button)
 	var game: Node = (loaded[-1] as PackedScene).instantiate()
 	get_tree().root.add_child(game)
 	get_tree().current_scene = game

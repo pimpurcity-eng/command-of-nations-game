@@ -195,7 +195,9 @@ func _process(_delta: float) -> void :
 	if armies != null:
 		for city in cities:
 			var controller: = controller_of(city)
-			districts[city.id].visible = controller == GameSession.player_country or armies.point_visible(city.point)
+			districts[city.id].visible = true
+			for facility in districts[city.id].get_children():
+				if facility.has_meta("building_level"): facility.visible = controller == GameSession.player_country or armies.point_visible(city.point)
 			var captured: bool = controller != city.country.to_lower()
 			var index: = cities.find(city)
 			labels[index].text = ("★ " if city.get("capital", false) else "") + city.name.to_upper() + (" · YOURS" if captured and controller == GameSession.player_country else " · ENEMY" if captured else "")

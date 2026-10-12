@@ -32,7 +32,7 @@ func city(id: String) -> Dictionary:
 func capital(country: String) -> Dictionary:
 	return city(capitals.get(country, ""))
 func is_capital(place: Dictionary) -> bool:
-	return place.id == capitals.get(place.country.to_lower(), "")
+	return place.id in capitals.values()
 func spec(id: String) -> Dictionary:
 	for entry in catalog:
 		if entry.id == id: return entry
@@ -41,6 +41,7 @@ func level(city_id: String, building_id: String) -> int:
 	if city_id.begins_with("province:"): return provinces.level(city_id,building_id)
 	return int(levels.get(city_id, {}).get(building_id, 0))
 func rate(city_id: String, building_id: String) -> float:
+	if building_id == "industry": return 1.0 + 0.25 * level(city_id, building_id)
 	return 1.0 + 0.25 * maxi(0, level(city_id, building_id) - 1)
 func research_rate(country: String) -> float:
 	var place: = capital(country)
@@ -60,6 +61,8 @@ func reason(city_id: String, building_id: String, country: String = "", check_re
 	var place: = city(city_id)
 	var definition: = spec(building_id)
 	if place.is_empty() or definition.is_empty(): return "Choose a city and building"
+	if definition.get("retired",false): return "This building has been retired"
+	if building_id == "capitol" and capitals.get(country,"") == city_id: return "This is already your capital"
 	if not economy.controlled(place, country): return "Recover control of this city first"
 	if definition.capital_only and place.id != capitals.get(country, ""): return "Research centers are built in your capital"
 	if definition.get("coastal_only", false) and not place.has("naval_spawn"): return "Naval bases require a coastal city (Odesa or Rostov-on-Don)"
@@ -132,15 +135,23 @@ func advance(seconds: float) -> void :
 			if job.progress < total: break
 			levels[place.id][job.building] = int(job.level)
 			jobs.remove_at(index)
+			if job.building == "capitol":
+				capitals[job.get("country",place.country.to_lower())] = place.id
+				for other in economy.cities:
+					if economy.controlled(other,job.get("country",place.country.to_lower())): other.capital = other.id == place.id
 			completed.emit(place.id, job.building)
 			changed.emit()
 func snapshot() -> Dictionary:
-	return {"levels": levels.duplicate(true), "jobs": jobs.duplicate(true), "next_id": next_id, "provinces":provinces.snapshot()}
+	return {"levels": levels.duplicate(true), "jobs": jobs.duplicate(true), "next_id": next_id, "capitals":capitals.duplicate(), "provinces":provinces.snapshot()}
 func _integer(value: Variant, low: int, high: int) -> bool:
 	return (value is float or value is int) and is_finite(float(value)) and value == floor(value) and value >= low and value <= high
 func validate(state: Variant) -> bool:
 	if not state is Dictionary or not state.get("levels") is Dictionary or not state.get("jobs") is Array or not _integer(state.get("next_id"), 1, 1000000000): return false
 	if not provinces.validate(state.get("provinces",{})): return false
+	var saved_capitals = state.get("capitals",capitals)
+	if not saved_capitals is Dictionary: return false
+	for country in saved_capitals:
+		if country not in economy.stockpiles or city(str(saved_capitals[country])).is_empty(): return false
 	if state.levels.size() != economy.cities.size() or state.jobs.size() > economy.cities.size() * QUEUE_LIMIT: return false
 	for place in economy.cities:
 		var saved = state.levels.get(place.id)
@@ -149,8 +160,8 @@ func validate(state: Variant) -> bool:
 			if spec(key).is_empty(): return false
 		for definition in catalog:
 			var value = saved.get(definition.id, initial_level(place, definition) if definition.id == "airbase" or definition.get("save_default", false) else null)
-			if not _integer(value, initial_level(place, definition), definition.max_level): return false
-			if definition.capital_only and not is_capital(place) and value != 0: return false
+			if not _integer(value, 0, definition.max_level): return false
+			if definition.capital_only and not definition.get("retired",false) and not is_capital(place) and value != 0: return false
 			if definition.get("coastal_only", false) and not place.has("naval_spawn") and value != 0: return false
 	var ids: Dictionary = {}
 	var counts: Dictionary = {}
@@ -175,6 +186,8 @@ func validate(state: Variant) -> bool:
 		if not (progress is float or progress is int) or not is_finite(float(progress)) or progress < 0 or progress >= duration(job.building, int(job.level)): return false
 	return true
 func restore(state: Dictionary) -> void :
+	capitals = state.get("capitals",capitals).duplicate()
+	for place in economy.cities: place.capital = place.id in capitals.values()
 	provinces.restore(state.get("provinces",{}))
 	if state.is_empty():
 		_reset_levels()
@@ -232,7 +245,7 @@ func production_rate(city_id: String, equipment: Dictionary) -> float:
 func morale_speed(city_id: String) -> float:
 	return clampf(economy.morale_factor(city(city_id))/0.8,0.25,1.0)
 func construction_rate(city_id: String) -> float:
-	return (1.0 + 0.15 * level(city_id, "infrastructure")) * morale_speed(city_id)
+	return (1.0 + 0.15 * level(city_id, "infrastructure")) * morale_speed(city_id) * EconomyResearch.factor(economy.controller(city(city_id)),"infrastructure")
 func construction_time(city_id: String, building_id: String, target: int, progress: float = 0.0) -> float:
 	return maxf(0, duration(building_id, target) - progress) / construction_rate(city_id)
 func incoming_damage_factor(unit: Dictionary) -> float:
