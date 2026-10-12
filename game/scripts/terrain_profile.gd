@@ -6,6 +6,12 @@ static var profiles: Dictionary = JSON.parse_string(FileAccess.get_file_as_strin
 static var carpathians: Array = [GeographicProjection.project(22.6, 48.7), GeographicProjection.project(24.1, 48.2), GeographicProjection.project(25.6, 47.6)]
 static var caucasus: Array = [GeographicProjection.project(39.6, 44.0), GeographicProjection.project(42.3, 43.5), GeographicProjection.project(44.5, 42.9), GeographicProjection.project(47.6, 42.2)]
 static var crimea: Array = [GeographicProjection.project(33.6, 44.55), GeographicProjection.project(35.0, 44.9)]
+## Called by MapDefinition.use(): cities and ridges are in the active map's coordinates.
+static func reload() -> void:
+	cities = GeographicProjection.load_cities()
+	carpathians = [GeographicProjection.project(22.6, 48.7), GeographicProjection.project(24.1, 48.2), GeographicProjection.project(25.6, 47.6)]
+	caucasus = [GeographicProjection.project(39.6, 44.0), GeographicProjection.project(42.3, 43.5), GeographicProjection.project(44.5, 42.9), GeographicProjection.project(47.6, 42.2)]
+	crimea = [GeographicProjection.project(33.6, 44.55), GeographicProjection.project(35.0, 44.9)]
 static func ridge_distance(point: Vector2, path: Array) -> float:
 	var result: = INF
 	for i in range(path.size() - 1): result = minf(result, point.distance_to(Geometry2D.get_closest_point_to_segment(point, path[i], path[i + 1])))
@@ -24,9 +30,17 @@ static func sample(point: Vector2, urban: bool = true) -> String:
 		for city in cities:
 			if city.point.distance_squared_to(point) < 0.36: return "urban"
 	var geo: = GeographicProjection.unproject(point)
+	if not MapDefinition.is_regional(): return europe_landform(geo.x, geo.y)
 	# Polissia's marshes count as forest: the old repeating sin*cos "wetlands" pattern drew
 	# rectangular patches across Volyn, Rivne and Zhytomyr.
 	return landform(geo.x, geo.y)
+## Larger maps: the regional rules where they apply (Russia, Ukraine, Caucasus), the northern
+## forests (Scandinavia, Finland, the Baltic), plains elsewhere. Hills and mountains are also
+## painted from the real shaded relief by the terrain shader.
+static func europe_landform(longitude: float, latitude: float) -> String:
+	if longitude >= 22.0 and latitude >= 43.2 and latitude <= 56.5: return landform(longitude, latitude)
+	if latitude >= 57.5 or (latitude >= 55.0 and longitude >= 20.5): return "forest"
+	return "plains"
 ## Owner review 2026-10-09: the map is totally flat (Call of War style) so units, roads,
 ## cities and flags always sit exactly on the ground; hills and mountains are painted by the
 ## terrain shader from relief_height() (shading, rock, snow) instead of raising the mesh.

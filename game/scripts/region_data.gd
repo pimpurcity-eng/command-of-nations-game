@@ -4,6 +4,13 @@ const COUNTRY_IDS: = ["UKR", "RUS", "BLR", "POL", "ROU", "MDA", "GEO", "TUR", "S
 static var country_cache: Array = []
 static func countries() -> Array:
 	if not country_cache.is_empty(): return country_cache
+	if not MapDefinition.is_regional():
+		# Country outlines (players and AI) from the map's provinces.json.
+		for outline in MapDefinition.provinces().get("outlines", []):
+			var projected: = _project_ring(outline.rings[0])
+			if projected.size() > 2:
+				country_cache.append({"country": MapDefinition.country_name(outline.country_id), "country_id": outline.country_id, "polygon": projected, "code": outline.country_id})
+		return country_cache
 	var bounds: = PackedVector2Array([Vector2(-24, -27), Vector2(26, -27), Vector2(26, 21), Vector2(-24, 21)])
 	for code in COUNTRY_IDS:
 		var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/" + code + ".geo.json"))
@@ -18,7 +25,43 @@ static func countries() -> Array:
 				if clipped.size() > 2 and not Geometry2D.triangulate_polygon(clipped).is_empty():
 					country_cache.append({"country": feature.properties.name, "polygon": clipped, "code": code})
 	return country_cache
+static func _project_ring(coordinates: Array) -> PackedVector2Array:
+	var ring: = PackedVector2Array()
+	for point in coordinates: ring.append(GeographicProjection.project(point[0], point[1]))
+	if ring.size() > 1 and ring[0].is_equal_approx(ring[-1]): ring.remove_at(ring.size() - 1)
+	return ring
+## Provinces of a data-driven map (data/maps/<id>/provinces.json): player and AI countries
+## are playable; "context" land (outside the map's countries) is drawn blank.
+static func map_territories() -> Array:
+	var result: Array = []
+	var cities: = GeographicProjection.load_cities()
+	for feature in MapDefinition.provinces().features:
+		var props: Dictionary = feature.properties
+		var playable: bool = props.role != "context"
+		var polygons: Array = feature.geometry.coordinates if feature.geometry.type == "MultiPolygon" else [feature.geometry.coordinates]
+		for index in polygons.size():
+			var poly: = _project_ring(polygons[index][0])
+			if poly.size() < 3 or Geometry2D.triangulate_polygon(poly).is_empty(): continue
+			var entry: = sector(props.id + "_" + str(index), props.name, props.country, poly, playable)
+			entry.owner = props.country_id
+			entry.controller = props.country_id
+			entry.province = props.name
+			entry.role = props.role
+			entry.holes = []
+			for i in range(1, polygons[index].size()): entry.holes.append(_project_ring(polygons[index][i]))
+			entry.mesh_polygons = []
+			for coordinates in feature.mesh_polygons[index]:
+				var patch: = _project_ring(coordinates)
+				if patch.size() > 2: entry.mesh_polygons.append(patch)
+			entry.center = GeographicProjection.project(feature.centers[index][0], feature.centers[index][1])
+			entry.terrain_profile = TerrainProfile.profile(props.country, props.name)
+			entry.terrain = TerrainProfile.sample(entry.center, false)
+			for city in cities:
+				if city.get("province", "") == props.id and contains(entry, city.point): entry.center = city.point
+			result.append(entry)
+	return result
 static func territories() -> Array:
+	if not MapDefinition.is_regional(): return map_territories()
 	var result: Array = []
 	for country in countries():
 		if country.country not in ["Ukraine", "Russia"]:

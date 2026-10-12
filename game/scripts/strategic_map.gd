@@ -11,6 +11,8 @@ var _surface_samples: Dictionary = {}
 var _border_rings: Array = []
 var _political: = -1.0
 var _city_points: = PackedVector2Array()
+## Bounding boxes of the road clip polygons (same order as the `land` list), for speed.
+var _land_boxes: Array[Rect2] = []
 ## The drawn ground is made of province triangles that can lie well above or below the smooth
 ## height formula between their corners, which buried roads, sank tanks and split cities.
 ## After the ground is built, heights come from the drawn triangles (bucketed in a grid).
@@ -75,7 +77,9 @@ func _build_sector(t: Dictionary) -> void :
 	for patch in t.get("mesh_polygons", [poly]):
 		var triangles: = Geometry2D.triangulate_polygon(patch)
 		for i in range(0, triangles.size(), 3):
-			_subdivide(surface, patch[triangles[i]], patch[triangles[i + 1]], patch[triangles[i + 2]], 3 if t.playable and t.get("terrain", "") in ["hills", "mountains"] else 2)
+			# Larger maps are big and flat: no subdivision; relief shading comes from the texture.
+			var depth: = (3 if t.playable and t.get("terrain", "") in ["hills", "mountains"] else 2) if MapDefinition.is_regional() else 0
+			_subdivide(surface, patch[triangles[i]], patch[triangles[i + 1]], patch[triangles[i + 2]], depth)
 	surface.index()
 	var mesh: = surface.commit()
 	_surface_samples.clear()
@@ -83,9 +87,18 @@ func _build_sector(t: Dictionary) -> void :
 	material.shader = load("res://assets/terrain.gdshader")
 	material.set_shader_parameter("terrain_types", TerrainVisualMap.get_texture())
 	material.set_shader_parameter("terrain_weights", TerrainVisualMap.get_weights())
-	material.set_shader_parameter("relief", load("res://assets/materials/relief.png"))
-	material.set_shader_parameter("city_points", _city_points)
-	material.set_shader_parameter("city_count", _city_points.size())
+	material.set_shader_parameter("relief", MapDefinition.relief())
+	material.set_shader_parameter("MAP_ORIGIN", MapDefinition.origin())
+	material.set_shader_parameter("MAP_EXTENT", MapDefinition.extent())
+	# The shader takes up to 12 cities: on larger maps, the ones near this province.
+	var nearby: = _city_points
+	if _city_points.size() > 12:
+		var area: = Rect2(poly[0], Vector2.ZERO)
+		for vertex in poly: area = area.expand(vertex)
+		area = area.grow(2.0)
+		nearby = PackedVector2Array(Array(_city_points).filter(func(city: Vector2): return area.has_point(city)).slice(0, 12))
+	material.set_shader_parameter("city_points", nearby)
+	material.set_shader_parameter("city_count", nearby.size())
 	material.set_shader_parameter("land_detail", load("res://assets/materials/land_detail.png"))
 	material.set_shader_parameter("ownership_strength", 0.18 if t.playable else 0.0)
 	material.set_shader_parameter("blank_context", not t.playable)
@@ -94,7 +107,9 @@ func _build_sector(t: Dictionary) -> void :
 	material.set_shader_parameter("dryness", profile.get("dryness", 0.3))
 	material.set_shader_parameter("wetness", profile.get("wetness", 0.0))
 	material.set_shader_parameter("country_tint", Color("8a9872") if t.country == "Ukraine" else (Color("c5b77e") if t.country == "Russia" else Color("6e7566")))
-	if t.playable:
+	if t.playable and not MapDefinition.is_regional():
+		material.set_shader_parameter("country_tint", _country_tint(t))
+	elif t.playable:
 		var tint: = Color("8a9872") if t.country == "Ukraine" else Color("c5b77e")
 		var variation: float = (abs(t.title.hash()) % 5 - 2) * 0.045
 		tint = tint.lightened(variation) if variation >= 0 else tint.darkened( - variation)
@@ -118,6 +133,11 @@ func _build_sector(t: Dictionary) -> void :
 	if not t.playable: return
 	_border_rings.append(poly)
 	_border_rings.append_array(t.get("holes", []))
+## Larger maps: every country in its own Call of War colour, provinces slightly varied.
+func _country_tint(t: Dictionary) -> Color:
+	var tint: = MapDefinition.country_color(t.controller)
+	var variation: float = (abs(t.title.hash()) % 5 - 2) * 0.03
+	return tint.lightened(variation) if variation >= 0 else tint.darkened( - variation)
 func _subdivide(s: SurfaceTool, a: Vector2, b: Vector2, c: Vector2, depth: int) -> void :
 	if depth > 0:
 		var ab: = (a + b) * 0.5
@@ -129,7 +149,9 @@ func _subdivide(s: SurfaceTool, a: Vector2, b: Vector2, c: Vector2, depth: int) 
 		_subdivide(s, ab, bc, ca, depth - 1)
 	else:
 		for point in [a, b, c]:
-			if not _surface_samples.has(point):
+			if not _surface_samples.has(point) and not MapDefinition.is_regional():
+				_surface_samples[point] = [position_at(point), Vector3.UP, 0.18]
+			elif not _surface_samples.has(point):
 
 				# Flat ground; the virtual relief goes to the shader as the normal (rock on
 				# slopes) and the vertex colour's red channel (altitude / 4, snow caps).
@@ -171,7 +193,7 @@ func _add_landscape() -> void :
 	water.albedo_color = Color("548aa0")
 	water.roughness = 0.65
 	var path: Array[Vector2] = []
-	for point in [[30.52, 50.45], [30.9, 50.0], [32.06, 49.44], [32.7, 49.0], [33.5, 48.8], [34.7, 48.55], [35.05, 48.46], [35.14, 47.84], [34.2, 47.5], [33.3, 47.0], [32.62, 46.63], [31.8, 46.5]]:
+	for point in ([] if not MapDefinition.is_regional() else [[30.52, 50.45], [30.9, 50.0], [32.06, 49.44], [32.7, 49.0], [33.5, 48.8], [34.7, 48.55], [35.05, 48.46], [35.14, 47.84], [34.2, 47.5], [33.3, 47.0], [32.62, 46.63], [31.8, 46.5]]):
 		path.append(GeographicProjection.project(point[0], point[1]))
 	var river_surface: = SurfaceTool.new()
 	river_surface.begin(Mesh.PRIMITIVE_TRIANGLES)
@@ -197,8 +219,21 @@ func _add_landscape() -> void :
 	rng.seed = 2943
 	var transforms: Array[Transform3D] = []
 	var city_locations: = GeographicProjection.load_cities()
-	for i in 8000:
-		var point: = Vector2(rng.randf_range(-19, 23), rng.randf_range(-20, 11))
+	var low: = Vector2(-19, -20)
+	var high: = Vector2(23, 11)
+	var samples: = 8000
+	if not MapDefinition.is_regional():
+		low = MapDefinition.origin()
+		high = low + MapDefinition.extent()
+		samples = 20000
+	var boxes: = {}
+	for t in territories:
+		if t.playable:
+			var area: = Rect2(t.polygon[0], Vector2.ZERO)
+			for vertex in t.polygon: area = area.expand(vertex)
+			boxes[t.id] = area
+	for i in samples:
+		var point: = Vector2(rng.randf_range(low.x, high.x), rng.randf_range(low.y, high.y))
 		var kind: = terrain_at(point)
 		var grove_density: = noise.get_noise_2d(point.x * 3.0, point.y * 3.0)
 		var density: = clampf(0.3 + grove_density * 1.2, 0.05, 0.85) if kind == "forest" else 0.0
@@ -209,7 +244,7 @@ func _add_landscape() -> void :
 			if city.point.distance_to(point) < 1.3: near_city = true
 		if near_city: continue
 		for t in territories:
-			if t.playable and RegionData.contains(t, point) and point.distance_to(t.center) > 1.0:
+			if t.playable and boxes[t.id].has_point(point) and RegionData.contains(t, point) and point.distance_to(t.center) > 1.0:
 				var scale: = rng.randf_range(0.35, 0.65)
 				transforms.append(Transform3D(Basis(Vector3.UP, rng.randf_range(0, TAU)).scaled(Vector3(scale, scale * rng.randf_range(0.8, 1.3), scale)), position_at(point) + Vector3.UP * 0.22))
 				break
@@ -251,7 +286,7 @@ func _add_landscape() -> void :
 
 func _add_country_outlines() -> void :
 	for country in RegionData.countries():
-		if country.country not in ["Russia", "Ukraine"]: continue
+		if MapDefinition.is_regional() and country.country not in ["Russia", "Ukraine"]: continue
 		var visual: = MapBorder.build([country.polygon], self, 1.65, Color("343d38"))
 		visual.name = "CountryBorder_" + country.country
 		add_child(visual)
@@ -272,12 +307,17 @@ func _add_connections() -> void :
 	var locations: Dictionary = {}
 	for city in GeographicProjection.load_cities(): locations[city.name] = city.point
 	var land: Array = []
+	_land_boxes.clear()
 	for country in RegionData.countries():
-		if country.country in ["Russia", "Ukraine"]: land.append(country.polygon)
+		if country.country in ["Russia", "Ukraine"] or not MapDefinition.is_regional():
+			land.append(country.polygon)
+			var area: = Rect2(country.polygon[0], Vector2.ZERO)
+			for vertex in country.polygon: area = area.expand(vertex)
+			_land_boxes.append(area)
 	# Highways between the major cities.
 	var highways: = SurfaceTool.new()
 	highways.begin(Mesh.PRIMITIVE_TRIANGLES)
-	var connections: = [["Lviv", "Kyiv"], ["Kyiv", "Kharkiv"], ["Kyiv", "Dnipro"], ["Dnipro", "Odesa"], ["Kharkiv", "Dnipro"], ["Moscow", "Kursk"], ["Moscow", "Voronezh"], ["Kursk", "Belgorod"], ["Voronezh", "Rostov-on-Don"]]
+	var connections: = [] if not MapDefinition.is_regional() else [["Lviv", "Kyiv"], ["Kyiv", "Kharkiv"], ["Kyiv", "Dnipro"], ["Dnipro", "Odesa"], ["Kharkiv", "Dnipro"], ["Moscow", "Kursk"], ["Moscow", "Voronezh"], ["Kursk", "Belgorod"], ["Voronezh", "Rostov-on-Don"]]
 	for pair in connections:
 		_road(highways, locations[pair[0]], locations[pair[1]], 0.010, 0.4, land)
 		roads.append([locations[pair[0]], locations[pair[1]], 0.4])
@@ -373,6 +413,8 @@ static func _polygon_area(polygon: PackedVector2Array) -> float:
 ## point an army must hold to capture the province. The flag shows who controls it.
 func _add_province_posts(city_points: Array) -> void :
 	var flags: = {"russia": [Color("f2f2ee"), Color("2853a8"), Color("c8372d")], "ukraine": [Color("2f6bc7"), Color("f2c418")]}
+	# Larger maps: one cloth per post, painted in the controller's colour (_update_posts).
+	if not MapDefinition.is_regional(): flags = {"controller": [Color.WHITE]}
 	for title in province_hubs:
 		var hub: Vector2 = province_hubs[title]
 		if city_points.any(func(city: Vector2): return city.distance_to(hub) < 0.5): continue
@@ -425,6 +467,8 @@ func _update_posts() -> void :
 		if not territory.playable or not province_posts.has(territory.title): continue
 		var post: Node3D = province_posts[territory.title]
 		for flag in post.get_children():
+			if flag.name == "controller":
+				for stripe in flag.get_children(): stripe.material_override.albedo_color = MapDefinition.country_color(territory.controller)
 			if flag.name in ["russia", "ukraine"]: flag.visible = flag.name == territory.controller
 
 ## Points along the road from start to end (both included), bowed sideways by `bend`.
@@ -445,7 +489,9 @@ func _road(surface: SurfaceTool, start: Vector2, end: Vector2, half_width: float
 		var a: = curve[i]
 		var b: = curve[i + 1]
 		var on_land: = false
-		for polygon in land:
+		for index in land.size():
+			var polygon: PackedVector2Array = land[index]
+			if index < _land_boxes.size() and not _land_boxes[index].has_point((a + b) * 0.5): continue
 			if Geometry2D.is_point_in_polygon((a + b) * 0.5, polygon):
 				on_land = true
 				break
@@ -477,6 +523,10 @@ func update_relations(at_war: bool) -> void :
 	for territory in territories:
 		if not territory.playable: continue
 		var material: ShaderMaterial = materials[territory.id]
+		if not MapDefinition.is_regional():
+			material.set_shader_parameter("occupied", territory.controller != territory.owner)
+			material.set_shader_parameter("country_tint", _country_tint(territory))
+			continue
 		material.set_shader_parameter("hostile", at_war and territory.controller != GameSession.player_country)
 		material.set_shader_parameter("occupied", territory.controller != territory.owner)
 		material.set_shader_parameter("country_tint", Color("c5b77e") if territory.controller == GameSession.player_country else Color("8a9872"))

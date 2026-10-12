@@ -12,6 +12,7 @@ var province_labels: Array = []
 var label_layer: CanvasLayer
 var districts: Dictionary = {}
 var _building_ref: WeakRef
+var _layouts: Dictionary = {}
 func setup(map: StrategicMap, camera_rig: StrategyCamera) -> void :
 	terrain = map
 	rig = camera_rig
@@ -36,7 +37,15 @@ func setup(map: StrategicMap, camera_rig: StrategyCamera) -> void :
 		districts[city.id] = district
 		var ink: = StandardMaterial3D.new()
 		ink.albedo_color = Color("73bcff") if city.country == "Ukraine" else Color("ef827c")
-		_build_city_district(district, city, ink)
+		if not MapDefinition.is_regional(): ink.albedo_color = MapDefinition.country_color(city.country_id).lightened(0.25)
+		# Larger maps (100+ cities, flat ground): a few city layouts built once and shared,
+		# which keeps loading and draw calls low on phones.
+		var layout: = ("capital" if city.get("capital", false) else "city") + str(abs(city.name.hash()) % 3)
+		if not MapDefinition.is_regional() and _layouts.has(layout):
+			for child in _layouts[layout].get_children(): district.add_child(child.duplicate())
+		else:
+			_build_city_district(district, city, ink)
+			_layouts[layout] = district
 		var label: = Button.new()
 		label.custom_minimum_size.y = 44
 		label.text = ("★ " if city.get("capital", false) else "") + city.name.to_upper()
@@ -98,7 +107,7 @@ func setup(map: StrategicMap, camera_rig: StrategyCamera) -> void :
 		leader.default_color = ink.albedo_color
 		label_layer.add_child(leader)
 		leaders.append(leader)
-	for spec in [["UKRAINE", [[25.5, 49.3], [29.7, 49.6], [34.2, 50.0]]], ["RUSSIA", [[36.0, 53.0], [39.5, 54.0], [44.0, 54.6]]]]:
+	for spec in ([["UKRAINE", [[25.5, 49.3], [29.7, 49.6], [34.2, 50.0]]], ["RUSSIA", [[36.0, 53.0], [39.5, 54.0], [44.0, 54.6]]]] if MapDefinition.is_regional() else []):
 		var points: = PackedVector2Array()
 		for coordinate in spec[1]: points.append(GeographicProjection.project(coordinate[0], coordinate[1]))
 		var label: = CountryMapLabel.new()

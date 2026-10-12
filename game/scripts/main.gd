@@ -331,6 +331,7 @@ func _ready() -> void :
 			GameSession.player_country = mobile_start.selected_country()
 			apply_player_country()
 			start_campaign_play())
+		mobile_start.europe_requested.connect(func(): get_tree().change_scene_to_file("res://scenes/europe_map.tscn"))
 		mobile_start.test_requested.connect(func():
 			GameSession.player_country = mobile_start.selected_country()
 			GameSession.weapons_test = true

@@ -2,13 +2,21 @@ class_name TerrainVisualMap
 extends RefCounted
 
 
-const ORIGIN: = Vector2(-24, -27)
-const EXTENT: = Vector2(50, 48)
-const RESOLUTION: = 256
+static var ORIGIN: = MapDefinition.REGIONAL_ORIGIN
+static var EXTENT: = MapDefinition.REGIONAL_EXTENT
+static var RESOLUTION: = 256
 const KINDS: = ["plains", "forest", "hills", "mountains", "urban", "wetlands", "desert"]
 static var image: Image
 static var texture: ImageTexture
 static var weights: ImageTexture
+## Called by MapDefinition.use(): the textures cover the active map's frame.
+static func reset() -> void:
+	ORIGIN = MapDefinition.origin()
+	EXTENT = MapDefinition.extent()
+	RESOLUTION = 256 if MapDefinition.is_regional() else 512
+	image = null
+	texture = null
+	weights = null
 static func get_texture() -> ImageTexture:
 	if texture != null: return texture
 	image = Image.create(RESOLUTION, RESOLUTION, false, Image.FORMAT_R8)

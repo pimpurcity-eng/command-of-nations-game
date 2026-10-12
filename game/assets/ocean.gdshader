@@ -1,10 +1,12 @@
 shader_type spatial;
 render_mode specular_disabled;
 uniform sampler2D coast_mask : filter_linear, repeat_disable;
+uniform vec2 mask_origin = vec2(-60.0);
+uniform vec2 mask_size = vec2(120.0);
 varying vec3 world;
 void vertex() { world=(MODEL_MATRIX*vec4(VERTEX,1.0)).xyz; }
 void fragment() {
- vec2 uv=(world.xz+vec2(60.0))/120.0;
+ vec2 uv=(world.xz-mask_origin)/mask_size;
  vec4 coast=texture(coast_mask,clamp(uv,vec2(0),vec2(1)));
  float distance_to_land=coast.g*8.0;
  vec3 sea=mix(vec3(0.22,0.43,0.47),vec3(0.09,0.24,0.31),smoothstep(0.0,2.6,distance_to_land));

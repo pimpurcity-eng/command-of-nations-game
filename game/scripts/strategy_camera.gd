@@ -21,6 +21,10 @@ var rendered_yaw: = 0.0
 var rendered_pitch: = 1.02
 ## Finger taps may wobble a little on high-density phone screens.
 const TAP_SLOP: = 14.0
+## Pan limits and farthest zoom (the regional map's by default; larger maps widen them).
+var bounds_low: = Vector2(-20, -26)
+var bounds_high: = Vector2(22, 16)
+var max_distance: = 60.0
 var fling: = Vector3.ZERO
 var _drag_velocity: = Vector3.ZERO
 func _ready() -> void :
@@ -44,8 +48,8 @@ func _process(delta: float) -> void :
 		fling = Vector3.ZERO if not touches.is_empty() or dragging else fling
 	_snap(1.0 - exp( - delta * 12.0))
 func _snap(weight: float) -> void :
-	target.x = clampf(target.x, -20, 22)
-	target.z = clampf(target.z, -26, 16)
+	target.x = clampf(target.x, bounds_low.x, bounds_high.x)
+	target.z = clampf(target.z, bounds_low.y, bounds_high.y)
 	rendered_target = rendered_target.lerp(target, weight)
 	rendered_distance = lerpf(rendered_distance, distance, weight)
 	rendered_yaw = lerpf(rendered_yaw, yaw, weight)
@@ -61,7 +65,7 @@ func _pan(motion: Vector2) -> void :
 	var forward: = Vector3(sin(yaw), 0, cos(yaw))
 	target += (right * motion.x + forward * motion.y) * distance * 0.0015
 func zoom(amount: float) -> void :
-	distance = clampf(distance * exp(amount), 4.5, 60.0)
+	distance = clampf(distance * exp(amount), 4.5, max_distance)
 func zoom_at(amount: float, screen: Vector2) -> void :
 	var ground: = Plane(Vector3.UP, 0.0)
 	var anchor = ground.intersects_ray(camera.project_ray_origin(screen), camera.project_ray_normal(screen))
