@@ -6,6 +6,7 @@ var rules: MatchSystem
 var buildings: BuildingSystem
 var tab: = "victory"
 signal strategic_launch_requested(kind: String)
+signal status_message(text: String)
 func setup(match_rules: MatchSystem, infrastructure: BuildingSystem, theme: Theme) -> void :
 	rules = match_rules
 	buildings = infrastructure
@@ -97,28 +98,90 @@ func _refresh() -> void :
 			var controller: = buildings.economy.controller(city)
 			_label(city.name + " · " + ("YOURS" if controller == GameSession.player_country else controller.capitalize()) + (" · captured" if controller != city.country.to_lower() else " · core city"))
 	else:
-		_label("DIPLOMACY", true)
-		_label(GameSession.player_country.capitalize() + " · You\n" + GameSession.opponent_country().capitalize() + " · AI opponent")
-		_label("AT WAR" if rules.at_war else "AT PEACE", true)
-		_label("Red territory belongs to the opposing country during war. Friendly control follows captured province ownership.")
-		for country in ["russia", "ukraine"]:
-			var provinces: = 0
-			var cities: = 0
-			for territory in rules.terrain.territories:
-				if territory.playable and territory.controller == country: provinces += 1
-			for city in buildings.economy.cities:
-				if buildings.economy.controlled(city, country): cities += 1
-			_label(country.capitalize() + " · " + str(provinces) + " provinces · " + str(cities) + " cities")
-		var action: = Button.new()
-		action.text = "End war · single-player ceasefire" if rules.at_war else "Declare war on " + GameSession.opponent_country().capitalize()
-		action.custom_minimum_size.y = 48
-		action.disabled = not rules.winner.is_empty()
-		action.pressed.connect( func():
-			if rules.at_war: rules.ceasefire()
-			else: rules.declare_war()
-			rules.terrain.update_relations(rules.at_war)
-			_refresh())
-		content.add_child(action)
+		_diplomacy()
+## Relations, coalitions and chat (Diplomacy). The AI answers proposals by how the war goes.
+func _diplomacy() -> void:
+	var me: = GameSession.player_country
+	var talks: Diplomacy = rules.diplomacy
+	var countries: Array = buildings.economy.stockpiles.keys()
+	var table: = VictoryRules.standings(rules.terrain.territories, rules.cities, countries)
+	_label("DIPLOMACY", true)
+	for other in countries:
+		if other == me: continue
+		var r: = talks.relation(me, other)
+		var flags: = []
+		if r.right_of_way: flags.append("right of way")
+		if r.shared_vision: flags.append("shared vision")
+		if talks.embargoed(me, other): flags.append("you embargo them")
+		if talks.embargoed(other, me): flags.append("they embargo you")
+		_label("%s · %s · %s%s" % [other.capitalize(), "AI" if other in talks.ai_countries else "player", "AT WAR" if r.war else "AT PEACE", (" · " + ", ".join(flags)) if not flags.is_empty() else ""], true)
+		var row: = HBoxContainer.new()
+		_action(row, "Propose peace" if r.war else "Declare war", func():
+			if r.war: hud_status(talks.propose(me, other, "peace", table).message)
+			else: rules.declare_war())
+		_action(row, "Right of way", func(): hud_status(talks.propose(me, other, "right_of_way", table).message), r.war or r.right_of_way)
+		_action(row, "Shared vision", func(): hud_status(talks.propose(me, other, "shared_vision", table).message), r.war or r.shared_vision)
+		_action(row, "Lift embargo" if talks.embargoed(me, other) else "Embargo", func(): talks.set_embargo(me, other, not talks.embargoed(me, other)))
+		content.add_child(row)
+	_label("COALITION", true)
+	var mine: = talks.coalition_of(me)
+	if mine.is_empty():
+		_label("Coalition members are at peace and share vision. Leaving blocks rejoining for %d days." % int(Diplomacy.REJOIN_DAYS))
+		var row: = HBoxContainer.new()
+		var name_box: = LineEdit.new()
+		name_box.placeholder_text = "Coalition name"
+		name_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_child(name_box)
+		_action(row, "Create", func(): hud_status(talks.create_coalition(name_box.text, me)))
+		content.add_child(row)
+		for name in talks.coalitions:
+			var join_row: = HBoxContainer.new()
+			_action(join_row, "Join %s (%d)" % [name, talks.coalitions[name].members.size()], func(): hud_status(talks.join(name, me)))
+			content.add_child(join_row)
+	else:
+		_label("%s · members: %s" % [mine, ", ".join(talks.coalitions[mine].members.map(func(c): return str(c).capitalize()))])
+		var row: = HBoxContainer.new()
+		_action(row, "Leave coalition", func(): talks.leave(me))
+		content.add_child(row)
+	_label("MESSAGES", true)
+	var inbox: = talks.inbox(me)
+	if inbox.is_empty(): _label("No messages yet.")
+	for i in range(maxi(0, inbox.size() - 20), inbox.size()):
+		var m: Dictionary = inbox[i]
+		_label("Day %d · %s → %s: %s" % [1 + int(m.time / VictoryRules.DAY), str(m.from).capitalize(), "everyone" if m.to == "all" else str(m.to).replace("coalition:", "coalition ").capitalize(), m.text])
+	var send: = HBoxContainer.new()
+	var to: = OptionButton.new()
+	var targets: = ["all"]
+	for other in countries:
+		if other != me: targets.append(other)
+	if not mine.is_empty(): targets.append("coalition:" + mine)
+	for target in targets: to.add_item("Everyone" if target == "all" else target.replace("coalition:", "Coalition ").capitalize())
+	send.add_child(to)
+	var text: = LineEdit.new()
+	text.placeholder_text = "Message"
+	text.max_length = 300
+	text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	send.add_child(text)
+	_action(send, "Send", func():
+		var target: String = targets[to.selected]
+		talks.post(me, target, text.text)
+		if target in talks.ai_countries:
+			talks.post(target, me, "We will answer on the battlefield." if talks.at_war(me, target) else "Your message has been noted, " + me.capitalize() + "."))
+	content.add_child(send)
+func _action(row: HBoxContainer, caption: String, action: Callable, disabled: bool = false) -> void:
+	var button: = Button.new()
+	button.text = caption
+	button.disabled = disabled or not rules.winner.is_empty()
+	button.custom_minimum_size.y = 48
+	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	button.clip_text = true
+	button.pressed.connect(func():
+		action.call()
+		rules.terrain.update_relations(rules.at_war)
+		_refresh())
+	row.add_child(button)
+func hud_status(message: String) -> void:
+	if not message.is_empty(): status_message.emit(message)
 func _strategic() -> void:
 	var me: = GameSession.player_country
 	_label("DOCTRINES", true)

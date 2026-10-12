@@ -134,6 +134,7 @@ func _ready() -> void :
 			exchange_panel = ExchangePanel.new()
 			add_child(exchange_panel)
 			exchange_panel.setup(production, hud.get_child(0).theme)
+			exchange_panel.exchange.diplomacy = match_rules.diplomacy
 		exchange_panel.open())
 	hud.add_destination_requested.connect( func():
 		if units.selected < 0 or units.units[units.selected].country != GameSession.player_country or not units.units[units.selected].moving:
@@ -820,6 +821,7 @@ func open_campaign(page: String) -> void :
 		add_child(campaign_panel)
 		campaign_panel.setup(match_rules, buildings, hud.get_child(0).theme)
 		campaign_panel.strategic_launch_requested.connect(launch_strategic)
+		campaign_panel.status_message.connect(hud.show_status)
 	campaign_panel.open(page)
 
 func open_army_command(action: String) -> void :

@@ -14,11 +14,15 @@ var fog_enabled: = true
 const MARCH_HEALTH_PER_SECOND: = 5.0 / (3600.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND)
 func vision_radius(unit: Dictionary) -> float:
 	return 4.0 if unit.visual_kind in ["fighter", "naval"] else 3.0
+## Shared vision and coalitions (MatchSystem.diplomacy, set by MatchSystem.setup).
+var diplomacy: Diplomacy
+func _sees_for(scout_country: String, country: String) -> bool:
+	return scout_country == country or (diplomacy != null and diplomacy.shares_vision(country, scout_country))
 func point_visible(point: Vector2, country: String = "") -> bool:
 	if country.is_empty(): country = GameSession.player_country
 	if not fog_enabled: return true
 	for scout in units:
-		if scout.country != country or scout.health <= 0: continue
+		if not _sees_for(scout.country, country) or scout.health <= 0: continue
 		var origin: = Vector2(scout.node.position.x, scout.node.position.z)
 		if origin.distance_to(point) <= vision_radius(scout): return true
 	return false
@@ -50,7 +54,7 @@ func unit_visible(unit: Dictionary, country: String = "") -> bool:
 	if not stealthy(unit): return point_visible(point, country)
 	if not fog_enabled: return true
 	for scout in units:
-		if scout.country != country or scout.health <= 0: continue
+		if not _sees_for(scout.country, country) or scout.health <= 0: continue
 		var distance: = Vector2(scout.node.position.x, scout.node.position.z).distance_to(point)
 		if distance <= CLOSE_RANGE or distance <= radar_range(scout, unit): return true
 	return false

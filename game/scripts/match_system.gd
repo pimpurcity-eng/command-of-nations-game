@@ -25,19 +25,28 @@ var chronicle: = WarChronicle.new()
 var annexation: = Annexation.new()
 ## Chemical and nuclear missiles.
 var strategic: = StrategicWeapons.new()
+## Relations, coalitions and messages.
+var diplomacy: = Diplomacy.new()
 ## Entrenchment (Conflict of Nations style): an army that has stood still for ENTRENCH_TIME at
 ## the centre of a province its country holds digs in and defends ENTRENCH_BONUS harder.
 const ENTRENCH_TIME: = VictoryRules.DAY / 12.0
 const ENTRENCH_BONUS: = 1.25
 var at_war: = false
+## Keeps the campaign's war flag in step with diplomacy (an accepted peace ends the war).
+func _sync_war() -> void:
+	var war: = diplomacy.at_war(GameSession.player_country, GameSession.opponent_country())
+	if war and not at_war: declare_war()
+	elif not war and at_war: ceasefire()
 func declare_war() -> void :
 	if at_war or not winner.is_empty(): return
+	diplomacy.set_war(GameSession.player_country, GameSession.opponent_country(), true)
 	at_war = true
 	armies.at_war = true
 	report.emit("WAR DECLARED · " + GameSession.opponent_country().capitalize() + " AI will defend and counterattack")
 func ceasefire() -> void :
 	if not at_war or not winner.is_empty(): return
 	at_war = false
+	diplomacy.set_war(GameSession.player_country, GameSession.opponent_country(), false)
 	armies.at_war = false
 	capture_progress.clear()
 	for unit in armies.units:
@@ -58,6 +67,8 @@ func setup(map: StrategicMap, units: UnitSystem, city_data: Array, time: Simulat
 	cities = city_data
 	clock = time
 	chronicle.setup(self)
+	armies.diplomacy = diplomacy
+	diplomacy.changed.connect(_sync_war)
 
 func advance_battles(seconds: float) -> void :
 	if not is_finite(seconds) or seconds <= 0 or not armies.at_war: return
@@ -80,6 +91,8 @@ func advance_battles(seconds: float) -> void :
 		remaining = maxf(0, remaining - step)
 func advance(seconds: float) -> void :
 	if not winner.is_empty() or seconds <= 0: return
+	diplomacy.now = clock.elapsed if clock != null else diplomacy.now + seconds
+	diplomacy.ai_countries = [GameSession.opponent_country()]
 	chronicle.advance(seconds)
 	for title in annexation.advance(seconds, terrain.territories): report.emit(title + " annexed")
 	for done in strategic.advance(seconds):
@@ -207,7 +220,7 @@ func end_match(country: String, kind: String = "elimination") -> void :
 	report.emit(VICTORY_NAMES.get(kind, "VICTORY") + " · " + country.capitalize() + " wins. Choose New match to play again.")
 	finished.emit(country)
 func snapshot() -> Dictionary:
-	return {"air_cooldowns": air_combat.snapshot(), "combat_cooldowns": combat.snapshot(), "at_war": at_war, "winner": winner, "decision_timer": decision_timer, "recruitment_timer": ai.recruitment_timer, "capture_progress": capture_progress.duplicate(true), "victory_type": victory_type, "victory": victory.snapshot(), "chronicle": chronicle.snapshot(), "annexation": annexation.snapshot(), "strategic": strategic.snapshot(), "doctrines": Doctrine.snapshot()}
+	return {"air_cooldowns": air_combat.snapshot(), "combat_cooldowns": combat.snapshot(), "at_war": at_war, "winner": winner, "decision_timer": decision_timer, "recruitment_timer": ai.recruitment_timer, "capture_progress": capture_progress.duplicate(true), "victory_type": victory_type, "victory": victory.snapshot(), "chronicle": chronicle.snapshot(), "annexation": annexation.snapshot(), "strategic": strategic.snapshot(), "doctrines": Doctrine.snapshot(), "diplomacy": diplomacy.snapshot()}
 func restore(state: Dictionary) -> void :
 	combat.restore(state.get("combat_cooldowns", {}))
 	air_combat.restore(state.get("air_cooldowns", {}))
@@ -223,3 +236,5 @@ func restore(state: Dictionary) -> void :
 	annexation.restore(state.get("annexation", {}))
 	strategic.restore(state.get("strategic", {}))
 	if state.has("doctrines"): Doctrine.restore(state.doctrines)
+	diplomacy.restore(state.get("diplomacy", {}))
+	diplomacy.relation(GameSession.player_country, GameSession.opponent_country()).war = at_war
