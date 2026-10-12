@@ -14,6 +14,12 @@ var content: VBoxContainer
 var artwork: TextureRect
 var fresh_button: Button
 var has_save: = false
+## Start-screen music (owner request 2026-10-12): drop a licensed track at one of these paths
+## (see assets/audio/README.md). Nothing plays until a track is there.
+const MUSIC_PATHS: = ["res://assets/audio/start_theme.ogg", "res://assets/audio/start_theme.mp3"]
+const SETTINGS_PATH: = "user://settings.cfg"
+var music: AudioStreamPlayer
+var music_button: Button
 func setup(theme: Theme, saved: bool) -> void :
 	has_save = saved
 	layer = 15
@@ -95,6 +101,7 @@ func setup(theme: Theme, saved: bool) -> void :
 	test_button.custom_minimum_size.y = 48
 	test_button.pressed.connect(func(): test_requested.emit(); hide())
 	column.add_child(test_button)
+	_start_music(column)
 	var europe_button: = Button.new()
 	europe_button.text = "EUROPE MAP · 20 PLAYERS (PREVIEW)"
 	europe_button.custom_minimum_size.y = 48
@@ -117,6 +124,40 @@ func setup(theme: Theme, saved: bool) -> void :
 	column.add_child(world_button)
 	get_viewport().size_changed.connect(_layout)
 	_layout()
+func _start_music(column: VBoxContainer) -> void:
+	var path: = ""
+	for candidate in MUSIC_PATHS:
+		if ResourceLoader.exists(candidate): path = candidate
+	if path.is_empty(): return
+	var stream: AudioStream = load(path)
+	if stream is AudioStreamOggVorbis: stream.loop = true
+	elif stream is AudioStreamMP3: stream.loop = true
+	music = AudioStreamPlayer.new()
+	music.stream = stream
+	add_child(music)
+	var settings: = ConfigFile.new()
+	settings.load(SETTINGS_PATH)
+	var enabled: bool = settings.get_value("audio", "music", true)
+	music_button = Button.new()
+	music_button.custom_minimum_size.y = 44
+	music_button.pressed.connect(func(): _set_music(not music.playing))
+	column.add_child(music_button)
+	_set_music(enabled)
+	# Fade out when the start screen closes (campaign starts) instead of cutting off.
+	visibility_changed.connect(func():
+		if not visible and music.playing:
+			var fade: = create_tween()
+			fade.tween_property(music, "volume_db", -40.0, 1.2)
+			fade.tween_callback(music.stop))
+func _set_music(enabled: bool) -> void:
+	music.volume_db = 0.0
+	if enabled: music.play()
+	else: music.stop()
+	music_button.text = "MUSIC: ON" if enabled else "MUSIC: OFF"
+	var settings: = ConfigFile.new()
+	settings.load(SETTINGS_PATH)
+	settings.set_value("audio", "music", enabled)
+	settings.save(SETTINGS_PATH)
 func _layout() -> void :
 	var size: = get_viewport().get_visible_rect().size
 	var portrait: = size.y > size.x

@@ -345,3 +345,7 @@ Native More → Player account: registration/commander name, masked password con
 - Start menu → **WORLD MAP · 100 PLAYERS (PREVIEW)** (`scenes/world_map.tscn`, same `EuropeMapView` script with `map_id = "world100"`). Far zoom shows capitals only.
 - Speed for big flat maps: no ground lookups (`elevation()` flat), borders built straight into arrays, roads test land with the coast mask and cities with a grid, forest uses the terrain texture. World loads in ~13 s and Europe in ~9 s on the build machine (was 31 s). Not yet tried on a phone.
 - Tests: new `test_world_map.gd` 8/0, `test_europe_map.gd` 11/0, all eight existing suites pass. No APK built (owner approval first).
+
+### Claude — 2026-10-12 (start-screen music support)
+- Owner wants RAVNIR's Viking battle music (YouTube) at game start. The track is copyrighted, so it was **not** downloaded or added; it needs the artist's permission or a licensed/royalty-free/owner-made replacement.
+- Start screen now plays `assets/audio/start_theme.ogg` (or `.mp3`) if present: loops, fades out when a campaign starts, MUSIC: ON/OFF button remembered in `user://settings.cfg`. No file = no music, no button. Verified with a temporary test tone (not committed). Record every track's licence in `docs/AUDIO_LICENCES.md`.
