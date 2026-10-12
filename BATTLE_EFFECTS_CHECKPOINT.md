@@ -367,3 +367,10 @@ Native More → Player account: registration/commander name, masked password con
 - Switches: start screen MUSIC/SOUND buttons, More menu "Sound: ON/OFF" and "Music: ON/OFF" (items 31/32), saved in `user://settings.cfg`. Hooks: combat_effects (shots, explosions), match reports (war, captures), finished (victory/defeat), buildings.completed, new `ResearchSystem.completed` signal, Europe/world map screens.
 - `tests/test_game_audio.gd` 16/0 (24 weapon-type mappings); all other suites pass. Listening copies: `docs/review/audio/`.
 - **Port to 0.22**: these files are self-contained; hooks are one line each (see above).
+
+### Claude — 2026-10-12 (Call of War / Conflict of Nations feature pass, phase 1: victory, news, battles)
+- Owner: "do it all" (gap list vs Call of War / Conflict of Nations) plus a domination victory and a very hard economic victory. Phases: 1 victory/news/battles · 2 entrenchment/retreat/annexation · 3 doctrines/stealth+radar/WMD · 4 diplomacy/coalitions/chat · 5 medals/leaderboard/tutorial/notifications/translations · 6 online multiplayer.
+- `scripts/victory_rules.gd`: victory points (province 1, city 5, capital 10). DOMINATION = 60% of all points outside your homeland held one game hour; ECONOMIC (very hard) = 80% of all map income + 250k funds + own capital, unbroken for 7 game days; ELIMINATION (kept); POINTS after day 45. Replaces the old "capture 3 cities" rule. `MatchSystem.victory_type`, saved. `ProductionSystem.earned` tracks gross income.
+- `scripts/war_chronicle.gd`: battle reports (fights within 2 map units and a game hour = one battle; shots and losses per country) and a daily newspaper (headline, captures, losses, biggest battle, research/construction, standings, economy leader). Saved with the game.
+- UI: Victory page = scoreboard with domination and economic progress bars and countdown; new News and Battles tabs; More → "War newspaper" (33), "Battle reports" (34); top-bar chip shows domination progress %.
+- `tests/test_victory.gd` 20/0; all other suites pass.

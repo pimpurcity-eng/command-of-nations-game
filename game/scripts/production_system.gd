@@ -5,6 +5,8 @@ signal unit_ready(spec: Dictionary)
 const RESOURCES: = ["funds", "materials", "electronics", "fuel", "manpower"]
 var catalog: Array = EquipmentIdentity.catalog  # one shared catalogue
 var stockpiles: Dictionary = {}
+## Gross income earned so far per country and resource (economic victory, newspaper).
+var earned: Dictionary = {}
 var jobs: Array = []
 var next_id: = 1
 const PLAN_LIMIT: = 8
@@ -78,12 +80,16 @@ func advance(seconds: float) -> void :
 		var bonus: float = ResourceSites.data().get("city_specialty_bonus", 0.0)
 		for resource in RESOURCES:
 			var facility: = buildings.resource_rate(city.id, resource) if buildings != null else 1.0
-			stockpiles[country][resource] += income[resource] * seconds * multiplier * facility * (1.0 + bonus if resource in specialties else 1.0)
+			var amount: float = income[resource] * seconds * multiplier * facility * (1.0 + bonus if resource in specialties else 1.0)
+			stockpiles[country][resource] += amount
+			_earn(country, resource, amount)
 	if resource_sites != null:
-		var earned: = resource_sites.income(seconds)
-		for country in earned:
+		var site_income: = resource_sites.income(seconds)
+		for country in site_income:
 			if not stockpiles.has(country): continue
-			for resource in earned[country]: stockpiles[country][resource] += earned[country][resource]
+			for resource in site_income[country]:
+				stockpiles[country][resource] += site_income[country][resource]
+				_earn(country, resource, site_income[country][resource])
 
 	for city in cities:
 		var remaining: = seconds
@@ -116,6 +122,9 @@ func advance(seconds: float) -> void :
 			if rally_points.has(city.id) and rally_points[city.id].country == spec.country: completed_unit.rally_point = rally_points[city.id].point.duplicate()
 			unit_ready.emit(completed_unit)
 	changed.emit()
+func _earn(country: String, resource: String, amount: float) -> void:
+	if not earned.has(country): earned[country] = {}
+	earned[country][resource] = earned[country].get(resource, 0.0) + amount
 func snapshot() -> Dictionary:
 	var state: = {"stockpiles": stockpiles.duplicate(true), "jobs": jobs.duplicate(true), "next_id": next_id, "rally_points": rally_points.duplicate(true)}
 	if research != null: state.research = research.snapshot()

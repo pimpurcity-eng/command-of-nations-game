@@ -232,12 +232,15 @@ func _ready() -> void :
 	cities.setup_buildings(buildings)
 	buildings.completed.connect(func(city_id: String, _building: String):
 		for city in cities.cities:
-			if city.id == city_id and cities.controller_of(city) == GameSession.player_country: audio.play("build_complete"))
+			if city.id == city_id:
+				match_rules.chronicle.note_building(cities.controller_of(city))
+				if cities.controller_of(city) == GameSession.player_country: audio.play("build_complete"))
 	research = ResearchSystem.new()
 	research.setup(production, clock, units)
 	production.research = research
 	clock.advanced.connect(research.advance)
 	research.completed.connect(func(_equipment: String, country: String):
+		match_rules.chronicle.note_research(country)
 		if country == GameSession.player_country: audio.play("research_complete"))
 	session.production = production
 	production.unit_ready.connect(units.spawn_produced)
@@ -330,7 +333,7 @@ func _ready() -> void :
 	match_rules.report.connect(_report_sound)
 	clock.advanced.connect(match_rules.advance)
 	units.status_changed.connect( func(_message: String): refresh_hud())
-	hud.show_status("PLANNING · Issue orders and queue production, then tap Play. Capture 3 enemy city provinces.")
+	hud.show_status("PLANNING · Issue orders and queue production, then tap Play. Win by domination, economy or elimination.")
 	apply_player_country()
 	if GameSession.weapons_test: populate_weapons_test(); apply_player_country()
 	if true:
@@ -536,6 +539,8 @@ func refresh_hud() -> void :
 	if hud == null: return
 	if match_rules != null:
 		hud.city_scores = match_rules.city_score()
+		var table: = VictoryRules.standings(map.territories, match_rules.cities, match_rules.production.stockpiles.keys() if match_rules.production != null else ["russia", "ukraine"])
+		hud.domination = table.get(GameSession.player_country, {}).get("domination", 0.0) / VictoryRules.DOMINATION_SHARE
 		map.update_relations(match_rules.at_war)
 	hud.show_clock(clock.elapsed, clock.speed, clock.paused)
 	if match_rules != null:

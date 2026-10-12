@@ -16,6 +16,11 @@ var clock: SimulationClock
 var ai_enabled: = true
 var decision_timer: = 0.0
 var winner: = ""
+## How the match was won: domination, economic, elimination or points (VictoryRules).
+var victory_type: = ""
+var victory: = VictoryRules.new()
+## Battle reports and the daily newspaper.
+var chronicle: = WarChronicle.new()
 var at_war: = false
 func declare_war() -> void :
 	if at_war or not winner.is_empty(): return
@@ -44,6 +49,7 @@ func setup(map: StrategicMap, units: UnitSystem, city_data: Array, time: Simulat
 	armies = units
 	cities = city_data
 	clock = time
+	chronicle.setup(self)
 
 func advance_battles(seconds: float) -> void :
 	if not is_finite(seconds) or seconds <= 0 or not armies.at_war: return
@@ -65,7 +71,14 @@ func advance_battles(seconds: float) -> void :
 			unit.health = maxf(0, unit.health - damage.get(unit.id, 0.0) * factor)
 		remaining = maxf(0, remaining - step)
 func advance(seconds: float) -> void :
-	if not winner.is_empty() or seconds <= 0 or not at_war: return
+	if not winner.is_empty() or seconds <= 0: return
+	chronicle.advance(seconds)
+	# Victory is checked in peace too (economic victory, time limit).
+	var result: = victory.evaluate(self, seconds)
+	if not result.is_empty():
+		end_match(result[0], result[1])
+		return
+	if not at_war: return
 	advance_battles(seconds)
 	var selected_stack: = ""
 	var selected_country: = ""
@@ -113,11 +126,7 @@ func advance(seconds: float) -> void :
 		terrain.update_relations(at_war)
 		capture_progress.erase(territory.id)
 		report.emit(territory.title + " captured by " + occupant.capitalize())
-	var score: = city_score()
 	for country in ["ukraine", "russia"]:
-		if score[country] >= 3:
-			end_match(country)
-			return
 		var living: = false
 		for unit in armies.units:
 			if unit.country == country:
@@ -132,7 +141,7 @@ func advance(seconds: float) -> void :
 				for city in cities:
 					if city.name == job.city and production.controlled(city, country): living = true
 		if not living:
-			end_match("russia" if country == "ukraine" else "ukraine")
+			end_match("russia" if country == "ukraine" else "ukraine", "elimination")
 			return
 	if not ai_enabled: return
 	decision_timer += seconds
@@ -145,14 +154,16 @@ func city_score() -> Dictionary:
 		for territory in terrain.territories:
 			if territory.id == city.sector and territory.controller != city.country.to_lower(): score[territory.controller] += 1
 	return score
-func end_match(country: String) -> void :
+const VICTORY_NAMES: = {"domination": "DOMINATION VICTORY", "economic": "ECONOMIC VICTORY", "elimination": "VICTORY BY ELIMINATION", "points": "VICTORY ON POINTS"}
+func end_match(country: String, kind: String = "elimination") -> void :
 	winner = country
+	victory_type = kind
 	clock.paused = true
 	clock.state_changed.emit()
-	report.emit(country.capitalize() + " wins. Choose New match to play again.")
+	report.emit(VICTORY_NAMES.get(kind, "VICTORY") + " · " + country.capitalize() + " wins. Choose New match to play again.")
 	finished.emit(country)
 func snapshot() -> Dictionary:
-	return {"air_cooldowns": air_combat.snapshot(), "combat_cooldowns": combat.snapshot(), "at_war": at_war, "winner": winner, "decision_timer": decision_timer, "recruitment_timer": ai.recruitment_timer, "capture_progress": capture_progress.duplicate(true)}
+	return {"air_cooldowns": air_combat.snapshot(), "combat_cooldowns": combat.snapshot(), "at_war": at_war, "winner": winner, "decision_timer": decision_timer, "recruitment_timer": ai.recruitment_timer, "capture_progress": capture_progress.duplicate(true), "victory_type": victory_type, "victory": victory.snapshot(), "chronicle": chronicle.snapshot()}
 func restore(state: Dictionary) -> void :
 	combat.restore(state.get("combat_cooldowns", {}))
 	air_combat.restore(state.get("air_cooldowns", {}))
@@ -162,3 +173,6 @@ func restore(state: Dictionary) -> void :
 	decision_timer = state.decision_timer
 	ai.recruitment_timer = state.recruitment_timer
 	capture_progress = state.capture_progress.duplicate(true)
+	victory_type = state.get("victory_type", "")
+	victory.restore(state.get("victory", {}))
+	chronicle.restore(state.get("chronicle", {}))
