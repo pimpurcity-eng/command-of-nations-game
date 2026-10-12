@@ -40,14 +40,30 @@ func build(page: String) -> void:
 	mode=page;inputs.clear()
 	for item in fields.get_children():fields.remove_child(item);item.queue_free()
 	label_text("COMMAND OF NATIONS",24).modulate=Color("c9ad73")
-	var titles: Dictionary={"login":"Welcome back, Commander","signup":"Create your commander account","verify":"Confirm your email","recover":"Reset your password","recovery_code":"Check your email","new_password":"Choose a new password","profile":"Commander account"}
+	var titles: Dictionary={"login":"Welcome back, Commander","signup":"Create your commander account","verify":"Confirm your email","recover":"Reset your password","recovery_code":"Check your email","new_password":"Choose a new password","profile":"Commander account","delete":"Delete account"}
 	label_text(titles[page],40)
 	if page=="profile":
-		label_text(str(auth.user.get("user_metadata",{}).get("commander_name","Commander")),34)
+		label_text(str(auth.profile.get("commander_name",auth.user.get("user_metadata",{}).get("commander_name","Commander"))),34)
 		label_text(str(auth.user.get("email","")))
-		label_text("Email confirmed. Online matches are still in development.",24)
+		if auth.profile.has("xp"):
+			var xp:=int(auth.profile.xp);var level:=PlayerAuth.level_for(xp)
+			var low:=PlayerAuth.xp_for_level(level);var high:=PlayerAuth.xp_for_level(level+1)
+			label_text("LEVEL %d" % level,40).modulate=Color("e9c46a")
+			var bar:=ProgressBar.new();bar.min_value=low;bar.max_value=high;bar.value=xp;bar.show_percentage=false;bar.custom_minimum_size.y=22;fields.add_child(bar)
+			label_text("%d / %d XP to level %d" % [xp,high,level+1],24)
+			label_text("Games %d · Wins %d · Losses %d" % [int(auth.profile.get("games_played",0)),int(auth.profile.get("wins",0)),int(auth.profile.get("losses",0))],26)
+		else:
+			label_text("Loading your level and stats…",24)
+			load_profile.call_deferred()
+		label_text("Win a campaign for 100 XP, finish one for 25 XP, plus up to 50 XP for its length.",22)
 		button("Sign out",func():
 			working=true;await auth.logout();working=false;build("login"))
+		button("Delete account",func():build("delete"))
+	elif page=="delete":
+		label_text("This permanently deletes your commander account, level, XP and stats. It cannot be undone. Your offline campaign on this phone is kept.",26)
+		input("confirm_delete","Type DELETE to confirm")
+		button("Delete my account forever",delete_account)
+		button("Keep my account",func():build("profile"))
 	else:
 		if page in ["login","signup","recover"]:input("email","Email address")
 		if page=="signup":input("commander","Commander name")
@@ -64,6 +80,16 @@ func build(page: String) -> void:
 	status=label_text("",24)
 	if not auth.configured():status.text="Online accounts are being connected. Offline play is available."
 	button("Back to game",func():overlay.hide())
+func load_profile() -> void:
+	if working or mode!="profile":return
+	working=true;var result:=await auth.load_profile();working=false
+	if result.ok and mode=="profile":build("profile")
+	elif mode=="profile":status.text=result.message
+func delete_account() -> void:
+	if value("confirm_delete").strip_edges()!="DELETE":status.text="Type DELETE (in capitals) to confirm.";return
+	working=true;status.text="Deleting…";var result:=await auth.delete_account();working=false
+	if not result.ok:status.text=result.message;return
+	build("login");status.text="Your account and all its data were deleted."
 func remember_email() -> void:
 	if inputs.has("email"):email=inputs.email.text.strip_edges()
 func value(key: String) -> String:return inputs[key].text if inputs.has(key) else ""

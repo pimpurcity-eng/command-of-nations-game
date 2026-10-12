@@ -313,6 +313,7 @@ func _ready() -> void :
 	session.match_rules = match_rules
 	match_rules.report.connect(hud.show_status)
 	match_rules.finished.connect(show_result)
+	match_rules.finished.connect(_report_result)
 	clock.advanced.connect(match_rules.advance)
 	units.status_changed.connect( func(_message: String): refresh_hud())
 	hud.show_status("PLANNING · Issue orders and queue production, then tap Play. Capture 3 enemy city provinces.")
@@ -564,6 +565,12 @@ func refresh_hud() -> void :
 		if hud.inspecting_unit: hud.clear_unit_selection()
 		hud.move_button.disabled = true
 		hud.stop_button.disabled = true
+## Signed-in commanders earn XP for finished campaigns (server caps and rate-limits it).
+var match_started_msec: = 0
+func _report_result(country: String) -> void:
+	if account_panel == null or not account_panel.auth.signed_in(): return
+	var minutes: = int((Time.get_ticks_msec() - match_started_msec) / 60000) if match_started_msec > 0 else 0
+	await account_panel.auth.record_result(country == GameSession.player_country, minutes)
 func show_result(country: String) -> void :
 	_set_order_mode(false)
 	city_panel.hide()
@@ -680,6 +687,7 @@ func show_stack_info() -> void :
 
 func start_campaign_play() -> void :
 	if not match_rules.winner.is_empty(): return
+	if match_started_msec == 0: match_started_msec = Time.get_ticks_msec()
 	clock.paused = false
 	refresh_hud()
 	hud.show_status("Campaign running at " + str(int(clock.speed)) + "x · select a your army, then Move or Fly. Pause stops movement and builds.")

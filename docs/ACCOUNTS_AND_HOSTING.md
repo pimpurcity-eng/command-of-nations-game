@@ -15,7 +15,7 @@ The profile migration creates a private UUID-linked profile on Auth signup and u
 1. Provision a dedicated Command of Nations Supabase project, independent of Yaska. Start with a nearby North American region and measure latency from testers.
 2. Enable email/password signup and require Confirm Email. Enforce a minimum 12-character password. Configure six-digit OTPs, short OTP expiry and provider-side signup/verify/recovery rate limits. Local resend cooldown is convenience only, not a security boundary.
 3. Configure a transactional SMTP sender for the chosen domain, verify SPF/DKIM and configure DMARC. Supabase's default sender reaches project-team addresses only, so it is unsuitable for the 100 testers. Raise email throughput deliberately for a tester onboarding wave, keeping abuse controls. Invite in batches.
-4. Apply backend/migrations/001_player_accounts.sql once to that project, with private excluded from exposed Data API schemas. Configure confirmation/reset templates from backend/email/. They use {{ .Token }}, not a website callback.
+4. Apply backend/migrations/001_player_accounts.sql, then 002_profiles_levels_deletion.sql (levels, XP, stats, `delete_my_account()`), once to that project, with private excluded from exposed Data API schemas. Configure confirmation/reset templates from backend/email/. They use {{ .Token }}, not a website callback.
 5. Copy game/config/accounts.example.cfg to game/config/accounts.cfg with the HTTPS project URL and sb_publishable_ client key. No service-role key, JWT signing key, SMTP password or secret key belongs in Godot. Build-time configuration must include only these public values.
 6. Verify registration and delivery to a non-team email address, code expiry/replay/retry, duplicate emails, confirmed/unconfirmed login, recovery/relogin, refresh, offline handling, and logout against the actual provider. Test database isolation with two real accounts, including denied cross-player reads/updates and denied privileged fields. Migration has been prepared, not applied or validated on a live PostgreSQL service.
 7. Render/review screens, then coordinate Claude's Android build/signing. Existing installed app does not gain this code automatically. No APK/release was published in this change.
@@ -51,3 +51,20 @@ Official references consulted:
 - https://supabase.com/pricing
 
 Claude handoff: new accounts files/backend/docs plus a small More-menu signal in hud.gd, lazy panel creation/map-input guard in main.gd, and Android internet=true in export_presets.cfg. Preserve existing map, cities, units and main campaign. Do not re-enable archived infantry. Actual hosting configuration, SMTP, live integration and Android signing remain open.
+
+## Levels, XP and account deletion (Claude, 2026-10-12)
+
+`backend/migrations/002_profiles_levels_deletion.sql` adds XP, games played, wins and losses to
+each profile, `commander_level(xp)` (level n needs 100·(n−1)² XP), a private results log,
+`record_match_result(won, minutes)` (100 XP for a win, 25 for a defeat, +1 per minute up to 50;
+one result per 10 minutes; confirmed accounts only) and `delete_my_account()` (Google Play's
+in-app deletion requirement; the profile and log are removed with the user). Players cannot
+write XP or stats themselves. Tested on PostgreSQL 16 with stand-ins for Supabase's `auth`
+schema: awards, the 10-minute limit, denied direct XP writes, own-row-only reads, denied log
+reads, unconfirmed and anonymous callers refused, deletion cascades. Re-check deletion on the
+live project (the function's owner must be allowed to delete from `auth.users`).
+
+In the game: More → Player account shows level, an XP bar, games/wins/losses, Sign out and
+Delete account (type DELETE). A finished campaign reports the result when signed in. While
+campaigns are single-player the phone reports results; once online matches exist, the match
+server records them and `record_match_result` is no longer granted to players.

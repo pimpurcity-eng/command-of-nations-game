@@ -349,3 +349,7 @@ Native More → Player account: registration/commander name, masked password con
 ### Claude — 2026-10-12 (start-screen music support)
 - Owner wants RAVNIR's Viking battle music (YouTube) at game start. The track is copyrighted, so it was **not** downloaded or added; it needs the artist's permission or a licensed/royalty-free/owner-made replacement.
 - Start screen now plays `assets/audio/start_theme.ogg` (or `.mp3`) if present: loops, fades out when a campaign starts, MUSIC: ON/OFF button remembered in `user://settings.cfg`. No file = no music, no button. Verified with a temporary test tone (not committed). Record every track's licence in `docs/AUDIO_LICENCES.md`.
+
+### Claude — 2026-10-12 (launch prep: levels, XP, account deletion)
+- `backend/migrations/002_profiles_levels_deletion.sql`: XP/games/wins/losses, `commander_level`, private results log, rate-limited capped `record_match_result`, `delete_my_account` (Play Store requirement). Applied with 001 to PostgreSQL 16 + Supabase stand-ins and behaviour-tested (awards, limits, no self-written XP, own-row reads, deletion cascade).
+- Game: `PlayerAuth.load_profile/record_result/delete_account`, `level_for`; account page shows level, XP bar, stats, Delete account (type DELETE); `main._report_result` reports finished campaigns when signed in. `test_player_accounts` 28/0 (7 new).

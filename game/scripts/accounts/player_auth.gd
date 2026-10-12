@@ -12,6 +12,8 @@ var expires_at := 0.0
 var recovery_pending := false
 var busy := false
 var refresh_retry_at := 0.0
+## The signed-in commander's profile from the server (xp, games_played, wins, losses).
+var profile: Dictionary = {}
 var transport: Callable # Test injection only; production uses HTTPRequest.
 func _ready() -> void:
 	var config := ConfigFile.new()
@@ -81,7 +83,33 @@ func logout() -> Dictionary:
 	if token.is_empty():return {"ok":true,"data":{}}
 	return await request("/logout?scope=local",{},HTTPClient.METHOD_POST,token)
 func clear_session() -> void:
-	access_token="";refresh_token="";user={};expires_at=0;recovery_pending=false;session_changed.emit()
+	access_token="";refresh_token="";user={};profile={};expires_at=0;recovery_pending=false;session_changed.emit()
+## Commander level from XP: level n needs 100*(n-1)^2 XP. Same formula as the server
+## (backend/migrations/002_profiles_levels_deletion.sql, commander_level).
+static func level_for(xp: int) -> int:return int(floor(sqrt(maxf(xp,0)/100.0)))+1
+static func xp_for_level(level: int) -> int:return 100*(level-1)*(level-1)
+func load_profile() -> Dictionary:
+	if not signed_in():return failure("Sign in first.")
+	var result:=await request("/rest/v1/player_profiles?select=commander_name,xp,games_played,wins,losses&id=eq."+str(user.id).uri_encode(),{},HTTPClient.METHOD_GET,access_token)
+	if not result.ok:return result
+	var rows: Variant=result.data.get("rows",[])
+	if not (rows is Array) or rows.is_empty():return failure("Profile not found yet. Try again in a moment.")
+	profile=rows[0];return {"ok":true,"data":profile}
+## Single-player result against the AI. The server rate-limits and caps the XP; when online
+## matches arrive, the match server records results instead.
+func record_result(won: bool,minutes: int) -> Dictionary:
+	if not signed_in():return failure("Sign in to earn XP.")
+	var result:=await request("/rest/v1/rpc/record_match_result",{"won":won,"minutes":maxi(minutes,0)},HTTPClient.METHOD_POST,access_token)
+	if not result.ok:return result
+	var rows: Variant=result.data.get("rows",[])
+	if rows is Array and not rows.is_empty():profile.merge(rows[0],true)
+	return {"ok":true,"data":profile}
+## Permanently deletes the account and everything stored with it (Google Play requirement).
+func delete_account() -> Dictionary:
+	if not signed_in():return failure("Sign in first.")
+	var result:=await request("/rest/v1/rpc/delete_my_account",{},HTTPClient.METHOD_POST,access_token)
+	if result.ok:clear_session()
+	return result
 func accept_session(data: Dictionary,recovery: bool) -> Dictionary:
 	var raw_user: Variant=data.get("user",{})
 	var candidate: Dictionary=raw_user if raw_user is Dictionary else {}
@@ -104,15 +132,20 @@ func http(path: String,payload: Dictionary,method: int,bearer: String) -> Dictio
 	var client:=HTTPRequest.new();client.timeout=20;add_child(client)
 	var headers:=PackedStringArray(["Content-Type: application/json","apikey: "+public_key])
 	if not bearer.is_empty():headers.append("Authorization: Bearer "+bearer)
-	var error:=client.request(base_url+"/auth/v1"+path,headers,method,JSON.stringify(payload))
+	# Data API (profiles, results) lives under /rest/v1; everything else is Auth.
+	var url:=base_url+(path if path.begins_with("/rest/") else "/auth/v1"+path)
+	var body:="" if method==HTTPClient.METHOD_GET else JSON.stringify(payload)
+	var error:=client.request(url,headers,method,body)
 	if error!=OK:client.queue_free();return failure("Could not connect. Please try again.")
 	var raw: Array=await client.request_completed;client.queue_free()
 	if int(raw[0])!=HTTPRequest.RESULT_SUCCESS:return failure("Connection interrupted. Please try again.")
 	var status:=int(raw[1]);var decoded: Variant=JSON.parse_string(raw[3].get_string_from_utf8())
-	var data: Dictionary=decoded if decoded is Dictionary else {}
+	# The Data API answers with arrays (rows); Auth with objects.
+	var data: Dictionary=decoded if decoded is Dictionary else ({"rows":decoded} if decoded is Array else {})
 	if status>=200 and status<300:return {"ok":true,"data":data,"status":status}
 	# Do not expose raw backend errors, account existence, tokens, or response bodies.
 	if status==429:return failure("Too many attempts. Wait a moment and try again.",status)
+	if path.begins_with("/rest/v1/rpc/record_match_result") and str(data.get("message",""))=="too soon":return failure("Results count once every 10 minutes.",status)
 	if str(data.get("error_code",""))=="email_not_confirmed":return failure("Confirm your email before signing in.",status)
 	if status>=500:return failure("Account service is temporarily unavailable. Please try again.",status)
 	return failure("Could not complete that request. Check your details or request a new code.",status)
