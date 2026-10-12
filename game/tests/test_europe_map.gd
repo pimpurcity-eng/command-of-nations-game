@@ -39,6 +39,24 @@ func run() -> void:
 	check(owner_at.call(60.0, 56.0) == "context", "Russia east of its map part is context land")
 	check(owner_at.call(14.5, 46.05) == "slovenia" and owner_at.call(-0.12, 51.5) == "united_kingdom", "small countries and capitals are on the map")
 	check(map.province_hubs.size() >= 20 * 25, "every province has a road hub (%d)" % map.province_hubs.size())
+	var titles: = {}
+	var playable: = 0
+	for t in map.territories:
+		if t.playable and t.id.ends_with("_0"):
+			titles[t.title] = true
+			playable += 1
+	check(titles.size() == playable and map.province_hubs.size() == playable, "every province has its own name and road hub (%d of %d)" % [map.province_hubs.size(), playable])
+	var grid: = {}
+	for t in map.territories:
+		if not t.playable: continue
+		var area: = Rect2(t.polygon[0], Vector2.ZERO)
+		for v in t.polygon: area = area.expand(v)
+		for x in range(floori(area.position.x), floori(area.end.x) + 1):
+			for y in range(floori(area.position.y), floori(area.end.y) + 1):
+				if not grid.has(Vector2i(x, y)): grid[Vector2i(x, y)] = []
+				grid[Vector2i(x, y)].append(t)
+	check(map.roads.all(func(r: Array): return StrategicMap._over_land(StrategicMap.road_curve(r[0], r[1], r[2]), grid)), "no road crosses sea or non-playable land")
+	check(view.cities.cities.all(func(c: Dictionary): return map.territories.any(func(t: Dictionary): return t.playable and t.controller == c.country_id and RegionData.contains(t, c.point))), "every city stands on its own country's land")
 	view._back.call()
 	check(MapDefinition.is_regional(), "leaving the Europe map restores the regional map")
 	print("RESULT failures=", failures.size())

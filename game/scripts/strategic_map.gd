@@ -387,9 +387,24 @@ static func road_graph(territory_list: Array) -> Dictionary:
 						if i != j: neighbours[i][j] = true
 	var edges: Array = []
 	var connected: Dictionary = {}
+	# Larger maps (owner review 2026-10-12): no road may cross sea or non-playable land, and
+	# islands are not bridged to the nearest province.
+	var land_check: = not MapDefinition.is_regional()
+	var land_grid: Dictionary = {}
+	if land_check:
+		for t in territory_list:
+			if not t.playable: continue
+			var area: = Rect2(t.polygon[0], Vector2.ZERO)
+			for vertex in t.polygon: area = area.expand(vertex)
+			for x in range(floori(area.position.x), floori(area.end.x) + 1):
+				for y in range(floori(area.position.y), floori(area.end.y) + 1):
+					var key: = Vector2i(x, y)
+					if not land_grid.has(key): land_grid[key] = []
+					land_grid[key].append(t)
 	for i in centers.size():
 		for j in neighbours[i]:
 			if j <= i: continue
+			if land_check and not _over_land(road_curve(centers[i], centers[j], 0.12 * sin(float(i * 31 + j))), land_grid): continue
 			var length: = centers[i].distance_to(centers[j])
 			var blocked: = false
 			for k in neighbours[i]:
@@ -402,13 +417,23 @@ static func road_graph(territory_list: Array) -> Dictionary:
 				connected[j] = true
 	# Enclaves (Kyiv City inside Kyiv region) share no outer border vertex: join the nearest.
 	for i in centers.size():
-		if connected.has(i): continue
+		if connected.has(i) or land_check: continue
 		var nearest: = -1
 		for j in centers.size():
 			if j != i and centers[j].distance_to(centers[i]) < 6.0 and (nearest < 0 or centers[j].distance_to(centers[i]) < centers[nearest].distance_to(centers[i])): nearest = j
 		if nearest >= 0: edges.append([centers[i], centers[nearest], 0.0])
 	return {"edges": edges, "hubs": main_part}
 
+## Every point of the road (as drawn and travelled) lies inside a playable province.
+static func _over_land(curve: PackedVector2Array, land_grid: Dictionary) -> bool:
+	for point in curve:
+		var inside: = false
+		for t in land_grid.get(Vector2i(floori(point.x), floori(point.y)), []):
+			if RegionData.contains(t, point):
+				inside = true
+				break
+		if not inside: return false
+	return true
 static func _polygon_area(polygon: PackedVector2Array) -> float:
 	var area: = 0.0
 	for i in polygon.size(): area += polygon[i].cross(polygon[(i + 1) % polygon.size()])

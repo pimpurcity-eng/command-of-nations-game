@@ -254,7 +254,10 @@ def split_unit(u, places, rng):
         else:
             other = c[1] if centre_xy is c[0] else c[0]
             v = centre_xy - other
-            name = u["name"] + (" " + ("West" if v[0] < 0 else "East") if abs(v[0]) > abs(v[1]) else " " + ("North" if v[1] < 0 else "South"))
+            base = u["name"]
+            for word in (" North", " South", " East", " West"):
+                base = base.removesuffix(word)  # no "Minsk South South"
+            name = base + (" " + ("West" if v[0] < 0 else "East") if abs(v[0]) > abs(v[1]) else " " + ("North" if v[1] < 0 else "South"))
         out.append({"name": name, "region": u["region"], "geom": geom, "area": km2(geom), "members": [(name, u["region"], km2(geom))]})
     return out
 
@@ -444,6 +447,14 @@ def main():
     for p in provinces:
         if seen[p["name"]] > 1:
             p["name"] = f"{p['name']} ({nations[p['code']][1]})"
+    # Still equal (same name twice in one country): number them. Road hubs are keyed by name.
+    again = {}
+    for p in provinces:
+        again.setdefault(p["name"], []).append(p)
+    for name, group in again.items():
+        if len(group) > 1:
+            for n, p in enumerate(group):
+                p["name"] = f"{name} {n + 1}"
 
     # Context: all other land inside the frame (the rest of Russia, Kazakhstan, Africa, Asia).
     claimed = unary_union([p["geom"] for p in provinces])
@@ -562,6 +573,14 @@ def main():
                            "province": home, "_x": float(x), "_z": float(z)})
         for c in chosen:
             del c["_x"], c["_z"]
+            # Coastal towns can fall just outside the simplified coastline: move them onto land.
+            g = next(g for item, g in own if item["id"] == c["province"])
+            if not g.contains(Point(c["longitude"], c["latitude"])):
+                inner = g.buffer(-0.03)
+                target = inner if not inner.is_empty else g
+                from shapely.ops import nearest_points
+                q = nearest_points(target, Point(c["longitude"], c["latitude"]))[0]
+                c["longitude"], c["latitude"] = round(q.x, 4), round(q.y, 4)
         cities += chosen
 
     # Country outlines (players and AI) for the thick national borders and the road clip.
