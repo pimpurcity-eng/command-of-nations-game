@@ -59,7 +59,7 @@ resumes the save and its seats (`<match>.json`, `<match>_seats.json`).
 3. **Install Docker and Caddy** on the server. Copy this repository there.
 4. **Configure.** In `server/`, create a `.env` file:
    ```
-   SUPABASE_URL=https://<your-project>.supabase.co
+   SUPABASE_URL=https://wrnmscdtwbezcmrlukvg.supabase.co   # the Warfront Mandate project
    SUPABASE_ANON_KEY=<the anon public key>
    ```
    These are the same public values the app already uses. **Do not use the service-role key.**
