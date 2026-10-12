@@ -10,7 +10,7 @@
 
 ## What is NOT finished
 
-The gateway is **not an authoritative Godot simulation worker**. It does not execute movement, combat, research, production, economic trade or elapsed offline time. Valid commands are only queued. The existing game is not wired to the gateway. There is no live Supabase project, SMTP configuration, server deployment, 100-client load test or updated Android build from this change. `WM_MULTIPLAYER_ENABLED` stays false until the simulation and country-specific state filtering are connected and tested.
+The gateway is **not an authoritative Godot simulation worker**. It does not execute movement, combat, research, production, economic trade or elapsed offline time. Valid commands are only queued. The existing game is not wired to the gateway. The dedicated live Supabase database is installed and verified. SMTP configuration, server deployment, a 100-client load test and an updated Android build are still pending. `WM_MULTIPLAYER_ENABLED` stays false until the simulation and country-specific state filtering are connected and tested.
 
 The reviewed account branch predates the current 0.22 local game. This branch contains a focused diff against `chatgpt/battle-effects`; it must not replace the newer game wholesale. Port only the account fixes and backend files into the current game. Europe and world previews are not enabled or modified here.
 
@@ -39,9 +39,25 @@ Use a Linux server behind HTTPS at an intended API address such as `api.warfront
 
 A simulation worker alone calls `server_start_match`, `server_restore_match`, `server_checkpoint` and `server_finish_match`. It must enforce ownership, legal routes, timing, prerequisites and resource balances using the current Godot rules. A queued response is not an accepted/applied order. Add fog-of-war filtered state delivery and a persistent worker lease before running multiple workers against a match. Add monitoring, restore drills and load tests before choosing server size.
 
-No paid resources or public online accounts were created by this preparation.
+No paid resources or public player accounts were created. The user provisioned the dedicated free Supabase project.
 
 References:
 - https://supabase.com/docs/guides/auth/passwords
 - https://supabase.com/docs/guides/auth/auth-smtp
 - https://supabase.com/docs/reference/javascript/auth-getuser
+
+## Verified live setup — 12 October 2026
+
+Project: Warfront Mandate, `wrnmscdtwbezcmrlukvg`, free plan, western US (`us-west-2`). This region does not restrict players to the US; worldwide access and worldwide game content are separate concerns.
+
+The live migration `warfront_accounts_and_server_foundation` applied existing 001–003 atomically, so players never had an intermediate opportunity to submit wins. The follow-up `harden_accounts_and_match_indexes` corresponds to `backend/migrations/20261012181705_harden_accounts_and_match_indexes.sql`. It fixes the level function search path, protects the historical results table with RLS, indexes player/owner foreign keys, and requires a current Auth session for account deletion. Deletion removes sessions before the Auth user.
+
+Live rollback tests in `backend/tests/live_security_smoke.sql` passed: signup profile creation, confirmed own-profile access and rename, unconfirmed denial, forbidden XP updates and privileged RPC calls, revoked-session deletion denial, order deduplication, stale checkpoint rejection, one-time rewards, and own-account deletion with cascades. These tests simulate JWT claims and Auth records; they do not test real email delivery or an Android login. Temporary records were rolled back and their absence verified.
+
+Auth's public settings confirmed email/password signup enabled, email confirmation required, and anonymous sign-in disabled. SMTP credentials, password minimum, email templates, OTP expiry/length, Site URL and delivery rates are not exposed through the connected management tools and remain unverified. Complete these in the dashboard before inviting users. Never paste SMTP credentials into chat or source control.
+
+Client-safe configuration is saved at `backend/deployment/production.accounts.cfg`. Copy it into `game/config/accounts.cfg` **in the current game**, alongside the focused account fixes; rebuild and test that version. The old branch must not replace the current game. No service-role or secret key was retrieved or placed in client files.
+
+Post-change performance advisor: no findings. Security advisor: the private tables intentionally have RLS with no player policies (deny client access); account deletion intentionally uses a restricted definer RPC with identity and active-session checks. The live assertions verify these boundaries. References:
+- [Private deny-by-default RLS advisory](https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy)
+- [Restricted account deletion RPC advisory](https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable)
