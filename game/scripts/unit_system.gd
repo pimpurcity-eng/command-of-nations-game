@@ -140,7 +140,7 @@ func setup(map: StrategicMap, scenario: Dictionary) -> void :
 	air.armies = self
 	terrain = map
 	navigation.terrain = map
-	for data in scenario.units:
+	for data in ([] if scenario.has("starting_tiers") else scenario.units):
 		var point: = GeographicProjection.project(data.longitude, data.latitude)
 		# Owner review: ground troops start in their city or province centre (no offsets);
 		# aircraft and ships keep the scenario offset.

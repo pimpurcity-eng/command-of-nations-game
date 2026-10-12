@@ -51,6 +51,7 @@ func gross_income() -> Dictionary:
 		counted[region.title] = true
 		if not result.has(region.controller): continue
 		var multiplier: = (1.0 if region.controller == region.owner else 0.25) * float(region.get("morale",100.0 if region.controller == region.owner else 25.0))/100.0
+		if buildings != null: multiplier *= buildings.provinces.income_factor(region.title)
 		result[region.controller].funds += 0.08 * multiplier
 		result[region.controller].manpower += 0.012 * multiplier
 	if resource_sites != null:
@@ -58,6 +59,15 @@ func gross_income() -> Dictionary:
 		for country in sites_income:
 			if result.has(country):
 				for resource in sites_income[country]: result[country][resource] += sites_income[country][resource]
+	return result
+func province_income(place: Dictionary) -> Dictionary:
+	var region: Dictionary = place.region
+	var factor: = (1.0 if region.controller == region.owner else 0.25)*float(region.get("morale",100.0))/100.0
+	if buildings != null: factor *= buildings.provinces.income_factor(region.title)
+	var result: = {"funds":0.08*factor,"manpower":0.012*factor,"materials":0.0,"electronics":0.0,"fuel":0.0}
+	if resource_sites != null:
+		for site in resource_sites.sites:
+			if site.city.is_empty() and site.territory.title == region.title: result[site.resource] += ResourceSites.rate(site.resource)*factor
 	return result
 func upkeep() -> Dictionary:
 	var result: Dictionary = {}

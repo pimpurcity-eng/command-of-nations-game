@@ -9,11 +9,13 @@ var capitals: Dictionary = {}
 var levels: Dictionary = {}
 var jobs: Array = []
 var next_id: = 1
+var provinces: = ProvinceConstruction.new()
 
 func setup(production: ProductionSystem, countries: Dictionary) -> void :
 	economy = production
 	for country in countries: capitals[country] = countries[country].get("capital_city", "")
 	_reset_levels()
+	provinces.setup(self)
 func _reset_levels() -> void :
 	levels.clear()
 	for city in economy.cities:
@@ -26,7 +28,7 @@ func initial_level(place: Dictionary, definition: Dictionary) -> int:
 func city(id: String) -> Dictionary:
 	for entry in economy.cities:
 		if entry.id == id: return entry
-	return {}
+	return provinces.place(id)
 func capital(country: String) -> Dictionary:
 	return city(capitals.get(country, ""))
 func is_capital(place: Dictionary) -> bool:
@@ -36,6 +38,7 @@ func spec(id: String) -> Dictionary:
 		if entry.id == id: return entry
 	return {}
 func level(city_id: String, building_id: String) -> int:
+	if city_id.begins_with("province:"): return provinces.level(city_id,building_id)
 	return int(levels.get(city_id, {}).get(building_id, 0))
 func rate(city_id: String, building_id: String) -> float:
 	return 1.0 + 0.25 * maxi(0, level(city_id, building_id) - 1)
@@ -52,6 +55,7 @@ func cost(building_id: String, target: int) -> Dictionary:
 func duration(building_id: String, target: int) -> float:
 	return spec(building_id).hours * 3600.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND * maxi(1, target - 1)
 func reason(city_id: String, building_id: String, country: String = "", check_resources: bool = true) -> String:
+	if city_id.begins_with("province:"): return provinces.reason(city_id,building_id,country,check_resources)
 	if country.is_empty(): country = GameSession.player_country
 	var place: = city(city_id)
 	var definition: = spec(building_id)
@@ -71,6 +75,7 @@ func reason(city_id: String, building_id: String, country: String = "", check_re
 		if check_resources and economy.stockpiles[country][resource] < cost(building_id, target)[resource]: return "Insufficient " + resource
 	return ""
 func enqueue(city_id: String, building_id: String, country: String = "") -> String:
+	if city_id.begins_with("province:"): return provinces.enqueue(city_id,building_id,country)
 	if country.is_empty(): country = GameSession.player_country
 	var error: = reason(city_id, building_id, country)
 	if not error.is_empty(): return error
@@ -99,6 +104,7 @@ func cancel(id: int, country: String = "") -> String:
 	return "This construction order is no longer queued"
 func advance(seconds: float) -> void :
 	if seconds <= 0: return
+	provinces.advance(seconds)
 	for place in economy.cities:
 		var remaining: = seconds
 		while remaining > 0:
@@ -129,11 +135,12 @@ func advance(seconds: float) -> void :
 			completed.emit(place.id, job.building)
 			changed.emit()
 func snapshot() -> Dictionary:
-	return {"levels": levels.duplicate(true), "jobs": jobs.duplicate(true), "next_id": next_id}
+	return {"levels": levels.duplicate(true), "jobs": jobs.duplicate(true), "next_id": next_id, "provinces":provinces.snapshot()}
 func _integer(value: Variant, low: int, high: int) -> bool:
 	return (value is float or value is int) and is_finite(float(value)) and value == floor(value) and value >= low and value <= high
 func validate(state: Variant) -> bool:
 	if not state is Dictionary or not state.get("levels") is Dictionary or not state.get("jobs") is Array or not _integer(state.get("next_id"), 1, 1000000000): return false
+	if not provinces.validate(state.get("provinces",{})): return false
 	if state.levels.size() != economy.cities.size() or state.jobs.size() > economy.cities.size() * QUEUE_LIMIT: return false
 	for place in economy.cities:
 		var saved = state.levels.get(place.id)
@@ -154,7 +161,7 @@ func validate(state: Variant) -> bool:
 		if not job.get("city") is String or not job.get("building") is String: return false
 		var place: = city(job.city)
 		var definition: = spec(job.building)
-		if place.is_empty() or definition.is_empty() or (definition.capital_only and not is_capital(place)): return false
+		if place.is_empty() or place.get("rural",false) or definition.is_empty() or (definition.capital_only and not is_capital(place)): return false
 		if definition.get("coastal_only", false) and not place.has("naval_spawn"): return false
 		if job.get("country", place.country.to_lower()) not in economy.stockpiles: return false
 		if not _integer(job.get("level"), 1, definition.max_level) or job.level != state.levels[place.id].get(definition.id, initial_level(place, definition)) + 1: return false
@@ -168,6 +175,7 @@ func validate(state: Variant) -> bool:
 		if not (progress is float or progress is int) or not is_finite(float(progress)) or progress < 0 or progress >= duration(job.building, int(job.level)): return false
 	return true
 func restore(state: Dictionary) -> void :
+	provinces.restore(state.get("provinces",{}))
 	if state.is_empty():
 		_reset_levels()
 		jobs.clear()
@@ -181,6 +189,7 @@ func restore(state: Dictionary) -> void :
 	changed.emit()
 
 func schedule(city_id: String, building_id: String, country: String = "") -> String:
+	if city_id.begins_with("province:"): return provinces.schedule(city_id,building_id,country)
 	if country.is_empty(): country = GameSession.player_country
 	var error: = reason(city_id, building_id, country, false)
 	if not error.is_empty(): return error
@@ -215,8 +224,11 @@ func resource_rate(city_id: String, resource: String) -> float:
 		if definition.get("resource", "") == resource: return 1.0 + 0.25 * level(city_id, definition.id)
 	return 1.0
 func production_rate(city_id: String, equipment: Dictionary) -> float:
-	var special: String = {"Armor": "tank_plant", "Mechanized": "barracks", "Infantry": "barracks", "Navy": "naval_base"}.get(equipment.get("category", ""), "")
-	return rate(city_id, "factory") * (1.0 + 0.25 * level(city_id, special)) * morale_speed(city_id)
+	if not equipment.has("production_building"):
+		var old_special: String = {"Armor":"tank_plant","Mechanized":"barracks","Infantry":"barracks","Navy":"naval_base"}.get(equipment.get("category",""),"")
+		return rate(city_id,"factory")*(1.0+0.25*level(city_id,old_special))*morale_speed(city_id)
+	var special: String = ProductionGroups.building(equipment)
+	return rate(city_id, special) * morale_speed(city_id)
 func morale_speed(city_id: String) -> float:
 	return clampf(economy.morale_factor(city(city_id))/0.8,0.25,1.0)
 func construction_rate(city_id: String) -> float:
@@ -226,7 +238,7 @@ func construction_time(city_id: String, building_id: String, target: int, progre
 func incoming_damage_factor(unit: Dictionary) -> float:
 	if unit.get("visual_kind", "") in ["fighter", "drone", "naval"]: return 1.0
 	var point: = Vector2(unit.node.position.x, unit.node.position.z)
-	var protection: = 0.0
+	var protection: = provinces.protection(unit)
 	for place in economy.cities:
 		if economy.controlled(place, unit.country) and point.distance_to(place.point) <= 0.6:
 			protection = maxf(protection, 0.2 * level(place.id, "bunker"))

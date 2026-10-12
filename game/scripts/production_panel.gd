@@ -71,10 +71,10 @@ func setup(system: ProductionSystem, units: UnitSystem, theme: Theme) -> void :
 	city_picker = OptionButton.new()
 	city_picker.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	city_picker.custom_minimum_size.y = 48
-	city_picker.item_selected.connect( func(_index: int): _show_details())
+	city_picker.item_selected.connect( func(_index: int): _populate_equipment())
 	selectors.add_child(city_picker)
 	category_picker = OptionButton.new()
-	for title_text in ["All equipment", "Armor", "Mechanized", "Artillery", "Fighters", "Bombers", "Helicopters", "Air defense", "Navy", "Missiles", "Drones", "Infantry", "Support"]: category_picker.add_item(title_text)
+	for title_text in ["All buildings"] + ProductionGroups.TITLES: category_picker.add_item(title_text)
 	category_picker.custom_minimum_size.y = 48
 	category_picker.item_selected.connect( func(_index: int): _populate_equipment())
 	selectors.add_child(category_picker)
@@ -167,25 +167,28 @@ func _populate_equipment() -> void :
 	equipment_list.clear()
 	for spec in production.catalog:
 		if spec.country != _country(): continue
-		if category_picker.selected != 0 and spec.category != category_picker.get_item_text(category_picker.selected): continue
+		if category_picker.selected != 0 and ProductionGroups.index(spec) != category_picker.selected-1: continue
+		if spec.visual_kind == "naval" and (city_picker.selected < 0 or not production.cities.filter(func(c):return c.name == city_names[city_picker.selected])[0].has("naval_spawn")): continue
 		filtered.append(spec)
-		equipment_list.add_item(spec.name + " · " + spec.category, CowUI.equipment_picture(spec.id))
+		equipment_list.add_item(spec.name + " · " + ProductionGroups.title(spec), CowUI.equipment_picture(spec.id))
 	if not filtered.is_empty():
 		equipment_list.select(0)
 		chosen = filtered[0].id
+	else: chosen = "";build_button.disabled = true
 	_show_details()
 	_refresh()
 func _show_details() -> void :
 	var spec: = production.equipment(chosen)
-	if spec.is_empty(): return
+	build_button.disabled = spec.is_empty()
+	if spec.is_empty(): details.text = "No equipment available for this building at this city";return
 	var multiplier: = 1.0
 	if production.buildings != null and city_picker.selected >= 0:
 		for place in production.cities:
-			if place.name == city_names[city_picker.selected]: multiplier = production.buildings.rate(place.id, "factory")
+			if place.name == city_names[city_picker.selected]: multiplier = production.buildings.production_rate(place.id, spec)
 	details.text = spec.name + " · " + SimulationClock.duration(spec.seconds / multiplier) + " at 1x · L" + str(production.research.level(spec.id) if production.research != null else 1) + "\n"
 	for resource in ProductionSystem.RESOURCES:
 		details.text += resource.capitalize() + " " + str(int(spec.cost[resource])) + "  "
-	for id in spec.get("building_requirements", {}): details.text += "\nRequires " + id + " L" + str(spec.building_requirements[id])
+	for id in spec.get("building_requirements", {}): details.text += "\nRequires " + production.buildings.spec(id).name + " L" + str(int(spec.building_requirements[id]))
 	if spec.visual_kind == "missile_launcher": details.text += "\nStops to fire automatically during war · Range " + str(int(spec.strike_range * 40)) + " game km · timed salvo rounds"
 	if spec.visual_kind == "fighter": details.text += "\nOperating radius: " + str(int(spec.air_range * 40)) + " game km · Fly / Patrol / Return"
 func _refresh() -> void :
@@ -211,7 +214,7 @@ func _refresh() -> void :
 		for place in production.cities:
 			if place.name != job.city: continue
 			held = not production.controlled(place, spec.country)
-			if production.buildings != null: multiplier = production.buildings.rate(place.id, "factory")
+			if production.buildings != null: multiplier = production.buildings.production_rate(place.id, spec)
 		queue_list.add_item(job.city + " · " + spec.name + " · " + ("PAUSED · city lost" if held else (("Waiting for resources / buildings" if not job.get("paid", true) else SimulationClock.duration((spec.seconds - job.progress) / multiplier) + " left at 1x") if active else "Waiting")))
 		if int(job.id) == selected_id: queue_list.select(queue_ids.size() - 1)
 	if queue_ids.is_empty(): queue_list.add_item("No queued production")
@@ -232,7 +235,7 @@ func open(city_name: String = "") -> void :
 	show()
 	_populate()
 	if city_names.has(city_name): city_picker.select(city_names.find(city_name))
-	_show_details()
+	_populate_equipment()
 	_refresh()
 
 func _process(_delta: float) -> void :

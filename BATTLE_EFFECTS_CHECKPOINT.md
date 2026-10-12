@@ -395,3 +395,7 @@ the deliverable APK. Private persistent signing key restored, not in Git.
 ## 12 October 2026 — 0.21 phone repair
 
 Existing 0.20 game repaired on a separate phone-fixes branch. See docs/PHONE_FIXES_0_21.md and RELEASE_VALIDATION_0_21.json for exact fixes and source/packaged checks. Same Android package and certificate; no source or models published externally. Physical Android performance still requires device testing.
+
+## 12 October 2026 — menu/province candidate
+
+Based on 0.21; five shared research/production groups, touch scrolling, intermediate research upgrades, 1/3/5 starting tiers, coastal-only naval UI, and rural construction without production. See docs/MENU_PROVINCE_CANDIDATE.md for tested behavior and pending ships/building cuts. No new APK delivered.

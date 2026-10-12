@@ -135,7 +135,7 @@ func open_rebase(units: UnitSystem) -> void :
 	bases.custom_minimum_size.y = 48
 	body.add_child(bases)
 	var unit: Dictionary = units.units[units.selected]
-	for city in units.air.economy.cities:
+	for city in units.air.economy.cities + units.air.economy.buildings.provinces.places.values():
 		if city.id == unit.base_city or not units.air.available(city, unit.country) or units.air.base(unit).point.distance_to(city.point) > units.air.radius(unit): continue
 		bases.add_item(city.name)
 		bases.set_item_metadata(bases.item_count - 1, city.id)

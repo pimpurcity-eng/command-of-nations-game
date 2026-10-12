@@ -12,6 +12,7 @@ static var _data: Dictionary = {}
 var sites: Array = []  # {name, resource, point: Vector2, territory: Dictionary}
 var terrain: StrategicMap
 var rig: StrategyCamera
+var provinces: ProvinceConstruction
 var badges: Array[Sprite3D] = []
 
 static func data() -> Dictionary:
@@ -92,7 +93,7 @@ func income(seconds: float) -> Dictionary:
 		if not result.has(controller): result[controller] = {}
 		var ownership: = 1.0 if controller == site.territory.owner else 0.25
 		var morale: = float(site.territory.get("morale",100.0 if ownership == 1.0 else 25.0))/100.0
-		result[controller][site.resource] = result[controller].get(site.resource, 0.0) + rate(site.resource) * seconds * ownership * morale
+		result[controller][site.resource] = result[controller].get(site.resource, 0.0) + rate(site.resource) * seconds * ownership * morale * (provinces.income_factor(site.territory.title) if provinces != null else 1.0)
 	return result
 
 func _process(_delta: float) -> void:

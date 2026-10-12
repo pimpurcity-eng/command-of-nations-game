@@ -6,6 +6,7 @@ var armies: UnitSystem
 var terrain: StrategicMap
 var rig: StrategyCamera
 var labels: Array[Button] = []
+var rural_districts: Dictionary = {}
 var leaders: Array[Line2D] = []
 var national_labels: Array = []
 var province_labels: Array = []
@@ -143,6 +144,35 @@ func sync_buildings() -> void :
 			visual.show()
 			visual.scale = Vector3.ONE * (0.11 + 0.015 * (current - 1))
 			visual.set_meta("building_level", current)
+	sync_province_buildings(system)
+func sync_province_buildings(system: BuildingSystem) -> void:
+	for id in system.provinces.levels:
+		var place: Dictionary = system.provinces.place(id)
+		for index in ProvinceConstruction.ALLOWED.size():
+			var kind: String = ProvinceConstruction.ALLOWED[index]
+			var current: = system.provinces.level(id,kind)
+			if current <= 0: continue
+			if not rural_districts.has(id):
+				var group: = Node3D.new()
+				group.name = "ProvinceBuildings_"+str(rural_districts.size())
+				group.position = terrain.position_at(place.point)
+				add_child(group);rural_districts[id] = group
+			var group: Node3D = rural_districts[id]
+			var visual: = group.get_node_or_null(NodePath(kind)) as Node3D
+			if visual == null:
+				var definition: = system.spec(kind)
+				var appearance: = AssetRoster.appearance(definition.asset_roster_id,place.country.to_lower())
+				visual = (load(appearance.model) as PackedScene).instantiate() as Node3D
+				visual.name = kind
+				var angle: = TAU*index/ProvinceConstruction.ALLOWED.size()
+				visual.position = Vector3(cos(angle)*0.28,0.03,sin(angle)*0.28)
+				_paint_infrastructure(visual);group.add_child(visual)
+			visual.scale = Vector3.ONE*(0.13+0.015*(current-1))
+			visual.set_meta("building_level",current)
+	# Restoring an older save also removes later, unsaved province structures.
+	for id in rural_districts:
+		for child in rural_districts[id].get_children(): child.visible = system.provinces.level(id,str(child.name)) > 0
+
 func _map_label(text: String, size: int, color: Color) -> Label:
 	var label: = Label.new()
 	label.text = text
@@ -160,11 +190,17 @@ func _process(_delta: float) -> void :
 	if armies != null:
 		for city in cities:
 			var controller: = controller_of(city)
-			districts[city.id].visible = controller == "russia" or armies.point_visible(city.point)
+			districts[city.id].visible = controller == GameSession.player_country or armies.point_visible(city.point)
 			var captured: bool = controller != city.country.to_lower()
 			var index: = cities.find(city)
-			labels[index].text = ("★ " if city.get("capital", false) else "") + city.name.to_upper() + (" · YOURS" if captured and controller == "russia" else " · ENEMY" if captured else "")
+			labels[index].text = ("★ " if city.get("capital", false) else "") + city.name.to_upper() + (" · YOURS" if captured and controller == GameSession.player_country else " · ENEMY" if captured else "")
 			labels[index].tooltip_text = city.name + " · Controlled by " + controller.capitalize() + (" · Capital" if city.get("capital", false) else "")
+	if armies != null:
+		var system: BuildingSystem = _building_ref.get_ref() if _building_ref != null else null
+		if system != null:
+			for id in rural_districts:
+				var place: Dictionary = system.provinces.place(id)
+				rural_districts[id].visible = system.economy.controlled(place,GameSession.player_country) or armies.point_visible(place.point)
 	var transform: = label_layer.get_final_transform().affine_inverse()
 	var viewport_size: = transform * get_viewport().get_visible_rect().size
 	var bottom: = 174.0 if viewport_size.x < 700 and viewport_size.y > viewport_size.x else 164.0
@@ -202,7 +238,7 @@ func _process(_delta: float) -> void :
 	for entry in province_labels:
 		var controller: String = entry.territory.controller
 		var captured: bool = controller != entry.territory.owner
-		entry.label.text = entry.base_text + (" · YOURS" if captured and controller == "russia" else " · ENEMY" if captured else "")
+		entry.label.text = entry.base_text + (" · YOURS" if captured and controller == GameSession.player_country else " · ENEMY" if captured else "")
 		entry.label.tooltip_text = "Controlled by " + controller.capitalize()
 		var anchor: = terrain.position_at(entry.point)
 		var point: = transform * rig.camera.unproject_position(anchor)

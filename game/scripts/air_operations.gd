@@ -23,6 +23,9 @@ func configure(unit: Dictionary, data: Dictionary) -> void :
 	position(unit, Vector2(data.get("position", [unit.node.position.x, unit.node.position.z])[0], data.get("position", [unit.node.position.x, unit.node.position.z])[1]))
 func base(unit: Dictionary) -> Dictionary:
 	if economy != null:
+		if economy.buildings != null:
+			var rural: = economy.buildings.provinces.place(unit.base_city)
+			if not rural.is_empty(): return rural
 		for place in economy.cities:
 			if place.id == unit.base_city: return place
 	for place in GeographicProjection.load_cities():

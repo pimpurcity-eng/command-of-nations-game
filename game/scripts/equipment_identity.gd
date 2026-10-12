@@ -1,6 +1,9 @@
 class_name EquipmentIdentity
 extends RefCounted
 static var _by_id: Dictionary = {}
+static var refinements: Dictionary = {}
+static func upgrade_factor(unit: Dictionary) -> float:
+	return 1.06 if refinements.get(unit.equipment_id,{}).get(str(int(unit.get("level",1))),false) else 1.0
 static var catalog: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/equipment.json")):
 	set(value):
 		catalog = value

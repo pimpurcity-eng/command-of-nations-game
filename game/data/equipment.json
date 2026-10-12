@@ -69,7 +69,8 @@
       "funds": 25.0,
       "fuel": 2.0,
       "manpower": 0.3
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "skyguard_russia",
@@ -141,7 +142,8 @@
       "funds": 20.0,
       "fuel": 2.0,
       "manpower": 0.3
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "patriot_ukraine",
@@ -213,7 +215,8 @@
       "funds": 25.0,
       "fuel": 2.0,
       "manpower": 0.3
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "skyguard_ukraine",
@@ -285,7 +288,8 @@
       "funds": 20.0,
       "fuel": 2.0,
       "manpower": 0.3
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "tanks_russia",
@@ -330,7 +334,7 @@
       }
     ],
     "building_requirements": {
-      "factory": 1
+      "tank_plant": 1
     },
     "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
     "research_days": [
@@ -344,7 +348,8 @@
       "funds": 28.0,
       "fuel": 3.2,
       "manpower": 0.3
-    }
+    },
+    "production_building": "tank_plant"
   },
   {
     "id": "apcs_russia",
@@ -389,7 +394,7 @@
       }
     ],
     "building_requirements": {
-      "factory": 1
+      "tank_plant": 1
     },
     "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
     "research_days": [
@@ -403,7 +408,8 @@
       "funds": 16.0,
       "fuel": 2.0,
       "manpower": 0.4
-    }
+    },
+    "production_building": "tank_plant"
   },
   {
     "id": "bombers_russia",
@@ -470,7 +476,8 @@
       "funds": 42.0,
       "fuel": 9.6,
       "manpower": 0.3
-    }
+    },
+    "production_building": "airbase"
   },
   {
     "id": "tanks_ukraine",
@@ -515,7 +522,7 @@
       }
     ],
     "building_requirements": {
-      "factory": 1
+      "tank_plant": 1
     },
     "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
     "research_days": [
@@ -529,7 +536,8 @@
       "funds": 28.0,
       "fuel": 3.2,
       "manpower": 0.3
-    }
+    },
+    "production_building": "tank_plant"
   },
   {
     "id": "apcs_ukraine",
@@ -575,7 +583,7 @@
       }
     ],
     "building_requirements": {
-      "factory": 1
+      "tank_plant": 1
     },
     "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
     "research_days": [
@@ -589,7 +597,8 @@
       "funds": 16.0,
       "fuel": 2.0,
       "manpower": 0.4
-    }
+    },
+    "production_building": "tank_plant"
   },
   {
     "id": "bombers_ukraine",
@@ -653,7 +662,8 @@
       "funds": 42.0,
       "fuel": 9.6,
       "manpower": 0.3
-    }
+    },
+    "production_building": "airbase"
   },
   {
     "id": "strike_ukraine",
@@ -720,7 +730,8 @@
       "funds": 30.0,
       "fuel": 6.4,
       "manpower": 0.2
-    }
+    },
+    "production_building": "airbase"
   },
   {
     "id": "artillery_russia",
@@ -780,7 +791,8 @@
       "funds": 33.0,
       "fuel": 4.0,
       "manpower": 0.4
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "artillery_ukraine",
@@ -840,7 +852,8 @@
       "funds": 33.0,
       "fuel": 4.0,
       "manpower": 0.4
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "rockets_russia",
@@ -903,7 +916,8 @@
       "funds": 33.0,
       "fuel": 4.0,
       "manpower": 0.4
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "rockets_ukraine",
@@ -967,7 +981,8 @@
       "funds": 33.0,
       "fuel": 4.0,
       "manpower": 0.4
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "helicopters_russia",
@@ -1032,7 +1047,8 @@
       "funds": 33.0,
       "fuel": 4.0,
       "manpower": 0.4
-    }
+    },
+    "production_building": "airbase"
   },
   {
     "id": "helicopters_ukraine",
@@ -1097,7 +1113,8 @@
       "funds": 33.0,
       "fuel": 4.0,
       "manpower": 0.4
-    }
+    },
+    "production_building": "airbase"
   },
   {
     "id": "fleet_russia",
@@ -1116,7 +1133,6 @@
       "manpower": 25
     },
     "building_requirements": {
-      "factory": 1,
       "naval_base": 1
     },
     "research_days": [
@@ -1170,7 +1186,8 @@
     "sonar_range": 2.2,
     "aa_damage": 4,
     "aa_range": 2.5,
-    "shore_bombardment": true
+    "shore_bombardment": true,
+    "production_building": "naval_base"
   },
   {
     "id": "fleet_ukraine",
@@ -1189,7 +1206,6 @@
       "manpower": 25
     },
     "building_requirements": {
-      "factory": 1,
       "naval_base": 1
     },
     "research_days": [
@@ -1243,7 +1259,8 @@
     "sonar_range": 2.2,
     "aa_damage": 4,
     "aa_range": 2.5,
-    "shore_bombardment": true
+    "shore_bombardment": true,
+    "production_building": "naval_base"
   },
   {
     "id": "submarines_russia",
@@ -1262,7 +1279,6 @@
       "manpower": 25
     },
     "building_requirements": {
-      "factory": 1,
       "naval_base": 1
     },
     "research_days": [
@@ -1316,7 +1332,8 @@
     "sonar_range": 1.5,
     "aa_damage": 0,
     "aa_range": 2.5,
-    "shore_bombardment": false
+    "shore_bombardment": false,
+    "production_building": "naval_base"
   },
   {
     "id": "carriers_russia",
@@ -1335,7 +1352,6 @@
       "manpower": 25
     },
     "building_requirements": {
-      "factory": 1,
       "naval_base": 1
     },
     "research_days": [
@@ -1384,7 +1400,8 @@
     "sonar_range": 0,
     "aa_damage": 6,
     "aa_range": 2.5,
-    "shore_bombardment": false
+    "shore_bombardment": false,
+    "production_building": "naval_base"
   },
   {
     "id": "carriers_ukraine",
@@ -1403,7 +1420,6 @@
       "manpower": 25
     },
     "building_requirements": {
-      "factory": 1,
       "naval_base": 1
     },
     "research_days": [
@@ -1452,7 +1468,8 @@
     "sonar_range": 0,
     "aa_damage": 6,
     "aa_range": 2.5,
-    "shore_bombardment": false
+    "shore_bombardment": false,
+    "production_building": "naval_base"
   },
   {
     "id": "missiles_russia",
@@ -1520,7 +1537,8 @@
       "funds": 40.0,
       "fuel": 4.8,
       "manpower": 0.5
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "missiles_ukraine",
@@ -1588,7 +1606,8 @@
       "funds": 40.0,
       "fuel": 4.8,
       "manpower": 0.5
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "silos_russia",
@@ -1657,7 +1676,8 @@
       "funds": 40.0,
       "fuel": 4.8,
       "manpower": 0.5
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "silos_ukraine",
@@ -1726,7 +1746,8 @@
       "funds": 40.0,
       "fuel": 4.8,
       "manpower": 0.5
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "drones_russia",
@@ -1745,7 +1766,7 @@
       "manpower": 25
     },
     "building_requirements": {
-      "factory": 1
+      "airbase": 1
     },
     "research_days": [
       1,
@@ -1805,7 +1826,8 @@
       "funds": 40.0,
       "fuel": 4.8,
       "manpower": 0.5
-    }
+    },
+    "production_building": "airbase"
   },
   {
     "id": "drones_ukraine",
@@ -1824,7 +1846,7 @@
       "manpower": 25
     },
     "building_requirements": {
-      "factory": 1
+      "airbase": 1
     },
     "research_days": [
       1,
@@ -1884,7 +1906,8 @@
       "funds": 40.0,
       "fuel": 4.8,
       "manpower": 0.5
-    }
+    },
+    "production_building": "airbase"
   },
   {
     "id": "loitering_russia",
@@ -1903,7 +1926,7 @@
       "manpower": 25
     },
     "building_requirements": {
-      "factory": 1
+      "airbase": 1
     },
     "research_days": [
       1,
@@ -1954,7 +1977,8 @@
       "funds": 40.0,
       "fuel": 4.8,
       "manpower": 0.5
-    }
+    },
+    "production_building": "airbase"
   },
   {
     "id": "fighters_russia",
@@ -1973,7 +1997,7 @@
       "manpower": 30
     },
     "building_requirements": {
-      "factory": 1
+      "airbase": 1
     },
     "research_days": [
       1,
@@ -2025,7 +2049,8 @@
       "funds": 25.0,
       "fuel": 2.4,
       "manpower": 0.6
-    }
+    },
+    "production_building": "airbase"
   },
   {
     "id": "fighters_ukraine",
@@ -2044,7 +2069,7 @@
       "manpower": 30
     },
     "building_requirements": {
-      "factory": 1
+      "airbase": 1
     },
     "research_days": [
       1,
@@ -2095,7 +2120,8 @@
       "funds": 25.0,
       "fuel": 2.4,
       "manpower": 0.6
-    }
+    },
+    "production_building": "airbase"
   },
   {
     "id": "infantry_russia",
@@ -2114,7 +2140,7 @@
       "manpower": 60
     },
     "building_requirements": {
-      "factory": 1
+      "barracks": 1
     },
     "research_days": [
       1,
@@ -2160,7 +2186,8 @@
       "funds": 12.0,
       "fuel": 0.4,
       "manpower": 1.2
-    }
+    },
+    "production_building": "barracks"
   },
   {
     "id": "infantry_ukraine",
@@ -2179,7 +2206,7 @@
       "manpower": 60
     },
     "building_requirements": {
-      "factory": 1
+      "barracks": 1
     },
     "research_days": [
       1,
@@ -2225,7 +2252,8 @@
       "funds": 12.0,
       "fuel": 0.4,
       "manpower": 1.2
-    }
+    },
+    "production_building": "barracks"
   },
   {
     "id": "kamaz5350_supply_russia",
@@ -2290,7 +2318,8 @@
       "funds": 25.0,
       "fuel": 2.4,
       "manpower": 0.6
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "brem1m_recovery_russia",
@@ -2355,7 +2384,8 @@
       "funds": 25.0,
       "fuel": 2.4,
       "manpower": 0.6
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "imr3m_engineer_russia",
@@ -2420,7 +2450,8 @@
       "funds": 25.0,
       "fuel": 2.4,
       "manpower": 0.6
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "mtu72_bridgelayer_russia",
@@ -2485,7 +2516,8 @@
       "funds": 25.0,
       "fuel": 2.4,
       "manpower": 0.6
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "ur77_mineclearing_russia",
@@ -2550,7 +2582,8 @@
       "funds": 25.0,
       "fuel": 2.4,
       "manpower": 0.6
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "man_hx77_supply_ukraine",
@@ -2615,7 +2648,8 @@
       "funds": 25.0,
       "fuel": 2.4,
       "manpower": 0.6
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "buffel_recovery_ukraine",
@@ -2680,7 +2714,8 @@
       "funds": 25.0,
       "fuel": 2.4,
       "manpower": 0.6
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "kodiak_engineer_ukraine",
@@ -2745,7 +2780,8 @@
       "funds": 25.0,
       "fuel": 2.4,
       "manpower": 0.6
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "leguan_bridgelayer_ukraine",
@@ -2810,7 +2846,8 @@
       "funds": 25.0,
       "fuel": 2.4,
       "manpower": 0.6
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "trojan_breacher_ukraine",
@@ -2875,7 +2912,8 @@
       "funds": 25.0,
       "fuel": 2.4,
       "manpower": 0.6
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "2b14_mortar_82_russia",
@@ -2940,7 +2978,8 @@
       "funds": 25.0,
       "fuel": 2.4,
       "manpower": 0.6
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "2b11_mortar_120_russia",
@@ -3005,7 +3044,8 @@
       "funds": 25.0,
       "fuel": 2.4,
       "manpower": 0.6
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "d30_howitzer_russia",
@@ -3070,7 +3110,8 @@
       "funds": 25.0,
       "fuel": 2.4,
       "manpower": 0.6
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "l16_mortar_81_ukraine",
@@ -3135,7 +3176,8 @@
       "funds": 25.0,
       "fuel": 2.4,
       "manpower": 0.6
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "mo120rt_mortar_ukraine",
@@ -3200,7 +3242,8 @@
       "funds": 25.0,
       "fuel": 2.4,
       "manpower": 0.6
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "l118_lightgun_ukraine",
@@ -3265,7 +3308,8 @@
       "funds": 25.0,
       "fuel": 2.4,
       "manpower": 0.6
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "il76md_russia",
@@ -3284,7 +3328,7 @@
       "manpower": 30
     },
     "building_requirements": {
-      "factory": 1
+      "airbase": 1
     },
     "research_days": [
       1,
@@ -3335,7 +3379,8 @@
       "funds": 25.0,
       "fuel": 2.4,
       "manpower": 0.6
-    }
+    },
+    "production_building": "airbase"
   },
   {
     "id": "a50u_russia",
@@ -3354,7 +3399,7 @@
       "manpower": 30
     },
     "building_requirements": {
-      "factory": 1
+      "airbase": 1
     },
     "research_days": [
       1,
@@ -3405,7 +3450,8 @@
       "funds": 25.0,
       "fuel": 2.4,
       "manpower": 0.6
-    }
+    },
+    "production_building": "airbase"
   },
   {
     "id": "yak130_russia",
@@ -3424,7 +3470,7 @@
       "manpower": 30
     },
     "building_requirements": {
-      "factory": 1
+      "airbase": 1
     },
     "research_days": [
       1,
@@ -3475,7 +3521,8 @@
       "funds": 25.0,
       "fuel": 2.4,
       "manpower": 0.6
-    }
+    },
+    "production_building": "airbase"
   },
   {
     "id": "a400m_atlas_ukraine",
@@ -3494,7 +3541,7 @@
       "manpower": 30
     },
     "building_requirements": {
-      "factory": 1
+      "airbase": 1
     },
     "research_days": [
       1,
@@ -3545,7 +3592,8 @@
       "funds": 25.0,
       "fuel": 2.4,
       "manpower": 0.6
-    }
+    },
+    "production_building": "airbase"
   },
   {
     "id": "hawk_t2_ukraine",
@@ -3564,7 +3612,7 @@
       "manpower": 30
     },
     "building_requirements": {
-      "factory": 1
+      "airbase": 1
     },
     "research_days": [
       1,
@@ -3615,7 +3663,8 @@
       "funds": 25.0,
       "fuel": 2.4,
       "manpower": 0.6
-    }
+    },
+    "production_building": "airbase"
   },
   {
     "id": "advanced_tanks_russia",
@@ -3634,7 +3683,7 @@
       "manpower": 30
     },
     "building_requirements": {
-      "factory": 1
+      "tank_plant": 1
     },
     "research_days": [
       1,
@@ -3680,7 +3729,8 @@
       "funds": 25.0,
       "fuel": 2.4,
       "manpower": 0.6
-    }
+    },
+    "production_building": "tank_plant"
   },
   {
     "id": "advanced_tanks_ukraine",
@@ -3699,7 +3749,7 @@
       "manpower": 30
     },
     "building_requirements": {
-      "factory": 1
+      "tank_plant": 1
     },
     "research_days": [
       1,
@@ -3745,7 +3795,8 @@
       "funds": 25.0,
       "fuel": 2.4,
       "manpower": 0.6
-    }
+    },
+    "production_building": "tank_plant"
   },
   {
     "id": "coastal_missiles_russia",
@@ -3819,7 +3870,8 @@
       "funds": 25.0,
       "fuel": 2.4,
       "manpower": 0.6
-    }
+    },
+    "production_building": "factory"
   },
   {
     "id": "coastal_missiles_ukraine",
@@ -3893,6 +3945,7 @@
       "funds": 25.0,
       "fuel": 2.4,
       "manpower": 0.6
-    }
+    },
+    "production_building": "factory"
   }
 ]

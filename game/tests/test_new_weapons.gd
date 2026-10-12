@@ -51,7 +51,7 @@ func run() -> void:
 	game.match_rules.ai_enabled = false
 	var units: UnitSystem = game.units
 	var helicopters: Array = units.units.filter(func(u): return u.equipment_id == "helicopters_russia")
-	check(helicopters.size() == 1, "live campaign starts with Russian helicopter")
+	check(helicopters.size() == 3 and helicopters.map(func(h):return int(h.level)) == [1,3,5], "live campaign starts with early, middle and top-tier Russian helicopters")
 	if not helicopters.is_empty():
 		var heli: Dictionary = helicopters[0]
 		var start: = Vector2(heli.node.position.x, heli.node.position.z)
@@ -68,16 +68,16 @@ func run() -> void:
 	var research: = ResearchPanel.new()
 	root.add_child(research)
 	research.setup(game.research, StrategyTheme.create())
-	check(research._families(ResearchPanel.CATEGORIES.find("Helicopters")).size() == 1, "helicopter family appears in national research")
+	check(research._families(3).filter(func(f):return f.category == "Helicopters").size() == 1, "helicopter family appears under Airbase research")
 	for category in ["Artillery", "Helicopters", "Missiles", "Bombers", "Armor", "Mechanized"]:
-		research.show_category(ResearchPanel.CATEGORIES.find(category))
+		var family: Dictionary = game.production.catalog.filter(func(f):return f.country == GameSession.player_country and f.category == category)[0]
+		research.show_category(ProductionGroups.index(family))
 		await process_frame
-		var families: = research._families(research.category_index)
-		var columns: = families.size() + 1
-		var day_four: Label = research.grid.get_child(columns).get_child(0)
-		var day_eighteen: Label = research.grid.get_child(columns * 4).get_child(0)
-		check(day_four.text == "4" and day_eighteen.text == "18", category + " tree actually shows Day 4 and Day 18")
-		check(not research.detail.name.text.contains("AA ") and research.detail.name.text.contains("Day 4"), category + " details render without air-defense fields")
+		research.selected_id=family.id;research.selected_level=2;research.selected_upgrade=false;research._refresh()
+		check(research.detail.name.text.contains("Day 4"), category+" retains its actual tier-2 unlock day")
+		research.selected_level=5;research._refresh()
+		check(research.detail.name.text.contains("Day 18"), category+" retains its actual top-tier unlock day")
+		check(research.cells.filter(func(c):return c.id == family.id and c.get("refinement",false)).size()==4,category+" has upgrade steps between model tiers")
 	game.queue_free()
 	research.queue_free()
 	await process_frame

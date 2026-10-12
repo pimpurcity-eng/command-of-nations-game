@@ -16,6 +16,7 @@ var research: ResearchSystem
 var research_panel: ResearchPanel
 var buildings: BuildingSystem
 var city_panel: CityPanel
+var province_panel: ProvincePanel
 var exchange_panel: ExchangePanel
 var weapon_showcase: WeaponShowcase
 var mobile_start: MobileStartPanel
@@ -43,6 +44,8 @@ var match_rules: MatchSystem
 var session: GameSession
 const SAVE_PATH: = "user://regional_save.json"
 func _ready() -> void :
+	var menu_scroll: = MenuTouchScroll.new()
+	add_child(menu_scroll)
 	if OS.has_feature("web"):
 		var ratio = JavaScriptBridge.eval("window.devicePixelRatio || 1")
 		if ratio != null: get_window().content_scale_factor = clampf(float(ratio), 1.0, 2.0)
@@ -223,6 +226,7 @@ func _ready() -> void :
 	buildings = BuildingSystem.new()
 	buildings.setup(production, session.countries)
 	production.buildings = buildings
+	resource_sites.provinces = buildings.provinces
 	units.air.economy = production
 	cities.setup_buildings(buildings)
 	research = ResearchSystem.new()
@@ -264,6 +268,18 @@ func _ready() -> void :
 		city_panel.hide()
 		production_panel.hide()
 		research_panel.open())
+	hud.construct_requested.connect(func():
+		var territory: Dictionary = hud.selected_territory
+		var rural: = buildings.provinces.for_sector(territory)
+		if not rural.is_empty():
+			if province_panel == null:
+				province_panel = ProvincePanel.new()
+				add_child(province_panel)
+				province_panel.setup(buildings,hud.get_child(0).theme)
+			province_panel.open(rural)
+		else:
+			for city in cities.cities:
+				if city.sector == territory.get("id", ""): city_panel.open(city);return)
 	hud.capital_requested.connect( func():
 		if match_rules == null or match_rules.winner.is_empty():
 			var place: = buildings.capital(GameSession.player_country)
@@ -322,6 +338,7 @@ func _ready() -> void :
 	hud.show_status("PLANNING · Issue orders and queue production, then tap Play. Capture 3 enemy city provinces.")
 	apply_player_country()
 	if GameSession.weapons_test: populate_weapons_test(); apply_player_country()
+	elif session.scenario.has("starting_tiers"): populate_campaign_forces();apply_player_country()
 	if true:
 		mobile_start = MobileStartPanel.new()
 		add_child(mobile_start)
@@ -348,7 +365,7 @@ func _ready() -> void :
 			rig._snap(1.0)
 			clock.paused = true
 			refresh_hud()
-			hud.show_status("All original weapons · real campaign map · tap any army to control it. Tap Play to move.")
+			hud.show_status("All original weapons · real campaign map · tap your armies to control them; enemy units can be inspected. Tap Play to move.")
 			mobile_start.hide())
 	if OS.has_feature("web"):
 		browser_callback = JavaScriptBridge.create_callback(_browser_hidden)
@@ -518,6 +535,7 @@ func _touch_over_ui(screen: Vector2) -> bool:
 	if production_panel != null and production_panel.visible: return true
 	if research_panel != null and research_panel.visible: return true
 	if city_panel != null and city_panel.visible: return true
+	if province_panel != null and province_panel.visible: return true
 	var point: Vector2 = hud.get_final_transform().affine_inverse() * screen
 	if hud.command_panel.get_global_rect().has_point(point): return true
 	if hud.top_bar.get_global_rect().has_point(point): return true
@@ -653,6 +671,9 @@ func apply_player_country(focus: bool = true) -> void:
 	refresh_hud()
 
 func restore_campaign_forces() -> void:
+	if session.scenario.has("starting_tiers"):
+		populate_campaign_forces()
+		return
 	units.restore([])
 	for data in session.scenario.units:
 		var offset: Array = data.get("offset", [0.0, 0.0])
@@ -663,6 +684,32 @@ func restore_campaign_forces() -> void:
 		units._spawn(data, point, color)
 	units.fog_enabled = true
 	if test_models != null: test_models.queue_free(); test_models = null
+
+func populate_campaign_forces() -> void:
+	units.restore([])
+	var counts: Dictionary = {}
+	var occupied_sea: Array[Vector2] = []
+	var occupied_air: Array[Vector2] = []
+	for family in EquipmentIdentity.catalog:
+		var kind: String = family.visual_kind
+		var bases: Array = production.cities.filter(func(city: Dictionary):
+			return city.country.to_lower() == family.country and (kind != "naval" or city.has("naval_spawn")) and (kind != "fighter" or units.air.available(city,family.country)))
+		if bases.is_empty(): continue
+		for level in session.scenario.get("starting_tiers",[1,3,5]):
+			var key: String = family.country + ":" + kind
+			var number: int = counts.get(key,0);counts[key]=number+1
+			var base: Dictionary = bases[number % bases.size()]
+			var point: Vector2 = base.point
+			if kind == "naval":
+				point = weapons_test_sea_slot(GeographicProjection.project(base.naval_spawn.longitude,base.naval_spawn.latitude),occupied_sea)
+				occupied_sea.append(point)
+			elif kind == "fighter":
+				point = weapons_test_air_slot(base.point,family.country,occupied_air,float(family.get("air_range",14.0)))
+				occupied_air.append(point)
+			var data: = {"id":"campaign_"+family.id+"_l"+str(level),"name":EquipmentIdentity.research_title(family.id,level),"country":family.country,"equipment_id":family.id,"level":level,"visual_kind":kind,"base_city":base.id}
+			units._spawn(data,point,Color("ef827c") if family.country == "russia" else Color("73bcff"))
+	units.fog_enabled = true
+	fog.refresh(true)
 
 func populate_weapons_test(show_progress: bool = false) -> void:
 	var total: Dictionary = {}

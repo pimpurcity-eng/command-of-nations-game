@@ -1,7 +1,7 @@
 [
   {
     "id": "factory",
-    "name": "Military factory",
+    "name": "Support factory",
     "asset_roster_id": "facility_factory",
     "capital_only": false,
     "max_level": 3,
@@ -13,7 +13,7 @@
       "fuel": 20,
       "manpower": 20
     },
-    "description": "Each level above 1 increases this city’s unit production speed by 25%.",
+    "description": "Produces artillery, air defence, missiles and ground support. Each level above 1 increases their production speed by 25%.",
     "starting_level": 1,
     "colour": "b96e53"
   },
@@ -31,7 +31,7 @@
       "fuel": 30,
       "manpower": 25
     },
-    "description": "Each level above 1 increases this city’s currency, manpower and main commodity income by 25%.",
+    "description": "Each level above 1 increases this city\u2019s currency, manpower and main commodity income by 25%.",
     "starting_level": 1,
     "colour": "c7ab65"
   },
@@ -90,7 +90,7 @@
       "fuel": 15,
       "manpower": 15
     },
-    "description": "Each level increases this city’s funds income by 25%.",
+    "description": "Each level increases this city\u2019s funds income by 25%.",
     "save_default": true
   },
   {
@@ -111,7 +111,7 @@
       "fuel": 15,
       "manpower": 15
     },
-    "description": "Each level increases this city’s materials income by 25%.",
+    "description": "Each level increases this city\u2019s materials income by 25%.",
     "save_default": true
   },
   {
@@ -132,7 +132,7 @@
       "fuel": 15,
       "manpower": 15
     },
-    "description": "Each level increases this city’s electronics income by 25%.",
+    "description": "Each level increases this city\u2019s electronics income by 25%.",
     "save_default": true
   },
   {
@@ -153,7 +153,7 @@
       "fuel": 15,
       "manpower": 15
     },
-    "description": "Each level increases this city’s fuel income by 25%.",
+    "description": "Each level increases this city\u2019s fuel income by 25%.",
     "save_default": true
   },
   {
@@ -174,7 +174,7 @@
       "fuel": 15,
       "manpower": 15
     },
-    "description": "Each level increases this city’s manpower income by 25%.",
+    "description": "Each level increases this city\u2019s manpower income by 25%.",
     "save_default": true
   },
   {
@@ -192,7 +192,7 @@
       "fuel": 15,
       "manpower": 40
     },
-    "description": "Each level increases mechanized / infantry production speed by 25%.",
+    "description": "Produces infantry. Each level above 1 increases infantry production speed by 25%.",
     "starting_level": 0,
     "save_default": true
   },
@@ -211,7 +211,7 @@
       "fuel": 45,
       "manpower": 30
     },
-    "description": "Each level increases armored-unit production speed by 25%.",
+    "description": "Produces tanks and mechanized vehicles. Each level above 1 increases their production speed by 25%.",
     "starting_level": 0,
     "save_default": true
   },
@@ -269,7 +269,7 @@
       "fuel": 20,
       "manpower": 30
     },
-    "description": "Each level increases this city’s construction speed by 15%.",
+    "description": "Each level increases this city\u2019s construction speed by 15%.",
     "starting_level": 0,
     "save_default": true
   }

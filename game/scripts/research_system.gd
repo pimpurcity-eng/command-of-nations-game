@@ -9,11 +9,14 @@ var clock: SimulationClock
 var armies: UnitSystem
 var levels: Dictionary = {}
 var jobs: Array = []
+var refinements: Dictionary = {}
 
 func setup(production: ProductionSystem, time: SimulationClock, units: UnitSystem) -> void :
 	economy = production
 	clock = time
 	armies = units
+	refinements.clear()
+	EquipmentIdentity.refinements = refinements
 	for spec in economy.catalog: levels[spec.id] = 1
 
 func day() -> int:
@@ -68,14 +71,51 @@ func start(id: String, target: int, country: String = "") -> String:
 	economy.changed.emit()
 	changed.emit()
 	return ""
+func refined(id: String, tier: int) -> bool:
+	return refinements.get(id,{}).get(str(tier),false)
+func upgrade_day(id: String, tier: int) -> int:
+	return ceili((unlock_day(id,tier)+unlock_day(id,mini(5,tier+1)))/2.0)
+func upgrade_duration(tier: int) -> float:
+	return tier * 3600.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
+func upgrade_cost(id: String, tier: int) -> Dictionary:
+	var result: Dictionary = {}
+	for resource in ProductionSystem.RESOURCES: result[resource] = ceili(economy.equipment(id).cost[resource] * (0.2+0.1*(tier-1)))
+	return result
+func upgrade_reason(id: String, tier: int, country: String = "") -> String:
+	if country.is_empty(): country = GameSession.player_country
+	var spec: = economy.equipment(id)
+	if spec.is_empty() or spec.country != country: return "Choose your country's equipment"
+	if tier < 1 or tier > 4: return "Choose an intermediate upgrade"
+	if level(id) < tier: return "Research this model first"
+	if refined(id,tier): return "Already upgraded"
+	if day() < upgrade_day(id,tier): return "Available on Day "+str(upgrade_day(id,tier))
+	if not active(id).is_empty(): return "This family is already being researched"
+	if jobs.filter(func(j):return economy.equipment(j.equipment).country == country).size() >= SLOTS: return "Both research slots are occupied"
+	var bill: = upgrade_cost(id,tier)
+	for resource in bill:
+		if economy.stockpiles[country][resource] < bill[resource]: return "Insufficient "+resource
+	return ""
+func start_upgrade(id: String, tier: int, country: String = "") -> String:
+	if country.is_empty(): country = GameSession.player_country
+	var error: = upgrade_reason(id,tier,country)
+	if not error.is_empty(): return error
+	var bill: = upgrade_cost(id,tier)
+	for resource in bill: economy.stockpiles[country][resource] -= bill[resource]
+	jobs.append({"equipment":id,"level":tier,"refinement":true,"progress":0.0})
+	economy.changed.emit();changed.emit()
+	return ""
+func job_duration(job: Dictionary) -> float:
+	return upgrade_duration(int(job.level)) if job.get("refinement",false) else duration(int(job.level))
+func job_cost(job: Dictionary) -> Dictionary:
+	return upgrade_cost(job.equipment,int(job.level)) if job.get("refinement",false) else cost(job.equipment,int(job.level))
 func cancel(id: String, country: String = "") -> void :
 	if country.is_empty(): country = GameSession.player_country
 	var spec: = economy.equipment(id)
 	if spec.is_empty() or spec.country != country: return
 	for i in jobs.size():
 		if jobs[i].equipment != id: continue
-		var remaining: float = 1.0 - jobs[i].progress / duration(jobs[i].level)
-		for resource in ProductionSystem.RESOURCES: economy.stockpiles[country][resource] += floor(cost(id, jobs[i].level)[resource] * remaining)
+		var remaining: float = 1.0 - jobs[i].progress / job_duration(jobs[i])
+		for resource in ProductionSystem.RESOURCES: economy.stockpiles[country][resource] += floor(job_cost(jobs[i])[resource] * remaining)
 		jobs.remove_at(i)
 		economy.changed.emit()
 		changed.emit()
@@ -86,8 +126,11 @@ func advance(seconds: float) -> void :
 	for i in range(jobs.size() - 1, -1, -1):
 		var country: String = economy.equipment(jobs[i].equipment).country
 		jobs[i].progress += seconds * rate(country)
-		if jobs[i].progress >= duration(jobs[i].level):
-			levels[jobs[i].equipment] = jobs[i].level
+		if jobs[i].progress >= job_duration(jobs[i]):
+			if jobs[i].get("refinement",false):
+				if not refinements.has(jobs[i].equipment): refinements[jobs[i].equipment] = {}
+				refinements[jobs[i].equipment][str(int(jobs[i].level))] = true
+			else: levels[jobs[i].equipment] = jobs[i].level
 			jobs.remove_at(i)
 			completed = true
 
@@ -119,12 +162,18 @@ func upgrade(unit: Dictionary) -> String:
 	economy.changed.emit()
 	return "Modernization started; this army remains stationary until complete"
 func snapshot() -> Dictionary:
-	return {"levels": levels.duplicate(), "jobs": jobs.duplicate(true)}
+	return {"levels": levels.duplicate(), "jobs": jobs.duplicate(true), "refinements":refinements.duplicate(true)}
 func validate(state: Variant) -> bool:
 	if not state is Dictionary or not state.get("levels") is Dictionary or not state.get("jobs") is Array or state.jobs.size() > 4: return false
 	for id in state.levels:
 		var value = state.levels[id]
 		if economy.equipment(str(id)).is_empty() or not (value is int or value is float) or not is_finite(float(value)) or value != floor(value) or value < 1 or value > 5: return false
+	var saved_refinements = state.get("refinements",{})
+	if not saved_refinements is Dictionary: return false
+	for id in saved_refinements:
+		if economy.equipment(str(id)).is_empty() or not saved_refinements[id] is Dictionary: return false
+		for key in saved_refinements[id]:
+			if str(key) not in ["1","2","3","4"] or saved_refinements[id][key] != true or int(key)>int(state.levels.get(id,1)): return false
 	var seen: Dictionary = {}
 	var counts: Dictionary = {}
 	for job in state.jobs:
@@ -135,11 +184,17 @@ func validate(state: Variant) -> bool:
 		counts[spec.country] = counts.get(spec.country, 0) + 1
 		if counts[spec.country] > SLOTS: return false
 		var target = job.get("level")
-		if not (target is int or target is float) or target < 2 or target > 5 or target != int(state.levels.get(job.equipment, 1)) + 1: return false
+		if not (target is int or target is float) or not is_finite(float(target)) or target != floor(target): return false
+		if job.has("refinement") and not job.refinement is bool: return false
+		if job.get("refinement",false):
+			if target < 1 or target > 4 or target > int(state.levels.get(job.equipment,1)) or saved_refinements.get(job.equipment,{}).get(str(int(target)),false): return false
+		elif target < 2 or target > 5 or target != int(state.levels.get(job.equipment,1))+1: return false
 		var progress = job.get("progress")
-		if not (progress is int or progress is float) or not is_finite(float(progress)) or progress < 0 or progress >= duration(int(target)): return false
+		if not (progress is int or progress is float) or not is_finite(float(progress)) or progress < 0 or progress >= job_duration(job): return false
 	return true
 func restore(state: Dictionary) -> void :
+	refinements = state.get("refinements",{}).duplicate(true)
+	EquipmentIdentity.refinements = refinements
 	for id in levels: levels[id] = int(state.get("levels", {}).get(id, 1))
 	jobs = state.get("jobs", []).duplicate(true)
 	changed.emit()

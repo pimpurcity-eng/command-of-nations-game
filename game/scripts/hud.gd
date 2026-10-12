@@ -7,6 +7,9 @@ extends CanvasLayer
 ##               your armies is selected it is replaced by the army sheet with large
 ##               Stop / Split / Attack / Move buttons.
 ## Signals and the members used by main.gd are unchanged.
+signal construct_requested
+var selected_territory: Dictionary = {}
+var build_tab: Button
 signal account_requested
 signal cancel_order_requested
 signal delay_requested
@@ -337,7 +340,11 @@ func _build_bottom(root: Control) -> void:
 		nav_row.add_child(tab)
 		match entry[0]:
 			"diplomacy": tab.pressed.connect(func(): campaign_requested.emit("diplomacy"))
-			"produce": tab.pressed.connect(func(): production_requested.emit())
+			"produce":
+				build_tab = tab
+				tab.pressed.connect(func():
+					if not selected_territory.is_empty(): construct_requested.emit()
+					else: production_requested.emit())
 			"provinces": tab.pressed.connect(func(): capital_requested.emit())
 			"market": tab.pressed.connect(func(): exchange_requested.emit())
 			"research": tab.pressed.connect(func(): research_requested.emit())
@@ -465,6 +472,8 @@ func _refresh_sheet() -> void:
 
 # ---------------------------------------------------------------- API used by main.gd
 func show_territory(t: Dictionary) -> void :
+	selected_territory = t
+	if build_tab != null: build_tab.text = "Construct"
 	inspecting_unit = false
 	health_bar.visible = false
 	selection_title.text = t.title.to_upper()
@@ -502,6 +511,8 @@ func show_army_roster(units: Array) -> void :
 	var size: = get_viewport().get_visible_rect().size
 	popup.popup_centered_clamped(Vector2i(mini(460, int(size.x) - 24), mini(400, int(size.y) - 24)))
 func show_unit(unit: Dictionary) -> void :
+	selected_territory = {}
+	if build_tab != null: build_tab.text = "Produce"
 	inspecting_unit = true
 	own_unit = unit.country == GameSession.player_country
 	selection_title.text = EquipmentIdentity.research_title(unit.equipment_id, unit.get("level", 1)).to_upper() + " · L" + str(unit.get("level", 1))

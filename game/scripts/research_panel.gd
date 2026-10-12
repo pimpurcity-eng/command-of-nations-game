@@ -5,7 +5,7 @@ extends CanvasLayer
 ## Two research slots at the top, then either the category banners or a category's tech tree:
 ## a column per equipment family and a row per level (labelled with the day it unlocks).
 ## Tapping a level shows its cost and the RESEARCH button in the bar at the bottom.
-const CATEGORIES: = ["Armor", "Mechanized", "Artillery", "Fighters", "Bombers", "Helicopters", "Air defense", "Navy", "Missiles", "Drones", "Infantry", "Support"]
+const CATEGORIES: = ProductionGroups.TITLES
 const CELL: = Vector2(150, 150)
 var research: ResearchSystem
 var panel: PanelContainer
@@ -13,6 +13,8 @@ var title: Label
 var back_button: Button
 var slots: Array = []
 var overview: ScrollContainer
+var banners: VBoxContainer
+var tree_scroll: ScrollContainer
 var tree_view: VBoxContainer
 var tab_row: HBoxContainer
 var column_titles: HBoxContainer
@@ -23,6 +25,7 @@ var message: Label
 var category_index: = 0
 var selected_id: = ""
 var selected_level: = 2
+var selected_upgrade: = false
 var ui_timer: = 0.0
 
 func setup(system: ResearchSystem, theme: Theme) -> void:
@@ -70,7 +73,7 @@ func setup(system: ResearchSystem, theme: Theme) -> void:
 	overview.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	overview.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	column.add_child(overview)
-	var banners: = VBoxContainer.new()
+	banners = VBoxContainer.new()
 	banners.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	banners.add_theme_constant_override("separation", 8)
 	var banner_margin: = MarginContainer.new()
@@ -78,37 +81,7 @@ func setup(system: ResearchSystem, theme: Theme) -> void:
 	for side in ["left", "right", "bottom"]: banner_margin.add_theme_constant_override("margin_" + side, 8)
 	banner_margin.add_child(banners)
 	overview.add_child(banner_margin)
-	for index in CATEGORIES.size():
-		var families: = _families(index)
-		if families.is_empty(): continue
-		var banner: = Button.new()
-		banner.custom_minimum_size.y = 118
-		var art: = "banner_" + GameSession.player_country
-		banner.add_theme_stylebox_override("normal", CowUI.skin(art, 6))
-		banner.add_theme_stylebox_override("hover", CowUI.skin(art, 6, 0, Color(1.06, 1.06, 1.06)))
-		banner.add_theme_stylebox_override("pressed", CowUI.skin(art, 6, 0, Color(0.92, 0.92, 0.92)))
-		banner.pressed.connect(func(): show_category(index))
-		var picture: = TextureRect.new()
-		picture.texture = CowUI.equipment_picture(families[0].id)
-		picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		picture.anchor_left = 0.45
-		picture.anchor_right = 1.0
-		picture.anchor_bottom = 1.0
-		picture.offset_top = 6
-		picture.offset_bottom = -6
-		picture.offset_right = -10
-		picture.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		banner.add_child(picture)
-		var name: = CowUI.label(CATEGORIES[index], 34, CowUI.INK)
-		name.anchor_top = 1.0
-		name.anchor_bottom = 1.0
-		name.offset_left = 18
-		name.offset_top = -58
-		name.offset_bottom = -12
-		name.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		banner.add_child(name)
-		banners.add_child(banner)
+	_build_banners()
 	# Tech tree.
 	tree_view = VBoxContainer.new()
 	tree_view.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -128,16 +101,20 @@ func setup(system: ResearchSystem, theme: Theme) -> void:
 	var board_column: = VBoxContainer.new()
 	board_column.add_theme_constant_override("separation", 0)
 	board.add_child(board_column)
+	tree_scroll = ScrollContainer.new()
+	tree_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	tree_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	board_column.add_child(tree_scroll)
+	var tree_content: = VBoxContainer.new()
+	tree_content.add_theme_constant_override("separation", 0)
+	tree_scroll.add_child(tree_content)
 	column_titles = HBoxContainer.new()
 	column_titles.add_theme_constant_override("separation", 0)
-	board_column.add_child(column_titles)
-	var grid_scroll: = ScrollContainer.new()
-	grid_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	board_column.add_child(grid_scroll)
+	tree_content.add_child(column_titles)
 	grid = GridContainer.new()
 	grid.add_theme_constant_override("h_separation", 0)
 	grid.add_theme_constant_override("v_separation", 0)
-	grid_scroll.add_child(grid)
+	tree_content.add_child(grid)
 	# Selected technology: cost, time and RESEARCH.
 	var bar: = PanelContainer.new()
 	bar.add_theme_stylebox_override("panel", CowUI.skin("header", 4, 8))
@@ -174,8 +151,8 @@ func setup(system: ResearchSystem, theme: Theme) -> void:
 	time_row.add_child(time)
 	var start: = CowUI.action("RESEARCH", "flask")
 	start.pressed.connect(func():
-		var error: = _system().start(selected_id, selected_level)
-		message.text = (EquipmentIdentity.title(selected_id) + " level " + str(selected_level) + " research started") if error.is_empty() else error
+		var error: = _system().start_upgrade(selected_id, selected_level) if selected_upgrade else _system().start(selected_id, selected_level)
+		message.text = (EquipmentIdentity.title(selected_id) + " level " + str(selected_level) + (" upgrade" if selected_upgrade else "") + " research started") if error.is_empty() else error
 		_refresh())
 	side.add_child(start)
 	detail = {"picture": picture, "name": name_label, "costs": costs, "time": time, "start": start}
@@ -200,15 +177,54 @@ func setup(system: ResearchSystem, theme: Theme) -> void:
 	_layout()
 	hide()
 
+func _build_banners() -> void:
+	for child in banners.get_children(): banners.remove_child(child);child.queue_free()
+	for index in CATEGORIES.size():
+		var families: = _families(index)
+		if families.is_empty(): continue
+		var banner: = Button.new()
+		banner.custom_minimum_size.y = 118
+		var art: = "banner_" + GameSession.player_country
+		banner.add_theme_stylebox_override("normal", CowUI.skin(art, 6))
+		banner.add_theme_stylebox_override("hover", CowUI.skin(art, 6, 0, Color(1.06, 1.06, 1.06)))
+		banner.add_theme_stylebox_override("pressed", CowUI.skin(art, 6, 0, Color(0.92, 0.92, 0.92)))
+		banner.pressed.connect(func(): show_category(index))
+		var picture: = TextureRect.new()
+		picture.texture = CowUI.equipment_picture(families[0].id)
+		picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		picture.anchor_left = 0.45
+		picture.anchor_right = 1.0
+		picture.anchor_bottom = 1.0
+		picture.offset_top = 6
+		picture.offset_bottom = -6
+		picture.offset_right = -10
+		picture.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		banner.add_child(picture)
+		var name: = CowUI.label(CATEGORIES[index], 34, CowUI.INK)
+		name.anchor_top = 1.0
+		name.anchor_bottom = 1.0
+		name.offset_left = 18
+		name.offset_top = -58
+		name.offset_bottom = -12
+		name.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		banner.add_child(name)
+		banners.add_child(banner)
+
 func _system() -> ResearchSystem:
 	return research
 
 func _families(index: int) -> Array:
-	var result: Array = _system().economy.catalog.filter(func(spec: Dictionary): return spec.country == GameSession.player_country and spec.category == CATEGORIES[index])
-	if CATEGORIES[index] == "Air defense": result.sort_custom(func(a, b): return a.aa_range < b.aa_range)
+	var result: Array = _system().economy.catalog.filter(func(spec: Dictionary): return spec.country == GameSession.player_country and ProductionGroups.index(spec) == index)
+	result.sort_custom(func(a, b):
+		if a.category == "Air defense" and b.category == "Air defense": return a.get("aa_range",0.0) < b.get("aa_range",0.0)
+		if a.category == "Air defense" or b.category == "Air defense": return a.category == "Air defense"
+		if a.category != b.category: return a.category < b.category
+		return a.name < b.name)
 	return result
 
 func show_category(index: int) -> void:
+	selected_upgrade = false
 	category_index = index
 	var families: = _families(index)
 	selected_id = families[0].id if not families.is_empty() else ""
@@ -218,7 +234,7 @@ func show_category(index: int) -> void:
 	_refresh()
 
 func _build_tree() -> void:
-	for child in tab_row.get_children(): child.queue_free()
+	for child in tab_row.get_children(): tab_row.remove_child(child);child.queue_free()
 	for index in CATEGORIES.size():
 		var families: = _families(index)
 		if families.is_empty(): continue
@@ -237,9 +253,9 @@ func _build_tree() -> void:
 		tab.pressed.connect(func(): show_category(index))
 		tab_row.add_child(tab)
 	var families: = _families(category_index)
-	var air_tree: bool = CATEGORIES[category_index] == "Air defense"
+	var air_tree: bool = true  # The same large illustrated layout for every production group.
 	var cell_size: Vector2 = Vector2(maxf(150, (panel.size.x - 88) / 2), 208) if air_tree else CELL
-	for child in column_titles.get_children(): child.queue_free()
+	for child in column_titles.get_children(): column_titles.remove_child(child);child.queue_free()
 	var corner: = PanelContainer.new()
 	corner.custom_minimum_size = Vector2(56, 52)
 	corner.add_theme_stylebox_override("panel", CowUI.box(Color("e6e9e7"), 14))
@@ -255,10 +271,10 @@ func _build_tree() -> void:
 		var text: = CowUI.label(spec.get("research_branch", EquipmentIdentity.title(spec.id)), 21 if air_tree else 15, CowUI.INK)
 		text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		text.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		text.clip_text = true
+		text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		heading.add_child(text)
 		column_titles.add_child(heading)
-	for child in grid.get_children(): child.queue_free()
+	for child in grid.get_children(): grid.remove_child(child);child.queue_free()
 	cells.clear()
 	grid.columns = families.size() + 1
 	for level in range(1, 6):
@@ -278,8 +294,8 @@ func _build_tree() -> void:
 			var card: = Button.new()
 			card.anchor_left = 0.5
 			card.anchor_right = 0.5
-			card.offset_left = -cell_size.x * 0.43 if air_tree else -52
-			card.offset_right = cell_size.x * 0.43 if air_tree else 52
+			card.offset_left = -cell_size.x * 0.45 if air_tree else -52
+			card.offset_right = cell_size.x * 0.45 if air_tree else 52
 			card.offset_top = 12
 			card.offset_bottom = cell_size.y - 14
 			var portrait: = TextureRect.new()
@@ -301,22 +317,51 @@ func _build_tree() -> void:
 			card.pressed.connect(func():
 				selected_id = spec.id
 				selected_level = level
+				selected_upgrade = false
 				message.text = ""
 				_refresh())
 			cell.add_child(card)
-			var ribbon: = CowUI.label(EquipmentIdentity.research_title(spec.id, level) + " · Day " + str(_system().unlock_day(spec.id, level)) if air_tree else "Level " + str(level), 16 if air_tree else 14, Color("fff7e5"))
+			var tier: = EquipmentIdentity.research_tier(spec.id, level)
+			var previous_tier: = EquipmentIdentity.research_tier(spec.id, maxi(1,level-1))
+			var upgrade: bool = level > 1 and tier.get("model", "") == previous_tier.get("model", "")
+			var ribbon: = CowUI.label(("UPGRADE · " if upgrade else "") + EquipmentIdentity.research_title(spec.id, level) + "\nDay " + str(_system().unlock_day(spec.id, level)), 16, Color("fff7e5"))
 			ribbon.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			ribbon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			ribbon.add_theme_stylebox_override("normal", CowUI.box(Color(0.06, 0.08, 0.09, 0.86), 8, Color.TRANSPARENT, 0, 3))
 			ribbon.anchor_left = 0.5
 			ribbon.anchor_right = 0.5
-			ribbon.offset_left = -cell_size.x * 0.43 if air_tree else -52
-			ribbon.offset_right = cell_size.x * 0.43 if air_tree else 52
-			ribbon.offset_top = cell_size.y - 42
+			ribbon.offset_left = -cell_size.x * 0.45 if air_tree else -52
+			ribbon.offset_right = cell_size.x * 0.45 if air_tree else 52
+			ribbon.offset_top = cell_size.y - 68
 			ribbon.offset_bottom = cell_size.y - 18
+			ribbon.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			cell.add_child(ribbon)
 			grid.add_child(cell)
 			cells.append({"card": card, "id": spec.id, "level": level})
+
+		if level < 5: _append_upgrades(families,level,cell_size)
+
+func _append_upgrades(families: Array, level: int, cell_size: Vector2) -> void:
+	var label_cell: = Control.new()
+	label_cell.custom_minimum_size = Vector2(56,104)
+	grid.add_child(label_cell)
+	for spec in families:
+		var cell: = TechCell.new(true,true)
+		cell.custom_minimum_size = Vector2(cell_size.x,104)
+		var card: = Button.new()
+		card.anchor_left=0.5;card.anchor_right=0.5
+		card.offset_left=-cell_size.x*0.43;card.offset_right=cell_size.x*0.43
+		card.offset_top=12;card.offset_bottom=90
+		var caption: = CowUI.label("UPGRADE · "+EquipmentIdentity.research_title(spec.id,level)+"\nDay "+str(_system().upgrade_day(spec.id,level))+" · +6% effectiveness",16,CowUI.INK)
+		caption.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		caption.offset_left=8;caption.offset_right=-8
+		caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;caption.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+		caption.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;caption.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		card.add_child(caption)
+		card.pressed.connect(func():
+			selected_id=spec.id;selected_level=level;selected_upgrade=true;message.text="";_refresh())
+		cell.add_child(card);grid.add_child(cell)
+		cells.append({"card":card,"id":spec.id,"level":level,"refinement":true})
 
 func _show_overview(show_banners: bool) -> void:
 	overview.visible = show_banners
@@ -326,6 +371,7 @@ func _show_overview(show_banners: bool) -> void:
 
 func open() -> void:
 	show()
+	_build_banners()
 	_show_overview(true)
 	_layout()
 	_refresh()
@@ -337,16 +383,21 @@ func _layout() -> void:
 	panel.position = Vector2((size.x - width) * 0.5, top)
 	panel.size = Vector2(width, size.y - top)
 
-func _state(id: String, level: int) -> String:
+func _state(id: String, level: int, refinement: bool = false) -> String:
 	var system: = _system()
+	if refinement:
+		if system.refined(id,level): return "done"
+		var upgrade: = system.active(id)
+		if upgrade.get("refinement",false) and int(upgrade.get("level",0)) == level: return "active"
+		return "available" if system.upgrade_reason(id,level).is_empty() else "locked"
 	if system.level(id) >= level: return "done"
 	var job: = system.active(id)
-	if not job.is_empty() and job.level == level: return "active"
+	if not job.is_empty() and not job.get("refinement",false) and job.level == level: return "active"
 	return "available" if system.reason(id, level).is_empty() else "locked"
 
 func _refresh() -> void:
 	var system: = _system()
-	title.text = "Air defense research" if tree_view.visible and CATEGORIES[category_index] == "Air defense" else "Research"
+	title.text = CATEGORIES[category_index] + " research" if tree_view.visible else "Research by production building"
 	# Slots.
 	var jobs: = system.jobs.filter(func(job: Dictionary): return system.economy.equipment(job.equipment).country == GameSession.player_country)
 	for i in slots.size():
@@ -359,9 +410,9 @@ func _refresh() -> void:
 		if job.is_empty():
 			slot.text.text = "No research"
 			continue
-		var total: = system.duration(job.level)
+		var total: = system.job_duration(job)
 		slot.picture.texture = CowUI.research_picture(job.equipment, job.level)
-		slot.text.text = "L" + str(job.level) + " · " + SimulationClock.duration(total - job.progress, system.clock.speed)
+		slot.text.text = ("Upgrade L" if job.get("refinement",false) else "L") + str(job.level) + " · " + SimulationClock.duration(total - job.progress, system.clock.speed)
 		slot.bar.max_value = total
 		slot.bar.value = job.progress
 		for connection in slot.cancel.pressed.get_connections(): slot.cancel.pressed.disconnect(connection.callable)
@@ -373,9 +424,9 @@ func _refresh() -> void:
 	if not tree_view.visible or selected_id.is_empty(): return
 	# Tree cards.
 	for cell in cells:
-		var state: = _state(cell.id, cell.level)
+		var state: = _state(cell.id, cell.level,cell.get("refinement",false))
 		var color: Color = {"done": Color("668cad"), "active": Color("5b86b0"), "available": Color("b8c3cb"), "locked": Color("8f959b")}[state]
-		var chosen: bool = cell.id == selected_id and cell.level == selected_level
+		var chosen: bool = cell.id == selected_id and cell.level == selected_level and bool(cell.get("refinement",false)) == selected_upgrade
 		var face: = CowUI.box(Color("edf0f2") if state == "available" else color.lightened(0.55), 22, color, 1, 6)
 		if chosen:
 			var ring: = CowUI.box(Color("f6f1df"), 22, CowUI.GOLD, 3, 6)
@@ -393,20 +444,22 @@ func _refresh() -> void:
 			detail.name.text += "\n" + tier.get("improvement", "") + " · Range " + str(tier.range) + " · AA " + str(tier.damage) + "\nAircraft & drones · " + EquipmentIdentity.spec(selected_id).get("model_status", "")
 		else:
 			detail.name.text += "\n" + tier.get("improvement", "")
-	for child in detail.costs.get_children(): child.queue_free()
+	if selected_upgrade:
+		detail.name.text = EquipmentIdentity.research_title(selected_id,selected_level)+" · Upgrade · Day "+str(system.upgrade_day(selected_id,selected_level))+"\n+6% combat effectiveness for this model · applies nationally"
+	for child in detail.costs.get_children(): detail.costs.remove_child(child);child.queue_free()
 	var caption: Label = detail.start.get_meta("caption")
-	var state: = _state(selected_id, selected_level)
-	if selected_level <= 1 or state == "done":
+	var state: = _state(selected_id, selected_level,selected_upgrade)
+	if (selected_level <= 1 and not selected_upgrade) or state == "done":
 		detail.time.text = ""
 		caption.text = "RESEARCHED"
 		detail.start.disabled = true
 		return
-	var bill: = system.cost(selected_id, selected_level)
+	var bill: = system.upgrade_cost(selected_id,selected_level) if selected_upgrade else system.cost(selected_id, selected_level)
 	var stock: Dictionary = system.economy.stockpiles[GameSession.player_country]
 	for resource in ProductionSystem.RESOURCES:
 		if bill[resource] > 0: detail.costs.add_child(CowUI.cost(resource, bill[resource], stock[resource] >= bill[resource]))
-	detail.time.text = " " + SimulationClock.duration(system.duration(selected_level))
-	var reason: = system.reason(selected_id, selected_level)
+	detail.time.text = " " + SimulationClock.duration(system.upgrade_duration(selected_level) if selected_upgrade else system.duration(selected_level))
+	var reason: = system.upgrade_reason(selected_id,selected_level) if selected_upgrade else system.reason(selected_id, selected_level)
 	detail.start.disabled = not reason.is_empty()
 	detail.start.tooltip_text = reason
 	caption.text = "IN PROGRESS" if state == "active" else "RESEARCH"

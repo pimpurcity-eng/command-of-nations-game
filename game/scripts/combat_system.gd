@@ -21,13 +21,13 @@ func damage_value(unit: Dictionary, target_kind: String, defending: bool = false
 	var values: = {"armor": {"armor": 7.0, "ifv": 8.0, "artillery": 6.0, "air_defense": 8.0}, "ifv": {"armor": 4.0, "ifv": 6.0, "artillery": 7.0, "air_defense": 7.0}, "artillery": {"armor": 5.0, "ifv": 7.0, "artillery": 5.0, "air_defense": 6.0}, "air_defense": {"armor": 1.0, "ifv": 2.0, "artillery": 1.0, "air_defense": 2.0}}
 	if unit.visual_kind == "missile_launcher":
 		if EquipmentIdentity.spec(unit.equipment_id).get("targets_naval", false) and target_kind not in ["naval", "submarine", "carrier"]: return 0.0
-		return (2.0 if defending else float(EquipmentIdentity.spec(unit.equipment_id).get("strike_damage", 22.0))) * (0.2 + 0.8 * clampf(unit.health / 100.0, 0, 1)) * (1.0 + 0.12 * (unit.get("level", 1) - 1))
+		return (2.0 if defending else float(EquipmentIdentity.spec(unit.equipment_id).get("strike_damage", 22.0))) * (0.2 + 0.8 * clampf(unit.health / 100.0, 0, 1)) * (1.0 + 0.12 * (unit.get("level", 1) - 1)) * EquipmentIdentity.upgrade_factor(unit)
 	if unit.visual_kind == "naval":
 		var role: String = EquipmentIdentity.spec(unit.equipment_id).get("role","naval")
 		var targets: Dictionary = {"naval":{"naval":8.0,"submarine":6.0,"carrier":10.0},"submarine":{"naval":12.0,"submarine":8.0,"carrier":16.0},"carrier":{"naval":2.0,"submarine":1.0,"carrier":2.0}}.get(role,{})
 		var base: float = targets.get(target_kind,0.0)
 		if target_kind not in ["naval","submarine","carrier"] and EquipmentIdentity.spec(unit.equipment_id).get("shore_bombardment",false): base = 4.0 if not defending else 0.0
-		return base * (0.2 + 0.8 * clampf(unit.health / 100.0, 0, 1)) * (1.0 + 0.12 * (unit.get("level", 1) - 1))
+		return base * (0.2 + 0.8 * clampf(unit.health / 100.0, 0, 1)) * (1.0 + 0.12 * (unit.get("level", 1) - 1)) * EquipmentIdentity.upgrade_factor(unit)
 	if defending:
 		values = {"armor": {"armor": 6.0, "ifv": 7.0, "artillery": 5.0, "air_defense": 7.0}, "ifv": {"armor": 5.0, "ifv": 7.0, "artillery": 6.0, "air_defense": 6.0}, "artillery": {"armor": 2.0, "ifv": 3.0, "artillery": 2.0, "air_defense": 3.0}, "air_defense": {"armor": 2.0, "ifv": 3.0, "artillery": 2.0, "air_defense": 3.0}}
 	values["infantry"] = {"armor": 1.5, "ifv": 2.5, "artillery": 5.0, "air_defense": 4.0, "infantry": 5.0, "support": 4.0}
@@ -35,7 +35,7 @@ func damage_value(unit: Dictionary, target_kind: String, defending: bool = false
 		values[role]["missile_launcher"] = values[role].get("artillery", 3.0)
 		values[role]["infantry"] = values[role].get("infantry", values[role].get("ifv", 3.0))
 		values[role]["support"] = values[role].get("support", values[role].get("artillery", 3.0))
-	return values.get(unit.visual_kind, {}).get(target_kind, 0.0) * (0.2 + 0.8 * clampf(unit.health / 100.0, 0, 1)) * (1.0 + 0.12 * (unit.get("level", 1) - 1))
+	return values.get(unit.visual_kind, {}).get(target_kind, 0.0) * (0.2 + 0.8 * clampf(unit.health / 100.0, 0, 1)) * (1.0 + 0.12 * (unit.get("level", 1) - 1)) * EquipmentIdentity.upgrade_factor(unit)
 func ranged_ready(unit: Dictionary) -> bool:
 	return not unit.get("moving", false) or unit.get("fire_mode", "at_will") in ["offensive", "aggressive"] or not unit.get("attack_target", "").is_empty()
 func attack_reach(unit: Dictionary) -> float:

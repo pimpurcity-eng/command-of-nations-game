@@ -10,7 +10,7 @@ signal production_requested(city_name: String)
 signal research_requested  # kept for compatibility; research is opened from the HUD tab
 const SECONDS_PER_HOUR: = 3600.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
 const HIDDEN_BUILDINGS: = ["research_center"]  # research is national, not a city building
-const SECTIONS: = [["Province economy", ["industry"]], ["Unit production", ["factory", "airbase"]]]
+const SECTIONS: = [["Economy", ["industry", "finance", "material_works", "electronics_plant", "fuel_depot", "recruitment_center"]], ["Unit production", ["barracks", "tank_plant", "factory", "airbase", "naval_base"]], ["Defence & roads", ["bunker", "infrastructure"]]]
 var clock: SimulationClock
 var buildings: BuildingSystem
 var panel: PanelContainer
@@ -20,6 +20,7 @@ var income_row: HBoxContainer
 var construction: Dictionary
 var production: Dictionary
 var rally_tab: Button
+var section_labels: Array = []
 var list: VBoxContainer
 var rows: Dictionary = {}
 var message: Label
@@ -175,12 +176,15 @@ func _add_row(definition: Dictionary) -> void:
 		message.text = (definition.name + " construction planned") if error.is_empty() else error
 		_refresh())
 	right_column.add_child(button)
-	rows[definition.id] = {"name": name_label, "costs": costs, "time": time, "button": button}
+	rows[definition.id] = {"card":card, "name": name_label, "costs": costs, "time": time, "button": button}
 
 func _effect(definition: Dictionary) -> String:
 	match definition.id:
-		"factory": return "+25% unit production speed per level"
+		"factory": return "Artillery, air defence, missiles & support"
 		"industry": return "+25% city income per level"
+		"tank_plant": return "Tanks & mechanized vehicles"
+		"barracks": return "Infantry production"
+		"naval_base": return "Ships, submarines & carriers · coastal cities"
 		"airbase": return "Base for aircraft; more per level"
 	return ""
 
@@ -250,7 +254,7 @@ func _refresh() -> void:
 			var spec: Dictionary = buildings.economy.equipment(job.equipment)
 			var seconds: float = (spec.seconds - job.progress) / buildings.rate(city_id, "factory")
 			production.text.text = EquipmentIdentity.title(job.equipment) + "  ·  " + ("paused" if paused else SimulationClock.duration(seconds))
-			production.picture.texture = UnitVisual.preview_texture(job.equipment)
+			production.picture.texture = CowUI.equipment_picture(job.equipment)
 			production.picture.visible = true
 			production.icon.visible = false
 			production.bar.visible = true
@@ -263,6 +267,8 @@ func _refresh() -> void:
 	for id in rows:
 		var row: Dictionary = rows[id]
 		var definition: = buildings.spec(id)
+		row.card.visible = not definition.get("coastal_only", false) or place.has("naval_spawn")
+		if not row.card.visible: continue
 		var current: = buildings.level(city_id, id)
 		var target: = current + 1 + jobs.filter(func(j: Dictionary): return j.building == id).size()
 		row.name.text = definition.name + " Lvl. " + str(current)

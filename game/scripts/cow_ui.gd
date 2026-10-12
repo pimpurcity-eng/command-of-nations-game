@@ -44,6 +44,12 @@ static func equipment_picture(id: String) -> Texture2D:
 	var air_drawing: String = {"skyguard_russia": "strela10", "patriot_russia": "bukm3", "skyguard_ukraine": "roland", "patriot_ukraine": "iris_t_slm"}.get(id, "")
 	var air_path: String = "res://assets/interface/illustrations/" + air_drawing + ".png"
 	if not air_drawing.is_empty() and ResourceLoader.exists(air_path): return load(air_path)
+	# Equipment families must show their real tier model, never a faction flag placeholder.
+	var tier: = EquipmentIdentity.research_tier(id, 1)
+	var supplied: String = tier.get("preview", "")
+	var model_stem: String = str(tier.get("model", "")).trim_suffix(".glb")
+	for candidate in [supplied, model_stem+"_ready.png", model_stem+".png", model_stem+"_preview.png"]:
+		if not candidate.is_empty() and ResourceLoader.exists(candidate): return load(candidate)
 	var portrait: = "res://assets/interface/portraits/" + id + ".png"
 	if ResourceLoader.exists(portrait): return load(portrait)
 	var direct: = UnitVisual.preview_path(id)

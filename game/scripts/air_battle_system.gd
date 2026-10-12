@@ -11,7 +11,7 @@ func value(unit: Dictionary, name: String, defending: bool = false) -> float:
 	if name == "aa_damage" and tier.has("damage"):
 		base = tier.damage
 		scaling = 1.0
-	return TerrainRules.unit_factor(unit, "defense" if defending else "attack") * base * (0.2 + 0.8 * clampf(unit.health / 100.0, 0, 1)) * scaling
+	return TerrainRules.unit_factor(unit, "defense" if defending else "attack") * base * (0.2 + 0.8 * clampf(unit.health / 100.0, 0, 1)) * scaling * EquipmentIdentity.upgrade_factor(unit)
 func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resolve_now: bool = false) -> void :
 	if not is_finite(seconds) or seconds < 0 or (seconds == 0 and not resolve_now) or not armies.at_war: return
 	var remaining: = seconds
