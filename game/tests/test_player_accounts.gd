@@ -65,8 +65,31 @@ func run() -> void:
 	r=await auth.load_profile()
 	check(r.ok and calls[-1][0].begins_with("/rest/v1/player_profiles?") and calls[-1][2]==HTTPClient.METHOD_GET and calls[-1][3]=="test_access" and auth.profile.xp==450,"Profile loads own row with the player token")
 	reply={"ok":true,"data":{"rows":[{"xp":575,"level":3,"games_played":4,"wins":3,"losses":1}]}}
+	before=calls.size()
 	r=await auth.record_result(true,25)
-	check(r.ok and calls[-1][0]=="/rest/v1/rpc/record_match_result" and calls[-1][1].won and calls[-1][1].minutes==25 and auth.profile.xp==575 and auth.profile.commander_name=="Tester","Results go through the server function, which returns the new XP")
+	check(not r.ok and calls.size()==before and auth.profile.xp==450,"Local wins cannot submit or award online XP")
+	auth.accept_session(session(),false)
+	check(auth.profile.xp==450,"Refreshing the same account preserves its own cached profile")
+	var other:=session();other.user.id="other-player-id"
+	auth.accept_session(other,false)
+	check(auth.profile.is_empty(),"Switching accounts clears the previous commander's profile")
+	auth.profile={"commander_name":"Other","xp":1000}
+	auth.accept_session(other,true)
+	check(auth.profile.is_empty(),"Entering password recovery clears cached player profile")
+	auth.accept_session(session(),false)
+	auth.transport=func(_path,_payload,_method,_bearer):
+		auth.clear_session()
+		return {"ok":true,"data":session()}
+	r=await auth.refresh()
+	check(not r.ok and not auth.signed_in(),"A delayed refresh cannot resurrect a signed-out session")
+	auth.accept_session(session(),false)
+	auth.transport=func(_path,_payload,_method,_bearer):
+		auth.accept_session(other,false)
+		return {"ok":true,"data":{"rows":[{"commander_name":"Previous","xp":9999}]}}
+	r=await auth.load_profile()
+	check(not r.ok and auth.profile.is_empty(),"An old profile response cannot overwrite the new account")
+	auth.transport=mock
+	auth.accept_session(session(),false);auth.profile={"commander_name":"Tester","xp":450}
 	var panel:=AccountPanel.new();root.add_child(panel);panel.auth.queue_free();panel.auth=auth
 	panel.build("profile")
 	check(panel.fields.get_children().any(func(n): return n is ProgressBar) and panel.fields.get_children().any(func(n): return n is Label and n.text=="LEVEL 3"),"Profile shows level and XP bar")
