@@ -1,6 +1,8 @@
 class_name ResearchSystem
 extends RefCounted
 signal changed
+## A research job finished (equipment id, country): the game plays a sound for the player's.
+signal completed(equipment_id: String, country: String)
 const DAYS: = [1, 1, 2, 4, 6]
 const HOURS: = [0, 2, 4, 6, 8]
 const SLOTS: = 2
@@ -82,19 +84,20 @@ func cancel(id: String, country: String = "") -> void :
 		return
 func advance(seconds: float) -> void :
 	if seconds <= 0: return
-	var completed: = false
+	var finished_any: = false
 	for i in range(jobs.size() - 1, -1, -1):
 		var country: String = economy.equipment(jobs[i].equipment).country
 		jobs[i].progress += seconds * rate(country)
 		if jobs[i].progress >= duration(jobs[i].level):
 			levels[jobs[i].equipment] = jobs[i].level
+			completed.emit(jobs[i].equipment, country)
 			jobs.remove_at(i)
-			completed = true
+			finished_any = true
 
 	for spec in economy.catalog:
 		if spec.country == GameSession.opponent_country() and level(spec.id) < 5 and reason(spec.id, level(spec.id) + 1, GameSession.opponent_country()).is_empty():
 			start(spec.id, level(spec.id) + 1, GameSession.opponent_country())
-	if completed: changed.emit()
+	if finished_any: changed.emit()
 func upgrade(unit: Dictionary) -> String:
 	if unit.country != GameSession.player_country: return "Select your army"
 	var group: = armies.stacks.members(unit)

@@ -55,6 +55,10 @@ func _ready() -> void:
 	rig.bounds_high = origin + extent - Vector2(4, 4)
 	rig.max_distance = float(view.get("max_distance", 140.0))
 	add_child(rig)
+	var audio: = GameAudio.new()
+	add_child(audio)
+	audio.rig = rig
+	audio.play_music("menu_theme")
 	rig.camera.far = rig.max_distance * 2.8  # after add_child: StrategyCamera._ready sets 250
 	var start: = GeographicProjection.project(float(view.get("longitude", 15.0)), float(view.get("latitude", 50.0)))
 	rig.target = Vector3(start.x, 0, start.y)

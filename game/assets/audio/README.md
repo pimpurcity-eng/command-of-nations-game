@@ -1,9 +1,15 @@
 # Game audio
 
-**Start-screen music:** put the track here as `start_theme.ogg` (preferred) or `start_theme.mp3`.
-It loops on the start screen, fades out when a campaign starts, and the start screen shows a
-MUSIC: ON/OFF button (remembered in `user://settings.cfg`). With no file here, nothing plays.
+All sounds (`sfx/`) and music (`music/`) are synthesized from scratch by `tools/make_sounds.py`
+(no samples), so the owner holds every right. Regenerate with:
 
-Only add music the owner has the right to use in a published game (a licence from the artist,
-a royalty-free licence that allows games, or music the owner made). Keep the licence or
-permission in `docs/AUDIO_LICENCES.md` next to the track's name.
+    python3 tools/make_sounds.py game/assets/audio
+
+`scripts/game_audio.gd` plays them: weapons by type (`GameAudio.WEAPON_SOUNDS`), explosions,
+events (war, captures, buildings, research, victory/defeat), button clicks, menu and battle
+music. Sound and Music switches are on the start screen and in More, remembered in
+`user://settings.cfg`.
+
+**Optional licensed menu track:** a file at `start_theme.ogg` (or `.mp3`) replaces the
+synthesized menu theme. Only add music the owner has the right to use, and record it in
+`docs/AUDIO_LICENCES.md`.

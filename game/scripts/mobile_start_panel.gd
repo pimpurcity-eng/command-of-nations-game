@@ -14,12 +14,10 @@ var content: VBoxContainer
 var artwork: TextureRect
 var fresh_button: Button
 var has_save: = false
-## Start-screen music (owner request 2026-10-12): drop a licensed track at one of these paths
-## (see assets/audio/README.md). Nothing plays until a track is there.
-const MUSIC_PATHS: = ["res://assets/audio/start_theme.ogg", "res://assets/audio/start_theme.mp3"]
-const SETTINGS_PATH: = "user://settings.cfg"
-var music: AudioStreamPlayer
+## Music and sound switches (owner request 2026-10-12); main sets `audio` before setup().
+var audio: GameAudio
 var music_button: Button
+var sound_button: Button
 func setup(theme: Theme, saved: bool) -> void :
 	has_save = saved
 	layer = 15
@@ -125,39 +123,23 @@ func setup(theme: Theme, saved: bool) -> void :
 	get_viewport().size_changed.connect(_layout)
 	_layout()
 func _start_music(column: VBoxContainer) -> void:
-	var path: = ""
-	for candidate in MUSIC_PATHS:
-		if ResourceLoader.exists(candidate): path = candidate
-	if path.is_empty(): return
-	var stream: AudioStream = load(path)
-	if stream is AudioStreamOggVorbis: stream.loop = true
-	elif stream is AudioStreamMP3: stream.loop = true
-	music = AudioStreamPlayer.new()
-	music.stream = stream
-	add_child(music)
-	var settings: = ConfigFile.new()
-	settings.load(SETTINGS_PATH)
-	var enabled: bool = settings.get_value("audio", "music", true)
+	if audio == null: return
+	var row: = HBoxContainer.new()
+	row.add_theme_constant_override("separation", 10)
 	music_button = Button.new()
-	music_button.custom_minimum_size.y = 44
-	music_button.pressed.connect(func(): _set_music(not music.playing))
-	column.add_child(music_button)
-	_set_music(enabled)
-	# Fade out when the start screen closes (campaign starts) instead of cutting off.
-	visibility_changed.connect(func():
-		if not visible and music.playing:
-			var fade: = create_tween()
-			fade.tween_property(music, "volume_db", -40.0, 1.2)
-			fade.tween_callback(music.stop))
-func _set_music(enabled: bool) -> void:
-	music.volume_db = 0.0
-	if enabled: music.play()
-	else: music.stop()
-	music_button.text = "MUSIC: ON" if enabled else "MUSIC: OFF"
-	var settings: = ConfigFile.new()
-	settings.load(SETTINGS_PATH)
-	settings.set_value("audio", "music", enabled)
-	settings.save(SETTINGS_PATH)
+	sound_button = Button.new()
+	for button in [music_button, sound_button]:
+		button.custom_minimum_size.y = 44
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_child(button)
+	music_button.pressed.connect(func(): audio.set_music(not GameAudio.music_enabled))
+	sound_button.pressed.connect(func(): audio.set_sound(not GameAudio.sound_enabled))
+	audio.settings_changed.connect(_show_audio)
+	column.add_child(row)
+	_show_audio()
+func _show_audio() -> void:
+	music_button.text = "MUSIC: " + ("ON" if GameAudio.music_enabled else "OFF")
+	sound_button.text = "SOUND: " + ("ON" if GameAudio.sound_enabled else "OFF")
 func _layout() -> void :
 	var size: = get_viewport().get_visible_rect().size
 	var portrait: = size.y > size.x

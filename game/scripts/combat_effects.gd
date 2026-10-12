@@ -17,6 +17,8 @@ var projectiles: Array = []
 var impacts: Array = []
 var terrain: StrategicMap
 var flight_scenes: Dictionary = {}
+## Weapon and explosion sounds (set by main; none in tests that build effects alone).
+var audio: GameAudio
 func setup(units: UnitSystem, time: SimulationClock, rules: MatchSystem) -> void :
 	armies = units
 	clock = time
@@ -49,6 +51,7 @@ func on_shot(source: Dictionary, target_unit: Dictionary, effect: String) -> voi
 	if not source_visible and not target_visible: return
 	var start: Vector3 = source.node.position + Vector3.UP * 0.4
 	var finish: Vector3 = target_unit.node.position + Vector3.UP * 0.2
+	if audio != null: audio.play_shot(effect, source, start if source_visible else finish)
 	if source_visible and effect == "interceptor":
 		var model: Node3D = source.node.get_child(0)
 		if model.has_meta("air_defense_animator"):
@@ -161,6 +164,7 @@ func trajectory(job: Dictionary, fraction: float) -> Vector3:
 		position.y = maxf(position.y, terrain.elevation(Vector2(position.x, position.z)) + 0.5)
 	return position
 func explode(position: Vector3, large: bool = false) -> void :
+	if audio != null: audio.play("explosion_large" if large else "explosion_small", position)
 	if impacts.size() >= MAX_IMPACTS: return
 	var root: = Node3D.new()
 	add_child(root)
