@@ -7,6 +7,22 @@ signal europe_requested
 signal world_requested
 var country_picker: OptionButton
 var doctrine_picker: OptionButton
+var language_picker: OptionButton
+## Languages with translations (translations/ui.csv, tools/make_translations.py).
+const LANGUAGES: = [["en", "English"], ["ru", "Русский"], ["uk", "Українська"], ["de", "Deutsch"], ["fr", "Français"], ["es", "Español"]]
+const SETTINGS_PATH: = "user://settings.cfg"
+static func apply_saved_language() -> void:
+	var settings: = ConfigFile.new()
+	settings.load(SETTINGS_PATH)
+	var saved: String = settings.get_value("general", "locale", "")
+	if not saved.is_empty(): TranslationServer.set_locale(saved)
+func _choose_language(index: int) -> void:
+	var code: String = LANGUAGES[index][0]
+	TranslationServer.set_locale(code)
+	var settings: = ConfigFile.new()
+	settings.load(SETTINGS_PATH)
+	settings.set_value("general", "locale", code)
+	settings.save(SETTINGS_PATH)
 ## The doctrine the player chose (Doctrine.DOCTRINES); "" keeps the country's default.
 func selected_doctrine() -> String:
 	if doctrine_picker == null or doctrine_picker.selected <= 0: return Doctrine.DEFAULTS.get(selected_country(), "european")
@@ -24,6 +40,7 @@ var audio: GameAudio
 var music_button: Button
 var sound_button: Button
 func setup(theme: Theme, saved: bool) -> void :
+	apply_saved_language()
 	has_save = saved
 	layer = 15
 	var root: = Control.new()
@@ -93,6 +110,15 @@ func setup(theme: Theme, saved: bool) -> void :
 	doctrine_picker.custom_minimum_size.y = 48
 	doctrine_picker.clip_text = true
 	content.add_child(doctrine_picker)
+	language_picker = OptionButton.new()
+	language_picker.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+	for language in LANGUAGES: language_picker.add_item("🌐 " + language[1])
+	var current: = TranslationServer.get_locale().substr(0, 2)
+	for i in LANGUAGES.size():
+		if LANGUAGES[i][0] == current: language_picker.select(i)
+	language_picker.custom_minimum_size.y = 48
+	language_picker.item_selected.connect(_choose_language)
+	content.add_child(language_picker)
 	continue_button = Button.new()
 	continue_button.text = "CONTINUE CAMPAIGN"
 	continue_button.custom_minimum_size.y = 52

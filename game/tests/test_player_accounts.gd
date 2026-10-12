@@ -69,7 +69,7 @@ func run() -> void:
 	check(r.ok and calls[-1][0]=="/rest/v1/rpc/record_match_result" and calls[-1][1].won and calls[-1][1].minutes==25 and auth.profile.xp==575 and auth.profile.commander_name=="Tester","Results go through the server function, which returns the new XP")
 	var panel:=AccountPanel.new();root.add_child(panel);panel.auth.queue_free();panel.auth=auth
 	panel.build("profile")
-	check(panel.fields.get_children().any(func(n): return n is ProgressBar) and panel.fields.get_children().any(func(n): return n is Label and n.text=="LEVEL 3"),"Profile shows level and XP bar")
+	check(panel.fields.get_children().any(func(n): return n is ProgressBar) and panel.fields.get_children().any(func(n): return n is Label and n.text=="LEVEL 3 · SERGEANT"),"Profile shows level, rank and XP bar")
 	panel.build("delete");panel.inputs.confirm_delete.text="delete";before=calls.size();await panel.delete_account()
 	check(calls.size()==before and auth.signed_in(),"Deletion needs DELETE typed exactly")
 	reply={"ok":true,"data":{}};panel.inputs.confirm_delete.text="DELETE";await panel.delete_account()

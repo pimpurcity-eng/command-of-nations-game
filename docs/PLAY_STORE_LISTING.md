@@ -55,7 +55,7 @@ Draft for Play Console. Character limits are Google's.
 Answer truthfully in Play Console. For the current game:
 - Violence: **yes**, realistic military vehicles and explosions; no people shown, no blood or gore.
 - Fear/horror, sexuality, gambling, crude humour, drugs: **no**.
-- Users interact / share content: **no** (no chat; commander names are not shown to other players yet).
+- Users interact: **yes once online play opens** (chat, leaderboard with commander names). Single-player chat is with the AI only.
 - Shares location: **no**. Digital purchases: **no**.
 
 Expected result: about **Teen / PEGI 12** (decided by the questionnaire, not by us).

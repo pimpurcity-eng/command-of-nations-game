@@ -1,6 +1,14 @@
 extends Node3D
 var account_panel: AccountPanel
 var audio: GameAudio
+## Ranks, medals and achievements (kept on the phone, synced to the account when signed in).
+var achievements: = Achievements.new()
+var lost_city: = false
+var tutorial: Tutorial
+## Alerts: an army attacked off-screen is announced (at most once every ALERT_GAP seconds).
+const ALERT_GAP: = 45.0
+var _last_alert: = -1000.0
+var used_wmd: = false
 var badges: UnitBadges
 var test_models: Node3D
 var fog: FogOfWar
@@ -238,6 +246,7 @@ func _ready() -> void :
 		for city in cities.cities:
 			if city.id == city_id:
 				match_rules.chronicle.note_building(cities.controller_of(city))
+				if cities.controller_of(city) == GameSession.player_country: _award_count("built")
 				if cities.controller_of(city) == GameSession.player_country: audio.play("build_complete"))
 	research = ResearchSystem.new()
 	research.setup(production, clock, units)
@@ -245,6 +254,7 @@ func _ready() -> void :
 	clock.advanced.connect(research.advance)
 	research.completed.connect(func(_equipment: String, country: String):
 		match_rules.chronicle.note_research(country)
+		if country == GameSession.player_country: _award_count("research")
 		if country == GameSession.player_country: audio.play("research_complete"))
 	session.production = production
 	production.unit_ready.connect(units.spawn_produced)
@@ -340,6 +350,17 @@ func _ready() -> void :
 	match_rules.finished.connect(_report_result)
 	match_rules.finished.connect(func(country: String): audio.play("victory" if country == GameSession.player_country else "defeat"))
 	match_rules.report.connect(_report_sound)
+	achievements.load_saved()
+	match_rules.report.connect(_report_achievements)
+	match_rules.unit_destroyed.connect(func(unit: Dictionary):
+		if unit.country != GameSession.player_country: _award_count("kills"))
+	match_rules.diplomacy.agreed.connect(func(from: String, _to: String, kind: String):
+		if from == GameSession.player_country and kind == "peace": _award("peacemaker"))
+	match_rules.diplomacy.coalition_created.connect(func(_name: String, leader: String):
+		if leader == GameSession.player_country: _award("coalition"))
+	match_rules.finished.connect(_campaign_medals)
+	match_rules.combat.weapon_fired.connect(_attack_alert)
+	match_rules.air_combat.weapon_fired.connect(_attack_alert)
 	clock.advanced.connect(match_rules.advance)
 	units.status_changed.connect( func(_message: String): refresh_hud())
 	hud.show_status("PLANNING · Issue orders and queue production, then tap Play. Win by domination, economy or elimination.")
@@ -614,6 +635,8 @@ func launch_strategic(kind: String) -> void:
 	var result: = match_rules.strategic.launch(GameSession.player_country, kind, target, units, map.territories)
 	hud.show_status(result.message)
 	if not result.ok: return
+	used_wmd = true
+	if kind == "nuclear": _award("nuclear")
 	match_rules.report.emit("%s launched a %s · %s" % [GameSession.player_country.capitalize(), StrategicWeapons.WEAPONS[kind].name.to_lower(), result.message])
 	var start: = Vector3(target.x + 6.0, 1.0, target.y + 6.0)
 	for city in cities.cities:
@@ -663,6 +686,53 @@ func _annex_hint(t: Dictionary) -> void:
 	else:
 		var points: = VictoryRules.province_points(map.territories, match_rules.cities)
 		hud.show_status(t.title + " · OCCUPIED · output %d%% · More → Annex for %d funds" % [roundi(Annexation.OCCUPIED_OUTPUT * 100), roundi(annex.cost(t, points))])
+func _attack_alert(_source: Dictionary, target: Dictionary, _effect: String) -> void:
+	if target.get("country", "") != GameSession.player_country or not target.has("node"): return
+	var now: = Time.get_ticks_msec() / 1000.0
+	if now - _last_alert < ALERT_GAP: return
+	if rig.camera.is_position_in_frustum(target.node.global_position): return
+	_last_alert = now
+	var place: = "the front"
+	var point: = Vector2(target.node.position.x, target.node.position.z)
+	for t in map.territories:
+		if t.playable and RegionData.contains(t, point): place = t.title
+	hud.show_status("UNDER ATTACK · " + target.get("name", "your army") + " near " + place)
+	audio.play("sonar_ping")
+## Achievements from match events; new ones are announced in the status bar and sent to the
+## signed-in account.
+func _award(id: String) -> void:
+	if achievements.unlock(id): _announce_achievements()
+func _award_count(counter: String) -> void:
+	achievements.count(counter)
+	_announce_achievements()
+func _announce_achievements() -> void:
+	for id in achievements.take_new():
+		hud.show_status("ACHIEVEMENT UNLOCKED · " + Achievements.LIST[id].name + " · " + Achievements.LIST[id].text)
+		audio.play("research_complete")
+		if account_panel != null and account_panel.auth.signed_in(): account_panel.auth.unlock_achievement(id)
+func _report_achievements(message: String) -> void:
+	var me: = GameSession.player_country.capitalize()
+	if message.ends_with(" captured by " + me):
+		var title: = message.trim_suffix(" captured by " + me)
+		for city in cities.cities:
+			for t in map.territories:
+				if t.id == city.sector and t.title == title and city.country.to_lower() != GameSession.player_country:
+					_award("capital_fall" if city.get("capital", false) else "conqueror")
+					if city.get("capital", false): _award("conqueror")
+	elif " captured by " in message:
+		var title: = message.get_slice(" captured by ", 0)
+		for city in cities.cities:
+			for t in map.territories:
+				if t.id == city.sector and t.title == title and city.country.to_lower() == GameSession.player_country: lost_city = true
+	elif message.ends_with(" annexed"):
+		var title: = message.trim_suffix(" annexed")
+		for t in map.territories:
+			if t.title == title and match_rules.annexation.annexed.get(t.id, "") == GameSession.player_country: _award_count("annexed")
+func _campaign_medals(country: String) -> void:
+	if country != GameSession.player_country: return
+	var won: = achievements.campaign_won(country, match_rules.victory_type, clock.elapsed / VictoryRules.DAY, lost_city, used_wmd)
+	_announce_achievements()
+	if not won.is_empty(): hud.show_status("MEDALS · " + ", ".join(won.map(func(id): return Achievements.MEDALS[id].name)))
 ## Event sounds from the match reports: war declared, provinces/cities captured.
 func _report_sound(message: String) -> void:
 	if message.begins_with("WAR DECLARED"): audio.play("war_declared")
@@ -790,6 +860,10 @@ func show_stack_info() -> void :
 func start_campaign_play() -> void :
 	if not match_rules.winner.is_empty(): return
 	if match_started_msec == 0: match_started_msec = Time.get_ticks_msec()
+	if tutorial == null and not GameSession.weapons_test and not Tutorial.done() and not OS.has_feature("headless_tests"):
+		tutorial = Tutorial.new()
+		add_child(tutorial)
+		tutorial.setup(self, hud.get_child(0).theme)
 	audio.play_music("battle_theme")
 	clock.paused = false
 	refresh_hud()

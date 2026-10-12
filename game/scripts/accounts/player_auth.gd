@@ -104,6 +104,16 @@ func record_result(won: bool,minutes: int) -> Dictionary:
 	var rows: Variant=result.data.get("rows",[])
 	if rows is Array and not rows.is_empty():profile.merge(rows[0],true)
 	return {"ok":true,"data":profile}
+## Achievements go to the account (server accepts known ids once each, migration 003).
+func unlock_achievement(code: String) -> Dictionary:
+	if not signed_in():return failure("Sign in first.")
+	return await request("/rest/v1/rpc/unlock_achievement",{"code":code},HTTPClient.METHOD_POST,access_token)
+## The public leaderboard: [{place, commander_name, level, xp, wins}].
+func leaderboard(how_many: int=50) -> Dictionary:
+	if not signed_in():return failure("Sign in to see the leaderboard.")
+	var result:=await request("/rest/v1/rpc/top_commanders",{"how_many":how_many},HTTPClient.METHOD_POST,access_token)
+	if not result.ok:return result
+	return {"ok":true,"data":{"rows":result.data.get("rows",[])}}
 ## Permanently deletes the account and everything stored with it (Google Play requirement).
 func delete_account() -> Dictionary:
 	if not signed_in():return failure("Sign in first.")

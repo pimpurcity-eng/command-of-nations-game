@@ -40,7 +40,7 @@ func build(page: String) -> void:
 	mode=page;inputs.clear()
 	for item in fields.get_children():fields.remove_child(item);item.queue_free()
 	label_text("COMMAND OF NATIONS",24).modulate=Color("c9ad73")
-	var titles: Dictionary={"login":"Welcome back, Commander","signup":"Create your commander account","verify":"Confirm your email","recover":"Reset your password","recovery_code":"Check your email","new_password":"Choose a new password","profile":"Commander account","delete":"Delete account"}
+	var titles: Dictionary={"login":"Welcome back, Commander","signup":"Create your commander account","verify":"Confirm your email","recover":"Reset your password","recovery_code":"Check your email","new_password":"Choose a new password","profile":"Commander account","delete":"Delete account","leaderboard":"Leaderboard","achievements":"Achievements"}
 	label_text(titles[page],40)
 	if page=="profile":
 		label_text(str(auth.profile.get("commander_name",auth.user.get("user_metadata",{}).get("commander_name","Commander"))),34)
@@ -48,7 +48,7 @@ func build(page: String) -> void:
 		if auth.profile.has("xp"):
 			var xp:=int(auth.profile.xp);var level:=PlayerAuth.level_for(xp)
 			var low:=PlayerAuth.xp_for_level(level);var high:=PlayerAuth.xp_for_level(level+1)
-			label_text("LEVEL %d" % level,40).modulate=Color("e9c46a")
+			label_text("LEVEL %d · %s" % [level,Achievements.rank(level).to_upper()],40).modulate=Color("e9c46a")
 			var bar:=ProgressBar.new();bar.min_value=low;bar.max_value=high;bar.value=xp;bar.show_percentage=false;bar.custom_minimum_size.y=22;fields.add_child(bar)
 			label_text("%d / %d XP to level %d" % [xp,high,level+1],24)
 			label_text("Games %d · Wins %d · Losses %d" % [int(auth.profile.get("games_played",0)),int(auth.profile.get("wins",0)),int(auth.profile.get("losses",0))],26)
@@ -56,9 +56,27 @@ func build(page: String) -> void:
 			label_text("Loading your level and stats…",24)
 			load_profile.call_deferred()
 		label_text("Win a campaign for 100 XP, finish one for 25 XP, plus up to 50 XP for its length.",22)
+		button("Leaderboard",func():build("leaderboard"))
+		button("Achievements and medals",func():build("achievements"))
 		button("Sign out",func():
 			working=true;await auth.logout();working=false;build("login"))
 		button("Delete account",func():build("delete"))
+	elif page=="leaderboard":
+		if leaderboard_rows.is_empty():
+			label_text("Loading the top commanders…",24)
+			load_leaderboard.call_deferred()
+		for row in leaderboard_rows:
+			label_text("%d. %s · level %d %s · %d XP · %d wins" % [int(row.place),str(row.commander_name),int(row.level),Achievements.rank(int(row.level)),int(row.xp),int(row.wins)],26)
+		button("Back",func():leaderboard_rows=[];build("profile"))
+	elif page=="achievements":
+		var progress:=Achievements.new();progress.load_saved()
+		label_text("%d of %d achievements" % [progress.unlocked.size(),Achievements.LIST.size()],30)
+		for id in Achievements.LIST:
+			label_text(("✔ " if progress.unlocked.has(id) else "· ")+Achievements.LIST[id].name+" — "+Achievements.LIST[id].text,24)
+		label_text("MEDALS",30)
+		for id in Achievements.MEDALS:
+			label_text("%s ×%d — %s" % [Achievements.MEDALS[id].name,int(progress.medals.get(id,0)),Achievements.MEDALS[id].text],24)
+		button("Back",func():build("profile" if auth.signed_in() else "login"))
 	elif page=="delete":
 		label_text("This permanently deletes your commander account, level, XP and stats. It cannot be undone. Your offline campaign on this phone is kept.",26)
 		input("confirm_delete","Type DELETE to confirm")
@@ -74,12 +92,22 @@ func build(page: String) -> void:
 		button({"login":"Sign in","signup":"Create account","verify":"Confirm email","recover":"Send reset code","recovery_code":"Verify reset code","new_password":"Save new password"}[page],submit)
 		if page=="login":
 			button("Create an account",func():remember_email();build("signup"))
+			button("Achievements and medals",func():build("achievements"))
 			button("Forgot password?",func():remember_email();build("recover"))
 		elif page in ["verify","recovery_code"]:button("Send another code",resend_code)
 		if page!="login":button("Back to sign in",func():auth.clear_session();build("login"))
 	status=label_text("",24)
 	if not auth.configured():status.text="Online accounts are being connected. Offline play is available."
 	button("Back to game",func():overlay.hide())
+var leaderboard_rows: Array = []
+func load_leaderboard() -> void:
+	if working or mode!="leaderboard":return
+	working=true;var result:=await auth.leaderboard(50);working=false
+	if result.ok:
+		leaderboard_rows=result.data.rows
+		if leaderboard_rows.is_empty():status.text="No commanders yet."
+		else:build("leaderboard")
+	else:status.text=result.message
 func load_profile() -> void:
 	if working or mode!="profile":return
 	working=true;var result:=await auth.load_profile();working=false

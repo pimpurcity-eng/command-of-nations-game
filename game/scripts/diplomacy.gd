@@ -9,6 +9,8 @@ extends RefCounted
 ##   REJOIN_DAYS days.
 ## - Messages: a chat log (to a country, a coalition or everyone); AI countries reply.
 signal changed
+signal agreed(from: String, to: String, kind: String)
+signal coalition_created(name: String, leader: String)
 const DAY: = VictoryRules.DAY
 const REJOIN_DAYS: = 3.0
 const PROPOSAL_COOLDOWN: = DAY / 4.0
@@ -84,6 +86,7 @@ func create_coalition(name: String, leader: String) -> String:
 	if not coalition_of(leader).is_empty(): return "Leave your coalition first"
 	if now - float(left_at.get(leader, -INF)) < REJOIN_DAYS * DAY: return "You left a coalition less than %d days ago" % int(REJOIN_DAYS)
 	coalitions[name] = {"members": [leader], "leader": leader}
+	coalition_created.emit(name, leader)
 	changed.emit()
 	return ""
 
@@ -131,6 +134,7 @@ func propose(from: String, to: String, kind: String, standing: Dictionary = {}) 
 		return {"accepted": false, "message": "Proposal sent"}
 	var answer: = _ai_answer(from, to, kind, standing)
 	if answer.accepted:
+		agreed.emit(from, to, kind)
 		match kind:
 			"peace": set_war(from, to, false)
 			"right_of_way": relation(from, to).right_of_way = true
