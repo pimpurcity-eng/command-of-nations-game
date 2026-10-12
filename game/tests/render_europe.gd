@@ -1,12 +1,12 @@
 extends SceneTree
-## Portrait screenshots of the 20-player Europe map (review aid).
+## Portrait screenshots of the Europe map, or MAP_SCENE=res://scenes/world_map.tscn (review aid).
 ##   godot --path . --script tests/render_europe.gd -- <out_prefix> [lon lat distance]...
 func _initialize() -> void: call_deferred("run")
 func run() -> void:
 	var args: = OS.get_cmdline_user_args()
 	root.size = Vector2i(540, 1200)
 	var started: = Time.get_ticks_msec()
-	var view = load("res://scenes/europe_map.tscn").instantiate()
+	var view = load(OS.get_environment("MAP_SCENE") if OS.get_environment("MAP_SCENE") != "" else "res://scenes/europe_map.tscn").instantiate()
 	root.add_child(view)
 	current_scene = view
 	print("europe map built in %d ms" % (Time.get_ticks_msec() - started))

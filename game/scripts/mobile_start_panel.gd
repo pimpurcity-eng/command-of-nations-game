@@ -4,6 +4,7 @@ signal continue_requested
 signal fresh_requested
 signal test_requested
 signal europe_requested
+signal world_requested
 var country_picker: OptionButton
 func selected_country() -> String:
 	return "ukraine" if country_picker.selected == 0 else "russia"
@@ -104,6 +105,16 @@ func setup(theme: Theme, saved: bool) -> void :
 		await get_tree().process_frame
 		europe_requested.emit())
 	column.add_child(europe_button)
+	var world_button: = Button.new()
+	world_button.text = "WORLD MAP · 100 PLAYERS (PREVIEW)"
+	world_button.custom_minimum_size.y = 48
+	world_button.pressed.connect(func():
+		world_button.text = "LOADING WORLD…"
+		world_button.disabled = true
+		await get_tree().process_frame
+		await get_tree().process_frame
+		world_requested.emit())
+	column.add_child(world_button)
 	get_viewport().size_changed.connect(_layout)
 	_layout()
 func _layout() -> void :
@@ -111,7 +122,7 @@ func _layout() -> void :
 	var portrait: = size.y > size.x
 	var art: = "res://assets/interface/campaign_hero_portrait.webp" if portrait else "res://assets/interface/campaign_hero_landscape.webp"
 	if ResourceLoader.exists(art): artwork.texture = load(art)
-	var height: = minf(600 if has_save else 540, size.y - 24)
+	var height: = minf(660 if has_save else 600, size.y - 24)
 	panel.position = Vector2(maxf(12, (size.x - 520) * 0.14), maxf(12, (size.y - height) * (0.25 if portrait else 0.5)))
 	var width: = minf(520, size.x - 24)
 	content.custom_minimum_size.x = maxf(0, width - 60)

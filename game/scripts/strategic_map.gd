@@ -13,6 +13,8 @@ var _political: = -1.0
 var _city_points: = PackedVector2Array()
 ## Bounding boxes of the road clip polygons (same order as the `land` list), for speed.
 var _land_boxes: Array[Rect2] = []
+## Larger maps: land/sea from the coast mask (red = land) instead of polygon tests.
+var _land_mask: Image
 ## The drawn ground is made of province triangles that can lie well above or below the smooth
 ## height formula between their corners, which buried roads, sank tanks and split cities.
 ## After the ground is built, heights come from the drawn triangles (bucketed in a grid).
@@ -40,6 +42,8 @@ func _ready() -> void :
 	_add_country_outlines()
 	_add_connections()
 func elevation(point: Vector2) -> float:
+	# Larger maps are completely flat: no triangle lookup needed.
+	if not MapDefinition.is_regional(): return TerrainProfile.FLAT_HEIGHT
 	if _ground_ready:
 		for tri in _ground_cells.get(Vector2i(floori(point.x / GROUND_CELL), floori(point.y / GROUND_CELL)), []):
 			var a: Vector3 = tri[0]
@@ -125,8 +129,8 @@ func _build_sector(t: Dictionary) -> void :
 	body.collision_layer = 1 if t.playable else 2
 	body.set_meta("territory", t)
 	var collision: = CollisionShape3D.new()
-	collision.shape = mesh.create_trimesh_shape()
-	collision.shape.backface_collision = true
+	collision.shape = mesh.create_trimesh_shape() if mesh.get_surface_count() > 0 else null
+	if collision.shape != null: collision.shape.backface_collision = true  # specks may have no area
 	body.add_child(collision)
 	add_child(body)
 	bodies[t.id] = body
@@ -162,7 +166,7 @@ func _subdivide(s: SurfaceTool, a: Vector2, b: Vector2, c: Vector2, depth: int) 
 			s.set_color(Color(clampf(sample[2] / 4.0, 0.0, 1.0), 0, 0))
 			s.set_normal(sample[1])
 			s.add_vertex(sample[0])
-		_register_ground(_surface_samples[a][0], _surface_samples[b][0], _surface_samples[c][0])
+		if MapDefinition.is_regional(): _register_ground(_surface_samples[a][0], _surface_samples[b][0], _surface_samples[c][0])
 func select(t: Dictionary) -> void :
 	selected_id = t.id
 	for item in territories:
@@ -234,7 +238,7 @@ func _add_landscape() -> void :
 			boxes[t.id] = area
 	for i in samples:
 		var point: = Vector2(rng.randf_range(low.x, high.x), rng.randf_range(low.y, high.y))
-		var kind: = terrain_at(point)
+		var kind: = terrain_at(point) if MapDefinition.is_regional() else TerrainVisualMap.kind_at(point)
 		var grove_density: = noise.get_noise_2d(point.x * 3.0, point.y * 3.0)
 		var density: = clampf(0.3 + grove_density * 1.2, 0.05, 0.85) if kind == "forest" else 0.0
 		if kind != "forest": continue
@@ -308,6 +312,7 @@ func _add_connections() -> void :
 	for city in GeographicProjection.load_cities(): locations[city.name] = city.point
 	var land: Array = []
 	_land_boxes.clear()
+	if not MapDefinition.is_regional(): _land_mask = MapDefinition.coast_mask().get_image()
 	for country in RegionData.countries():
 		if country.country in ["Russia", "Ukraine"] or not MapDefinition.is_regional():
 			land.append(country.polygon)
@@ -489,6 +494,11 @@ func _road(surface: SurfaceTool, start: Vector2, end: Vector2, half_width: float
 		var a: = curve[i]
 		var b: = curve[i + 1]
 		var on_land: = false
+		if _land_mask != null:
+			var uv: = ((a + b) * 0.5 - MapDefinition.origin()) / MapDefinition.extent()
+			var pixel: = Vector2i(clampi(int(uv.x * _land_mask.get_width()), 0, _land_mask.get_width() - 1), clampi(int(uv.y * _land_mask.get_height()), 0, _land_mask.get_height() - 1))
+			on_land = _land_mask.get_pixelv(pixel).r > 0.5
+			land = []
 		for index in land.size():
 			var polygon: PackedVector2Array = land[index]
 			if index < _land_boxes.size() and not _land_boxes[index].has_point((a + b) * 0.5): continue
@@ -498,11 +508,26 @@ func _road(surface: SurfaceTool, start: Vector2, end: Vector2, half_width: float
 		if not on_land: continue
 		# Roads stop at the city edge instead of piling up through the city.
 		var middle: = (a + b) * 0.5
-		if _city_points.size() > 0 and Array(_city_points).any(func(city: Vector2): return city.distance_to(middle) < CITY_EDGE): continue
+		if _near_city(middle): continue
 		var side: = (b - a).orthogonal().normalized() * half_width
 		for point in [a - side, a + side, b + side, a - side, b + side, b - side]:
 			surface.add_vertex(position_at(point) + Vector3.UP * 0.04)
 
+## Cities bucketed in a 1x1 grid (hundreds of cities on the larger maps).
+var _city_grid: Dictionary = {}
+func _near_city(point: Vector2) -> bool:
+	if _city_grid.is_empty():
+		for city in _city_points:
+			var key: = Vector2i(floori(city.x), floori(city.y))
+			if not _city_grid.has(key): _city_grid[key] = []
+			_city_grid[key].append(city)
+		_city_grid[Vector2i(1 << 30, 0)] = []
+	var cell: = Vector2i(floori(point.x), floori(point.y))
+	for dx in [-1, 0, 1]:
+		for dy in [-1, 0, 1]:
+			for city in _city_grid.get(cell + Vector2i(dx, dy), []):
+				if city.distance_to(point) < CITY_EDGE: return true
+	return false
 func _add_road_mesh(surface: SurfaceTool, color: Color) -> void :
 	var roads: = MeshInstance3D.new()
 	roads.mesh = surface.commit()

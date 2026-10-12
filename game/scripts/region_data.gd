@@ -41,7 +41,7 @@ static func map_territories() -> Array:
 		var polygons: Array = feature.geometry.coordinates if feature.geometry.type == "MultiPolygon" else [feature.geometry.coordinates]
 		for index in polygons.size():
 			var poly: = _project_ring(polygons[index][0])
-			if poly.size() < 3 or Geometry2D.triangulate_polygon(poly).is_empty(): continue
+			if poly.size() < 3: continue
 			var entry: = sector(props.id + "_" + str(index), props.name, props.country, poly, playable)
 			entry.owner = props.country_id
 			entry.controller = props.country_id
@@ -128,5 +128,5 @@ static func _half_plane(poly: PackedVector2Array, site: Vector2, other: Vector2)
 	return result
 static func sector(id: String, title: String, country: String, polygon: PackedVector2Array, playable: bool) -> Dictionary:
 	var triangles: = Geometry2D.triangulate_polygon(polygon)
-	var center: = (polygon[triangles[0]] + polygon[triangles[1]] + polygon[triangles[2]]) / 3.0
+	var center: = polygon[0] if triangles.is_empty() else (polygon[triangles[0]] + polygon[triangles[1]] + polygon[triangles[2]]) / 3.0
 	return {"id": id, "title": title, "country": country, "polygon": polygon, "center": center, "playable": playable, "owner": country.to_lower(), "controller": country.to_lower()}

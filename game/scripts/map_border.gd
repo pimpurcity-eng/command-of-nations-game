@@ -25,6 +25,7 @@ static func _key(a: Vector2, b: Vector2) -> String:
 	var kb: = "%.4f,%.4f" % [b.x, b.y]
 	return ka + "|" + kb if ka < kb else kb + "|" + ka
 static func build_segments(segment_list: Array, terrain: StrategicMap, width: float, color: Color) -> MeshInstance3D:
+	if not MapDefinition.is_regional(): return _build_flat(segment_list, width, color)
 	var surface: = SurfaceTool.new()
 	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var segments: = 0
@@ -54,4 +55,42 @@ static func build_segments(segment_list: Array, terrain: StrategicMap, width: fl
 	material.set_shader_parameter("ink", color)
 	visual.material_override = material
 	visual.set_meta("border_segments", segments)
+	return visual
+
+## Larger, flat maps: one quad per edge straight into arrays (thousands of provinces).
+static func _build_flat(segment_list: Array, width: float, color: Color) -> MeshInstance3D:
+	var vertices: = PackedVector3Array()
+	var uvs: = PackedVector2Array()
+	var uv2s: = PackedVector2Array()
+	var height: = TerrainProfile.FLAT_HEIGHT + 0.065
+	for pair in segment_list:
+		var a: Vector2 = pair[0]
+		var b: Vector2 = pair[1]
+		if a.distance_squared_to(b) < 1e-06: continue
+		var normal: = Vector2( - (b - a).y, (b - a).x).normalized()
+		for vertex in [[a, -1.0], [a, 1.0], [b, 1.0], [a, -1.0], [b, 1.0], [b, -1.0]]:
+			vertices.append(Vector3(vertex[0].x, height, vertex[0].y))
+			uvs.append(Vector2(vertex[1], 0))
+			uv2s.append(normal)
+	var visual: = MeshInstance3D.new()
+	if vertices.is_empty(): return visual
+	var normals: = PackedVector3Array()
+	normals.resize(vertices.size())
+	normals.fill(Vector3.UP)
+	var arrays: = []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = vertices
+	arrays[Mesh.ARRAY_NORMAL] = normals
+	arrays[Mesh.ARRAY_TEX_UV] = uvs
+	arrays[Mesh.ARRAY_TEX_UV2] = uv2s
+	var mesh: = ArrayMesh.new()
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	visual.mesh = mesh
+	visual.extra_cull_margin = 0.5
+	var material: = ShaderMaterial.new()
+	material.shader = load("res://assets/map_border.gdshader")
+	material.set_shader_parameter("width_pixels", width)
+	material.set_shader_parameter("ink", color)
+	visual.material_override = material
+	visual.set_meta("border_segments", vertices.size() / 6)
 	return visual

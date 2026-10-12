@@ -191,6 +191,8 @@ func _process(_delta: float) -> void :
 		leaders[i].visible = false
 		label.set_meta("screen_anchor", point)
 		if rig.camera.is_position_behind(anchor) or not safe.has_point(point): continue
+		# Larger maps zoomed out: capitals only.
+		if not MapDefinition.is_regional() and rig.rendered_distance > 120.0 and not cities[i].get("capital", false): continue
 		var size: = label.size
 		var offsets: = [Vector2( - size.x * 0.5, - size.y - 10), Vector2( - size.x * 0.5, 12), Vector2(16, - size.y * 0.5), Vector2( - size.x - 16, - size.y * 0.5), Vector2(16, - size.y - 18), Vector2( - size.x - 16, 18), Vector2( - size.x * 0.5, - size.y - 42), Vector2( - size.x * 0.5, 42)]
 		for offset in offsets:

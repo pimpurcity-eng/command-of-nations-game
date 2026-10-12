@@ -1,11 +1,12 @@
 class_name EuropeMapView
 extends Node3D
+## Also shows the 100-player world map (scenes/world_map.tscn sets map_id = "world100").
 ## The separate 20-player Europe map (owner requests 2026-10-12): no resources and no units
 ## yet. 20 player countries with 25 provinces and 5 cities each (Ukraine keeps its 27
 ## provinces); the other European countries are AI countries (not player slots) with one
 ## city each; Russia is the regional map's part plus its north (Karelia, Murmansk, Arkhangelsk).
 ## Explore it, tap a province to see who holds it, open the player list.
-const MAP_ID: = "europe20"
+@export var map_id: = "europe20"
 var map: StrategicMap
 var cities: CitySystem
 var rig: StrategyCamera
@@ -14,7 +15,8 @@ var info_panel: PanelContainer
 var players_panel: PanelContainer
 
 func _ready() -> void:
-	MapDefinition.use(MAP_ID)
+	MapDefinition.use(map_id)
+	var view: Dictionary = MapDefinition.data.get("view", {})
 	var environment: = WorldEnvironment.new()
 	var settings: = Environment.new()
 	settings.background_mode = Environment.BG_COLOR
@@ -34,7 +36,7 @@ func _ready() -> void:
 	var extent: = MapDefinition.extent()
 	var sea: = MeshInstance3D.new()
 	var plane: = PlaneMesh.new()
-	plane.size = extent + Vector2(80, 80)
+	plane.size = extent * 3.0 + Vector2(80, 80)  # to the horizon when zoomed out
 	sea.mesh = plane
 	sea.position = Vector3(origin.x + extent.x * 0.5, 0, origin.y + extent.y * 0.5)
 	var ocean: = ShaderMaterial.new()
@@ -51,12 +53,12 @@ func _ready() -> void:
 	rig = StrategyCamera.new()
 	rig.bounds_low = origin + Vector2(4, 4)
 	rig.bounds_high = origin + extent - Vector2(4, 4)
-	rig.max_distance = 140.0
-	rig.camera.far = 400
+	rig.max_distance = float(view.get("max_distance", 140.0))
 	add_child(rig)
-	var start: = GeographicProjection.project(15.0, 50.0)
+	rig.camera.far = rig.max_distance * 2.8  # after add_child: StrategyCamera._ready sets 250
+	var start: = GeographicProjection.project(float(view.get("longitude", 15.0)), float(view.get("latitude", 50.0)))
 	rig.target = Vector3(start.x, 0, start.y)
-	rig.distance = 110.0
+	rig.distance = float(view.get("distance", 110.0))
 	rig._snap(1.0)
 	rig.map_clicked.connect(_tap)
 	cities = CitySystem.new()
@@ -118,7 +120,7 @@ func _tap(screen: Vector2, _order: bool) -> void:
 
 func _show_province(territory: Dictionary) -> void:
 	var country_id: String = territory.controller
-	var role: = "Player nation (1 of 20)" if MapDefinition.is_player(country_id) else "AI nation · not a player slot"
+	var role: = "Player nation (1 of %d)" % MapDefinition.players().size() if MapDefinition.is_player(country_id) else "AI nation · not a player slot"
 	var count: = 0
 	for t in map.territories:
 		if t.playable and t.controller == country_id and t.id.ends_with("_0"): count += 1
@@ -137,7 +139,7 @@ func _build_ui() -> void:
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.theme = StrategyTheme.create()
 	layer.add_child(root)
-	var header: = CowUI.header("EUROPE · 20 PLAYERS", true)
+	var header: = CowUI.header(str(MapDefinition.data.name).to_upper().replace(" (", " · ").replace(")", ""), true)
 	header.bar.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
 	header.close.hide()
 	header.back.pressed.connect(_back)
@@ -146,7 +148,7 @@ func _build_ui() -> void:
 	note.position = Vector2(16, 86)
 	root.add_child(note)
 	var players_button: = Button.new()
-	players_button.text = "PLAYERS (20)"
+	players_button.text = "PLAYERS (%d)" % MapDefinition.players().size()
 	players_button.custom_minimum_size = Vector2(150, 48)
 	players_button.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
 	players_button.position = Vector2(-166, 80)

@@ -332,6 +332,12 @@
   "relief": "res://assets/materials/relief_europe20.png",
   "coast_mask": "res://assets/materials/coast_europe20.png",
   "cities": "res://data/maps/europe20/cities.json",
+  "view": {
+    "longitude": 15.0,
+    "latitude": 50.0,
+    "distance": 110.0,
+    "max_distance": 140.0
+  },
   "resources": false,
   "units": false
 }

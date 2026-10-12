@@ -1,0 +1,5752 @@
+[
+  {
+    "id": "united_states_0",
+    "name": "Washington, D.C.",
+    "country": "United States",
+    "country_id": "united_states",
+    "longitude": -77.0114,
+    "latitude": 38.9015,
+    "capital": true,
+    "province": "w_usa_4"
+  },
+  {
+    "id": "united_states_1",
+    "name": "New York",
+    "country": "United States",
+    "country_id": "united_states",
+    "longitude": -73.982,
+    "latitude": 40.7519,
+    "capital": false,
+    "province": "w_usa_11"
+  },
+  {
+    "id": "united_states_2",
+    "name": "Los Angeles",
+    "country": "United States",
+    "country_id": "united_states",
+    "longitude": -118.1819,
+    "latitude": 33.9919,
+    "capital": false,
+    "province": "w_usa_12"
+  },
+  {
+    "id": "united_states_3",
+    "name": "Chicago",
+    "country": "United States",
+    "country_id": "united_states",
+    "longitude": -87.752,
+    "latitude": 41.8319,
+    "capital": false,
+    "province": "w_usa_6"
+  },
+  {
+    "id": "united_states_4",
+    "name": "Miami",
+    "country": "United States",
+    "country_id": "united_states",
+    "longitude": -80.2261,
+    "latitude": 25.7896,
+    "capital": false,
+    "province": "w_usa_1"
+  },
+  {
+    "id": "china_0",
+    "name": "Beijing",
+    "country": "China",
+    "country_id": "china",
+    "longitude": 116.3863,
+    "latitude": 39.9308,
+    "capital": true,
+    "province": "w_chn_10"
+  },
+  {
+    "id": "china_1",
+    "name": "Shanghai",
+    "country": "China",
+    "country_id": "china",
+    "longitude": 121.4346,
+    "latitude": 31.2184,
+    "capital": false,
+    "province": "w_chn_6"
+  },
+  {
+    "id": "china_2",
+    "name": "Guangzhou",
+    "country": "China",
+    "country_id": "china",
+    "longitude": 113.3231,
+    "latitude": 23.1469,
+    "capital": false,
+    "province": "w_chn_5"
+  },
+  {
+    "id": "china_3",
+    "name": "Wuhan",
+    "country": "China",
+    "country_id": "china",
+    "longitude": 114.2681,
+    "latitude": 30.582,
+    "capital": false,
+    "province": "w_chn_11"
+  },
+  {
+    "id": "china_4",
+    "name": "Chongqing",
+    "country": "China",
+    "country_id": "china",
+    "longitude": 106.593,
+    "latitude": 29.5669,
+    "capital": false,
+    "province": "w_chn_14"
+  },
+  {
+    "id": "russia_0",
+    "name": "Moscow",
+    "country": "Russia",
+    "country_id": "russia",
+    "longitude": 37.6136,
+    "latitude": 55.7541,
+    "capital": true,
+    "province": "w_rus_2"
+  },
+  {
+    "id": "russia_1",
+    "name": "Novosibirsk",
+    "country": "Russia",
+    "country_id": "russia",
+    "longitude": 82.9581,
+    "latitude": 55.0319,
+    "capital": false,
+    "province": "w_rus_3"
+  },
+  {
+    "id": "russia_2",
+    "name": "Yekaterinburg",
+    "country": "Russia",
+    "country_id": "russia",
+    "longitude": 60.598,
+    "latitude": 56.852,
+    "capital": false,
+    "province": "w_rus_6"
+  },
+  {
+    "id": "russia_3",
+    "name": "Nizhny Novgorod",
+    "country": "Russia",
+    "country_id": "russia",
+    "longitude": 43.9981,
+    "latitude": 56.335,
+    "capital": false,
+    "province": "w_rus_11"
+  },
+  {
+    "id": "russia_4",
+    "name": "Samara",
+    "country": "Russia",
+    "country_id": "russia",
+    "longitude": 50.1493,
+    "latitude": 53.197,
+    "capital": false,
+    "province": "w_rus_8"
+  },
+  {
+    "id": "canada_0",
+    "name": "Ottawa",
+    "country": "Canada",
+    "country_id": "canada",
+    "longitude": -75.702,
+    "latitude": 45.4186,
+    "capital": true,
+    "province": "w_can_1"
+  },
+  {
+    "id": "canada_1",
+    "name": "Vancouver",
+    "country": "Canada",
+    "country_id": "canada",
+    "longitude": -123.1236,
+    "latitude": 49.2754,
+    "capital": false,
+    "province": "w_can_4"
+  },
+  {
+    "id": "canada_2",
+    "name": "Calgary",
+    "country": "Canada",
+    "country_id": "canada",
+    "longitude": -114.0819,
+    "latitude": 51.0849,
+    "capital": false,
+    "province": "w_can_7"
+  },
+  {
+    "id": "canada_3",
+    "name": "Winnipeg",
+    "country": "Canada",
+    "country_id": "canada",
+    "longitude": -97.166,
+    "latitude": 49.883,
+    "capital": false,
+    "province": "w_can_8"
+  },
+  {
+    "id": "canada_4",
+    "name": "Quebec",
+    "country": "Canada",
+    "country_id": "canada",
+    "longitude": -71.2456,
+    "latitude": 46.84,
+    "capital": false,
+    "province": "w_can_6"
+  },
+  {
+    "id": "brazil_0",
+    "name": "Brasilia",
+    "country": "Brazil",
+    "country_id": "brazil",
+    "longitude": -47.918,
+    "latitude": -15.7814,
+    "capital": true,
+    "province": "w_bra_8"
+  },
+  {
+    "id": "brazil_1",
+    "name": "Sao Paulo",
+    "country": "Brazil",
+    "country_id": "brazil",
+    "longitude": -46.627,
+    "latitude": -23.5567,
+    "capital": false,
+    "province": "w_bra_9"
+  },
+  {
+    "id": "brazil_2",
+    "name": "Belo Horizonte",
+    "country": "Brazil",
+    "country_id": "brazil",
+    "longitude": -43.9169,
+    "latitude": -19.9131,
+    "capital": false,
+    "province": "w_bra_3"
+  },
+  {
+    "id": "brazil_3",
+    "name": "Porto Alegre",
+    "country": "Brazil",
+    "country_id": "brazil",
+    "longitude": -51.202,
+    "latitude": -30.0481,
+    "capital": false,
+    "province": "w_bra_13"
+  },
+  {
+    "id": "brazil_4",
+    "name": "Recife",
+    "country": "Brazil",
+    "country_id": "brazil",
+    "longitude": -34.9176,
+    "latitude": -8.0737,
+    "capital": false,
+    "province": "w_bra_14"
+  },
+  {
+    "id": "australia_0",
+    "name": "Canberra",
+    "country": "Australia",
+    "country_id": "australia",
+    "longitude": 149.129,
+    "latitude": -35.283,
+    "capital": true,
+    "province": "w_aus_12"
+  },
+  {
+    "id": "australia_1",
+    "name": "Sydney",
+    "country": "Australia",
+    "country_id": "australia",
+    "longitude": 151.1832,
+    "latitude": -33.9181,
+    "capital": false,
+    "province": "w_aus_2"
+  },
+  {
+    "id": "australia_2",
+    "name": "Melbourne",
+    "country": "Australia",
+    "country_id": "australia",
+    "longitude": 144.9731,
+    "latitude": -37.8181,
+    "capital": false,
+    "province": "w_aus_10"
+  },
+  {
+    "id": "australia_3",
+    "name": "Brisbane",
+    "country": "Australia",
+    "country_id": "australia",
+    "longitude": 153.0331,
+    "latitude": -27.4531,
+    "capital": false,
+    "province": "w_aus_0"
+  },
+  {
+    "id": "australia_4",
+    "name": "Perth",
+    "country": "Australia",
+    "country_id": "australia",
+    "longitude": 115.8381,
+    "latitude": -31.9531,
+    "capital": false,
+    "province": "w_aus_3"
+  },
+  {
+    "id": "india_0",
+    "name": "New Delhi",
+    "country": "India",
+    "country_id": "india",
+    "longitude": 77.2,
+    "latitude": 28.6,
+    "capital": true,
+    "province": "w_ind_1"
+  },
+  {
+    "id": "india_1",
+    "name": "Mumbai",
+    "country": "India",
+    "country_id": "india",
+    "longitude": 72.855,
+    "latitude": 19.0189,
+    "capital": false,
+    "province": "w_ind_2"
+  },
+  {
+    "id": "india_2",
+    "name": "Kolkata",
+    "country": "India",
+    "country_id": "india",
+    "longitude": 88.3227,
+    "latitude": 22.4969,
+    "capital": false,
+    "province": "w_ind_4"
+  },
+  {
+    "id": "india_3",
+    "name": "Chennai",
+    "country": "India",
+    "country_id": "india",
+    "longitude": 80.2781,
+    "latitude": 13.0919,
+    "capital": false,
+    "province": "w_ind_9"
+  },
+  {
+    "id": "india_4",
+    "name": "Bengaluru",
+    "country": "India",
+    "country_id": "india",
+    "longitude": 77.5581,
+    "latitude": 12.9719,
+    "capital": false,
+    "province": "w_ind_7"
+  },
+  {
+    "id": "mexico_0",
+    "name": "Mexico City",
+    "country": "Mexico",
+    "country_id": "mexico",
+    "longitude": -99.1329,
+    "latitude": 19.4444,
+    "capital": true,
+    "province": "w_mex_8"
+  },
+  {
+    "id": "mexico_1",
+    "name": "Guadalajara",
+    "country": "Mexico",
+    "country_id": "mexico",
+    "longitude": -103.332,
+    "latitude": 20.672,
+    "capital": false,
+    "province": "w_mex_13"
+  },
+  {
+    "id": "mexico_2",
+    "name": "Monterrey",
+    "country": "Mexico",
+    "country_id": "mexico",
+    "longitude": -100.3319,
+    "latitude": 25.6719,
+    "capital": false,
+    "province": "w_mex_7"
+  },
+  {
+    "id": "mexico_3",
+    "name": "Tijuana",
+    "country": "Mexico",
+    "country_id": "mexico",
+    "longitude": -117.0819,
+    "latitude": 32.502,
+    "capital": false,
+    "province": "w_mex_5"
+  },
+  {
+    "id": "mexico_4",
+    "name": "Ciudad Juarez",
+    "country": "Mexico",
+    "country_id": "mexico",
+    "longitude": -106.492,
+    "latitude": 31.6923,
+    "capital": false,
+    "province": "w_mex_0"
+  },
+  {
+    "id": "indonesia_0",
+    "name": "Jakarta",
+    "country": "Indonesia",
+    "country_id": "indonesia",
+    "longitude": 106.8275,
+    "latitude": -6.1725,
+    "capital": true,
+    "province": "w_idn_4"
+  },
+  {
+    "id": "indonesia_1",
+    "name": "Medan",
+    "country": "Indonesia",
+    "country_id": "indonesia",
+    "longitude": 98.6481,
+    "latitude": 3.5819,
+    "capital": false,
+    "province": "w_idn_5"
+  },
+  {
+    "id": "indonesia_2",
+    "name": "Palembang",
+    "country": "Indonesia",
+    "country_id": "indonesia",
+    "longitude": 104.7481,
+    "latitude": -2.9781,
+    "capital": false,
+    "province": "w_idn_10"
+  },
+  {
+    "id": "indonesia_3",
+    "name": "Makassar",
+    "country": "Indonesia",
+    "country_id": "indonesia",
+    "longitude": 119.4301,
+    "latitude": -5.138,
+    "capital": false,
+    "province": "w_idn_14"
+  },
+  {
+    "id": "indonesia_4",
+    "name": "Padang",
+    "country": "Indonesia",
+    "country_id": "indonesia",
+    "longitude": 100.3581,
+    "latitude": -0.9581,
+    "capital": false,
+    "province": "w_idn_8"
+  },
+  {
+    "id": "japan_0",
+    "name": "Tokyo",
+    "country": "Japan",
+    "country_id": "japan",
+    "longitude": 139.7495,
+    "latitude": 35.687,
+    "capital": true,
+    "province": "w_jpn_1"
+  },
+  {
+    "id": "japan_1",
+    "name": "Osaka",
+    "country": "Japan",
+    "country_id": "japan",
+    "longitude": 135.4582,
+    "latitude": 34.752,
+    "capital": false,
+    "province": "w_jpn_8"
+  },
+  {
+    "id": "japan_2",
+    "name": "Fukuoka",
+    "country": "Japan",
+    "country_id": "japan",
+    "longitude": 130.4081,
+    "latitude": 33.597,
+    "capital": false,
+    "province": "w_jpn_10"
+  },
+  {
+    "id": "japan_3",
+    "name": "Sapporo",
+    "country": "Japan",
+    "country_id": "japan",
+    "longitude": 141.3381,
+    "latitude": 43.0769,
+    "capital": false,
+    "province": "w_jpn_0"
+  },
+  {
+    "id": "japan_4",
+    "name": "Sendai",
+    "country": "Japan",
+    "country_id": "japan",
+    "longitude": 141.0198,
+    "latitude": 38.2891,
+    "capital": false,
+    "province": "w_jpn_2"
+  },
+  {
+    "id": "france_0",
+    "name": "Paris",
+    "country": "France",
+    "country_id": "france",
+    "longitude": 2.3314,
+    "latitude": 48.8686,
+    "capital": true,
+    "province": "w_fra_7"
+  },
+  {
+    "id": "france_1",
+    "name": "Lyon",
+    "country": "France",
+    "country_id": "france",
+    "longitude": 4.8281,
+    "latitude": 45.772,
+    "capital": false,
+    "province": "w_fra_2"
+  },
+  {
+    "id": "france_2",
+    "name": "Marseille",
+    "country": "France",
+    "country_id": "france",
+    "longitude": 5.3731,
+    "latitude": 43.2919,
+    "capital": false,
+    "province": "w_fra_11"
+  },
+  {
+    "id": "france_3",
+    "name": "Lille",
+    "country": "France",
+    "country_id": "france",
+    "longitude": 3.0781,
+    "latitude": 50.6519,
+    "capital": false,
+    "province": "w_fra_10"
+  },
+  {
+    "id": "france_4",
+    "name": "Toulouse",
+    "country": "France",
+    "country_id": "france",
+    "longitude": 1.448,
+    "latitude": 43.6219,
+    "capital": false,
+    "province": "w_fra_1"
+  },
+  {
+    "id": "saudi_arabia_0",
+    "name": "Riyadh",
+    "country": "Saudi Arabia",
+    "country_id": "saudi_arabia",
+    "longitude": 46.7708,
+    "latitude": 24.6428,
+    "capital": true,
+    "province": "w_sau_2"
+  },
+  {
+    "id": "saudi_arabia_1",
+    "name": "Jeddah",
+    "country": "Saudi Arabia",
+    "country_id": "saudi_arabia",
+    "longitude": 39.2173,
+    "latitude": 21.5188,
+    "capital": false,
+    "province": "w_sau_5"
+  },
+  {
+    "id": "saudi_arabia_2",
+    "name": "Ad Damman",
+    "country": "Saudi Arabia",
+    "country_id": "saudi_arabia",
+    "longitude": 50.0977,
+    "latitude": 26.4301,
+    "capital": false,
+    "province": "w_sau_3"
+  },
+  {
+    "id": "saudi_arabia_3",
+    "name": "Medina",
+    "country": "Saudi Arabia",
+    "country_id": "saudi_arabia",
+    "longitude": 39.5781,
+    "latitude": 24.5019,
+    "capital": false,
+    "province": "w_sau_4"
+  },
+  {
+    "id": "saudi_arabia_4",
+    "name": "Tabuk",
+    "country": "Saudi Arabia",
+    "country_id": "saudi_arabia",
+    "longitude": 36.555,
+    "latitude": 28.3838,
+    "capital": false,
+    "province": "w_sau_9"
+  },
+  {
+    "id": "germany_0",
+    "name": "Berlin",
+    "country": "Germany",
+    "country_id": "germany",
+    "longitude": 13.3996,
+    "latitude": 52.5238,
+    "capital": true,
+    "province": "w_deu_13"
+  },
+  {
+    "id": "germany_1",
+    "name": "Stuttgart",
+    "country": "Germany",
+    "country_id": "germany",
+    "longitude": 9.2,
+    "latitude": 48.78,
+    "capital": false,
+    "province": "w_deu_2"
+  },
+  {
+    "id": "germany_2",
+    "name": "Hamburg",
+    "country": "Germany",
+    "country_id": "germany",
+    "longitude": 9.9981,
+    "latitude": 53.552,
+    "capital": false,
+    "province": "w_deu_14"
+  },
+  {
+    "id": "germany_3",
+    "name": "Essen",
+    "country": "Germany",
+    "country_id": "germany",
+    "longitude": 7.0166,
+    "latitude": 51.45,
+    "capital": false,
+    "province": "w_deu_3"
+  },
+  {
+    "id": "germany_4",
+    "name": "Munich",
+    "country": "Germany",
+    "country_id": "germany",
+    "longitude": 11.573,
+    "latitude": 48.1319,
+    "capital": false,
+    "province": "w_deu_0"
+  },
+  {
+    "id": "argentina_0",
+    "name": "Buenos Aires",
+    "country": "Argentina",
+    "country_id": "argentina",
+    "longitude": -58.3995,
+    "latitude": -34.6006,
+    "capital": true,
+    "province": "w_arg_0"
+  },
+  {
+    "id": "argentina_1",
+    "name": "Cordoba",
+    "country": "Argentina",
+    "country_id": "argentina",
+    "longitude": -64.1842,
+    "latitude": -31.398,
+    "capital": false,
+    "province": "w_arg_8"
+  },
+  {
+    "id": "argentina_2",
+    "name": "Rosario",
+    "country": "Argentina",
+    "country_id": "argentina",
+    "longitude": -60.6683,
+    "latitude": -32.9492,
+    "capital": false,
+    "province": "w_arg_13"
+  },
+  {
+    "id": "argentina_3",
+    "name": "Mendoza",
+    "country": "Argentina",
+    "country_id": "argentina",
+    "longitude": -68.8186,
+    "latitude": -32.8814,
+    "capital": false,
+    "province": "w_arg_10"
+  },
+  {
+    "id": "argentina_4",
+    "name": "Tucuman",
+    "country": "Argentina",
+    "country_id": "argentina",
+    "longitude": -65.2186,
+    "latitude": -26.8141,
+    "capital": false,
+    "province": "w_arg_3"
+  },
+  {
+    "id": "iran_0",
+    "name": "Tehran",
+    "country": "Iran",
+    "country_id": "iran",
+    "longitude": 51.4224,
+    "latitude": 35.6739,
+    "capital": true,
+    "province": "w_irn_7"
+  },
+  {
+    "id": "iran_1",
+    "name": "Mashhad",
+    "country": "Iran",
+    "country_id": "iran",
+    "longitude": 59.5681,
+    "latitude": 36.272,
+    "capital": false,
+    "province": "w_irn_2"
+  },
+  {
+    "id": "iran_2",
+    "name": "Isfahan",
+    "country": "Iran",
+    "country_id": "iran",
+    "longitude": 51.6981,
+    "latitude": 32.702,
+    "capital": false,
+    "province": "w_irn_6"
+  },
+  {
+    "id": "iran_3",
+    "name": "Tabriz",
+    "country": "Iran",
+    "country_id": "iran",
+    "longitude": 46.2993,
+    "latitude": 38.0882,
+    "capital": false,
+    "province": "w_irn_9"
+  },
+  {
+    "id": "iran_4",
+    "name": "Shiraz",
+    "country": "Iran",
+    "country_id": "iran",
+    "longitude": 52.5681,
+    "latitude": 29.6319,
+    "capital": false,
+    "province": "w_irn_4"
+  },
+  {
+    "id": "spain_0",
+    "name": "Madrid",
+    "country": "Spain",
+    "country_id": "spain",
+    "longitude": -3.6853,
+    "latitude": 40.402,
+    "capital": true,
+    "province": "w_esp_4"
+  },
+  {
+    "id": "spain_1",
+    "name": "Barcelona",
+    "country": "Spain",
+    "country_id": "spain",
+    "longitude": 2.1814,
+    "latitude": 41.3852,
+    "capital": false,
+    "province": "w_esp_5"
+  },
+  {
+    "id": "spain_2",
+    "name": "Seville",
+    "country": "Spain",
+    "country_id": "spain",
+    "longitude": -5.98,
+    "latitude": 37.405,
+    "capital": false,
+    "province": "w_esp_1"
+  },
+  {
+    "id": "spain_3",
+    "name": "Bilbao",
+    "country": "Spain",
+    "country_id": "spain",
+    "longitude": -2.93,
+    "latitude": 43.25,
+    "capital": false,
+    "province": "w_esp_2"
+  },
+  {
+    "id": "spain_4",
+    "name": "Zaragoza",
+    "country": "Spain",
+    "country_id": "spain",
+    "longitude": -0.89,
+    "latitude": 41.65,
+    "capital": false,
+    "province": "w_esp_0"
+  },
+  {
+    "id": "united_kingdom_0",
+    "name": "London",
+    "country": "United Kingdom",
+    "country_id": "united_kingdom",
+    "longitude": -0.1187,
+    "latitude": 51.5019,
+    "capital": true,
+    "province": "w_gbr_7"
+  },
+  {
+    "id": "united_kingdom_1",
+    "name": "Manchester",
+    "country": "United Kingdom",
+    "country_id": "united_kingdom",
+    "longitude": -2.2499,
+    "latitude": 53.5024,
+    "capital": false,
+    "province": "w_gbr_8"
+  },
+  {
+    "id": "united_kingdom_2",
+    "name": "Glasgow",
+    "country": "United Kingdom",
+    "country_id": "united_kingdom",
+    "longitude": -4.2527,
+    "latitude": 55.8764,
+    "capital": false,
+    "province": "w_gbr_13"
+  },
+  {
+    "id": "united_kingdom_3",
+    "name": "Bristol",
+    "country": "United Kingdom",
+    "country_id": "united_kingdom",
+    "longitude": -2.5833,
+    "latitude": 51.45,
+    "capital": false,
+    "province": "w_gbr_9"
+  },
+  {
+    "id": "united_kingdom_4",
+    "name": "Aberdeen",
+    "country": "United Kingdom",
+    "country_id": "united_kingdom",
+    "longitude": -2.08,
+    "latitude": 57.1704,
+    "capital": false,
+    "province": "w_gbr_1"
+  },
+  {
+    "id": "italy_0",
+    "name": "Rome",
+    "country": "Italy",
+    "country_id": "italy",
+    "longitude": 12.4813,
+    "latitude": 41.8979,
+    "capital": true,
+    "province": "w_ita_9"
+  },
+  {
+    "id": "italy_1",
+    "name": "Milan",
+    "country": "Italy",
+    "country_id": "italy",
+    "longitude": 9.2031,
+    "latitude": 45.4719,
+    "capital": false,
+    "province": "w_ita_3"
+  },
+  {
+    "id": "italy_2",
+    "name": "Naples",
+    "country": "Italy",
+    "country_id": "italy",
+    "longitude": 14.2431,
+    "latitude": 40.842,
+    "capital": false,
+    "province": "w_ita_5"
+  },
+  {
+    "id": "italy_3",
+    "name": "Florence",
+    "country": "Italy",
+    "country_id": "italy",
+    "longitude": 11.25,
+    "latitude": 43.78,
+    "capital": false,
+    "province": "w_ita_6"
+  },
+  {
+    "id": "italy_4",
+    "name": "Palermo",
+    "country": "Italy",
+    "country_id": "italy",
+    "longitude": 13.3481,
+    "latitude": 38.127,
+    "capital": false,
+    "province": "w_ita_1"
+  },
+  {
+    "id": "turkey_0",
+    "name": "Ankara",
+    "country": "Turkey",
+    "country_id": "turkey",
+    "longitude": 32.8624,
+    "latitude": 39.9292,
+    "capital": true,
+    "province": "w_tur_5"
+  },
+  {
+    "id": "turkey_1",
+    "name": "Istanbul",
+    "country": "Turkey",
+    "country_id": "turkey",
+    "longitude": 29.0081,
+    "latitude": 41.1069,
+    "capital": false,
+    "province": "w_tur_1"
+  },
+  {
+    "id": "turkey_2",
+    "name": "Izmir",
+    "country": "Turkey",
+    "country_id": "turkey",
+    "longitude": 27.1498,
+    "latitude": 38.4381,
+    "capital": false,
+    "province": "w_tur_6"
+  },
+  {
+    "id": "turkey_3",
+    "name": "Adana",
+    "country": "Turkey",
+    "country_id": "turkey",
+    "longitude": 35.3181,
+    "latitude": 36.9969,
+    "capital": false,
+    "province": "w_tur_3"
+  },
+  {
+    "id": "turkey_4",
+    "name": "Konya",
+    "country": "Turkey",
+    "country_id": "turkey",
+    "longitude": 32.4731,
+    "latitude": 37.877,
+    "capital": false,
+    "province": "w_tur_0"
+  },
+  {
+    "id": "venezuela_0",
+    "name": "Caracas",
+    "country": "Venezuela",
+    "country_id": "venezuela",
+    "longitude": -66.919,
+    "latitude": 10.5029,
+    "capital": true,
+    "province": "w_ven_12"
+  },
+  {
+    "id": "venezuela_1",
+    "name": "Maracaibo",
+    "country": "Venezuela",
+    "country_id": "venezuela",
+    "longitude": -71.6619,
+    "latitude": 10.7319,
+    "capital": false,
+    "province": "w_ven_5"
+  },
+  {
+    "id": "venezuela_2",
+    "name": "Barquisimeto",
+    "country": "Venezuela",
+    "country_id": "venezuela",
+    "longitude": -69.3019,
+    "latitude": 10.0519,
+    "capital": false,
+    "province": "w_ven_13"
+  },
+  {
+    "id": "venezuela_3",
+    "name": "Ciudad Guayana",
+    "country": "Venezuela",
+    "country_id": "venezuela",
+    "longitude": -62.62,
+    "latitude": 8.37,
+    "capital": false,
+    "province": "w_ven_0"
+  },
+  {
+    "id": "venezuela_4",
+    "name": "Barcelona",
+    "country": "Venezuela",
+    "country_id": "venezuela",
+    "longitude": -64.72,
+    "latitude": 10.1304,
+    "capital": false,
+    "province": "w_ven_4"
+  },
+  {
+    "id": "south_africa_0",
+    "name": "Cape Town",
+    "country": "South Africa",
+    "country_id": "south_africa",
+    "longitude": 18.433,
+    "latitude": -33.9181,
+    "capital": true,
+    "province": "w_zaf_11"
+  },
+  {
+    "id": "south_africa_1",
+    "name": "Pretoria",
+    "country": "South Africa",
+    "country_id": "south_africa",
+    "longitude": 28.2275,
+    "latitude": -25.705,
+    "capital": false,
+    "province": "w_zaf_14"
+  },
+  {
+    "id": "south_africa_2",
+    "name": "Bloemfontein",
+    "country": "South Africa",
+    "country_id": "south_africa",
+    "longitude": 26.2299,
+    "latitude": -29.12,
+    "capital": false,
+    "province": "w_zaf_10"
+  },
+  {
+    "id": "south_africa_3",
+    "name": "Durban",
+    "country": "South Africa",
+    "country_id": "south_africa",
+    "longitude": 30.9781,
+    "latitude": -29.8631,
+    "capital": false,
+    "province": "w_zaf_5"
+  },
+  {
+    "id": "south_africa_4",
+    "name": "Port Elizabeth",
+    "country": "South Africa",
+    "country_id": "south_africa",
+    "longitude": 25.5981,
+    "latitude": -33.9681,
+    "capital": false,
+    "province": "w_zaf_6"
+  },
+  {
+    "id": "nigeria_0",
+    "name": "Abuja",
+    "country": "Nigeria",
+    "country_id": "nigeria",
+    "longitude": 7.5314,
+    "latitude": 9.0853,
+    "capital": true,
+    "province": "w_nga_6"
+  },
+  {
+    "id": "nigeria_1",
+    "name": "Lagos",
+    "country": "Nigeria",
+    "country_id": "nigeria",
+    "longitude": 3.3896,
+    "latitude": 6.4452,
+    "capital": false,
+    "province": "w_nga_0"
+  },
+  {
+    "id": "nigeria_2",
+    "name": "Kano",
+    "country": "Nigeria",
+    "country_id": "nigeria",
+    "longitude": 8.5181,
+    "latitude": 12.0019,
+    "capital": false,
+    "province": "w_nga_4"
+  },
+  {
+    "id": "nigeria_3",
+    "name": "Kaduna",
+    "country": "Nigeria",
+    "country_id": "nigeria",
+    "longitude": 7.4381,
+    "latitude": 10.522,
+    "capital": false,
+    "province": "w_nga_13"
+  },
+  {
+    "id": "nigeria_4",
+    "name": "Benin City",
+    "country": "Nigeria",
+    "country_id": "nigeria",
+    "longitude": 5.6181,
+    "latitude": 6.3424,
+    "capital": false,
+    "province": "w_nga_8"
+  },
+  {
+    "id": "algeria_0",
+    "name": "Algiers",
+    "country": "Algeria",
+    "country_id": "algeria",
+    "longitude": 3.0486,
+    "latitude": 36.765,
+    "capital": true,
+    "province": "w_dza_13"
+  },
+  {
+    "id": "algeria_1",
+    "name": "Oran",
+    "country": "Algeria",
+    "country_id": "algeria",
+    "longitude": -0.6219,
+    "latitude": 35.7119,
+    "capital": false,
+    "province": "w_dza_8"
+  },
+  {
+    "id": "algeria_2",
+    "name": "Annaba",
+    "country": "Algeria",
+    "country_id": "algeria",
+    "longitude": 7.76,
+    "latitude": 36.92,
+    "capital": false,
+    "province": "w_dza_9"
+  },
+  {
+    "id": "algeria_3",
+    "name": "Arak",
+    "country": "Algeria",
+    "country_id": "algeria",
+    "longitude": 3.75,
+    "latitude": 25.28,
+    "capital": false,
+    "province": "w_dza_0"
+  },
+  {
+    "id": "algeria_4",
+    "name": "Biskra",
+    "country": "Algeria",
+    "country_id": "algeria",
+    "longitude": 5.73,
+    "latitude": 34.86,
+    "capital": false,
+    "province": "w_dza_10"
+  },
+  {
+    "id": "colombia_0",
+    "name": "Bogota",
+    "country": "Colombia",
+    "country_id": "colombia",
+    "longitude": -74.0853,
+    "latitude": 4.5984,
+    "capital": true,
+    "province": "w_col_6"
+  },
+  {
+    "id": "colombia_1",
+    "name": "Medellin",
+    "country": "Colombia",
+    "country_id": "colombia",
+    "longitude": -75.577,
+    "latitude": 6.2769,
+    "capital": false,
+    "province": "w_col_1"
+  },
+  {
+    "id": "colombia_2",
+    "name": "Barranquilla",
+    "country": "Colombia",
+    "country_id": "colombia",
+    "longitude": -74.8019,
+    "latitude": 10.9619,
+    "capital": false,
+    "province": "w_col_4"
+  },
+  {
+    "id": "colombia_3",
+    "name": "Bucaramanga",
+    "country": "Colombia",
+    "country_id": "colombia",
+    "longitude": -73.1278,
+    "latitude": 7.132,
+    "capital": false,
+    "province": "w_col_7"
+  },
+  {
+    "id": "colombia_4",
+    "name": "Pasto",
+    "country": "Colombia",
+    "country_id": "colombia",
+    "longitude": -77.2811,
+    "latitude": 1.2136,
+    "capital": false,
+    "province": "w_col_10"
+  },
+  {
+    "id": "egypt_0",
+    "name": "Cairo",
+    "country": "Egypt",
+    "country_id": "egypt",
+    "longitude": 31.248,
+    "latitude": 30.0519,
+    "capital": true,
+    "province": "w_egy_14"
+  },
+  {
+    "id": "egypt_1",
+    "name": "Alexandria",
+    "country": "Egypt",
+    "country_id": "egypt",
+    "longitude": 29.948,
+    "latitude": 31.202,
+    "capital": false,
+    "province": "w_egy_8"
+  },
+  {
+    "id": "egypt_2",
+    "name": "Luxor",
+    "country": "Egypt",
+    "country_id": "egypt",
+    "longitude": 32.65,
+    "latitude": 25.7,
+    "capital": false,
+    "province": "w_egy_12"
+  },
+  {
+    "id": "egypt_3",
+    "name": "El Minya",
+    "country": "Egypt",
+    "country_id": "egypt",
+    "longitude": 30.75,
+    "latitude": 28.09,
+    "capital": false,
+    "province": "w_egy_6"
+  },
+  {
+    "id": "egypt_4",
+    "name": "Aswan",
+    "country": "Egypt",
+    "country_id": "egypt",
+    "longitude": 32.8989,
+    "latitude": 24.0875,
+    "capital": false,
+    "province": "w_egy_7"
+  },
+  {
+    "id": "peru_0",
+    "name": "Lima",
+    "country": "Peru",
+    "country_id": "peru",
+    "longitude": -77.052,
+    "latitude": -12.0461,
+    "capital": true,
+    "province": "w_per_9"
+  },
+  {
+    "id": "peru_1",
+    "name": "Arequipa",
+    "country": "Peru",
+    "country_id": "peru",
+    "longitude": -71.532,
+    "latitude": -16.418,
+    "capital": false,
+    "province": "w_per_2"
+  },
+  {
+    "id": "peru_2",
+    "name": "Trujillo",
+    "country": "Peru",
+    "country_id": "peru",
+    "longitude": -79.02,
+    "latitude": -8.12,
+    "capital": false,
+    "province": "w_per_6"
+  },
+  {
+    "id": "peru_3",
+    "name": "Iquitos",
+    "country": "Peru",
+    "country_id": "peru",
+    "longitude": -73.25,
+    "latitude": -3.75,
+    "capital": false,
+    "province": "w_per_0"
+  },
+  {
+    "id": "peru_4",
+    "name": "Piura",
+    "country": "Peru",
+    "country_id": "peru",
+    "longitude": -80.63,
+    "latitude": -5.21,
+    "capital": false,
+    "province": "w_per_13"
+  },
+  {
+    "id": "thailand_0",
+    "name": "Bangkok",
+    "country": "Thailand",
+    "country_id": "thailand",
+    "longitude": 100.5147,
+    "latitude": 13.7519,
+    "capital": true,
+    "province": "w_tha_6"
+  },
+  {
+    "id": "thailand_1",
+    "name": "Chiang Mai",
+    "country": "Thailand",
+    "country_id": "thailand",
+    "longitude": 98.98,
+    "latitude": 18.8,
+    "capital": false,
+    "province": "w_tha_5"
+  },
+  {
+    "id": "thailand_2",
+    "name": "Nakhon Ratchasima",
+    "country": "Thailand",
+    "country_id": "thailand",
+    "longitude": 102.1,
+    "latitude": 15.0,
+    "capital": false,
+    "province": "w_tha_8"
+  },
+  {
+    "id": "thailand_3",
+    "name": "Hat Yai",
+    "country": "Thailand",
+    "country_id": "thailand",
+    "longitude": 100.4714,
+    "latitude": 6.9964,
+    "capital": false,
+    "province": "w_tha_1"
+  },
+  {
+    "id": "thailand_4",
+    "name": "Ubon Ratchathani",
+    "country": "Thailand",
+    "country_id": "thailand",
+    "longitude": 104.83,
+    "latitude": 15.25,
+    "capital": false,
+    "province": "w_tha_10"
+  },
+  {
+    "id": "pakistan_0",
+    "name": "Islamabad",
+    "country": "Pakistan",
+    "country_id": "pakistan",
+    "longitude": 73.1647,
+    "latitude": 33.7019,
+    "capital": true,
+    "province": "w_pak_14"
+  },
+  {
+    "id": "pakistan_1",
+    "name": "Karachi",
+    "country": "Pakistan",
+    "country_id": "pakistan",
+    "longitude": 66.9881,
+    "latitude": 24.8719,
+    "capital": false,
+    "province": "w_pak_2"
+  },
+  {
+    "id": "pakistan_2",
+    "name": "Lahore",
+    "country": "Pakistan",
+    "country_id": "pakistan",
+    "longitude": 74.3481,
+    "latitude": 31.5619,
+    "capital": false,
+    "province": "w_pak_11"
+  },
+  {
+    "id": "pakistan_3",
+    "name": "Multan",
+    "country": "Pakistan",
+    "country_id": "pakistan",
+    "longitude": 71.4531,
+    "latitude": 30.2019,
+    "capital": false,
+    "province": "w_pak_0"
+  },
+  {
+    "id": "pakistan_4",
+    "name": "Quetta",
+    "country": "Pakistan",
+    "country_id": "pakistan",
+    "longitude": 67.023,
+    "latitude": 30.2219,
+    "capital": false,
+    "province": "w_pak_5"
+  },
+  {
+    "id": "sweden_0",
+    "name": "Stockholm",
+    "country": "Sweden",
+    "country_id": "sweden",
+    "longitude": 18.0954,
+    "latitude": 59.3527,
+    "capital": true,
+    "province": "w_swe_13"
+  },
+  {
+    "id": "sweden_1",
+    "name": "Goteborg",
+    "country": "Sweden",
+    "country_id": "sweden",
+    "longitude": 12.0,
+    "latitude": 57.75,
+    "capital": false,
+    "province": "w_swe_4"
+  },
+  {
+    "id": "sweden_2",
+    "name": "Malmo",
+    "country": "Sweden",
+    "country_id": "sweden",
+    "longitude": 13.0333,
+    "latitude": 55.5833,
+    "capital": false,
+    "province": "w_swe_14"
+  },
+  {
+    "id": "sweden_3",
+    "name": "Orebro",
+    "country": "Sweden",
+    "country_id": "sweden",
+    "longitude": 15.22,
+    "latitude": 59.2803,
+    "capital": false,
+    "province": "w_swe_9"
+  },
+  {
+    "id": "sweden_4",
+    "name": "Umea",
+    "country": "Sweden",
+    "country_id": "sweden",
+    "longitude": 20.24,
+    "latitude": 63.83,
+    "capital": false,
+    "province": "w_swe_1"
+  },
+  {
+    "id": "chile_0",
+    "name": "Santiago",
+    "country": "Chile",
+    "country_id": "chile",
+    "longitude": -70.669,
+    "latitude": -33.4481,
+    "capital": true,
+    "province": "w_chl_14"
+  },
+  {
+    "id": "chile_1",
+    "name": "Concepcion",
+    "country": "Chile",
+    "country_id": "chile",
+    "longitude": -73.05,
+    "latitude": -36.83,
+    "capital": false,
+    "province": "w_chl_6"
+  },
+  {
+    "id": "chile_2",
+    "name": "Antofagasta",
+    "country": "Chile",
+    "country_id": "chile",
+    "longitude": -70.4,
+    "latitude": -23.65,
+    "capital": false,
+    "province": "w_chl_0"
+  },
+  {
+    "id": "chile_3",
+    "name": "Temuco",
+    "country": "Chile",
+    "country_id": "chile",
+    "longitude": -72.58,
+    "latitude": -38.73,
+    "capital": false,
+    "province": "w_chl_8"
+  },
+  {
+    "id": "chile_4",
+    "name": "Iquique",
+    "country": "Chile",
+    "country_id": "chile",
+    "longitude": -70.13,
+    "latitude": -20.25,
+    "capital": false,
+    "province": "w_chl_5"
+  },
+  {
+    "id": "poland_0",
+    "name": "Warsaw",
+    "country": "Poland",
+    "country_id": "poland",
+    "longitude": 20.9981,
+    "latitude": 52.2519,
+    "capital": true,
+    "province": "w_pol_0"
+  },
+  {
+    "id": "poland_1",
+    "name": "Katowice",
+    "country": "Poland",
+    "country_id": "poland",
+    "longitude": 19.02,
+    "latitude": 50.2604,
+    "capital": false,
+    "province": "w_pol_5"
+  },
+  {
+    "id": "poland_2",
+    "name": "Gdansk",
+    "country": "Poland",
+    "country_id": "poland",
+    "longitude": 18.64,
+    "latitude": 54.36,
+    "capital": false,
+    "province": "w_pol_8"
+  },
+  {
+    "id": "poland_3",
+    "name": "Wroclaw",
+    "country": "Poland",
+    "country_id": "poland",
+    "longitude": 17.03,
+    "latitude": 51.1104,
+    "capital": false,
+    "province": "w_pol_7"
+  },
+  {
+    "id": "poland_4",
+    "name": "Szczecin",
+    "country": "Poland",
+    "country_id": "poland",
+    "longitude": 14.53,
+    "latitude": 53.4204,
+    "capital": false,
+    "province": "w_pol_4"
+  },
+  {
+    "id": "south_korea_0",
+    "name": "Seoul",
+    "country": "South Korea",
+    "country_id": "south_korea",
+    "longitude": 126.9978,
+    "latitude": 37.5683,
+    "capital": true,
+    "province": "w_kor_10"
+  },
+  {
+    "id": "south_korea_1",
+    "name": "Busan",
+    "country": "South Korea",
+    "country_id": "south_korea",
+    "longitude": 129.0081,
+    "latitude": 35.097,
+    "capital": false,
+    "province": "w_kor_14"
+  },
+  {
+    "id": "south_korea_2",
+    "name": "Daejeon",
+    "country": "South Korea",
+    "country_id": "south_korea",
+    "longitude": 127.4231,
+    "latitude": 36.3375,
+    "capital": false,
+    "province": "w_kor_13"
+  },
+  {
+    "id": "south_korea_3",
+    "name": "Jeju",
+    "country": "South Korea",
+    "country_id": "south_korea",
+    "longitude": 126.5219,
+    "latitude": 33.5101,
+    "capital": false,
+    "province": "w_kor_8"
+  },
+  {
+    "id": "south_korea_4",
+    "name": "Daegu",
+    "country": "South Korea",
+    "country_id": "south_korea",
+    "longitude": 128.605,
+    "latitude": 35.8687,
+    "capital": false,
+    "province": "w_kor_11"
+  },
+  {
+    "id": "norway_0",
+    "name": "Oslo",
+    "country": "Norway",
+    "country_id": "norway",
+    "longitude": 10.748,
+    "latitude": 59.9186,
+    "capital": true,
+    "province": "w_nor_14"
+  },
+  {
+    "id": "norway_1",
+    "name": "Bergen",
+    "country": "Norway",
+    "country_id": "norway",
+    "longitude": 5.3245,
+    "latitude": 60.391,
+    "capital": false,
+    "province": "w_nor_12"
+  },
+  {
+    "id": "norway_2",
+    "name": "Trondheim",
+    "country": "Norway",
+    "country_id": "norway",
+    "longitude": 10.4167,
+    "latitude": 63.4167,
+    "capital": false,
+    "province": "w_nor_8"
+  },
+  {
+    "id": "norway_3",
+    "name": "Kristiansand",
+    "country": "Norway",
+    "country_id": "norway",
+    "longitude": 8.0,
+    "latitude": 58.1666,
+    "capital": false,
+    "province": "w_nor_11"
+  },
+  {
+    "id": "norway_4",
+    "name": "Tromso",
+    "country": "Norway",
+    "country_id": "norway",
+    "longitude": 18.992,
+    "latitude": 69.6351,
+    "capital": false,
+    "province": "w_nor_6"
+  },
+  {
+    "id": "malaysia_0",
+    "name": "Kuala Lumpur",
+    "country": "Malaysia",
+    "country_id": "malaysia",
+    "longitude": 101.698,
+    "latitude": 3.1686,
+    "capital": true,
+    "province": "w_mys_13"
+  },
+  {
+    "id": "malaysia_1",
+    "name": "George Town",
+    "country": "Malaysia",
+    "country_id": "malaysia",
+    "longitude": 100.3294,
+    "latitude": 5.4136,
+    "capital": false,
+    "province": "w_mys_12"
+  },
+  {
+    "id": "malaysia_2",
+    "name": "Johor Bahru",
+    "country": "Malaysia",
+    "country_id": "malaysia",
+    "longitude": 103.7281,
+    "latitude": 1.482,
+    "capital": false,
+    "province": "w_mys_4"
+  },
+  {
+    "id": "malaysia_3",
+    "name": "Kuching",
+    "country": "Malaysia",
+    "country_id": "malaysia",
+    "longitude": 110.33,
+    "latitude": 1.53,
+    "capital": false,
+    "province": "w_mys_0"
+  },
+  {
+    "id": "malaysia_4",
+    "name": "Kota Kinabalu",
+    "country": "Malaysia",
+    "country_id": "malaysia",
+    "longitude": 116.11,
+    "latitude": 5.98,
+    "capital": false,
+    "province": "w_mys_1"
+  },
+  {
+    "id": "dr_congo_0",
+    "name": "Kinshasa",
+    "country": "DR Congo",
+    "country_id": "dr_congo",
+    "longitude": 15.313,
+    "latitude": -4.3278,
+    "capital": true,
+    "province": "w_cod_14"
+  },
+  {
+    "id": "dr_congo_1",
+    "name": "Lubumbashi",
+    "country": "DR Congo",
+    "country_id": "dr_congo",
+    "longitude": 27.4781,
+    "latitude": -11.6781,
+    "capital": false,
+    "province": "w_cod_1"
+  },
+  {
+    "id": "dr_congo_2",
+    "name": "Mbuji-Mayi",
+    "country": "DR Congo",
+    "country_id": "dr_congo",
+    "longitude": 23.5981,
+    "latitude": -6.1481,
+    "capital": false,
+    "province": "w_cod_6"
+  },
+  {
+    "id": "dr_congo_3",
+    "name": "Kikwit",
+    "country": "DR Congo",
+    "country_id": "dr_congo",
+    "longitude": 18.85,
+    "latitude": -5.03,
+    "capital": false,
+    "province": "w_cod_9"
+  },
+  {
+    "id": "dr_congo_4",
+    "name": "Kisangani",
+    "country": "DR Congo",
+    "country_id": "dr_congo",
+    "longitude": 25.22,
+    "latitude": 0.52,
+    "capital": false,
+    "province": "w_cod_3"
+  },
+  {
+    "id": "angola_0",
+    "name": "Luanda",
+    "country": "Angola",
+    "country_id": "angola",
+    "longitude": 13.2325,
+    "latitude": -8.8363,
+    "capital": true,
+    "province": "w_ago_9"
+  },
+  {
+    "id": "angola_1",
+    "name": "Huambo",
+    "country": "Angola",
+    "country_id": "angola",
+    "longitude": 15.7581,
+    "latitude": -12.748,
+    "capital": false,
+    "province": "w_ago_14"
+  },
+  {
+    "id": "angola_2",
+    "name": "Lobito",
+    "country": "Angola",
+    "country_id": "angola",
+    "longitude": 13.5412,
+    "latitude": -12.37,
+    "capital": false,
+    "province": "w_ago_13"
+  },
+  {
+    "id": "angola_3",
+    "name": "Namibe",
+    "country": "Angola",
+    "country_id": "angola",
+    "longitude": 12.16,
+    "latitude": -15.19,
+    "capital": false,
+    "province": "w_ago_10"
+  },
+  {
+    "id": "angola_4",
+    "name": "Malanje",
+    "country": "Angola",
+    "country_id": "angola",
+    "longitude": 16.34,
+    "latitude": -9.54,
+    "capital": false,
+    "province": "w_ago_3"
+  },
+  {
+    "id": "philippines_0",
+    "name": "Manila",
+    "country": "Philippines",
+    "country_id": "philippines",
+    "longitude": 120.9803,
+    "latitude": 14.6061,
+    "capital": true,
+    "province": "w_phl_3"
+  },
+  {
+    "id": "philippines_1",
+    "name": "Davao",
+    "country": "Philippines",
+    "country_id": "philippines",
+    "longitude": 125.6281,
+    "latitude": 7.112,
+    "capital": false,
+    "province": "w_phl_6"
+  },
+  {
+    "id": "philippines_2",
+    "name": "Cagayan de Oro",
+    "country": "Philippines",
+    "country_id": "philippines",
+    "longitude": 124.6853,
+    "latitude": 8.4508,
+    "capital": false,
+    "province": "w_phl_2"
+  },
+  {
+    "id": "philippines_3",
+    "name": "Cebu",
+    "country": "Philippines",
+    "country_id": "philippines",
+    "longitude": 123.8981,
+    "latitude": 10.3219,
+    "capital": false,
+    "province": "w_phl_1"
+  },
+  {
+    "id": "philippines_4",
+    "name": "Zamboanga",
+    "country": "Philippines",
+    "country_id": "philippines",
+    "longitude": 122.0781,
+    "latitude": 6.9219,
+    "capital": false,
+    "province": "w_phl_12"
+  },
+  {
+    "id": "ethiopia_0",
+    "name": "Addis Ababa",
+    "country": "Ethiopia",
+    "country_id": "ethiopia",
+    "longitude": 38.6981,
+    "latitude": 9.0353,
+    "capital": true,
+    "province": "w_eth_13"
+  },
+  {
+    "id": "ethiopia_1",
+    "name": "Dire Dawa",
+    "country": "Ethiopia",
+    "country_id": "ethiopia",
+    "longitude": 41.86,
+    "latitude": 9.59,
+    "capital": false,
+    "province": "w_eth_12"
+  },
+  {
+    "id": "ethiopia_2",
+    "name": "Bahir Dar",
+    "country": "Ethiopia",
+    "country_id": "ethiopia",
+    "longitude": 37.3833,
+    "latitude": 11.6001,
+    "capital": false,
+    "province": "w_eth_0"
+  },
+  {
+    "id": "ethiopia_3",
+    "name": "Awasa",
+    "country": "Ethiopia",
+    "country_id": "ethiopia",
+    "longitude": 38.477,
+    "latitude": 7.06,
+    "capital": false,
+    "province": "w_eth_3"
+  },
+  {
+    "id": "ethiopia_4",
+    "name": "Adigrat",
+    "country": "Ethiopia",
+    "country_id": "ethiopia",
+    "longitude": 39.47,
+    "latitude": 14.2804,
+    "capital": false,
+    "province": "w_eth_10"
+  },
+  {
+    "id": "iraq_0",
+    "name": "Baghdad",
+    "country": "Iraq",
+    "country_id": "iraq",
+    "longitude": 44.3919,
+    "latitude": 33.3406,
+    "capital": true,
+    "province": "w_irq_12"
+  },
+  {
+    "id": "iraq_1",
+    "name": "Mosul",
+    "country": "Iraq",
+    "country_id": "iraq",
+    "longitude": 43.1431,
+    "latitude": 36.3469,
+    "capital": false,
+    "province": "w_irq_2"
+  },
+  {
+    "id": "iraq_2",
+    "name": "Basra",
+    "country": "Iraq",
+    "country_id": "iraq",
+    "longitude": 47.8116,
+    "latitude": 30.5155,
+    "capital": false,
+    "province": "w_irq_9"
+  },
+  {
+    "id": "iraq_3",
+    "name": "As Sulaymaniyah",
+    "country": "Iraq",
+    "country_id": "iraq",
+    "longitude": 45.4309,
+    "latitude": 35.5613,
+    "capital": false,
+    "province": "w_irq_8"
+  },
+  {
+    "id": "iraq_4",
+    "name": "As Samawah",
+    "country": "Iraq",
+    "country_id": "iraq",
+    "longitude": 45.2803,
+    "latitude": 31.3099,
+    "capital": false,
+    "province": "w_irq_1"
+  },
+  {
+    "id": "finland_0",
+    "name": "Helsinki",
+    "country": "Finland",
+    "country_id": "finland",
+    "longitude": 24.9322,
+    "latitude": 60.1775,
+    "capital": true,
+    "province": "w_fin_13"
+  },
+  {
+    "id": "finland_1",
+    "name": "Turku",
+    "country": "Finland",
+    "country_id": "finland",
+    "longitude": 22.255,
+    "latitude": 60.4539,
+    "capital": false,
+    "province": "w_fin_12"
+  },
+  {
+    "id": "finland_2",
+    "name": "Oulu",
+    "country": "Finland",
+    "country_id": "finland",
+    "longitude": 25.47,
+    "latitude": 65.0,
+    "capital": false,
+    "province": "w_fin_1"
+  },
+  {
+    "id": "finland_3",
+    "name": "Kuopio",
+    "country": "Finland",
+    "country_id": "finland",
+    "longitude": 27.6949,
+    "latitude": 62.8943,
+    "capital": false,
+    "province": "w_fin_4"
+  },
+  {
+    "id": "finland_4",
+    "name": "Vaasa",
+    "country": "Finland",
+    "country_id": "finland",
+    "longitude": 21.6,
+    "latitude": 63.1,
+    "capital": false,
+    "province": "w_fin_7"
+  },
+  {
+    "id": "ukraine_0",
+    "name": "Kiev",
+    "country": "Ukraine",
+    "country_id": "ukraine",
+    "longitude": 30.5147,
+    "latitude": 50.4353,
+    "capital": true,
+    "province": "w_ukr_12"
+  },
+  {
+    "id": "ukraine_1",
+    "name": "Kharkiv",
+    "country": "Ukraine",
+    "country_id": "ukraine",
+    "longitude": 36.2481,
+    "latitude": 50.0019,
+    "capital": false,
+    "province": "w_ukr_10"
+  },
+  {
+    "id": "ukraine_2",
+    "name": "Odessa",
+    "country": "Ukraine",
+    "country_id": "ukraine",
+    "longitude": 30.7081,
+    "latitude": 46.492,
+    "capital": false,
+    "province": "w_ukr_7"
+  },
+  {
+    "id": "ukraine_3",
+    "name": "Donetsk",
+    "country": "Ukraine",
+    "country_id": "ukraine",
+    "longitude": 37.828,
+    "latitude": 48.0019,
+    "capital": false,
+    "province": "w_ukr_1"
+  },
+  {
+    "id": "ukraine_4",
+    "name": "Lvov",
+    "country": "Ukraine",
+    "country_id": "ukraine",
+    "longitude": 24.03,
+    "latitude": 49.835,
+    "capital": false,
+    "province": "w_ukr_6"
+  },
+  {
+    "id": "vietnam_0",
+    "name": "Hanoi",
+    "country": "Vietnam",
+    "country_id": "vietnam",
+    "longitude": 105.8481,
+    "latitude": 21.0353,
+    "capital": true,
+    "province": "w_vnm_9"
+  },
+  {
+    "id": "vietnam_1",
+    "name": "Ho Chi Minh City",
+    "country": "Vietnam",
+    "country_id": "vietnam",
+    "longitude": 106.6931,
+    "latitude": 10.782,
+    "capital": false,
+    "province": "w_vnm_7"
+  },
+  {
+    "id": "vietnam_2",
+    "name": "Da Nang",
+    "country": "Vietnam",
+    "country_id": "vietnam",
+    "longitude": 108.25,
+    "latitude": 16.06,
+    "capital": false,
+    "province": "w_vnm_5"
+  },
+  {
+    "id": "vietnam_3",
+    "name": "Qui Nhon",
+    "country": "Vietnam",
+    "country_id": "vietnam",
+    "longitude": 109.18,
+    "latitude": 13.78,
+    "capital": false,
+    "province": "w_vnm_0"
+  },
+  {
+    "id": "vietnam_4",
+    "name": "Vinh",
+    "country": "Vietnam",
+    "country_id": "vietnam",
+    "longitude": 105.68,
+    "latitude": 18.7,
+    "capital": false,
+    "province": "w_vnm_10"
+  },
+  {
+    "id": "libya_0",
+    "name": "Tripoli",
+    "country": "Libya",
+    "country_id": "libya",
+    "longitude": 13.18,
+    "latitude": 32.8925,
+    "capital": true,
+    "province": "w_lby_13"
+  },
+  {
+    "id": "libya_1",
+    "name": "Banghazi",
+    "country": "Libya",
+    "country_id": "libya",
+    "longitude": 20.0648,
+    "latitude": 32.1187,
+    "capital": false,
+    "province": "w_lby_12"
+  },
+  {
+    "id": "libya_2",
+    "name": "Misratah",
+    "country": "Libya",
+    "country_id": "libya",
+    "longitude": 15.1,
+    "latitude": 32.38,
+    "capital": false,
+    "province": "w_lby_9"
+  },
+  {
+    "id": "libya_3",
+    "name": "Tubruq",
+    "country": "Libya",
+    "country_id": "libya",
+    "longitude": 23.96,
+    "latitude": 32.08,
+    "capital": false,
+    "province": "w_lby_6"
+  },
+  {
+    "id": "libya_4",
+    "name": "Surt",
+    "country": "Libya",
+    "country_id": "libya",
+    "longitude": 16.59,
+    "latitude": 31.21,
+    "capital": false,
+    "province": "w_lby_11"
+  },
+  {
+    "id": "morocco_0",
+    "name": "Rabat",
+    "country": "Morocco",
+    "country_id": "morocco",
+    "longitude": -6.8364,
+    "latitude": 34.0253,
+    "capital": true,
+    "province": "w_mar_13"
+  },
+  {
+    "id": "morocco_1",
+    "name": "Marrakesh",
+    "country": "Morocco",
+    "country_id": "morocco",
+    "longitude": -8.0019,
+    "latitude": 31.6319,
+    "capital": false,
+    "province": "w_mar_6"
+  },
+  {
+    "id": "morocco_2",
+    "name": "Agadir",
+    "country": "Morocco",
+    "country_id": "morocco",
+    "longitude": -9.62,
+    "latitude": 30.44,
+    "capital": false,
+    "province": "w_mar_3"
+  },
+  {
+    "id": "morocco_3",
+    "name": "Tangier",
+    "country": "Morocco",
+    "country_id": "morocco",
+    "longitude": -5.8327,
+    "latitude": 35.7473,
+    "capital": false,
+    "province": "w_mar_12"
+  },
+  {
+    "id": "morocco_4",
+    "name": "Oujda",
+    "country": "Morocco",
+    "country_id": "morocco",
+    "longitude": -1.91,
+    "latitude": 34.69,
+    "capital": false,
+    "province": "w_mar_5"
+  },
+  {
+    "id": "tanzania_0",
+    "name": "Dar es Salaam",
+    "country": "Tanzania",
+    "country_id": "tanzania",
+    "longitude": 39.2664,
+    "latitude": -6.7981,
+    "capital": true,
+    "province": "w_tza_6"
+  },
+  {
+    "id": "tanzania_1",
+    "name": "Mwanza",
+    "country": "Tanzania",
+    "country_id": "tanzania",
+    "longitude": 32.93,
+    "latitude": -2.52,
+    "capital": false,
+    "province": "w_tza_12"
+  },
+  {
+    "id": "tanzania_2",
+    "name": "Arusha",
+    "country": "Tanzania",
+    "country_id": "tanzania",
+    "longitude": 36.67,
+    "latitude": -3.36,
+    "capital": false,
+    "province": "w_tza_2"
+  },
+  {
+    "id": "tanzania_3",
+    "name": "Mbeya",
+    "country": "Tanzania",
+    "country_id": "tanzania",
+    "longitude": 33.43,
+    "latitude": -8.89,
+    "capital": false,
+    "province": "w_tza_10"
+  },
+  {
+    "id": "tanzania_4",
+    "name": "Dodoma",
+    "country": "Tanzania",
+    "country_id": "tanzania",
+    "longitude": 35.75,
+    "latitude": -6.1833,
+    "capital": false,
+    "province": "w_tza_1"
+  },
+  {
+    "id": "romania_0",
+    "name": "Bucharest",
+    "country": "Romania",
+    "country_id": "romania",
+    "longitude": 26.098,
+    "latitude": 44.4353,
+    "capital": true,
+    "province": "w_rou_14"
+  },
+  {
+    "id": "romania_1",
+    "name": "Iasi",
+    "country": "Romania",
+    "country_id": "romania",
+    "longitude": 27.5749,
+    "latitude": 47.1683,
+    "capital": false,
+    "province": "w_rou_4"
+  },
+  {
+    "id": "romania_2",
+    "name": "Cluj-Napoca",
+    "country": "Romania",
+    "country_id": "romania",
+    "longitude": 23.5984,
+    "latitude": 46.7884,
+    "capital": false,
+    "province": "w_rou_11"
+  },
+  {
+    "id": "romania_3",
+    "name": "Timisoara",
+    "country": "Romania",
+    "country_id": "romania",
+    "longitude": 21.2234,
+    "latitude": 45.7588,
+    "capital": false,
+    "province": "w_rou_5"
+  },
+  {
+    "id": "romania_4",
+    "name": "Galati",
+    "country": "Romania",
+    "country_id": "romania",
+    "longitude": 28.0459,
+    "latitude": 45.4559,
+    "capital": false,
+    "province": "w_rou_2"
+  },
+  {
+    "id": "sudan_0",
+    "name": "Khartoum",
+    "country": "Sudan",
+    "country_id": "sudan",
+    "longitude": 32.5322,
+    "latitude": 15.59,
+    "capital": true,
+    "province": "w_sdn_12"
+  },
+  {
+    "id": "sudan_1",
+    "name": "Port Sudan",
+    "country": "Sudan",
+    "country_id": "sudan",
+    "longitude": 37.2164,
+    "latitude": 19.6158,
+    "capital": false,
+    "province": "w_sdn_3"
+  },
+  {
+    "id": "sudan_2",
+    "name": "Kassala",
+    "country": "Sudan",
+    "country_id": "sudan",
+    "longitude": 36.39,
+    "latitude": 15.46,
+    "capital": false,
+    "province": "w_sdn_10"
+  },
+  {
+    "id": "sudan_3",
+    "name": "El Obeid",
+    "country": "Sudan",
+    "country_id": "sudan",
+    "longitude": 30.2167,
+    "latitude": 13.1833,
+    "capital": false,
+    "province": "w_sdn_2"
+  },
+  {
+    "id": "sudan_4",
+    "name": "Niyala",
+    "country": "Sudan",
+    "country_id": "sudan",
+    "longitude": 24.89,
+    "latitude": 12.06,
+    "capital": false,
+    "province": "w_sdn_6"
+  },
+  {
+    "id": "kenya_0",
+    "name": "Nairobi",
+    "country": "Kenya",
+    "country_id": "kenya",
+    "longitude": 36.8147,
+    "latitude": -1.2814,
+    "capital": true,
+    "province": "w_ken_14"
+  },
+  {
+    "id": "kenya_1",
+    "name": "Mombasa",
+    "country": "Kenya",
+    "country_id": "kenya",
+    "longitude": 39.688,
+    "latitude": -4.0381,
+    "capital": false,
+    "province": "w_ken_6"
+  },
+  {
+    "id": "kenya_2",
+    "name": "Kisumu",
+    "country": "Kenya",
+    "country_id": "kenya",
+    "longitude": 34.75,
+    "latitude": -0.09,
+    "capital": false,
+    "province": "w_ken_11"
+  },
+  {
+    "id": "kenya_3",
+    "name": "Garissa",
+    "country": "Kenya",
+    "country_id": "kenya",
+    "longitude": 39.67,
+    "latitude": -0.4396,
+    "capital": false,
+    "province": "w_ken_2"
+  },
+  {
+    "id": "kenya_4",
+    "name": "Meru",
+    "country": "Kenya",
+    "country_id": "kenya",
+    "longitude": 37.64,
+    "latitude": 0.06,
+    "capital": false,
+    "province": "w_ken_0"
+  },
+  {
+    "id": "new_zealand_0",
+    "name": "Wellington",
+    "country": "New Zealand",
+    "country_id": "new_zealand",
+    "longitude": 174.7833,
+    "latitude": -41.3,
+    "capital": true,
+    "province": "w_nzl_12"
+  },
+  {
+    "id": "new_zealand_1",
+    "name": "Auckland",
+    "country": "New Zealand",
+    "country_id": "new_zealand",
+    "longitude": 174.763,
+    "latitude": -36.8481,
+    "capital": false,
+    "province": "w_nzl_6"
+  },
+  {
+    "id": "new_zealand_2",
+    "name": "Christchurch",
+    "country": "New Zealand",
+    "country_id": "new_zealand",
+    "longitude": 172.63,
+    "latitude": -43.535,
+    "capital": false,
+    "province": "w_nzl_0"
+  },
+  {
+    "id": "new_zealand_3",
+    "name": "Dunedin",
+    "country": "New Zealand",
+    "country_id": "new_zealand",
+    "longitude": 170.491,
+    "latitude": -45.8854,
+    "capital": false,
+    "province": "w_nzl_1"
+  },
+  {
+    "id": "new_zealand_4",
+    "name": "Palmerston North",
+    "country": "New Zealand",
+    "country_id": "new_zealand",
+    "longitude": 175.6072,
+    "latitude": -40.3527,
+    "capital": false,
+    "province": "w_nzl_5"
+  },
+  {
+    "id": "myanmar_0",
+    "name": "Naypyidaw",
+    "country": "Myanmar",
+    "country_id": "myanmar",
+    "longitude": 96.1167,
+    "latitude": 19.7685,
+    "capital": true,
+    "province": "w_mmr_6"
+  },
+  {
+    "id": "myanmar_1",
+    "name": "Rangoon",
+    "country": "Myanmar",
+    "country_id": "myanmar",
+    "longitude": 96.1647,
+    "latitude": 16.7853,
+    "capital": false,
+    "province": "w_mmr_14"
+  },
+  {
+    "id": "myanmar_2",
+    "name": "Myeik",
+    "country": "Myanmar",
+    "country_id": "myanmar",
+    "longitude": 98.6115,
+    "latitude": 12.4541,
+    "capital": false,
+    "province": "w_mmr_7"
+  },
+  {
+    "id": "myanmar_3",
+    "name": "Monywa",
+    "country": "Myanmar",
+    "country_id": "myanmar",
+    "longitude": 95.15,
+    "latitude": 22.105,
+    "capital": false,
+    "province": "w_mmr_0"
+  },
+  {
+    "id": "myanmar_4",
+    "name": "Sittwe",
+    "country": "Myanmar",
+    "country_id": "myanmar",
+    "longitude": 92.88,
+    "latitude": 20.14,
+    "capital": false,
+    "province": "w_mmr_9"
+  },
+  {
+    "id": "bolivia_0",
+    "name": "La Paz",
+    "country": "Bolivia",
+    "country_id": "bolivia",
+    "longitude": -68.1519,
+    "latitude": -16.496,
+    "capital": true,
+    "province": "w_bol_6"
+  },
+  {
+    "id": "bolivia_1",
+    "name": "Sucre",
+    "country": "Bolivia",
+    "country_id": "bolivia",
+    "longitude": -65.2595,
+    "latitude": -19.041,
+    "capital": false,
+    "province": "w_bol_12"
+  },
+  {
+    "id": "bolivia_2",
+    "name": "Santa Cruz",
+    "country": "Bolivia",
+    "country_id": "bolivia",
+    "longitude": -63.2279,
+    "latitude": -17.752,
+    "capital": false,
+    "province": "w_bol_2"
+  },
+  {
+    "id": "bolivia_3",
+    "name": "Cochabamba",
+    "country": "Bolivia",
+    "country_id": "bolivia",
+    "longitude": -66.17,
+    "latitude": -17.41,
+    "capital": false,
+    "province": "w_bol_10"
+  },
+  {
+    "id": "bolivia_4",
+    "name": "Santa Ana",
+    "country": "Bolivia",
+    "country_id": "bolivia",
+    "longitude": -65.58,
+    "latitude": -13.76,
+    "capital": false,
+    "province": "w_bol_5"
+  },
+  {
+    "id": "bangladesh_0",
+    "name": "Dhaka",
+    "country": "Bangladesh",
+    "country_id": "bangladesh",
+    "longitude": 90.4066,
+    "latitude": 23.725,
+    "capital": true,
+    "province": "w_bgd_6"
+  },
+  {
+    "id": "bangladesh_1",
+    "name": "Chattogram",
+    "country": "Bangladesh",
+    "country_id": "bangladesh",
+    "longitude": 91.798,
+    "latitude": 22.3319,
+    "capital": false,
+    "province": "w_bgd_2"
+  },
+  {
+    "id": "bangladesh_2",
+    "name": "Rajshahi",
+    "country": "Bangladesh",
+    "country_id": "bangladesh",
+    "longitude": 88.6031,
+    "latitude": 24.3769,
+    "capital": false,
+    "province": "w_bgd_3"
+  },
+  {
+    "id": "bangladesh_3",
+    "name": "Khulna",
+    "country": "Bangladesh",
+    "country_id": "bangladesh",
+    "longitude": 89.5581,
+    "latitude": 22.8419,
+    "capital": false,
+    "province": "w_bgd_0"
+  },
+  {
+    "id": "bangladesh_4",
+    "name": "Mymensingh",
+    "country": "Bangladesh",
+    "country_id": "bangladesh",
+    "longitude": 90.38,
+    "latitude": 24.7504,
+    "capital": false,
+    "province": "w_bgd_11"
+  },
+  {
+    "id": "austria_0",
+    "name": "Vienna",
+    "country": "Austria",
+    "country_id": "austria",
+    "longitude": 16.3647,
+    "latitude": 48.202,
+    "capital": true,
+    "province": "w_aut_14"
+  },
+  {
+    "id": "austria_1",
+    "name": "Salzburg",
+    "country": "Austria",
+    "country_id": "austria",
+    "longitude": 13.04,
+    "latitude": 47.8105,
+    "capital": false,
+    "province": "w_aut_2"
+  },
+  {
+    "id": "austria_2",
+    "name": "Bregenz",
+    "country": "Austria",
+    "country_id": "austria",
+    "longitude": 9.7667,
+    "latitude": 47.5167,
+    "capital": false,
+    "province": "w_aut_13"
+  },
+  {
+    "id": "austria_3",
+    "name": "Linz",
+    "country": "Austria",
+    "country_id": "austria",
+    "longitude": 14.2888,
+    "latitude": 48.3192,
+    "capital": false,
+    "province": "w_aut_7"
+  },
+  {
+    "id": "austria_4",
+    "name": "Graz",
+    "country": "Austria",
+    "country_id": "austria",
+    "longitude": 15.41,
+    "latitude": 47.0778,
+    "capital": false,
+    "province": "w_aut_0"
+  },
+  {
+    "id": "uae_0",
+    "name": "Abu Dhabi",
+    "country": "UAE",
+    "country_id": "uae",
+    "longitude": 54.3666,
+    "latitude": 24.4667,
+    "capital": true,
+    "province": "w_are_1"
+  },
+  {
+    "id": "uae_1",
+    "name": "Ras al Khaymah",
+    "country": "UAE",
+    "country_id": "uae",
+    "longitude": 55.9428,
+    "latitude": 25.7915,
+    "capital": false,
+    "province": "w_are_8"
+  },
+  {
+    "id": "uae_2",
+    "name": "Al Ayn",
+    "country": "UAE",
+    "country_id": "uae",
+    "longitude": 55.74,
+    "latitude": 24.2305,
+    "capital": false,
+    "province": "w_are_2"
+  },
+  {
+    "id": "uae_3",
+    "name": "Dubai",
+    "country": "UAE",
+    "country_id": "uae",
+    "longitude": 55.278,
+    "latitude": 25.2319,
+    "capital": false,
+    "province": "w_are_7"
+  },
+  {
+    "id": "uae_4",
+    "name": "Al Fujayrah",
+    "country": "UAE",
+    "country_id": "uae",
+    "longitude": 56.3375,
+    "latitude": 25.1234,
+    "capital": false,
+    "province": "w_are_10"
+  },
+  {
+    "id": "switzerland_0",
+    "name": "Bern",
+    "country": "Switzerland",
+    "country_id": "switzerland",
+    "longitude": 7.467,
+    "latitude": 46.9167,
+    "capital": true,
+    "province": "w_che_1"
+  },
+  {
+    "id": "switzerland_1",
+    "name": "Geneva",
+    "country": "Switzerland",
+    "country_id": "switzerland",
+    "longitude": 6.14,
+    "latitude": 46.21,
+    "capital": false,
+    "province": "w_che_3"
+  },
+  {
+    "id": "switzerland_2",
+    "name": "Lugano",
+    "country": "Switzerland",
+    "country_id": "switzerland",
+    "longitude": 8.9667,
+    "latitude": 46.0004,
+    "capital": false,
+    "province": "w_che_4"
+  },
+  {
+    "id": "switzerland_3",
+    "name": "Saint Gallen",
+    "country": "Switzerland",
+    "country_id": "switzerland",
+    "longitude": 9.362,
+    "latitude": 47.423,
+    "capital": false,
+    "province": "w_che_5"
+  },
+  {
+    "id": "switzerland_4",
+    "name": "Zurich",
+    "country": "Switzerland",
+    "country_id": "switzerland",
+    "longitude": 8.5481,
+    "latitude": 47.3819,
+    "capital": false,
+    "province": "w_che_8"
+  },
+  {
+    "id": "greece_0",
+    "name": "Athens",
+    "country": "Greece",
+    "country_id": "greece",
+    "longitude": 23.7314,
+    "latitude": 37.9853,
+    "capital": true,
+    "province": "w_grc_11"
+  },
+  {
+    "id": "greece_1",
+    "name": "Thessaloniki",
+    "country": "Greece",
+    "country_id": "greece",
+    "longitude": 22.8831,
+    "latitude": 40.6981,
+    "capital": false,
+    "province": "w_grc_7"
+  },
+  {
+    "id": "greece_2",
+    "name": "Iraklio",
+    "country": "Greece",
+    "country_id": "greece",
+    "longitude": 25.1305,
+    "latitude": 35.325,
+    "capital": false,
+    "province": "w_grc_9"
+  },
+  {
+    "id": "greece_3",
+    "name": "Ioanina",
+    "country": "Greece",
+    "country_id": "greece",
+    "longitude": 20.8509,
+    "latitude": 39.6679,
+    "capital": false,
+    "province": "w_grc_8"
+  },
+  {
+    "id": "greece_4",
+    "name": "Rodos",
+    "country": "Greece",
+    "country_id": "greece",
+    "longitude": 28.2225,
+    "latitude": 36.4412,
+    "capital": false,
+    "province": "w_grc_12"
+  },
+  {
+    "id": "ecuador_0",
+    "name": "Quito",
+    "country": "Ecuador",
+    "country_id": "ecuador",
+    "longitude": -78.502,
+    "latitude": -0.213,
+    "capital": true,
+    "province": "w_ecu_7"
+  },
+  {
+    "id": "ecuador_1",
+    "name": "Guayaquil",
+    "country": "Ecuador",
+    "country_id": "ecuador",
+    "longitude": -79.922,
+    "latitude": -2.2181,
+    "capital": false,
+    "province": "w_ecu_5"
+  },
+  {
+    "id": "ecuador_2",
+    "name": "Esmeraldas",
+    "country": "Ecuador",
+    "country_id": "ecuador",
+    "longitude": -79.67,
+    "latitude": 0.9304,
+    "capital": false,
+    "province": "w_ecu_8"
+  },
+  {
+    "id": "ecuador_3",
+    "name": "Loja",
+    "country": "Ecuador",
+    "country_id": "ecuador",
+    "longitude": -79.21,
+    "latitude": -3.99,
+    "capital": false,
+    "province": "w_ecu_11"
+  },
+  {
+    "id": "ecuador_4",
+    "name": "Santa Cruz",
+    "country": "Ecuador",
+    "country_id": "ecuador",
+    "longitude": -90.35,
+    "latitude": -0.5333,
+    "capital": false,
+    "province": "w_ecu_14"
+  },
+  {
+    "id": "ireland_0",
+    "name": "Dublin",
+    "country": "Ireland",
+    "country_id": "ireland",
+    "longitude": -6.2509,
+    "latitude": 53.335,
+    "capital": true,
+    "province": "w_irl_1"
+  },
+  {
+    "id": "ireland_1",
+    "name": "Cork",
+    "country": "Ireland",
+    "country_id": "ireland",
+    "longitude": -8.4958,
+    "latitude": 51.8986,
+    "capital": false,
+    "province": "w_irl_0"
+  },
+  {
+    "id": "ireland_2",
+    "name": "Sligo",
+    "country": "Ireland",
+    "country_id": "ireland",
+    "longitude": -8.4833,
+    "latitude": 54.2671,
+    "capital": false,
+    "province": "w_irl_11"
+  },
+  {
+    "id": "ireland_3",
+    "name": "Waterford",
+    "country": "Ireland",
+    "country_id": "ireland",
+    "longitude": -7.1119,
+    "latitude": 52.2583,
+    "capital": false,
+    "province": "w_irl_4"
+  },
+  {
+    "id": "ireland_4",
+    "name": "Limerick",
+    "country": "Ireland",
+    "country_id": "ireland",
+    "longitude": -8.623,
+    "latitude": 52.6647,
+    "capital": false,
+    "province": "w_irl_5"
+  },
+  {
+    "id": "uzbekistan_0",
+    "name": "Tashkent",
+    "country": "Uzbekistan",
+    "country_id": "uzbekistan",
+    "longitude": 69.293,
+    "latitude": 41.3136,
+    "capital": true,
+    "province": "w_uzb_14"
+  },
+  {
+    "id": "uzbekistan_1",
+    "name": "Fargona",
+    "country": "Uzbekistan",
+    "country_id": "uzbekistan",
+    "longitude": 71.78,
+    "latitude": 40.39,
+    "capital": false,
+    "province": "w_uzb_11"
+  },
+  {
+    "id": "uzbekistan_2",
+    "name": "Samarqand",
+    "country": "Uzbekistan",
+    "country_id": "uzbekistan",
+    "longitude": 66.945,
+    "latitude": 39.67,
+    "capital": false,
+    "province": "w_uzb_7"
+  },
+  {
+    "id": "uzbekistan_3",
+    "name": "Bukhara",
+    "country": "Uzbekistan",
+    "country_id": "uzbekistan",
+    "longitude": 64.43,
+    "latitude": 39.78,
+    "capital": false,
+    "province": "w_uzb_3"
+  },
+  {
+    "id": "uzbekistan_4",
+    "name": "Nukus",
+    "country": "Uzbekistan",
+    "country_id": "uzbekistan",
+    "longitude": 59.615,
+    "latitude": 42.47,
+    "capital": false,
+    "province": "w_uzb_2"
+  },
+  {
+    "id": "oman_0",
+    "name": "Muscat",
+    "country": "Oman",
+    "country_id": "oman",
+    "longitude": 58.5933,
+    "latitude": 23.6133,
+    "capital": true,
+    "province": "w_omn_12"
+  },
+  {
+    "id": "oman_1",
+    "name": "Salalah",
+    "country": "Oman",
+    "country_id": "oman",
+    "longitude": 54.0852,
+    "latitude": 17.0255,
+    "capital": false,
+    "province": "w_omn_0"
+  },
+  {
+    "id": "oman_2",
+    "name": "Suhar",
+    "country": "Oman",
+    "country_id": "oman",
+    "longitude": 56.7344,
+    "latitude": 24.362,
+    "capital": false,
+    "province": "w_omn_10"
+  },
+  {
+    "id": "oman_3",
+    "name": "Hilf",
+    "country": "Oman",
+    "country_id": "oman",
+    "longitude": 58.8768,
+    "latitude": 20.6562,
+    "capital": false,
+    "province": "w_omn_8"
+  },
+  {
+    "id": "oman_4",
+    "name": "Ibri",
+    "country": "Oman",
+    "country_id": "oman",
+    "longitude": 56.517,
+    "latitude": 23.2254,
+    "capital": false,
+    "province": "w_omn_6"
+  },
+  {
+    "id": "mongolia_0",
+    "name": "Ulaanbaatar",
+    "country": "Mongolia",
+    "country_id": "mongolia",
+    "longitude": 106.9147,
+    "latitude": 47.9186,
+    "capital": true,
+    "province": "w_mng_12"
+  },
+  {
+    "id": "mongolia_1",
+    "name": "Erdenet",
+    "country": "Mongolia",
+    "country_id": "mongolia",
+    "longitude": 104.1183,
+    "latitude": 49.0533,
+    "capital": false,
+    "province": "w_mng_8"
+  },
+  {
+    "id": "mongolia_2",
+    "name": "Ulaangom",
+    "country": "Mongolia",
+    "country_id": "mongolia",
+    "longitude": 92.0666,
+    "latitude": 49.9833,
+    "capital": false,
+    "province": "w_mng_5"
+  },
+  {
+    "id": "mongolia_3",
+    "name": "Choybalsan",
+    "country": "Mongolia",
+    "country_id": "mongolia",
+    "longitude": 114.506,
+    "latitude": 48.0666,
+    "capital": false,
+    "province": "w_mng_2"
+  },
+  {
+    "id": "mongolia_4",
+    "name": "Altay",
+    "country": "Mongolia",
+    "country_id": "mongolia",
+    "longitude": 95.845,
+    "latitude": 46.3961,
+    "capital": false,
+    "province": "w_mng_1"
+  },
+  {
+    "id": "portugal_0",
+    "name": "Lisbon",
+    "country": "Portugal",
+    "country_id": "portugal",
+    "longitude": -9.1468,
+    "latitude": 38.7247,
+    "capital": true,
+    "province": "w_prt_1"
+  },
+  {
+    "id": "portugal_1",
+    "name": "Porto",
+    "country": "Portugal",
+    "country_id": "portugal",
+    "longitude": -8.6219,
+    "latitude": 41.152,
+    "capital": false,
+    "province": "w_prt_4"
+  },
+  {
+    "id": "portugal_2",
+    "name": "Portimao",
+    "country": "Portugal",
+    "country_id": "portugal",
+    "longitude": -8.5333,
+    "latitude": 37.1337,
+    "capital": false,
+    "province": "w_prt_10"
+  },
+  {
+    "id": "portugal_3",
+    "name": "Leiria",
+    "country": "Portugal",
+    "country_id": "portugal",
+    "longitude": -8.805,
+    "latitude": 39.739,
+    "capital": false,
+    "province": "w_prt_13"
+  },
+  {
+    "id": "portugal_4",
+    "name": "Beja",
+    "country": "Portugal",
+    "country_id": "portugal",
+    "longitude": -7.863,
+    "latitude": 38.014,
+    "capital": false,
+    "province": "w_prt_0"
+  },
+  {
+    "id": "mali_0",
+    "name": "Bamako",
+    "country": "Mali",
+    "country_id": "mali",
+    "longitude": -8.002,
+    "latitude": 12.652,
+    "capital": true,
+    "province": "w_mli_14"
+  },
+  {
+    "id": "mali_1",
+    "name": "Sikasso",
+    "country": "Mali",
+    "country_id": "mali",
+    "longitude": -5.68,
+    "latitude": 11.3204,
+    "capital": false,
+    "province": "w_mli_10"
+  },
+  {
+    "id": "mali_2",
+    "name": "Segou",
+    "country": "Mali",
+    "country_id": "mali",
+    "longitude": -6.26,
+    "latitude": 13.44,
+    "capital": false,
+    "province": "w_mli_13"
+  },
+  {
+    "id": "mali_3",
+    "name": "Gao",
+    "country": "Mali",
+    "country_id": "mali",
+    "longitude": -0.05,
+    "latitude": 16.2666,
+    "capital": false,
+    "province": "w_mli_5"
+  },
+  {
+    "id": "mali_4",
+    "name": "Mopti",
+    "country": "Mali",
+    "country_id": "mali",
+    "longitude": -4.18,
+    "latitude": 14.49,
+    "capital": false,
+    "province": "w_mli_8"
+  },
+  {
+    "id": "czechia_0",
+    "name": "Prague",
+    "country": "Czechia",
+    "country_id": "czechia",
+    "longitude": 14.464,
+    "latitude": 50.0853,
+    "capital": true,
+    "province": "w_cze_14"
+  },
+  {
+    "id": "czechia_1",
+    "name": "Ostrava",
+    "country": "Czechia",
+    "country_id": "czechia",
+    "longitude": 18.25,
+    "latitude": 49.8304,
+    "capital": false,
+    "province": "w_cze_5"
+  },
+  {
+    "id": "czechia_2",
+    "name": "Brno",
+    "country": "Czechia",
+    "country_id": "czechia",
+    "longitude": 16.61,
+    "latitude": 49.2004,
+    "capital": false,
+    "province": "w_cze_2"
+  },
+  {
+    "id": "czechia_3",
+    "name": "Ceske Budejovice",
+    "country": "Czechia",
+    "country_id": "czechia",
+    "longitude": 14.46,
+    "latitude": 48.98,
+    "capital": false,
+    "province": "w_cze_0"
+  },
+  {
+    "id": "czechia_4",
+    "name": "Pizen",
+    "country": "Czechia",
+    "country_id": "czechia",
+    "longitude": 13.36,
+    "latitude": 49.7404,
+    "capital": false,
+    "province": "w_cze_1"
+  },
+  {
+    "id": "turkmenistan_0",
+    "name": "Ashgabat",
+    "country": "Turkmenistan",
+    "country_id": "turkmenistan",
+    "longitude": 58.3833,
+    "latitude": 37.95,
+    "capital": true,
+    "province": "w_tkm_6"
+  },
+  {
+    "id": "turkmenistan_1",
+    "name": "Turkmenabat",
+    "country": "Turkmenistan",
+    "country_id": "turkmenistan",
+    "longitude": 63.58,
+    "latitude": 39.11,
+    "capital": false,
+    "province": "w_tkm_13"
+  },
+  {
+    "id": "turkmenistan_2",
+    "name": "Dasoguz",
+    "country": "Turkmenistan",
+    "country_id": "turkmenistan",
+    "longitude": 59.965,
+    "latitude": 41.84,
+    "capital": false,
+    "province": "w_tkm_8"
+  },
+  {
+    "id": "turkmenistan_3",
+    "name": "Mary",
+    "country": "Turkmenistan",
+    "country_id": "turkmenistan",
+    "longitude": 61.8333,
+    "latitude": 37.6,
+    "capital": false,
+    "province": "w_tkm_3"
+  },
+  {
+    "id": "turkmenistan_4",
+    "name": "Balkanabat",
+    "country": "Turkmenistan",
+    "country_id": "turkmenistan",
+    "longitude": 54.3649,
+    "latitude": 39.5124,
+    "capital": false,
+    "province": "w_tkm_5"
+  },
+  {
+    "id": "ivory_coast_0",
+    "name": "Abidjan",
+    "country": "Ivory Coast",
+    "country_id": "ivory_coast",
+    "longitude": -4.042,
+    "latitude": 5.3219,
+    "capital": true,
+    "province": "w_civ_6"
+  },
+  {
+    "id": "ivory_coast_1",
+    "name": "Bouake",
+    "country": "Ivory Coast",
+    "country_id": "ivory_coast",
+    "longitude": -5.03,
+    "latitude": 7.69,
+    "capital": false,
+    "province": "w_civ_2"
+  },
+  {
+    "id": "ivory_coast_2",
+    "name": "San-Pedro",
+    "country": "Ivory Coast",
+    "country_id": "ivory_coast",
+    "longitude": -6.64,
+    "latitude": 4.7704,
+    "capital": false,
+    "province": "w_civ_3"
+  },
+  {
+    "id": "ivory_coast_3",
+    "name": "Korhogo",
+    "country": "Ivory Coast",
+    "country_id": "ivory_coast",
+    "longitude": -5.64,
+    "latitude": 9.46,
+    "capital": false,
+    "province": "w_civ_0"
+  },
+  {
+    "id": "ivory_coast_4",
+    "name": "Man",
+    "country": "Ivory Coast",
+    "country_id": "ivory_coast",
+    "longitude": -7.55,
+    "latitude": 7.4004,
+    "capital": false,
+    "province": "w_civ_4"
+  },
+  {
+    "id": "syria_0",
+    "name": "Damascus",
+    "country": "Syria",
+    "country_id": "syria",
+    "longitude": 36.2981,
+    "latitude": 33.502,
+    "capital": true,
+    "province": "w_syr_14"
+  },
+  {
+    "id": "syria_1",
+    "name": "Aleppo",
+    "country": "Syria",
+    "country_id": "syria",
+    "longitude": 37.1681,
+    "latitude": 36.2319,
+    "capital": false,
+    "province": "w_syr_3"
+  },
+  {
+    "id": "syria_2",
+    "name": "Dayr az Zawr",
+    "country": "Syria",
+    "country_id": "syria",
+    "longitude": 40.13,
+    "latitude": 35.3304,
+    "capital": false,
+    "province": "w_syr_1"
+  },
+  {
+    "id": "syria_3",
+    "name": "Al Qamishli",
+    "country": "Syria",
+    "country_id": "syria",
+    "longitude": 41.23,
+    "latitude": 37.03,
+    "capital": false,
+    "province": "w_syr_2"
+  },
+  {
+    "id": "syria_4",
+    "name": "Hims",
+    "country": "Syria",
+    "country_id": "syria",
+    "longitude": 36.7181,
+    "latitude": 34.7319,
+    "capital": false,
+    "province": "w_syr_0"
+  },
+  {
+    "id": "cameroon_0",
+    "name": "Yaounde",
+    "country": "Cameroon",
+    "country_id": "cameroon",
+    "longitude": 11.5147,
+    "latitude": 3.8686,
+    "capital": true,
+    "province": "w_cmr_5"
+  },
+  {
+    "id": "cameroon_1",
+    "name": "Bamenda",
+    "country": "Cameroon",
+    "country_id": "cameroon",
+    "longitude": 10.15,
+    "latitude": 5.96,
+    "capital": false,
+    "province": "w_cmr_13"
+  },
+  {
+    "id": "cameroon_2",
+    "name": "Garoua",
+    "country": "Cameroon",
+    "country_id": "cameroon",
+    "longitude": 13.39,
+    "latitude": 9.3,
+    "capital": false,
+    "province": "w_cmr_6"
+  },
+  {
+    "id": "cameroon_3",
+    "name": "Maroua",
+    "country": "Cameroon",
+    "country_id": "cameroon",
+    "longitude": 14.3247,
+    "latitude": 10.5956,
+    "capital": false,
+    "province": "w_cmr_3"
+  },
+  {
+    "id": "cameroon_4",
+    "name": "Ngaoundere",
+    "country": "Cameroon",
+    "country_id": "cameroon",
+    "longitude": 13.58,
+    "latitude": 7.3204,
+    "capital": false,
+    "province": "w_cmr_9"
+  },
+  {
+    "id": "zambia_0",
+    "name": "Lusaka",
+    "country": "Zambia",
+    "country_id": "zambia",
+    "longitude": 28.2814,
+    "latitude": -15.4147,
+    "capital": true,
+    "province": "w_zmb_14"
+  },
+  {
+    "id": "zambia_1",
+    "name": "Kitwe",
+    "country": "Zambia",
+    "country_id": "zambia",
+    "longitude": 28.22,
+    "latitude": -12.81,
+    "capital": false,
+    "province": "w_zmb_13"
+  },
+  {
+    "id": "zambia_2",
+    "name": "Kasama",
+    "country": "Zambia",
+    "country_id": "zambia",
+    "longitude": 31.1799,
+    "latitude": -10.1996,
+    "capital": false,
+    "province": "w_zmb_0"
+  },
+  {
+    "id": "zambia_3",
+    "name": "Livingstone",
+    "country": "Zambia",
+    "country_id": "zambia",
+    "longitude": 25.86,
+    "latitude": -17.86,
+    "capital": false,
+    "province": "w_zmb_12"
+  },
+  {
+    "id": "zambia_4",
+    "name": "Chipata",
+    "country": "Zambia",
+    "country_id": "zambia",
+    "longitude": 32.64,
+    "latitude": -13.6296,
+    "capital": false,
+    "province": "w_zmb_7"
+  },
+  {
+    "id": "ghana_0",
+    "name": "Accra",
+    "country": "Ghana",
+    "country_id": "ghana",
+    "longitude": -0.2187,
+    "latitude": 5.552,
+    "capital": true,
+    "province": "w_gha_14"
+  },
+  {
+    "id": "ghana_1",
+    "name": "Kumasi",
+    "country": "Ghana",
+    "country_id": "ghana",
+    "longitude": -1.632,
+    "latitude": 6.6919,
+    "capital": false,
+    "province": "w_gha_0"
+  },
+  {
+    "id": "ghana_2",
+    "name": "Tamale",
+    "country": "Ghana",
+    "country_id": "ghana",
+    "longitude": -0.84,
+    "latitude": 9.4004,
+    "capital": false,
+    "province": "w_gha_8"
+  },
+  {
+    "id": "ghana_3",
+    "name": "Bawku",
+    "country": "Ghana",
+    "country_id": "ghana",
+    "longitude": -0.24,
+    "latitude": 11.0604,
+    "capital": false,
+    "province": "w_gha_13"
+  },
+  {
+    "id": "ghana_4",
+    "name": "Sekondi",
+    "country": "Ghana",
+    "country_id": "ghana",
+    "longitude": -1.704,
+    "latitude": 4.9433,
+    "capital": false,
+    "province": "w_gha_9"
+  },
+  {
+    "id": "niger_0",
+    "name": "Niamey",
+    "country": "Niger",
+    "country_id": "niger",
+    "longitude": 2.1147,
+    "latitude": 13.5187,
+    "capital": true,
+    "province": "w_ner_14"
+  },
+  {
+    "id": "niger_1",
+    "name": "Maradi",
+    "country": "Niger",
+    "country_id": "niger",
+    "longitude": 7.0964,
+    "latitude": 13.4916,
+    "capital": false,
+    "province": "w_ner_12"
+  },
+  {
+    "id": "niger_2",
+    "name": "Zinder",
+    "country": "Niger",
+    "country_id": "niger",
+    "longitude": 8.9833,
+    "latitude": 13.8,
+    "capital": false,
+    "province": "w_ner_8"
+  },
+  {
+    "id": "niger_3",
+    "name": "Agadez",
+    "country": "Niger",
+    "country_id": "niger",
+    "longitude": 7.9828,
+    "latitude": 16.9959,
+    "capital": false,
+    "province": "w_ner_0"
+  },
+  {
+    "id": "niger_4",
+    "name": "Tahoua",
+    "country": "Niger",
+    "country_id": "niger",
+    "longitude": 5.2599,
+    "latitude": 14.9,
+    "capital": false,
+    "province": "w_ner_2"
+  },
+  {
+    "id": "paraguay_0",
+    "name": "Asuncion",
+    "country": "Paraguay",
+    "country_id": "paraguay",
+    "longitude": -57.6435,
+    "latitude": -25.2945,
+    "capital": true,
+    "province": "w_pry_14"
+  },
+  {
+    "id": "paraguay_1",
+    "name": "Encarnacion",
+    "country": "Paraguay",
+    "country_id": "paraguay",
+    "longitude": -55.8739,
+    "latitude": -27.3472,
+    "capital": false,
+    "province": "w_pry_5"
+  },
+  {
+    "id": "paraguay_2",
+    "name": "Ciudad del Este",
+    "country": "Paraguay",
+    "country_id": "paraguay",
+    "longitude": -54.6161,
+    "latitude": -25.5167,
+    "capital": false,
+    "province": "w_pry_7"
+  },
+  {
+    "id": "paraguay_3",
+    "name": "Pedro Juan Caballero",
+    "country": "Paraguay",
+    "country_id": "paraguay",
+    "longitude": -55.76,
+    "latitude": -22.5446,
+    "capital": false,
+    "province": "w_pry_10"
+  },
+  {
+    "id": "paraguay_4",
+    "name": "Pilar",
+    "country": "Paraguay",
+    "country_id": "paraguay",
+    "longitude": -58.3,
+    "latitude": -26.8695,
+    "capital": false,
+    "province": "w_pry_11"
+  },
+  {
+    "id": "hungary_0",
+    "name": "Budapest",
+    "country": "Hungary",
+    "country_id": "hungary",
+    "longitude": 19.0814,
+    "latitude": 47.502,
+    "capital": true,
+    "province": "w_hun_2"
+  },
+  {
+    "id": "hungary_1",
+    "name": "Debrecen",
+    "country": "Hungary",
+    "country_id": "hungary",
+    "longitude": 21.63,
+    "latitude": 47.5305,
+    "capital": false,
+    "province": "w_hun_7"
+  },
+  {
+    "id": "hungary_2",
+    "name": "Szombathely",
+    "country": "Hungary",
+    "country_id": "hungary",
+    "longitude": 16.6287,
+    "latitude": 47.2253,
+    "capital": false,
+    "province": "w_hun_3"
+  },
+  {
+    "id": "hungary_3",
+    "name": "Szeged",
+    "country": "Hungary",
+    "country_id": "hungary",
+    "longitude": 20.15,
+    "latitude": 46.2504,
+    "capital": false,
+    "province": "w_hun_13"
+  },
+  {
+    "id": "hungary_4",
+    "name": "Pecs",
+    "country": "Hungary",
+    "country_id": "hungary",
+    "longitude": 18.22,
+    "latitude": 46.0804,
+    "capital": false,
+    "province": "w_hun_0"
+  },
+  {
+    "id": "denmark_0",
+    "name": "Kobenhavn",
+    "country": "Denmark",
+    "country_id": "denmark",
+    "longitude": 12.5615,
+    "latitude": 55.6805,
+    "capital": true,
+    "province": "w_dnk_10"
+  },
+  {
+    "id": "denmark_1",
+    "name": "Aarhus",
+    "country": "Denmark",
+    "country_id": "denmark",
+    "longitude": 10.2107,
+    "latitude": 56.1572,
+    "capital": false,
+    "province": "w_dnk_9"
+  },
+  {
+    "id": "denmark_2",
+    "name": "Esbjerg",
+    "country": "Denmark",
+    "country_id": "denmark",
+    "longitude": 8.45,
+    "latitude": 55.467,
+    "capital": false,
+    "province": "w_dnk_3"
+  },
+  {
+    "id": "denmark_3",
+    "name": "Frederikshavn",
+    "country": "Denmark",
+    "country_id": "denmark",
+    "longitude": 10.5333,
+    "latitude": 57.4337,
+    "capital": false,
+    "province": "w_dnk_6"
+  },
+  {
+    "id": "denmark_4",
+    "name": "Odense",
+    "country": "Denmark",
+    "country_id": "denmark",
+    "longitude": 10.3833,
+    "latitude": 55.4004,
+    "capital": false,
+    "province": "w_dnk_1"
+  },
+  {
+    "id": "chad_0",
+    "name": "Ndjamena",
+    "country": "Chad",
+    "country_id": "chad",
+    "longitude": 15.0472,
+    "latitude": 12.115,
+    "capital": true,
+    "province": "w_tcd_12"
+  },
+  {
+    "id": "chad_1",
+    "name": "Bongor",
+    "country": "Chad",
+    "country_id": "chad",
+    "longitude": 15.3872,
+    "latitude": 10.2859,
+    "capital": false,
+    "province": "w_tcd_14"
+  },
+  {
+    "id": "chad_2",
+    "name": "Sarh",
+    "country": "Chad",
+    "country_id": "chad",
+    "longitude": 18.39,
+    "latitude": 9.15,
+    "capital": false,
+    "province": "w_tcd_13"
+  },
+  {
+    "id": "chad_3",
+    "name": "Abeche",
+    "country": "Chad",
+    "country_id": "chad",
+    "longitude": 20.83,
+    "latitude": 13.84,
+    "capital": false,
+    "province": "w_tcd_5"
+  },
+  {
+    "id": "chad_4",
+    "name": "Moundou",
+    "country": "Chad",
+    "country_id": "chad",
+    "longitude": 16.09,
+    "latitude": 8.55,
+    "capital": false,
+    "province": "w_tcd_8"
+  },
+  {
+    "id": "belarus_0",
+    "name": "Minsk",
+    "country": "Belarus",
+    "country_id": "belarus",
+    "longitude": 27.5647,
+    "latitude": 53.9019,
+    "capital": true,
+    "province": "w_blr_14"
+  },
+  {
+    "id": "belarus_1",
+    "name": "Homyel",
+    "country": "Belarus",
+    "country_id": "belarus",
+    "longitude": 31.0,
+    "latitude": 52.43,
+    "capital": false,
+    "province": "w_blr_12"
+  },
+  {
+    "id": "belarus_2",
+    "name": "Vitsyebsk",
+    "country": "Belarus",
+    "country_id": "belarus",
+    "longitude": 30.1853,
+    "latitude": 55.1887,
+    "capital": false,
+    "province": "w_blr_1"
+  },
+  {
+    "id": "belarus_3",
+    "name": "Hrodna",
+    "country": "Belarus",
+    "country_id": "belarus",
+    "longitude": 23.8341,
+    "latitude": 53.6779,
+    "capital": false,
+    "province": "w_blr_8"
+  },
+  {
+    "id": "belarus_4",
+    "name": "Pinsk",
+    "country": "Belarus",
+    "country_id": "belarus",
+    "longitude": 26.0941,
+    "latitude": 52.1279,
+    "capital": false,
+    "province": "w_blr_2"
+  },
+  {
+    "id": "afghanistan_0",
+    "name": "Kabul",
+    "country": "Afghanistan",
+    "country_id": "afghanistan",
+    "longitude": 69.1813,
+    "latitude": 34.5186,
+    "capital": true,
+    "province": "w_afg_5"
+  },
+  {
+    "id": "afghanistan_1",
+    "name": "Kandahar",
+    "country": "Afghanistan",
+    "country_id": "afghanistan",
+    "longitude": 65.6949,
+    "latitude": 31.61,
+    "capital": false,
+    "province": "w_afg_2"
+  },
+  {
+    "id": "afghanistan_2",
+    "name": "Herat",
+    "country": "Afghanistan",
+    "country_id": "afghanistan",
+    "longitude": 62.17,
+    "latitude": 34.33,
+    "capital": false,
+    "province": "w_afg_1"
+  },
+  {
+    "id": "afghanistan_3",
+    "name": "Mazar-e Sharif",
+    "country": "Afghanistan",
+    "country_id": "afghanistan",
+    "longitude": 67.1,
+    "latitude": 36.7,
+    "capital": false,
+    "province": "w_afg_4"
+  },
+  {
+    "id": "afghanistan_4",
+    "name": "Meymaneh",
+    "country": "Afghanistan",
+    "country_id": "afghanistan",
+    "longitude": 64.7701,
+    "latitude": 35.9302,
+    "capital": false,
+    "province": "w_afg_8"
+  },
+  {
+    "id": "mozambique_0",
+    "name": "Maputo",
+    "country": "Mozambique",
+    "country_id": "mozambique",
+    "longitude": 32.5872,
+    "latitude": -25.9533,
+    "capital": true,
+    "province": "w_moz_14"
+  },
+  {
+    "id": "mozambique_1",
+    "name": "Beira",
+    "country": "Mozambique",
+    "country_id": "mozambique",
+    "longitude": 34.87,
+    "latitude": -19.82,
+    "capital": false,
+    "province": "w_moz_4"
+  },
+  {
+    "id": "mozambique_2",
+    "name": "Nampula",
+    "country": "Mozambique",
+    "country_id": "mozambique",
+    "longitude": 39.293,
+    "latitude": -15.136,
+    "capital": false,
+    "province": "w_moz_11"
+  },
+  {
+    "id": "mozambique_3",
+    "name": "Quelimane",
+    "country": "Mozambique",
+    "country_id": "mozambique",
+    "longitude": 36.89,
+    "latitude": -17.88,
+    "capital": false,
+    "province": "w_moz_9"
+  },
+  {
+    "id": "mozambique_4",
+    "name": "Tete",
+    "country": "Mozambique",
+    "country_id": "mozambique",
+    "longitude": 33.58,
+    "latitude": -16.17,
+    "capital": false,
+    "province": "w_moz_8"
+  },
+  {
+    "id": "papua_new_guinea_0",
+    "name": "Port Moresby",
+    "country": "Papua New Guinea",
+    "country_id": "papua_new_guinea",
+    "longitude": 147.1925,
+    "latitude": -9.4647,
+    "capital": true,
+    "province": "w_png_5"
+  },
+  {
+    "id": "papua_new_guinea_1",
+    "name": "Lae",
+    "country": "Papua New Guinea",
+    "country_id": "papua_new_guinea",
+    "longitude": 146.99,
+    "latitude": -6.733,
+    "capital": false,
+    "province": "w_png_4"
+  },
+  {
+    "id": "papua_new_guinea_2",
+    "name": "Madang",
+    "country": "Papua New Guinea",
+    "country_id": "papua_new_guinea",
+    "longitude": 145.7853,
+    "latitude": -5.2248,
+    "capital": false,
+    "province": "w_png_6"
+  },
+  {
+    "id": "papua_new_guinea_3",
+    "name": "Arawa",
+    "country": "Papua New Guinea",
+    "country_id": "papua_new_guinea",
+    "longitude": 155.566,
+    "latitude": -6.228,
+    "capital": false,
+    "province": "w_png_11"
+  },
+  {
+    "id": "papua_new_guinea_4",
+    "name": "Mendi",
+    "country": "Papua New Guinea",
+    "country_id": "papua_new_guinea",
+    "longitude": 143.6452,
+    "latitude": -6.1444,
+    "capital": false,
+    "province": "w_png_8"
+  },
+  {
+    "id": "botswana_0",
+    "name": "Gaborone",
+    "country": "Botswana",
+    "country_id": "botswana",
+    "longitude": 25.9119,
+    "latitude": -24.6463,
+    "capital": true,
+    "province": "w_bwa_10"
+  },
+  {
+    "id": "botswana_1",
+    "name": "Francistown",
+    "country": "Botswana",
+    "country_id": "botswana",
+    "longitude": 27.5,
+    "latitude": -21.17,
+    "capital": false,
+    "province": "w_bwa_11"
+  },
+  {
+    "id": "botswana_2",
+    "name": "Mahalapye",
+    "country": "Botswana",
+    "country_id": "botswana",
+    "longitude": 26.82,
+    "latitude": -23.1,
+    "capital": false,
+    "province": "w_bwa_0"
+  },
+  {
+    "id": "botswana_3",
+    "name": "Maun",
+    "country": "Botswana",
+    "country_id": "botswana",
+    "longitude": 23.42,
+    "latitude": -19.9896,
+    "capital": false,
+    "province": "w_bwa_1"
+  },
+  {
+    "id": "botswana_4",
+    "name": "Tshabong",
+    "country": "Botswana",
+    "country_id": "botswana",
+    "longitude": 22.4,
+    "latitude": -26.0095,
+    "capital": false,
+    "province": "w_bwa_3"
+  },
+  {
+    "id": "yemen_0",
+    "name": "Sanaa",
+    "country": "Yemen",
+    "country_id": "yemen",
+    "longitude": 44.2046,
+    "latitude": 15.3567,
+    "capital": true,
+    "province": "w_yem_10"
+  },
+  {
+    "id": "yemen_1",
+    "name": "Aden",
+    "country": "Yemen",
+    "country_id": "yemen",
+    "longitude": 45.0095,
+    "latitude": 12.7797,
+    "capital": false,
+    "province": "w_yem_9"
+  },
+  {
+    "id": "yemen_2",
+    "name": "Al Mukalla",
+    "country": "Yemen",
+    "country_id": "yemen",
+    "longitude": 49.1259,
+    "latitude": 14.5412,
+    "capital": false,
+    "province": "w_yem_0"
+  },
+  {
+    "id": "yemen_3",
+    "name": "Sadah",
+    "country": "Yemen",
+    "country_id": "yemen",
+    "longitude": 43.8498,
+    "latitude": 16.9398,
+    "capital": false,
+    "province": "w_yem_8"
+  },
+  {
+    "id": "yemen_4",
+    "name": "'Ataq",
+    "country": "Yemen",
+    "country_id": "yemen",
+    "longitude": 46.8,
+    "latitude": 14.55,
+    "capital": false,
+    "province": "w_yem_3"
+  },
+  {
+    "id": "namibia_0",
+    "name": "Windhoek",
+    "country": "Namibia",
+    "country_id": "namibia",
+    "longitude": 17.0835,
+    "latitude": -22.57,
+    "capital": true,
+    "province": "w_nam_10"
+  },
+  {
+    "id": "namibia_1",
+    "name": "Rundu",
+    "country": "Namibia",
+    "country_id": "namibia",
+    "longitude": 19.7499,
+    "latitude": -17.92,
+    "capital": false,
+    "province": "w_nam_8"
+  },
+  {
+    "id": "namibia_2",
+    "name": "Walvis Bay",
+    "country": "Namibia",
+    "country_id": "namibia",
+    "longitude": 14.5053,
+    "latitude": -22.9575,
+    "capital": false,
+    "province": "w_nam_5"
+  },
+  {
+    "id": "namibia_3",
+    "name": "Ongwediva",
+    "country": "Namibia",
+    "country_id": "namibia",
+    "longitude": 15.77,
+    "latitude": -17.78,
+    "capital": false,
+    "province": "w_nam_14"
+  },
+  {
+    "id": "namibia_4",
+    "name": "Katima Mulilo",
+    "country": "Namibia",
+    "country_id": "namibia",
+    "longitude": 24.26,
+    "latitude": -17.4996,
+    "capital": false,
+    "province": "w_nam_12"
+  },
+  {
+    "id": "uruguay_0",
+    "name": "Montevideo",
+    "country": "Uruguay",
+    "country_id": "uruguay",
+    "longitude": -56.173,
+    "latitude": -34.8561,
+    "capital": true,
+    "province": "w_ury_11"
+  },
+  {
+    "id": "uruguay_1",
+    "name": "Rivera",
+    "country": "Uruguay",
+    "country_id": "uruguay",
+    "longitude": -55.56,
+    "latitude": -30.8996,
+    "capital": false,
+    "province": "w_ury_14"
+  },
+  {
+    "id": "uruguay_2",
+    "name": "Salto",
+    "country": "Uruguay",
+    "country_id": "uruguay",
+    "longitude": -57.9687,
+    "latitude": -31.3903,
+    "capital": false,
+    "province": "w_ury_2"
+  },
+  {
+    "id": "uruguay_3",
+    "name": "Melo",
+    "country": "Uruguay",
+    "country_id": "uruguay",
+    "longitude": -54.18,
+    "latitude": -32.3595,
+    "capital": false,
+    "province": "w_ury_4"
+  },
+  {
+    "id": "uruguay_4",
+    "name": "Mercedes",
+    "country": "Uruguay",
+    "country_id": "uruguay",
+    "longitude": -58.03,
+    "latitude": -33.2595,
+    "capital": false,
+    "province": "w_ury_1"
+  },
+  {
+    "id": "uganda_0",
+    "name": "Kampala",
+    "country": "Uganda",
+    "country_id": "uganda",
+    "longitude": 32.5814,
+    "latitude": 0.3186,
+    "capital": true,
+    "province": "w_uga_4"
+  },
+  {
+    "id": "uganda_1",
+    "name": "Mbale",
+    "country": "Uganda",
+    "country_id": "uganda",
+    "longitude": 34.17,
+    "latitude": 1.0904,
+    "capital": false,
+    "province": "w_uga_2"
+  },
+  {
+    "id": "uganda_2",
+    "name": "Arua",
+    "country": "Uganda",
+    "country_id": "uganda",
+    "longitude": 30.9,
+    "latitude": 3.0204,
+    "capital": false,
+    "province": "w_uga_3"
+  },
+  {
+    "id": "uganda_3",
+    "name": "Lira",
+    "country": "Uganda",
+    "country_id": "uganda",
+    "longitude": 32.89,
+    "latitude": 2.2604,
+    "capital": false,
+    "province": "w_uga_10"
+  },
+  {
+    "id": "uganda_4",
+    "name": "Mbarara",
+    "country": "Uganda",
+    "country_id": "uganda",
+    "longitude": 30.65,
+    "latitude": -0.5996,
+    "capital": false,
+    "province": "w_uga_1"
+  },
+  {
+    "id": "madagascar_0",
+    "name": "Antananarivo",
+    "country": "Madagascar",
+    "country_id": "madagascar",
+    "longitude": 47.5147,
+    "latitude": -18.9147,
+    "capital": true,
+    "province": "w_mdg_7"
+  },
+  {
+    "id": "madagascar_1",
+    "name": "Toamasina",
+    "country": "Madagascar",
+    "country_id": "madagascar",
+    "longitude": 49.405,
+    "latitude": -18.1818,
+    "capital": false,
+    "province": "w_mdg_13"
+  },
+  {
+    "id": "madagascar_2",
+    "name": "Fianarantsoa",
+    "country": "Madagascar",
+    "country_id": "madagascar",
+    "longitude": 47.0833,
+    "latitude": -21.4333,
+    "capital": false,
+    "province": "w_mdg_4"
+  },
+  {
+    "id": "madagascar_3",
+    "name": "Mahajanga",
+    "country": "Madagascar",
+    "country_id": "madagascar",
+    "longitude": 46.345,
+    "latitude": -15.67,
+    "capital": false,
+    "province": "w_mdg_11"
+  },
+  {
+    "id": "madagascar_4",
+    "name": "Toliara",
+    "country": "Madagascar",
+    "country_id": "madagascar",
+    "longitude": 43.69,
+    "latitude": -23.3568,
+    "capital": false,
+    "province": "w_mdg_0"
+  },
+  {
+    "id": "guatemala_0",
+    "name": "Guatemala",
+    "country": "Guatemala",
+    "country_id": "guatemala",
+    "longitude": -90.5289,
+    "latitude": 14.6231,
+    "capital": true,
+    "province": "w_gtm_8"
+  },
+  {
+    "id": "guatemala_1",
+    "name": "San Luis",
+    "country": "Guatemala",
+    "country_id": "guatemala",
+    "longitude": -89.44,
+    "latitude": 16.2,
+    "capital": false,
+    "province": "w_gtm_0"
+  },
+  {
+    "id": "guatemala_2",
+    "name": "Huehuetenango",
+    "country": "Guatemala",
+    "country_id": "guatemala",
+    "longitude": -91.47,
+    "latitude": 15.3204,
+    "capital": false,
+    "province": "w_gtm_3"
+  },
+  {
+    "id": "guatemala_3",
+    "name": "Zacapa",
+    "country": "Guatemala",
+    "country_id": "guatemala",
+    "longitude": -89.529,
+    "latitude": 14.972,
+    "capital": false,
+    "province": "w_gtm_5"
+  },
+  {
+    "id": "guatemala_4",
+    "name": "Quetzaltenango",
+    "country": "Guatemala",
+    "country_id": "guatemala",
+    "longitude": -91.52,
+    "latitude": 14.83,
+    "capital": false,
+    "province": "w_gtm_9"
+  },
+  {
+    "id": "zimbabwe_0",
+    "name": "Harare",
+    "country": "Zimbabwe",
+    "country_id": "zimbabwe",
+    "longitude": 31.0428,
+    "latitude": -17.8158,
+    "capital": true,
+    "province": "w_zwe_13"
+  },
+  {
+    "id": "zimbabwe_1",
+    "name": "Bulawayo",
+    "country": "Zimbabwe",
+    "country_id": "zimbabwe",
+    "longitude": 28.58,
+    "latitude": -20.17,
+    "capital": false,
+    "province": "w_zwe_14"
+  },
+  {
+    "id": "zimbabwe_2",
+    "name": "Mutare",
+    "country": "Zimbabwe",
+    "country_id": "zimbabwe",
+    "longitude": 32.65,
+    "latitude": -18.97,
+    "capital": false,
+    "province": "w_zwe_2"
+  },
+  {
+    "id": "zimbabwe_3",
+    "name": "Kwekwe",
+    "country": "Zimbabwe",
+    "country_id": "zimbabwe",
+    "longitude": 29.8,
+    "latitude": -18.9296,
+    "capital": false,
+    "province": "w_zwe_9"
+  },
+  {
+    "id": "zimbabwe_4",
+    "name": "Victoria Falls",
+    "country": "Zimbabwe",
+    "country_id": "zimbabwe",
+    "longitude": 25.84,
+    "latitude": -17.9296,
+    "capital": false,
+    "province": "w_zwe_0"
+  },
+  {
+    "id": "mauritania_0",
+    "name": "Nouakchott",
+    "country": "Mauritania",
+    "country_id": "mauritania",
+    "longitude": -15.9753,
+    "latitude": 18.0864,
+    "capital": true,
+    "province": "w_mrt_14"
+  },
+  {
+    "id": "mauritania_1",
+    "name": "Saint-Louis",
+    "country": "Mauritania",
+    "country_id": "mauritania",
+    "longitude": -16.51,
+    "latitude": 16.02,
+    "capital": false,
+    "province": "w_mrt_6"
+  },
+  {
+    "id": "mauritania_2",
+    "name": "Nema",
+    "country": "Mauritania",
+    "country_id": "mauritania",
+    "longitude": -7.25,
+    "latitude": 16.6171,
+    "capital": false,
+    "province": "w_mrt_0"
+  },
+  {
+    "id": "mauritania_3",
+    "name": "Nouadhibou",
+    "country": "Mauritania",
+    "country_id": "mauritania",
+    "longitude": -17.056,
+    "latitude": 20.9,
+    "capital": false,
+    "province": "w_mrt_11"
+  },
+  {
+    "id": "mauritania_4",
+    "name": "Kiffa",
+    "country": "Mauritania",
+    "country_id": "mauritania",
+    "longitude": -11.4,
+    "latitude": 16.62,
+    "capital": false,
+    "province": "w_mrt_9"
+  },
+  {
+    "id": "bulgaria_0",
+    "name": "Sofia",
+    "country": "Bulgaria",
+    "country_id": "bulgaria",
+    "longitude": 23.3147,
+    "latitude": 42.6853,
+    "capital": true,
+    "province": "w_bgr_10"
+  },
+  {
+    "id": "bulgaria_1",
+    "name": "Varna",
+    "country": "Bulgaria",
+    "country_id": "bulgaria",
+    "longitude": 27.8953,
+    "latitude": 43.2156,
+    "capital": false,
+    "province": "w_bgr_3"
+  },
+  {
+    "id": "bulgaria_2",
+    "name": "Ruse",
+    "country": "Bulgaria",
+    "country_id": "bulgaria",
+    "longitude": 25.9733,
+    "latitude": 43.8537,
+    "capital": false,
+    "province": "w_bgr_13"
+  },
+  {
+    "id": "bulgaria_3",
+    "name": "Khaskovo",
+    "country": "Bulgaria",
+    "country_id": "bulgaria",
+    "longitude": 25.5633,
+    "latitude": 41.9438,
+    "capital": false,
+    "province": "w_bgr_4"
+  },
+  {
+    "id": "bulgaria_4",
+    "name": "Pleven",
+    "country": "Bulgaria",
+    "country_id": "bulgaria",
+    "longitude": 24.6134,
+    "latitude": 43.4238,
+    "capital": false,
+    "province": "w_bgr_2"
+  },
+  {
+    "id": "south_sudan_0",
+    "name": "Yei",
+    "country": "South Sudan",
+    "country_id": "south_sudan",
+    "longitude": 30.68,
+    "latitude": 4.0904,
+    "capital": false,
+    "province": "w_sds_3"
+  },
+  {
+    "id": "south_sudan_1",
+    "name": "Malakal",
+    "country": "South Sudan",
+    "country_id": "south_sudan",
+    "longitude": 31.656,
+    "latitude": 9.5369,
+    "capital": false,
+    "province": "w_sds_2"
+  },
+  {
+    "id": "south_sudan_2",
+    "name": "Wau",
+    "country": "South Sudan",
+    "country_id": "south_sudan",
+    "longitude": 27.99,
+    "latitude": 7.7,
+    "capital": false,
+    "province": "w_sds_4"
+  },
+  {
+    "id": "south_sudan_3",
+    "name": "Yambio",
+    "country": "South Sudan",
+    "country_id": "south_sudan",
+    "longitude": 28.4163,
+    "latitude": 4.5705,
+    "capital": false,
+    "province": "w_sds_5"
+  },
+  {
+    "id": "south_sudan_4",
+    "name": "Rumbek",
+    "country": "South Sudan",
+    "country_id": "south_sudan",
+    "longitude": 29.6833,
+    "latitude": 6.8,
+    "capital": false,
+    "province": "w_sds_8"
+  },
+  {
+    "id": "tunisia_0",
+    "name": "Tunis",
+    "country": "Tunisia",
+    "country_id": "tunisia",
+    "longitude": 10.1797,
+    "latitude": 36.8028,
+    "capital": true,
+    "province": "w_tun_3"
+  },
+  {
+    "id": "tunisia_1",
+    "name": "Sfax",
+    "country": "Tunisia",
+    "country_id": "tunisia",
+    "longitude": 10.72,
+    "latitude": 34.75,
+    "capital": false,
+    "province": "w_tun_9"
+  },
+  {
+    "id": "tunisia_2",
+    "name": "Kasserine",
+    "country": "Tunisia",
+    "country_id": "tunisia",
+    "longitude": 8.7167,
+    "latitude": 35.2167,
+    "capital": false,
+    "province": "w_tun_4"
+  },
+  {
+    "id": "tunisia_3",
+    "name": "Tataouine",
+    "country": "Tunisia",
+    "country_id": "tunisia",
+    "longitude": 10.4667,
+    "latitude": 33.0,
+    "capital": false,
+    "province": "w_tun_0"
+  },
+  {
+    "id": "tunisia_4",
+    "name": "Sousse",
+    "country": "Tunisia",
+    "country_id": "tunisia",
+    "longitude": 10.625,
+    "latitude": 35.83,
+    "capital": false,
+    "province": "w_tun_12"
+  },
+  {
+    "id": "sri_lanka_0",
+    "name": "Colombo",
+    "country": "Sri Lanka",
+    "country_id": "sri_lanka",
+    "longitude": 79.8578,
+    "latitude": 6.932,
+    "capital": true,
+    "province": "w_lka_8"
+  },
+  {
+    "id": "sri_lanka_1",
+    "name": "Jaffna",
+    "country": "Sri Lanka",
+    "country_id": "sri_lanka",
+    "longitude": 80.005,
+    "latitude": 9.675,
+    "capital": false,
+    "province": "w_lka_9"
+  },
+  {
+    "id": "sri_lanka_2",
+    "name": "Batticaloa",
+    "country": "Sri Lanka",
+    "country_id": "sri_lanka",
+    "longitude": 81.7,
+    "latitude": 7.717,
+    "capital": false,
+    "province": "w_lka_3"
+  },
+  {
+    "id": "sri_lanka_3",
+    "name": "Anuradhapura",
+    "country": "Sri Lanka",
+    "country_id": "sri_lanka",
+    "longitude": 80.3833,
+    "latitude": 8.35,
+    "capital": false,
+    "province": "w_lka_0"
+  },
+  {
+    "id": "sri_lanka_4",
+    "name": "Galle",
+    "country": "Sri Lanka",
+    "country_id": "sri_lanka",
+    "longitude": 80.24,
+    "latitude": 6.03,
+    "capital": false,
+    "province": "w_lka_12"
+  },
+  {
+    "id": "slovakia_0",
+    "name": "Bratislava",
+    "country": "Slovakia",
+    "country_id": "slovakia",
+    "longitude": 17.117,
+    "latitude": 48.15,
+    "capital": true,
+    "province": "w_svk_12"
+  },
+  {
+    "id": "slovakia_1",
+    "name": "Kosice",
+    "country": "Slovakia",
+    "country_id": "slovakia",
+    "longitude": 21.25,
+    "latitude": 48.7304,
+    "capital": false,
+    "province": "w_svk_7"
+  },
+  {
+    "id": "slovakia_2",
+    "name": "Zilina",
+    "country": "Slovakia",
+    "country_id": "slovakia",
+    "longitude": 18.7494,
+    "latitude": 49.2198,
+    "capital": false,
+    "province": "w_svk_8"
+  },
+  {
+    "id": "slovakia_3",
+    "name": "Banska Bystrica",
+    "country": "Slovakia",
+    "country_id": "slovakia",
+    "longitude": 19.15,
+    "latitude": 48.7333,
+    "capital": false,
+    "province": "w_svk_10"
+  },
+  {
+    "id": "slovakia_4",
+    "name": "Presov",
+    "country": "Slovakia",
+    "country_id": "slovakia",
+    "longitude": 21.2394,
+    "latitude": 48.9997,
+    "capital": false,
+    "province": "w_svk_9"
+  },
+  {
+    "id": "panama_0",
+    "name": "Panama City",
+    "country": "Panama",
+    "country_id": "panama",
+    "longitude": -79.535,
+    "latitude": 8.97,
+    "capital": true,
+    "province": "w_pan_7"
+  },
+  {
+    "id": "panama_1",
+    "name": "David",
+    "country": "Panama",
+    "country_id": "panama",
+    "longitude": -82.4333,
+    "latitude": 8.4333,
+    "capital": false,
+    "province": "w_pan_3"
+  },
+  {
+    "id": "panama_2",
+    "name": "Jaque",
+    "country": "Panama",
+    "country_id": "panama",
+    "longitude": -78.166,
+    "latitude": 7.519,
+    "capital": false,
+    "province": "w_pan_0"
+  },
+  {
+    "id": "panama_3",
+    "name": "Santiago",
+    "country": "Panama",
+    "country_id": "panama",
+    "longitude": -80.9833,
+    "latitude": 8.1004,
+    "capital": false,
+    "province": "w_pan_1"
+  },
+  {
+    "id": "panama_4",
+    "name": "Bocas del Toro",
+    "country": "Panama",
+    "country_id": "panama",
+    "longitude": -82.2475,
+    "latitude": 9.3354,
+    "capital": false,
+    "province": "w_pan_8"
+  },
+  {
+    "id": "cambodia_0",
+    "name": "Phnom Penh",
+    "country": "Cambodia",
+    "country_id": "cambodia",
+    "longitude": 104.9147,
+    "latitude": 11.552,
+    "capital": true,
+    "province": "w_khm_1"
+  },
+  {
+    "id": "cambodia_1",
+    "name": "Battambang",
+    "country": "Cambodia",
+    "country_id": "cambodia",
+    "longitude": 103.2,
+    "latitude": 13.1,
+    "capital": false,
+    "province": "w_khm_4"
+  },
+  {
+    "id": "cambodia_2",
+    "name": "Krong Koh Kong",
+    "country": "Cambodia",
+    "country_id": "cambodia",
+    "longitude": 102.9849,
+    "latitude": 11.6175,
+    "capital": false,
+    "province": "w_khm_7"
+  },
+  {
+    "id": "cambodia_3",
+    "name": "Stoeng Treng",
+    "country": "Cambodia",
+    "country_id": "cambodia",
+    "longitude": 105.974,
+    "latitude": 13.523,
+    "capital": false,
+    "province": "w_khm_11"
+  },
+  {
+    "id": "cambodia_4",
+    "name": "Senmonorom",
+    "country": "Cambodia",
+    "country_id": "cambodia",
+    "longitude": 107.2,
+    "latitude": 12.45,
+    "capital": false,
+    "province": "w_khm_3"
+  },
+  {
+    "id": "north_korea_0",
+    "name": "Pyongyang",
+    "country": "North Korea",
+    "country_id": "north_korea",
+    "longitude": 125.7527,
+    "latitude": 39.0214,
+    "capital": true,
+    "province": "w_prk_13"
+  },
+  {
+    "id": "north_korea_1",
+    "name": "Chongjin",
+    "country": "North Korea",
+    "country_id": "north_korea",
+    "longitude": 129.79,
+    "latitude": 41.7846,
+    "capital": false,
+    "province": "w_prk_10"
+  },
+  {
+    "id": "north_korea_2",
+    "name": "Kaesong",
+    "country": "North Korea",
+    "country_id": "north_korea",
+    "longitude": 126.5644,
+    "latitude": 37.964,
+    "capital": false,
+    "province": "w_prk_5"
+  },
+  {
+    "id": "north_korea_3",
+    "name": "Kanggye",
+    "country": "North Korea",
+    "country_id": "north_korea",
+    "longitude": 126.6032,
+    "latitude": 40.9732,
+    "capital": false,
+    "province": "w_prk_7"
+  },
+  {
+    "id": "north_korea_4",
+    "name": "Hamhung",
+    "country": "North Korea",
+    "country_id": "north_korea",
+    "longitude": 127.5435,
+    "latitude": 39.912,
+    "capital": false,
+    "province": "w_prk_11"
+  },
+  {
+    "id": "senegal_0",
+    "name": "Dakar",
+    "country": "Senegal",
+    "country_id": "senegal",
+    "longitude": -17.4751,
+    "latitude": 14.7178,
+    "capital": true,
+    "province": "w_sen_14"
+  },
+  {
+    "id": "senegal_1",
+    "name": "Ziguinchor",
+    "country": "Senegal",
+    "country_id": "senegal",
+    "longitude": -16.29,
+    "latitude": 12.59,
+    "capital": false,
+    "province": "w_sen_9"
+  },
+  {
+    "id": "senegal_2",
+    "name": "Tambacounda",
+    "country": "Senegal",
+    "country_id": "senegal",
+    "longitude": -13.68,
+    "latitude": 13.7804,
+    "capital": false,
+    "province": "w_sen_5"
+  },
+  {
+    "id": "senegal_3",
+    "name": "Kaedi",
+    "country": "Senegal",
+    "country_id": "senegal",
+    "longitude": -13.5,
+    "latitude": 16.15,
+    "capital": false,
+    "province": "w_sen_0"
+  },
+  {
+    "id": "senegal_4",
+    "name": "Kedougou",
+    "country": "Senegal",
+    "country_id": "senegal",
+    "longitude": -12.18,
+    "latitude": 12.5604,
+    "capital": false,
+    "province": "w_sen_3"
+  },
+  {
+    "id": "nepal_0",
+    "name": "Kathmandu",
+    "country": "Nepal",
+    "country_id": "nepal",
+    "longitude": 85.3147,
+    "latitude": 27.7186,
+    "capital": true,
+    "province": "w_npl_10"
+  },
+  {
+    "id": "nepal_1",
+    "name": "Biratnagar",
+    "country": "Nepal",
+    "country_id": "nepal",
+    "longitude": 87.2833,
+    "latitude": 26.4837,
+    "capital": false,
+    "province": "w_npl_8"
+  },
+  {
+    "id": "nepal_2",
+    "name": "Dhangarhi",
+    "country": "Nepal",
+    "country_id": "nepal",
+    "longitude": 80.593,
+    "latitude": 28.695,
+    "capital": false,
+    "province": "w_npl_0"
+  },
+  {
+    "id": "nepal_3",
+    "name": "Baglung",
+    "country": "Nepal",
+    "country_id": "nepal",
+    "longitude": 83.5833,
+    "latitude": 28.2667,
+    "capital": false,
+    "province": "w_npl_13"
+  },
+  {
+    "id": "nepal_4",
+    "name": "Nepalganj",
+    "country": "Nepal",
+    "country_id": "nepal",
+    "longitude": 81.6167,
+    "latitude": 28.0503,
+    "capital": false,
+    "province": "w_npl_3"
+  },
+  {
+    "id": "kazakhstan_0",
+    "name": "Astana",
+    "country": "Kazakhstan",
+    "country_id": "kazakhstan",
+    "longitude": 71.4278,
+    "latitude": 51.1811,
+    "capital": true,
+    "province": "w_kaz_8"
+  },
+  {
+    "id": "kazakhstan_1",
+    "name": "Almaty",
+    "country": "Kazakhstan",
+    "country_id": "kazakhstan",
+    "longitude": 76.9131,
+    "latitude": 43.3269,
+    "capital": false,
+    "province": "w_kaz_4"
+  },
+  {
+    "id": "kazakhstan_2",
+    "name": "Shymkent",
+    "country": "Kazakhstan",
+    "country_id": "kazakhstan",
+    "longitude": 69.595,
+    "latitude": 42.32,
+    "capital": false,
+    "province": "w_kaz_11"
+  },
+  {
+    "id": "kazakhstan_3",
+    "name": "Qaraghandy",
+    "country": "Kazakhstan",
+    "country_id": "kazakhstan",
+    "longitude": 73.115,
+    "latitude": 49.885,
+    "capital": false,
+    "province": "w_kaz_0"
+  },
+  {
+    "id": "kazakhstan_4",
+    "name": "Pavlodar",
+    "country": "Kazakhstan",
+    "country_id": "kazakhstan",
+    "longitude": 76.95,
+    "latitude": 52.3,
+    "capital": false,
+    "province": "w_kaz_10"
+  },
+  {
+    "id": "serbia_0",
+    "name": "Belgrade",
+    "country": "Serbia",
+    "country_id": "serbia",
+    "longitude": 20.466,
+    "latitude": 44.8206,
+    "capital": true,
+    "province": "w_srb_6"
+  },
+  {
+    "id": "serbia_1",
+    "name": "Nis",
+    "country": "Serbia",
+    "country_id": "serbia",
+    "longitude": 21.9,
+    "latitude": 43.3304,
+    "capital": false,
+    "province": "w_srb_0"
+  },
+  {
+    "id": "serbia_2",
+    "name": "Subotica",
+    "country": "Serbia",
+    "country_id": "serbia",
+    "longitude": 19.68,
+    "latitude": 46.07,
+    "capital": false,
+    "province": "w_srb_3"
+  },
+  {
+    "id": "serbia_3",
+    "name": "Novi Sad",
+    "country": "Serbia",
+    "country_id": "serbia",
+    "longitude": 19.8499,
+    "latitude": 45.2504,
+    "capital": false,
+    "province": "w_srb_8"
+  },
+  {
+    "id": "serbia_4",
+    "name": "Kragujevac",
+    "country": "Serbia",
+    "country_id": "serbia",
+    "longitude": 20.92,
+    "latitude": 44.02,
+    "capital": false,
+    "province": "w_srb_11"
+  },
+  {
+    "id": "albania_0",
+    "name": "Tirana",
+    "country": "Albania",
+    "country_id": "albania",
+    "longitude": 19.8189,
+    "latitude": 41.3275,
+    "capital": true,
+    "province": "w_alb_0"
+  },
+  {
+    "id": "armenia_0",
+    "name": "Yerevan",
+    "country": "Armenia",
+    "country_id": "armenia",
+    "longitude": 44.5116,
+    "latitude": 40.1831,
+    "capital": true,
+    "province": "w_arm_0"
+  },
+  {
+    "id": "azerbaijan_0",
+    "name": "Baku",
+    "country": "Azerbaijan",
+    "country_id": "azerbaijan",
+    "longitude": 49.8603,
+    "latitude": 40.3972,
+    "capital": true,
+    "province": "w_aze_0"
+  },
+  {
+    "id": "burundi_0",
+    "name": "Bujumbura",
+    "country": "Burundi",
+    "country_id": "burundi",
+    "longitude": 29.36,
+    "latitude": -3.3761,
+    "capital": true,
+    "province": "w_bdi_0"
+  },
+  {
+    "id": "belgium_0",
+    "name": "Brussels",
+    "country": "Belgium",
+    "country_id": "belgium",
+    "longitude": 4.3314,
+    "latitude": 50.8353,
+    "capital": true,
+    "province": "w_bel_0"
+  },
+  {
+    "id": "benin_0",
+    "name": "Cotonou",
+    "country": "Benin",
+    "country_id": "benin",
+    "longitude": 2.518,
+    "latitude": 6.402,
+    "capital": true,
+    "province": "w_ben_0"
+  },
+  {
+    "id": "burkina_faso_0",
+    "name": "Ouagadougou",
+    "country": "Burkina Faso",
+    "country_id": "burkina_faso",
+    "longitude": -1.5267,
+    "latitude": 12.3723,
+    "capital": true,
+    "province": "w_bfa_1"
+  },
+  {
+    "id": "the_bahamas_0",
+    "name": "Freeport",
+    "country": "The Bahamas",
+    "country_id": "the_bahamas",
+    "longitude": -78.7,
+    "latitude": 26.5333,
+    "capital": false,
+    "province": "w_bhs_0"
+  },
+  {
+    "id": "bosnia_and_herzegovina_0",
+    "name": "Sarajevo",
+    "country": "Bosnia and Herzegovina",
+    "country_id": "bosnia_and_herzegovina",
+    "longitude": 18.383,
+    "latitude": 43.85,
+    "capital": true,
+    "province": "w_bih_0"
+  },
+  {
+    "id": "belize_0",
+    "name": "Belmopan",
+    "country": "Belize",
+    "country_id": "belize",
+    "longitude": -88.7671,
+    "latitude": 17.252,
+    "capital": true,
+    "province": "w_blz_0"
+  },
+  {
+    "id": "brunei_0",
+    "name": "Bandar Seri Begawan",
+    "country": "Brunei",
+    "country_id": "brunei",
+    "longitude": 114.9333,
+    "latitude": 4.8833,
+    "capital": true,
+    "province": "w_brn_0"
+  },
+  {
+    "id": "bhutan_0",
+    "name": "Thimphu",
+    "country": "Bhutan",
+    "country_id": "bhutan",
+    "longitude": 89.639,
+    "latitude": 27.473,
+    "capital": true,
+    "province": "w_btn_0"
+  },
+  {
+    "id": "central_african_republic_0",
+    "name": "Bangui",
+    "country": "Central African Republic",
+    "country_id": "central_african_republic",
+    "longitude": 18.5583,
+    "latitude": 4.3666,
+    "capital": true,
+    "province": "w_caf_0"
+  },
+  {
+    "id": "congo_0",
+    "name": "Brazzaville",
+    "country": "Congo",
+    "country_id": "congo",
+    "longitude": 15.2827,
+    "latitude": -4.2572,
+    "capital": true,
+    "province": "w_cog_1"
+  },
+  {
+    "id": "cape_verde_0",
+    "name": "Praia",
+    "country": "Cape Verde",
+    "country_id": "cape_verde",
+    "longitude": -23.5167,
+    "latitude": 14.9167,
+    "capital": true,
+    "province": "w_cpv_0"
+  },
+  {
+    "id": "costa_rica_0",
+    "name": "San Jose",
+    "country": "Costa Rica",
+    "country_id": "costa_rica",
+    "longitude": -84.086,
+    "latitude": 9.937,
+    "capital": true,
+    "province": "w_cri_0"
+  },
+  {
+    "id": "cuba_0",
+    "name": "Havana",
+    "country": "Cuba",
+    "country_id": "cuba",
+    "longitude": -82.3661,
+    "latitude": 23.1339,
+    "capital": true,
+    "province": "w_cub_0"
+  },
+  {
+    "id": "cyprus_0",
+    "name": "Nicosia",
+    "country": "Cyprus",
+    "country_id": "cyprus",
+    "longitude": 33.3666,
+    "latitude": 35.1667,
+    "capital": true,
+    "province": "w_cyp_0"
+  },
+  {
+    "id": "djibouti_0",
+    "name": "Djibouti",
+    "country": "Djibouti",
+    "country_id": "djibouti",
+    "longitude": 43.148,
+    "latitude": 11.595,
+    "capital": true,
+    "province": "w_dji_0"
+  },
+  {
+    "id": "dominican_republic_0",
+    "name": "Santo Domingo",
+    "country": "Dominican Republic",
+    "country_id": "dominican_republic",
+    "longitude": -69.902,
+    "latitude": 18.472,
+    "capital": true,
+    "province": "w_dom_0"
+  },
+  {
+    "id": "eritrea_0",
+    "name": "Asmara",
+    "country": "Eritrea",
+    "country_id": "eritrea",
+    "longitude": 38.9333,
+    "latitude": 15.3333,
+    "capital": true,
+    "province": "w_eri_0"
+  },
+  {
+    "id": "estonia_0",
+    "name": "Tallinn",
+    "country": "Estonia",
+    "country_id": "estonia",
+    "longitude": 24.728,
+    "latitude": 59.4339,
+    "capital": true,
+    "province": "w_est_0"
+  },
+  {
+    "id": "fiji_0",
+    "name": "Suva",
+    "country": "Fiji",
+    "country_id": "fiji",
+    "longitude": 178.4417,
+    "latitude": -18.133,
+    "capital": true,
+    "province": "w_fji_0"
+  },
+  {
+    "id": "falkland_islands_0",
+    "name": "Stanley",
+    "country": "Falkland Islands",
+    "country_id": "falkland_islands",
+    "longitude": -57.85,
+    "latitude": -51.7,
+    "capital": false,
+    "province": "w_flk_0"
+  },
+  {
+    "id": "gabon_0",
+    "name": "Libreville",
+    "country": "Gabon",
+    "country_id": "gabon",
+    "longitude": 9.458,
+    "latitude": 0.3854,
+    "capital": true,
+    "province": "w_gab_1"
+  },
+  {
+    "id": "georgia_0",
+    "name": "Tbilisi",
+    "country": "Georgia",
+    "country_id": "georgia",
+    "longitude": 44.7888,
+    "latitude": 41.727,
+    "capital": true,
+    "province": "w_geo_0"
+  },
+  {
+    "id": "guinea_0",
+    "name": "Conakry",
+    "country": "Guinea",
+    "country_id": "guinea",
+    "longitude": -13.6822,
+    "latitude": 9.5335,
+    "capital": true,
+    "province": "w_gin_0"
+  },
+  {
+    "id": "the_gambia_0",
+    "name": "Banjul",
+    "country": "The Gambia",
+    "country_id": "the_gambia",
+    "longitude": -16.5917,
+    "latitude": 13.4539,
+    "capital": true,
+    "province": "w_gmb_0"
+  },
+  {
+    "id": "guinea_bissau_0",
+    "name": "Bissau",
+    "country": "Guinea-Bissau",
+    "country_id": "guinea_bissau",
+    "longitude": -15.5984,
+    "latitude": 11.865,
+    "capital": true,
+    "province": "w_gnb_0"
+  },
+  {
+    "id": "equatorial_guinea_0",
+    "name": "Malabo",
+    "country": "Equatorial Guinea",
+    "country_id": "equatorial_guinea",
+    "longitude": 8.7833,
+    "latitude": 3.75,
+    "capital": true,
+    "province": "w_gnq_1"
+  },
+  {
+    "id": "greenland_0",
+    "name": "Nuuk",
+    "country": "Greenland",
+    "country_id": "greenland",
+    "longitude": -51.7327,
+    "latitude": 64.1983,
+    "capital": false,
+    "province": "w_grl_1"
+  },
+  {
+    "id": "guyana_0",
+    "name": "Georgetown",
+    "country": "Guyana",
+    "country_id": "guyana",
+    "longitude": -58.167,
+    "latitude": 6.802,
+    "capital": true,
+    "province": "w_guy_1"
+  },
+  {
+    "id": "honduras_0",
+    "name": "Tegucigalpa",
+    "country": "Honduras",
+    "country_id": "honduras",
+    "longitude": -87.2195,
+    "latitude": 14.104,
+    "capital": true,
+    "province": "w_hnd_0"
+  },
+  {
+    "id": "croatia_0",
+    "name": "Zagreb",
+    "country": "Croatia",
+    "country_id": "croatia",
+    "longitude": 16.0,
+    "latitude": 45.8,
+    "capital": true,
+    "province": "w_hrv_0"
+  },
+  {
+    "id": "haiti_0",
+    "name": "Port-au-Prince",
+    "country": "Haiti",
+    "country_id": "haiti",
+    "longitude": -72.338,
+    "latitude": 18.543,
+    "capital": true,
+    "province": "w_hti_0"
+  },
+  {
+    "id": "iceland_0",
+    "name": "Reykjavik",
+    "country": "Iceland",
+    "country_id": "iceland",
+    "longitude": -21.95,
+    "latitude": 64.15,
+    "capital": true,
+    "province": "w_isl_0"
+  },
+  {
+    "id": "israel_0",
+    "name": "Jerusalem",
+    "country": "Israel",
+    "country_id": "israel",
+    "longitude": 35.2066,
+    "latitude": 31.7784,
+    "capital": true,
+    "province": "w_isr_0"
+  },
+  {
+    "id": "jamaica_0",
+    "name": "Kingston",
+    "country": "Jamaica",
+    "country_id": "jamaica",
+    "longitude": -76.7674,
+    "latitude": 17.9771,
+    "capital": true,
+    "province": "w_jam_0"
+  },
+  {
+    "id": "jordan_0",
+    "name": "Amman",
+    "country": "Jordan",
+    "country_id": "jordan",
+    "longitude": 35.9314,
+    "latitude": 31.952,
+    "capital": true,
+    "province": "w_jor_0"
+  },
+  {
+    "id": "kyrgyzstan_0",
+    "name": "Bishkek",
+    "country": "Kyrgyzstan",
+    "country_id": "kyrgyzstan",
+    "longitude": 74.5833,
+    "latitude": 42.875,
+    "capital": true,
+    "province": "w_kgz_0"
+  },
+  {
+    "id": "kosovo_0",
+    "name": "Pristina",
+    "country": "Kosovo",
+    "country_id": "kosovo",
+    "longitude": 21.166,
+    "latitude": 42.6667,
+    "capital": true,
+    "province": "w_kos_0"
+  },
+  {
+    "id": "kuwait_0",
+    "name": "Kuwait City",
+    "country": "Kuwait",
+    "country_id": "kuwait",
+    "longitude": 47.9764,
+    "latitude": 29.3717,
+    "capital": true,
+    "province": "w_kwt_0"
+  },
+  {
+    "id": "laos_0",
+    "name": "Vientiane",
+    "country": "Laos",
+    "country_id": "laos",
+    "longitude": 102.6,
+    "latitude": 17.9667,
+    "capital": true,
+    "province": "w_lao_1"
+  },
+  {
+    "id": "lebanon_0",
+    "name": "Beirut",
+    "country": "Lebanon",
+    "country_id": "lebanon",
+    "longitude": 35.5078,
+    "latitude": 33.8739,
+    "capital": true,
+    "province": "w_lbn_0"
+  },
+  {
+    "id": "liberia_0",
+    "name": "Monrovia",
+    "country": "Liberia",
+    "country_id": "liberia",
+    "longitude": -10.7997,
+    "latitude": 6.3146,
+    "capital": true,
+    "province": "w_lbr_0"
+  },
+  {
+    "id": "lesotho_0",
+    "name": "Maseru",
+    "country": "Lesotho",
+    "country_id": "lesotho",
+    "longitude": 27.4833,
+    "latitude": -29.3167,
+    "capital": true,
+    "province": "w_lso_0"
+  },
+  {
+    "id": "lithuania_0",
+    "name": "Vilnius",
+    "country": "Lithuania",
+    "country_id": "lithuania",
+    "longitude": 25.3166,
+    "latitude": 54.6834,
+    "capital": true,
+    "province": "w_ltu_0"
+  },
+  {
+    "id": "luxembourg_0",
+    "name": "Luxembourg",
+    "country": "Luxembourg",
+    "country_id": "luxembourg",
+    "longitude": 6.13,
+    "latitude": 49.6117,
+    "capital": true,
+    "province": "w_lux_0"
+  },
+  {
+    "id": "latvia_0",
+    "name": "Riga",
+    "country": "Latvia",
+    "country_id": "latvia",
+    "longitude": 24.1,
+    "latitude": 56.95,
+    "capital": true,
+    "province": "w_lva_0"
+  },
+  {
+    "id": "moldova_0",
+    "name": "Chisinau",
+    "country": "Moldova",
+    "country_id": "moldova",
+    "longitude": 28.8577,
+    "latitude": 47.005,
+    "capital": true,
+    "province": "w_mda_0"
+  },
+  {
+    "id": "north_macedonia_0",
+    "name": "Skopje",
+    "country": "North Macedonia",
+    "country_id": "north_macedonia",
+    "longitude": 21.4335,
+    "latitude": 42.0,
+    "capital": true,
+    "province": "w_mkd_0"
+  },
+  {
+    "id": "montenegro_0",
+    "name": "Podgorica",
+    "country": "Montenegro",
+    "country_id": "montenegro",
+    "longitude": 19.2663,
+    "latitude": 42.466,
+    "capital": true,
+    "province": "w_mne_0"
+  },
+  {
+    "id": "malawi_0",
+    "name": "Lilongwe",
+    "country": "Malawi",
+    "country_id": "malawi",
+    "longitude": 33.7833,
+    "latitude": -13.9833,
+    "capital": true,
+    "province": "w_mwi_0"
+  },
+  {
+    "id": "new_caledonia_0",
+    "name": "Noumea",
+    "country": "New Caledonia",
+    "country_id": "new_caledonia",
+    "longitude": 166.4443,
+    "latitude": -22.2625,
+    "capital": false,
+    "province": "w_ncl_0"
+  },
+  {
+    "id": "nicaragua_0",
+    "name": "Managua",
+    "country": "Nicaragua",
+    "country_id": "nicaragua",
+    "longitude": -86.2704,
+    "latitude": 12.155,
+    "capital": true,
+    "province": "w_nic_0"
+  },
+  {
+    "id": "netherlands_0",
+    "name": "Amsterdam",
+    "country": "Netherlands",
+    "country_id": "netherlands",
+    "longitude": 4.9147,
+    "latitude": 52.3519,
+    "capital": true,
+    "province": "w_nld_0"
+  },
+  {
+    "id": "puerto_rico_0",
+    "name": "San Juan",
+    "country": "Puerto Rico",
+    "country_id": "puerto_rico",
+    "longitude": -66.13,
+    "latitude": 18.44,
+    "capital": false,
+    "province": "w_pri_0"
+  },
+  {
+    "id": "palestine_0",
+    "name": "Al Khalil",
+    "country": "Palestine",
+    "country_id": "palestine",
+    "longitude": 35.0956,
+    "latitude": 31.5406,
+    "capital": false,
+    "province": "w_psx_0"
+  },
+  {
+    "id": "qatar_0",
+    "name": "Doha",
+    "country": "Qatar",
+    "country_id": "qatar",
+    "longitude": 51.533,
+    "latitude": 25.2866,
+    "capital": true,
+    "province": "w_qat_0"
+  },
+  {
+    "id": "rwanda_0",
+    "name": "Kigali",
+    "country": "Rwanda",
+    "country_id": "rwanda",
+    "longitude": 30.0586,
+    "latitude": -1.9516,
+    "capital": true,
+    "province": "w_rwa_0"
+  },
+  {
+    "id": "western_sahara_0",
+    "name": "Bir Lehlou",
+    "country": "Western Sahara",
+    "country_id": "western_sahara",
+    "longitude": -9.6525,
+    "latitude": 26.1192,
+    "capital": false,
+    "province": "w_sah_0"
+  },
+  {
+    "id": "solomon_islands_0",
+    "name": "Honiara",
+    "country": "Solomon Islands",
+    "country_id": "solomon_islands",
+    "longitude": 159.9498,
+    "latitude": -9.438,
+    "capital": true,
+    "province": "w_slb_0"
+  },
+  {
+    "id": "sierra_leone_0",
+    "name": "Freetown",
+    "country": "Sierra Leone",
+    "country_id": "sierra_leone",
+    "longitude": -13.2362,
+    "latitude": 8.472,
+    "capital": true,
+    "province": "w_sle_0"
+  },
+  {
+    "id": "el_salvador_0",
+    "name": "San Salvador",
+    "country": "El Salvador",
+    "country_id": "el_salvador",
+    "longitude": -89.205,
+    "latitude": 13.7119,
+    "capital": true,
+    "province": "w_slv_0"
+  },
+  {
+    "id": "somalia_0",
+    "name": "Mogadishu",
+    "country": "Somalia",
+    "country_id": "somalia",
+    "longitude": 45.3647,
+    "latitude": 2.0686,
+    "capital": true,
+    "province": "w_som_4"
+  },
+  {
+    "id": "suriname_0",
+    "name": "Paramaribo",
+    "country": "Suriname",
+    "country_id": "suriname",
+    "longitude": -55.167,
+    "latitude": 5.835,
+    "capital": true,
+    "province": "w_sur_0"
+  },
+  {
+    "id": "slovenia_0",
+    "name": "Ljubljana",
+    "country": "Slovenia",
+    "country_id": "slovenia",
+    "longitude": 14.515,
+    "latitude": 46.0553,
+    "capital": true,
+    "province": "w_svn_0"
+  },
+  {
+    "id": "eswatini_0",
+    "name": "Mbabane",
+    "country": "Eswatini",
+    "country_id": "eswatini",
+    "longitude": 31.1333,
+    "latitude": -26.3167,
+    "capital": true,
+    "province": "w_swz_0"
+  },
+  {
+    "id": "togo_0",
+    "name": "Lome",
+    "country": "Togo",
+    "country_id": "togo",
+    "longitude": 1.2208,
+    "latitude": 6.1339,
+    "capital": true,
+    "province": "w_tgo_0"
+  },
+  {
+    "id": "tajikistan_0",
+    "name": "Dushanbe",
+    "country": "Tajikistan",
+    "country_id": "tajikistan",
+    "longitude": 68.7739,
+    "latitude": 38.56,
+    "capital": true,
+    "province": "w_tjk_0"
+  },
+  {
+    "id": "east_timor_0",
+    "name": "Dili",
+    "country": "East Timor",
+    "country_id": "east_timor",
+    "longitude": 125.5795,
+    "latitude": -8.5594,
+    "capital": true,
+    "province": "w_tls_0"
+  },
+  {
+    "id": "trinidad_and_tobago_0",
+    "name": "Port-of-Spain",
+    "country": "Trinidad and Tobago",
+    "country_id": "trinidad_and_tobago",
+    "longitude": -61.517,
+    "latitude": 10.652,
+    "capital": true,
+    "province": "w_tto_0"
+  },
+  {
+    "id": "taiwan_0",
+    "name": "Taipei",
+    "country": "Taiwan",
+    "country_id": "taiwan",
+    "longitude": 121.5683,
+    "latitude": 25.0358,
+    "capital": true,
+    "province": "w_twn_0"
+  },
+  {
+    "id": "vanuatu_0",
+    "name": "Port Vila",
+    "country": "Vanuatu",
+    "country_id": "vanuatu",
+    "longitude": 168.3166,
+    "latitude": -17.7334,
+    "capital": true,
+    "province": "w_vut_0"
+  },
+  {
+    "id": "samoa_0",
+    "name": "Apia",
+    "country": "Samoa",
+    "country_id": "samoa",
+    "longitude": -171.7386,
+    "latitude": -13.8415,
+    "capital": true,
+    "province": "w_wsm_1"
+  }
+]
