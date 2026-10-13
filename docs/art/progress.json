@@ -562,6 +562,46 @@
       "sha": "f34d1af6954c760faf2fc29310b66996679824e4",
       "width": 512,
       "height": 512
+    },
+    {
+      "key": "euro_kodiak_engineer",
+      "name": "Kodiak engineer",
+      "model": "res://assets/library/arsenal/euro_kodiak_engineer.glb",
+      "path": "game/assets/interface/unit_art/euro_kodiak_engineer.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: Kodiak engineer (euro_kodiak_engineer), a Support weapon or vehicle on dry grass and packed earth, correct identifying turret, wheels, tracks or weapon tubes, entire subject visible from low front three-quarter angle. This is the European equipment from model euro_kodiak_engineer; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "9dd22a815a0bd8e061aa205caf580455cb64e909",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_buyan_m",
+      "name": "Buyan-M",
+      "model": "res://assets/library/arsenal/russia_buyan_m.glb",
+      "path": "game/assets/interface/unit_art/russia_buyan_m.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: Buyan-M naval vessel, correct identifying hull and superstructure, complete silhouette from front three-quarter elevated angle, sitting correctly at its waterline in a calm sea. This is the Russian equipment from model russia_buyan_m; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "7f286d71e747c1caf5503baac553a5a2b84c9274",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_patria_amv",
+      "name": "Patria AMV",
+      "model": "res://assets/library/arsenal/euro_patria_amv.glb",
+      "path": "game/assets/interface/unit_art/euro_patria_amv.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: Patria AMV (euro_patria_amv), a Mechanized weapon or vehicle on dry grass and packed earth, correct identifying turret, wheels, tracks or weapon tubes, entire subject visible from low front three-quarter angle. This is the European equipment from model euro_patria_amv; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "459ae2697416ae309a5f4eafa07a07966c71e1a5",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_rafale",
+      "name": "Rafale",
+      "model": "res://assets/library/arsenal/euro_rafale.glb",
+      "path": "game/assets/interface/unit_art/euro_rafale.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: Rafale aircraft in flight, correct wing/fuselage/engine arrangement, clear complete silhouette against a soft clouded sky. This is the European equipment from model euro_rafale; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "2e8c33fde9ee5717548ee0b7b6ba3ff65fbe8dab",
+      "width": 512,
+      "height": 512
     }
   ],
   "failed": []
