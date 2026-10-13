@@ -4,7 +4,9 @@ extends CanvasLayer
 ## complicated; reference screenshots of Call of War's city screen). Dark header with the
 ## city name, "construction" and "production" status boxes, a tab row, and a light list of
 ## buildings grouped in sections: picture, "Name Lvl. N", cost icons, build time and a green
-## CONSTRUCT button. Research is national and opened from the Research tab, not here.
+## CONSTRUCT button. Owner 2026-10-13 (Call of War city screenshots): unit tabs (Infantry,
+## Ordnance, Tanks, Air, Naval) list each weapon ONCE at its current level with PRODUCE, and
+## only the next research level under it ("only what's next in line").
 signal rally_requested(city_id: String)
 signal production_requested(city_name: String)
 signal research_requested  # kept for compatibility; research is opened from the HUD tab
@@ -12,6 +14,12 @@ const SECONDS_PER_HOUR: = 3600.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
 const HIDDEN_BUILDINGS: = ["research_center", "finance", "material_works", "electronics_plant", "fuel_depot"]  # research is national, not a city building
 const SECTIONS := [["Economy", ["industry", "recruitment_center", "train_station", "capitol"]], ["Unit production", ["barracks", "tank_plant", "factory", "missile_factory", "airbase", "naval_base"]], ["Defence & roads", ["bunker", "infrastructure"]]]
 var clock: SimulationClock
+var research: ResearchSystem
+var tab_row: HBoxContainer
+var tab_index: = -1  # -1 = buildings, otherwise a ProductionGroups index
+var unit_list: VBoxContainer
+var unit_rows: Dictionary = {}
+var scroll: ScrollContainer
 var buildings: BuildingSystem
 var panel: PanelContainer
 var title: Label
@@ -71,15 +79,12 @@ func setup(system: BuildingSystem, theme: Theme) -> void:
 	boxes.add_child(production.panel)
 	production.panel.gui_input.connect(func(event: InputEvent):
 		if (event is InputEventMouseButton or event is InputEventScreenTouch) and event.pressed and not event.is_echo(): _produce())
-	# Tabs: Buildings (this list), Produce (unit production screen), Rally point.
-	var tabs: = HBoxContainer.new()
-	tabs.add_theme_constant_override("separation", 0)
-	column.add_child(tabs)
-	tabs.add_child(CowUI.tab("Buildings", "hammer", true))
-	var produce_tab: = CowUI.tab("Produce", "produce", false)
-	produce_tab.pressed.connect(_produce)
-	tabs.add_child(produce_tab)
-	rally_tab = CowUI.tab("Rally point", "flag", false)
+	# Tabs: Buildings, one per unit group, Rally point.
+	tab_row = HBoxContainer.new()
+	tab_row.add_theme_constant_override("separation", 0)
+	column.add_child(tab_row)
+	rally_tab = CowUI.tab("Rally", "flag", false)
+	rally_tab.custom_minimum_size.x = 56
 	rally_tab.pressed.connect(func():
 		var rally: Dictionary = buildings.economy.rally_points.get(city_id, {})
 		if rally.get("country", "") == GameSession.player_country:
@@ -89,19 +94,27 @@ func setup(system: BuildingSystem, theme: Theme) -> void:
 		else:
 			hide()
 			rally_requested.emit(city_id))
-	tabs.add_child(rally_tab)
+	_build_tabs()
 	# Building list.
 	var list_back: = PanelContainer.new()
 	list_back.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	list_back.add_theme_stylebox_override("panel", CowUI.skin("list", 8))
 	column.add_child(list_back)
-	var scroll: = ScrollContainer.new()
+	scroll = ScrollContainer.new()
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	list_back.add_child(scroll)
 	list = VBoxContainer.new()
 	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	list.add_theme_constant_override("separation", 6)
-	scroll.add_child(list)
+	var lists: = VBoxContainer.new()
+	lists.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(lists)
+	lists.add_child(list)
+	unit_list = VBoxContainer.new()
+	unit_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	unit_list.add_theme_constant_override("separation", 6)
+	unit_list.visible = false
+	lists.add_child(unit_list)
 	var listed: = {}
 	for section in SECTIONS:
 		list.add_child(CowUI.section(section[0]))
@@ -178,6 +191,181 @@ func _add_row(definition: Dictionary) -> void:
 	right_column.add_child(button)
 	rows[definition.id] = {"card":card, "picture":image, "name": name_label, "costs": costs, "time": time, "button": button}
 
+func _build_tabs() -> void:
+	for child in tab_row.get_children():
+		tab_row.remove_child(child)
+		if child != rally_tab: child.queue_free()
+	var entries: Array = [-1]
+	entries.append_array(ProductionGroups.CITY_TABS)
+	for index in entries:
+		var tab: Button
+		if index < 0: tab = CowUI.tab("Buildings", "hammer", tab_index < 0)
+		else:
+			tab = CowUI.tab(ProductionGroups.CITY_TITLES[index], "", tab_index == index)
+			var symbol: = UnitTypeIcon.silhouette(ProductionGroups.ICONS[index], CowUI.GOLD, Vector2(30, 26))
+			symbol.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+			var inner: VBoxContainer = tab.get_child(0)
+			inner.add_child(symbol)
+			inner.move_child(symbol, 0)
+		tab.custom_minimum_size.x = 56
+		var caption: Label = tab.get_child(0).get_child(1)
+		caption.add_theme_font_size_override("font_size", 12)
+		tab.pressed.connect(func(): show_tab(index))
+		tab_row.add_child(tab)
+	tab_row.add_child(rally_tab)
+
+## -1 shows the buildings; a ProductionGroups index shows that group's weapons.
+func show_tab(index: int) -> void:
+	tab_index = index
+	_build_tabs()
+	list.visible = index < 0
+	unit_list.visible = index >= 0
+	for child in unit_list.get_children(): unit_list.remove_child(child); child.queue_free()
+	unit_rows.clear()
+	if index >= 0 and research != null:
+		var families: Array = buildings.economy.catalog.filter(func(spec: Dictionary): return spec.country == GameSession.player_country and ProductionGroups.index(spec) == index)
+		families.sort_custom(func(a, b): return a.category < b.category if a.category != b.category else a.name < b.name)
+		for spec in families: _add_unit_row(spec)
+	if scroll != null: scroll.scroll_vertical = 0
+	if visible: _refresh()
+
+func _add_unit_row(spec: Dictionary) -> void:
+	var card: = PanelContainer.new()
+	card.add_theme_stylebox_override("panel", CowUI.skin("row", 6, 8))
+	unit_list.add_child(card)
+	var stack: = VBoxContainer.new()
+	stack.add_theme_constant_override("separation", 6)
+	card.add_child(stack)
+	var row: = HBoxContainer.new()
+	row.add_theme_constant_override("separation", 10)
+	stack.add_child(row)
+	var frame: = PanelContainer.new()
+	frame.add_theme_stylebox_override("panel", CowUI.box(Color("e8e4d6"), 0, Color("2f2f2a"), 2, 2))
+	row.add_child(frame)
+	var image: = TextureRect.new()
+	image.custom_minimum_size = Vector2(96, 80)
+	image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	frame.add_child(image)
+	var rank: = Chevrons.new()
+	rank.custom_minimum_size = Vector2(26, 30)
+	rank.size_flags_horizontal = Control.SIZE_SHRINK_END
+	rank.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	frame.add_child(rank)
+	var middle: = VBoxContainer.new()
+	middle.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	middle.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.add_child(middle)
+	var name_label: = CowUI.label("", 18, CowUI.INK)
+	name_label.clip_text = true
+	name_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	middle.add_child(name_label)
+	var kind: = HBoxContainer.new()
+	kind.add_theme_constant_override("separation", 4)
+	middle.add_child(kind)
+	kind.add_child(UnitTypeIcon.silhouette(spec.visual_kind, CowUI.INK, Vector2(20, 18)))
+	var kind_label: = CowUI.label("", 13, Color("5a584e"))
+	kind_label.clip_text = true
+	kind_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	kind.add_child(kind_label)
+	var costs: = HBoxContainer.new()
+	costs.add_theme_constant_override("separation", 10)
+	middle.add_child(costs)
+	var right: = PanelContainer.new()
+	right.add_theme_stylebox_override("panel", CowUI.box(Color(0.55, 0.52, 0.44, 0.22), 6, Color(0, 0, 0, 0), 0, 5))
+	row.add_child(right)
+	var right_column: = VBoxContainer.new()
+	right_column.alignment = BoxContainer.ALIGNMENT_CENTER
+	right.add_child(right_column)
+	var time_row: = HBoxContainer.new()
+	time_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	right_column.add_child(time_row)
+	time_row.add_child(CowUI.Icon.new("clock", CowUI.INK, Vector2(22, 22)))
+	var time: = CowUI.label("", 15, CowUI.INK)
+	time_row.add_child(time)
+	var produce: = CowUI.action("PRODUCE", "")
+	produce.pressed.connect(func():
+		var place: = buildings.city(city_id)
+		var error: = buildings.economy.schedule(spec.id, place.get("name", ""))
+		message.text = (EquipmentIdentity.research_title(spec.id, research.level(spec.id)) + " added to " + place.get("name", "") + " production") if error.is_empty() else error
+		_refresh())
+	right_column.add_child(produce)
+	# Only the next research level, as a bar under the card (like Call of War's "Lvl. 3 ... >>").
+	var next_row: = HBoxContainer.new()
+	next_row.add_theme_constant_override("separation", 8)
+	stack.add_child(next_row)
+	var bar: = ProgressBar.new()
+	bar.show_percentage = false
+	bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	bar.custom_minimum_size.y = 40
+	bar.add_theme_stylebox_override("background", CowUI.box(Color("c98a3e"), 4, Color("2f2f2a"), 2))
+	bar.add_theme_stylebox_override("fill", CowUI.box(Color("e3ae5a"), 4))
+	next_row.add_child(bar)
+	var next_label: = CowUI.label("", 15, Color("201a10"))
+	next_label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	next_label.offset_left = 10
+	next_label.offset_right = -10
+	next_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	next_label.clip_text = true
+	next_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	next_label.add_theme_font_override("font", CowUI.title_font())
+	bar.add_child(next_label)
+	var next_button: = CowUI.action("RESEARCH", "")
+	next_button.custom_minimum_size = Vector2(118, 40)
+	next_button.pressed.connect(func():
+		var target: = research.level(spec.id) + 1
+		var error: = research.start(spec.id, target)
+		message.text = (EquipmentIdentity.research_title(spec.id, target) + " research started") if error.is_empty() else error
+		_refresh())
+	next_row.add_child(next_button)
+	unit_rows[spec.id] = {"card": card, "picture": image, "rank": rank, "name": name_label, "kind": kind_label, "costs": costs, "time": time, "produce": produce, "next_row": next_row, "bar": bar, "next": next_label, "research": next_button}
+
+func _refresh_units(place: Dictionary) -> void:
+	var stock: Dictionary = buildings.economy.stockpiles[GameSession.player_country]
+	for id in unit_rows:
+		var row: Dictionary = unit_rows[id]
+		var spec: = buildings.economy.equipment(id)
+		var level: = research.level(id)
+		row.picture.texture = CowUI.research_picture(id, level)
+		row.rank.level = level
+		row.rank.queue_redraw()
+		row.name.text = EquipmentIdentity.research_title(id, level).trim_suffix(" · upgrade").replace(" · technology", "")
+		row.kind.text = (str(spec.get("research_branch", "")) if not str(spec.get("research_branch", "")).is_empty() else str(spec.get("category", ""))) + " Lvl. " + str(level)
+		for child in row.costs.get_children(): row.costs.remove_child(child); child.queue_free()
+		for resource in ProductionSystem.RESOURCES:
+			if spec.cost[resource] > 0: row.costs.add_child(CowUI.cost(resource, spec.cost[resource], stock[resource] >= spec.cost[resource]))
+		row.time.text = " " + SimulationClock.duration(spec.seconds / maxf(buildings.production_rate(city_id, spec), 0.01))
+		var blocked: = ""
+		if spec.get("requires_port", false) and not place.has("naval_spawn"): blocked = "COASTAL ONLY"
+		for building_id in spec.get("building_requirements", {}):
+			if blocked.is_empty() and buildings.level(city_id, building_id) < int(spec.building_requirements[building_id]):
+				blocked = "NEEDS " + buildings.spec(building_id).get("name", building_id).to_upper()
+		row.produce.get_meta("caption").text = "PRODUCE" if blocked.is_empty() else blocked
+		row.produce.get_meta("caption").autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		row.produce.disabled = not blocked.is_empty()
+		# Next research level only.
+		row.next_row.visible = level < 5
+		if level >= 5: continue
+		var target: = level + 1
+		var job: = research.active(id)
+		var caption: Label = row.research.get_meta("caption")
+		if not job.is_empty() and not job.get("refinement", false) and int(job.level) == target:
+			var total: = research.job_duration(job)
+			row.bar.max_value = total
+			row.bar.value = job.progress
+			row.next.text = "Lvl. " + str(target) + "   " + SimulationClock.duration(total - job.progress, research.clock.speed if research.clock != null else 1.0)
+			caption.text = "RESEARCHING"
+			row.research.disabled = true
+			continue
+		row.bar.max_value = 1.0
+		row.bar.value = 0.0
+		var reason: = research.reason(id, target)
+		var day: = research.unlock_day(id, target)
+		row.next.text = "Lvl. " + str(target) + "   " + (("Day " + str(day)) if research.day() < day else SimulationClock.duration(research.duration(target)))
+		caption.text = "RESEARCH"
+		row.research.disabled = not reason.is_empty()
+		row.research.tooltip_text = reason
+
 func _effect(definition: Dictionary) -> String:
 	match definition.id:
 		"factory": return "Artillery, air defence & support"
@@ -191,6 +379,7 @@ func _effect(definition: Dictionary) -> String:
 func open(place: Dictionary) -> void:
 	city_id = place.id
 	message.text = ""
+	show_tab(-1)
 	show()
 	_layout()
 	_refresh()
@@ -212,7 +401,6 @@ func _refresh() -> void:
 	var controlled: = buildings.economy.controlled(place, GameSession.player_country)
 	var own: bool = controlled
 	var scouted := controlled or (buildings.economy.armies != null and buildings.economy.armies.point_visible(place.point))
-	list.visible = scouted
 	var captured: bool = controlled and place.country.to_lower() != GameSession.player_country
 	title.text = ("★ " if buildings.is_capital(place) else "") + place.name
 	summary.text = ("YOURS · " + ("captured city · income 25%" if captured else ("capital" if buildings.is_capital(place) else "core city"))) if controlled else ("Controlled by " + buildings.economy.controller(place).capitalize())
@@ -231,7 +419,8 @@ func _refresh() -> void:
 	var rally: Dictionary = buildings.economy.rally_points.get(city_id, {})
 	rally_tab.get_child(0).get_child(1).text = "Clear rally" if rally.get("country", "") == GameSession.player_country else "Rally point"
 	rally_tab.disabled = not controlled
-	list.visible = own
+	list.visible = own and tab_index < 0
+	unit_list.visible = own and tab_index >= 0
 	var paused: = not controlled or (clock != null and clock.paused)
 	# Construction status.
 	var jobs: = _jobs_here()
@@ -264,6 +453,9 @@ func _refresh() -> void:
 			production.bar.value = job.progress
 			break
 	if not own: return
+	if tab_index >= 0:
+		_refresh_units(place)
+		return
 	# Building rows.
 	var stock: Dictionary = buildings.economy.stockpiles[GameSession.player_country]
 	for id in rows:
@@ -297,3 +489,16 @@ func _process(delta: float) -> void:
 	if ui_timer >= 0.5:
 		ui_timer = 0
 		_refresh()
+
+## Call of War rank badge: a dark shield with one chevron per level.
+class Chevrons extends Control:
+	var level: = 1
+	func _init() -> void: mouse_filter = Control.MOUSE_FILTER_IGNORE
+	func _draw() -> void:
+		var w: = size.x
+		var h: = size.y
+		draw_colored_polygon(PackedVector2Array([Vector2(0, 0), Vector2(w, 0), Vector2(w, h * 0.78), Vector2(w * 0.5, h), Vector2(0, h * 0.78)]), Color(0.08, 0.08, 0.07, 0.92))
+		var step: = h * 0.15
+		for i in clampi(level, 1, 5):
+			var y: = h * 0.72 - i * step
+			draw_polyline(PackedVector2Array([Vector2(w * 0.18, y + step * 0.6), Vector2(w * 0.5, y), Vector2(w * 0.82, y + step * 0.6)]), Color("f3dc9a"), 2.4)

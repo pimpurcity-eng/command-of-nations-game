@@ -18,7 +18,7 @@ func run() -> void:
 	game.clock.paused = true
 	game.match_rules.ai_enabled = false
 	check(game.units.units.size() == EquipmentIdentity.catalog.size() and game.units.units.all(func(u):return u.level == 1),"one level-1 unit of each family (owner 2026-10-13, Call of War start)")
-	check(ProductionGroups.TITLES == ["Economy","Aircraft","Ordnance","Tanks","Naval","Barracks"],"six requested research groups")
+	check(ProductionGroups.TITLES == ["Economy","Aircraft","Ordnance","Tanks","Naval","Barracks","Missiles"],"requested research groups incl. Missiles")
 	var schedules := {}
 	for spec in EquipmentIdentity.catalog:
 		var tiers: Array = spec.research_tiers
@@ -64,10 +64,10 @@ func run() -> void:
 	game.rig.distance = UnitSystem.CLOSE_ZOOM - 3.0
 	game.rig._snap(1.0)
 	for i in 8: await process_frame
-	check(game.badges.buttons.values().any(func(b):return b.visible and not b.get_node("Icon").visible and b.get_node("Health").visible and not b.get_node("Level").visible),"small health bar (no level text) on units when zoomed in")
+	check(game.badges.buttons.values().any(func(b):return b.visible and b.get_node("Token").mode == "tag"),"Call of War tag (count + health bar, no level text) beside units when zoomed in")
 	game.rig.distance = UnitSystem.FAR_ZOOM + 10.0
 	game.rig._snap(1.0)
 	for i in 8: await process_frame
-	check(game.badges.buttons.values().any(func(b):return b.visible and b.get_node("Icon").visible),"unit-type symbols shown when zoomed out")
+	check(game.badges.buttons.values().any(func(b):return b.visible and b.get_node("Token").mode == "token"),"diamond unit-type tokens shown when zoomed out")
 	print("RESULT checks=",checks," failures=",failures)
 	quit(0 if failures == 0 else 1)

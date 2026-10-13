@@ -8,6 +8,17 @@ var kind: = "armor"
 var faction: = Color("ef827c")
 var selected: = false
 var hostile: = false
+## Plain silhouette (no badge) in `ink`, for tabs and banners in the Call of War style.
+var plain: = false
+var ink: = Color("fff8ea")
+
+static func silhouette(visual_kind: String, color: Color, minimum: Vector2) -> UnitTypeIcon:
+	var icon: = UnitTypeIcon.new()
+	icon.kind = visual_kind
+	icon.plain = true
+	icon.ink = color
+	icon.custom_minimum_size = minimum
+	return icon
 
 static func category(visual_kind: String) -> String:
 	match visual_kind:
@@ -29,10 +40,10 @@ func _draw() -> void:
 	var c: = r.get_center()
 	var s: float = minf(size.x, size.y)
 	# Badge: rounded square in the country colour, gold edge when selected, red edge for enemies at war.
-	var edge: Color = Color("f5cf82") if selected else (Color("d84a3a") if hostile else Color(0, 0, 0, 0.55))
-	draw_style_box(_box(faction.darkened(0.15), edge), r)
-	var ink: = Color("fff8ea")
-	var u: float = s / 30.0
+	if not plain:
+		var edge: Color = Color("f5cf82") if selected else (Color("d84a3a") if hostile else Color(0, 0, 0, 0.55))
+		draw_style_box(_box(faction.darkened(0.15), edge), r)
+	var u: float = s / (24.0 if plain else 30.0)
 	match category(kind):
 		"tank":
 			draw_rect(Rect2(c + Vector2(-9, -1) * u, Vector2(18, 7) * u), ink)            # hull

@@ -22,4 +22,8 @@ func run() -> void:
 	await shot("Research_Economy")
 	game.research_panel.tree_scroll.scroll_vertical = 100000
 	await shot("Research_Economy_Bottom")
+	game.research_panel.show_category(2)
+	await shot("Research_Ordnance")
+	game.research_panel.show_category(5)
+	await shot("Research_Barracks")
 	quit()

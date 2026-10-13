@@ -301,6 +301,7 @@ func _ready() -> void :
 	add_child(city_panel)
 	city_panel.setup(buildings, hud.get_child(0).theme)
 	city_panel.clock = clock
+	city_panel.research = research
 	city_panel.rally_requested.connect( func(id: String):
 		rally_city = id
 		attack_order = false

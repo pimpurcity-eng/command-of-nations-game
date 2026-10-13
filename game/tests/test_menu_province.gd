@@ -28,11 +28,11 @@ func run():
  game.research_panel.open();game.research_panel.show_category(2)
  for i in 4:await process_frame
  var research=game.research_panel
- check(ResearchPanel.CATEGORIES.size()==6,"six research groups")
+ check(ResearchPanel.CATEGORIES.size()==7,"seven research groups (Missiles added by owner 2026-10-13)")
  var families=research._families(2)
  check(families.any(func(f):return f.category=="Air defense") and families.any(func(f):return f.category=="Artillery"),"artillery and air defence together in Support Factory")
  var card=research.cells[0].card
- check(card.size.x>230 and card.size.y>160,"large air-defence card layout used for support")
+ check(card.size.x>=120 and card.size.y>=120,"square Call of War research cards (owner 2026-10-13)")
  check(research.tree_scroll.get_h_scroll_bar().max_value>research.tree_scroll.get_h_scroll_bar().page,"wide tree can scroll horizontally")
  var old_id=research.selected_id;var old_level=research.selected_level
  drag(Vector2(480,850),Vector2(220,430))
@@ -46,7 +46,7 @@ func run():
  var start=list.get_global_transform_with_canvas()*Vector2(200,280)
  drag(start,start-Vector2(0,200));await process_frame
  check(list.get_v_scroll_bar().value>50,"production equipment list responds to finger swipe")
- check(game.production_panel.category_picker.item_count==7,"production uses same six groups plus All")
+ check(game.production_panel.category_picker.item_count==8,"production uses the seven groups (with Missiles) plus All")
  game.production_panel.category_picker.select(5);game.production_panel._populate_equipment()
  check(game.production_panel.filtered.is_empty(),"no inland naval production options")
  game.production_panel.hide()
