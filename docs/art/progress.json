@@ -392,6 +392,26 @@
       "sha": "6c80a7762870e0fed3f933fb34af05d32dbd69d8",
       "width": 512,
       "height": 512
+    },
+    {
+      "key": "euro_fr_foreign_legion",
+      "name": "Mechanised infantry",
+      "model": "res://assets/library/arsenal/euro_fr_foreign_legion.glb",
+      "path": "game/assets/interface/unit_art/euro_fr_foreign_legion.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: a small group of European Mechanised infantry foot soldiers, era-appropriate uniforms and rifles, believable human proportions and equipment, standing or walking on dry grass. They are foot infantry, with no motor vehicle. This is the European equipment from model euro_fr_foreign_legion; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "b188fcb01fac415d19d1050bad0430e544275ace",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_motor_rifleman",
+      "name": "Motor riflemen",
+      "model": "res://assets/library/arsenal/russia_motor_rifleman.glb",
+      "path": "game/assets/interface/unit_art/russia_motor_rifleman.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: a small group of Russian Motor riflemen foot soldiers, era-appropriate uniforms and rifles, believable human proportions and equipment, standing or walking on dry grass. They are foot infantry, with no motor vehicle. This is the Russian equipment from model russia_motor_rifleman; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "0dbc2408053f1c7a7f32642355d796c4efa6c218",
+      "width": 512,
+      "height": 512
     }
   ],
   "failed": []
