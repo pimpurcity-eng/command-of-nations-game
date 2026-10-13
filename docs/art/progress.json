@@ -422,6 +422,46 @@
       "sha": "52dfcfb7b293753eb1b6b45b674cf2a6011f96cc",
       "width": 512,
       "height": 512
+    },
+    {
+      "key": "russia_pantsir_s1",
+      "name": "Pantsir-S1",
+      "model": "res://assets/library/arsenal/russia_pantsir_s1.glb",
+      "path": "game/assets/interface/unit_art/russia_pantsir_s1.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: Pantsir-S1 (russia_pantsir_s1), a Air defense weapon or vehicle on dry grass and packed earth, correct identifying turret, wheels, tracks or weapon tubes, entire subject visible from low front three-quarter angle. This is the Russian equipment from model russia_pantsir_s1; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "004d92977f5b85512cd60341e11e235a681a241f",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_t72b3",
+      "name": "T-72B3",
+      "model": "res://assets/library/arsenal/russia_t72b3.glb",
+      "path": "game/assets/interface/unit_art/russia_t72b3.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: T-72B3 (russia_t72b3), a Armor weapon or vehicle on dry grass and packed earth, correct identifying turret, wheels, tracks or weapon tubes, entire subject visible from low front three-quarter angle. This is the Russian equipment from model russia_t72b3; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "a6bff8ab5deedd0435c4eb03cf3caf185ed77e44",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_btr80",
+      "name": "BTR-80",
+      "model": "res://assets/library/arsenal/russia_btr80.glb",
+      "path": "game/assets/interface/unit_art/russia_btr80.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: BTR-80 (russia_btr80), a Mechanized weapon or vehicle on dry grass and packed earth, correct identifying turret, wheels, tracks or weapon tubes, entire subject visible from low front three-quarter angle. This is the Russian equipment from model russia_btr80; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "e3285b0018f078d5fa0de20ff83b6c1bd576d4ad",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_btr90",
+      "name": "BTR-90",
+      "model": "res://assets/library/arsenal/russia_btr90.glb",
+      "path": "game/assets/interface/unit_art/russia_btr90.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: BTR-90 (russia_btr90), a Mechanized weapon or vehicle on dry grass and packed earth, correct identifying turret, wheels, tracks or weapon tubes, entire subject visible from low front three-quarter angle. This is the Russian equipment from model russia_btr90; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "73654dbb85a4ce4ba578f0c6093e551bd84e9fe5",
+      "width": 512,
+      "height": 512
     }
   ],
   "failed": []
