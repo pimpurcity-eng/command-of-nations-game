@@ -22,6 +22,8 @@ def build_sparse_index(resources):
 
 
 def verify_sparse_index(resources):
+    if not resources.get("project.binary", b"").startswith(b"ECFG"):
+        raise ValueError("Android requires a valid project.binary settings file")
     data = resources["assets.sparsepck"]
     if data[:4] != b"GDPC":
         raise ValueError("Invalid Godot sparse header")
