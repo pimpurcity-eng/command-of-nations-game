@@ -602,6 +602,46 @@
       "sha": "2e8c33fde9ee5717548ee0b7b6ba3ff65fbe8dab",
       "width": 512,
       "height": 512
+    },
+    {
+      "key": "euro_submarine_t2_mid_type212a",
+      "name": "Type 212A",
+      "model": "res://assets/library/arsenal/euro_submarine_t2_mid_type212a.glb",
+      "path": "game/assets/interface/unit_art/euro_submarine_t2_mid_type212a.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: Type 212A submarine, surfaced at the correct waterline, correct long hull and sail visible in a calm sea. This is the European equipment from model euro_submarine_t2_mid_type212a; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "5380c67d61b26f6c51c7ffd85a559d66f61b1dcb",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_eurofighter",
+      "name": "Eurofighter",
+      "model": "res://assets/library/arsenal/euro_eurofighter.glb",
+      "path": "game/assets/interface/unit_art/euro_eurofighter.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: Eurofighter aircraft in flight, correct wing/fuselage/engine arrangement, clear complete silhouette against a soft clouded sky. This is the European equipment from model euro_eurofighter; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "b20045f56e313b424a4c1ef7b7e2ebbc227fc661",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_corvette_t2_mid_k130_braunschweig",
+      "name": "K130 Braunschweig",
+      "model": "res://assets/library/arsenal/euro_corvette_t2_mid_k130_braunschweig.glb",
+      "path": "game/assets/interface/unit_art/euro_corvette_t2_mid_k130_braunschweig.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: K130 Braunschweig naval vessel, correct identifying hull and superstructure, complete silhouette from front three-quarter elevated angle, sitting correctly at its waterline in a calm sea. This is the European equipment from model euro_corvette_t2_mid_k130_braunschweig; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "d757c4a81695226b3da99ed8f9b98fb106775d87",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_destroyer_t1_starting_type42",
+      "name": "Type 42",
+      "model": "res://assets/library/arsenal/euro_destroyer_t1_starting_type42.glb",
+      "path": "game/assets/interface/unit_art/euro_destroyer_t1_starting_type42.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: Type 42 naval vessel, correct identifying hull and superstructure, complete silhouette from front three-quarter elevated angle, sitting correctly at its waterline in a calm sea. This is the European equipment from model euro_destroyer_t1_starting_type42; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "70685c0318072495b8d414f4d954a1d7fb91933f",
+      "width": 512,
+      "height": 512
     }
   ],
   "failed": []
