@@ -132,7 +132,7 @@ func snapshot() -> Dictionary: return {"levels":levels.duplicate(true),"jobs":jo
 func validate(state: Variant) -> bool:
  if state is Dictionary and state.is_empty(): return true  # Pre-province saves.
  if not state is Dictionary or not state.get("levels") is Dictionary or not state.get("jobs") is Array or not buildings._integer(state.get("next_id"),1,1000000000): return false
- if state.levels.size() != places.size() or state.jobs.size()>places.size()*BuildingSystem.QUEUE_LIMIT: return false
+ if state.levels.size() != places.size() or state.jobs.size()>places.size()*8: return false
  for id in state.levels:
   if not places.has(id) or not state.levels[id] is Dictionary or state.levels[id].size()>ALLOWED.size(): return false
   for building in ALLOWED:
@@ -147,7 +147,7 @@ func validate(state: Variant) -> bool:
   if pending.has(key): return false
   pending[key] = true
   counts[job.city] = counts.get(job.city,0)+1
-  if counts[job.city]>BuildingSystem.QUEUE_LIMIT: return false
+  if counts[job.city]>8: return false  # older saves queued up to eight
   if not job.get("paid") is bool: return false
   var progress = job.get("progress")
   if not (progress is int or progress is float) or not is_finite(float(progress)) or progress<0 or progress>=buildings.duration(job.building,job.level) or (not job.paid and progress!=0): return false

@@ -2,7 +2,7 @@ class_name BuildingSystem
 extends RefCounted
 signal changed
 signal completed(city_id: String, building_id: String)
-const QUEUE_LIMIT: = 8
+const QUEUE_LIMIT: = 4  # Call of War premium: four buildings queued per city (owner 2026-10-13)
 var catalog: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/buildings.json"))
 var economy: ProductionSystem
 var capitals: Dictionary = {}
@@ -153,7 +153,7 @@ func validate(state: Variant) -> bool:
 	if not saved_capitals is Dictionary: return false
 	for country in saved_capitals:
 		if country not in economy.stockpiles or city(str(saved_capitals[country])).is_empty(): return false
-	if state.levels.size() != economy.cities.size() or state.jobs.size() > economy.cities.size() * QUEUE_LIMIT: return false
+	if state.levels.size() != economy.cities.size() or state.jobs.size() > economy.cities.size() * 8: return false  # older saves queued up to eight
 	for place in economy.cities:
 		var saved = state.levels.get(place.id)
 		if not saved is Dictionary or saved.size() > catalog.size(): return false
@@ -181,7 +181,7 @@ func validate(state: Variant) -> bool:
 		if seen.has(key): return false
 		seen[key] = true
 		counts[job.city] = counts.get(job.city, 0) + 1
-		if counts[job.city] > QUEUE_LIMIT: return false
+		if counts[job.city] > 8: return false  # older saves queued up to eight
 		if not job.get("paid", true) is bool or ( not job.get("paid", true) and job.get("progress") != 0): return false
 		var progress = job.get("progress")
 		if not (progress is float or progress is int) or not is_finite(float(progress)) or progress < 0 or progress >= duration(job.building, int(job.level)): return false

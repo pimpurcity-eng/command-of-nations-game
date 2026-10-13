@@ -39,6 +39,7 @@ signal capital_requested
 signal production_requested
 signal pause_requested
 signal speed_requested(speed: float)
+signal guard_requested
 signal save_requested
 signal load_requested
 signal stop_requested
@@ -70,6 +71,7 @@ var mode_button: Button
 var navigation_menu: MenuButton
 var pause_button: Button
 var speed_button: Button
+var guard_button: Button
 var time_label: Label
 var score_label: Label
 var war_label: Label
@@ -153,6 +155,12 @@ func _build_top_bar(root: Control) -> void:
 	score_label = _chip_label("★ 0%")
 	score_label.add_theme_color_override("font_color", GOLD)
 	second.add_child(score_label)
+	# Guard mode (sleep defence): the AI defends your land while you are away.
+	guard_button = _small_button("GUARD")
+	guard_button.custom_minimum_size.x = 72
+	guard_button.tooltip_text = "Going to sleep? The AI defends your cities and land. It never attacks."
+	guard_button.pressed.connect(func(): guard_requested.emit())
+	second.add_child(guard_button)
 	speed_button = _small_button("» 1x")
 	speed_button.pressed.connect(func():
 		_speed = {1.0: 2.0, 2.0: 4.0}.get(_speed, 1.0)
@@ -684,3 +692,9 @@ func _show_audio_items() -> void:
 	var popup: = navigation_menu.get_popup()
 	popup.set_item_text(31, "Sound: " + ("ON" if GameAudio.sound_enabled else "OFF"))
 	popup.set_item_text(32, "Music: " + ("ON" if GameAudio.music_enabled else "OFF"))
+
+func set_guard(on: bool) -> void:
+	if guard_button == null: return
+	guard_button.text = "GUARD ON" if on else "GUARD"
+	guard_button.custom_minimum_size.x = 104 if on else 72
+	guard_button.add_theme_color_override("font_color", Color("8fe07a") if on else Color("e3d9bd"))

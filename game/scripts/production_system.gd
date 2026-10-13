@@ -13,7 +13,8 @@ var annexation: Annexation
 var strategic: StrategicWeapons
 var jobs: Array = []
 var next_id: = 1
-const PLAN_LIMIT: = 8
+const PLAN_LIMIT: = 4  # Call of War premium: four units queued per city (owner 2026-10-13)
+const SAVED_PLAN_LIMIT: = 8  # older saves may still hold up to eight orders
 var rally_points: Dictionary = {}
 var cities: Array
 var terrain: StrategicMap
@@ -134,7 +135,7 @@ func enqueue(equipment_id: String, city_name: String) -> String:
 	var count: = 0
 	for job in jobs:
 		if job.city == city_name: count += 1
-	if count >= 5: return "City queue is full (5 orders)"
+	if count >= PLAN_LIMIT: return "City queue is full (%d orders)" % PLAN_LIMIT
 	for resource in RESOURCES:
 		if stockpiles[spec.country][resource] < spec.cost[resource]: return "Insufficient " + resource
 	for resource in RESOURCES: stockpiles[spec.country][resource] -= spec.cost[resource]
@@ -209,7 +210,7 @@ func validate(state: Variant) -> bool:
 	if research != null and state.has("research") and not research.validate(state.research): return false
 	if buildings != null and state.has("buildings") and not buildings.validate(state.buildings): return false
 	if not (state.get("next_id") is float or state.get("next_id") is int) or not is_finite(float(state.next_id)) or state.next_id < 1 or state.next_id != floor(state.next_id): return false
-	if state.stockpiles.size() != stockpiles.size() or state.jobs.size() > cities.size() * PLAN_LIMIT: return false
+	if state.stockpiles.size() != stockpiles.size() or state.jobs.size() > cities.size() * SAVED_PLAN_LIMIT: return false
 	for country in stockpiles:
 		if not state.stockpiles.get(country) is Dictionary: return false
 		for resource in RESOURCES:
@@ -238,7 +239,7 @@ func validate(state: Variant) -> bool:
 			if city.name == job.get("city") and ( not spec.get("requires_port", false) or city.has("naval_spawn")): found = true
 		if not found: return false
 		counts[job.city] = counts.get(job.city, 0) + 1
-		if counts[job.city] > PLAN_LIMIT: return false
+		if counts[job.city] > SAVED_PLAN_LIMIT: return false
 		if not job.get("paid", true) is bool or ( not job.get("paid", true) and job.get("progress") != 0): return false
 		var progress = job.get("progress")
 		if not (progress is float or progress is int) or not is_finite(float(progress)) or progress < 0 or progress >= spec.seconds: return false
@@ -260,7 +261,7 @@ func schedule(equipment_id: String, city_name: String) -> String:
 		if entry.name == city_name: place = entry
 	if place.is_empty() or not controlled(place, spec.country): return "Choose a controlled city"
 	if spec.get("requires_port", false) and not place.has("naval_spawn"): return "Ships require a coastal city"
-	if jobs.filter( func(job: Dictionary): return job.city == city_name).size() >= PLAN_LIMIT: return "City plan is full (8 orders)"
+	if jobs.filter( func(job: Dictionary): return job.city == city_name).size() >= PLAN_LIMIT: return "City queue is full (%d orders)" % PLAN_LIMIT
 	jobs.append({"id": next_id, "equipment": equipment_id, "city": city_name, "progress": 0.0, "paid": false})
 	next_id += 1
 	changed.emit()

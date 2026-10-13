@@ -394,7 +394,7 @@
       }
     ],
     "building_requirements": {
-      "tank_plant": 1
+      "barracks": 1
     },
     "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
     "research_days": [
@@ -409,7 +409,7 @@
       "fuel": 2.0,
       "manpower": 0.4
     },
-    "production_building": "tank_plant"
+    "production_building": "barracks"
   },
   {
     "id": "bombers_russia",
@@ -583,7 +583,7 @@
       }
     ],
     "building_requirements": {
-      "tank_plant": 1
+      "barracks": 1
     },
     "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
     "research_days": [
@@ -598,7 +598,7 @@
       "fuel": 2.0,
       "manpower": 0.4
     },
-    "production_building": "tank_plant"
+    "production_building": "barracks"
   },
   {
     "id": "bombers_ukraine",

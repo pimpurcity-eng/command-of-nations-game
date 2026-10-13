@@ -385,6 +385,9 @@ func _ready() -> void :
 	match_rules.production = production
 	session.match_rules = match_rules
 	match_rules.report.connect(hud.show_status)
+	match_rules.guard_changed.connect(func(country: String, on: bool):
+		if country == GameSession.player_country: hud.set_guard(on))
+	hud.guard_requested.connect(_toggle_guard)
 	match_rules.report.connect(func(_message: String): railway.refresh())
 	match_rules.finished.connect(show_result)
 	match_rules.finished.connect(_report_result)
@@ -1181,3 +1184,13 @@ func _report_result(country: String) -> void:
 	if account_panel == null or not account_panel.auth.signed_in(): return
 	var minutes := int((Time.get_ticks_msec() - match_started_msec) / 60000) if match_started_msec > 0 else 0
 	await account_panel.auth.record_result(country == GameSession.player_country, minutes)
+
+## Guard mode (sleep defence, owner 2026-10-13): the AI defends your land while you sleep.
+func _toggle_guard() -> void:
+	var country: = GameSession.player_country
+	var on: = not match_rules.guarded(country)
+	if MatchClient.active != null:
+		var error: = MatchClient.active.send("guard", {"on": on})
+		if not error.is_empty(): hud.show_status(error); return
+	else: match_rules.set_guard(country, on)
+	hud.show_status("GUARD ON · the AI defends your cities and land while you are away. It will not attack." if on else "GUARD OFF · you are in command")

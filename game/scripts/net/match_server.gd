@@ -236,7 +236,7 @@ func _state(country: String, kind: String, full: bool) -> Dictionary:
 			if key.contains(">" + country + ":") or key.begins_with(country + ">"): mine[key] = rules.diplomacy.pending[key]
 		talks.pending = mine
 		var strategic: = {"stock": {country: rules.strategic.stock.get(country, {})}, "jobs": rules.strategic.jobs.filter(func(job: Dictionary): return job.country == country), "fallout": rules.strategic.fallout}
-		state.merge({"diplomacy": talks, "ai_countries": ai_seats, "research": game.research.snapshot(), "buildings": game.buildings.snapshot(), "victory": rules.victory.snapshot(), "annexation": rules.annexation.snapshot(), "strategic": strategic, "chronicle": rules.chronicle.snapshot()})
+		state.merge({"diplomacy": talks, "ai_countries": ai_seats, "guards": rules.guards.keys(), "research": game.research.snapshot(), "buildings": game.buildings.snapshot(), "victory": rules.victory.snapshot(), "annexation": rules.annexation.snapshot(), "strategic": strategic, "chronicle": rules.chronicle.snapshot()})
 	return state
 
 ## Carries out one order for `country`. Returns "" or the reason it was refused.
@@ -269,6 +269,12 @@ func command(country: String, message: Dictionary) -> String:
 				var destination: = rules.retreat(units.stacks.members(unit), Vector2(unit.node.position.x, unit.node.position.z))
 				if destination != Vector2.INF: moved += units.command(country, [unit.id], "move", destination)
 			return "" if moved > 0 else "No friendly province to retreat to"
+		"guard":
+			# Sleep defence: the server's DefenceAI holds this player's land while they are away.
+			var on: = bool(message.get("on", false))
+			rules.set_guard(country, on)
+			_broadcast({"t": "event", "text": "%s %s guard mode" % [country.capitalize(), "switched on" if on else "switched off"]})
+			return ""
 		"declare_war":
 			if rules.at_war: return "Already at war"
 			rules.declare_war()

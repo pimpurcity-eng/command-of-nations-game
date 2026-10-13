@@ -146,6 +146,8 @@ func _apply(message: Dictionary, full: bool) -> void:
 		if message.has("chronicle"): rules.chronicle.restore(message.chronicle)
 		if message.has("diplomacy"): rules.diplomacy.restore(message.diplomacy)
 		rules.diplomacy.ai_countries = message.get("ai_countries", [])
+		var guarded: Array = message.get("guards", [])
+		for country in ["russia", "ukraine"]: rules.set_guard(country, country in guarded)
 	game.refresh_hud()
 	if not rules.winner.is_empty() and not _shown_winner:
 		_shown_winner = true

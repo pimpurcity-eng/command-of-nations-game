@@ -18,6 +18,17 @@ var ai_enabled: = true
 ## players who have been away too long). Empty = the single-player opponent `ai`.
 var seat_ai: Dictionary = {}
 var online: = false
+## Guard mode (sleep defence): country -> DefenceAI. Defends only, never attacks or spends.
+var guards: Dictionary = {}
+signal guard_changed(country: String, on: bool)
+func set_guard(country: String, on: bool) -> void:
+	if on == guards.has(country): return
+	if on:
+		guards[country] = DefenceAI.new()
+		guards[country].country = country
+	else: guards.erase(country)
+	guard_changed.emit(country, on)
+func guarded(country: String) -> bool: return guards.has(country)
 func set_ai_countries(countries: Array) -> void:
 	for country in seat_ai.keys():
 		if not country in countries: seat_ai.erase(country)
@@ -233,13 +244,19 @@ func advance(seconds: float) -> void :
 		if not living:
 			end_match("russia" if country == "ukraine" else "ukraine", "elimination")
 			return
+	if clock.elapsed >= 2.5 and MatchClient.active == null:  # online, the server runs guard mode
+		for country in guards:
+			var said: String = guards[country].decide(armies, cities, production, seconds)
+			if not said.is_empty() and country == GameSession.player_country: report.emit(said)
 	if not ai_enabled: return
 	decision_timer += seconds
 	if decision_timer < 0.05: return
 	if clock.elapsed >= 2.5:
 		if seat_ai.is_empty(): ai.decide(armies, terrain, cities, production, decision_timer)
 		else:
-			for country in seat_ai: seat_ai[country].decide(armies, terrain, cities, production, decision_timer)
+			for country in seat_ai:
+				# A guarded player who is away is defended, not sent on the attack.
+				if not guards.has(country): seat_ai[country].decide(armies, terrain, cities, production, decision_timer)
 	decision_timer = 0
 func _update_entrenchment(seconds: float) -> void:
 	for unit in armies.units:
@@ -288,12 +305,15 @@ func end_match(country: String, kind: String = "elimination") -> void :
 	report.emit(VICTORY_NAMES.get(kind, "VICTORY") + " · " + country.capitalize() + " wins. Choose New match to play again.")
 	finished.emit(country)
 func snapshot() -> Dictionary:
-	return {"last_day": last_day, "air_cooldowns": air_combat.snapshot(), "combat_cooldowns": combat.snapshot(), "at_war": at_war, "winner": winner, "decision_timer": decision_timer, "recruitment_timer": ai.recruitment_timer, "capture_progress": capture_progress.duplicate(true), "victory_type": victory_type, "victory": victory.snapshot(), "chronicle": chronicle.snapshot(), "annexation": annexation.snapshot(), "strategic": strategic.snapshot(), "trade": trade.snapshot() if trade != null else {}, "doctrines": Doctrine.snapshot(), "diplomacy": diplomacy.snapshot()}
+	return {"last_day": last_day, "air_cooldowns": air_combat.snapshot(), "combat_cooldowns": combat.snapshot(), "at_war": at_war, "winner": winner, "decision_timer": decision_timer, "recruitment_timer": ai.recruitment_timer, "capture_progress": capture_progress.duplicate(true), "victory_type": victory_type, "victory": victory.snapshot(), "chronicle": chronicle.snapshot(), "annexation": annexation.snapshot(), "strategic": strategic.snapshot(), "trade": trade.snapshot() if trade != null else {}, "doctrines": Doctrine.snapshot(), "diplomacy": diplomacy.snapshot(), "guards": guards.keys()}
 func restore(state: Dictionary) -> void :
 	last_day = int(state.get("last_day",1+int(clock.elapsed/ProductionSystem.DAY_SECONDS)))
 	combat.restore(state.get("combat_cooldowns", {}))
 	air_combat.restore(state.get("air_cooldowns", {}))
 	at_war = state.get("at_war", true)
+	for country in guards.keys(): set_guard(country, false)
+	for country in state.get("guards", []):
+		if country is String and country in ["russia", "ukraine"]: set_guard(country, true)
 	armies.at_war = at_war
 	winner = state.winner
 	decision_timer = state.decision_timer

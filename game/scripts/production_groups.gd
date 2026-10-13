@@ -6,8 +6,9 @@ static func index(spec: Dictionary) -> int:
 	if spec.get("category", "") == "Economy": return 0
 	if spec.get("visual_kind", "") == "naval": return 4
 	if spec.get("visual_kind", "") == "fighter": return 1
-	if spec.get("category", "") in ["Armor", "Mechanized"]: return 3
-	if spec.get("category", "") == "Infantry": return 5
+	# Owner 2026-10-13: infantry vehicles (APCs/IFVs) are Infantry; air defence is Ordnance.
+	if spec.get("category", "") in ["Infantry", "Mechanized"]: return 5
+	if spec.get("category", "") == "Armor": return 3
 	if spec.get("category", "") == "Missiles": return 6
 	return 2
 static func building(spec: Dictionary) -> String:
