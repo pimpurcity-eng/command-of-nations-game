@@ -99,6 +99,8 @@ func setup(map: StrategicMap, camera_rig: StrategyCamera) -> void :
 		leader.default_color = ink.albedo_color
 		label_layer.add_child(leader)
 		leaders.append(leader)
+		if OS.has_feature("mobile"):
+			await get_tree().process_frame
 	for spec in [["UKRAINE", [[25.5, 49.3], [29.7, 49.6], [34.2, 50.0]]], ["RUSSIA", [[36.0, 53.0], [39.5, 54.0], [44.0, 54.6]]]]:
 		var points: = PackedVector2Array()
 		for coordinate in spec[1]: points.append(GeographicProjection.project(coordinate[0], coordinate[1]))
@@ -192,6 +194,7 @@ func select_city(city: Dictionary) -> void :
 	city_selected.emit(city)
 func _process(_delta: float) -> void :
 	if rig == null: return
+	if labels.size() != cities.size(): return
 	if armies != null:
 		for city in cities:
 			var controller: = controller_of(city)
