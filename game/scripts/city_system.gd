@@ -4,6 +4,8 @@ signal city_selected(city: Dictionary)
 ## Clear space at the actual city destination. Sized for the enlarged map units.
 const GARRISON_PLAZA_RADIUS := 0.70
 const SHOW_COURTYARD_DISK: = false
+const RESOURCE_WORDS: = {"materials": "METAL", "electronics": "RARE EARTHS", "fuel": "OIL", "food": "FOOD"}
+const RESOURCE_COLOURS: = {"materials": Color("d4dade"), "electronics": Color("d7a8ff"), "fuel": Color("ff9a7a"), "food": Color("9ee07e")}
 var cities: Array = GeographicProjection.load_cities()
 var armies: UnitSystem
 var terrain: StrategicMap
@@ -46,7 +48,7 @@ func setup(map: StrategicMap, camera_rig: StrategyCamera) -> void :
 		label.text = spaced(city.name)
 		label.tooltip_text = city.name + " · " + city.country + (" · Capital" if city.get("capital", false) else "")
 		label.set_meta("capital", city.get("capital", false))
-		label.add_theme_font_size_override("font_size", 15)
+		label.add_theme_font_size_override("font_size", 19)
 		label.add_theme_font_override("font", StrategyTheme.font("Oswald", 500))
 		label.add_theme_color_override("font_color", Color("efe9d3"))
 		label.add_theme_color_override("font_outline_color", Color("07121b"))
@@ -92,22 +94,34 @@ func setup(map: StrategicMap, camera_rig: StrategyCamera) -> void :
 		boxes.anchor_bottom = 1.0
 		boxes.offset_left = 36
 		boxes.offset_top = -6
-		boxes.offset_bottom = 22
+		boxes.offset_bottom = 34
+		# Owner 2026-10-13: "I can't tell what resource it is" - a big icon with its name.
 		for resource in ResourceSites.city_resources(city.name):
 			var box: = _tag_box()
+			var stack: = HBoxContainer.new()
+			stack.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			stack.add_theme_constant_override("separation", 4)
+			box.add_child(stack)
 			var picture: = TextureRect.new()
 			picture.texture = resource_picture(resource)
 			picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 			picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-			picture.custom_minimum_size = Vector2(22, 22)
+			picture.custom_minimum_size = Vector2(34, 34)
 			picture.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			box.add_child(picture)
+			stack.add_child(picture)
+			var word: = Label.new()
+			word.text = RESOURCE_WORDS.get(resource, resource.to_upper())
+			word.add_theme_font_size_override("font_size", 16)
+			word.add_theme_font_override("font", StrategyTheme.font("Oswald", 600))
+			word.add_theme_color_override("font_color", RESOURCE_COLOURS.get(resource, Color.WHITE))
+			word.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+			stack.add_child(word)
 			boxes.add_child(box)
 		if city.get("capital", false):
 			var star: = _tag_box()
 			var points: = Label.new()
 			points.text = "★ " + str(VictoryRules.PROVINCE_POINTS + VictoryRules.CAPITAL_POINTS)
-			points.add_theme_font_size_override("font_size", 15)
+			points.add_theme_font_size_override("font_size", 20)
 			points.add_theme_color_override("font_color", Color("ecc86e"))
 			star.add_child(points)
 			boxes.add_child(star)

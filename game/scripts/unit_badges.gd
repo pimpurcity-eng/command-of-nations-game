@@ -41,7 +41,11 @@ func _process(_delta: float) -> void :
 	var alive: Dictionary = {}
 	var occupied: Array[Rect2] = []
 	for label in city_labels:
-		if label.visible: occupied.append(label.get_global_rect())
+		if not label.visible: continue
+		occupied.append(label.get_global_rect())
+		# Keep army labels off the city's resource / capital boxes under its name.
+		var boxes: = label.get_node_or_null("Boxes") as Control
+		if boxes != null: occupied.append(boxes.get_global_rect())
 	var ordered: = armies.units.duplicate()
 	ordered.sort_custom( func(a: Dictionary, b: Dictionary):
 		var selected_stack: String = armies.units[armies.selected].country + ":" + armies.units[armies.selected].stack_id if armies.selected >= 0 else ""
@@ -83,6 +87,9 @@ func _process(_delta: float) -> void :
 		# Tokens sit on the army; tags sit to the right of the model, like Call of War.
 		var offsets: Array = [Vector2(-footprint.x * 0.5, -footprint.y * 0.5)] if icon_mode else [Vector2(14, -footprint.y * 0.5), Vector2(14, -footprint.y * 0.5 - 30), Vector2(-footprint.x - 14, -footprint.y * 0.5), Vector2(14, -footprint.y * 0.5 + 30)]
 		for extra in [Vector2(20, 0), Vector2(-20, 0), Vector2(0, 22), Vector2(0, -22)]: if icon_mode: offsets.append(offsets[0] + extra)
+		# More spots further out, so an army beside a busy city is never left without a label.
+		for ring in [Vector2(0, 46), Vector2(0, -46), Vector2(60, 0), Vector2(-60, 0), Vector2(0, 70), Vector2(60, 46), Vector2(-60, 46)]: offsets.append(offsets[0] + ring)
+		var placed: = false
 		for offset in offsets:
 			var bounds: = Rect2(point + offset, footprint)
 			if not safe.encloses(bounds): continue
@@ -93,7 +100,12 @@ func _process(_delta: float) -> void :
 			button.position = bounds.position
 			button.visible = true
 			occupied.append(bounds)
+			placed = true
 			break
+		# Owner: armies must always be visible - fall back to the first spot if all are taken.
+		if not placed and safe.has_point(point):
+			button.position = point + offsets[0]
+			button.visible = true
 	for id in buttons.keys():
 		if alive.has(id): continue
 		buttons[id].queue_free()
