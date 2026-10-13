@@ -8,12 +8,12 @@
     "asset_roster_id": "patriot",
     "seconds": 50,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 840,
-      "fuel": 300,
-      "manpower": 180,
-      "food": 168
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 10080,
+      "fuel": 3600,
+      "manpower": 2160,
+      "food": 1356
     },
     "building_requirements": {
       "factory": 1
@@ -67,10 +67,10 @@
       22
     ],
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 20.0,
-      "manpower": 3.0,
-      "food": 6.0
+      "funds": 2500.0,
+      "fuel": 200.0,
+      "manpower": 30.0,
+      "food": 60.0
     },
     "production_building": "factory",
     "starter": false
@@ -84,12 +84,12 @@
     "asset_roster_id": "skyguard",
     "seconds": 40,
     "cost": {
-      "funds": 2400,
-      "materials": 780,
-      "electronics": 600,
-      "fuel": 300,
-      "manpower": 180,
-      "food": 168
+      "funds": 28800,
+      "materials": 9360,
+      "electronics": 7200,
+      "fuel": 3600,
+      "manpower": 2160,
+      "food": 1356
     },
     "building_requirements": {
       "factory": 1
@@ -143,10 +143,10 @@
       13
     ],
     "upkeep": {
-      "funds": 200.0,
-      "fuel": 20.0,
-      "manpower": 3.0,
-      "food": 6.0
+      "funds": 2000.0,
+      "fuel": 200.0,
+      "manpower": 30.0,
+      "food": 60.0
     },
     "production_building": "factory",
     "starter": true
@@ -160,12 +160,12 @@
     "asset_roster_id": "patriot",
     "seconds": 50,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 840,
-      "fuel": 300,
-      "manpower": 180,
-      "food": 168
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 10080,
+      "fuel": 3600,
+      "manpower": 2160,
+      "food": 1356
     },
     "building_requirements": {
       "factory": 1
@@ -219,10 +219,10 @@
       22
     ],
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 20.0,
-      "manpower": 3.0,
-      "food": 6.0
+      "funds": 2500.0,
+      "fuel": 200.0,
+      "manpower": 30.0,
+      "food": 60.0
     },
     "production_building": "factory",
     "starter": false
@@ -236,12 +236,12 @@
     "asset_roster_id": "skyguard",
     "seconds": 40,
     "cost": {
-      "funds": 2400,
-      "materials": 780,
-      "electronics": 600,
-      "fuel": 300,
-      "manpower": 180,
-      "food": 168
+      "funds": 28800,
+      "materials": 9360,
+      "electronics": 7200,
+      "fuel": 3600,
+      "manpower": 2160,
+      "food": 1356
     },
     "building_requirements": {
       "factory": 1
@@ -295,10 +295,10 @@
       13
     ],
     "upkeep": {
-      "funds": 200.0,
-      "fuel": 20.0,
-      "manpower": 3.0,
-      "food": 6.0
+      "funds": 2000.0,
+      "fuel": 200.0,
+      "manpower": 30.0,
+      "food": 60.0
     },
     "production_building": "factory",
     "starter": true
@@ -312,12 +312,12 @@
     "research_branch": "Main battle tank",
     "seconds": 45,
     "cost": {
-      "funds": 3360,
-      "materials": 1140,
-      "electronics": 420,
-      "fuel": 480,
-      "manpower": 180,
-      "food": 168
+      "funds": 40320,
+      "materials": 13680,
+      "electronics": 5040,
+      "fuel": 5760,
+      "manpower": 2160,
+      "food": 1356
     },
     "research_tiers": [
       {
@@ -358,10 +358,10 @@
       17
     ],
     "upkeep": {
-      "funds": 280.0,
-      "fuel": 32.0,
-      "manpower": 3.0,
-      "food": 6.0
+      "funds": 2800.0,
+      "fuel": 320.0,
+      "manpower": 30.0,
+      "food": 60.0
     },
     "production_building": "tank_plant",
     "starter": true
@@ -375,12 +375,12 @@
     "research_branch": "Armoured personnel carrier",
     "seconds": 28,
     "cost": {
-      "funds": 1920,
-      "materials": 720,
-      "electronics": 240,
-      "fuel": 300,
-      "manpower": 240,
-      "food": 204
+      "funds": 23040,
+      "materials": 8640,
+      "electronics": 2880,
+      "fuel": 3600,
+      "manpower": 2880,
+      "food": 1788
     },
     "research_tiers": [
       {
@@ -421,10 +421,10 @@
       13
     ],
     "upkeep": {
-      "funds": 160.0,
-      "fuel": 20.0,
-      "manpower": 4.0,
-      "food": 8.0
+      "funds": 1600.0,
+      "fuel": 200.0,
+      "manpower": 40.0,
+      "food": 80.0
     },
     "production_building": "barracks",
     "starter": true
@@ -439,12 +439,12 @@
     "research_branch": "Strategic bomber",
     "seconds": 80,
     "cost": {
-      "funds": 5040,
-      "materials": 1320,
-      "electronics": 1320,
-      "fuel": 1440,
-      "manpower": 180,
-      "food": 168
+      "funds": 60480,
+      "materials": 15840,
+      "electronics": 15840,
+      "fuel": 17280,
+      "manpower": 2160,
+      "food": 1356
     },
     "building_requirements": {
       "airbase": 1
@@ -489,10 +489,10 @@
       25
     ],
     "upkeep": {
-      "funds": 420.0,
-      "fuel": 96.0,
-      "manpower": 3.0,
-      "food": 6.0
+      "funds": 4200.0,
+      "fuel": 960.0,
+      "manpower": 30.0,
+      "food": 60.0
     },
     "production_building": "airbase",
     "starter": false
@@ -506,12 +506,12 @@
     "research_branch": "Main battle tank",
     "seconds": 45,
     "cost": {
-      "funds": 3360,
-      "materials": 1140,
-      "electronics": 420,
-      "fuel": 480,
-      "manpower": 180,
-      "food": 168
+      "funds": 40320,
+      "materials": 13680,
+      "electronics": 5040,
+      "fuel": 5760,
+      "manpower": 2160,
+      "food": 1356
     },
     "research_tiers": [
       {
@@ -552,10 +552,10 @@
       17
     ],
     "upkeep": {
-      "funds": 280.0,
-      "fuel": 32.0,
-      "manpower": 3.0,
-      "food": 6.0
+      "funds": 2800.0,
+      "fuel": 320.0,
+      "manpower": 30.0,
+      "food": 60.0
     },
     "production_building": "tank_plant",
     "starter": true
@@ -569,12 +569,12 @@
     "research_branch": "Armoured personnel carrier",
     "seconds": 28,
     "cost": {
-      "funds": 1920,
-      "materials": 720,
-      "electronics": 240,
-      "fuel": 300,
-      "manpower": 240,
-      "food": 204
+      "funds": 23040,
+      "materials": 8640,
+      "electronics": 2880,
+      "fuel": 3600,
+      "manpower": 2880,
+      "food": 1788
     },
     "research_tiers": [
       {
@@ -615,10 +615,10 @@
       13
     ],
     "upkeep": {
-      "funds": 160.0,
-      "fuel": 20.0,
-      "manpower": 4.0,
-      "food": 8.0
+      "funds": 1600.0,
+      "fuel": 200.0,
+      "manpower": 40.0,
+      "food": 80.0
     },
     "production_building": "barracks",
     "starter": true
@@ -633,12 +633,12 @@
     "research_branch": "Strategic bomber",
     "seconds": 80,
     "cost": {
-      "funds": 5040,
-      "materials": 1320,
-      "electronics": 1320,
-      "fuel": 1440,
-      "manpower": 180,
-      "food": 168
+      "funds": 60480,
+      "materials": 15840,
+      "electronics": 15840,
+      "fuel": 17280,
+      "manpower": 2160,
+      "food": 1356
     },
     "building_requirements": {
       "airbase": 1
@@ -683,10 +683,10 @@
       25
     ],
     "upkeep": {
-      "funds": 420.0,
-      "fuel": 96.0,
-      "manpower": 3.0,
-      "food": 6.0
+      "funds": 4200.0,
+      "fuel": 960.0,
+      "manpower": 30.0,
+      "food": 60.0
     },
     "production_building": "airbase",
     "starter": false
@@ -700,12 +700,12 @@
     "research_branch": "Strike fighter",
     "seconds": 60,
     "cost": {
-      "funds": 3600,
-      "materials": 960,
-      "electronics": 1080,
-      "fuel": 960,
-      "manpower": 120,
-      "food": 132
+      "funds": 43200,
+      "materials": 11520,
+      "electronics": 12960,
+      "fuel": 11520,
+      "manpower": 1440,
+      "food": 924
     },
     "building_requirements": {
       "airbase": 1
@@ -754,10 +754,10 @@
       19
     ],
     "upkeep": {
-      "funds": 300.0,
-      "fuel": 64.0,
-      "manpower": 2.0,
-      "food": 5.0
+      "funds": 3000.0,
+      "fuel": 640.0,
+      "manpower": 20.0,
+      "food": 40.0
     },
     "production_building": "airbase",
     "starter": false
@@ -772,12 +772,12 @@
     "research_branch": "Self-propelled artillery",
     "seconds": 70,
     "cost": {
-      "funds": 3960,
-      "materials": 1200,
-      "electronics": 780,
-      "fuel": 600,
-      "manpower": 240,
-      "food": 204
+      "funds": 47520,
+      "materials": 14400,
+      "electronics": 9360,
+      "fuel": 7200,
+      "manpower": 2880,
+      "food": 1788
     },
     "building_requirements": {
       "factory": 1
@@ -818,10 +818,10 @@
       }
     ],
     "upkeep": {
-      "funds": 330.0,
-      "fuel": 40.0,
-      "manpower": 4.0,
-      "food": 8.0
+      "funds": 3300.0,
+      "fuel": 400.0,
+      "manpower": 40.0,
+      "food": 80.0
     },
     "production_building": "factory",
     "starter": false
@@ -836,12 +836,12 @@
     "research_branch": "Self-propelled artillery",
     "seconds": 70,
     "cost": {
-      "funds": 3960,
-      "materials": 1200,
-      "electronics": 780,
-      "fuel": 600,
-      "manpower": 240,
-      "food": 204
+      "funds": 47520,
+      "materials": 14400,
+      "electronics": 9360,
+      "fuel": 7200,
+      "manpower": 2880,
+      "food": 1788
     },
     "building_requirements": {
       "factory": 1
@@ -882,10 +882,10 @@
       }
     ],
     "upkeep": {
-      "funds": 330.0,
-      "fuel": 40.0,
-      "manpower": 4.0,
-      "food": 8.0
+      "funds": 3300.0,
+      "fuel": 400.0,
+      "manpower": 40.0,
+      "food": 80.0
     },
     "production_building": "factory",
     "starter": false
@@ -900,12 +900,12 @@
     "research_branch": "Rocket artillery",
     "seconds": 70,
     "cost": {
-      "funds": 3960,
-      "materials": 1200,
-      "electronics": 780,
-      "fuel": 600,
-      "manpower": 240,
-      "food": 204
+      "funds": 47520,
+      "materials": 14400,
+      "electronics": 9360,
+      "fuel": 7200,
+      "manpower": 2880,
+      "food": 1788
     },
     "building_requirements": {
       "missile_factory": 1
@@ -949,10 +949,10 @@
     "reload_rounds": 2.0,
     "strike_damage": 12.0,
     "upkeep": {
-      "funds": 330.0,
-      "fuel": 40.0,
-      "manpower": 4.0,
-      "food": 8.0
+      "funds": 3300.0,
+      "fuel": 400.0,
+      "manpower": 40.0,
+      "food": 80.0
     },
     "production_building": "missile_factory",
     "starter": false
@@ -967,12 +967,12 @@
     "research_branch": "Rocket artillery",
     "seconds": 70,
     "cost": {
-      "funds": 3960,
-      "materials": 1200,
-      "electronics": 780,
-      "fuel": 600,
-      "manpower": 240,
-      "food": 204
+      "funds": 47520,
+      "materials": 14400,
+      "electronics": 9360,
+      "fuel": 7200,
+      "manpower": 2880,
+      "food": 1788
     },
     "building_requirements": {
       "missile_factory": 1
@@ -1017,10 +1017,10 @@
     "reload_rounds": 2.0,
     "strike_damage": 12.0,
     "upkeep": {
-      "funds": 330.0,
-      "fuel": 40.0,
-      "manpower": 4.0,
-      "food": 8.0
+      "funds": 3300.0,
+      "fuel": 400.0,
+      "manpower": 40.0,
+      "food": 80.0
     },
     "production_building": "missile_factory",
     "starter": false
@@ -1035,12 +1035,12 @@
     "research_branch": "Attack helicopter",
     "seconds": 70,
     "cost": {
-      "funds": 3960,
-      "materials": 1200,
-      "electronics": 780,
-      "fuel": 600,
-      "manpower": 240,
-      "food": 204
+      "funds": 47520,
+      "materials": 14400,
+      "electronics": 9360,
+      "fuel": 7200,
+      "manpower": 2880,
+      "food": 1788
     },
     "building_requirements": {
       "airbase": 1
@@ -1086,10 +1086,10 @@
     "air_damage": 2.0,
     "ground_damage": 5.0,
     "upkeep": {
-      "funds": 330.0,
-      "fuel": 40.0,
-      "manpower": 4.0,
-      "food": 8.0
+      "funds": 3300.0,
+      "fuel": 400.0,
+      "manpower": 40.0,
+      "food": 80.0
     },
     "production_building": "airbase",
     "starter": false
@@ -1104,12 +1104,12 @@
     "research_branch": "Attack helicopter",
     "seconds": 70,
     "cost": {
-      "funds": 3960,
-      "materials": 1200,
-      "electronics": 780,
-      "fuel": 600,
-      "manpower": 240,
-      "food": 204
+      "funds": 47520,
+      "materials": 14400,
+      "electronics": 9360,
+      "fuel": 7200,
+      "manpower": 2880,
+      "food": 1788
     },
     "building_requirements": {
       "airbase": 1
@@ -1155,10 +1155,10 @@
     "air_damage": 2.0,
     "ground_damage": 5.0,
     "upkeep": {
-      "funds": 330.0,
-      "fuel": 40.0,
-      "manpower": 4.0,
-      "food": 8.0
+      "funds": 3300.0,
+      "fuel": 400.0,
+      "manpower": 40.0,
+      "food": 80.0
     },
     "production_building": "airbase",
     "starter": false
@@ -1173,12 +1173,12 @@
     "asset_roster_id": "missiles_russia",
     "seconds": 80,
     "cost": {
-      "funds": 4800,
-      "materials": 1440,
-      "electronics": 1200,
-      "fuel": 720,
-      "manpower": 300,
-      "food": 240
+      "funds": 57600,
+      "materials": 17280,
+      "electronics": 14400,
+      "fuel": 8640,
+      "manpower": 3600,
+      "food": 2220
     },
     "building_requirements": {
       "missile_factory": 1
@@ -1222,10 +1222,10 @@
     "strike_damage": 18.0,
     "reload_rounds": 3.0,
     "upkeep": {
-      "funds": 400.0,
-      "fuel": 48.0,
-      "manpower": 5.0,
-      "food": 10.0
+      "funds": 4000.0,
+      "fuel": 480.0,
+      "manpower": 50.0,
+      "food": 100.0
     },
     "production_building": "missile_factory",
     "research_branch": "Tactical ballistic missile",
@@ -1241,12 +1241,12 @@
     "asset_roster_id": "missiles_ukraine",
     "seconds": 80,
     "cost": {
-      "funds": 4800,
-      "materials": 1440,
-      "electronics": 1200,
-      "fuel": 720,
-      "manpower": 300,
-      "food": 240
+      "funds": 57600,
+      "materials": 17280,
+      "electronics": 14400,
+      "fuel": 8640,
+      "manpower": 3600,
+      "food": 2220
     },
     "building_requirements": {
       "missile_factory": 1
@@ -1295,10 +1295,10 @@
     "strike_damage": 18.0,
     "reload_rounds": 3.0,
     "upkeep": {
-      "funds": 400.0,
-      "fuel": 48.0,
-      "manpower": 5.0,
-      "food": 10.0
+      "funds": 4000.0,
+      "fuel": 480.0,
+      "manpower": 50.0,
+      "food": 100.0
     },
     "production_building": "missile_factory",
     "research_branch": "Tactical ballistic missile",
@@ -1314,12 +1314,12 @@
     "asset_roster_id": "silos_russia",
     "seconds": 80,
     "cost": {
-      "funds": 4800,
-      "materials": 1440,
-      "electronics": 1200,
-      "fuel": 720,
-      "manpower": 300,
-      "food": 240
+      "funds": 57600,
+      "materials": 17280,
+      "electronics": 14400,
+      "fuel": 8640,
+      "manpower": 3600,
+      "food": 2220
     },
     "building_requirements": {
       "missile_factory": 1
@@ -1369,10 +1369,10 @@
     "strike_damage": 22.0,
     "reload_rounds": 4.0,
     "upkeep": {
-      "funds": 400.0,
-      "fuel": 48.0,
-      "manpower": 5.0,
-      "food": 10.0
+      "funds": 4000.0,
+      "fuel": 480.0,
+      "manpower": 50.0,
+      "food": 100.0
     },
     "production_building": "missile_factory",
     "research_branch": "Missile silo",
@@ -1388,12 +1388,12 @@
     "asset_roster_id": "silos_ukraine",
     "seconds": 80,
     "cost": {
-      "funds": 4800,
-      "materials": 1440,
-      "electronics": 1200,
-      "fuel": 720,
-      "manpower": 300,
-      "food": 240
+      "funds": 57600,
+      "materials": 17280,
+      "electronics": 14400,
+      "fuel": 8640,
+      "manpower": 3600,
+      "food": 2220
     },
     "building_requirements": {
       "missile_factory": 1
@@ -1443,10 +1443,10 @@
     "strike_damage": 22.0,
     "reload_rounds": 4.0,
     "upkeep": {
-      "funds": 400.0,
-      "fuel": 48.0,
-      "manpower": 5.0,
-      "food": 10.0
+      "funds": 4000.0,
+      "fuel": 480.0,
+      "manpower": 50.0,
+      "food": 100.0
     },
     "production_building": "missile_factory",
     "research_branch": "Missile silo",
@@ -1462,12 +1462,12 @@
     "asset_roster_id": "drones_russia",
     "seconds": 80,
     "cost": {
-      "funds": 4800,
-      "materials": 1440,
-      "electronics": 1200,
-      "fuel": 720,
-      "manpower": 300,
-      "food": 240
+      "funds": 57600,
+      "materials": 17280,
+      "electronics": 14400,
+      "fuel": 8640,
+      "manpower": 3600,
+      "food": 2220
     },
     "building_requirements": {
       "drone_factory": 1
@@ -1512,10 +1512,10 @@
     "air_damage": 0.0,
     "ground_damage": 1.0,
     "upkeep": {
-      "funds": 400.0,
-      "fuel": 48.0,
-      "manpower": 5.0,
-      "food": 10.0
+      "funds": 4000.0,
+      "fuel": 480.0,
+      "manpower": 50.0,
+      "food": 100.0
     },
     "production_building": "drone_factory",
     "research_branch": "Reconnaissance drone",
@@ -1531,12 +1531,12 @@
     "asset_roster_id": "drones_ukraine",
     "seconds": 80,
     "cost": {
-      "funds": 4800,
-      "materials": 1440,
-      "electronics": 1200,
-      "fuel": 720,
-      "manpower": 300,
-      "food": 240
+      "funds": 57600,
+      "materials": 17280,
+      "electronics": 14400,
+      "fuel": 8640,
+      "manpower": 3600,
+      "food": 2220
     },
     "building_requirements": {
       "drone_factory": 1
@@ -1586,10 +1586,10 @@
     "air_damage": 0.0,
     "ground_damage": 1.0,
     "upkeep": {
-      "funds": 400.0,
-      "fuel": 48.0,
-      "manpower": 5.0,
-      "food": 10.0
+      "funds": 4000.0,
+      "fuel": 480.0,
+      "manpower": 50.0,
+      "food": 100.0
     },
     "production_building": "drone_factory",
     "research_branch": "Reconnaissance drone",
@@ -1605,12 +1605,12 @@
     "asset_roster_id": "loitering_russia",
     "seconds": 80,
     "cost": {
-      "funds": 4800,
-      "materials": 1440,
-      "electronics": 1200,
-      "fuel": 720,
-      "manpower": 300,
-      "food": 240
+      "funds": 57600,
+      "materials": 17280,
+      "electronics": 14400,
+      "fuel": 8640,
+      "manpower": 3600,
+      "food": 2220
     },
     "building_requirements": {
       "drone_factory": 1
@@ -1661,10 +1661,10 @@
     "ground_damage": 7.0,
     "single_use": true,
     "upkeep": {
-      "funds": 400.0,
-      "fuel": 48.0,
-      "manpower": 5.0,
-      "food": 10.0
+      "funds": 4000.0,
+      "fuel": 480.0,
+      "manpower": 50.0,
+      "food": 100.0
     },
     "production_building": "drone_factory",
     "research_branch": "Loitering munition",
@@ -1680,12 +1680,12 @@
     "asset_roster_id": "fighters_russia",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "airbase": 1
@@ -1731,10 +1731,10 @@
     "ground_damage": 7.0,
     "requires_airbase": true,
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "airbase",
     "research_branch": "Air superiority fighter",
@@ -1750,12 +1750,12 @@
     "asset_roster_id": "fighters_ukraine",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "airbase": 1
@@ -1806,10 +1806,10 @@
     "ground_damage": 7.0,
     "requires_airbase": true,
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "airbase",
     "research_branch": "Air superiority fighter",
@@ -1818,19 +1818,19 @@
   {
     "id": "infantry_russia",
     "country": "russia",
-    "name": "Motorized infantry",
+    "name": "Infantry",
     "category": "Infantry",
     "visual_kind": "infantry",
     "role": "infantry",
     "asset_roster_id": "infantry_russia",
     "seconds": 35,
     "cost": {
-      "funds": 1440,
-      "materials": 300,
-      "electronics": 120,
-      "fuel": 60,
-      "manpower": 720,
-      "food": 492
+      "funds": 17280,
+      "materials": 3600,
+      "electronics": 1440,
+      "fuel": 720,
+      "manpower": 8640,
+      "food": 5244
     },
     "building_requirements": {
       "barracks": 1
@@ -1844,58 +1844,58 @@
     ],
     "research_tiers": [
       {
-        "name": "Motor riflemen",
+        "name": "Rifle infantry",
         "improvement": "",
         "model": "res://assets/library/arsenal/russia_motor_rifleman.glb"
       },
       {
-        "name": "Motor riflemen · Ratnik kit",
+        "name": "Rifle infantry · Ratnik kit",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/russia_motor_rifleman.glb"
       },
       {
-        "name": "Guards motor riflemen",
+        "name": "Guards infantry",
         "improvement": "Better training and night vision",
         "model": "res://assets/library/arsenal/russia_motor_rifleman.glb"
       },
       {
-        "name": "Guards motor riflemen · upgrade",
+        "name": "Guards infantry · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/russia_motor_rifleman.glb"
       },
       {
-        "name": "Guards motor riflemen · Sotnik kit",
+        "name": "Guards infantry · Sotnik kit",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/russia_motor_rifleman.glb"
       }
     ],
     "model_status": "Original supplied model",
     "upkeep": {
-      "funds": 120.0,
-      "fuel": 4.0,
-      "manpower": 12.0,
-      "food": 24.0
+      "funds": 1200.0,
+      "fuel": 40.0,
+      "manpower": 120.0,
+      "food": 240.0
     },
     "production_building": "barracks",
-    "research_branch": "Motorized infantry",
+    "research_branch": "Infantry",
     "starter": true
   },
   {
     "id": "infantry_ukraine",
     "country": "ukraine",
-    "name": "Motorized infantry",
+    "name": "Infantry",
     "category": "Infantry",
     "visual_kind": "infantry",
     "role": "infantry",
     "asset_roster_id": "infantry_ukraine",
     "seconds": 35,
     "cost": {
-      "funds": 1440,
-      "materials": 300,
-      "electronics": 120,
-      "fuel": 60,
-      "manpower": 720,
-      "food": 492
+      "funds": 17280,
+      "materials": 3600,
+      "electronics": 1440,
+      "fuel": 720,
+      "manpower": 8640,
+      "food": 5244
     },
     "building_requirements": {
       "barracks": 1
@@ -1909,40 +1909,40 @@
     ],
     "research_tiers": [
       {
-        "name": "Mechanised infantry",
+        "name": "Rifle infantry",
         "improvement": "",
         "model": "res://assets/library/arsenal/euro_fr_foreign_legion.glb"
       },
       {
-        "name": "Mechanised infantry · upgrade",
+        "name": "Rifle infantry · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_fr_foreign_legion.glb"
       },
       {
-        "name": "Mechanised infantry · NATO kit",
+        "name": "Rifle infantry · NATO kit",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_fr_foreign_legion.glb"
       },
       {
-        "name": "Mechanised infantry · upgrade",
+        "name": "Rifle infantry · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_fr_foreign_legion.glb"
       },
       {
-        "name": "Mechanised infantry · night vision",
+        "name": "Rifle infantry · night vision",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_fr_foreign_legion.glb"
       }
     ],
     "model_status": "Original supplied model",
     "upkeep": {
-      "funds": 120.0,
-      "fuel": 4.0,
-      "manpower": 12.0,
-      "food": 24.0
+      "funds": 1200.0,
+      "fuel": 40.0,
+      "manpower": 120.0,
+      "food": 240.0
     },
     "production_building": "barracks",
-    "research_branch": "Motorized infantry",
+    "research_branch": "Infantry",
     "starter": true
   },
   {
@@ -1955,12 +1955,12 @@
     "asset_roster_id": "kamaz5350_supply_russia",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "support_depot": 1
@@ -2006,10 +2006,10 @@
     ],
     "model_status": "Original supplied model",
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "support_depot",
     "research_branch": "Supply truck",
@@ -2025,12 +2025,12 @@
     "asset_roster_id": "brem1m_recovery_russia",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "support_depot": 1
@@ -2076,10 +2076,10 @@
     ],
     "model_status": "Original supplied model",
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "support_depot",
     "research_branch": "Recovery vehicle",
@@ -2095,12 +2095,12 @@
     "asset_roster_id": "imr3m_engineer_russia",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "support_depot": 1
@@ -2146,10 +2146,10 @@
     ],
     "model_status": "Original supplied model",
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "support_depot",
     "research_branch": "Combat engineers",
@@ -2165,12 +2165,12 @@
     "asset_roster_id": "mtu72_bridgelayer_russia",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "support_depot": 1
@@ -2216,10 +2216,10 @@
     ],
     "model_status": "Original supplied model",
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "support_depot",
     "research_branch": "Bridge layer",
@@ -2235,12 +2235,12 @@
     "asset_roster_id": "ur77_mineclearing_russia",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "factory": 1
@@ -2286,10 +2286,10 @@
     ],
     "model_status": "Original supplied model",
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "factory",
     "retired": true,
@@ -2305,12 +2305,12 @@
     "asset_roster_id": "man_hx77_supply_ukraine",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "support_depot": 1
@@ -2356,10 +2356,10 @@
     ],
     "model_status": "Original supplied model",
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "support_depot",
     "research_branch": "Supply truck",
@@ -2375,12 +2375,12 @@
     "asset_roster_id": "buffel_recovery_ukraine",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "support_depot": 1
@@ -2426,10 +2426,10 @@
     ],
     "model_status": "Original supplied model",
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "support_depot",
     "research_branch": "Recovery vehicle",
@@ -2445,12 +2445,12 @@
     "asset_roster_id": "kodiak_engineer_ukraine",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "support_depot": 1
@@ -2496,10 +2496,10 @@
     ],
     "model_status": "Original supplied model",
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "support_depot",
     "research_branch": "Combat engineers",
@@ -2515,12 +2515,12 @@
     "asset_roster_id": "leguan_bridgelayer_ukraine",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "support_depot": 1
@@ -2566,10 +2566,10 @@
     ],
     "model_status": "Original supplied model",
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "support_depot",
     "research_branch": "Bridge layer",
@@ -2585,12 +2585,12 @@
     "asset_roster_id": "trojan_breacher_ukraine",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "factory": 1
@@ -2636,10 +2636,10 @@
     ],
     "model_status": "Original supplied model",
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "factory",
     "retired": true,
@@ -2655,12 +2655,12 @@
     "asset_roster_id": "2b14_mortar_82_russia",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "factory": 1
@@ -2701,10 +2701,10 @@
     ],
     "model_status": "Original supplied model",
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "factory",
     "research_branch": "Mortars",
@@ -2720,12 +2720,12 @@
     "asset_roster_id": "2b11_mortar_120_russia",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "factory": 1
@@ -2771,10 +2771,10 @@
     ],
     "model_status": "Original supplied model",
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "factory",
     "retired": true,
@@ -2790,12 +2790,12 @@
     "asset_roster_id": "d30_howitzer_russia",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "factory": 1
@@ -2836,10 +2836,10 @@
     ],
     "model_status": "Original supplied model",
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "factory",
     "research_branch": "Towed artillery",
@@ -2855,12 +2855,12 @@
     "asset_roster_id": "l16_mortar_81_ukraine",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "factory": 1
@@ -2901,10 +2901,10 @@
     ],
     "model_status": "Original supplied model",
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "factory",
     "research_branch": "Mortars",
@@ -2920,12 +2920,12 @@
     "asset_roster_id": "mo120rt_mortar_ukraine",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "factory": 1
@@ -2971,10 +2971,10 @@
     ],
     "model_status": "Original supplied model",
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "factory",
     "retired": true,
@@ -2990,12 +2990,12 @@
     "asset_roster_id": "l118_lightgun_ukraine",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "factory": 1
@@ -3036,10 +3036,10 @@
     ],
     "model_status": "Original supplied model",
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "factory",
     "research_branch": "Towed artillery",
@@ -3055,12 +3055,12 @@
     "asset_roster_id": "il76md_russia",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "airbase": 1
@@ -3111,10 +3111,10 @@
     "air_damage": 0.0,
     "ground_damage": 0.0,
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "airbase",
     "research_branch": "Transport aircraft",
@@ -3130,12 +3130,12 @@
     "asset_roster_id": "a50u_russia",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "airbase": 1
@@ -3186,10 +3186,10 @@
     "air_damage": 0.0,
     "ground_damage": 0.0,
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "airbase",
     "research_branch": "Airborne early warning",
@@ -3205,12 +3205,12 @@
     "asset_roster_id": "yak130_russia",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "airbase": 1
@@ -3256,10 +3256,10 @@
     "air_damage": 2.0,
     "ground_damage": 3.0,
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "airbase",
     "research_branch": "Light attack aircraft",
@@ -3275,12 +3275,12 @@
     "asset_roster_id": "a400m_atlas_ukraine",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "airbase": 1
@@ -3331,10 +3331,10 @@
     "air_damage": 0.0,
     "ground_damage": 0.0,
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "airbase",
     "research_branch": "Transport aircraft",
@@ -3350,12 +3350,12 @@
     "asset_roster_id": "hawk_t2_ukraine",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "airbase": 1
@@ -3401,10 +3401,10 @@
     "air_damage": 2.0,
     "ground_damage": 3.0,
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "airbase",
     "research_branch": "Light attack aircraft",
@@ -3420,12 +3420,12 @@
     "asset_roster_id": "advanced_tanks_russia",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "tank_plant": 1
@@ -3466,10 +3466,10 @@
     ],
     "model_status": "Original supplied model",
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "tank_plant",
     "research_branch": "Next-generation tank",
@@ -3485,12 +3485,12 @@
     "asset_roster_id": "advanced_tanks_ukraine",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "tank_plant": 1
@@ -3531,10 +3531,10 @@
     ],
     "model_status": "Original supplied model",
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "tank_plant",
     "research_branch": "Next-generation tank",
@@ -3550,12 +3550,12 @@
     "asset_roster_id": "coastal_missiles_russia",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "missile_factory": 1
@@ -3610,10 +3610,10 @@
     "reload_rounds": 4.0,
     "targets_naval": true,
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "missile_factory",
     "research_branch": "Coastal anti-ship missile",
@@ -3629,12 +3629,12 @@
     "asset_roster_id": "coastal_missiles_ukraine",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "missile_factory": 1
@@ -3689,10 +3689,10 @@
     "reload_rounds": 4.0,
     "targets_naval": true,
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "missile_factory",
     "research_branch": "Coastal anti-ship missile",
@@ -3708,12 +3708,12 @@
     "asset_roster_id": "fleet_russia",
     "seconds": 80,
     "cost": {
-      "funds": 4800,
-      "materials": 1440,
-      "electronics": 1200,
-      "fuel": 720,
-      "manpower": 300,
-      "food": 240
+      "funds": 57600,
+      "materials": 17280,
+      "electronics": 14400,
+      "fuel": 8640,
+      "manpower": 3600,
+      "food": 2220
     },
     "building_requirements": {
       "naval_base": 1
@@ -3762,10 +3762,10 @@
     "sea_speed": 1.2,
     "sea_range": 3.0,
     "upkeep": {
-      "funds": 400.0,
-      "fuel": 48.0,
-      "manpower": 5.0,
-      "food": 10.0
+      "funds": 4000.0,
+      "fuel": 480.0,
+      "manpower": 50.0,
+      "food": 100.0
     },
     "sonar_range": 2.2,
     "aa_damage": 4,
@@ -3785,12 +3785,12 @@
     "asset_roster_id": "fleet_ukraine",
     "seconds": 80,
     "cost": {
-      "funds": 4800,
-      "materials": 1440,
-      "electronics": 1200,
-      "fuel": 720,
-      "manpower": 300,
-      "food": 240
+      "funds": 57600,
+      "materials": 17280,
+      "electronics": 14400,
+      "fuel": 8640,
+      "manpower": 3600,
+      "food": 2220
     },
     "building_requirements": {
       "naval_base": 1
@@ -3839,10 +3839,10 @@
     "sea_speed": 1.2,
     "sea_range": 3.0,
     "upkeep": {
-      "funds": 400.0,
-      "fuel": 48.0,
-      "manpower": 5.0,
-      "food": 10.0
+      "funds": 4000.0,
+      "fuel": 480.0,
+      "manpower": 50.0,
+      "food": 100.0
     },
     "sonar_range": 2.2,
     "aa_damage": 4,
@@ -3862,12 +3862,12 @@
     "asset_roster_id": "destroyers_russia",
     "seconds": 80,
     "cost": {
-      "funds": 4800,
-      "materials": 1440,
-      "electronics": 1200,
-      "fuel": 720,
-      "manpower": 300,
-      "food": 240
+      "funds": 57600,
+      "materials": 17280,
+      "electronics": 14400,
+      "fuel": 8640,
+      "manpower": 3600,
+      "food": 2220
     },
     "building_requirements": {
       "naval_base": 1
@@ -3916,10 +3916,10 @@
     "sea_speed": 1.2,
     "sea_range": 3.0,
     "upkeep": {
-      "funds": 400.0,
-      "fuel": 48.0,
-      "manpower": 5.0,
-      "food": 10.0
+      "funds": 4000.0,
+      "fuel": 480.0,
+      "manpower": 50.0,
+      "food": 100.0
     },
     "sonar_range": 2.2,
     "aa_damage": 4,
@@ -3939,12 +3939,12 @@
     "asset_roster_id": "destroyers_ukraine",
     "seconds": 80,
     "cost": {
-      "funds": 4800,
-      "materials": 1440,
-      "electronics": 1200,
-      "fuel": 720,
-      "manpower": 300,
-      "food": 240
+      "funds": 57600,
+      "materials": 17280,
+      "electronics": 14400,
+      "fuel": 8640,
+      "manpower": 3600,
+      "food": 2220
     },
     "building_requirements": {
       "naval_base": 1
@@ -3993,10 +3993,10 @@
     "sea_speed": 1.2,
     "sea_range": 3.0,
     "upkeep": {
-      "funds": 400.0,
-      "fuel": 48.0,
-      "manpower": 5.0,
-      "food": 10.0
+      "funds": 4000.0,
+      "fuel": 480.0,
+      "manpower": 50.0,
+      "food": 100.0
     },
     "sonar_range": 2.2,
     "aa_damage": 4,
@@ -4016,12 +4016,12 @@
     "asset_roster_id": "corvettes_russia",
     "seconds": 80,
     "cost": {
-      "funds": 4800,
-      "materials": 1440,
-      "electronics": 1200,
-      "fuel": 720,
-      "manpower": 300,
-      "food": 240
+      "funds": 57600,
+      "materials": 17280,
+      "electronics": 14400,
+      "fuel": 8640,
+      "manpower": 3600,
+      "food": 2220
     },
     "building_requirements": {
       "naval_base": 1
@@ -4070,10 +4070,10 @@
     "sea_speed": 1.2,
     "sea_range": 3.0,
     "upkeep": {
-      "funds": 400.0,
-      "fuel": 48.0,
-      "manpower": 5.0,
-      "food": 10.0
+      "funds": 4000.0,
+      "fuel": 480.0,
+      "manpower": 50.0,
+      "food": 100.0
     },
     "sonar_range": 2.2,
     "aa_damage": 4,
@@ -4093,12 +4093,12 @@
     "asset_roster_id": "corvettes_ukraine",
     "seconds": 80,
     "cost": {
-      "funds": 4800,
-      "materials": 1440,
-      "electronics": 1200,
-      "fuel": 720,
-      "manpower": 300,
-      "food": 240
+      "funds": 57600,
+      "materials": 17280,
+      "electronics": 14400,
+      "fuel": 8640,
+      "manpower": 3600,
+      "food": 2220
     },
     "building_requirements": {
       "naval_base": 1
@@ -4147,10 +4147,10 @@
     "sea_speed": 1.2,
     "sea_range": 3.0,
     "upkeep": {
-      "funds": 400.0,
-      "fuel": 48.0,
-      "manpower": 5.0,
-      "food": 10.0
+      "funds": 4000.0,
+      "fuel": 480.0,
+      "manpower": 50.0,
+      "food": 100.0
     },
     "sonar_range": 2.2,
     "aa_damage": 4,
@@ -4170,12 +4170,12 @@
     "asset_roster_id": "submarines_russia",
     "seconds": 80,
     "cost": {
-      "funds": 4800,
-      "materials": 1440,
-      "electronics": 1200,
-      "fuel": 720,
-      "manpower": 300,
-      "food": 240
+      "funds": 57600,
+      "materials": 17280,
+      "electronics": 14400,
+      "fuel": 8640,
+      "manpower": 3600,
+      "food": 2220
     },
     "building_requirements": {
       "naval_base": 1
@@ -4224,10 +4224,10 @@
     "sea_speed": 1.0,
     "sea_range": 2.5,
     "upkeep": {
-      "funds": 400.0,
-      "fuel": 48.0,
-      "manpower": 5.0,
-      "food": 10.0
+      "funds": 4000.0,
+      "fuel": 480.0,
+      "manpower": 50.0,
+      "food": 100.0
     },
     "sonar_range": 1.5,
     "aa_damage": 0,
@@ -4247,12 +4247,12 @@
     "asset_roster_id": "submarines_ukraine",
     "seconds": 80,
     "cost": {
-      "funds": 4800,
-      "materials": 1440,
-      "electronics": 1200,
-      "fuel": 720,
-      "manpower": 300,
-      "food": 240
+      "funds": 57600,
+      "materials": 17280,
+      "electronics": 14400,
+      "fuel": 8640,
+      "manpower": 3600,
+      "food": 2220
     },
     "building_requirements": {
       "naval_base": 1
@@ -4301,10 +4301,10 @@
     "sea_speed": 1.0,
     "sea_range": 2.5,
     "upkeep": {
-      "funds": 400.0,
-      "fuel": 48.0,
-      "manpower": 5.0,
-      "food": 10.0
+      "funds": 4000.0,
+      "fuel": 480.0,
+      "manpower": 50.0,
+      "food": 100.0
     },
     "sonar_range": 1.5,
     "aa_damage": 0,
@@ -4324,22 +4324,22 @@
     "asset_roster_id": "carriers_russia",
     "seconds": 80,
     "cost": {
-      "funds": 4800,
-      "materials": 1440,
-      "electronics": 1200,
-      "fuel": 720,
-      "manpower": 300,
-      "food": 240
+      "funds": 57600,
+      "materials": 17280,
+      "electronics": 14400,
+      "fuel": 8640,
+      "manpower": 3600,
+      "food": 2220
     },
     "building_requirements": {
       "naval_base": 1
     },
     "research_days": [
-      18,
-      22,
-      26,
-      30,
-      34
+      3,
+      7,
+      11,
+      15,
+      19
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -4378,10 +4378,10 @@
     "sea_speed": 0.9,
     "sea_range": 2.8,
     "upkeep": {
-      "funds": 400.0,
-      "fuel": 48.0,
-      "manpower": 5.0,
-      "food": 10.0
+      "funds": 4000.0,
+      "fuel": 480.0,
+      "manpower": 50.0,
+      "food": 100.0
     },
     "sonar_range": 0,
     "aa_damage": 6,
@@ -4401,22 +4401,22 @@
     "asset_roster_id": "carriers_ukraine",
     "seconds": 80,
     "cost": {
-      "funds": 4800,
-      "materials": 1440,
-      "electronics": 1200,
-      "fuel": 720,
-      "manpower": 300,
-      "food": 240
+      "funds": 57600,
+      "materials": 17280,
+      "electronics": 14400,
+      "fuel": 8640,
+      "manpower": 3600,
+      "food": 2220
     },
     "building_requirements": {
       "naval_base": 1
     },
     "research_days": [
-      18,
-      22,
-      26,
-      30,
-      34
+      3,
+      7,
+      11,
+      15,
+      19
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -4455,10 +4455,10 @@
     "sea_speed": 0.9,
     "sea_range": 2.8,
     "upkeep": {
-      "funds": 400.0,
-      "fuel": 48.0,
-      "manpower": 5.0,
-      "food": 10.0
+      "funds": 4000.0,
+      "fuel": 480.0,
+      "manpower": 50.0,
+      "food": 100.0
     },
     "sonar_range": 0,
     "aa_damage": 6,
@@ -4478,12 +4478,12 @@
     "asset_roster_id": "airborne_russia",
     "seconds": 35,
     "cost": {
-      "funds": 1440,
-      "materials": 300,
-      "electronics": 120,
-      "fuel": 60,
-      "manpower": 720,
-      "food": 492
+      "funds": 17280,
+      "materials": 3600,
+      "electronics": 1440,
+      "fuel": 720,
+      "manpower": 8640,
+      "food": 5244
     },
     "building_requirements": {
       "barracks": 1
@@ -4524,10 +4524,10 @@
     ],
     "model_status": "Original supplied model",
     "upkeep": {
-      "funds": 120.0,
-      "fuel": 4.0,
-      "manpower": 12.0,
-      "food": 24.0
+      "funds": 1200.0,
+      "fuel": 40.0,
+      "manpower": 120.0,
+      "food": 240.0
     },
     "production_building": "barracks",
     "research_branch": "Airborne infantry",
@@ -4543,12 +4543,12 @@
     "asset_roster_id": "special_forces_russia",
     "seconds": 35,
     "cost": {
-      "funds": 1440,
-      "materials": 300,
-      "electronics": 120,
-      "fuel": 60,
-      "manpower": 720,
-      "food": 492
+      "funds": 17280,
+      "materials": 3600,
+      "electronics": 1440,
+      "fuel": 720,
+      "manpower": 8640,
+      "food": 5244
     },
     "building_requirements": {
       "barracks": 1
@@ -4589,10 +4589,10 @@
     ],
     "model_status": "Original supplied model",
     "upkeep": {
-      "funds": 120.0,
-      "fuel": 4.0,
-      "manpower": 12.0,
-      "food": 24.0
+      "funds": 1200.0,
+      "fuel": 40.0,
+      "manpower": 120.0,
+      "food": 240.0
     },
     "production_building": "barracks",
     "research_branch": "Special forces",
@@ -4608,12 +4608,12 @@
     "asset_roster_id": "naval_infantry_russia",
     "seconds": 35,
     "cost": {
-      "funds": 1440,
-      "materials": 300,
-      "electronics": 120,
-      "fuel": 60,
-      "manpower": 720,
-      "food": 492
+      "funds": 17280,
+      "materials": 3600,
+      "electronics": 1440,
+      "fuel": 720,
+      "manpower": 8640,
+      "food": 5244
     },
     "building_requirements": {
       "barracks": 1
@@ -4654,10 +4654,10 @@
     ],
     "model_status": "Original supplied model",
     "upkeep": {
-      "funds": 120.0,
-      "fuel": 4.0,
-      "manpower": 12.0,
-      "food": 24.0
+      "funds": 1200.0,
+      "fuel": 40.0,
+      "manpower": 120.0,
+      "food": 240.0
     },
     "production_building": "barracks",
     "research_branch": "Naval infantry",
@@ -4673,12 +4673,12 @@
     "asset_roster_id": "snipers_russia",
     "seconds": 35,
     "cost": {
-      "funds": 1440,
-      "materials": 300,
-      "electronics": 120,
-      "fuel": 60,
-      "manpower": 720,
-      "food": 492
+      "funds": 17280,
+      "materials": 3600,
+      "electronics": 1440,
+      "fuel": 720,
+      "manpower": 8640,
+      "food": 5244
     },
     "building_requirements": {
       "barracks": 1
@@ -4719,10 +4719,10 @@
     ],
     "model_status": "Original supplied model",
     "upkeep": {
-      "funds": 120.0,
-      "fuel": 4.0,
-      "manpower": 12.0,
-      "food": 24.0
+      "funds": 1200.0,
+      "fuel": 40.0,
+      "manpower": 120.0,
+      "food": 240.0
     },
     "production_building": "barracks",
     "research_branch": "Snipers",
@@ -4737,12 +4737,12 @@
     "research_branch": "Infantry fighting vehicle",
     "seconds": 28,
     "cost": {
-      "funds": 1920,
-      "materials": 720,
-      "electronics": 240,
-      "fuel": 300,
-      "manpower": 240,
-      "food": 204
+      "funds": 23040,
+      "materials": 8640,
+      "electronics": 2880,
+      "fuel": 3600,
+      "manpower": 2880,
+      "food": 1788
     },
     "research_tiers": [
       {
@@ -4783,10 +4783,10 @@
       14
     ],
     "upkeep": {
-      "funds": 160.0,
-      "fuel": 20.0,
-      "manpower": 4.0,
-      "food": 8.0
+      "funds": 1600.0,
+      "fuel": 200.0,
+      "manpower": 40.0,
+      "food": 80.0
     },
     "production_building": "barracks",
     "starter": false,
@@ -4801,12 +4801,12 @@
     "research_branch": "Airborne fighting vehicle",
     "seconds": 28,
     "cost": {
-      "funds": 1920,
-      "materials": 720,
-      "electronics": 240,
-      "fuel": 300,
-      "manpower": 240,
-      "food": 204
+      "funds": 23040,
+      "materials": 8640,
+      "electronics": 2880,
+      "fuel": 3600,
+      "manpower": 2880,
+      "food": 1788
     },
     "research_tiers": [
       {
@@ -4847,10 +4847,10 @@
       17
     ],
     "upkeep": {
-      "funds": 160.0,
-      "fuel": 20.0,
-      "manpower": 4.0,
-      "food": 8.0
+      "funds": 1600.0,
+      "fuel": 200.0,
+      "manpower": 40.0,
+      "food": 80.0
     },
     "production_building": "barracks",
     "starter": false,
@@ -4865,12 +4865,12 @@
     "research_branch": "Light tank",
     "seconds": 45,
     "cost": {
-      "funds": 3360,
-      "materials": 1140,
-      "electronics": 420,
-      "fuel": 480,
-      "manpower": 180,
-      "food": 168
+      "funds": 40320,
+      "materials": 13680,
+      "electronics": 5040,
+      "fuel": 5760,
+      "manpower": 2160,
+      "food": 1356
     },
     "research_tiers": [
       {
@@ -4911,10 +4911,10 @@
       13
     ],
     "upkeep": {
-      "funds": 280.0,
-      "fuel": 32.0,
-      "manpower": 3.0,
-      "food": 6.0
+      "funds": 2800.0,
+      "fuel": 320.0,
+      "manpower": 30.0,
+      "food": 60.0
     },
     "production_building": "tank_plant",
     "starter": true,
@@ -4930,12 +4930,12 @@
     "asset_roster_id": "strategic_russia",
     "seconds": 80,
     "cost": {
-      "funds": 4800,
-      "materials": 1440,
-      "electronics": 1200,
-      "fuel": 720,
-      "manpower": 300,
-      "food": 240
+      "funds": 57600,
+      "materials": 17280,
+      "electronics": 14400,
+      "fuel": 8640,
+      "manpower": 3600,
+      "food": 2220
     },
     "building_requirements": {
       "missile_factory": 1
@@ -4981,10 +4981,10 @@
     "strike_damage": 40.0,
     "reload_rounds": 3.0,
     "upkeep": {
-      "funds": 400.0,
-      "fuel": 48.0,
-      "manpower": 5.0,
-      "food": 10.0
+      "funds": 4000.0,
+      "fuel": 480.0,
+      "manpower": 50.0,
+      "food": 100.0
     },
     "production_building": "missile_factory",
     "research_branch": "Strategic nuclear missile",
@@ -5000,12 +5000,12 @@
     "asset_roster_id": "strike_russia",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "airbase": 1
@@ -5051,10 +5051,10 @@
     "ground_damage": 11.0,
     "requires_airbase": true,
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "airbase",
     "research_branch": "Strike fighter",
@@ -5070,12 +5070,12 @@
     "asset_roster_id": "interceptor_russia",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "airbase": 1
@@ -5121,10 +5121,10 @@
     "ground_damage": 2.0,
     "requires_airbase": true,
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "airbase",
     "research_branch": "Interceptor",
@@ -5140,12 +5140,12 @@
     "research_branch": "Transport helicopter",
     "seconds": 70,
     "cost": {
-      "funds": 3960,
-      "materials": 1200,
-      "electronics": 780,
-      "fuel": 600,
-      "manpower": 240,
-      "food": 204
+      "funds": 47520,
+      "materials": 14400,
+      "electronics": 9360,
+      "fuel": 7200,
+      "manpower": 2880,
+      "food": 1788
     },
     "building_requirements": {
       "airbase": 1
@@ -5191,10 +5191,10 @@
     "air_damage": 2.0,
     "ground_damage": 2.0,
     "upkeep": {
-      "funds": 330.0,
-      "fuel": 40.0,
-      "manpower": 4.0,
-      "food": 8.0
+      "funds": 3300.0,
+      "fuel": 400.0,
+      "manpower": 40.0,
+      "food": 80.0
     },
     "production_building": "airbase",
     "starter": false
@@ -5209,12 +5209,12 @@
     "asset_roster_id": "strike_drone_russia",
     "seconds": 80,
     "cost": {
-      "funds": 4800,
-      "materials": 1440,
-      "electronics": 1200,
-      "fuel": 720,
-      "manpower": 300,
-      "food": 240
+      "funds": 57600,
+      "materials": 17280,
+      "electronics": 14400,
+      "fuel": 8640,
+      "manpower": 3600,
+      "food": 2220
     },
     "building_requirements": {
       "drone_factory": 1
@@ -5259,10 +5259,10 @@
     "air_damage": 0.0,
     "ground_damage": 6.0,
     "upkeep": {
-      "funds": 400.0,
-      "fuel": 48.0,
-      "manpower": 5.0,
-      "food": 10.0
+      "funds": 4000.0,
+      "fuel": 480.0,
+      "manpower": 50.0,
+      "food": 100.0
     },
     "production_building": "drone_factory",
     "research_branch": "Strike drone",
@@ -5278,12 +5278,12 @@
     "asset_roster_id": "geran_russia",
     "seconds": 80,
     "cost": {
-      "funds": 4800,
-      "materials": 1440,
-      "electronics": 1200,
-      "fuel": 720,
-      "manpower": 300,
-      "food": 240
+      "funds": 57600,
+      "materials": 17280,
+      "electronics": 14400,
+      "fuel": 8640,
+      "manpower": 3600,
+      "food": 2220
     },
     "building_requirements": {
       "drone_factory": 1
@@ -5329,10 +5329,10 @@
     "ground_damage": 12.0,
     "single_use": true,
     "upkeep": {
-      "funds": 400.0,
-      "fuel": 48.0,
-      "manpower": 5.0,
-      "food": 10.0
+      "funds": 4000.0,
+      "fuel": 480.0,
+      "manpower": 50.0,
+      "food": 100.0
     },
     "production_building": "drone_factory",
     "research_branch": "One-way attack drone",
@@ -5348,12 +5348,12 @@
     "asset_roster_id": "medic_russia",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "support_depot": 1
@@ -5394,10 +5394,10 @@
     ],
     "model_status": "BTR-80 with medical markings (tools/make_new_models.gd)",
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "support_depot",
     "research_branch": "Field medics",
@@ -5413,12 +5413,12 @@
     "asset_roster_id": "airborne_ukraine",
     "seconds": 35,
     "cost": {
-      "funds": 1440,
-      "materials": 300,
-      "electronics": 120,
-      "fuel": 60,
-      "manpower": 720,
-      "food": 492
+      "funds": 17280,
+      "materials": 3600,
+      "electronics": 1440,
+      "fuel": 720,
+      "manpower": 8640,
+      "food": 5244
     },
     "building_requirements": {
       "barracks": 1
@@ -5459,10 +5459,10 @@
     ],
     "model_status": "Original supplied model",
     "upkeep": {
-      "funds": 120.0,
-      "fuel": 4.0,
-      "manpower": 12.0,
-      "food": 24.0
+      "funds": 1200.0,
+      "fuel": 40.0,
+      "manpower": 120.0,
+      "food": 240.0
     },
     "production_building": "barracks",
     "research_branch": "Airborne infantry",
@@ -5478,12 +5478,12 @@
     "asset_roster_id": "special_forces_ukraine",
     "seconds": 35,
     "cost": {
-      "funds": 1440,
-      "materials": 300,
-      "electronics": 120,
-      "fuel": 60,
-      "manpower": 720,
-      "food": 492
+      "funds": 17280,
+      "materials": 3600,
+      "electronics": 1440,
+      "fuel": 720,
+      "manpower": 8640,
+      "food": 5244
     },
     "building_requirements": {
       "barracks": 1
@@ -5524,10 +5524,10 @@
     ],
     "model_status": "Original supplied model",
     "upkeep": {
-      "funds": 120.0,
-      "fuel": 4.0,
-      "manpower": 12.0,
-      "food": 24.0
+      "funds": 1200.0,
+      "fuel": 40.0,
+      "manpower": 120.0,
+      "food": 240.0
     },
     "production_building": "barracks",
     "research_branch": "Special forces",
@@ -5543,12 +5543,12 @@
     "asset_roster_id": "naval_infantry_ukraine",
     "seconds": 35,
     "cost": {
-      "funds": 1440,
-      "materials": 300,
-      "electronics": 120,
-      "fuel": 60,
-      "manpower": 720,
-      "food": 492
+      "funds": 17280,
+      "materials": 3600,
+      "electronics": 1440,
+      "fuel": 720,
+      "manpower": 8640,
+      "food": 5244
     },
     "building_requirements": {
       "barracks": 1
@@ -5589,10 +5589,10 @@
     ],
     "model_status": "Original supplied model",
     "upkeep": {
-      "funds": 120.0,
-      "fuel": 4.0,
-      "manpower": 12.0,
-      "food": 24.0
+      "funds": 1200.0,
+      "fuel": 40.0,
+      "manpower": 120.0,
+      "food": 240.0
     },
     "production_building": "barracks",
     "research_branch": "Naval infantry",
@@ -5608,12 +5608,12 @@
     "asset_roster_id": "snipers_ukraine",
     "seconds": 35,
     "cost": {
-      "funds": 1440,
-      "materials": 300,
-      "electronics": 120,
-      "fuel": 60,
-      "manpower": 720,
-      "food": 492
+      "funds": 17280,
+      "materials": 3600,
+      "electronics": 1440,
+      "fuel": 720,
+      "manpower": 8640,
+      "food": 5244
     },
     "building_requirements": {
       "barracks": 1
@@ -5654,10 +5654,10 @@
     ],
     "model_status": "Original supplied model",
     "upkeep": {
-      "funds": 120.0,
-      "fuel": 4.0,
-      "manpower": 12.0,
-      "food": 24.0
+      "funds": 1200.0,
+      "fuel": 40.0,
+      "manpower": 120.0,
+      "food": 240.0
     },
     "production_building": "barracks",
     "research_branch": "Snipers",
@@ -5672,12 +5672,12 @@
     "research_branch": "Infantry fighting vehicle",
     "seconds": 28,
     "cost": {
-      "funds": 1920,
-      "materials": 720,
-      "electronics": 240,
-      "fuel": 300,
-      "manpower": 240,
-      "food": 204
+      "funds": 23040,
+      "materials": 8640,
+      "electronics": 2880,
+      "fuel": 3600,
+      "manpower": 2880,
+      "food": 1788
     },
     "research_tiers": [
       {
@@ -5718,10 +5718,10 @@
       14
     ],
     "upkeep": {
-      "funds": 160.0,
-      "fuel": 20.0,
-      "manpower": 4.0,
-      "food": 8.0
+      "funds": 1600.0,
+      "fuel": 200.0,
+      "manpower": 40.0,
+      "food": 80.0
     },
     "production_building": "barracks",
     "starter": false,
@@ -5736,12 +5736,12 @@
     "research_branch": "Light tank",
     "seconds": 45,
     "cost": {
-      "funds": 3360,
-      "materials": 1140,
-      "electronics": 420,
-      "fuel": 480,
-      "manpower": 180,
-      "food": 168
+      "funds": 40320,
+      "materials": 13680,
+      "electronics": 5040,
+      "fuel": 5760,
+      "manpower": 2160,
+      "food": 1356
     },
     "research_tiers": [
       {
@@ -5782,10 +5782,10 @@
       13
     ],
     "upkeep": {
-      "funds": 280.0,
-      "fuel": 32.0,
-      "manpower": 3.0,
-      "food": 6.0
+      "funds": 2800.0,
+      "fuel": 320.0,
+      "manpower": 30.0,
+      "food": 60.0
     },
     "production_building": "tank_plant",
     "starter": true,
@@ -5801,12 +5801,12 @@
     "asset_roster_id": "strategic_ukraine",
     "seconds": 80,
     "cost": {
-      "funds": 4800,
-      "materials": 1440,
-      "electronics": 1200,
-      "fuel": 720,
-      "manpower": 300,
-      "food": 240
+      "funds": 57600,
+      "materials": 17280,
+      "electronics": 14400,
+      "fuel": 8640,
+      "manpower": 3600,
+      "food": 2220
     },
     "building_requirements": {
       "missile_factory": 1
@@ -5855,10 +5855,10 @@
     "strike_damage": 40.0,
     "reload_rounds": 3.0,
     "upkeep": {
-      "funds": 400.0,
-      "fuel": 48.0,
-      "manpower": 5.0,
-      "food": 10.0
+      "funds": 4000.0,
+      "fuel": 480.0,
+      "manpower": 50.0,
+      "food": 100.0
     },
     "production_building": "missile_factory",
     "research_branch": "Strategic missile",
@@ -5874,12 +5874,12 @@
     "research_branch": "Transport helicopter",
     "seconds": 70,
     "cost": {
-      "funds": 3960,
-      "materials": 1200,
-      "electronics": 780,
-      "fuel": 600,
-      "manpower": 240,
-      "food": 204
+      "funds": 47520,
+      "materials": 14400,
+      "electronics": 9360,
+      "fuel": 7200,
+      "manpower": 2880,
+      "food": 1788
     },
     "building_requirements": {
       "airbase": 1
@@ -5925,10 +5925,10 @@
     "air_damage": 2.0,
     "ground_damage": 2.0,
     "upkeep": {
-      "funds": 330.0,
-      "fuel": 40.0,
-      "manpower": 4.0,
-      "food": 8.0
+      "funds": 3300.0,
+      "fuel": 400.0,
+      "manpower": 40.0,
+      "food": 80.0
     },
     "production_building": "airbase",
     "starter": false
@@ -5943,12 +5943,12 @@
     "asset_roster_id": "strike_drone_ukraine",
     "seconds": 80,
     "cost": {
-      "funds": 4800,
-      "materials": 1440,
-      "electronics": 1200,
-      "fuel": 720,
-      "manpower": 300,
-      "food": 240
+      "funds": 57600,
+      "materials": 17280,
+      "electronics": 14400,
+      "fuel": 8640,
+      "manpower": 3600,
+      "food": 2220
     },
     "building_requirements": {
       "drone_factory": 1
@@ -5993,10 +5993,10 @@
     "air_damage": 0.0,
     "ground_damage": 6.0,
     "upkeep": {
-      "funds": 400.0,
-      "fuel": 48.0,
-      "manpower": 5.0,
-      "food": 10.0
+      "funds": 4000.0,
+      "fuel": 480.0,
+      "manpower": 50.0,
+      "food": 100.0
     },
     "production_building": "drone_factory",
     "research_branch": "Strike drone",
@@ -6012,12 +6012,12 @@
     "asset_roster_id": "liutyi_ukraine",
     "seconds": 80,
     "cost": {
-      "funds": 4800,
-      "materials": 1440,
-      "electronics": 1200,
-      "fuel": 720,
-      "manpower": 300,
-      "food": 240
+      "funds": 57600,
+      "materials": 17280,
+      "electronics": 14400,
+      "fuel": 8640,
+      "manpower": 3600,
+      "food": 2220
     },
     "building_requirements": {
       "drone_factory": 1
@@ -6062,10 +6062,10 @@
     "air_damage": 0.0,
     "ground_damage": 12.0,
     "upkeep": {
-      "funds": 400.0,
-      "fuel": 48.0,
-      "manpower": 5.0,
-      "food": 10.0
+      "funds": 4000.0,
+      "fuel": 480.0,
+      "manpower": 50.0,
+      "food": 100.0
     },
     "production_building": "drone_factory",
     "research_branch": "One-way attack drone",
@@ -6082,12 +6082,12 @@
     "asset_roster_id": "medic_ukraine",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
-      "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "funds": 36000,
+      "materials": 11520,
+      "electronics": 5760,
+      "fuel": 4320,
+      "manpower": 4320,
+      "food": 2652
     },
     "building_requirements": {
       "support_depot": 1
@@ -6128,10 +6128,10 @@
     ],
     "model_status": "Boxer with medical markings (tools/make_new_models.gd)",
     "upkeep": {
-      "funds": 250.0,
-      "fuel": 24.0,
-      "manpower": 6.0,
-      "food": 12.0
+      "funds": 2500.0,
+      "fuel": 240.0,
+      "manpower": 60.0,
+      "food": 120.0
     },
     "production_building": "support_depot",
     "research_branch": "Field medics",

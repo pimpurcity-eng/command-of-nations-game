@@ -84,9 +84,9 @@ LRSAM_RANGE, LRSAM_DAMAGE = [3.5, 4.0, 4.4, 4.7, 5.2], [10, 12, 13.5, 15, 16.5]
 
 # ------------------------------------------------------------------------------- RUSSIA
 R = "russia"
-family("infantry_russia", research_branch="Motorized infantry", name="Motorized infantry", starter=True,
-       research_days=days(1), research_tiers=line(("Motor riflemen", m("russia_motor_rifleman")), "+Ratnik kit",
-       ("Guards motor riflemen", m("russia_motor_rifleman"), "Better training and night vision"), "+", "+Sotnik kit"))
+family("infantry_russia", research_branch="Infantry", name="Infantry", starter=True,
+       research_days=days(1), research_tiers=line(("Rifle infantry", m("russia_motor_rifleman")), "+Ratnik kit",
+       ("Guards infantry", m("russia_motor_rifleman"), "Better training and night vision"), "+", "+Sotnik kit"))
 family("airborne_russia", "infantry_russia", name="Airborne infantry", research_branch="Airborne infantry", starter=False,
        research_days=days(3), research_tiers=line(("VDV paratroopers", m("russia_vdv_paratrooper")), "+", "+air assault", "+", "+guards"))
 family("special_forces_russia", "infantry_russia", name="Special forces", research_branch="Special forces", starter=False,
@@ -163,7 +163,7 @@ family("geran_russia", "loitering_russia", name="One-way attack drones", researc
        research_days=days(6), air_range=30.0, air_speed=1.6, ground_damage=12.0, model_status="Original model (tools/make_new_models.gd)",
        research_tiers=line(("Geran-2", m("russia_geran2")), "+", "+jam-resistant navigation", "+", "+jet engine"))
 for fid, d in [("corvettes_russia", days(1, 4)), ("fleet_russia", days(4, 4)), ("submarines_russia", days(6, 4)),
-               ("destroyers_russia", days(8, 4)), ("carriers_russia", days(18, 4))]:
+               ("destroyers_russia", days(8, 4)), ("carriers_russia", days(3, 4))]:
     family(fid, research_days=d, starter=(fid == "corvettes_russia"))
 for fid, branch, name, role, d in [("kamaz5350_supply_russia", "Supply truck", "Supply trucks", "supply", days(1)),
                                     ("brem1m_recovery_russia", "Recovery vehicle", "Recovery vehicles", "recovery", days(4)),
@@ -176,8 +176,8 @@ family("medic_russia", "imr3m_engineer_russia", name="Field medics", research_br
 retire("ur77_mineclearing_russia")
 
 # ------------------------------------------------------------------------------- UKRAINE
-family("infantry_ukraine", research_branch="Motorized infantry", name="Motorized infantry", starter=True, research_days=days(1),
-       research_tiers=line(("Mechanised infantry", m("euro_fr_foreign_legion")), "+", "+NATO kit", "+", "+night vision"))
+family("infantry_ukraine", research_branch="Infantry", name="Infantry", starter=True, research_days=days(1),
+       research_tiers=line(("Rifle infantry", m("euro_fr_foreign_legion")), "+", "+NATO kit", "+", "+night vision"))
 family("airborne_ukraine", "infantry_ukraine", name="Airborne infantry", research_branch="Airborne infantry", starter=False, research_days=days(3),
        research_tiers=line(("Air assault troops", m("euro_it_folgore_paratrooper")), "+", "+", "+", "+elite"))
 family("special_forces_ukraine", "infantry_ukraine", name="Special forces", research_branch="Special forces", starter=False, research_days=days(6),
@@ -242,7 +242,7 @@ family("liutyi_ukraine", "drones_ukraine", name="Long-range attack drones", rese
        model_status="Original model (tools/make_new_models.gd)",
        research_tiers=line(("FP-1 / Liutyi", m("ukraine_liutyi")), "+", "+jam-resistant navigation", "+", "+heavier warhead"))
 for fid, d in [("corvettes_ukraine", days(1, 4)), ("fleet_ukraine", days(4, 4)), ("submarines_ukraine", days(6, 4)),
-               ("destroyers_ukraine", days(8, 4)), ("carriers_ukraine", days(18, 4))]:
+               ("destroyers_ukraine", days(8, 4)), ("carriers_ukraine", days(3, 4))]:
     family(fid, research_days=d, starter=(fid == "corvettes_ukraine"))
 for fid, branch, name, role, d in [("man_hx77_supply_ukraine", "Supply truck", "Supply trucks", "supply", days(1)),
                                     ("buffel_recovery_ukraine", "Recovery vehicle", "Recovery vehicles", "recovery", days(4)),

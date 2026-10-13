@@ -156,7 +156,7 @@ func _add_row(definition: Dictionary) -> void:
 	image.custom_minimum_size = Vector2(88, 80)
 	image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	image.texture = load(definition.get("preview", AssetRoster.appearance(definition.asset_roster_id, GameSession.player_country).preview))
+	image.texture = FacilityVisual.preview(definition, GameSession.player_country, 1)
 	frame.add_child(image)
 	var middle: = VBoxContainer.new()
 	middle.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -224,7 +224,7 @@ func show_tab(index: int) -> void:
 	unit_rows.clear()
 	if index >= 0 and research != null:
 		var families: Array = buildings.economy.catalog.filter(func(spec: Dictionary): return spec.country == GameSession.player_country and ProductionGroups.index(spec) == index and ProductionGroups.offered(spec))
-		families.sort_custom(func(a, b): return a.category < b.category if a.category != b.category else a.name < b.name)
+		families.sort_custom(ProductionGroups.before)
 		for spec in families: _add_unit_row(spec)
 	if scroll != null: scroll.scroll_vertical = 0
 	if visible: _refresh()
@@ -245,7 +245,7 @@ func _add_unit_row(spec: Dictionary) -> void:
 	var image: = TextureRect.new()
 	image.custom_minimum_size = Vector2(96, 80)
 	image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	frame.add_child(image)
 	var rank: = Chevrons.new()
 	rank.custom_minimum_size = Vector2(26, 30)

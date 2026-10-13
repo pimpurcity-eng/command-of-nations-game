@@ -55,7 +55,7 @@ func _layout() -> void :
 
 func _section(text: String) -> VBoxContainer:
 	var bar: = PanelContainer.new()
-	bar.add_theme_stylebox_override("panel", CowUI.box(Color("2b3036"), 0, Color("1a1d20"), 1, 14))
+	bar.add_theme_stylebox_override("panel", CowUI.box(Color("777569"), 0, Color("1a1d20"), 1, 14))
 	content.add_child(bar)
 	var row: = HBoxContainer.new()
 	bar.add_child(row)
@@ -76,7 +76,7 @@ func _section(text: String) -> VBoxContainer:
 
 func _row(body: VBoxContainer, cells: Array, header: bool = false, icon_kind: String = "") -> HBoxContainer:
 	var back: = PanelContainer.new()
-	back.add_theme_stylebox_override("panel", CowUI.box(Color("232830") if header else Color("1d2127"), 0, Color("14171a"), 1, 10))
+	back.add_theme_stylebox_override("panel", CowUI.box(Color("b8b5a7") if header else CowUI.LIST, 0, Color("14171a"), 1, 10))
 	body.add_child(back)
 	var row: = HBoxContainer.new()
 	row.add_theme_constant_override("separation", 10)
@@ -87,7 +87,7 @@ func _row(body: VBoxContainer, cells: Array, header: bool = false, icon_kind: St
 		tag.add_child(UnitTypeIcon.silhouette(icon_kind, Color("f2e6d0"), Vector2(30, 24)))
 		row.add_child(tag)
 	for i in cells.size():
-		var label: = CowUI.label(str(cells[i]), 17 if not header else 15, Color("efe6cf") if not header else Color("bfb8a6"))
+		var label: = CowUI.label(str(cells[i]), 17 if not header else 15, CowUI.INK)
 		if i == 0:
 			label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			label.clip_text = true
@@ -121,12 +121,12 @@ func open(armies: UnitSystem, terrain: StrategicMap) -> void :
 	title.text = "Army Details" if own else "Enemy Army"
 	# Header card: picture, flag, name, country, terrain.
 	var hero: = Control.new()
-	hero.custom_minimum_size.y = 260
+	hero.custom_minimum_size.y = 380
 	content.add_child(hero)
 	var picture: = TextureRect.new()
 	picture.texture = CowUI.research_picture(top.equipment_id, top.get("level", 1))
 	picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	picture.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	hero.add_child(picture)
 	var band: = PanelContainer.new()
@@ -206,7 +206,7 @@ func open(armies: UnitSystem, terrain: StrategicMap) -> void :
 		var pic: = TextureRect.new()
 		pic.texture = CowUI.research_picture(member.equipment_id, member.get("level", 1))
 		pic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		pic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		pic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		pic.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		pic.offset_bottom = -18
 		stack.add_child(pic)

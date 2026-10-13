@@ -226,11 +226,7 @@ func _system() -> ResearchSystem:
 func _families(index: int) -> Array:
 	# Owner 2026-10-13: economy upgrades are city buildings, not research; retired families are hidden.
 	var result: Array = _system().economy.catalog.filter(func(spec: Dictionary): return spec.country == GameSession.player_country and ProductionGroups.index(spec) == index and ProductionGroups.offered(spec))
-	result.sort_custom(func(a, b):
-		if a.category == "Air defense" and b.category == "Air defense": return a.get("aa_range",0.0) < b.get("aa_range",0.0)
-		if a.category == "Air defense" or b.category == "Air defense": return a.category == "Air defense"
-		if a.category != b.category: return a.category < b.category
-		return a.name < b.name)
+	result.sort_custom(ProductionGroups.before)
 	return result
 
 func show_category(index: int) -> void:
@@ -343,7 +339,7 @@ func _build_tree() -> void:
 			for side in ["offset_left", "offset_top"]: portrait.set(side, 6)
 			for side in ["offset_right", "offset_bottom"]: portrait.set(side, -6)
 			portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-			portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+			portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 			portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			card.add_child(portrait)
 			var rank: = CityPanel.Chevrons.new()
