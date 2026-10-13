@@ -3,6 +3,9 @@ extends RefCounted
 
 ## Strategic map dimensions before UnitSystem's 0.65 scale. These are readable
 ## symbols, not metres at the geographical map scale. Preserve model proportions.
+const DISPLAY_SCALE := 1.20
+## Extra readability for tanks after the owner reviewed the city concept.
+const ARMOR_READABILITY := 1.10
 const FOOTPRINT := {
 	"helicopter": 0.95, "bomber": 1.35, "armor": 0.8, "ifv": 0.74,
 	"artillery": 0.77, "air_defense": 0.77, "missile_launcher": 0.83,
@@ -26,11 +29,12 @@ static func limits(role: String, path: String = "") -> Vector2:
 	var model := path.get_file().get_basename()
 	if model.contains("mortar"):
 		if model.contains("2b14") or model.contains("l16"):
-			return Vector2(0.2, 0.22)
-		return Vector2(0.34, 0.3)
+			return Vector2(0.2, 0.22) * DISPLAY_SCALE
+		return Vector2(0.34, 0.3) * DISPLAY_SCALE
 	# Effects keep their existing visual scale; this change is for units only.
 	if role == "projectile": return Vector2(0.62, INF)
-	return Vector2(FOOTPRINT.get(role, 0.37), HEIGHT.get(role, 0.38))
+	var scale := DISPLAY_SCALE * (ARMOR_READABILITY if role == "armor" else 1.0)
+	return Vector2(FOOTPRINT.get(role, 0.37), HEIGHT.get(role, 0.38)) * scale
 
 static func fit_factor(size: Vector3, role: String, path: String = "") -> float:
 	var envelope := limits(role, path)
