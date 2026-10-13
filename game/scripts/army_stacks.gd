@@ -19,10 +19,25 @@ func groups() -> Array:
 func members(unit: Dictionary) -> Array:
 	groups()
 	return _groups.get(unit.country + ":" + unit.stack_id, [])
+## The strongest unit leads the army and is the model shown on the map (owner 2026-10-13:
+## "the strongest unit goes on top"). Rated at full health so the leader does not flip as
+## units take damage.
+static var _rating: Dictionary = {}
+static func rating(unit: Dictionary) -> float:
+	var key: String = str(unit.get("equipment_id", "")) + ":" + str(int(unit.get("level", 1)))
+	if not _rating.has(key):
+		var fresh: Dictionary = unit.duplicate()
+		fresh.health = 100.0
+		_rating[key] = ArmyDetailsPanel.strength(fresh)
+	return _rating[key]
 func leader(group: Array) -> Dictionary:
 	var result: Dictionary = group[0]
+	var best: = rating(result)
 	for unit in group:
-		if unit.visual_kind == "armor" and result.visual_kind != "armor": result = unit
+		var value: = rating(unit)
+		if value > best + 0.001:
+			best = value
+			result = unit
 	return result
 func join(a: Dictionary, b: Dictionary) -> bool:
 	if a.country != b.country or a.stack_id == b.stack_id: return false
