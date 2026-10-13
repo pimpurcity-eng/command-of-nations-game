@@ -29,7 +29,7 @@ func _initialize() -> void:
 	var small := Sizes.limits("artillery", "russia_2b14_mortar_82.glb")
 	var large := Sizes.limits("artillery", "russia_2b11_mortar_120.glb")
 	check(small.x < large.x and large.x < Sizes.limits("armor").x, "Mortars must be smaller than tanks")
-	check(Sizes.fit_factor(Vector3(1, 12, 1), "artillery", "euro_mo120rt_mortar.glb") <= 0.02501, "Tall mortar regression")
+	check(Sizes.fit_factor(Vector3(1, 12, 1), "artillery", "euro_mo120rt_mortar.glb") <= 0.03001, "Tall mortar regression")
 	check(is_equal_approx(Sizes.fit_factor(Vector3(2, 3, 10), "armor"), Sizes.fit_factor(Vector3(200, 300, 1000), "armor") * 100), "Source units affect size")
 	check(is_equal_approx(Sizes.limits("projectile").x, 0.62), "Projectile size changed")
 	# Exercise the actual fitting transform, including yaw and grounding.
@@ -44,7 +44,7 @@ func _initialize() -> void:
 	pivot.add_child(vehicle)
 	UnitVisual._fit(pivot, vehicle, "artillery", "euro_mo120rt_mortar.glb")
 	var fitted := UnitVisual.model_bounds(pivot, 0)
-	check(fitted.size.y <= 0.30001, "Actual mortar fit exceeds height")
+	check(fitted.size.y <= 0.36001, "Actual mortar fit exceeds height")
 	check(is_zero_approx(fitted.position.y), "Model not grounded")
 	check(is_zero_approx(fitted.get_center().x) and is_zero_approx(fitted.get_center().z), "Model not centred")
 	check(mesh.mesh == source and source.size == Vector3(1, 12, 1), "Source geometry changed")

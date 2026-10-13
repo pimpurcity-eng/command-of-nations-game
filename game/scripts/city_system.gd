@@ -1,6 +1,8 @@
 class_name CitySystem
 extends Node3D
 signal city_selected(city: Dictionary)
+## Clear space at the actual city destination. Sized for the enlarged map units.
+const GARRISON_PLAZA_RADIUS := 0.70
 var cities: Array = GeographicProjection.load_cities()
 var armies: UnitSystem
 var terrain: StrategicMap
@@ -358,33 +360,32 @@ func _build_city_district(district: Node3D, city: Dictionary, _ink: StandardMate
 	rng.seed = city.name.hash()
 	var capital: bool = city.get("capital", false)
 	var plaza: = StandardMaterial3D.new()
-	plaza.albedo_color = Color("b3ab98")
+	plaza.albedo_color = Color("a9aaac")
 	plaza.roughness = 1.0
 	var park: = StandardMaterial3D.new()
 	park.albedo_color = Color("5f7046")
 	park.roughness = 1.0
 	var towers: Array[ShaderMaterial] = [
-		_facade("2f3a44", "4f7593", "3b4248", 0.0105, 0.009, 0.86, 0.78, 1.0),
-		_facade("3c4a4f", "5d8a8f", "41484c", 0.0105, 0.010, 0.82, 0.74, 1.0),
-		_facade("4a4136", "8a6f45", "3f3a34", 0.0105, 0.009, 0.84, 0.72, 0.9),
+		_facade("2f3a44", "536675", "3b4248", 0.0105, 0.009, 0.86, 0.78, 1.0),
+		_facade("3c4a4f", "596a75", "41484c", 0.0105, 0.010, 0.82, 0.74, 1.0),
+		_facade("454b50", "5e6b75", "42484d", 0.0105, 0.009, 0.84, 0.72, 0.9),
 		_facade("8f8a80", "44515b", "5d5f60", 0.0115, 0.011, 0.55, 0.62, 0.4)]
-	# Owner review: "paint all the buildings" - painted Soviet-era blocks and houses instead
-	# of pale beige/white boxes.
+	# Owner chose concept 1: grey concrete, subtle blue-grey glass and slate roofs.
 	var blocks: Array[ShaderMaterial] = [
-		_facade("b98a52", "3c4650", "6f6a62", 0.0125, 0.012, 0.42, 0.5, 0.0),
-		_facade("a6604a", "39424a", "5e4a40", 0.0125, 0.012, 0.42, 0.5, 0.0),
-		_facade("7f9670", "414a52", "5d625a", 0.0125, 0.013, 0.40, 0.48, 0.0),
-		_facade("7c8ea3", "3a4047", "5a5f66", 0.0125, 0.012, 0.40, 0.5, 0.0),
-		_facade("c2a35c", "3c4650", "6a5f50", 0.0125, 0.012, 0.42, 0.5, 0.0),
-		_facade("8e5440", "3a4047", "4f4038", 0.0125, 0.012, 0.40, 0.5, 0.0)]
+		_facade("a3a29d", "3c4650", "6f6a62", 0.0125, 0.012, 0.42, 0.5, 0.0),
+		_facade("8d9295", "39424a", "5b6166", 0.0125, 0.012, 0.42, 0.5, 0.0),
+		_facade("b0afa8", "414a52", "5d625a", 0.0125, 0.013, 0.40, 0.48, 0.0),
+		_facade("929ba2", "3a4047", "5a5f66", 0.0125, 0.012, 0.40, 0.5, 0.0),
+		_facade("a8aaa7", "3c4650", "64696b", 0.0125, 0.012, 0.42, 0.5, 0.0),
+		_facade("858d92", "3a4047", "535b60", 0.0125, 0.012, 0.40, 0.5, 0.0)]
 	var houses: Array[ShaderMaterial] = [
-		_facade("d1b15e", "3f4850", "8e5b47", 0.016, 0.016, 0.38, 0.42, 0.0),
-		_facade("c98a6e", "3f4850", "8e5b47", 0.016, 0.016, 0.38, 0.42, 0.0),
-		_facade("9fb48a", "3f4850", "8e5b47", 0.016, 0.016, 0.38, 0.42, 0.0),
-		_facade("c9b48f", "3f4850", "8e5b47", 0.016, 0.016, 0.38, 0.42, 0.0),
-		_facade("a3634c", "3f4850", "8e5b47", 0.016, 0.016, 0.38, 0.42, 0.0)]
+		_facade("b5b4ad", "3f4850", "555c63", 0.016, 0.016, 0.38, 0.42, 0.0),
+		_facade("a4a8a9", "3f4850", "555c63", 0.016, 0.016, 0.38, 0.42, 0.0),
+		_facade("b9bab4", "3f4850", "555c63", 0.016, 0.016, 0.38, 0.42, 0.0),
+		_facade("aeb0ab", "3f4850", "555c63", 0.016, 0.016, 0.38, 0.42, 0.0),
+		_facade("989ea1", "3f4850", "555c63", 0.016, 0.016, 0.38, 0.42, 0.0)]
 	var roof_tiles: Array[StandardMaterial3D] = []
-	for color in ["8a3d2c", "6e4a36", "4f5f45", "5b4038"]:
+	for color in ["4f565e", "626568", "555e62", "474e56"]:
 		var tile: = StandardMaterial3D.new()
 		tile.albedo_color = Color(color)
 		tile.roughness = 0.9
@@ -403,8 +404,14 @@ func _build_city_district(district: Node3D, city: Dictionary, _ink: StandardMate
 	var phase_b: = rng.randf() * TAU
 	var reach: = func(angle: float) -> float:
 		return 0.86 + 0.13 * sin(2.0 * angle + phase_a) + 0.09 * sin(3.0 * angle + phase_b)
-	_city_block(district, Vector3(0.22, 0.012, 0.22), Vector3(0, 0.018, 0), base_angle, plaza)
-	taken.append([Vector2.ZERO, 0.12])
+	var courtyard := CylinderMesh.new()
+	courtyard.top_radius = GARRISON_PLAZA_RADIUS
+	courtyard.bottom_radius = GARRISON_PLAZA_RADIUS
+	courtyard.height = 0.008
+	courtyard.radial_segments = 48
+	_city_mesh(district, courtyard, Vector3(0, 0.004, 0), plaza)
+	district.set_meta("garrison_plaza_radius", GARRISON_PLAZA_RADIUS * district.scale.x)
+	taken.append([Vector2.ZERO, GARRISON_PLAZA_RADIUS + 0.025])
 	var place: = func(point: Vector2, radius: float) -> bool:
 		for angle in avenues:
 			var direction: = Vector2(cos(angle), sin(angle))
@@ -420,12 +427,13 @@ func _build_city_district(district: Node3D, city: Dictionary, _ink: StandardMate
 	var tallest: = 1.05 if capital else 0.62
 	for attempt in 400:
 		if built >= tower_count: break
-		var r: = sqrt(rng.randf()) * 0.3
-		var a: = rng.randf() * TAU
+		var r: = rng.randf_range(0.79, 1.03)
+		# Tall skyline behind the courtyard; lower buildings encircle the units.
+		var a: = -PI * 0.5 + rng.randf_range(-0.9, 0.9)
 		var point: = Vector2(cos(a), sin(a)) * r
 		var footprint: = rng.randf_range(0.05, 0.085)
 		if not place.call(point, footprint * 0.72): continue
-		var height: = lerpf(tallest, tallest * 0.35, r / 0.3) * rng.randf_range(0.7, 1.0)
+		var height: = lerpf(tallest, tallest * 0.35, (r - 0.79) / 0.24) * rng.randf_range(0.7, 1.0)
 		var material: = towers[rng.randi_range(0, towers.size() - 1)]
 		var turn: = base_angle + rng.randf_range(-0.15, 0.15)
 		_city_block(district, Vector3(footprint, height, footprint * rng.randf_range(0.75, 1.0)), Vector3(point.x, 0.02 + height * 0.5, point.y), turn, material)
@@ -439,7 +447,7 @@ func _build_city_district(district: Node3D, city: Dictionary, _ink: StandardMate
 	for attempt in 900:
 		if built >= tower_count + 95: break
 		var a: = rng.randf() * TAU
-		var r: float = rng.randf_range(0.26, 0.72) * float(reach.call(a))
+		var r: float = rng.randf_range(0.72, 1.02) * float(reach.call(a))
 		var point: = Vector2(cos(a), sin(a)) * r
 		var length: = rng.randf_range(0.1, 0.19)
 		if not place.call(point, length * 0.5): continue
@@ -450,14 +458,14 @@ func _build_city_district(district: Node3D, city: Dictionary, _ink: StandardMate
 	# Parks.
 	for attempt in 60:
 		var a: = rng.randf() * TAU
-		var r: float = rng.randf_range(0.3, 0.8) * float(reach.call(a))
+		var r: float = rng.randf_range(0.72, 1.0) * float(reach.call(a))
 		var point: = Vector2(cos(a), sin(a)) * r
 		if place.call(point, 0.06): _city_block(district, Vector3(0.12, 0.011, 0.1), Vector3(point.x, 0.017, point.y), -a, park)
 	# Low-rise houses with pitched roofs on the outskirts.
 	for attempt in 1400:
 		if built >= tower_count + 95 + 190: break
 		var a: = rng.randf() * TAU
-		var r: float = rng.randf_range(0.55, 1.0) * float(reach.call(a))
+		var r: float = rng.randf_range(0.83, 1.08) * float(reach.call(a))
 		var point: = Vector2(cos(a), sin(a)) * r
 		if not place.call(point, 0.022): continue
 		var height: = rng.randf_range(0.026, 0.05)
