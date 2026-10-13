@@ -3,6 +3,7 @@ extends Node3D
 signal city_selected(city: Dictionary)
 ## Clear space at the actual city destination. Sized for the enlarged map units.
 const GARRISON_PLAZA_RADIUS := 0.70
+const SHOW_COURTYARD_DISK: = false
 var cities: Array = GeographicProjection.load_cities()
 var armies: UnitSystem
 var terrain: StrategicMap
@@ -431,7 +432,9 @@ func _build_city_district(district: Node3D, city: Dictionary, _ink: StandardMate
 	courtyard.bottom_radius = GARRISON_PLAZA_RADIUS
 	courtyard.height = 0.008
 	courtyard.radial_segments = 48
-	_city_mesh(district, courtyard, Vector3(0, 0.004, 0), plaza)
+	# Owner 2026-10-13: "take out the disks" - the centre stays clear for the garrison, but
+	# no pavement disk is drawn (it read as a white disc on phones).
+	if SHOW_COURTYARD_DISK: _city_mesh(district, courtyard, Vector3(0, 0.004, 0), plaza)
 	district.set_meta("garrison_plaza_radius", GARRISON_PLAZA_RADIUS * district.scale.x)
 	taken.append([Vector2.ZERO, GARRISON_PLAZA_RADIUS + 0.025])
 	var place: = func(point: Vector2, radius: float) -> bool:

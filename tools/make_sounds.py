@@ -285,14 +285,35 @@ def ui_click():
 
 
 def war_declared():
-    """Air-raid siren rising and falling twice, with a drum hit."""
-    seconds = 3.6
+    """Air-raid siren (owner 2026-10-13: "use air raid sirens, not the wee wee"): a WWII-style
+    two-rotor motor siren that winds up slowly, holds, winds down and wails again, heard from
+    across the city (distance filtering and reverb), with a low drum hit at the start."""
+    seconds = 11.0
     t = t_axis(seconds)
-    f = 300 + 380 * (0.5 - 0.5 * np.cos(2 * np.pi * t / 1.8))
-    siren = signal.square(2 * np.pi * np.cumsum(f) / SR) * 0.25 + np.sin(2 * np.pi * np.cumsum(f) / SR) * 0.4
-    siren = filt(siren, "low", 2400) * np.clip(t / 0.2, 0, 1) * np.clip((seconds - t) / 0.6, 0, 1)
-    hit = boom(seconds, 90, 40, 1.4, 0.6, 0.5)
-    return normalize(reverb(siren + hit, 1.6, 0.3, 3000))
+    # Pitch envelope: wind up 4 s, hold 1.5 s, wind down 3 s, second shorter wail.
+    def env(x):
+        if x < 4.0:
+            return 0.5 - 0.5 * np.cos(np.pi * x / 4.0)
+        if x < 5.5:
+            return 1.0
+        if x < 8.5:
+            return 0.45 + 0.55 * (0.5 + 0.5 * np.cos(np.pi * (x - 5.5) / 3.0))
+        if x < 10.0:
+            return 0.45 + 0.55 * (0.5 - 0.5 * np.cos(np.pi * (x - 8.5) / 1.5))
+        return 1.0 - 0.6 * (x - 10.0)
+    shape = np.array([env(x) for x in t])
+    base = 110 + 360 * shape
+    wobble = 1 + 0.004 * np.sin(2 * np.pi * 5.2 * t)
+    siren = np.zeros_like(t)
+    # Two rotors a minor third apart; rich harmonics from the chopped air ports.
+    for ratio, gain in ((1.0, 1.0), (1.19, 0.8)):
+        phase = 2 * np.pi * np.cumsum(base * ratio * wobble) / SR
+        for harmonic, weight in ((1, 1.0), (2, 0.45), (3, 0.3), (4, 0.15), (5, 0.08)):
+            siren += gain * weight * np.sin(harmonic * phase)
+    siren = filt(siren, "low", 2600) * (0.25 + 0.75 * shape)
+    siren *= np.clip(t / 0.4, 0, 1) * np.clip((seconds - t) / 0.8, 0, 1)
+    hit = boom(seconds, 70, 35, 1.6, 0.5, 0.4)
+    return normalize(reverb(siren * 0.6 + hit * 0.5, 2.4, 0.4, 3200))
 
 
 def fanfare(notes, beat=0.32, minor=False):

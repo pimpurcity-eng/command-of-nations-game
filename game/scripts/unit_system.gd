@@ -617,6 +617,7 @@ func _replace_visual(unit: Dictionary, replacement: Node3D) -> void:
 	unit.node.add_child(replacement)
 	unit.node.move_child(replacement, 0)
 
+const CITY_GARRISON_SCALE: = 1.35
 func _process(delta: float) -> void :
 	# Do not load 3D vehicles behind the campaign's start menu on phones.
 	if OS.has_feature("mobile") and get_parent() is Node3D and not (get_parent() as Node3D).visible:
@@ -722,8 +723,9 @@ func _process(delta: float) -> void :
 		if not is_naval(unit) and not air.is_air(unit):
 			var slope: = Quaternion(Vector3.UP, ground_normal(Vector2(unit.node.position.x, unit.node.position.z)))
 			unit.node.quaternion = unit.node.quaternion.slerp(slope, 1.0 - exp( - delta * 8.0))
-		# Consistent map size while entering/leaving cities, including aircraft and ships.
-		var target_scale: = 0.65
+		# Owner 2026-10-13: ground armies standing in a city are drawn bigger so the garrison
+		# reads clearly among the buildings (aircraft and ships keep their size).
+		var target_scale: = 0.65 * (CITY_GARRISON_SCALE if not is_naval(unit) and not air.is_air(unit) and _in_city(Vector2(unit.node.position.x, unit.node.position.z)) else 1.0)
 		model.scale = model.scale.lerp(Vector3.ONE * target_scale, 1.0 - exp( - delta * 6.0))
 		if unit.visual_kind == "air_defense": unit.ring.scale = Vector3.ONE * (0.52 if chosen else 0.42) * (model.scale.x / 0.65)
 		if unit.node.has_meta("detailed_sprite"):
