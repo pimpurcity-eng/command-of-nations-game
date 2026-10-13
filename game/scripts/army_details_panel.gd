@@ -4,8 +4,8 @@ extends CanvasLayer
 ## with the lead unit, strength / speed / total hit points, army status, combat statistics
 ## (attack and defence against every unit type), the full unit list with the strongest unit on
 ## top, terrain influences and class distribution. Works for enemy armies too (inspection).
-const TARGETS: = [["infantry", "Infantry"], ["ifv", "Light armour"], ["armor", "Heavy armour"], ["artillery", "Artillery"],
-	["missile_launcher", "Missile launchers"], ["air_defense", "Air defence"], ["support", "Support"], ["naval", "Ships"], ["submarine", "Submarines"]]
+## Combat statistics against the six unit types (owner 2026-10-13); aircraft are listed below.
+const TARGETS: = [["infantry", "Infantry"], ["light", "Light armour"], ["heavy", "Heavy armour"], ["naval", "Ships"], ["submarine", "Submarines"]]
 const CLASS_NAMES: = {"infantry": "Infantry", "ifv": "Light armour", "armor": "Heavy armour", "artillery": "Artillery", "missile_launcher": "Missiles",
 	"air_defense": "Air defence", "support": "Support", "fighter": "Aircraft", "naval": "Ships"}
 var panel: PanelContainer
@@ -182,11 +182,11 @@ func open(armies: UnitSystem, terrain: StrategicMap) -> void :
 		var table: = _section("Combat statistics")
 		_row(table, ["Damage against type", "Attack", "Defence"], true)
 		for target in TARGETS:
-			_row(table, ["vs. " + target[1], "%.1f" % combat.potential(group, target[0]), "%.1f" % combat.potential(group, target[0], false, true)], false, target[0] if target[0] not in ["submarine"] else "naval")
+			_row(table, ["vs. " + target[1], "%.1f" % combat.potential(group, target[0]), "%.1f" % combat.potential(group, target[0], false, true)], false, target[0])
 		var aa: = 0.0
 		for member in group:
 			if member.visual_kind == "air_defense": aa += float(EquipmentIdentity.research_tier(member.equipment_id, member.get("level", 1)).get("damage", 0.0)) * member.health / 100.0
-		_row(table, ["vs. Aircraft", "%.1f" % aa, "%.1f" % aa], false, "fighter")
+		_row(table, ["vs. Planes", "%.1f" % aa, "%.1f" % aa], false, "air")
 	# Units, strongest first.
 	var list: = _section("Units")
 	_row(list, ["Unit", "HP", "Strength"], true)
@@ -249,10 +249,12 @@ func open(armies: UnitSystem, terrain: StrategicMap) -> void :
 		_row(terrain_body, [CLASS_NAMES.get(member.visual_kind, member.visual_kind.capitalize()), ("%+d%%" % speed) if speed != 0 else "-", ("%+d%%" % power) if power != 0 else "-"], false, member.visual_kind)
 	# Class distribution.
 	var classes: = {}
-	for member in group: classes[member.visual_kind] = classes.get(member.visual_kind, 0) + 1
+	for member in group:
+		var unit_class: = UnitClasses.of(member)
+		classes[unit_class] = classes.get(unit_class, 0) + 1
 	var dist: = _section("Class distribution")
 	_row(dist, ["Unit class", "Share"], true)
 	for kind in classes:
-		_row(dist, [CLASS_NAMES.get(kind, str(kind).capitalize()), "%d%%" % roundi(100.0 * classes[kind] / group.size())], false, kind)
+		_row(dist, [UnitClasses.NAMES.get(kind, str(kind).capitalize()), "%d%%" % roundi(100.0 * classes[kind] / group.size())], false, kind)
 	_layout()
 	show()

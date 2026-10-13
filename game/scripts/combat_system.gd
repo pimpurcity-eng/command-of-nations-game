@@ -8,9 +8,9 @@ const STACK_DAMAGE_LIMIT: = 10
 const CLOSE_COMBAT_REACH: = 0.45
 const MAX_ROUND_SECONDS: = ROUND_SECONDS * 4
 var cooldowns: Dictionary = {}
+## The unit's type as a target: one of the six Call of War classes (UnitClasses).
 func target_class(unit: Dictionary) -> String:
-	if unit.visual_kind != "naval": return unit.visual_kind
-	return "submarine" if EquipmentIdentity.spec(unit.equipment_id).get("role", "") == "submarine" else "carrier" if EquipmentIdentity.spec(unit.equipment_id).get("role", "") == "carrier" else "naval"
+	return UnitClasses.of(unit)
 func shot_effect(unit: Dictionary) -> String:
 	if EquipmentIdentity.research_tier(unit.equipment_id, unit.get("level", 1)).has("projectile_model"): return "missile"
 	return "missile" if unit.visual_kind == "missile_launcher" else "artillery" if unit.visual_kind in ["artillery", "naval"] else "cannon" if unit.visual_kind == "armor" else "tracer"
@@ -18,26 +18,37 @@ func key(group: Array) -> String:
 	return group[0].country + ":" + group[0].stack_id
 func alive(group: Array) -> Array:
 	return group.filter( func(unit: Dictionary): return unit.health > 0)
+## Owner 2026-10-13: every weapon attacks and defends against the six unit types only.
+## Damage per round at full health and level 1, by the attacker's kind and the target's class.
+const ATTACK: = {
+	"armor": {"infantry": 8.0, "light": 8.0, "heavy": 7.0},
+	"ifv": {"infantry": 7.0, "light": 6.0, "heavy": 4.0},
+	"artillery": {"infantry": 6.0, "light": 6.0, "heavy": 4.0},
+	"air_defense": {"infantry": 2.0, "light": 1.5, "heavy": 1.0},
+	"infantry": {"infantry": 5.0, "light": 3.0, "heavy": 1.5},
+}
+const DEFENCE: = {
+	"armor": {"infantry": 7.0, "light": 7.0, "heavy": 6.0},
+	"ifv": {"infantry": 6.0, "light": 7.0, "heavy": 5.0},
+	"artillery": {"infantry": 3.0, "light": 2.0, "heavy": 2.0},
+	"air_defense": {"infantry": 3.0, "light": 2.0, "heavy": 2.0},
+	"infantry": {"infantry": 5.0, "light": 3.0, "heavy": 1.5},
+}
+## Ships by role against ships and submarines.
+const NAVAL: = {"naval": {"naval": 9.0, "submarine": 6.0}, "submarine": {"naval": 13.0, "submarine": 8.0}, "carrier": {"naval": 2.0, "submarine": 1.0}}
 func damage_value(unit: Dictionary, target_kind: String, defending: bool = false) -> float:
-
-	var values: = {"armor": {"armor": 7.0, "ifv": 8.0, "artillery": 6.0, "air_defense": 8.0}, "ifv": {"armor": 4.0, "ifv": 6.0, "artillery": 7.0, "air_defense": 7.0}, "artillery": {"armor": 5.0, "ifv": 7.0, "artillery": 5.0, "air_defense": 6.0}, "air_defense": {"armor": 1.0, "ifv": 2.0, "artillery": 1.0, "air_defense": 2.0}}
+	var target: = UnitClasses.symbol(target_kind) if target_kind not in UnitClasses.ALL else target_kind
+	var scale: = (0.2 + 0.8 * clampf(unit.health / 100.0, 0, 1)) * (1.0 + 0.12 * (unit.get("level", 1) - 1)) * EquipmentIdentity.upgrade_factor(unit)
+	var spec: = EquipmentIdentity.spec(unit.equipment_id)
 	if unit.visual_kind == "missile_launcher":
-		if EquipmentIdentity.spec(unit.equipment_id).get("targets_naval", false) and target_kind not in ["naval", "submarine", "carrier"]: return 0.0
-		return (2.0 if defending else float(EquipmentIdentity.spec(unit.equipment_id).get("strike_damage", 22.0))) * (0.2 + 0.8 * clampf(unit.health / 100.0, 0, 1)) * (1.0 + 0.12 * (unit.get("level", 1) - 1)) * EquipmentIdentity.upgrade_factor(unit)
+		if spec.get("targets_naval", false) and target not in ["naval", "submarine"]: return 0.0
+		if target == "air": return 0.0
+		return (2.0 if defending else float(spec.get("strike_damage", 22.0))) * scale
 	if unit.visual_kind == "naval":
-		var role: String = EquipmentIdentity.spec(unit.equipment_id).get("role","naval")
-		var targets: Dictionary = {"naval":{"naval":8.0,"submarine":6.0,"carrier":10.0},"submarine":{"naval":12.0,"submarine":8.0,"carrier":16.0},"carrier":{"naval":2.0,"submarine":1.0,"carrier":2.0}}.get(role,{})
-		var base: float = targets.get(target_kind,0.0)
-		if target_kind not in ["naval","submarine","carrier"] and EquipmentIdentity.spec(unit.equipment_id).get("shore_bombardment",false): base = 4.0 if not defending else 0.0
-		return base * (0.2 + 0.8 * clampf(unit.health / 100.0, 0, 1)) * (1.0 + 0.12 * (unit.get("level", 1) - 1)) * EquipmentIdentity.upgrade_factor(unit)
-	if defending:
-		values = {"armor": {"armor": 6.0, "ifv": 7.0, "artillery": 5.0, "air_defense": 7.0}, "ifv": {"armor": 5.0, "ifv": 7.0, "artillery": 6.0, "air_defense": 6.0}, "artillery": {"armor": 2.0, "ifv": 3.0, "artillery": 2.0, "air_defense": 3.0}, "air_defense": {"armor": 2.0, "ifv": 3.0, "artillery": 2.0, "air_defense": 3.0}}
-	values["infantry"] = {"armor": 1.5, "ifv": 2.5, "artillery": 5.0, "air_defense": 4.0, "infantry": 5.0, "support": 4.0}
-	for role in values:
-		values[role]["missile_launcher"] = values[role].get("artillery", 3.0)
-		values[role]["infantry"] = values[role].get("infantry", values[role].get("ifv", 3.0))
-		values[role]["support"] = values[role].get("support", values[role].get("artillery", 3.0))
-	return values.get(unit.visual_kind, {}).get(target_kind, 0.0) * (0.2 + 0.8 * clampf(unit.health / 100.0, 0, 1)) * (1.0 + 0.12 * (unit.get("level", 1) - 1)) * EquipmentIdentity.upgrade_factor(unit)
+		var base: float = NAVAL.get(str(spec.get("role", "naval")), {}).get(target, 0.0)
+		if target in ["infantry", "light", "heavy"] and spec.get("shore_bombardment", false): base = 4.0 if not defending else 0.0
+		return base * scale
+	return (DEFENCE if defending else ATTACK).get(unit.visual_kind, {}).get(target, 0.0) * scale
 func ranged_ready(unit: Dictionary) -> bool:
 	return not unit.get("moving", false) or unit.get("fire_mode", "at_will") in ["offensive", "aggressive"] or not unit.get("attack_target", "").is_empty()
 func attack_reach(unit: Dictionary) -> float:
