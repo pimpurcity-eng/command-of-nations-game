@@ -29,7 +29,8 @@ func run() -> void:
 	for city in game.cities.cities:
 		for spec in game.buildings.catalog:
 			# Owner 2026-10-13 (later): only the capital starts with a train station.
-			var expected := 1 if spec.id == "train_station" and game.buildings.is_capital(city) else 0
+			# The capital also starts with a recruitment centre (manpower comes only from them).
+			var expected := 1 if spec.id in ["train_station", "recruitment_center"] and game.buildings.is_capital(city) else 0
 			check(game.buildings.level(city.id,spec.id) == expected,"starting buildings: " + city.name + " / " + spec.id)
 	game.production_panel.open("Moscow")
 	check(game.production_panel.city_names.all(func(name):return game.production.cities.any(func(c):return c.name == name and game.production.controlled(c,"russia"))),"production lists controlled cities only")
