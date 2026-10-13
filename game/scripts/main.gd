@@ -108,6 +108,8 @@ func _ready() -> void :
 	add_child(water_label)
 	map = StrategicMap.new()
 	add_child(map)
+	if not map.build_finished:
+		await map.map_ready
 	rig = StrategyCamera.new()
 	add_child(rig)
 	audio = GameAudio.new()
@@ -234,7 +236,7 @@ func _ready() -> void :
 	hud.terrain_mode_requested.connect(map.set_terrain_mode)
 	cities = CitySystem.new()
 	add_child(cities)
-	cities.setup(map, rig)
+	await cities.setup(map, rig)
 	cities.armies = units
 	badges = UnitBadges.new()
 	add_child(badges)
@@ -410,7 +412,10 @@ func _ready() -> void :
 		mobile_start.audio = audio
 		mobile_start.setup(hud.get_child(0).theme, FileAccess.file_exists(SAVE_PATH))
 		visible = false
-		mobile_start.visibility_changed.connect(func(): visible = not mobile_start.visible)
+		mobile_start.visibility_changed.connect(func():
+			visible = not mobile_start.visible
+			get_viewport().disable_3d = mobile_start.visible
+		)
 		mobile_start.continue_requested.connect( func():
 			load_game()
 			start_campaign_play()
