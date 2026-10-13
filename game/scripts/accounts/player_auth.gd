@@ -39,13 +39,13 @@ func _process(_delta: float) -> void:
 static func email_valid(email: String) -> bool:
 	var regex:=RegEx.new();regex.compile("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")
 	return email.length()<=254 and regex.search(email)!=null
-static func password_valid(password: String) -> bool:return password.length()>=12 and password.length()<=128
+static func password_valid(password: String) -> bool:return password.length()>=8 and password.length()<=128
 static func code_valid(code: String) -> bool:
 	var regex:=RegEx.new();regex.compile("^[0-9]{6}$");return regex.search(code)!=null
 static func username_valid(value: String) -> bool:
 	var regex:=RegEx.new();regex.compile("^[A-Za-z0-9_]{3,24}$");return regex.search(value)!=null
 func signup(email: String,password: String,commander: String) -> Dictionary:
-	if not email_valid(email) or not password_valid(password) or not username_valid(commander):return failure("Enter a valid email, a 12–128 character password and a commander name (3–24 letters, numbers or underscores).")
+	if not email_valid(email) or not password_valid(password) or not username_valid(commander):return failure("Enter a valid email, an 8–128 character password and a commander name (3–24 letters, numbers or underscores).")
 	var result:=await request("/signup",{"email":email.strip_edges(),"password":password,"data":{"commander_name":commander}})
 	# Even if the server is misconfigured to auto-confirm, this UI never silently logs in after signup.
 	return result
@@ -64,7 +64,7 @@ func resend(email: String,recovery: bool=false) -> Dictionary:
 	return await request("/recover" if recovery else "/resend",{"email":email.strip_edges()} if recovery else {"email":email.strip_edges(),"type":"signup"})
 func reset_password(password: String) -> Dictionary:
 	if not recovery_pending or access_token.is_empty():return failure("Verify the password-reset code first.")
-	if not password_valid(password):return failure("Use a password with 12–128 characters.")
+	if not password_valid(password):return failure("Use a password with 8–128 characters.")
 	var result:=await request("/user",{"password":password},HTTPClient.METHOD_PUT,access_token)
 	if result.ok:
 		# Close the recovery session, then require a normal login using the new password.

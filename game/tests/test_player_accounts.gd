@@ -21,11 +21,16 @@ func run() -> void:
 	auth.base_url="https://example.supabase.co";auth.public_key="sb_secret_example"
 	check(not auth.configured(),"Reject server secret keys in the client")
 	auth.public_key="sb_publishable_example"
+	check(not PlayerAuth.password_valid("A7pass!") and PlayerAuth.password_valid("A8passw!"),"Password minimum is eight characters")
+	check(PlayerAuth.password_valid("a".repeat(128)) and not PlayerAuth.password_valid("a".repeat(129)),"Password maximum remains 128 characters")
+	r=await auth.signup("tester@example.org","A7pass!","Tester")
+	check(not r.ok and calls.is_empty(),"Seven-character registration password is rejected before a request")
 	r=await auth.signup("bad email","short","bad name")
 	check(not r.ok and calls.is_empty(),"Invalid registration cannot reach backend")
 	reply={"ok":true,"data":{}}
-	r=await auth.signup("tester@example.org","strongpassword12","Tester")
+	r=await auth.signup("tester@example.org","A8passw!","Tester")
 	check(r.ok and calls[-1][0]=="/signup" and calls[-1][1].data.commander_name=="Tester","Registration sends commander metadata")
+	check(calls[-1][1].password=="A8passw!","Eight-character registration password reaches the account service")
 	check(not auth.signed_in(),"Registration waits for confirmation")
 	reply={"ok":true,"data":session(false)}
 	r=await auth.login("tester@example.org","strongpassword12")
@@ -43,8 +48,12 @@ func run() -> void:
 	r=await auth.verify("tester@example.org","123456",true)
 	check(r.ok and auth.recovery_pending and not auth.signed_in(),"Recovery session is blocked from normal login")
 	reply={"ok":true,"data":{}}
-	r=await auth.reset_password("updatedpassword12")
+	var reset_calls_before:=calls.size()
+	r=await auth.reset_password("A7pass!")
+	check(not r.ok and calls.size()==reset_calls_before and auth.recovery_pending,"Seven-character reset password is rejected without ending recovery")
+	r=await auth.reset_password("B8passw!")
 	check(r.ok and calls[-2][0]=="/user" and calls[-2][2]==HTTPClient.METHOD_PUT and calls[-2][3]=="test_access","Password update requires recovery bearer token")
+	check(calls[-2][1].password=="B8passw!","Eight-character reset password reaches the account service")
 	check(not auth.recovery_pending and auth.access_token.is_empty(),"Reset clears session and requires a fresh login")
 	r=await auth.reset_password("updatedpassword12")
 	check(not r.ok,"Password update without verified recovery is blocked")
@@ -79,6 +88,9 @@ func run() -> void:
 	panel=AccountPanel.new();root.add_child(panel);panel.open()
 	check(panel.mode=="login" and panel.overlay.visible,"Native account panel opens without configuration")
 	panel.build("signup");check(panel.inputs.has("confirm") and panel.inputs.password.secret,"Registration has masked password confirmation")
+	check(panel.inputs.password.placeholder_text=="Password (8+ characters)","Registration displays the eight-character minimum")
+	panel.build("new_password")
+	check(panel.inputs.password.placeholder_text=="Password (8+ characters)","Password reset displays the eight-character minimum")
 	panel.build("recovery_code");check(panel.inputs.has("code"),"Recovery screen accepts email codes")
 	panel.queue_free();auth.queue_free()
 	print("ACCOUNT CHECKS ",checks," failures=",failures)

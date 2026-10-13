@@ -13,7 +13,7 @@ The profile migration creates a private UUID-linked profile on Auth signup and u
 ## Connect the service
 
 1. Provision a dedicated Command of Nations Supabase project, independent of Yaska. Start with a nearby North American region and measure latency from testers.
-2. Enable email/password signup and require Confirm Email. Enforce a minimum 12-character password. Configure six-digit OTPs, short OTP expiry and provider-side signup/verify/recovery rate limits. Local resend cooldown is convenience only, not a security boundary.
+2. Enable email/password signup and require Confirm Email. Enforce a minimum 8-character password, matching the game's registration and password-reset forms. Configure six-digit OTPs, short OTP expiry and provider-side signup/verify/recovery rate limits. Local resend cooldown is convenience only, not a security boundary.
 3. Configure a transactional SMTP sender for the chosen domain, verify SPF/DKIM and configure DMARC. Supabase's default sender reaches project-team addresses only, so it is unsuitable for the 100 testers. Raise email throughput deliberately for a tester onboarding wave, keeping abuse controls. Invite in batches.
 4. Apply backend/migrations/001_player_accounts.sql once to that project, with private excluded from exposed Data API schemas. Configure confirmation/reset templates from backend/email/. They use {{ .Token }}, not a website callback.
 5. Copy game/config/accounts.example.cfg to game/config/accounts.cfg with the HTTPS project URL and sb_publishable_ client key. No service-role key, JWT signing key, SMTP password or secret key belongs in Godot. Build-time configuration must include only these public values.
