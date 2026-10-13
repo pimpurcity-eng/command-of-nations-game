@@ -72,6 +72,86 @@
       "model": null,
       "width": 512,
       "height": 512
+    },
+    {
+      "key": "city_russia",
+      "name": "Russian city",
+      "path": "game/assets/interface/cities/city_russia.webp",
+      "sha": "ceac595d4e9014291f974a9ff1ebfcb308669d38",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: muted Russian city district with grey-beige apartment blocks and a few modern glass towers AROUND an open central garrison plaza; one large clearly visible T-72 tank dominates the foreground, buildings do not obscure it. Three-quarter elevated view of the complete building or compact compound. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "model": null,
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "tank_plant",
+      "name": "Tank plant",
+      "path": "game/assets/interface/buildings/tank_plant.webp",
+      "sha": "8bc8b1c635a4d3b1a5331933089d425855153951",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: tank manufacturing hall with wide assembly doors and one battle tank in the outside yard. Three-quarter elevated view of the complete building or compact compound. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "model": null,
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_t62",
+      "name": "T-62",
+      "path": "game/assets/interface/unit_art/russia_t62.webp",
+      "sha": "5b5645803f1c8070e91f2e4851549839ea8a113c",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: T-62 (russia_t62), a Armor weapon or vehicle on dry grass and packed earth, correct identifying turret, wheels, tracks or weapon tubes, entire subject visible from low front three-quarter angle. This is the Russian equipment from model russia_t62; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "model": "res://assets/library/arsenal/russia_t62.glb",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "city_ukraine",
+      "name": "European city",
+      "path": "game/assets/interface/cities/city_ukraine.webp",
+      "sha": "b859c605a06b536b7d883608bb2ee245b6e4328e",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: muted European city district with grey-beige apartment blocks and glass high-rises AROUND an open central garrison plaza; one large clearly visible Leopard tank dominates the foreground, buildings do not obscure it. Three-quarter elevated view of the complete building or compact compound. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "model": null,
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "naval_base",
+      "name": "Naval base",
+      "path": "game/assets/interface/buildings/naval_base.webp",
+      "sha": "86b64ec01d04857f8fec7bbf08de817215e55af9",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: naval harbour with docks, cranes, warehouses, a modest warship floating beside the pier. Three-quarter elevated view of the complete building or compact compound. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "model": null,
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "infrastructure",
+      "name": "Road infrastructure",
+      "path": "game/assets/interface/buildings/infrastructure.webp",
+      "sha": "94f796400ace9070d6fb2220a15b3ae6c9c9cee9",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: asphalt road junction and modest overpass through subdued countryside, with a military supply truck for scale. Three-quarter elevated view of the complete building or compact compound. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "model": null,
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_tu22m3",
+      "name": "Tu-22M3",
+      "path": "game/assets/interface/unit_art/russia_tu22m3.webp",
+      "sha": "4b225142917086938e46a54e29a2bb959362980b",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: Tu-22M3 aircraft in flight, correct wing/fuselage/engine arrangement, clear complete silhouette against a soft clouded sky. This is the Russian equipment from model russia_tu22m3; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "model": "res://assets/library/arsenal/russia_tu22m3.glb",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "capitol",
+      "name": "Capitol",
+      "path": "game/assets/interface/buildings/capitol.webp",
+      "sha": "752e200fce70c006f1a072523c29a5c0baa1b907",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: dignified stone government capitol with restrained neoclassical architecture in a civic square. Three-quarter elevated view of the complete building or compact compound. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "model": null,
+      "width": 512,
+      "height": 512
     }
   ],
   "failed": []
