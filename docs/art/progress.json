@@ -272,6 +272,46 @@
       "sha": "57842d904e3da0d7e81ef141d9937d4e7af89a02",
       "width": 512,
       "height": 512
+    },
+    {
+      "key": "russia_mi24_mi35",
+      "name": "Mi-24 / Mi-35",
+      "model": "res://assets/library/arsenal/russia_mi24_mi35.glb",
+      "path": "game/assets/interface/unit_art/russia_mi24_mi35.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: Mi-24 / Mi-35 aircraft in flight, correct wing/fuselage/engine arrangement, clear complete silhouette against a soft clouded sky. This is the Russian equipment from model russia_mi24_mi35; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "37e193d88f3da448843aeb87331f3537be029f16",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_bm21_grad",
+      "name": "BM-21 Grad",
+      "model": "res://assets/library/arsenal/russia_bm21_grad.glb",
+      "path": "game/assets/interface/unit_art/russia_bm21_grad.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: BM-21 Grad (russia_bm21_grad), a Missiles weapon or vehicle on dry grass and packed earth, correct identifying turret, wheels, tracks or weapon tubes, entire subject visible from low front three-quarter angle. This is the Russian equipment from model russia_bm21_grad; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "04ee6e4800a84a5001ec8f7dcc8c1c4275e45b8c",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_lar160",
+      "name": "LAR-160",
+      "model": "res://assets/library/arsenal/euro_lar160.glb",
+      "path": "game/assets/interface/unit_art/euro_lar160.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: LAR-160 (euro_lar160), a Missiles weapon or vehicle on dry grass and packed earth, correct identifying turret, wheels, tracks or weapon tubes, entire subject visible from low front three-quarter angle. This is the European equipment from model euro_lar160; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "f9b11af9db2769b414ca884957bb1ad0058f0229",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_orlan10_drone_only",
+      "name": "Orlan-10",
+      "model": "res://assets/library/arsenal/russia_orlan10_drone_only.glb",
+      "path": "game/assets/interface/unit_art/russia_orlan10_drone_only.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: Orlan-10 uncrewed aircraft, correct propeller, wings, airframe and era, flying over distant muted terrain, the entire drone clearly visible. This is the Russian equipment from model russia_orlan10_drone_only; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "82bedf4f3d00b10046bc3e333b9b9d1c22c41579",
+      "width": 512,
+      "height": 512
     }
   ],
   "failed": []
