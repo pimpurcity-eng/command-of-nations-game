@@ -977,7 +977,8 @@ func populate_campaign_forces(staged: bool = false) -> void:
 			var number: int = counts.get(family.id, 0)
 			counts[family.id] = number + 1
 			var data: = {"id": "campaign_%s_%d" % [family.id, number], "name": EquipmentIdentity.research_title(family.id, 1), "country": country, "equipment_id": family.id, "level": 1, "visual_kind": kind, "base_city": base.id}
-			if kind != "fighter": data.stack_id = "start_" + base.id
+			# Air defence cannot move, so it gets its own stack and does not pin the army in place.
+			if kind != "fighter": data.stack_id = ("start_ad_" if family.get("stationary", false) or kind == "air_defense" else "start_") + base.id
 			units._spawn(data, point, Color("ef827c") if country == "russia" else Color("73bcff"))
 			spawned += 1
 			if staged and spawned % 4 == 0:

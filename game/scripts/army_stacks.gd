@@ -23,12 +23,21 @@ func members(unit: Dictionary) -> Array:
 ## "the strongest unit goes on top"). Rated at full health so the leader does not flip as
 ## units take damage.
 static var _rating: Dictionary = {}
+## How strong a unit type is for picking the stack leader (owner: "strongest unit goes on top").
+## Its own attack plus defence against every target type at full health, without terrain,
+## so urban defence bonuses do not put infantry above tanks.
 static func rating(unit: Dictionary) -> float:
 	var key: String = str(unit.get("equipment_id", "")) + ":" + str(int(unit.get("level", 1)))
 	if not _rating.has(key):
 		var fresh: Dictionary = unit.duplicate()
 		fresh.health = 100.0
-		_rating[key] = ArmyDetailsPanel.strength(fresh)
+		var combat: = CombatSystem.new()
+		var total: = 0.0
+		for target in ArmyDetailsPanel.TARGETS:
+			total += combat.damage_value(fresh, target[0], false) + combat.damage_value(fresh, target[0], true)
+		if fresh.visual_kind == "fighter": total += 2.0 * float(EquipmentIdentity.spec(fresh.equipment_id).get("air_damage", 0.0))
+		if fresh.visual_kind == "air_defense": total += 2.0 * float(EquipmentIdentity.research_tier(fresh.equipment_id, int(fresh.get("level", 1))).get("damage", 0.0))
+		_rating[key] = total
 	return _rating[key]
 func leader(group: Array) -> Dictionary:
 	var result: Dictionary = group[0]
