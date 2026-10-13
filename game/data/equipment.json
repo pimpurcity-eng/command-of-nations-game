@@ -4904,11 +4904,11 @@
     },
     "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
     "research_days": [
-      2,
-      5,
-      8,
-      11,
-      14
+      1,
+      4,
+      7,
+      10,
+      13
     ],
     "upkeep": {
       "funds": 280.0,
@@ -4917,7 +4917,7 @@
       "food": 6.0
     },
     "production_building": "tank_plant",
-    "starter": false,
+    "starter": true,
     "asset_roster_id": "light_tank_russia"
   },
   {
@@ -5775,11 +5775,11 @@
     },
     "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
     "research_days": [
-      2,
-      5,
-      8,
-      11,
-      14
+      1,
+      4,
+      7,
+      10,
+      13
     ],
     "upkeep": {
       "funds": 280.0,
@@ -5788,7 +5788,7 @@
       "food": 6.0
     },
     "production_building": "tank_plant",
-    "starter": false,
+    "starter": true,
     "asset_roster_id": "light_tank_ukraine"
   },
   {

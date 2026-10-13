@@ -192,10 +192,19 @@ func _map_label(text: String, size: int, color: Color) -> Label:
 	return label
 func select_city(city: Dictionary) -> void :
 	city_selected.emit(city)
-func _process(_delta: float) -> void :
+## Performance (owner 2026-10-13, lag with 20 armies): city ownership, visibility and label
+## text update 4 times a second; label positions only when the camera moved or that changed.
+var _state_timer: = 0.0
+var _view_key: Array = []
+func _process(delta: float) -> void :
 	if rig == null: return
 	if labels.size() != cities.size(): return
-	if armies != null:
+	_state_timer -= delta
+	var view_key: Array = [rig.camera.global_transform, get_viewport().get_visible_rect().size, rig.rendered_distance]
+	if _state_timer > 0.0 and view_key == _view_key: return
+	_view_key = view_key
+	if _state_timer <= 0.0 and armies != null:
+		_state_timer = 0.25
 		for city in cities:
 			var controller: = controller_of(city)
 			districts[city.id].visible = true
@@ -205,7 +214,7 @@ func _process(_delta: float) -> void :
 			var index: = cities.find(city)
 			labels[index].text = ("★ " if city.get("capital", false) else "") + city.name.to_upper() + (" · YOURS" if captured and controller == GameSession.player_country else " · ENEMY" if captured else "")
 			labels[index].tooltip_text = city.name + " · Controlled by " + controller.capitalize() + (" · Capital" if city.get("capital", false) else "")
-	if armies != null:
+	if _state_timer == 0.25 and armies != null:
 		var system: BuildingSystem = _building_ref.get_ref() if _building_ref != null else null
 		if system != null:
 			for id in rural_districts:

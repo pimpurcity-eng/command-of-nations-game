@@ -55,6 +55,9 @@ var order_mode: = false
 ## Last map tap, so tapping the same spot again steps to the next army or the city under it.
 var _tap_cycle: Dictionary = {}
 var gold_panel: GoldPanel
+const STARTING_ARMY: = {"infantry": 15, "light_tank": 2, "air_defence": 5, "plane": 1}
+## Each side's starter light attack jet.
+const STARTING_PLANE: = {"russia": "yak130_russia", "ukraine": "hawk_t2_ukraine"}
 var selecting_armies: = false
 var patrol_order: = false
 var clock: SimulationClock
@@ -945,31 +948,37 @@ func restore_campaign_forces() -> void:
 
 func populate_campaign_forces(staged: bool = false) -> void:
 	units.restore([])
-	var count_total: int = maxi(1, EquipmentIdentity.catalog.filter(func(f: Dictionary): return f.get("starter", false)).size() * session.scenario.get("starting_tiers", [1, 3, 5]).size())
+	var count_total: int = 2 * (STARTING_ARMY.infantry + STARTING_ARMY.light_tank + STARTING_ARMY.air_defence + STARTING_ARMY.plane)
 	var spawned: int = 0
 	var counts: Dictionary = {}
 	var occupied_sea: Array[Vector2] = []
 	var occupied_air: Array[Vector2] = []
-	for family in EquipmentIdentity.catalog:
-		# Owner 2026-10-13 (Call of War start): a small army of the weakest starter weapons only.
-		if not family.get("starter", false) or family.get("retired", false): continue
-		var kind: String = family.visual_kind
-		var bases: Array = production.cities.filter(func(city: Dictionary):
-			return city.country.to_lower() == family.country and (kind != "naval" or city.has("naval_spawn")))
-		if bases.is_empty(): continue
-		for level in session.scenario.get("starting_tiers",[1,3,5]):
-			var key: String = family.country + ":" + kind
-			var number: int = counts.get(key,0);counts[key]=number+1
-			var base: Dictionary = bases[number % bases.size()]
+	# Owner 2026-10-13 (Call of War start): 15 infantry, 2 light tanks, 1 plane and 5 air
+	# defence per country, all level 1, stacked in their cities (capital first).
+	for country in ["russia", "ukraine"]:
+		var capital: Dictionary = buildings.capital(country)
+		var homes: Array = production.cities.filter(func(city: Dictionary): return city.country.to_lower() == country)
+		homes.sort_custom(func(a: Dictionary, b: Dictionary): return a.id == capital.id and b.id != capital.id)
+		if homes.is_empty(): continue
+		var plan: Array = []  # [family id, city]
+		for i in STARTING_ARMY.infantry: plan.append(["infantry_" + country, homes[0] if i < 3 else homes[1 + (i - 3) % (homes.size() - 1)] if homes.size() > 1 else homes[0]])
+		for i in STARTING_ARMY.light_tank: plan.append(["light_tank_" + country, homes[0]])
+		for i in STARTING_ARMY.air_defence: plan.append(["skyguard_" + country, homes[i % homes.size()]])
+		for i in STARTING_ARMY.plane: plan.append([STARTING_PLANE[country], homes[0]])
+		for entry in plan:
+			var family: Dictionary = EquipmentIdentity.spec(entry[0])
+			if family.is_empty(): continue
+			var base: Dictionary = entry[1]
+			var kind: String = family.visual_kind
 			var point: Vector2 = base.point
-			if kind == "naval":
-				point = weapons_test_sea_slot(GeographicProjection.project(base.naval_spawn.longitude,base.naval_spawn.latitude),occupied_sea)
-				occupied_sea.append(point)
-			elif kind == "fighter":
-				point = weapons_test_air_slot(base.point,family.country,occupied_air,float(family.get("air_range",14.0)))
+			if kind == "fighter":
+				point = weapons_test_air_slot(base.point, country, occupied_air, float(family.get("air_range", 14.0)))
 				occupied_air.append(point)
-			var data: = {"id":"campaign_"+family.id+"_l"+str(level),"name":EquipmentIdentity.research_title(family.id,level),"country":family.country,"equipment_id":family.id,"level":level,"visual_kind":kind,"base_city":base.id}
-			units._spawn(data,point,Color("ef827c") if family.country == "russia" else Color("73bcff"))
+			var number: int = counts.get(family.id, 0)
+			counts[family.id] = number + 1
+			var data: = {"id": "campaign_%s_%d" % [family.id, number], "name": EquipmentIdentity.research_title(family.id, 1), "country": country, "equipment_id": family.id, "level": 1, "visual_kind": kind, "base_city": base.id}
+			if kind != "fighter": data.stack_id = "start_" + base.id
+			units._spawn(data, point, Color("ef827c") if country == "russia" else Color("73bcff"))
 			spawned += 1
 			if staged and spawned % 4 == 0:
 				boot_progress.emit(spawned, count_total)

@@ -18,12 +18,15 @@ func run():
  while not game.boot_finished: await process_frame
  for i in 3:await process_frame
  game.mobile_start.hide();game.clock.paused=true;game.match_rules.ai_enabled=false
- var starters: Array = EquipmentIdentity.catalog.filter(func(f):return f.get("starter",false))
- check(game.units.units.size()==starters.size(),"a small starting army: one level-1 unit of each starter weapon (owner 2026-10-13, Call of War start)")
+ # Owner 2026-10-13 (Call of War start): 15 infantry, 2 light tanks, 5 air defence and 1 plane each.
+ var expected := {"infantry": 15, "light_tank": 2, "skyguard": 5, "plane": 1}
+ check(game.units.units.size()==2*23,"starting army: 23 level-1 units per country (%d)" % game.units.units.size())
+ for country in ["russia","ukraine"]:
+  for prefix in expected:
+   var id: String = game.STARTING_PLANE[country] if prefix == "plane" else prefix+"_"+country
+   var have=game.units.units.filter(func(u):return u.equipment_id==id and int(u.level)==1).size()
+   check(have==expected[prefix],"%s starts with %d %s (%d)" % [country,expected[prefix],prefix,have])
  for family in EquipmentIdentity.catalog:
-  var units=game.units.units.filter(func(u):return u.equipment_id==family.id)
-  if family.get("starter",false): check(units.size()==1 and int(units[0].level)==1,family.id+" starts with one level-1 unit")
-  else: check(units.is_empty(),family.id+" is not in the starting army")
   check(not CowUI.equipment_picture(family.id).resource_path.contains("_flag") and not UnitVisual.preview_texture(family.id).resource_path.contains("_flag"),family.id+" equipment image is not a nation flag")
  check(game.units.units.filter(func(u):return u.visual_kind=="naval").all(func(u):return game.units.sea_navigation.on_sea(Vector2(u.node.position.x,u.node.position.z))),"starting fleet is on water")
  check(game.research.level("tanks_russia")==1,"starting top-tier units do not unlock future production research")

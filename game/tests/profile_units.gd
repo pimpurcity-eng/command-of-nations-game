@@ -20,13 +20,15 @@ func run() -> void:
 	var moscow: Vector2 = game.buildings.city("moscow").point
 	# 20 armies around Moscow, a mix of families like a real game.
 	var families: Array = EquipmentIdentity.catalog.filter(func(f): return f.country == "russia" and not f.get("retired", false) and f.visual_kind not in ["naval"])
-	for i in 20:
+	# PROFILE_START=1: measure the real Call of War start army instead of 20 extra armies.
+	var extra: int = 0 if OS.get_environment("PROFILE_START") == "1" else 20
+	for i in extra:
 		var family: Dictionary = families[i % families.size()]
 		var at: = moscow + Vector2.from_angle(i * 0.9) * (0.6 + 0.12 * i)
 		game.units._spawn({"id": "p%d" % i, "name": family.name, "country": "russia", "equipment_id": family.id, "level": 1 + i % 5,
 			"visual_kind": family.visual_kind, "base_city": "moscow"}, at, Color("ef827c"))
 	game.rig.target = Vector3(moscow.x, 0, moscow.y)
-	game.rig.distance = 14.0
+	game.rig.distance = float(OS.get_environment("PROFILE_DISTANCE")) if not OS.get_environment("PROFILE_DISTANCE").is_empty() else 14.0
 	game.rig._snap(1.0)
 	for i in 60: await process_frame  # let models load
 	game.clock.paused = false

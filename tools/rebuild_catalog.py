@@ -108,7 +108,7 @@ family("tanks_russia", name="Main battle tanks", research_branch="Main battle ta
        "+", ("T-90A", m("russia_t90a"))))
 family("advanced_tanks_russia", name="Next-generation tanks", research_branch="Next-generation tank", starter=False,
        research_days=days(10), research_tiers=line(("T-80BVM", m("russia_t80bvm")), "+", ("T-90M Proryv", LIB + "t90m_russian.glb"), "+", ("T-14 Armata", m("russia_t14_armata"))))
-family("light_tank_russia", "tanks_russia", name="Light tanks", research_branch="Light tank", starter=False, research_days=days(2),
+family("light_tank_russia", "tanks_russia", name="Light tanks", research_branch="Light tank", starter=True, research_days=days(1),
        research_tiers=line(("PL-01 light tank", LIB + "pl01_russian.glb"), "+", "+thermal sights", "+", "+advanced"))
 family("2b14_mortar_82_russia", name="Mortars", research_branch="Mortars", starter=True, research_days=days(1),
        research_tiers=line(("2B14 82 mm mortar", m("russia_2b14_mortar_82")), "+", ("2B11 120 mm mortar", m("russia_2b11_mortar_120")), "+", "+guided rounds"))
@@ -196,7 +196,7 @@ family("tanks_ukraine", name="Main battle tanks", research_branch="Main battle t
        "+", ("Challenger 2", m("euro_challenger2"))))
 family("advanced_tanks_ukraine", name="Next-generation tanks", research_branch="Next-generation tank", starter=False, research_days=days(10),
        research_tiers=line(("Leclerc", m("euro_leclerc")), "+", ("M1A2 Abrams", LIB + "abrams_european.glb"), "+", ("KF51 Panther", m("euro_kf51_panther"))))
-family("light_tank_ukraine", "tanks_ukraine", name="Light tanks", research_branch="Light tank", starter=False, research_days=days(2),
+family("light_tank_ukraine", "tanks_ukraine", name="Light tanks", research_branch="Light tank", starter=True, research_days=days(1),
        research_tiers=line(("PL-01 light tank", LIB + "pl01_european.glb"), "+", "+thermal sights", "+", "+advanced"))
 family("l16_mortar_81_ukraine", name="Mortars", research_branch="Mortars", starter=True, research_days=days(1),
        research_tiers=line(("L16 81 mm mortar", m("euro_l16_mortar_81")), "+", ("MO-120-RT 120 mm mortar", m("euro_mo120rt_mortar")), "+", "+guided rounds"))

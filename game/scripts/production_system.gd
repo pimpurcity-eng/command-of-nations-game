@@ -33,10 +33,15 @@ const DAY_SECONDS: = 86400.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
 var shortage_resources: Dictionary = {}
 ## Gold per country for this match only (GoldWallet.START at the start).
 var gold: Dictionary = {}
+## Territory by id, cached (performance 2026-10-13: these lookups ran for every city every tick).
+var _territory_by_id: Dictionary = {}
+func _territory(id: String) -> Dictionary:
+	if _territory_by_id.size() != terrain.territories.size():
+		_territory_by_id.clear()
+		for territory in terrain.territories: _territory_by_id[territory.id] = territory
+	return _territory_by_id.get(id, {})
 func province(city: Dictionary) -> Dictionary:
-	for territory in terrain.territories:
-		if territory.id == city.sector: return territory
-	return {}
+	return _territory(str(city.get("sector", "")))
 func morale_factor(city: Dictionary) -> float:
 	var region: = province(city)
 	return float(region.get("morale",100.0 if controller(city) == city.country.to_lower() else 25.0))/100.0
@@ -97,8 +102,8 @@ func upkeep() -> Dictionary:
 		if spec.is_empty(): continue
 		for resource in RESOURCES: result[unit.country][resource] += float(spec.get("upkeep",{}).get(resource,0.0))/DAY_SECONDS
 	return result
-func net_income() -> Dictionary:
-	var result: = gross_income()
+func net_income(gross: Dictionary = {}) -> Dictionary:
+	var result: = gross.duplicate(true) if not gross.is_empty() else gross_income()
 	var maintenance: = upkeep()
 	for country in result:
 		for resource in RESOURCES: result[country][resource] -= maintenance[country][resource]
@@ -125,9 +130,7 @@ func equipment(id: String) -> Dictionary:
 		if spec.id == id: return spec
 	return {}
 func controller(city: Dictionary) -> String:
-	for territory in terrain.territories:
-		if territory.id == city.sector: return territory.controller
-	return ""
+	return str(_territory(str(city.get("sector", ""))).get("controller", ""))
 func controlled(city: Dictionary, country: String = "") -> bool:
 	return controller(city) == (city.country.to_lower() if country.is_empty() else country)
 func enqueue(equipment_id: String, city_name: String) -> String:
@@ -173,7 +176,7 @@ func advance(seconds: float) -> void :
 	var gross := gross_income()
 	for country in gross:
 		for resource in RESOURCES: _earn(country,resource,gross[country][resource]*seconds)
-	var income: = net_income()
+	var income: = net_income(gross)
 	shortage_resources.clear()
 	for country in stockpiles:
 		shortage_resources[country] = []

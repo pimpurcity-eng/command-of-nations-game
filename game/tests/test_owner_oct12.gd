@@ -17,7 +17,7 @@ func run() -> void:
 	for i in 5: await process_frame
 	game.clock.paused = true
 	game.match_rules.ai_enabled = false
-	check(game.units.units.size() == EquipmentIdentity.catalog.filter(func(f):return f.get("starter",false)).size() and game.units.units.all(func(u):return u.level == 1),"one level-1 unit of each starter weapon (owner 2026-10-13, Call of War start)")
+	check(game.units.units.size() == 46 and game.units.units.all(func(u):return u.level == 1),"Call of War start: 15 infantry, 2 light tanks, 5 air defence, 1 plane per side, all level 1 (owner 2026-10-13)")
 	check(ProductionGroups.TITLES == ["Economy","Aircraft","Ordnance","Tanks","Naval","Barracks","Missiles","Drones","Support"],"requested research groups incl. Missiles, Drones, Support")
 	var schedules := {}
 	for spec in EquipmentIdentity.catalog.filter(func(f):return not f.get("retired",false)):

@@ -148,7 +148,10 @@ func advance(seconds: float) -> void :
 			jobs.remove_at(i)
 			finished_any = true
 
-	for spec in economy.catalog:  # economy upgrades are buildings now; retired families are skipped
+	# The opponent AI looks for new research only when it has a free slot (performance).
+	var opponent: = GameSession.opponent_country()
+	var busy: = jobs.filter(func(job: Dictionary): return economy.equipment(job.equipment).country == opponent).size()
+	for spec in (economy.catalog if busy < SLOTS else []):  # economy upgrades are buildings now; retired families are skipped
 		if spec.get("retired", false): continue
 		if spec.country == GameSession.opponent_country() and level(spec.id) < 5 and reason(spec.id, level(spec.id) + 1, GameSession.opponent_country()).is_empty():
 			start(spec.id, level(spec.id) + 1, GameSession.opponent_country())

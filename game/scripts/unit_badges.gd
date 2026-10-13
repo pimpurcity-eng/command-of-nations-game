@@ -14,6 +14,8 @@ func contains(screen: Vector2) -> bool:
 ## Army markers in the Call of War style: diamond tokens when zoomed out, a count and
 ## health tag beside each 3D model when zoomed in (see UnitToken).
 const SHOW_TAGS: = true
+var _refresh_timer: = 0.0
+var _view_key: Array = []
 func _process(_delta: float) -> void :
 	if armies == null: return
 	if not SHOW_TAGS:
@@ -21,6 +23,13 @@ func _process(_delta: float) -> void :
 		return
 	var camera: = get_viewport().get_camera_3d()
 	if camera == null: return
+	# Performance (owner 2026-10-13): lay the markers out again only when the camera moved,
+	# an army is moving, or 4 times a second for health and selection changes.
+	_refresh_timer -= _delta
+	var view_key: Array = [camera.global_transform, get_viewport().get_visible_rect().size, armies.selected, armies.units.size()]
+	if _refresh_timer > 0.0 and view_key == _view_key and not armies.units.any(func(u: Dictionary): return u.get("moving", false)): return
+	_view_key = view_key
+	_refresh_timer = 0.25
 	var transform: = get_final_transform().affine_inverse()
 	var size: = transform * get_viewport().get_visible_rect().size
 	var bottom: = 248.0 if size.y > size.x else 164.0

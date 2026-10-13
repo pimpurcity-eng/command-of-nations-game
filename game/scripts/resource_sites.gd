@@ -98,8 +98,15 @@ func income(seconds: float) -> Dictionary:
 		result[controller][site.resource] = result[controller].get(site.resource, 0.0) + rate(site.resource) * seconds * factor
 	return result
 
+## Owner 2026-10-13 ("why is there a leaf there?"): no floating resource icons on the map; the
+## city's name tag shows its resource. Set true to show the floating badges again.
+const SHOW_BADGES: = false
 func _process(_delta: float) -> void:
 	if rig == null: return
+	if not SHOW_BADGES and not SHOW_INSTALLATIONS:
+		for badge in badges: badge.visible = false
+		set_process(false)
+		return
 	var show: = rig.rendered_distance < ICON_DISTANCE
 	for badge in badges: badge.visible = show
 	if armies != null:

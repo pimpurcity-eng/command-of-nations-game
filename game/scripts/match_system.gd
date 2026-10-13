@@ -301,11 +301,18 @@ func _update_entrenchment(seconds: float) -> void:
 			unit.entrenched = false
 			continue
 		var point: = Vector2(unit.node.position.x, unit.node.position.z)
-		var at_centre: = false
-		for title in terrain.province_hubs:
-			if terrain.province_hubs[title].distance_to(point) <= CAPTURE_RADIUS:
-				at_centre = true
-				break
+		# A parked army stays put: remember the hub test for this spot
+		# (performance 2026-10-13; this ran over every province hub for every army each tick).
+		var memo: Array = unit.get("_entrench_memo", [])
+		if memo.size() != 2 or memo[0] != point:
+			var at_hub: = false
+			for title in terrain.province_hubs:
+				if terrain.province_hubs[title].distance_to(point) <= CAPTURE_RADIUS:
+					at_hub = true
+					break
+			memo = [point, at_hub]
+			unit._entrench_memo = memo
+		var at_centre: bool = memo[1]
 		# Combat engineers dig the army in anywhere, twice as fast.
 		var engineers: float = SupportRoles.entrench_factor(armies.stacks.members(unit))
 		unit.dug_in = unit.get("dug_in", 0.0) + seconds * engineers if at_centre or engineers > 1.0 else 0.0
