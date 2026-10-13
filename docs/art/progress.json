@@ -472,6 +472,46 @@
       "sha": "04ce4f267f2c9e3688dc9ca09520c24efe1efb0f",
       "width": 512,
       "height": 512
+    },
+    {
+      "key": "russia_2b14_mortar_82",
+      "name": "2B14 82 mm mortar",
+      "model": "res://assets/library/arsenal/russia_2b14_mortar_82.glb",
+      "path": "game/assets/interface/unit_art/russia_2b14_mortar_82.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: 2B14 82 mm mortar military mortar, correct barrel, bipod and baseplate, no people or extra objects, standing on dry grass viewed from low three-quarter angle. This is the Russian equipment from model russia_2b14_mortar_82; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "a2d915c50843d886547184d5ec0a68404614e7c1",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_l16_mortar_81",
+      "name": "L16 81 mm mortar",
+      "model": "res://assets/library/arsenal/euro_l16_mortar_81.glb",
+      "path": "game/assets/interface/unit_art/euro_l16_mortar_81.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: L16 81 mm mortar military mortar, correct barrel, bipod and baseplate, no people or extra objects, standing on dry grass viewed from low three-quarter angle. This is the European equipment from model euro_l16_mortar_81; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "46e14317fd18616c75c4b87190e4493bf142f3db",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_mo120rt_mortar",
+      "name": "MO-120-RT 120 mm mortar",
+      "model": "res://assets/library/arsenal/euro_mo120rt_mortar.glb",
+      "path": "game/assets/interface/unit_art/euro_mo120rt_mortar.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: MO-120-RT 120 mm mortar military mortar, correct barrel, bipod and baseplate, no people or extra objects, standing on dry grass viewed from low three-quarter angle. This is the European equipment from model euro_mo120rt_mortar; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "02f5d45bbf583bb73e885aafe5f04bb487e530c1",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_horizon",
+      "name": "Horizon Andrea Doria",
+      "model": "res://assets/library/arsenal/euro_horizon.glb",
+      "path": "game/assets/interface/unit_art/euro_horizon.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: Horizon Andrea Doria naval vessel, correct identifying hull and superstructure, complete silhouette from front three-quarter elevated angle, sitting correctly at its waterline in a calm sea. This is the European equipment from model euro_horizon; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "3b4f1fc3e145e30dfe9073a2f8c69a5632c1597f",
+      "width": 512,
+      "height": 512
     }
   ],
   "failed": []
