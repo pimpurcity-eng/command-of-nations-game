@@ -1,0 +1,88 @@
+--- a/game/scripts/main.gd	2026-10-13 13:06:16.365084958 -0300
++++ b/game/scripts/main.gd	2026-10-13 13:06:16.381435627 -0300
+@@ -55,6 +55,9 @@
+ var clock: SimulationClock
+ var match_rules: MatchSystem
+ var session: GameSession
++## Anti-cheat: start-of-match sweep, in-match watchdog and save seal (anti_cheat.gd).
++var anti_cheat: AntiCheat
++var anti_cheat_save_ok: = true
+ const SAVE_PATH: = "user://regional_save.json"
+ func _ready() -> void :
+ 	# Prevent costly detail loading/rendering before the portrait start screen is ready.
+@@ -274,6 +277,12 @@
+ 		if country == GameSession.player_country: _award_count("research")
+ 		if country == GameSession.player_country: audio.play("research_complete"))
+ 	session.production = production
++	anti_cheat = AntiCheat.new()
++	anti_cheat.name = "AntiCheat"
++	add_child(anti_cheat)
++	anti_cheat.attach(self)
++	anti_cheat.match_flagged.connect(func(reason: String):
++		hud.show_status("ANTI-CHEAT · match is now UNRANKED · " + reason))
+ 	production.unit_ready.connect(units.spawn_produced)
+ 	production.changed.connect( func(): hud.show_resources(resource_country, production.stockpiles[resource_country]))
+ 	production.changed.connect(refresh_rally_markers)
+@@ -456,6 +465,7 @@
+ 	if session == null or session.match_rules == null: return "Game is still loading"
+ 	var state: = session.capture(clock, map, units, rig)
+ 	if browser_suspended: state.clock.paused = not resume_after_background
++	if anti_cheat != null: state = anti_cheat.seal_save(state)
+ 	return session.write_save(path, state)
+ func _browser_hidden(_arguments: Array) -> void :
+ 	if browser_suspended: return
+@@ -563,7 +573,9 @@
+ 	return Vector3(point.x, 0.15, point.y)
+ 
+ func save_game() -> void :
+-	var error: = session.write_save(SAVE_PATH, session.capture(clock, map, units, rig))
++	var state: = session.capture(clock, map, units, rig)
++	if anti_cheat != null: state = anti_cheat.seal_save(state)
++	var error: = session.write_save(SAVE_PATH, state)
+ 	hud.show_status("Game saved on this device" if error.is_empty() else error)
+ func load_game() -> void :
+ 	var result: = session.read_save(SAVE_PATH, map, units)
+@@ -571,6 +583,12 @@
+ 		hud.show_status(result.error)
+ 		return
+ 	rally_city = ""
++	if anti_cheat != null:
++		anti_cheat_save_ok = anti_cheat.verify_save(result.state)
++		if not anti_cheat_save_ok:
++			anti_cheat.flagged = true
++			hud.show_status("ANTI-CHEAT · this save was edited outside the game · match is UNRANKED")
++		result.state.erase("_seal")
+ 	session.restore(result.state, clock, map, units, rig)
+ 	apply_player_country(false)
+ 	units.fog_enabled = not GameSession.weapons_test
+@@ -590,6 +608,7 @@
+ 	if not match_rules.winner.is_empty(): show_result(match_rules.winner)
+ 	hud.clear_unit_selection()
+ 	hud.show_status("Saved game restored")
++	if anti_cheat != null: anti_cheat.rebaseline()
+ 
+ func _touch_over_ui(screen: Vector2) -> bool:
+ 	if account_panel != null and account_panel.overlay.visible: return true
+@@ -791,8 +810,10 @@
+ ## Achievements from match events; new ones are announced in the status bar and sent to the
+ ## signed-in account.
+ func _award(id: String) -> void:
++	if anti_cheat != null and anti_cheat.flagged: return
+ 	if achievements.unlock(id): _announce_achievements()
+ func _award_count(counter: String) -> void:
++	if anti_cheat != null and anti_cheat.flagged: return
+ 	achievements.count(counter)
+ 	_announce_achievements()
+ func _announce_achievements() -> void:
+@@ -1029,6 +1050,11 @@
+ 		add_child(tutorial)
+ 		tutorial.setup(self, hud.get_child(0).theme)
+ 	audio.play_music("battle_theme")
++	# Everyone is in and the map is loaded: run the anti-cheat sweep once per match.
++	# Multiplayer: pass every other player's anti_cheat.build_report() here.
++	if anti_cheat != null and anti_cheat.last_report.is_empty() and not GameSession.weapons_test:
++		var sweep: = anti_cheat.run_start_sweep()
++		if sweep.match_verdict != AntiCheat.CLEAN: hud.show_status("ANTI-CHEAT · " + sweep.match_verdict + " · see the match report")
+ 	clock.paused = false
+ 	refresh_hud()
+ 	hud.show_status("Campaign running at " + str(int(clock.speed)) + "x · select a your army, then Move or Fly. Pause stops movement and builds.")

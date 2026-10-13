@@ -47,7 +47,7 @@ jobs:
       - name: Run Godot tests
         run: |
           fail=0
-          for t in test_startup_progress.gd test_campaign.gd test_phone_regression.gd; do
+          for t in test_startup_progress.gd test_campaign.gd test_phone_regression.gd test_anti_cheat.gd; do
             f=$(find "$PROJ" -name "$t" | head -1); [ -z "$f" ] && { echo "::warning::$t not found"; continue; }
             rel=res://${f#$PROJ/}
             echo "== $rel"; timeout 600 godot --headless --path "$PROJ" --script "$rel" 2>&1 | tee "/tmp/$t.log"
