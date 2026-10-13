@@ -185,37 +185,45 @@ func setup(system: ResearchSystem, theme: Theme) -> void:
 	hide()
 
 func _build_banners() -> void:
-	for child in banners.get_children(): banners.remove_child(child);child.queue_free()
+	for child in banners.get_children(): banners.remove_child(child); child.queue_free()
 	for index in CATEGORIES.size():
-		var families: = _families(index)
+		var families := _families(index)
 		if families.is_empty(): continue
-		var banner: = Button.new()
-		banner.custom_minimum_size.y = 188  # keeps the 1400x380 art in proportion on a phone
-		# Painted banner (tools/make_banners.py): the group's hero vehicle on flag-coloured rays.
-		var art_path: = "res://assets/interface/banners/" + GameSession.player_country + "_" + str(index) + ".jpg"
+		var banner := Button.new()
+		banner.custom_minimum_size.y = 164
 		for state in ["normal", "hover", "pressed"]:
-			var face: = StyleBoxTexture.new()
-			face.texture = load(art_path) if ResourceLoader.exists(art_path) else null
-			face.modulate_color = {"normal": Color.WHITE, "hover": Color(1.06, 1.06, 1.06), "pressed": Color(0.9, 0.9, 0.9)}[state]
-			banner.add_theme_stylebox_override(state, face if face.texture != null else CowUI.skin("banner_" + GameSession.player_country, 6))
+			var color: Color = {"normal": Color("293238"), "hover": Color("344047"), "pressed": Color("20282d")}[state]
+			banner.add_theme_stylebox_override(state, CowUI.box(color, 6, Color("526068"), 1))
 		banner.pressed.connect(func(): show_category(index))
-		var symbol: = UnitTypeIcon.silhouette(ProductionGroups.ICONS[index], CowUI.INK, Vector2(46, 40))
-		symbol.anchor_top = 1.0
-		symbol.anchor_bottom = 1.0
-		symbol.offset_left = 16
-		symbol.offset_right = 62
-		symbol.offset_top = -56
-		symbol.offset_bottom = -14
+		var hero: Dictionary = families[0]
+		for spec in families:
+			if _system().unlock_day(spec.id, 1) < _system().unlock_day(hero.id, 1): hero = spec
+		var picture := TextureRect.new()
+		picture.texture = CowUI.equipment_picture(hero.id)
+		picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		picture.anchor_left = 1.0
+		picture.anchor_right = 1.0
+		picture.offset_left = -162
+		picture.offset_right = -14
+		picture.offset_top = 8
+		picture.offset_bottom = 156
+		picture.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		banner.add_child(picture)
+		var symbol := UnitTypeIcon.silhouette(ProductionGroups.ICONS[index], CowUI.GOLD, Vector2(42, 40))
+		symbol.offset_left = 18
+		symbol.offset_right = 60
+		symbol.offset_top = 64
+		symbol.offset_bottom = 104
 		banner.add_child(symbol)
-		var name: = CowUI.label(CATEGORIES[index], 40, CowUI.INK)
+		var name := CowUI.label(CATEGORIES[index], 32, Color("f4ecd8"))
 		name.add_theme_font_override("font", CowUI.title_font())
-		name.add_theme_color_override("font_outline_color", Color(1, 1, 1, 0.7))
-		name.add_theme_constant_override("outline_size", 4)
-		name.anchor_top = 1.0
-		name.anchor_bottom = 1.0
-		name.offset_left = 74
-		name.offset_top = -58
-		name.offset_bottom = -12
+		name.anchor_right = 1.0
+		name.offset_left = 78
+		name.offset_right = -176
+		name.offset_top = 58
+		name.offset_bottom = 110
+		name.clip_text = true
 		name.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		banner.add_child(name)
 		banners.add_child(banner)

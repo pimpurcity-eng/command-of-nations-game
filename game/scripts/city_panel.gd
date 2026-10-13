@@ -24,6 +24,7 @@ var buildings: BuildingSystem
 var panel: PanelContainer
 var title: Label
 var summary: Label
+var city_picture: TextureRect
 var income_row: HBoxContainer
 var construction: Dictionary
 var production: Dictionary
@@ -56,8 +57,18 @@ func setup(system: BuildingSystem, theme: Theme) -> void:
 	var info: = PanelContainer.new()
 	info.add_theme_stylebox_override("panel", CowUI.box(Color(0, 0, 0, 0), 0, Color(0, 0, 0, 0), 0, 8))
 	column.add_child(info)
+	var info_row := HBoxContainer.new()
+	info_row.add_theme_constant_override("separation", 12)
+	info.add_child(info_row)
+	city_picture = TextureRect.new()
+	city_picture.custom_minimum_size = Vector2(92, 80)
+	city_picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	city_picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	info_row.add_child(city_picture)
 	var info_column: = VBoxContainer.new()
-	info.add_child(info_column)
+	info_column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	info_column.alignment = BoxContainer.ALIGNMENT_CENTER
+	info_row.add_child(info_column)
 	summary = CowUI.label("", 14, Color("c9c3ae"))
 	summary.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	summary.clip_text = true
@@ -404,6 +415,7 @@ func _jobs_here() -> Array:
 func _refresh() -> void:
 	var place: = buildings.city(city_id)
 	if place.is_empty(): return
+	city_picture.texture = MenuArt.city(buildings.economy.controller(place))
 	var controlled: = buildings.economy.controlled(place, GameSession.player_country)
 	var own: bool = controlled
 	var scouted := controlled or (buildings.economy.armies != null and buildings.economy.armies.point_visible(place.point))
