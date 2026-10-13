@@ -12,6 +12,7 @@ func run() -> void:
 	GameSession.weapons_test = false
 	var game = load("res://scenes/main.tscn").instantiate()
 	root.add_child(game)
+	if not game.boot_finished: await game.boot_ready
 	current_scene = game
 	for i in 5: await process_frame
 	game.clock.paused = true
