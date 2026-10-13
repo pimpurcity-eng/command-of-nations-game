@@ -11,6 +11,7 @@ func run() -> void:
 		GameSession.weapons_test = false
 		var game = load("res://scenes/main.tscn").instantiate()
 		root.add_child(game); current_scene = game
+		while not game.boot_finished: await process_frame
 		await process_frame
 		game.mobile_start.hide()
 		game.apply_player_country()

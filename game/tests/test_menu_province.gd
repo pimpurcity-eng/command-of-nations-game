@@ -15,6 +15,7 @@ func run():
  root.size=Vector2i(720,1440)
  GameSession.player_country="russia";GameSession.weapons_test=false
  var game=load("res://scenes/main.tscn").instantiate();root.add_child(game)
+ while not game.boot_finished: await process_frame
  for i in 3:await process_frame
  game.mobile_start.hide();game.clock.paused=true;game.match_rules.ai_enabled=false
  check(game.units.units.size()==EquipmentIdentity.catalog.size()*3,"three starting units per equipment family")

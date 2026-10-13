@@ -10,6 +10,7 @@ func run():
 	GameSession.player_country = "russia";GameSession.weapons_test = false
 	var game = load("res://scenes/main.tscn").instantiate()
 	root.add_child(game)
+	while not game.boot_finished: await process_frame
 	for i in 3: await process_frame
 	game.mobile_start.hide();game.clock.paused = true
 	var navy: Array = EquipmentIdentity.catalog.filter(func(s):return s.visual_kind=="naval")

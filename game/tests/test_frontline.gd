@@ -13,6 +13,7 @@ func run() -> void:
 	GameSession.player_country = "russia"
 	var game = load("res://scenes/main.tscn").instantiate()
 	root.add_child(game)
+	while not game.boot_finished: await process_frame
 	current_scene = game
 	for i in 3: await process_frame
 	game.mobile_start.hide()
