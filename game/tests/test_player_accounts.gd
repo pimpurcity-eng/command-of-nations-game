@@ -14,6 +14,8 @@ func session(confirmed: bool=true) -> Dictionary:
 	return {"access_token":"test_access","refresh_token":"test_refresh","expires_in":3600,"user":{"id":"test-player-id","email":"tester@example.org","email_confirmed_at":"2026-10-09T00:00:00Z" if confirmed else "","user_metadata":{"commander_name":"Tester"}}}
 func run() -> void:
 	var auth:=PlayerAuth.new();root.add_child(auth);auth.transport=mock
+	check(auth.configured() and auth.base_url=="https://wrnmscdtwbezcmrlukvg.supabase.co","Packaged account service configuration loads")
+	auth.base_url="";auth.public_key=""
 	var r:=await auth.login("tester@example.org","password")
 	check(not r.ok and calls.is_empty(),"Unconfigured accounts fail closed without a request")
 	auth.base_url="http://insecure.example.org";auth.public_key="sb_publishable_example"
@@ -21,6 +23,10 @@ func run() -> void:
 	auth.base_url="https://example.supabase.co";auth.public_key="sb_secret_example"
 	check(not auth.configured(),"Reject server secret keys in the client")
 	auth.public_key="sb_publishable_example"
+	check(auth.endpoint("/signup")=="https://example.supabase.co/auth/v1/signup","Registration uses the Auth endpoint")
+	check(auth.endpoint("/rest/v1/rpc/top_commanders")=="https://example.supabase.co/rest/v1/rpc/top_commanders","Profile and leaderboard use the REST endpoint")
+	check(PlayerAuth.response_data([{"commander_name":"Tester"}]).rows[0].commander_name=="Tester","REST array responses retain profile rows")
+	check(PlayerAuth.response_data({"access_token":"test_access"}).access_token=="test_access","Auth object responses retain session data")
 	check(not PlayerAuth.password_valid("A7pass!") and PlayerAuth.password_valid("A8passw!"),"Password minimum is eight characters")
 	check(PlayerAuth.password_valid("a".repeat(128)) and not PlayerAuth.password_valid("a".repeat(129)),"Password maximum remains 128 characters")
 	r=await auth.signup("tester@example.org","A7pass!","Tester")
