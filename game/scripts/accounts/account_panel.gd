@@ -85,7 +85,7 @@ func build(page: String) -> void:
 	else:
 		if page in ["login","signup","recover"]:input("email","Email address")
 		if page=="signup":input("commander","Commander name")
-		if page in ["login","signup","new_password"]:input("password","Password (12+ characters)" if page!="login" else "Password",true)
+		if page in ["login","signup","new_password"]:input("password","Password (8+ characters)" if page!="login" else "Password",true)
 		if page in ["signup","new_password"]:input("confirm","Repeat password",true)
 		if page in ["verify","recovery_code"]:
 			label_text("Enter the six-digit code sent to "+email+".",24);input("code","Six-digit email code")
