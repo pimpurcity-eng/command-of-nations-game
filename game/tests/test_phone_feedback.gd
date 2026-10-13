@@ -18,7 +18,10 @@ func run() -> void:
 	game.apply_player_country(false)
 	game.rig.set_process(false)
 	check(game.units.units.all(func(u):return is_equal_approx(u.heading,game.units._facing_enemy(u.country,Vector2(u.node.position.x,u.node.position.z)))),"idle units face their opposing country")
-	for ship in game.units.units.filter(func(u):return u.visual_kind == "naval"):
+	# Enemy ships first, own ships last, so the final selection is one the player commands.
+	var ships: Array = game.units.units.filter(func(u):return u.visual_kind == "naval")
+	ships.sort_custom(func(a,b):return a.country != GameSession.player_country and b.country == GameSession.player_country)
+	for ship in ships:
 		game.rig.target = Vector3(ship.node.position.x,0,ship.node.position.z)
 		game.rig.distance = 8
 		game.rig._snap(1.0)

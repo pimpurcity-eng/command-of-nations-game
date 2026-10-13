@@ -32,7 +32,10 @@ func base(unit: Dictionary) -> Dictionary:
 		if place.id == unit.base_city: return place
 	return {}
 func available(place: Dictionary, country: String = "") -> bool:
-	return not place.is_empty() and economy != null and economy.controlled(place, country) and economy.buildings != null and economy.buildings.level(place.id, "airbase") > 0
+	if place.is_empty() or economy == null or economy.buildings == null or not economy.controlled(place, country): return false
+	# Like Call of War, every controlled city can host aircraft (cities start with only a
+	# train station); an airbase adds capacity and faster refuelling. Provinces need one.
+	return economy.buildings.level(place.id, "airbase") > 0 or economy.cities.any(func(c: Dictionary): return c.id == place.id)
 func radius(unit: Dictionary) -> float:
 	var result: = float(EquipmentIdentity.spec(unit.equipment_id).get("air_range", 14.0))
 	for member in armies.stacks.members(unit): result = minf(result, EquipmentIdentity.spec(member.equipment_id).get("air_range", 14.0))

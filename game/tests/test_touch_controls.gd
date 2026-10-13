@@ -117,7 +117,7 @@ func run() -> void:
 	# 5. No floating identification labels: tags carry only a count.
 	var labelled: = 0
 	for button in game.badges.buttons.values():
-		if button.visible and not button.text.is_valid_int(): labelled += 1
+		if button.visible and not button.text.is_empty() and not button.text.is_valid_int(): labelled += 1
 	check(labelled == 0, "unit tags show counts only, no names over units")
 	print("RESULT failures=", failures.size())
 	quit(0 if failures.is_empty() else 1)

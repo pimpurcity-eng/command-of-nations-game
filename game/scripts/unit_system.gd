@@ -536,6 +536,7 @@ func _draw_route() -> void :
 func snapshot() -> Array:
 	var result: Array = []
 	for unit in units:
+		if unit.health <= 0.001: continue  # destroyed this frame, removed after combat; never saved
 		var saved_route: Array = []
 		for point in unit.waypoints: saved_route.append([point.x, point.y])
 		result.append({"forced_march": unit.forced_march, "delay_remaining": unit.delay_remaining, "fire_mode": unit.get("fire_mode", "at_will"), "attack_target": unit.get("attack_target", ""), "level": unit.get("level", 1), "upgrade_remaining": unit.get("upgrade_remaining", 0.0), "upgrade_target": unit.get("upgrade_target", unit.get("level", 1)), "stack_id": unit.stack_id, "route": saved_route, "equipment_id": unit.equipment_id, "id": unit.id, "name": unit.name, "country": unit.country, "visual_kind": unit.visual_kind, "presentation": unit.get("presentation", ""), "position": [unit.node.position.x, unit.node.position.z], "target": [unit.target.x, unit.target.y], "moving": unit.moving, "health": unit.health})

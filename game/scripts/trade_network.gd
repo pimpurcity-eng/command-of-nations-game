@@ -249,7 +249,7 @@ func _place(c: Dictionary) -> void:
 			c.node.position = Vector3(p.x, height, p.y)
 			var dir: Vector2 = path[i + 1] - path[i]
 			if dir.length() > 0.0001: c.node.rotation.y = atan2(-dir.x, -dir.y)
-			c.node.visible = armies.point_visible(p) if armies != null else true
+			c.node.visible = c.country == GameSession.player_country or c.partner == GameSession.player_country or armies == null or armies.point_visible(p)
 			return
 		travelled -= seg
 
@@ -307,11 +307,15 @@ func _model(path: String, length: float) -> Node3D:
 		if scene == null: return null
 		var merged: = UnitVisual.merged(scene.instantiate() as Node3D)
 		var bounds: = UnitVisual.model_bounds(merged, 0.0)
-		_models[path] = [merged, length / maxf(bounds.get_longest_axis_size(), 0.001)]
+		# Models face different axes; turn each so its long side runs along the track (z).
+		_models[path] = [merged, length / maxf(bounds.get_longest_axis_size(), 0.001), bounds.size.x > bounds.size.z]
 	var entry: Array = _models[path]
 	var copy: Node3D = entry[0].duplicate()
 	copy.scale = Vector3.ONE * entry[1]
-	return copy
+	if entry[2]: copy.rotation.y = PI * 0.5
+	var holder: = Node3D.new()
+	holder.add_child(copy)
+	return holder
 
 func _convoy_visual(mode: String, cargo: String) -> Node3D:
 	var root: = Node3D.new()
@@ -325,7 +329,7 @@ func _convoy_visual(mode: String, cargo: String) -> Node3D:
 	for i in cars.size():
 		var car: = _model(cars[i], 0.22)
 		if car == null: continue
-		car.position = Vector3(0, 0, 0.24 * i)
+		car.position = Vector3(0, 0, 0.225 * i)
 		root.add_child(car)
 	return root
 
