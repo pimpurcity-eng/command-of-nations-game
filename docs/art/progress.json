@@ -152,6 +152,86 @@
       "model": null,
       "width": 512,
       "height": 512
+    },
+    {
+      "key": "euro_gvozdika_pl",
+      "name": "2S1 Gvozdika (PL)",
+      "path": "game/assets/interface/unit_art/euro_gvozdika_pl.webp",
+      "sha": "649c9a7be85a5dfae19883c4f17be842c09888b8",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: 2S1 Gvozdika (PL) (euro_gvozdika_pl), a Artillery weapon or vehicle on dry grass and packed earth, correct identifying turret, wheels, tracks or weapon tubes, entire subject visible from low front three-quarter angle. This is the European equipment from model euro_gvozdika_pl; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "model": "res://assets/library/arsenal/euro_gvozdika_pl.glb",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "missile_factory",
+      "name": "Missile factory",
+      "path": "game/assets/interface/buildings/missile_factory.webp",
+      "sha": "11f46125559e87e7498def81a6d6976baba058d9",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: reinforced missile manufacturing hall with one missile transport vehicle parked in the loading yard. Three-quarter elevated view of the complete building or compact compound. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "model": null,
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_vab",
+      "name": "VAB",
+      "path": "game/assets/interface/unit_art/euro_vab.webp",
+      "sha": "d620e13b9abd4f4d0e4de0ec801357b915c139dd",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: VAB (euro_vab), a Mechanized weapon or vehicle on dry grass and packed earth, correct identifying turret, wheels, tracks or weapon tubes, entire subject visible from low front three-quarter angle. This is the European equipment from model euro_vab; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "model": "res://assets/library/arsenal/euro_vab.glb",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_2s1_gvozdika",
+      "name": "2S1 Gvozdika",
+      "path": "game/assets/interface/unit_art/russia_2s1_gvozdika.webp",
+      "sha": "0d45cc0c7f790a1be9310f0a20a93911860b6b72",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: 2S1 Gvozdika (russia_2s1_gvozdika), a Artillery weapon or vehicle on dry grass and packed earth, correct identifying turret, wheels, tracks or weapon tubes, entire subject visible from low front three-quarter angle. This is the Russian equipment from model russia_2s1_gvozdika; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "model": "res://assets/library/arsenal/russia_2s1_gvozdika.glb",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_btr60pb",
+      "name": "BTR-60PB",
+      "path": "game/assets/interface/unit_art/russia_btr60pb.webp",
+      "sha": "bd37031ffa7175d1a6635d8a0bb268be7147e6fd",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: BTR-60PB (russia_btr60pb), a Mechanized weapon or vehicle on dry grass and packed earth, correct identifying turret, wheels, tracks or weapon tubes, entire subject visible from low front three-quarter angle. This is the Russian equipment from model russia_btr60pb; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "model": "res://assets/library/arsenal/russia_btr60pb.glb",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "train_station",
+      "name": "Train station",
+      "path": "game/assets/interface/buildings/train_station.webp",
+      "sha": "ad1ab562f7fafd83db8c0878b2ac563bdc9157fd",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: brick railway terminal, platform, tracks and a locomotive. Three-quarter elevated view of the complete building or compact compound. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "model": null,
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_iskander_m",
+      "name": "Iskander-M",
+      "path": "game/assets/interface/unit_art/russia_iskander_m.webp",
+      "sha": "3dc8ff923a7e43fb9a4123593eaec6d294262c08",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: Iskander-M (russia_iskander_m), a Missiles weapon or vehicle on dry grass and packed earth, correct identifying turret, wheels, tracks or weapon tubes, entire subject visible from low front three-quarter angle. This is the Russian equipment from model russia_iskander_m; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "model": "res://assets/library/arsenal/russia_iskander_m.glb",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_s3_silo",
+      "name": "S3 silo",
+      "path": "game/assets/interface/unit_art/euro_s3_silo.webp",
+      "sha": "dd3eb8369f80fabb71b92e21fcb3b13100689c86",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: S3 silo hardened missile-silo emplacement set into grass, visible circular hatch and low reinforced structures, not a truck. This is the European equipment from model euro_s3_silo; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "model": "res://assets/library/arsenal/euro_s3_silo.glb",
+      "width": 512,
+      "height": 512
     }
   ],
   "failed": []
