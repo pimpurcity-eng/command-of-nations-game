@@ -352,6 +352,46 @@
       "sha": "bc5d75368508bc506b9acf011670c8b2ab22a82a",
       "width": 512,
       "height": 512
+    },
+    {
+      "key": "euro_mirage2000",
+      "name": "Mirage 2000",
+      "model": "res://assets/library/arsenal/euro_mirage2000.glb",
+      "path": "game/assets/interface/unit_art/euro_mirage2000.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: Mirage 2000 aircraft in flight, correct wing/fuselage/engine arrangement, clear complete silhouette against a soft clouded sky. This is the European equipment from model euro_mirage2000; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "cd8866fa48b7a5c7d8f2ef274aeb716cb8b0ab59",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_lancet3_drone_only",
+      "name": "Lancet-3",
+      "model": "res://assets/library/arsenal/russia_lancet3_drone_only.glb",
+      "path": "game/assets/interface/unit_art/russia_lancet3_drone_only.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: Lancet-3 uncrewed aircraft, correct propeller, wings, airframe and era, flying over distant muted terrain, the entire drone clearly visible. This is the Russian equipment from model russia_lancet3_drone_only; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "2391f8062a2e5c637b47298377632dadf60ba6bc",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_tiger",
+      "name": "Tiger HAP",
+      "model": "res://assets/library/arsenal/euro_tiger.glb",
+      "path": "game/assets/interface/unit_art/euro_tiger.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: Tiger HAP aircraft in flight, correct wing/fuselage/engine arrangement, clear complete silhouette against a soft clouded sky. This is the European equipment from model euro_tiger; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "a2eafe3d3961f9b3ace6a0b1ab92b2c56463fd33",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_camcopter_s100",
+      "name": "Camcopter S-100",
+      "model": "res://assets/library/arsenal/euro_camcopter_s100.glb",
+      "path": "game/assets/interface/unit_art/euro_camcopter_s100.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: Camcopter S-100 uncrewed aircraft, correct propeller, wings, airframe and era, flying over distant muted terrain, the entire drone clearly visible. This is the European equipment from model euro_camcopter_s100; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "6c80a7762870e0fed3f933fb34af05d32dbd69d8",
+      "width": 512,
+      "height": 512
     }
   ],
   "failed": []
