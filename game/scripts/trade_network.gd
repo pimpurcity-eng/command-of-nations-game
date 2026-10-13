@@ -290,10 +290,12 @@ func _territory_at(point: Vector2) -> Dictionary:
 			return t
 	return {}
 
-## 2.0 when a ground army moves through a friendly province with a train station.
+## 2.0 when a ground army moves through a friendly province a railway line runs through
+## (owner 2026-10-13: no rails until a second station is connected to the capital).
 func rail_factor(point: Vector2, country: String) -> float:
 	var t: = _territory_at(point)
-	if t.is_empty() or not _station_territories.has(str(t.id)): return 1.0
+	var rail: Dictionary = RailwayMap.active.served if RailwayMap.active != null and is_instance_valid(RailwayMap.active) else _station_territories
+	if t.is_empty() or not rail.has(str(t.id)): return 1.0
 	var owner: String = t.controller
 	if owner == country: return 2.0
 	if diplomacy != null and not diplomacy.at_war(country, owner) and diplomacy.right_of_way(country, owner): return 2.0

@@ -365,7 +365,7 @@
       "fuel": 20,
       "manpower": 30
     },
-    "description": "City train station. Connects to nearby friendly completed stations by rail and improves construction speed by 15% per level. Rural provinces build roads and logistics instead.",
+    "description": "Train station. The capital starts with one; build a second station and a railway line joins them over your own land (armies move twice as fast along it) and improves construction speed by 15% per level. Rural provinces build roads and logistics instead.",
     "starting_level": 0,
     "save_default": true,
     "model_tiers": [
@@ -397,8 +397,9 @@
       "fuel": 20,
       "manpower": 30
     },
-    "description": "City train station. Connects to nearby friendly completed stations by rail and improves construction speed by 15% per level. Rural provinces build roads and logistics instead.",
-    "starting_level": 1,
+    "description": "Train station. The capital starts with one; build a second station and a railway joins them over your own land (armies move twice as fast along it) and improves construction speed by 15% per level. Rural provinces build roads and logistics instead.",
+    "starting_level": 0,
+    "capital_starting_level": 1,
     "save_default": true,
     "model_tiers": [
       "res://assets/library/buildings_oct12/train_station.glb",

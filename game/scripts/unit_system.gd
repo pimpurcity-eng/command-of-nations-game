@@ -757,10 +757,14 @@ func patrol(position: Vector3) -> bool:
 	return error.is_empty()
 
 func pick_screen(camera: Camera3D, screen: Vector2, enemies_only: bool = false) -> Dictionary:
-	var nearest: Dictionary = {}
+	var hits: = pick_all_screen(camera, screen, enemies_only)
+	return hits[0] if not hits.is_empty() else {}
+
+## Every army under a tap, best match first: armies whose model is under the finger (closest to
+## the model centre first), then armies within 40 px (closest first).
+func pick_all_screen(camera: Camera3D, screen: Vector2, enemies_only: bool = false) -> Array:
+	var hits: Array = []
 	var radius: = 40.0 * get_window().content_scale_factor
-	var model_hit: = false
-	var model_distance: = INF
 	var leader_ids: Dictionary = {}
 	for group in stacks.groups(): leader_ids[stacks.leader(group).id] = true
 	for i in units.size():
@@ -786,12 +790,10 @@ func pick_screen(camera: Camera3D, screen: Vector2, enemies_only: bool = false) 
 					centre_distance = camera.unproject_position(model.to_global(bounds.get_center())).distance_to(screen)
 				else:
 					for edge in hull.size(): distance = minf(distance,screen.distance_to(Geometry2D.get_closest_point_to_segment(screen,hull[edge],hull[(edge+1)%hull.size()])))
-		if (inside_model and (not model_hit or centre_distance < model_distance)) or (not model_hit and distance < radius):
-			radius = distance
-			model_hit = inside_model
-			model_distance = centre_distance
-			nearest = {"index": i, "distance": distance}
-	return nearest
+		if inside_model or distance < radius:
+			hits.append({"index": i, "distance": distance, "inside": inside_model, "rank": centre_distance if inside_model else distance})
+	hits.sort_custom(func(a, b): return a.inside and not b.inside or a.inside == b.inside and a.rank < b.rank)
+	return hits
 
 func find_id(id: String) -> Dictionary:
 	for unit in units:

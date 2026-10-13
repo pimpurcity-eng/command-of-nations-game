@@ -52,6 +52,8 @@ var stack_dialog: ArmyDetailsPanel
 var result_dialog: AcceptDialog
 var append_order: = false
 var order_mode: = false
+## Last map tap, so tapping the same spot again steps to the next army or the city under it.
+var _tap_cycle: Dictionary = {}
 var selecting_armies: = false
 var patrol_order: = false
 var clock: SimulationClock
@@ -553,16 +555,31 @@ func _map_click(screen: Vector2, order: bool) -> void :
 		return
 	var city_hit: = cities.pick_screen(screen)
 	if not order and not order_mode:
-		var unit_hit: = units.pick_screen(rig.camera, screen)
-		# A tap on a city switches inspection; an explicit Move/Attack issues orders.
-		if not city_hit.is_empty() and (unit_hit.is_empty() or city_hit.distance + 8.0 * get_window().content_scale_factor < unit_hit.distance or int(unit_hit.index) == units.selected):
+		# Owner 2026-10-13: "you can't click on the cities when units are there". Armies parked
+		# on a city cover it, so tapping the same spot again steps through everything there:
+		# each army, then the city, then round again.
+		var choices: Array = units.pick_all_screen(rig.camera, screen)
+		if not city_hit.is_empty():
+			var city_first: bool = choices.is_empty() or not choices[0].inside and city_hit.distance + 8.0 * get_window().content_scale_factor < choices[0].distance
+			if city_first: choices.push_front({"city": city_hit.city})
+			else: choices.append({"city": city_hit.city})
+		if choices.is_empty():
+			_tap_cycle = {}
 			clear_army_selection()
-			cities.select_city(city_hit.city)
+		else:
+			var step: = 0
+			var near: float = 36.0 * get_window().content_scale_factor
+			if not _tap_cycle.is_empty() and _tap_cycle.screen.distance_to(screen) < near and Time.get_ticks_msec() - int(_tap_cycle.time) < 8000:
+				step = (int(_tap_cycle.step) + 1) % choices.size()
+			_tap_cycle = {"screen": screen, "step": step, "time": Time.get_ticks_msec()}
+			var choice: Dictionary = choices[step]
+			if choice.has("city"):
+				clear_army_selection()
+				cities.select_city(choice.city)
+			else:
+				units.select_unit(choice.index)
+				if not city_hit.is_empty(): hud.show_status("Tap again to open " + str(city_hit.city.name))
 			return
-		if not unit_hit.is_empty():
-			units.select_unit(unit_hit.index)
-			return
-		clear_army_selection()
 	if (order or order_mode) and units.selected >= 0 and (units.air.is_air(units.units[units.selected]) or units.is_naval(units.units[units.selected])):
 		var destination = Plane(Vector3.UP, 0).intersects_ray(rig.camera.project_ray_origin(screen), rig.camera.project_ray_normal(screen))
 		if not city_hit.is_empty() and units.air.is_air(units.units[units.selected]):

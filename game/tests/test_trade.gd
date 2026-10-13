@@ -21,7 +21,7 @@ func run() -> void:
 	var trade: TradeNetwork = game.trade
 	check(trade != null and TradeNetwork.active == trade, "the trade network runs in the campaign")
 	check(game.hud != null and "Trade" in str(game.hud.get_children()) or true, "market tab is now Trade")
-	# Every city starts with a train station, so rail trade is available at once.
+	# The capital starts with a train station, so rail trade is available at once.
 	var plan: = trade.plan("russia", "belarus")
 	check(not plan.has("error") and plan.mode == "rail" and plan.path.size() >= 2, "Russia can run a train to Belarus from a station city")
 	check(trade.open_route("russia", "belarus", "fuel").is_empty(), "a rail trade route opens")
@@ -40,6 +40,9 @@ func run() -> void:
 	check(is_equal_approx(trade.delivery_amount(route), TradeNetwork.CARGO.fuel * game.buildings.level(route.city, "train_station")), "cargo grows with the station level")
 	# Rail transport for armies.
 	var station_city: Dictionary = game.buildings.city(route.city)
+	# Rail speed needs a line: join a second station to the capital (owner 2026-10-13).
+	game.buildings.levels.tula.train_station = 1
+	game.buildings.changed.emit()
 	check(trade.rail_factor(station_city.point, "russia") == 2.0, "armies move twice as fast by rail in a friendly station province")
 	var kyiv: Dictionary = game.buildings.capital("ukraine")
 	check(trade.rail_factor(kyiv.point, "russia") == 1.0, "no rail speed in enemy territory")
