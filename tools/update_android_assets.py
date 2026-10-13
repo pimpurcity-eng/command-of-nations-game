@@ -4,6 +4,7 @@ Produces an unsigned APK. Sign separately with the existing private certificate.
 """
 import argparse, struct, zipfile
 from pathlib import Path
+from android_sparse_index import build_sparse_index, verify_sparse_index
 
 p=argparse.ArgumentParser(description=__doc__)
 p.add_argument('original',type=Path);p.add_argument('pack',type=Path)
@@ -60,6 +61,9 @@ def manifest(data):
     return bytes(raw)
 
 with zipfile.ZipFile(args.original) as old, zipfile.ZipFile(args.pack) as pack, zipfile.ZipFile(args.output,'w') as out:
+    resources = {i.filename: pack.read(i) for i in pack.infolist() if not i.is_dir()}
+    resources['assets.sparsepck'] = build_sparse_index(resources)
+    verify_sparse_index(resources)
     previous={i.filename:i for i in old.infolist()}
     def write(name,data,compression):
         item=zipfile.ZipInfo(name);item.compress_type=compression
@@ -74,9 +78,8 @@ with zipfile.ZipFile(args.original) as old, zipfile.ZipFile(args.pack) as pack, 
         data=old.read(item)
         if item.filename=='AndroidManifest.xml':data=manifest(data)
         write(item.filename,data,item.compress_type)
-    for item in pack.infolist():
-        if item.is_dir():continue
-        name='assets/'+item.filename
+    for resource_path, resource_data in resources.items():
+        name='assets/'+resource_path
         compression=previous[name].compress_type if name in previous else zipfile.ZIP_DEFLATED
-        write(name,pack.read(item),compression)
+        write(name,resource_data,compression)
 print('Unsigned APK',args.output.stat().st_size,'bytes')
