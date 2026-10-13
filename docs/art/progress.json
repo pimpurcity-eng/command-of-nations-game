@@ -512,6 +512,56 @@
       "sha": "3b4f1fc3e145e30dfe9073a2f8c69a5632c1597f",
       "width": 512,
       "height": 512
+    },
+    {
+      "key": "russia_t14_armata",
+      "name": "T-14 Armata",
+      "model": "res://assets/library/arsenal/russia_t14_armata.glb",
+      "path": "game/assets/interface/unit_art/russia_t14_armata.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: T-14 Armata (russia_t14_armata), a Armor weapon or vehicle on dry grass and packed earth, correct identifying turret, wheels, tracks or weapon tubes, entire subject visible from low front three-quarter angle. This is the Russian equipment from model russia_t14_armata; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "d59a4276ea74ed81d618c189e3aed0360b31c5fb",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_corvette_t1_starting_grisha",
+      "name": "Grisha",
+      "model": "res://assets/library/arsenal/russia_corvette_t1_starting_grisha.glb",
+      "path": "game/assets/interface/unit_art/russia_corvette_t1_starting_grisha.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: Grisha naval vessel, correct identifying hull and superstructure, complete silhouette from front three-quarter elevated angle, sitting correctly at its waterline in a calm sea. This is the Russian equipment from model russia_corvette_t1_starting_grisha; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "4cfc8a9750f2382771e485635195debb9a62e034",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_destroyer_t3_modern_type45_daring",
+      "name": "Type 45 Daring",
+      "model": "res://assets/library/arsenal/euro_destroyer_t3_modern_type45_daring.glb",
+      "path": "game/assets/interface/unit_art/euro_destroyer_t3_modern_type45_daring.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: Type 45 Daring naval vessel, correct identifying hull and superstructure, complete silhouette from front three-quarter elevated angle, sitting correctly at its waterline in a calm sea. This is the European equipment from model euro_destroyer_t3_modern_type45_daring; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "f8f4da63486b03e7b1bea9b9a14b52f105ba031e",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_leopard2a6",
+      "name": "Leopard 2A6",
+      "model": "res://assets/library/arsenal/euro_leopard2a6.glb",
+      "path": "game/assets/interface/unit_art/euro_leopard2a6.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: Leopard 2A6 (euro_leopard2a6), a Armor weapon or vehicle on dry grass and packed earth, correct identifying turret, wheels, tracks or weapon tubes, entire subject visible from low front three-quarter angle. This is the European equipment from model euro_leopard2a6; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "3daf310c834d9813c760ecb4b87516a77f9cb6c8",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_challenger2",
+      "name": "Challenger 2",
+      "model": "res://assets/library/arsenal/euro_challenger2.glb",
+      "path": "game/assets/interface/unit_art/euro_challenger2.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: Challenger 2 (euro_challenger2), a Armor weapon or vehicle on dry grass and packed earth, correct identifying turret, wheels, tracks or weapon tubes, entire subject visible from low front three-quarter angle. This is the European equipment from model euro_challenger2; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "f34d1af6954c760faf2fc29310b66996679824e4",
+      "width": 512,
+      "height": 512
     }
   ],
   "failed": []
