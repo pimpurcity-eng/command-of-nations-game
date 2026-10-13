@@ -642,6 +642,46 @@
       "sha": "70685c0318072495b8d414f4d954a1d7fb91933f",
       "width": 512,
       "height": 512
+    },
+    {
+      "key": "russia_kilo_sub",
+      "name": "Kilo",
+      "model": "res://assets/library/arsenal/russia_kilo_sub.glb",
+      "path": "game/assets/interface/unit_art/russia_kilo_sub.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: Kilo submarine, surfaced at the correct waterline, correct long hull and sail visible in a calm sea. This is the Russian equipment from model russia_kilo_sub; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "1516ed1b21edc1e6915f585e65749b18654bad50",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_2s19_msta",
+      "name": "2S19 Msta-S",
+      "model": "res://assets/library/arsenal/russia_2s19_msta.glb",
+      "path": "game/assets/interface/unit_art/russia_2s19_msta.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: 2S19 Msta-S (russia_2s19_msta), a Artillery weapon or vehicle on dry grass and packed earth, correct identifying turret, wheels, tracks or weapon tubes, entire subject visible from low front three-quarter angle. This is the Russian equipment from model russia_2s19_msta; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "bdf28a6f5db6b6336edd320393bb4b3f2cc98b10",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_caesar",
+      "name": "CAESAR",
+      "model": "res://assets/library/arsenal/euro_caesar.glb",
+      "path": "game/assets/interface/unit_art/euro_caesar.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: CAESAR (euro_caesar), a Artillery weapon or vehicle on dry grass and packed earth, correct identifying turret, wheels, tracks or weapon tubes, entire subject visible from low front three-quarter angle. This is the European equipment from model euro_caesar; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "3e39c64c5d0761109e4d586acacc46a71d0a3394",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_admiral_kuznetsov",
+      "name": "Admiral Kuznetsov",
+      "model": "res://assets/library/arsenal/russia_admiral_kuznetsov.glb",
+      "path": "game/assets/interface/unit_art/russia_admiral_kuznetsov.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: Admiral Kuznetsov aircraft carrier, correct full hull, flight deck and island, a few appropriately sized aircraft on deck, entire ship from elevated front three-quarter angle at sea. This is the Russian equipment from model russia_admiral_kuznetsov; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "ffeb93a4553fb67cfbae8f7bb938c1bc8362345e",
+      "width": 512,
+      "height": 512
     }
   ],
   "failed": []
