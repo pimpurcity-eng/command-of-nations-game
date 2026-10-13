@@ -21,14 +21,31 @@ var online: = false
 ## Guard mode (sleep defence): country -> DefenceAI. Defends only, never attacks or spends.
 var guards: Dictionary = {}
 signal guard_changed(country: String, on: bool)
-func set_guard(country: String, on: bool) -> void:
-	if on == guards.has(country): return
+## Emitted when guard mode is switched off: the "while you were away" report.
+signal guard_report(country: String, text: String)
+## Returns the "while you were away" report when switching off ("" otherwise).
+func set_guard(country: String, on: bool) -> String:
+	if on == guards.has(country): return ""
+	var text: = ""
 	if on:
 		guards[country] = DefenceAI.new()
 		guards[country].country = country
-	else: guards.erase(country)
+		guards[country].started = clock.elapsed if clock != null else 0.0
+	else:
+		text = guards[country].summary(clock.elapsed if clock != null else 0.0)
+		guards.erase(country)
 	guard_changed.emit(country, on)
+	if not text.is_empty(): guard_report.emit(country, text)
+	return text
 func guarded(country: String) -> bool: return guards.has(country)
+func guard_logs() -> Dictionary:
+	var logs: = {}
+	for country in guards: logs[country] = guards[country].log_state()
+	return logs
+func restore_guard_logs(logs: Variant) -> void:
+	if not logs is Dictionary: return
+	for country in logs:
+		if guards.has(country) and logs[country] is Dictionary: guards[country].restore_log(logs[country])
 func set_ai_countries(countries: Array) -> void:
 	for country in seat_ai.keys():
 		if not country in countries: seat_ai.erase(country)
@@ -182,6 +199,9 @@ func advance(seconds: float) -> void :
 		if armies.units[index].health > 0: continue
 		casualties = true
 		unit_destroyed.emit(armies.units[index])
+		for guarded_country in guards:
+			if armies.units[index].country == guarded_country: guards[guarded_country].lost += 1
+			else: guards[guarded_country].kills += 1
 		report.emit(armies.units[index].name + " destroyed")
 		armies.units[index].node.queue_free()
 		armies.units.remove_at(index)
@@ -223,6 +243,9 @@ func advance(seconds: float) -> void :
 		progress.seconds += seconds
 		capture_progress[territory.id] = progress
 		if progress.seconds < 6: continue
+		for guarded_country in guards:
+			if territory.controller == guarded_country: guards[guarded_country].lost_places.append(territory.title)
+			elif occupant == guarded_country: guards[guarded_country].retaken.append(territory.title)
 		change_control(territory,occupant)
 		terrain.update_relations(at_war)
 		capture_progress.erase(territory.id)
@@ -305,15 +328,17 @@ func end_match(country: String, kind: String = "elimination") -> void :
 	report.emit(VICTORY_NAMES.get(kind, "VICTORY") + " · " + country.capitalize() + " wins. Choose New match to play again.")
 	finished.emit(country)
 func snapshot() -> Dictionary:
-	return {"last_day": last_day, "air_cooldowns": air_combat.snapshot(), "combat_cooldowns": combat.snapshot(), "at_war": at_war, "winner": winner, "decision_timer": decision_timer, "recruitment_timer": ai.recruitment_timer, "capture_progress": capture_progress.duplicate(true), "victory_type": victory_type, "victory": victory.snapshot(), "chronicle": chronicle.snapshot(), "annexation": annexation.snapshot(), "strategic": strategic.snapshot(), "trade": trade.snapshot() if trade != null else {}, "doctrines": Doctrine.snapshot(), "diplomacy": diplomacy.snapshot(), "guards": guards.keys()}
+	return {"last_day": last_day, "air_cooldowns": air_combat.snapshot(), "combat_cooldowns": combat.snapshot(), "at_war": at_war, "winner": winner, "decision_timer": decision_timer, "recruitment_timer": ai.recruitment_timer, "capture_progress": capture_progress.duplicate(true), "victory_type": victory_type, "victory": victory.snapshot(), "chronicle": chronicle.snapshot(), "annexation": annexation.snapshot(), "strategic": strategic.snapshot(), "trade": trade.snapshot() if trade != null else {}, "doctrines": Doctrine.snapshot(), "diplomacy": diplomacy.snapshot(), "guards": guards.keys(), "guard_logs": guard_logs()}
 func restore(state: Dictionary) -> void :
 	last_day = int(state.get("last_day",1+int(clock.elapsed/ProductionSystem.DAY_SECONDS)))
 	combat.restore(state.get("combat_cooldowns", {}))
 	air_combat.restore(state.get("air_cooldowns", {}))
 	at_war = state.get("at_war", true)
-	for country in guards.keys(): set_guard(country, false)
+	for country in guards.keys(): guard_changed.emit(country, false)
+	guards.clear()
 	for country in state.get("guards", []):
 		if country is String and country in ["russia", "ukraine"]: set_guard(country, true)
+	restore_guard_logs(state.get("guard_logs", {}))
 	armies.at_war = at_war
 	winner = state.winner
 	decision_timer = state.decision_timer

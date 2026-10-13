@@ -387,6 +387,9 @@ func _ready() -> void :
 	match_rules.report.connect(hud.show_status)
 	match_rules.guard_changed.connect(func(country: String, on: bool):
 		if country == GameSession.player_country: hud.set_guard(on))
+	match_rules.guard_report.connect(func(country: String, text: String):
+		# Online the server sends the report (it ran guard mode); offline it comes from here.
+		if country == GameSession.player_country and MatchClient.active == null: show_guard_report(text))
 	hud.guard_requested.connect(_toggle_guard)
 	match_rules.report.connect(func(_message: String): railway.refresh())
 	match_rules.finished.connect(show_result)
@@ -1194,3 +1197,50 @@ func _toggle_guard() -> void:
 		if not error.is_empty(): hud.show_status(error); return
 	else: match_rules.set_guard(country, on)
 	hud.show_status("GUARD ON · the AI defends your cities and land while you are away. It will not attack." if on else "GUARD OFF · you are in command")
+
+var guard_popup: CanvasLayer
+## "While you were away" report, shown when guard mode is switched off.
+func show_guard_report(text: String) -> void:
+	if text.is_empty(): return
+	if guard_popup == null:
+		guard_popup = CanvasLayer.new()
+		guard_popup.layer = 20
+		add_child(guard_popup)
+		var shade: = ColorRect.new()
+		shade.color = Color(0, 0, 0, 0.55)
+		shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		guard_popup.add_child(shade)
+		var card: = PanelContainer.new()
+		card.name = "Card"
+		card.theme = hud.get_child(0).theme
+		card.add_theme_stylebox_override("panel", CowUI.skin("panel_dark", 8))
+		card.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+		card.custom_minimum_size = Vector2(minf(560.0, get_viewport().get_visible_rect().size.x - 40.0), 0)
+		guard_popup.add_child(card)
+		var column: = VBoxContainer.new()
+		column.add_theme_constant_override("separation", 0)
+		card.add_child(column)
+		var head: = CowUI.header("Guard report", false)
+		head.close.pressed.connect(func(): guard_popup.hide())
+		column.add_child(head.bar)
+		var body: = MarginContainer.new()
+		for side in ["left", "right", "top", "bottom"]: body.add_theme_constant_override("margin_" + side, 18)
+		column.add_child(body)
+		var lines: = CowUI.label("", 18, Color("efe6cf"))
+		lines.name = "Lines"
+		lines.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		body.add_child(lines)
+		var ok: = CowUI.action("OK", "")
+		ok.custom_minimum_size = Vector2(160, 52)
+		ok.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		ok.pressed.connect(func(): guard_popup.hide())
+		var foot: = MarginContainer.new()
+		foot.add_theme_constant_override("margin_bottom", 16)
+		foot.add_child(ok)
+		column.add_child(foot)
+	var label: Label = guard_popup.find_child("Lines", true, false)
+	label.text = text
+	guard_popup.show()
+	var card: Control = guard_popup.get_node("Card")
+	card.reset_size()
+	card.position = (get_viewport().get_visible_rect().size - card.get_combined_minimum_size()) * 0.5

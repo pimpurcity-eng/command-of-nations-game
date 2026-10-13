@@ -92,6 +92,8 @@ func _handle(message: Dictionary) -> void:
 			if results.size() > 50: results.pop_front()
 			if game != null and not results[-1][1]: game.hud.show_status(results[-1][2])
 			result_received.emit(results[-1][0], results[-1][1], results[-1][2])
+		"guard_report":
+			if game != null: game.show_guard_report(str(message.get("text", "")))
 		"error":
 			error = str(message.get("message", ""))
 			if game != null: game.hud.show_status(error)

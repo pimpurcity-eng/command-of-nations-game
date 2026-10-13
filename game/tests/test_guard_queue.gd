@@ -53,13 +53,25 @@ func run() -> void:
 	check(not responders.is_empty(), "an enemy inside Russia makes the guard send defenders (" + said + ")")
 	check(responders.all(func(u): return game.units.navigation.controller_at(u.target) == "russia" and u.waypoints.all(func(p): return game.units.navigation.controller_at(p) == "russia")), "defenders never leave Russian land")
 	check(game.units.units.filter(func(u): return u.country == "russia" and u.moving).size() - before.size() <= DefenceAI.MAX_RESPONDERS * 2, "only a few armies respond")
+	# A battle while guarding is counted for the morning report.
+	enemy.health = 0.0
+	rules.advance(0.1)
+	check(rules.guards.russia.kills >= 1 and rules.guards.russia.defended.has("Kursk"), "the guard log counts defences and kills")
 	var saved: = rules.snapshot()
-	rules.set_guard("russia", false)
+	check(saved.guard_logs.russia.kills >= 1, "the guard log is saved")
+	game.hud.guard_requested.emit()
+	await process_frame
 	check(not rules.guarded("russia") and game.hud.guard_button.text == "GUARD", "guard can be switched off")
+	var report: Label = game.guard_popup.find_child("Lines", true, false) if game.guard_popup != null else null
+	check(report != null and game.guard_popup.visible and report.text.begins_with("WHILE YOU WERE AWAY") and report.text.contains("Kursk") and report.text.contains("destroyed"), "switching guard off shows the while-you-were-away report: " + (report.text.replace("\n", " | ") if report != null else "none"))
 	rules.restore(saved)
-	check(rules.guarded("russia"), "loading a save restores guard mode")
+	check(rules.guarded("russia") and rules.guards.russia.kills >= 1, "loading a save restores guard mode and its log")
 	# An away player under guard is defended, not sent on the attack.
 	rules.set_ai_countries(["russia", "ukraine"])
 	check(rules.seat_ai.has("russia") and rules.guarded("russia"), "a guarded seat keeps the defence AI")
+	if not OS.get_environment("GUARD_SHOT").is_empty():
+		game.show_guard_report("WHILE YOU WERE AWAY · 7h 40m\nAttacks met at Kursk, Belgorod\n3 enemy armies destroyed · 1 of your armies lost\nNo provinces lost")
+		for i in 20: await process_frame
+		root.get_texture().get_image().save_png(OS.get_environment("GUARD_SHOT"))
 	print("FAILURES ", failures)
 	quit(1 if failures > 0 else 0)

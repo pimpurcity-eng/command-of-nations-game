@@ -27,6 +27,7 @@ const UNIT_OPS: = ["move", "stop", "attack", "retreat"]
 ## Private fields of enemy armies that are never sent (their orders are secret).
 const HIDDEN_FIELDS: = ["route", "attack_target", "fire_mode", "forced_march", "delay_remaining", "upgrade_remaining", "upgrade_target", "patrol_center", "patrol_phase", "flight_used", "refuel_remaining"]
 
+var guard_reports: Dictionary = {}  # country -> pending "while you were away" report
 var game: Node
 var tcp: = TCPServer.new()
 var peers: Array = []          # {ws, state: new|auth|play, user, name, country, since, budget}
@@ -114,6 +115,8 @@ func _receive(peer: Dictionary, text: String) -> void:
 			peer.budget -= 1.0
 			var answer: = command(peer.country, message)
 			_send(peer, {"t": "result", "op": str(message.get("op", "")), "ok": answer.is_empty(), "message": answer})
+			# The "while you were away" report goes only to the player who switched guard off.
+			if guard_reports.has(peer.country): _send(peer, {"t": "guard_report", "text": guard_reports[peer.country]}); guard_reports.erase(peer.country)
 		["play", "ping"]: _send(peer, {"t": "pong"})
 
 ## Sign-in: development tokens ("dev:<name>") only when allowed; otherwise the Supabase access
@@ -272,7 +275,8 @@ func command(country: String, message: Dictionary) -> String:
 		"guard":
 			# Sleep defence: the server's DefenceAI holds this player's land while they are away.
 			var on: = bool(message.get("on", false))
-			rules.set_guard(country, on)
+			var away_report: = rules.set_guard(country, on)
+			if not away_report.is_empty(): guard_reports[country] = away_report
 			_broadcast({"t": "event", "text": "%s %s guard mode" % [country.capitalize(), "switched on" if on else "switched off"]})
 			return ""
 		"declare_war":

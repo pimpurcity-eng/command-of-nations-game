@@ -17,6 +17,38 @@ const THINK_EVERY: = 2.0       # game seconds between decisions
 var country: = "russia"
 var timer: = 0.0
 var last_report: = ""
+## "While you were away" log (owner 2026-10-13): shown when guard mode is switched off.
+var started: = 0.0
+var defended: Dictionary = {}   # city name -> times armies were sent to defend it
+var kills: = 0
+var lost: = 0
+var lost_places: Array = []
+var retaken: Array = []
+
+func log_state() -> Dictionary:
+	return {"started": started, "defended": defended.duplicate(), "kills": kills, "lost": lost, "lost_places": lost_places.duplicate(), "retaken": retaken.duplicate()}
+
+func restore_log(state: Dictionary) -> void:
+	started = float(state.get("started", started))
+	defended = Dictionary(state.get("defended", {})).duplicate()
+	kills = int(state.get("kills", 0))
+	lost = int(state.get("lost", 0))
+	lost_places = Array(state.get("lost_places", [])).duplicate()
+	retaken = Array(state.get("retaken", [])).duplicate()
+
+## One short report for the morning.
+func summary(now: float) -> String:
+	var lines: Array = ["WHILE YOU WERE AWAY · " + SimulationClock.duration(maxf(0.0, now - started))]
+	if defended.is_empty(): lines.append("No attacks on your land")
+	else:
+		var places: Array = defended.keys()
+		places.sort_custom(func(a, b): return defended[a] > defended[b])
+		lines.append("Attacks met at " + ", ".join(places.slice(0, 4)) + (" and %d more" % (places.size() - 4) if places.size() > 4 else ""))
+	lines.append("%d enemy %s destroyed · %d of your %s lost" % [kills, "army" if kills == 1 else "armies", lost, "army" if lost == 1 else "armies"])
+	if not lost_places.is_empty(): lines.append("Lost: " + ", ".join(lost_places.slice(0, 5)))
+	if not retaken.is_empty(): lines.append("Taken back: " + ", ".join(retaken.slice(0, 5)))
+	if lost_places.is_empty(): lines.append("No provinces lost")
+	return "\n".join(lines)
 
 func decide(armies: UnitSystem, cities: Array, production: ProductionSystem, seconds: float) -> String:
 	timer += seconds
@@ -90,6 +122,7 @@ func decide(armies: UnitSystem, cities: Array, production: ProductionSystem, sec
 			orders += 1
 	if orders == 0: return ""
 	var city_name: String = threats[0].city.get("name", "your land")
+	defended[city_name] = int(defended.get(city_name, 0)) + 1
 	var report: = "GUARD · %d armies moved to defend %s" % [orders, city_name]
 	if report == last_report: return ""
 	last_report = report
