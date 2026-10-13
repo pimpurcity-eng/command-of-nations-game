@@ -1,0 +1,1208 @@
+{
+  "schema_version": 1,
+  "name": "Historical strategy unit roster",
+  "base_map": {
+    "cities": 700,
+    "provinces": 2500
+  },
+  "supported_player_counts": [
+    100,
+    150,
+    200
+  ],
+  "eras": [
+    {
+      "id": "ancient",
+      "name": "Ancient",
+      "start_year": -1000
+    },
+    {
+      "id": "medieval",
+      "name": "Medieval",
+      "start_year": 1100
+    },
+    {
+      "id": "gunpowder",
+      "name": "Gunpowder",
+      "start_year": 1450
+    },
+    {
+      "id": "napoleonic",
+      "name": "Napoleonic",
+      "start_year": 1750
+    },
+    {
+      "id": "industrial",
+      "name": "Industrial",
+      "start_year": 1850
+    },
+    {
+      "id": "world_wars",
+      "name": "World Wars",
+      "start_year": 1914
+    },
+    {
+      "id": "modern",
+      "name": "Modern",
+      "start_year": 1990
+    }
+  ],
+  "units": [
+    {
+      "id": "militia",
+      "name": "Militia",
+      "unlock_era": 0,
+      "domain": "land",
+      "visual_kind": "infantry",
+      "role": "garrison",
+      "stats": {
+        "attack": 2,
+        "defense": 3,
+        "speed": 2
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 40,
+        "manpower": 100,
+        "food": 90,
+        "materials": 20,
+        "fuel": 0,
+        "electronics": 0
+      },
+      "starter": true,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "spearmen",
+      "name": "Spearmen",
+      "unlock_era": 0,
+      "domain": "land",
+      "visual_kind": "infantry",
+      "role": "anti_cavalry",
+      "stats": {
+        "attack": 5,
+        "defense": 7,
+        "speed": 2
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 96,
+        "manpower": 100,
+        "food": 90,
+        "materials": 48,
+        "fuel": 0,
+        "electronics": 0
+      },
+      "starter": true,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "slingers",
+      "name": "Slingers",
+      "unlock_era": 0,
+      "domain": "land",
+      "visual_kind": "infantry",
+      "role": "ranged",
+      "stats": {
+        "attack": 4,
+        "defense": 2,
+        "speed": 3
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 48,
+        "manpower": 100,
+        "food": 90,
+        "materials": 24,
+        "fuel": 0,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "archers",
+      "name": "Archers",
+      "unlock_era": 0,
+      "domain": "land",
+      "visual_kind": "infantry",
+      "role": "ranged",
+      "stats": {
+        "attack": 6,
+        "defense": 3,
+        "speed": 3
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 72,
+        "manpower": 100,
+        "food": 90,
+        "materials": 36,
+        "fuel": 0,
+        "electronics": 0
+      },
+      "starter": true,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "heavy_infantry",
+      "name": "Heavy Infantry",
+      "unlock_era": 0,
+      "domain": "land",
+      "visual_kind": "infantry",
+      "role": "frontline",
+      "stats": {
+        "attack": 8,
+        "defense": 8,
+        "speed": 2
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 128,
+        "manpower": 100,
+        "food": 90,
+        "materials": 64,
+        "fuel": 0,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "light_cavalry",
+      "name": "Light Cavalry",
+      "unlock_era": 0,
+      "domain": "land",
+      "visual_kind": "cavalry",
+      "role": "recon",
+      "stats": {
+        "attack": 6,
+        "defense": 4,
+        "speed": 7
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 80,
+        "manpower": 80,
+        "food": 70,
+        "materials": 40,
+        "fuel": 0,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "trireme",
+      "name": "Trireme",
+      "unlock_era": 0,
+      "domain": "sea",
+      "visual_kind": "naval",
+      "role": "warship",
+      "stats": {
+        "attack": 8,
+        "defense": 7,
+        "speed": 6
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 120,
+        "manpower": 50,
+        "food": 30,
+        "materials": 60,
+        "fuel": 0,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [
+        "ancient_mediterranean"
+      ],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "crossbowmen",
+      "name": "Crossbowmen",
+      "unlock_era": 1,
+      "domain": "land",
+      "visual_kind": "infantry",
+      "role": "ranged",
+      "stats": {
+        "attack": 8,
+        "defense": 4,
+        "speed": 2
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 96,
+        "manpower": 100,
+        "food": 90,
+        "materials": 48,
+        "fuel": 0,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "longbowmen",
+      "name": "English Longbowmen",
+      "unlock_era": 1,
+      "domain": "land",
+      "visual_kind": "infantry",
+      "role": "ranged",
+      "stats": {
+        "attack": 10,
+        "defense": 4,
+        "speed": 2
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 112,
+        "manpower": 100,
+        "food": 90,
+        "materials": 56,
+        "fuel": 0,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [
+        "england"
+      ],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "horse_archers",
+      "name": "Mongol Horse Archers",
+      "unlock_era": 1,
+      "domain": "land",
+      "visual_kind": "cavalry",
+      "role": "ranged_cavalry",
+      "stats": {
+        "attack": 9,
+        "defense": 5,
+        "speed": 8
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 112,
+        "manpower": 80,
+        "food": 70,
+        "materials": 56,
+        "fuel": 0,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [
+        "mongol"
+      ],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "knights",
+      "name": "Knights",
+      "unlock_era": 1,
+      "domain": "land",
+      "visual_kind": "cavalry",
+      "role": "shock",
+      "stats": {
+        "attack": 12,
+        "defense": 10,
+        "speed": 6
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 176,
+        "manpower": 80,
+        "food": 70,
+        "materials": 88,
+        "fuel": 0,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "men_at_arms",
+      "name": "Men-at-Arms",
+      "unlock_era": 1,
+      "domain": "land",
+      "visual_kind": "infantry",
+      "role": "frontline",
+      "stats": {
+        "attack": 9,
+        "defense": 10,
+        "speed": 2
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 152,
+        "manpower": 100,
+        "food": 90,
+        "materials": 76,
+        "fuel": 0,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "trebuchet",
+      "name": "Trebuchet",
+      "unlock_era": 1,
+      "domain": "land",
+      "visual_kind": "artillery",
+      "role": "siege",
+      "stats": {
+        "attack": 15,
+        "defense": 1,
+        "speed": 1
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 128,
+        "manpower": 40,
+        "food": 30,
+        "materials": 64,
+        "fuel": 0,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "medieval_galley",
+      "name": "Medieval Galley",
+      "unlock_era": 1,
+      "domain": "sea",
+      "visual_kind": "naval",
+      "role": "warship",
+      "stats": {
+        "attack": 11,
+        "defense": 9,
+        "speed": 5
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 160,
+        "manpower": 50,
+        "food": 30,
+        "materials": 80,
+        "fuel": 0,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "arquebusiers",
+      "name": "Arquebusiers",
+      "unlock_era": 2,
+      "domain": "land",
+      "visual_kind": "infantry",
+      "role": "ranged",
+      "stats": {
+        "attack": 11,
+        "defense": 5,
+        "speed": 2
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 128,
+        "manpower": 100,
+        "food": 90,
+        "materials": 64,
+        "fuel": 0,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "pike_square",
+      "name": "Pikemen",
+      "unlock_era": 2,
+      "domain": "land",
+      "visual_kind": "infantry",
+      "role": "anti_cavalry",
+      "stats": {
+        "attack": 9,
+        "defense": 12,
+        "speed": 2
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 168,
+        "manpower": 100,
+        "food": 90,
+        "materials": 84,
+        "fuel": 0,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "field_cannon",
+      "name": "Early Field Cannon",
+      "unlock_era": 2,
+      "domain": "land",
+      "visual_kind": "artillery",
+      "role": "siege",
+      "stats": {
+        "attack": 18,
+        "defense": 3,
+        "speed": 2
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 168,
+        "manpower": 40,
+        "food": 30,
+        "materials": 84,
+        "fuel": 0,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "galleon",
+      "name": "Galleon",
+      "unlock_era": 2,
+      "domain": "sea",
+      "visual_kind": "naval",
+      "role": "warship",
+      "stats": {
+        "attack": 17,
+        "defense": 16,
+        "speed": 5
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 264,
+        "manpower": 50,
+        "food": 30,
+        "materials": 132,
+        "fuel": 0,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "caravel",
+      "name": "Caravel",
+      "unlock_era": 2,
+      "domain": "sea",
+      "visual_kind": "naval",
+      "role": "recon",
+      "stats": {
+        "attack": 4,
+        "defense": 7,
+        "speed": 8
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 88,
+        "manpower": 50,
+        "food": 30,
+        "materials": 44,
+        "fuel": 0,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "line_infantry",
+      "name": "Line Infantry",
+      "unlock_era": 3,
+      "domain": "land",
+      "visual_kind": "infantry",
+      "role": "frontline",
+      "stats": {
+        "attack": 15,
+        "defense": 11,
+        "speed": 3
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 208,
+        "manpower": 100,
+        "food": 90,
+        "materials": 104,
+        "fuel": 0,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "riflemen",
+      "name": "Riflemen",
+      "unlock_era": 3,
+      "domain": "land",
+      "visual_kind": "infantry",
+      "role": "skirmish",
+      "stats": {
+        "attack": 17,
+        "defense": 9,
+        "speed": 3
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 208,
+        "manpower": 100,
+        "food": 90,
+        "materials": 104,
+        "fuel": 0,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "cuirassiers",
+      "name": "Cuirassiers",
+      "unlock_era": 3,
+      "domain": "land",
+      "visual_kind": "cavalry",
+      "role": "shock",
+      "stats": {
+        "attack": 18,
+        "defense": 14,
+        "speed": 6
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 256,
+        "manpower": 80,
+        "food": 70,
+        "materials": 128,
+        "fuel": 0,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "horse_artillery",
+      "name": "Horse Artillery",
+      "unlock_era": 3,
+      "domain": "land",
+      "visual_kind": "artillery",
+      "role": "mobile_fire",
+      "stats": {
+        "attack": 20,
+        "defense": 5,
+        "speed": 5
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 200,
+        "manpower": 40,
+        "food": 30,
+        "materials": 100,
+        "fuel": 0,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "ship_of_line",
+      "name": "Ship of the Line",
+      "unlock_era": 3,
+      "domain": "sea",
+      "visual_kind": "naval",
+      "role": "capital_ship",
+      "stats": {
+        "attack": 25,
+        "defense": 25,
+        "speed": 4
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 400,
+        "manpower": 50,
+        "food": 30,
+        "materials": 200,
+        "fuel": 0,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "industrial_infantry",
+      "name": "Industrial Infantry",
+      "unlock_era": 4,
+      "domain": "land",
+      "visual_kind": "infantry",
+      "role": "frontline",
+      "stats": {
+        "attack": 19,
+        "defense": 16,
+        "speed": 3
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 280,
+        "manpower": 100,
+        "food": 90,
+        "materials": 140,
+        "fuel": 42,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "machine_gun_team",
+      "name": "Machine Gun Team",
+      "unlock_era": 4,
+      "domain": "land",
+      "visual_kind": "infantry",
+      "role": "defense",
+      "stats": {
+        "attack": 24,
+        "defense": 20,
+        "speed": 2
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 352,
+        "manpower": 100,
+        "food": 90,
+        "materials": 176,
+        "fuel": 28,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "heavy_artillery",
+      "name": "Heavy Artillery",
+      "unlock_era": 4,
+      "domain": "land",
+      "visual_kind": "artillery",
+      "role": "long_range",
+      "stats": {
+        "attack": 28,
+        "defense": 6,
+        "speed": 2
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 272,
+        "manpower": 40,
+        "food": 30,
+        "materials": 136,
+        "fuel": 28,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "armored_car",
+      "name": "Armoured Car",
+      "unlock_era": 4,
+      "domain": "land",
+      "visual_kind": "armor",
+      "role": "recon",
+      "stats": {
+        "attack": 15,
+        "defense": 12,
+        "speed": 7
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 216,
+        "manpower": 40,
+        "food": 30,
+        "materials": 108,
+        "fuel": 98,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "biplane",
+      "name": "Reconnaissance Biplane",
+      "unlock_era": 4,
+      "domain": "air",
+      "visual_kind": "fighter",
+      "role": "recon",
+      "stats": {
+        "attack": 7,
+        "defense": 3,
+        "speed": 12
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 80,
+        "manpower": 40,
+        "food": 30,
+        "materials": 40,
+        "fuel": 168,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "dreadnought",
+      "name": "Dreadnought",
+      "unlock_era": 4,
+      "domain": "sea",
+      "visual_kind": "naval",
+      "role": "capital_ship",
+      "stats": {
+        "attack": 35,
+        "defense": 32,
+        "speed": 5
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 536,
+        "manpower": 50,
+        "food": 30,
+        "materials": 268,
+        "fuel": 70,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "early_tank",
+      "name": "Early Tank",
+      "unlock_era": 5,
+      "domain": "land",
+      "visual_kind": "armor",
+      "role": "breakthrough",
+      "stats": {
+        "attack": 27,
+        "defense": 24,
+        "speed": 3
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 408,
+        "manpower": 40,
+        "food": 30,
+        "materials": 204,
+        "fuel": 42,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "medium_tank",
+      "name": "Medium Tank",
+      "unlock_era": 5,
+      "domain": "land",
+      "visual_kind": "armor",
+      "role": "breakthrough",
+      "stats": {
+        "attack": 36,
+        "defense": 30,
+        "speed": 5
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 528,
+        "manpower": 40,
+        "food": 30,
+        "materials": 264,
+        "fuel": 70,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "motorized_infantry",
+      "name": "Motorized Infantry",
+      "unlock_era": 5,
+      "domain": "land",
+      "visual_kind": "infantry",
+      "role": "mobile",
+      "stats": {
+        "attack": 26,
+        "defense": 20,
+        "speed": 7
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 368,
+        "manpower": 100,
+        "food": 90,
+        "materials": 184,
+        "fuel": 98,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "fighter_prop",
+      "name": "Propeller Fighter",
+      "unlock_era": 5,
+      "domain": "air",
+      "visual_kind": "fighter",
+      "role": "air_superiority",
+      "stats": {
+        "attack": 27,
+        "defense": 18,
+        "speed": 16
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 360,
+        "manpower": 40,
+        "food": 30,
+        "materials": 180,
+        "fuel": 224,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "strategic_bomber",
+      "name": "Strategic Bomber",
+      "unlock_era": 5,
+      "domain": "air",
+      "visual_kind": "bomber",
+      "role": "bombardment",
+      "stats": {
+        "attack": 42,
+        "defense": 12,
+        "speed": 12
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 432,
+        "manpower": 40,
+        "food": 30,
+        "materials": 216,
+        "fuel": 168,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "submarine",
+      "name": "Submarine",
+      "unlock_era": 5,
+      "domain": "sea",
+      "visual_kind": "naval",
+      "role": "submarine",
+      "stats": {
+        "attack": 34,
+        "defense": 16,
+        "speed": 7
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 400,
+        "manpower": 50,
+        "food": 30,
+        "materials": 200,
+        "fuel": 98,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "destroyer",
+      "name": "Destroyer",
+      "unlock_era": 5,
+      "domain": "sea",
+      "visual_kind": "naval",
+      "role": "escort",
+      "stats": {
+        "attack": 29,
+        "defense": 25,
+        "speed": 10
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 432,
+        "manpower": 50,
+        "food": 30,
+        "materials": 216,
+        "fuel": 140,
+        "electronics": 0
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "modern_infantry",
+      "name": "Modern Infantry",
+      "unlock_era": 6,
+      "domain": "land",
+      "visual_kind": "infantry",
+      "role": "frontline",
+      "stats": {
+        "attack": 32,
+        "defense": 26,
+        "speed": 5
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 464,
+        "manpower": 100,
+        "food": 90,
+        "materials": 232,
+        "fuel": 70,
+        "electronics": 192
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "mechanized_infantry",
+      "name": "Mechanized Infantry",
+      "unlock_era": 6,
+      "domain": "land",
+      "visual_kind": "armor",
+      "role": "mobile",
+      "stats": {
+        "attack": 42,
+        "defense": 38,
+        "speed": 9
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 640,
+        "manpower": 40,
+        "food": 30,
+        "materials": 320,
+        "fuel": 126,
+        "electronics": 252
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "main_battle_tank",
+      "name": "Main Battle Tank",
+      "unlock_era": 6,
+      "domain": "land",
+      "visual_kind": "armor",
+      "role": "breakthrough",
+      "stats": {
+        "attack": 52,
+        "defense": 45,
+        "speed": 10
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 776,
+        "manpower": 40,
+        "food": 30,
+        "materials": 388,
+        "fuel": 140,
+        "electronics": 312
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "fighter_jet",
+      "name": "Fighter Jet",
+      "unlock_era": 6,
+      "domain": "air",
+      "visual_kind": "fighter",
+      "role": "air_superiority",
+      "stats": {
+        "attack": 51,
+        "defense": 33,
+        "speed": 27
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 672,
+        "manpower": 40,
+        "food": 30,
+        "materials": 336,
+        "fuel": 378,
+        "electronics": 306
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "attack_helicopter",
+      "name": "Attack Helicopter",
+      "unlock_era": 6,
+      "domain": "air",
+      "visual_kind": "helicopter",
+      "role": "support",
+      "stats": {
+        "attack": 43,
+        "defense": 23,
+        "speed": 18
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 528,
+        "manpower": 40,
+        "food": 30,
+        "materials": 264,
+        "fuel": 252,
+        "electronics": 258
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "combat_drone",
+      "name": "Combat Drone",
+      "unlock_era": 6,
+      "domain": "air",
+      "visual_kind": "fighter",
+      "role": "recon_strike",
+      "stats": {
+        "attack": 34,
+        "defense": 11,
+        "speed": 24
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 360,
+        "manpower": 40,
+        "food": 30,
+        "materials": 180,
+        "fuel": 336,
+        "electronics": 204
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "rocket_artillery",
+      "name": "Rocket Artillery",
+      "unlock_era": 6,
+      "domain": "land",
+      "visual_kind": "artillery",
+      "role": "long_range",
+      "stats": {
+        "attack": 55,
+        "defense": 9,
+        "speed": 6
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 512,
+        "manpower": 40,
+        "food": 30,
+        "materials": 256,
+        "fuel": 84,
+        "electronics": 330
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "modern_air_defense",
+      "name": "Mobile Air Defense",
+      "unlock_era": 6,
+      "domain": "land",
+      "visual_kind": "air_defense",
+      "role": "anti_air",
+      "stats": {
+        "attack": 10,
+        "defense": 36,
+        "speed": 7
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 368,
+        "manpower": 40,
+        "food": 30,
+        "materials": 184,
+        "fuel": 98,
+        "electronics": 60
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    },
+    {
+      "id": "modern_destroyer",
+      "name": "Modern Destroyer",
+      "unlock_era": 6,
+      "domain": "sea",
+      "visual_kind": "naval",
+      "role": "warship",
+      "stats": {
+        "attack": 56,
+        "defense": 48,
+        "speed": 16
+      },
+      "research_levels": 5,
+      "cost": {
+        "funds": 832,
+        "manpower": 50,
+        "food": 30,
+        "materials": 416,
+        "fuel": 224,
+        "electronics": 336
+      },
+      "starter": false,
+      "variant_factions": [],
+      "asset_status": "needs historical model; no modern unit asset reused"
+    }
+  ]
+}
