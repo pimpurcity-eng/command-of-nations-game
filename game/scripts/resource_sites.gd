@@ -1,9 +1,8 @@
 class_name ResourceSites
 extends Node3D
-## Resource sites scattered across the provinces (oil and gas fields, mines and steelworks,
-## timber, tech plants, grain farmland) and the resource specialties of each city. A site
-## earns its resource for whoever controls its province; each is drawn as an original 3D
-## installation with a resource badge above it (badges hide when zoomed far out).
+## The resource specialty of each city (metal, rare earths or oil), shown as a badge beside it.
+## Owner 2026-10-13: all resources come from the cities; provinces produce nothing, so the
+## old province sites (data "sites") no longer appear or earn (income() only skips city sites).
 ## Data: res://data/resource_sites.json. Owner review 2026-10-09: "there has to be resources
 ## in cities, and some scattered across some provinces".
 const DATA_PATH: = "res://data/resource_sites.json"
@@ -42,10 +41,7 @@ static func icon(resource: String) -> Texture2D:
 func setup(map: StrategicMap, camera_rig: StrategyCamera) -> void:
 	terrain = map
 	rig = camera_rig
-	# Selected rural provinces have commodities. Currency/recruitment are province income,
-	# not commodity installations. Cities are accounted for once by ProductionSystem.
-	var hints: = []
-	for entry in data().sites: hints.append({"resource": entry.resource, "point": GeographicProjection.project(entry.longitude, entry.latitude)})
+	# Each city shows its resource specialty; its income is counted by ProductionSystem.
 	var city_data: = GeographicProjection.load_cities()
 	for title in terrain.province_hubs:
 		var hub: Vector2 = terrain.province_hubs[title]
@@ -55,14 +51,10 @@ func setup(map: StrategicMap, camera_rig: StrategyCamera) -> void:
 		var city_name: = ""
 		for city in city_data:
 			if parts.any(func(part: Dictionary):return part.id == city.get("sector", "") or city.point.distance_to(hub)<0.5): city_name = city.name
-		if not city_name.is_empty() and not city_resources(city_name).is_empty(): resource = city_resources(city_name)[0]
-		else:
-			var votes: = {}
-			for hint in hints:
-				if parts.any(func(t: Dictionary): return RegionData.contains(t, hint.point)): votes[hint.resource] = votes.get(hint.resource, 0) + 1
-			for candidate in votes:
-				if resource.is_empty() or votes[candidate] > votes[resource]: resource = candidate
-		if resource not in ["fuel", "materials", "electronics"]: continue
+		# Owner 2026-10-13: "take all resources out of the provinces"; only cities show one.
+		if city_name.is_empty() or city_resources(city_name).is_empty(): continue
+		resource = city_resources(city_name)[0]
+		if resource not in ["food", "fuel", "materials", "electronics"]: continue
 		var point: = _beside(hub, 1.0 if not city_name.is_empty() else 0.55, parts)
 		var territory: Dictionary = parts[0]
 		for part in parts:

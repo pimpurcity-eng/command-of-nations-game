@@ -336,7 +336,7 @@ func _refresh_units(place: Dictionary) -> void:
 		row.kind.text = (str(spec.get("research_branch", "")) if not str(spec.get("research_branch", "")).is_empty() else str(spec.get("category", ""))) + (" Lvl. " + str(level) if level > 0 else " · not researched")
 		for child in row.costs.get_children(): row.costs.remove_child(child); child.queue_free()
 		for resource in ProductionSystem.RESOURCES:
-			if spec.cost[resource] > 0: row.costs.add_child(CowUI.cost(resource, spec.cost[resource], stock[resource] >= spec.cost[resource]))
+			if float(spec.cost.get(resource, 0.0)) > 0: row.costs.add_child(CowUI.cost(resource, float(spec.cost.get(resource, 0.0)), stock[resource] >= float(spec.cost.get(resource, 0.0))))
 		row.time.text = " " + SimulationClock.duration(spec.seconds / maxf(buildings.production_rate(city_id, spec), 0.01))
 		var blocked: = "" if level > 0 else "RESEARCH FIRST"
 		if blocked.is_empty() and spec.get("requires_port", false) and not place.has("naval_spawn"): blocked = "COASTAL ONLY"

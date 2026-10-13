@@ -51,7 +51,7 @@ func cost(building_id: String, target: int) -> Dictionary:
 	var bill: Dictionary = {}
 	var definition: = spec(building_id)
 	if definition.is_empty(): return bill
-	for resource in ProductionSystem.RESOURCES: bill[resource] = ceili(definition.cost[resource] * (1.0 + 0.5 * maxi(0, target - 2)))
+	for resource in ProductionSystem.RESOURCES: bill[resource] = ceili(float(definition.cost.get(resource, 0.0)) * (1.0 + 0.5 * maxi(0, target - 2)))
 	return bill
 func duration(building_id: String, target: int) -> float:
 	return spec(building_id).hours * 3600.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND * maxi(1, target - 1)

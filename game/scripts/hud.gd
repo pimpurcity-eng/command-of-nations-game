@@ -581,7 +581,7 @@ func clear_unit_selection() -> void :
 	_refresh_sheet()
 func show_resources(_country: String, stockpile: Dictionary) -> void :
 	for resource in ProductionSystem.RESOURCES:
-		var amount: = int(stockpile[resource])
+		var amount: = int(stockpile.get(resource, 0))
 		resource_values[resource].text = ("%.1fk" % (amount / 1000.0)) if amount >= 10000 else str(amount)
 
 
@@ -615,7 +615,7 @@ class Glyph extends Control:
 					var band: = Rect2(rect.position + Vector2(0, rect.size.y * i / colors.size()), Vector2(rect.size.x, rect.size.y / colors.size()))
 					draw_rect(band, colors[i])
 				draw_rect(rect, Color(0, 0, 0, 0.6), false, 1.5)
-			"funds", "materials", "electronics", "fuel", "manpower":
+			"funds", "materials", "electronics", "fuel", "manpower", "food":
 				# Shaded resource icons (tools/make_ui_skin.py), as in the menus.
 				var side: = minf(size.x, size.y) * 1.25
 				draw_texture_rect(ResourceSites.icon(kind), Rect2(c - Vector2(side, side) * 0.5, Vector2(side, side)), false)

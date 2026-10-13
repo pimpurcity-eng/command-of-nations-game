@@ -187,7 +187,7 @@ func _show_details() -> void :
 			if place.name == city_names[city_picker.selected]: multiplier = production.buildings.production_rate(place.id, spec)
 	details.text = spec.name + " · " + SimulationClock.duration(spec.seconds / multiplier) + " at 1x · L" + str(production.research.level(spec.id) if production.research != null else 1) + "\n"
 	for resource in ProductionSystem.RESOURCES:
-		details.text += resource.capitalize() + " " + str(int(spec.cost[resource])) + "  "
+		details.text += resource.capitalize() + " " + str(int(float(spec.cost.get(resource, 0.0)))) + "  "
 	for id in spec.get("building_requirements", {}): details.text += "\nRequires " + production.buildings.spec(id).name + " L" + str(int(spec.building_requirements[id]))
 	if spec.visual_kind == "missile_launcher": details.text += "\nStops to fire automatically during war · Range " + str(int(spec.strike_range * 40)) + " game km · timed salvo rounds"
 	if spec.visual_kind == "fighter": details.text += "\nOperating radius: " + str(int(spec.air_range * 40)) + " game km · Fly / Patrol / Return"

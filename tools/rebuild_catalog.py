@@ -269,6 +269,11 @@ for e in catalog:
     if "upkeep" not in e:
         e["upkeep"] = {"funds": round(e["cost"]["funds"] * 0.1, 1), "fuel": 1.0, "manpower": 0.3}
 
+# Food (owner 2026-10-13, Call of War style): armies eat; infantry-heavy units cost the most food.
+for e in catalog:
+    e["cost"]["food"] = int(round(e["cost"].get("manpower", 0) * 0.6 + 5))
+    e.setdefault("upkeep", {})["food"] = round(max(0.5, e["upkeep"].get("manpower", 0) * 2), 1)
+
 starters = {}
 for e in catalog:
     if e.get("starter"):

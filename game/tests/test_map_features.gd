@@ -35,29 +35,18 @@ func run() -> void:
 	unreached.erase("Kaliningrad region")
 	check(unreached.is_empty(), "a road reaches every province (unreached: %s)" % [unreached])
 
-	# 2. Resource sites: placed in playable provinces, with city specialties, paying the controller.
+	# 2. Resources: only cities show and earn a resource (owner 2026-10-13); provinces have none.
 	var sites: ResourceSites = game.resource_sites
-	check(sites.sites.size() > 0 and sites.sites.size() < game.map.province_hubs.size(), "commodities appear in selected provinces, not every province")
-	check(sites.sites.all(func(site: Dictionary):return RegionData.contains(site.territory,site.point)),"resource installations remain inside their province")
-	check(sites.sites.all(func(site: Dictionary): return site.point.distance_to(game.map.province_hubs[site.name]) <= 1.01), "each resource sits at its province centre")
+	check(sites.sites.size() == game.production.cities.size(), "one resource badge per city, none in provinces (%d)" % sites.sites.size())
+	check(sites.sites.all(func(site: Dictionary):return RegionData.contains(site.territory,site.point)),"resource badges remain inside their city's province")
 	var kinds: = {}
 	for site in sites.sites: kinds[site.resource] = true
-	check(kinds.has_all(["fuel", "materials", "electronics"]) and not kinds.has("manpower"), "commodities use oil, mine and factory sites; recruitment is not farmland")
+	check(kinds.has_all(["fuel", "materials", "electronics"]) and not kinds.has("manpower"), "cities spread oil, metal and rare earths")
 	check(ResourceSites.city_resources("Kursk").has("materials"), "cities list their resource specialties")
-	var fuel_site: Dictionary = {}
-	for site in sites.sites:
-		if site.resource == "fuel" and site.territory.controller == "ukraine": fuel_site = site
-	check(not fuel_site.is_empty(), "Ukraine holds an oil or gas field")
-	var earned: Dictionary = sites.income(10.0)
-	check(earned.get("ukraine", {}).get("fuel", 0.0) > 0.0, "a site earns its resource for the province's controller")
-	var original: String = fuel_site.territory.controller
-	fuel_site.territory.controller = "russia"
-	var before: float = sites.income(10.0).get("russia", {}).get("fuel", 0.0)
-	fuel_site.territory.controller = original
-	check(before > sites.income(10.0).get("russia", {}).get("fuel", 0.0), "capturing the province transfers the site's income")
+	check(sites.income(10.0).is_empty(), "provinces earn nothing")
 	var stock_before: float = game.production.stockpiles.russia.fuel
 	game.production.advance(1.0)
-	check(game.production.stockpiles.russia.fuel > stock_before, "production adds city and site income")
+	check(game.production.stockpiles.russia.fuel > stock_before, "production adds city income")
 
 	# 3. Ground: the height used for placement matches the drawn ground, and vehicles rest on it.
 	var units: UnitSystem = game.units

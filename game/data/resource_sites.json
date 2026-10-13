@@ -1,31 +1,20 @@
 {
-  "note": "Cities have one main commodity. Selected rural provinces use geographic site hints; unassigned provinces have currency and manpower only. Income uses occupation and morale modifiers.",
+  "note": "Owner 2026-10-13: all resources come from the seven cities of each country; provinces produce nothing. Each city has one specialty: metal (materials), rare earths (electronics), oil (fuel) or food. By country: Russia has more oil (3 cities: Voronezh, Rostov-on-Don, Bryansk), Ukraine more rare earths (Kyiv, Kharkiv) and food (Poltava, Vinnytsia - the grain belt). Money comes from city industry, manpower from every city. 'sites' are kept only as old map hints and no longer appear or earn.",
   "rates": {
     "fuel": 0.06,
     "materials": 0.09,
     "electronics": 0.04,
     "manpower": 0.05,
-    "funds": 0.4
+    "funds": 0.4,
+    "food": 0.08
   },
   "city_specialty_bonus": 0.5,
   "cities": {
-    "Kyiv": [
-      "electronics"
-    ],
-    "Lviv": [
-      "materials"
-    ],
-    "Odesa": [
-      "fuel"
-    ],
-    "Kharkiv": [
-      "electronics"
-    ],
-    "Dnipro": [
-      "materials"
-    ],
     "Moscow": [
       "electronics"
+    ],
+    "Tula": [
+      "food"
     ],
     "Kursk": [
       "materials"
@@ -34,9 +23,33 @@
       "materials"
     ],
     "Voronezh": [
-      "electronics"
+      "fuel"
     ],
     "Rostov-on-Don": [
+      "fuel"
+    ],
+    "Bryansk": [
+      "fuel"
+    ],
+    "Kyiv": [
+      "electronics"
+    ],
+    "Kharkiv": [
+      "electronics"
+    ],
+    "Vinnytsia": [
+      "food"
+    ],
+    "Poltava": [
+      "food"
+    ],
+    "Dnipro": [
+      "materials"
+    ],
+    "Lviv": [
+      "materials"
+    ],
+    "Odesa": [
       "fuel"
     ]
   },

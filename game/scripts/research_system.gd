@@ -44,7 +44,7 @@ func cost(id: String, target: int) -> Dictionary:
 	var spec: = economy.equipment(id)
 	if spec.is_empty(): return result
 	for resource in ProductionSystem.RESOURCES:
-		result[resource] = ceili(spec.cost[resource] * maxf(0.3, 0.5 + 0.3 * (target - 2)))
+		result[resource] = ceili(float(spec.cost.get(resource, 0.0)) * maxf(0.3, 0.5 + 0.3 * (target - 2)))
 	return result
 func active(id: String) -> Dictionary:
 	for job in jobs:
@@ -92,7 +92,7 @@ func upgrade_duration(tier: int) -> float:
 	return tier * 3600.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
 func upgrade_cost(id: String, tier: int) -> Dictionary:
 	var result: Dictionary = {}
-	for resource in ProductionSystem.RESOURCES: result[resource] = ceili(economy.equipment(id).cost[resource] * (0.2+0.1*(tier-1)))
+	for resource in ProductionSystem.RESOURCES: result[resource] = ceili(float(economy.equipment(id).cost.get(resource, 0.0)) * (0.2+0.1*(tier-1)))
 	return result
 func upgrade_reason(id: String, tier: int, country: String = "") -> String:
 	if country.is_empty(): country = GameSession.player_country
@@ -165,7 +165,7 @@ func upgrade(unit: Dictionary) -> String:
 		if member.get("level", 1) >= level(member.equipment_id): continue
 		eligible.append(member)
 		var spec: = economy.equipment(member.equipment_id)
-		for resource in ProductionSystem.RESOURCES: bill[resource] += ceil(spec.cost[resource] * 0.5)
+		for resource in ProductionSystem.RESOURCES: bill[resource] += ceil(float(spec.cost.get(resource, 0.0)) * 0.5)
 		duration_seconds = maxf(duration_seconds, spec.seconds * 0.5)
 	if eligible.is_empty(): return "This army already has the highest researched levels"
 	for resource in ProductionSystem.RESOURCES:

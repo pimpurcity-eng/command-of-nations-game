@@ -17,7 +17,7 @@ const DAY: = VictoryRules.DAY
 const DEPARTURE_EVERY: = DAY / 4.0           # a convoy leaves every 6 game hours
 const RAIL_SPEED: = 6.0                       # map units per game day ... scaled below
 const SEA_SPEED: = 4.0
-const CARGO: = {"materials": 60.0, "electronics": 20.0, "fuel": 45.0}
+const CARGO: = {"food": 80.0, "materials": 60.0, "electronics": 20.0, "fuel": 45.0}
 const SEA_BONUS: = 1.6
 const PARTNER_SHARE: = 0.25                   # a player partner also earns this share as funds
 const MAX_ROUTES_PER_COUNTRY: = 4
@@ -157,7 +157,7 @@ func routes_of(country: String) -> Array:
 	return routes.filter(func(r: Dictionary): return r.country == country)
 
 func open_route(country: String, partner: String, cargo: String, city_id: String = "") -> String:
-	if not CARGO.has(cargo): return "Choose fuel, materials or electronics"
+	if not CARGO.has(cargo): return "Choose food, fuel, materials or electronics"
 	if routes_of(country).size() >= MAX_ROUTES_PER_COUNTRY: return "At most %d trade routes" % MAX_ROUTES_PER_COUNTRY
 	for r in routes_of(country):
 		if r.partner == partner: return "You already trade with " + partner_name(partner)

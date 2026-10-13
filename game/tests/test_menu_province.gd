@@ -61,14 +61,13 @@ func run():
  game.city_panel.hide()
  var province: Dictionary = game.buildings.provinces.places.values().filter(func(p):return game.production.controlled(p,"russia"))[0]
  for r in ProductionSystem.RESOURCES:game.production.stockpiles.russia[r]=100000
- var before=game.production.province_income(province)
- check(game.buildings.schedule(province.id,"industry").is_empty(),"rural local industry can be queued")
+ check(not game.buildings.schedule(province.id,"industry").is_empty(),"no industry in provinces (owner 2026-10-13)")
  check(not game.buildings.schedule(province.id,"factory").is_empty(),"rural production factory rejected")
  check(not game.production.schedule("tanks_russia",province.name).is_empty(),"province cannot create units")
- game.buildings.advance(game.buildings.duration("industry",1)+1)
- check(game.buildings.provinces.level(province.id,"industry")==1,"province construction completes")
- check(game.cities.rural_districts.has(province.id) and game.cities.rural_districts[province.id].get_node("industry").visible,"completed province building appears on map")
- check(is_equal_approx(game.production.province_income(province).funds,before.funds*1.25),"local industry actually increases province output")
+ check(game.buildings.schedule(province.id,"bunker").is_empty(),"rural fortifications can be queued")
+ game.buildings.advance(game.buildings.duration("bunker",1)+1)
+ check(game.buildings.provinces.level(province.id,"bunker")==1,"province construction completes")
+ check(game.cities.rural_districts.has(province.id) and game.cities.rural_districts[province.id].get_node("bunker").visible,"completed province building appears on map")
  check(game.buildings.schedule(province.id,"airbase").is_empty(),"rural airfield can be built")
  game.buildings.advance(game.buildings.duration("airbase",1)+1)
  check(game.units.air.available(province,"russia"),"completed airfield is an aircraft base")
@@ -77,8 +76,10 @@ func run():
  var old=state.duplicate(true);old.erase("provinces")
  check(game.buildings.validate(old),"pre-province saves remain compatible")
  game.buildings.restore(state)
- check(game.buildings.provinces.level(province.id,"industry")==1,"province buildings restore")
- var forged=state.duplicate(true);forged.provinces.levels[province.id].industry=99
+ check(game.buildings.provinces.level(province.id,"bunker")==1,"province buildings restore")
+ var legacy=state.duplicate(true);legacy.provinces.levels[province.id].industry=1
+ check(game.buildings.validate(legacy),"older saves with province industry still load")
+ var forged=state.duplicate(true);forged.provinces.levels[province.id].bunker=99
  check(not game.buildings.validate(forged),"invalid rural building levels rejected")
  check(CowUI.equipment_picture("apcs_russia").resource_path==str(EquipmentIdentity.research_tier("apcs_russia",1).model).trim_suffix(".glb")+".png","APC thumbnail uses actual model, not Russian flag")
  check(CowUI.equipment_picture("fleet_russia").resource_path==str(EquipmentIdentity.research_tier("fleet_russia",1).preview),"naval thumbnail uses actual ship")

@@ -197,7 +197,7 @@ func _strategic() -> void:
 		var weapon: Dictionary = StrategicWeapons.WEAPONS[kind]
 		var cost: = []
 		for resource in weapon.cost:
-			if weapon.cost[resource] > 0: cost.append("%s %s" % [_short(weapon.cost[resource]), resource])
+			if float(weapon.cost.get(resource, 0.0)) > 0: cost.append("%s %s" % [_short(float(weapon.cost.get(resource, 0.0))), resource])
 		_label("%s · ready: %d · cost %s · builds in %.1f days" % [weapon.name, rules.strategic.count(me, kind), ", ".join(cost), weapon.build / VictoryRules.DAY])
 		var row: = HBoxContainer.new()
 		var build: = Button.new()

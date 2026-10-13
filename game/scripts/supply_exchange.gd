@@ -1,7 +1,7 @@
 class_name SupplyExchange
 extends RefCounted
 
-const PRICES: = {"materials": {"buy": 3.0, "sell": 2.0}, "electronics": {"buy": 8.0, "sell": 5.0}, "fuel": {"buy": 4.0, "sell": 2.0}}
+const PRICES: = {"food": {"buy": 2.0, "sell": 1.0}, "materials": {"buy": 3.0, "sell": 2.0}, "electronics": {"buy": 8.0, "sell": 5.0}, "fuel": {"buy": 4.0, "sell": 2.0}}
 var economy: ProductionSystem
 ## Embargoes act as sanctions: worse prices for every country embargoing you.
 var diplomacy: Diplomacy

@@ -119,7 +119,7 @@ func open_upgrade(units: UnitSystem, research: ResearchSystem) -> void :
 		if unit.level >= research.level(unit.equipment_id): continue
 		count += 1
 		var spec: = research.economy.equipment(unit.equipment_id)
-		for resource in ProductionSystem.RESOURCES: bill[resource] += ceil(spec.cost[resource] * 0.5)
+		for resource in ProductionSystem.RESOURCES: bill[resource] += ceil(float(spec.cost.get(resource, 0.0)) * 0.5)
 		duration = maxf(duration, spec.seconds * 0.5)
 	var text: = str(count) + " units · " + SimulationClock.duration(duration) + " at 1x"
 	for resource in bill: text += "\n" + resource.capitalize() + ": " + str(int(bill[resource]))

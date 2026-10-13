@@ -32,14 +32,14 @@ func reason(country: String, kind: String, day: int, stockpile: Dictionary) -> S
 	for job in jobs:
 		if job.country == country and job.kind == kind: return "Already being built"
 	for resource in weapon.cost:
-		if float(stockpile.get(resource, 0.0)) < weapon.cost[resource]: return "Needs %d %s" % [roundi(weapon.cost[resource]), resource]
+		if float(stockpile.get(resource, 0.0)) < float(weapon.cost.get(resource, 0.0)): return "Needs %d %s" % [roundi(float(weapon.cost.get(resource, 0.0))), resource]
 	return ""
 
 func build(country: String, kind: String, day: int, stockpile: Dictionary) -> String:
 	if MatchClient.active != null: return MatchClient.active.send("strategic_build", {"kind": kind})
 	var why: = reason(country, kind, day, stockpile)
 	if not why.is_empty(): return why
-	for resource in WEAPONS[kind].cost: stockpile[resource] -= WEAPONS[kind].cost[resource]
+	for resource in WEAPONS[kind].cost: stockpile[resource] -= float(WEAPONS[kind].cost.get(resource, 0.0))
 	jobs.append({"country": country, "kind": kind, "remaining": WEAPONS[kind].build})
 	return ""
 

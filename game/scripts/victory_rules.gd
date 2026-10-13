@@ -62,7 +62,7 @@ static func standings(territories: Array, cities: Array, countries: Array) -> Di
 
 ## Income in one number: funds plus resources at rough market value.
 static func value(resources: Dictionary) -> float:
-	return float(resources.get("funds", 0.0)) + 2.0 * float(resources.get("materials", 0.0)) + 4.0 * float(resources.get("electronics", 0.0)) + 2.5 * float(resources.get("fuel", 0.0)) + 3.0 * float(resources.get("manpower", 0.0))
+	return float(resources.get("funds", 0.0)) + 2.0 * float(resources.get("materials", 0.0)) + 4.0 * float(resources.get("electronics", 0.0)) + 2.5 * float(resources.get("fuel", 0.0)) + 3.0 * float(resources.get("manpower", 0.0)) + 1.5 * float(resources.get("food", 0.0))
 
 ## Called by MatchSystem every step. Returns [winner country, victory type] or [] if none.
 func evaluate(rules: MatchSystem, seconds: float) -> Array:

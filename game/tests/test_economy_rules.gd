@@ -27,18 +27,29 @@ func run():
  var before: float = game.production.stockpiles.ukraine.funds
  game.production.advance(1.0)
  check(is_equal_approx(game.production.stockpiles.ukraine.funds-before,net.ukraine.funds),"actual stockpile reconciles with displayed rate")
- var site: Dictionary = game.resource_sites.sites.filter(func(s):return s.city.is_empty())[0]
- var owner: String = site.territory.controller
- var resource: String = site.resource
- var normal: float = game.resource_sites.income(1.0)[owner][resource]
- site.territory.controller = "russia" if owner=="ukraine" else "ukraine"
- site.territory.morale = 100.0
- var occupied: Dictionary = game.resource_sites.income(1.0)
- site.territory.controller = owner
- check(normal>occupied.get(owner,{}).get(resource,0.0),"captured site transfers output from original controller")
- site.territory.morale = 25.0
- check(game.resource_sites.income(1.0)[owner][resource]<normal,"morale reduces rural output")
- site.territory.morale = 100.0
+ # Owner 2026-10-13: all resources come from the cities; provinces produce nothing.
+ check(game.resource_sites.sites.all(func(s):return not s.city.is_empty()),"no resource sites in provinces")
+ check(game.resource_sites.income(1.0).is_empty(),"provinces earn nothing")
+ var rural: Dictionary = game.buildings.provinces.places.values()[0]
+ check(game.production.province_income(rural).values().all(func(v):return v == 0.0),"province income is zero")
+ var city_total: = {"russia":{},"ukraine":{}}
+ for c in game.production.cities:
+  var who: String = game.production.controller(c)
+  var made: Dictionary = game.production.city_income(c)
+  for r in made: city_total[who][r] = city_total[who].get(r,0.0)+made[r]
+ for who in ["russia","ukraine"]:
+  check(ProductionSystem.RESOURCES.all(func(r):return is_equal_approx(city_total[who][r],gross[who][r])),"all of %s's income comes from its cities" % who)
+  check(ProductionSystem.RESOURCES.all(func(r):return gross[who][r]>0),"%s's seven cities make every resource" % who)
+ check(gross.russia.fuel>gross.ukraine.fuel,"Russia has more oil")
+ check(gross.ukraine.electronics>gross.russia.electronics,"Ukraine has more rare earths")
+ check(gross.ukraine.food>gross.russia.food,"Ukraine has more food")
+ check(ProductionSystem.RESOURCES.has("food") and game.hud.resource_values.has("food"),"food is a resource in the top bar")
+ check(game.production.equipment("infantry_russia").cost.food>0,"units cost food")
+ var old_save: Dictionary = game.production.snapshot()
+ for who in old_save.stockpiles: old_save.stockpiles[who].erase("food")
+ check(game.production.validate(old_save),"saves from before food still load")
+ game.production.restore(old_save)
+ check(game.production.stockpiles.russia.food==300.0,"older saves start with the normal food stock")
  var unit: Dictionary = game.units.units.filter(func(u):return u.country=="ukraine" and u.visual_kind!="fighter")[0]
  for r in ProductionSystem.RESOURCES:game.production.stockpiles.ukraine[r] = 100000.0
  var russian: Dictionary = game.production.stockpiles.russia.duplicate()

@@ -2,7 +2,8 @@ class_name ProductionSystem
 extends RefCounted
 signal changed
 signal unit_ready(spec: Dictionary)
-const RESOURCES: = ["funds", "materials", "electronics", "fuel", "manpower"]
+## Call of War order: money, manpower, food, metal, oil, rare earths. Food added 2026-10-13.
+const RESOURCES: = ["funds", "manpower", "food", "materials", "fuel", "electronics"]
 var catalog: Array = EquipmentIdentity.catalog  # one shared catalogue
 var stockpiles: Dictionary = {}
 ## Gross income earned so far per country and resource (economic victory, newspaper).
@@ -19,7 +20,9 @@ var rally_points: Dictionary = {}
 var cities: Array
 var terrain: StrategicMap
 var armies: UnitSystem
-const CITY_BASE: = {"funds": 1.0, "materials": 0.18, "electronics": 0.08, "fuel": 0.12, "manpower": 0.1}
+## Owner 2026-10-13: every resource comes from the seven cities per country (provinces produce
+## nothing). Raised so a country's total income stays about what cities + provinces gave before.
+const CITY_BASE: = {"funds": 1.35, "materials": 0.24, "electronics": 0.16, "fuel": 0.14, "manpower": 0.15, "food": 0.2}
 const DAY_SECONDS: = 86400.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
 var shortage_resources: Dictionary = {}
 func province(city: Dictionary) -> Dictionary:
@@ -45,37 +48,16 @@ func gross_income() -> Dictionary:
 	for country in stockpiles:
 		result[country] = {}
 		for resource in RESOURCES: result[country][resource] = 0.0
-	var city_titles: Dictionary = {}
 	for city in cities:
 		var country: = controller(city)
 		if not result.has(country): continue
-		var region: = province(city)
-		city_titles[region.get("title","")] = true
 		var income: = city_income(city)
 		for resource in RESOURCES: result[country][resource] += income[resource]
-	var counted: Dictionary = {}
-	for region in terrain.territories:
-		if not region.playable or counted.has(region.title) or city_titles.has(region.title): continue
-		counted[region.title] = true
-		if not result.has(region.controller): continue
-		var multiplier: = (1.0 if region.controller == region.owner else 0.25) * float(region.get("morale",100.0 if region.controller == region.owner else 25.0))/100.0
-		if buildings != null: multiplier *= buildings.provinces.income_factor(region.title)
-		result[region.controller].funds += 0.08 * multiplier
-		result[region.controller].manpower += 0.012 * multiplier
-	if resource_sites != null:
-		var sites_income: = resource_sites.income(1.0)
-		for country in sites_income:
-			if result.has(country):
-				for resource in sites_income[country]: result[country][resource] += sites_income[country][resource]
 	return result
-func province_income(place: Dictionary) -> Dictionary:
-	var region: Dictionary = place.region
-	var factor: = (1.0 if region.controller == region.owner else 0.25)*float(region.get("morale",100.0))/100.0
-	if buildings != null: factor *= buildings.provinces.income_factor(region.title)
-	var result: = {"funds":0.08*factor,"manpower":0.012*factor,"materials":0.0,"electronics":0.0,"fuel":0.0}
-	if resource_sites != null:
-		for site in resource_sites.sites:
-			if site.city.is_empty() and site.territory.title == region.title: result[site.resource] += ResourceSites.rate(site.resource)*factor
+## Provinces produce nothing (owner 2026-10-13: "all resources will be in cities").
+func province_income(_place: Dictionary) -> Dictionary:
+	var result: = {}
+	for resource in RESOURCES: result[resource] = 0.0
 	return result
 func upkeep() -> Dictionary:
 	var result: Dictionary = {}
@@ -109,7 +91,7 @@ func setup(map: StrategicMap, city_data: Array, countries: Dictionary) -> void :
 	terrain = map
 	cities = city_data
 	for id in countries:
-		stockpiles[id] = {"funds": 1000.0, "materials": 400.0, "electronics": 150.0, "fuel": 250.0, "manpower": 200.0}
+		stockpiles[id] = {"funds": 1000.0, "materials": 400.0, "electronics": 150.0, "fuel": 250.0, "manpower": 200.0, "food": 300.0}
 func equipment(id: String) -> Dictionary:
 	if id.begins_with("economy_"): return EconomyResearch.spec(id)
 	for spec in catalog:
@@ -139,8 +121,8 @@ func enqueue(equipment_id: String, city_name: String) -> String:
 		if job.city == city_name: count += 1
 	if count >= PLAN_LIMIT: return "City queue is full (%d orders)" % PLAN_LIMIT
 	for resource in RESOURCES:
-		if stockpiles[spec.country][resource] < spec.cost[resource]: return "Insufficient " + resource
-	for resource in RESOURCES: stockpiles[spec.country][resource] -= spec.cost[resource]
+		if stockpiles[spec.country][resource] < float(spec.cost.get(resource, 0.0)): return "Insufficient " + resource
+	for resource in RESOURCES: stockpiles[spec.country][resource] -= float(spec.cost.get(resource, 0.0))
 	jobs.append({"id": next_id, "equipment": equipment_id, "city": city_name, "progress": 0.0})
 	next_id += 1
 	changed.emit()
@@ -155,7 +137,7 @@ func cancel(id: int) -> void :
 		if jobs[i].id != id: continue
 		var spec: = equipment(jobs[i].equipment)
 		if jobs[i].get("paid", true):
-			for resource in RESOURCES: stockpiles[spec.country][resource] += spec.cost[resource]
+			for resource in RESOURCES: stockpiles[spec.country][resource] += float(spec.cost.get(resource, 0.0))
 		jobs.remove_at(i)
 		changed.emit()
 		return
@@ -187,11 +169,11 @@ func advance(seconds: float) -> void :
 			if not job.get("paid", true):
 				var ready: = true
 				for resource in RESOURCES:
-					if stockpiles[spec.country][resource] < spec.cost[resource]: ready = false
+					if stockpiles[spec.country][resource] < float(spec.cost.get(resource, 0.0)): ready = false
 				for building_id in spec.get("building_requirements", {}):
 					if buildings == null or buildings.level(city.id, building_id) < spec.building_requirements[building_id]: ready = false
 				if not ready: break
-				for resource in RESOURCES: stockpiles[spec.country][resource] -= spec.cost[resource]
+				for resource in RESOURCES: stockpiles[spec.country][resource] -= float(spec.cost.get(resource, 0.0))
 				job.paid = true
 			var multiplier: = buildings.production_rate(city.id, spec) if buildings != null else 1.0
 			var step: = minf(remaining, (spec.seconds - job.progress) / multiplier)
@@ -221,7 +203,8 @@ func validate(state: Variant) -> bool:
 	for country in stockpiles:
 		if not state.stockpiles.get(country) is Dictionary: return false
 		for resource in RESOURCES:
-			var value = state.stockpiles[country].get(resource)
+			# Saves from before food existed have none; restore() gives them the starting amount.
+			var value = state.stockpiles[country].get(resource, 0.0 if resource == "food" else null)
 			if not (value is float or value is int) or not is_finite(float(value)) or value < 0 or value > 1000000000000.0: return false
 	if not state.get("rally_points", {}) is Dictionary or state.get("rally_points", {}).size() > cities.size(): return false
 	for id in state.get("rally_points", {}):
@@ -254,6 +237,8 @@ func validate(state: Variant) -> bool:
 func restore(state: Dictionary) -> void :
 	rally_points = state.get("rally_points", {}).duplicate(true)
 	stockpiles = state.stockpiles.duplicate(true)
+	for country in stockpiles:
+		if not stockpiles[country].has("food"): stockpiles[country].food = 300.0
 	jobs = state.jobs.duplicate(true)
 	next_id = int(state.next_id)
 	if buildings != null: buildings.restore(state.get("buildings", {}))

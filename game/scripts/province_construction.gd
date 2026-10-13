@@ -1,8 +1,11 @@
 class_name ProvinceConstruction
 extends RefCounted
 ## Rural construction shares city costs/queues, but never joins the city production list.
-const ALLOWED: = ["industry", "bunker", "infrastructure", "airbase", "train_station", "naval_base", "hospital"]
-const NAMES: = {"industry":"Local industry", "bunker":"Fortifications", "infrastructure":"Roads & logistics", "airbase":"Airfield", "train_station":"Train station", "naval_base":"Naval base"}
+## Owner 2026-10-13: no industry in provinces; money comes from city industry.
+## Buildings older saves may still hold; accepted on load and then dropped.
+const LEGACY: = ["industry"]
+const ALLOWED: = ["bunker", "infrastructure", "airbase", "train_station", "naval_base", "hospital"]
+const NAMES: = {"industry":"Local industry", "bunker":"Fortifications", "infrastructure":"Roads & logistics", "airbase":"Airfield", "train_station":"Train station", "naval_base":"Naval base", "hospital":"Field hospital"}
 var _owner: WeakRef
 var buildings: BuildingSystem:
  get: return _owner.get_ref() if _owner != null else null
@@ -110,7 +113,7 @@ func advance(seconds: float) -> void:
    buildings.completed.emit(id,job.building);buildings.changed.emit()
 func construction_rate(id: String) -> float:
  return (1.0+0.15*level(id,"infrastructure"))*clampf(float(place(id).region.get("morale",100.0))/80.0,0.25,1.0)
-func income_factor(title: String) -> float: return 1.0 + 0.25 * level("province:"+title,"industry")
+func income_factor(_title: String) -> float: return 1.0  # provinces produce nothing
 func movement_factor(point: Vector2,country: String) -> float:
  for id in _roads:
   var p: Dictionary = places[id]
@@ -134,14 +137,14 @@ func validate(state: Variant) -> bool:
  if not state is Dictionary or not state.get("levels") is Dictionary or not state.get("jobs") is Array or not buildings._integer(state.get("next_id"),1,1000000000): return false
  if state.levels.size() != places.size() or state.jobs.size()>places.size()*8: return false
  for id in state.levels:
-  if not places.has(id) or not state.levels[id] is Dictionary or state.levels[id].size()>ALLOWED.size(): return false
-  for building in ALLOWED:
+  if not places.has(id) or not state.levels[id] is Dictionary or state.levels[id].size()>ALLOWED.size()+LEGACY.size(): return false
+  for building in ALLOWED+LEGACY:
    if not buildings._integer(state.levels[id].get(building,0),0,int(buildings.spec(building).max_level)): return false
  var ids: Dictionary = {};var pending: Dictionary = {};var counts: Dictionary = {}
  for job in state.jobs:
   if not job is Dictionary or not buildings._integer(job.get("id"),1,int(state.next_id)-1) or ids.has(job.id): return false
   ids[job.id] = true
-  if not places.has(job.get("city", "")) or job.get("building") not in ALLOWED or job.get("country") not in buildings.economy.stockpiles: return false
+  if not places.has(job.get("city", "")) or job.get("building") not in ALLOWED+LEGACY or job.get("country") not in buildings.economy.stockpiles: return false
   if not buildings._integer(job.get("level"),1,buildings.spec(job.building).max_level) or job.level != state.levels[job.city].get(job.building,0)+1: return false
   var key: String = job.city+":"+job.building
   if pending.has(key): return false
@@ -156,6 +159,10 @@ func restore(state: Dictionary) -> void:
  reset()
  if state.is_empty(): return
  levels=state.levels.duplicate(true);jobs=state.jobs.duplicate(true);next_id=int(state.next_id)
+ # Older saves: province industry no longer exists (no refund needed; it produced income).
+ jobs=jobs.filter(func(job):return job.building in ALLOWED)
+ for id in levels:
+  for kind in LEGACY: levels[id].erase(kind)
  for id in levels:
   for kind in ALLOWED:
    if not levels[id].has(kind): levels[id][kind]=0
