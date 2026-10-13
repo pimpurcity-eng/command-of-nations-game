@@ -38,7 +38,7 @@ const DEFENCE: = {
 const NAVAL: = {"naval": {"naval": 9.0, "submarine": 6.0}, "submarine": {"naval": 13.0, "submarine": 8.0}, "carrier": {"naval": 2.0, "submarine": 1.0}}
 func damage_value(unit: Dictionary, target_kind: String, defending: bool = false) -> float:
 	var target: = UnitClasses.symbol(target_kind) if target_kind not in UnitClasses.ALL else target_kind
-	var scale: = (0.2 + 0.8 * clampf(unit.health / 100.0, 0, 1)) * (1.0 + 0.12 * (unit.get("level", 1) - 1)) * EquipmentIdentity.upgrade_factor(unit)
+	var scale: float = (0.2 + 0.8 * clampf(unit.health / 100.0, 0, 1)) * (1.0 + 0.12 * (unit.get("level", 1) - 1)) * EquipmentIdentity.upgrade_factor(unit)
 	var spec: = EquipmentIdentity.spec(unit.equipment_id)
 	if unit.visual_kind == "missile_launcher":
 		if spec.get("targets_naval", false) and target not in ["naval", "submarine"]: return 0.0
