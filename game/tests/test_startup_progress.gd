@@ -27,6 +27,20 @@ func run() -> void:
 	check(game != null and game.get_script().resource_path == "res://scripts/main.gd","opens real campaign")
 	if game != null:
 		check(game.mobile_start.progress.value == 100 and not game.mobile_start.fresh_button.disabled,"ready screen completed")
+		var point: Vector2 = game.mobile_start.fresh_button.get_global_rect().get_center()
+		var click := InputEventMouseButton.new()
+		click.button_index = MOUSE_BUTTON_LEFT
+		click.position = point
+		click.global_position = point
+		click.pressed = true
+		root.push_input(click)
+		click = click.duplicate()
+		click.pressed = false
+		root.push_input(click)
+		for i in 6: await process_frame
+		check(not game.mobile_start.visible and not game.clock.paused, "actual Start button input opens running campaign")
+		game.mobile_start.show()
+		game.mobile_start.cancel_loading("Ready")
 		game.mobile_start.test_button.pressed.emit()
 		await process_frame
 		check(game.mobile_start.loading,"button starts loading")
