@@ -313,7 +313,7 @@ func _process(delta: float) -> void :
 		if entry.label.visible: occupied.append(bounds)
 func pick_screen(screen: Vector2) -> Dictionary:
 	var nearest: Dictionary = {}
-	var radius: = 22.0 * get_window().content_scale_factor
+	var radius: = 34.0 * get_window().content_scale_factor  # owner: cities were hard to tap
 	for city in cities:
 		var anchor: = terrain.position_at(city.point) + Vector3.UP * 0.2
 		if rig.camera.is_position_behind(anchor): continue

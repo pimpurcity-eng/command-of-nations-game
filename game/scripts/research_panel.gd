@@ -420,7 +420,8 @@ func _layout() -> void:
 	var width: = minf(760.0, size.x)
 	var top: = roundf(size.y * 0.06)
 	panel.position = Vector2((size.x - width) * 0.5, top)
-	panel.size = Vector2(width, size.y - top)
+	panel.scale = Vector2.ONE * CowUI.MENU_ZOOM
+	panel.size = Vector2(width, size.y - top) / CowUI.MENU_ZOOM
 
 func _state(id: String, level: int, refinement: bool = false) -> String:
 	var system: = _system()

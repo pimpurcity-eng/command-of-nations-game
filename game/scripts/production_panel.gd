@@ -95,7 +95,7 @@ func setup(system: ProductionSystem, units: UnitSystem, theme: Theme) -> void :
 		var error: = production.schedule(chosen, city_names[city_picker.selected] if city_picker.selected >= 0 else "")
 		message.text = "Planned · resources charged when production starts" if error.is_empty() else error)
 	column.add_child(build)
-	message = _label(column, "Queue up to " + str(ProductionSystem.PLAN_LIMIT) + " units per city. Waiting orders start when resources and buildings are available.")
+	message = _label(column, "One unit at a time per city. It starts when resources and buildings are available.")
 	message.max_lines_visible = 2
 	play_button = Button.new()
 	play_button.text = "Play · production paused"

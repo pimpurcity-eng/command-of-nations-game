@@ -6,6 +6,8 @@ extends RefCounted
 const DARK: = Color("23272b")
 const DARKER: = Color("1a1d20")
 const LINE: = Color("4a4f52")
+## Owner 2026-10-13 ("I can't see the city menu screens"): full-screen menus drawn 20% bigger.
+const MENU_ZOOM: = 1.2
 const GOLD: = Color("e9c46a")
 const LIST: = Color("cdc8b6")
 const ROW: = Color("dcd7c6")

@@ -42,7 +42,7 @@ func setup(system: BuildingSystem,theme: Theme) -> void:
 func _layout() -> void:
  var size: = get_viewport().get_visible_rect().size
  var width: = minf(760,size.x)
- panel.position=Vector2((size.x-width)/2,roundf(size.y*0.06));panel.size=Vector2(width,size.y-panel.position.y)
+ panel.position=Vector2((size.x-width)/2,roundf(size.y*0.06));panel.scale=Vector2.ONE*CowUI.MENU_ZOOM;panel.size=Vector2(width,size.y-panel.position.y)/CowUI.MENU_ZOOM
 func open(place: Dictionary) -> void:
  province_id=place.id;message.text="";show();_layout();refresh()
 func refresh() -> void:

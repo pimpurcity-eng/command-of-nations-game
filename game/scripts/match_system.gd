@@ -111,6 +111,7 @@ func change_control(territory: Dictionary, country: String) -> void:
 		part.controller = country
 		part.morale = 25.0
 		capture_progress.erase(part.id)
+	if armies != null: armies.terrain_revision += 1
 ## Keeps the campaign's war flag in step with diplomacy (an accepted peace ends the war).
 func _sync_war() -> void:
 	var war: = diplomacy.at_war(GameSession.player_country, GameSession.opponent_country())

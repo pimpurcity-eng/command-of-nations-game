@@ -92,6 +92,9 @@ var attack_button: Button
 var split_button: Button
 ## Units in the selected army (set by main before show_unit).
 var stack_count: = 1
+## Whether the selected army is moving (set by main before show_unit).
+var unit_moving: = false
+var waypoint_button: Button
 var patrol_button: Button
 var armies_button: Button
 var cancel_button: Button
@@ -306,8 +309,14 @@ func _build_bottom(root: Control) -> void:
 	patrol_button.pressed.connect(func(): patrol_requested.emit())
 	patrol_button.visible = false
 	action_row.add_child(patrol_button)
-	armies_button = _order_button("add", "Armies", Color("3a3f42"))
-	armies_button.pressed.connect(func(): select_armies_requested.emit())
+	# Owner 2026-10-13: a moving army can get more stops ("flags") to build a path.
+	waypoint_button = _order_button("add", "Waypoint", Color("3a3f42"))
+	waypoint_button.pressed.connect(func(): add_destination_requested.emit())
+	waypoint_button.visible = false
+	action_row.add_child(waypoint_button)
+	# "Speed up": forced march toggle, used often (selecting several armies is in More).
+	armies_button = _order_button("move", "Speed", Color("3a3f42"))
+	armies_button.pressed.connect(func(): forced_march_requested.emit())
 	action_row.add_child(armies_button)
 	cancel_button = _order_button("close", "Cancel", Color("6b2f2a"))
 	cancel_button.visible = false
@@ -572,7 +581,8 @@ func show_unit(unit: Dictionary) -> void :
 	show_air_commands(unit.visual_kind == "fighter")
 func show_air_commands(aircraft: bool) -> void :
 	patrol_button.visible = aircraft and not choosing_destination
-	armies_button.visible = not aircraft and not choosing_destination
+	armies_button.visible = not aircraft and not choosing_destination and own_unit
+	waypoint_button.visible = not choosing_destination and own_unit and unit_moving
 	# Owner 2026-10-13: Split only when the army is a stack of more than one unit.
 	split_button.visible = not aircraft and not choosing_destination and own_unit and stack_count > 1
 	attack_button.visible = not choosing_destination

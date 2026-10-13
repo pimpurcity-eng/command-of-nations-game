@@ -49,7 +49,8 @@ func _layout() -> void :
 	var width: = minf(760.0, size.x)
 	var top: = roundf(size.y * 0.04)
 	panel.position = Vector2((size.x - width) * 0.5, top)
-	panel.size = Vector2(width, size.y - top * 2)
+	panel.scale = Vector2.ONE * CowUI.MENU_ZOOM
+	panel.size = Vector2(width, size.y - top * 2) / CowUI.MENU_ZOOM
 
 # ---------------------------------------------------------------- building blocks
 

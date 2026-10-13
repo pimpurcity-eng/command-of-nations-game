@@ -19,14 +19,14 @@ func run() -> void:
 	check(ProductionGroups.index(EquipmentIdentity.spec("apcs_russia")) == 5 and ProductionGroups.building(EquipmentIdentity.spec("apcs_russia")) == "barracks", "infantry vehicles are Infantry, built in the barracks")
 	check(ProductionGroups.index(EquipmentIdentity.spec("patriot_russia")) == 2 and ProductionGroups.index(EquipmentIdentity.spec("skyguard_ukraine")) == 2, "air defence is Ordnance")
 	check(ProductionGroups.index(EquipmentIdentity.spec("tanks_russia")) == 3, "tanks stay Tanks")
-	# Queues: four units, four buildings.
+	# Owner 2026-10-13 (later): one unit and one building at a time per city.
 	for resource in ProductionSystem.RESOURCES: game.production.stockpiles.russia[resource] = 1000000
-	for i in 4: check(game.production.schedule("infantry_russia", "Moscow").is_empty(), "unit order %d queues" % (i + 1))
-	check(not game.production.schedule("infantry_russia", "Moscow").is_empty(), "a fifth unit order is refused")
+	check(game.production.schedule("infantry_russia", "Moscow").is_empty(), "one unit order queues")
+	check(not game.production.schedule("infantry_russia", "Moscow").is_empty(), "a second unit order is refused")
 	var queued: = 0
 	for id in ["industry", "barracks", "tank_plant", "factory", "missile_factory"]:
 		if game.buildings.schedule("moscow", id).is_empty(): queued += 1
-	check(queued == 4, "four buildings queue, the fifth is refused (%d)" % queued)
+	check(queued == 1, "one building at a time, the next is refused (%d)" % queued)
 	# Guard mode.
 	var rules: MatchSystem = game.match_rules
 	game.hud.guard_requested.emit()

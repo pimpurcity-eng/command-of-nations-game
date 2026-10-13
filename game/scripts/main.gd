@@ -169,7 +169,7 @@ func _ready() -> void :
 		trade_panel.open())
 	hud.add_destination_requested.connect( func():
 		if units.selected < 0 or units.units[units.selected].country != GameSession.player_country or not units.units[units.selected].moving:
-			hud.show_status("Select a your army with a movement order first")
+			hud.show_status("Select your army with a movement order first")
 			return
 		append_order = true
 		_set_order_mode(true)
@@ -252,7 +252,20 @@ func _ready() -> void :
 	add_child(badges)
 	badges.armies = units
 	badges.city_labels = cities.labels
-	badges.badge_clicked.connect(func(index: int): units.select_unit(index))
+	# Owner 2026-10-13: armies are tapped by their labels from any zoom; in Attack mode an
+	# enemy label is the target, in Move mode a label is the destination.
+	badges.badge_clicked.connect(func(index: int):
+		if index < 0 or index >= units.units.size(): return
+		var tapped: Dictionary = units.units[index]
+		if attack_order and tapped.country != GameSession.player_country:
+			if units.attack_many(tapped) > 0:
+				attack_order = false
+				_set_order_mode(false)
+			return
+		if order_mode and not selecting_armies and units.selected >= 0 and tapped.id != units.units[units.selected].id:
+			player_order(tapped.node.position)
+			return
+		units.select_unit(index))
 	production = ProductionSystem.new()
 	production.setup(map, cities.cities, session.countries)
 	production.armies = units
@@ -291,6 +304,7 @@ func _ready() -> void :
 	production.changed.connect(refresh_rally_markers)
 	units.unit_selected.connect( func(unit: Dictionary):
 		hud.stack_count = units.stacks.members(unit).size()
+		hud.unit_moving = unit.get("moving", false)
 		hud.show_unit(unit)
 		resource_country = GameSession.player_country
 		hud.show_resources(resource_country, production.stockpiles[resource_country]))
@@ -712,10 +726,21 @@ func player_order(destination: Vector3) -> void :
 		return
 	var accepted: = units.patrol(destination) if patrol_order and units.air.is_air(units.units[units.selected]) else units.order_many(destination, append_order) > 0
 	if accepted:
+		hud.unit_moving = true
+		# Movement sound by unit type (owner 2026-10-13): tracks, wheels, boots or jet engines.
+		var mover: Dictionary = units.units[units.selected]
+		var sound: String = {"heavy": "tracks_moving", "light": "wheels_moving", "infantry": "march", "air": "jet_flyby"}.get(UnitClasses.of(mover), "")
+		if not sound.is_empty(): audio.play(sound, mover.node.position)
 		if GameSession.weapons_test and clock.paused:
 			clock.paused = false
 			refresh_hud()
 		if clock.paused: hud.show_status("Order accepted · PAUSED · tap Play to begin movement")
+		_set_order_mode(false)
+		append_order = false
+		patrol_order = false
+	else:
+		# Owner 2026-10-13: never leave the player stuck in "choose a destination" needing X;
+		# the reason stays on the status line and the army stays selected.
 		_set_order_mode(false)
 		append_order = false
 		patrol_order = false
@@ -739,6 +764,8 @@ func refresh_hud() -> void :
 		units._draw_route()
 	if units.selected >= 0 and units.selected < units.units.size():
 		var unit: Dictionary = units.units[units.selected]
+		hud.unit_moving = unit.get("moving", false)
+		hud.stack_count = units.stacks.members(unit).size()
 		hud.show_air_commands(units.air.is_air(unit))
 		if hud.inspecting_unit:
 			var state: = "WAIT " + SimulationClock.duration(unit.get("delay_remaining", 0.0), clock.speed) if unit.get("delay_remaining", 0.0) > 0 else "MODERNIZING" if unit.get("upgrade_remaining", 0.0) > 0 else "ENGAGED" if unit.engaged else "FIRING" if unit.get("firing_halt", false) else ("MOVING" if unit.moving else "READY")
@@ -808,8 +835,11 @@ func launch_strategic(kind: String) -> void:
 	if not result.intercepted:
 		var radius: float = StrategicWeapons.WEAPONS[kind].radius
 		get_tree().create_timer(1.6).timeout.connect(func():
-			for i in (7 if kind == "nuclear" else 4):
-				var angle: = TAU * i / 7.0
+			if kind == "nuclear":
+				combat_effects.nuke(finish, radius)
+				return
+			for i in 4:
+				var angle: = TAU * i / 4.0
 				combat_effects.explode(finish + Vector3(cos(angle), 0.1, sin(angle)) * radius * (0.0 if i == 0 else 0.6), true))
 	refresh_hud()
 ## Retreat: the selected army pulls back to the nearest friendly province centre.

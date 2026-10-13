@@ -285,35 +285,119 @@ def ui_click():
 
 
 def war_declared():
-    """Air-raid siren (owner 2026-10-13: "use air raid sirens, not the wee wee"): a WWII-style
-    two-rotor motor siren that winds up slowly, holds, winds down and wails again, heard from
-    across the city (distance filtering and reverb), with a low drum hit at the start."""
-    seconds = 11.0
+    """Air-raid siren (owner 2026-10-13: "make a different air raid siren, like a normal one you
+    hear"): the familiar single-tone civil-defence wail - a slow rise, a short hold and a slow
+    fall, twice - with the volume swell of a rotating siren head, heard across a town."""
+    seconds = 14.0
     t = t_axis(seconds)
-    # Pitch envelope: wind up 4 s, hold 1.5 s, wind down 3 s, second shorter wail.
-    def env(x):
-        if x < 4.0:
-            return 0.5 - 0.5 * np.cos(np.pi * x / 4.0)
-        if x < 5.5:
-            return 1.0
-        if x < 8.5:
-            return 0.45 + 0.55 * (0.5 + 0.5 * np.cos(np.pi * (x - 5.5) / 3.0))
-        if x < 10.0:
-            return 0.45 + 0.55 * (0.5 - 0.5 * np.cos(np.pi * (x - 8.5) / 1.5))
-        return 1.0 - 0.6 * (x - 10.0)
-    shape = np.array([env(x) for x in t])
-    base = 110 + 360 * shape
-    wobble = 1 + 0.004 * np.sin(2 * np.pi * 5.2 * t)
-    siren = np.zeros_like(t)
-    # Two rotors a minor third apart; rich harmonics from the chopped air ports.
-    for ratio, gain in ((1.0, 1.0), (1.19, 0.8)):
-        phase = 2 * np.pi * np.cumsum(base * ratio * wobble) / SR
-        for harmonic, weight in ((1, 1.0), (2, 0.45), (3, 0.3), (4, 0.15), (5, 0.08)):
-            siren += gain * weight * np.sin(harmonic * phase)
-    siren = filt(siren, "low", 2600) * (0.25 + 0.75 * shape)
-    siren *= np.clip(t / 0.4, 0, 1) * np.clip((seconds - t) / 0.8, 0, 1)
-    hit = boom(seconds, 70, 35, 1.6, 0.5, 0.4)
-    return normalize(reverb(siren * 0.6 + hit * 0.5, 2.4, 0.4, 3200))
+    cycle = 7.0
+    phase = np.mod(t, cycle)
+    # 0-3 s rise, 3-4 s hold, 4-7 s fall (smooth, like a motor spinning up and down).
+    rise = 0.5 - 0.5 * np.cos(np.pi * np.clip(phase / 3.0, 0, 1))
+    fall = 0.5 + 0.5 * np.cos(np.pi * np.clip((phase - 4.0) / 3.0, 0, 1))
+    shape = np.where(phase < 4.0, rise, fall)
+    pitch = 160 + 380 * shape
+    angle = 2 * np.pi * np.cumsum(pitch) / SR
+    # A siren's chopped air gives a buzzy, horn-like tone: strong odd harmonics.
+    tone = (np.sin(angle) + 0.55 * np.sin(3 * angle) + 0.3 * np.sin(5 * angle)
+            + 0.18 * np.sin(2 * angle) + 0.12 * np.sin(7 * angle))
+    tone = filt(tone, "low", 2200)
+    swell = 0.72 + 0.28 * np.sin(2 * np.pi * t / 2.6)  # rotating head
+    level = (0.3 + 0.7 * shape) * swell
+    fade = np.clip(t / 0.5, 0, 1) * np.clip((seconds - t) / 1.2, 0, 1)
+    return normalize(reverb(tone * level * fade, 2.8, 0.45, 2600))
+
+
+
+def jet_flyby():
+    """Fast jet passing overhead (owner 2026-10-13: "there's no sound with the planes"): a
+    roaring turbine that swells, peaks and fades, with the Doppler drop of the whine."""
+    seconds = 4.5
+    t = t_axis(seconds)
+    approach = np.exp(-((t - 2.0) / 0.9) ** 2)
+    roar = filt(noise(seconds), "band", (120, 1800)) * (0.15 + approach)
+    hiss = filt(noise(seconds), "high", 2500) * approach * 0.35
+    whine_f = 2600 - 1300 * (0.5 + 0.5 * np.tanh((t - 2.0) * 3.0))
+    whine = np.sin(2 * np.pi * np.cumsum(whine_f) / SR) * approach * 0.12
+    rumble = filt(noise(seconds), "low", 90) * approach * 0.8
+    x = roar + hiss + whine + rumble
+    return normalize(fade_out(reverb(x, 1.6, 0.3, 3000), 0.6))
+
+
+def bomb_whistle():
+    """Falling bomb: a descending whistle, then the impact."""
+    fall = 1.3
+    t = t_axis(fall)
+    f = 1500 - 900 * (t / fall) ** 1.4
+    whistle = np.sin(2 * np.pi * np.cumsum(f) / SR) * (0.15 + 0.5 * t / fall)
+    whistle += filt(noise(fall), "band", (900, 2400)) * 0.08 * t / fall
+    hit = boom(2.4, 70, 30, 1.8, crack=0.9, rumble=0.9)
+    total = fall + 2.4
+    return normalize(reverb(mix(at(whistle, 0, total), at(hit, fall, total) * 1.3), 1.8, 0.35, 2800))
+
+
+def nuclear_blast():
+    """Nuclear detonation (owner: "make that amazing"): a sharp blinding crack, a long earth-
+    shaking roar that rolls on, the shock wave arriving, and the wind of the rising cloud."""
+    seconds = 12.0
+    t = t_axis(seconds)
+    crack = filt(noise(seconds), "high", 1200) * env(seconds, 0.0005, 0.12) * 1.4
+    thump = np.sin(sweep(seconds, 55, 18)) * env(seconds, 0.01, 4.0) * 1.6
+    roar = filt(noise(seconds), "low", 160) * env(seconds, 0.3, 7.0, 0.9) * 1.4
+    rolling = filt(noise(seconds), "band", (40, 400)) * (0.5 + 0.5 * np.sin(2 * np.pi * 0.7 * t)) * env(seconds, 1.0, 8.0) * 0.8
+    shock = at(boom(3.0, 60, 25, 2.5, crack=1.0, rumble=1.0), 1.4, seconds) * 1.1
+    wind = filt(noise(seconds), "band", (200, 1400)) * np.clip((t - 2.5) / 3.0, 0, 1) * np.clip((seconds - t) / 4.0, 0, 1) * 0.35
+    return normalize(fade_out(reverb(crack + thump + roar + rolling + shock + wind, 3.5, 0.5, 2000), 2.0))
+
+
+
+def tracks_moving():
+    """Tanks and tracked armour moving off (owner 2026-10-13: "nothing else makes noise"):
+    a revving diesel and the clank-squeal of tracks."""
+    seconds = 4.0
+    t = t_axis(seconds)
+    rev = np.clip(t / 0.8, 0, 1)
+    engine_f = 38 + 22 * rev
+    engine = np.sin(2 * np.pi * np.cumsum(engine_f) / SR) + 0.5 * np.sin(4 * np.pi * np.cumsum(engine_f) / SR)
+    engine = filt(engine + filt(noise(seconds), "low", 260) * 0.8, "low", 500) * (0.4 + 0.6 * rev)
+    clank = np.zeros_like(t)
+    rate = 7.0
+    for k in range(int(seconds * rate)):
+        start = int(SR * (k / rate + 0.02 * np.sin(k)))
+        if start >= len(t): break
+        hit = filt(noise(0.05), "band", (900, 3200)) * env(0.05, 0.001, 0.03)
+        clank[start:start + len(hit)] += hit[: len(t) - start] * (0.5 + 0.3 * rev[start])
+    squeal = np.sin(2 * np.pi * np.cumsum(1800 + 200 * np.sin(2 * np.pi * 0.7 * t)) / SR) * 0.04 * rev
+    x = engine * 1.2 + clank + squeal
+    return normalize(fade_out(reverb(x, 1.2, 0.25, 3000), 0.8))
+
+
+def wheels_moving():
+    """Wheeled armour (APCs, trucks, launchers) driving off: a turbo-diesel and road rumble."""
+    seconds = 3.5
+    t = t_axis(seconds)
+    rev = np.clip(t / 0.6, 0, 1)
+    f = 55 + 45 * rev
+    engine = np.sin(2 * np.pi * np.cumsum(f) / SR) + 0.6 * np.sin(4 * np.pi * np.cumsum(f) / SR) + 0.3 * np.sin(6 * np.pi * np.cumsum(f) / SR)
+    engine = filt(engine, "low", 700) * (0.4 + 0.6 * rev)
+    road = filt(noise(seconds), "band", (60, 500)) * 0.5 * rev
+    turbo = np.sin(2 * np.pi * np.cumsum(2400 * (0.6 + 0.4 * rev)) / SR) * 0.03 * rev
+    return normalize(fade_out(reverb(engine + road + turbo, 1.0, 0.2, 3000), 0.7))
+
+
+def march():
+    """Infantry moving out: boots in step and rattling gear."""
+    seconds = 3.5
+    t = t_axis(seconds)
+    x = np.zeros_like(t)
+    for k in range(int(seconds * 4)):
+        for offset in (0.0, 0.035, 0.07):
+            start = int(SR * (k * 0.25 + offset + RNG.uniform(0, 0.02)))
+            if start >= len(t): continue
+            step = filt(noise(0.07), "band", (120, 1400)) * env(0.07, 0.002, 0.05) * 0.6
+            x[start:start + len(step)] += step[: len(t) - start]
+    gear = filt(noise(seconds), "band", (2500, 6000)) * 0.05 * (0.5 + 0.5 * np.sin(2 * np.pi * 4 * t))
+    return normalize(fade_out(reverb(x + gear, 0.8, 0.2, 4000), 0.6))
 
 
 def fanfare(notes, beat=0.32, minor=False):
@@ -705,6 +789,8 @@ def carrier_launch():
 
 
 SFX = {
+    "tracks_moving": tracks_moving, "wheels_moving": wheels_moving, "march": march,
+    "jet_flyby": jet_flyby, "bomb_whistle": bomb_whistle, "nuclear_blast": nuclear_blast,
     "tank_cannon": tank_cannon, "autocannon": autocannon, "artillery": artillery, "naval_gun": naval_gun,
     "missile_launch": missile_launch, "interceptor": interceptor, "air_strike": air_strike,
     "drone_strike": drone_strike,

@@ -42,6 +42,18 @@ func point_visible(point: Vector2, country: String = "") -> bool:
 		var origin: = Vector2(scout.node.position.x, scout.node.position.z)
 		if origin.distance_to(point) <= vision_radius(scout): return true
 	return false
+## Who controls the land under a unit (remembered per spot; territory tests are costly).
+func _land_owner(unit: Dictionary) -> String:
+	var point: = Vector2(unit.node.position.x, unit.node.position.z)
+	var memo: Array = unit.get("_land_memo", [])
+	if memo.size() == 3 and memo[0].distance_squared_to(point) < 0.0025 and memo[2] == terrain_revision: return memo[1]
+	var owner: = navigation.controller_at(point) if navigation.terrain != null else ""
+	unit._land_memo = [point, owner, terrain_revision]
+	return owner
+## Tests: run the phone model-budget path on desktop.
+static var force_mobile: = false
+## Bumped when provinces change hands so the cached land owners refresh.
+var terrain_revision: = 0
 func visible_to_player(unit: Dictionary) -> bool:
 	return unit_visible(unit)
 ## Stealth and radar (owner request 2026-10-12, Conflict of Nations style): stealth units
@@ -67,6 +79,8 @@ func unit_visible(unit: Dictionary, country: String = "") -> bool:
 	if country.is_empty(): country = GameSession.player_country
 	if unit.country == country: return true
 	var point: = Vector2(unit.node.position.x, unit.node.position.z)
+	# Owner 2026-10-13 (Call of War): enemies on your own land are always visible, at any zoom.
+	if fog_enabled and not stealthy(unit) and _sees_for(_land_owner(unit), country): return true
 	if not stealthy(unit): return point_visible(point, country)
 	if not fog_enabled: return true
 	for scout in units:
@@ -642,7 +656,7 @@ func _process(delta: float) -> void :
 	for group in stacks.groups(): leader_ids[stacks.leader(group).id] = true
 	var camera: = get_viewport().get_camera_3d()
 	var view: = get_viewport().get_visible_rect().grow(160)
-	var mobile: bool = OS.has_feature("mobile")
+	var mobile: bool = OS.has_feature("mobile") or force_mobile
 	var detailed: int = 0
 	var upgrades_left: int = _mobile_visual_refresh_budget
 	for unit in units:
