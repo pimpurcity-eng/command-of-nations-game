@@ -40,10 +40,11 @@ func setup(map: StrategicMap, camera_rig: StrategyCamera) -> void :
 		_build_city_district(district, city, ink)
 		var label: = Button.new()
 		label.custom_minimum_size.y = 44
-		label.text = ("★ " if city.get("capital", false) else "") + city.name.to_upper()
+		label.text = spaced(city.name)
 		label.tooltip_text = city.name + " · " + city.country + (" · Capital" if city.get("capital", false) else "")
 		label.set_meta("capital", city.get("capital", false))
-		label.add_theme_font_size_override("font_size", 14)
+		label.add_theme_font_size_override("font_size", 15)
+		label.add_theme_font_override("font", StrategyTheme.font("Oswald", 500))
 		label.add_theme_color_override("font_color", Color("efe9d3"))
 		label.add_theme_color_override("font_outline_color", Color("07121b"))
 		label.add_theme_constant_override("outline_size", 2)
@@ -66,31 +67,48 @@ func setup(map: StrategicMap, camera_rig: StrategyCamera) -> void :
 		hover.bg_color = Color("233945")
 		label.add_theme_stylebox_override("hover", hover)
 		label.add_theme_stylebox_override("pressed", hover)
-		# The city's resource specialties as badges at the right end of its name tag.
-		var specialties: = ResourceSites.city_resources(city.name)
-		if not specialties.is_empty():
-			style.content_margin_right = 8 + specialties.size() * 18
-			hover.content_margin_right = style.content_margin_right
-			var icons: = HBoxContainer.new()
-			icons.add_theme_constant_override("separation", 1)
-			icons.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			icons.anchor_left = 1.0
-			icons.anchor_right = 1.0
-			icons.anchor_top = 0.5
-			icons.anchor_bottom = 0.5
-			icons.offset_left = -(4 + specialties.size() * 18)
-			icons.offset_right = -4
-			icons.offset_top = -8
-			icons.offset_bottom = 8
-			for resource in specialties:
-				var badge: = TextureRect.new()
-				badge.texture = ResourceSites.icon(resource)
-				badge.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-				badge.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-				badge.custom_minimum_size = Vector2(17, 17)
-				badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
-				icons.add_child(badge)
-			label.add_child(icons)
+		# Call of War city tag (owner approved preview 2026-10-13): flag, spaced name, and under
+		# it a box with the city's resource and, for capitals, a star with its victory points.
+		style.content_margin_left = 40
+		hover.content_margin_left = 40
+		var flag: = FlagSwatch.new()
+		flag.name = "Flag"
+		flag.country = controller_of(city)
+		flag.anchor_top = 0.5
+		flag.anchor_bottom = 0.5
+		flag.offset_left = 7
+		flag.offset_right = 33
+		flag.offset_top = -8
+		flag.offset_bottom = 8
+		label.add_child(flag)
+		var boxes: = HBoxContainer.new()
+		boxes.name = "Boxes"
+		boxes.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		boxes.add_theme_constant_override("separation", 4)
+		boxes.anchor_top = 1.0
+		boxes.anchor_bottom = 1.0
+		boxes.offset_left = 36
+		boxes.offset_top = -6
+		boxes.offset_bottom = 22
+		for resource in ResourceSites.city_resources(city.name):
+			var box: = _tag_box()
+			var picture: = TextureRect.new()
+			picture.texture = resource_picture(resource)
+			picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			picture.custom_minimum_size = Vector2(22, 22)
+			picture.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			box.add_child(picture)
+			boxes.add_child(box)
+		if city.get("capital", false):
+			var star: = _tag_box()
+			var points: = Label.new()
+			points.text = "★ " + str(VictoryRules.PROVINCE_POINTS + VictoryRules.CAPITAL_POINTS)
+			points.add_theme_font_size_override("font_size", 15)
+			points.add_theme_color_override("font_color", Color("ecc86e"))
+			star.add_child(points)
+			boxes.add_child(star)
+		label.add_child(boxes)
 		label.pressed.connect( func(): select_city(city))
 		label_layer.add_child(label)
 		labels.append(label)
@@ -212,7 +230,11 @@ func _process(delta: float) -> void :
 				if facility.has_meta("building_level"): facility.visible = controller == GameSession.player_country or armies.point_visible(city.point)
 			var captured: bool = controller != city.country.to_lower()
 			var index: = cities.find(city)
-			labels[index].text = ("★ " if city.get("capital", false) else "") + city.name.to_upper() + (" · YOURS" if captured and controller == GameSession.player_country else " · ENEMY" if captured else "")
+			labels[index].text = spaced(city.name) + (" · YOURS" if captured and controller == GameSession.player_country else " · ENEMY" if captured else "")
+			var flag: = labels[index].get_node_or_null("Flag") as FlagSwatch
+			if flag != null and flag.country != controller:
+				flag.country = controller
+				flag.queue_redraw()
 			labels[index].tooltip_text = city.name + " · Controlled by " + controller.capitalize() + (" · Capital" if city.get("capital", false) else "")
 	if _state_timer == 0.25 and armies != null:
 		var system: BuildingSystem = _building_ref.get_ref() if _building_ref != null else null
@@ -495,3 +517,42 @@ func _build_city_district(district: Node3D, city: Dictionary, _ink: StandardMate
 		visual.mesh = fitted
 		district.add_child(visual)
 	district.remove_meta("building_batches")
+
+
+## "MOSCOW" -> "M O S C O W", like Call of War city names.
+static func spaced(name: String) -> String:
+	var letters: PackedStringArray = []
+	for character in name.to_upper(): letters.append(character)
+	return " ".join(letters)
+
+## The owner's resource icon (model pack) for a city resource, or the simple icon.
+static func resource_picture(resource: String) -> Texture2D:
+	var file: String = {"materials": "metal", "electronics": "rare_earth", "fuel": "oil", "food": "food"}.get(resource, "")
+	var path: = "res://assets/library/buildings_oct12/resource_%s_icon128.png" % file
+	if not file.is_empty() and ResourceLoader.exists(path): return load(path)
+	return ResourceSites.icon(resource)
+
+static func _tag_box() -> PanelContainer:
+	var box: = PanelContainer.new()
+	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var back: = StyleBoxFlat.new()
+	back.bg_color = Color(0.11, 0.12, 0.13, 0.92)
+	back.set_corner_radius_all(4)
+	back.set_content_margin_all(2)
+	back.content_margin_left = 3
+	back.content_margin_right = 3
+	back.shadow_color = Color(0, 0, 0, 0.35)
+	back.shadow_size = 2
+	box.add_theme_stylebox_override("panel", back)
+	return box
+
+## The controlling country's flag on a city tag.
+class FlagSwatch extends Control:
+	var country: = ""
+	func _init() -> void:
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+	func _draw() -> void:
+		var colours: Array = [Color("2f6bc7"), Color("f2c418")] if country == "ukraine" else [Color("f2f2ee"), Color("2853a8"), Color("c8372d")]
+		for i in colours.size():
+			draw_rect(Rect2(Vector2(0, size.y * i / colours.size()), Vector2(size.x, size.y / colours.size())), colours[i])
+		draw_rect(Rect2(Vector2.ZERO, size), Color.BLACK, false, 1.0)

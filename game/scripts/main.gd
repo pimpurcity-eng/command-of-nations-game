@@ -290,6 +290,7 @@ func _ready() -> void :
 	production.changed.connect( func(): hud.show_resources(resource_country, production.stockpiles[resource_country]))
 	production.changed.connect(refresh_rally_markers)
 	units.unit_selected.connect( func(unit: Dictionary):
+		hud.stack_count = units.stacks.members(unit).size()
 		hud.show_unit(unit)
 		resource_country = GameSession.player_country
 		hud.show_resources(resource_country, production.stockpiles[resource_country]))

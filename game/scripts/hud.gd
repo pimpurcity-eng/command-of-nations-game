@@ -88,6 +88,8 @@ var move_button: Button
 var stop_button: Button
 var attack_button: Button
 var split_button: Button
+## Units in the selected army (set by main before show_unit).
+var stack_count: = 1
 var patrol_button: Button
 var armies_button: Button
 var cancel_button: Button
@@ -564,7 +566,8 @@ func show_unit(unit: Dictionary) -> void :
 func show_air_commands(aircraft: bool) -> void :
 	patrol_button.visible = aircraft and not choosing_destination
 	armies_button.visible = not aircraft and not choosing_destination
-	split_button.visible = not aircraft and not choosing_destination
+	# Owner 2026-10-13: Split only when the army is a stack of more than one unit.
+	split_button.visible = not aircraft and not choosing_destination and own_unit and stack_count > 1
 	attack_button.visible = not choosing_destination
 	stop_button.visible = not choosing_destination
 	orders_menu.visible = not choosing_destination

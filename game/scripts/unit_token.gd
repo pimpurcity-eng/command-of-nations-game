@@ -1,78 +1,63 @@
 class_name UnitToken
 extends Control
-## Call of War style army marker (owner 2026-10-13, reference screenshots):
-##  * "token" (zoomed out): a diamond with the unit-type symbol and the number of units.
-##  * "tag" (zoomed in, beside the 3D model): small diamond, the unit count in a white pill
-##    and a vertical five-segment health bar.
-## White for your armies, red for enemies you are at war with, grey for others; gold edge
-## when selected.
-const TOKEN_SIZE: = Vector2(48, 48)
-const TAG_SIZE: = Vector2(86, 30)
+## Call of War style army label (owner approved preview, 2026-10-13): a plate with the bold
+## symbol of the army's unit type (UnitClasses), the number of units, and five health bars
+## beside it. White for your armies, red for enemies you are at war with, grey for others;
+## gold edge when selected. "token" (zoomed out) is a slightly smaller plate than "tag".
+const TOKEN_SIZE: = Vector2(74, 26)
+const TAG_SIZE: = Vector2(88, 30)
 var mode: = "token"
-var kind: = "armor"
+## Map class (UnitClasses.ALL) or menu kind; picks the symbol.
+var kind: = "heavy"
 var count: = 1
 var health: = 100.0
 var own: = true
 var hostile: = false
 var selected: = false
-var symbol: UnitTypeIcon
 
 func _init() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	symbol = UnitTypeIcon.silhouette("armor", Color.BLACK, Vector2(24, 20))
-	add_child(symbol)
 
 func refresh() -> void:
 	custom_minimum_size = TOKEN_SIZE if mode == "token" else TAG_SIZE
 	size = custom_minimum_size
-	symbol.kind = kind
-	symbol.ink = Color.WHITE if hostile else Color("1c1b18")
-	if mode == "token":
-		symbol.position = Vector2(12, 7)
-		symbol.size = Vector2(24, 20)
-	else:
-		symbol.position = Vector2(5, 7)
-		symbol.size = Vector2(18, 16)
-	symbol.queue_redraw()
 	queue_redraw()
 
 func _fill() -> Color:
-	if hostile: return Color("c8433a")
-	return Color("f4f1e8") if own else Color("c9ccd1")
-
-func _diamond(centre: Vector2, half: float) -> PackedVector2Array:
-	return PackedVector2Array([centre + Vector2(0, -half), centre + Vector2(half, 0), centre + Vector2(0, half), centre + Vector2(-half, 0)])
+	if hostile: return Color("c63a30")
+	return Color("faf8f2") if own else Color("c9ccd1")
 
 func _draw() -> void:
 	var font: = get_theme_default_font()
-	var edge: = Color("f3c64f") if selected else Color(0.1, 0.1, 0.09, 0.85)
-	var edge_width: = 3.0 if selected else 1.6
-	if mode == "token":
-		var centre: = size * 0.5
-		var shape: = _diamond(centre, 22.0)
-		draw_colored_polygon(_diamond(centre + Vector2(1.5, 2.5), 22.0), Color(0, 0, 0, 0.35))  # drop shadow
-		draw_colored_polygon(shape, _fill())
-		draw_polyline(shape + PackedVector2Array([shape[0]]), edge, edge_width, true)
-		draw_string(font, Vector2(0, centre.y + 17), str(count), HORIZONTAL_ALIGNMENT_CENTER, size.x, 13, Color.WHITE if hostile else Color("1c1b18"))
-		return
-	# Tag: pill with the count, diamond on the left, health segments on the right.
-	var pill: = Rect2(Vector2(14, 4), Vector2(52, 22))
-	var back: = StyleBoxFlat.new()
-	back.bg_color = Color("f4f1e8")
-	back.set_corner_radius_all(4)
-	back.border_color = edge
-	back.set_border_width_all(int(edge_width))
-	back.shadow_color = Color(0, 0, 0, 0.3)
-	back.shadow_size = 2
-	draw_style_box(back, pill)
-	draw_string(font, Vector2(30, 21), str(count), HORIZONTAL_ALIGNMENT_CENTER, 34, 16, Color("1c1b18"))
-	var shape: = _diamond(Vector2(14, 15), 14.0)
-	draw_colored_polygon(shape, _fill())
-	draw_polyline(shape + PackedVector2Array([shape[0]]), edge, edge_width, true)
-	var frame: = Rect2(Vector2(68, 2), Vector2(14, 26))
-	draw_rect(frame, Color(0.08, 0.09, 0.07, 0.85))
+	var ink: = Color.WHITE if hostile else Color("161614")
+	var bars: = 12.0
+	var plate: = Rect2(Vector2(1, 1), Vector2(size.x - bars - 4, size.y - 2))
+	var face: = StyleBoxFlat.new()
+	face.bg_color = _fill()
+	face.set_corner_radius_all(6)
+	face.border_color = Color("f3c440") if selected else Color(0.08, 0.08, 0.07, 0.9)
+	face.set_border_width_all(3 if selected else 1)
+	face.shadow_color = Color(0, 0, 0, 0.35)
+	face.shadow_size = 3
+	face.shadow_offset = Vector2(1, 2)
+	draw_style_box(face, plate)
+	# Symbol on the left, divider, count on the right.
+	var split: = plate.position.x + plate.size.x * 0.62
+	var picture: = UnitClasses.icon(UnitClasses.symbol(kind), ink)
+	if picture != null:
+		var area: = Rect2(plate.position + Vector2(5, 4), Vector2(split - plate.position.x - 9, plate.size.y - 8))
+		var scale: = minf(area.size.x / picture.get_width(), area.size.y / picture.get_height())
+		var drawn: = Vector2(picture.get_width(), picture.get_height()) * scale
+		draw_texture_rect(picture, Rect2(area.get_center() - drawn * 0.5, drawn), false)
+	draw_line(Vector2(split, plate.position.y + 5), Vector2(split, plate.end.y - 5), Color(1, 1, 1, 0.6) if hostile else Color(0.55, 0.53, 0.5), 1.0)
+	var font_size: = 15 if mode == "token" else 17
+	draw_string(font, Vector2(split, plate.get_center().y + font_size * 0.36), str(count), HORIZONTAL_ALIGNMENT_CENTER, plate.end.x - split, font_size, ink)
+	# Five health bars, bottom up.
 	var filled: = clampi(ceili(health / 20.0), 0, 5)
-	var colour: = Color("6cc04a") if health >= 60 else (Color("e0b84a") if health >= 30 else Color("d65448"))
+	var colour: = Color("62c848") if health >= 60 else (Color("e0b84a") if health >= 30 else Color("d65448"))
+	var x: = size.x - bars
+	var step: = (size.y - 2) / 5.0
 	for i in 5:
-		var segment: = Rect2(Vector2(70, 24 - i * 5 - 3), Vector2(10, 4))
-		draw_rect(segment, colour if i < filled else Color(0.3, 0.32, 0.28))
+		var segment: = Rect2(Vector2(x, size.y - 1 - (i + 1) * step + 0.8), Vector2(bars - 2, step - 1.6))
+		draw_rect(segment, colour if i < filled else Color(0.27, 0.28, 0.25))
+		draw_rect(segment, Color(0.05, 0.12, 0.04), false, 1.0)

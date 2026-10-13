@@ -57,7 +57,7 @@ func _process(_delta: float) -> void :
 		var group: = armies.stacks.members(unit)
 		if armies.stacks.leader(group).id != unit.id or not armies.visible_to_player(unit): continue
 		var icon_mode: bool = unit.get("icon_only", false) or (far and not unit.node.visible)
-		# Call of War style (owner 2026-10-13): far = diamond token; zoomed in = tag beside the model.
+		# Call of War style (owner 2026-10-13): far = plate on the army; zoomed in = plate beside the model.
 		var selected: bool = armies.selected >= 0 and armies.units[armies.selected].stack_id == unit.stack_id and armies.units[armies.selected].country == unit.country
 		var hostile: bool = armies.at_war and unit.country != GameSession.player_country
 		var hp: = 0.0
@@ -65,8 +65,8 @@ func _process(_delta: float) -> void :
 		hp /= maxf(1.0, group.size())
 		var token: UnitToken = button.get_node("Token")
 		token.mode = "token" if icon_mode else "tag"
-		var role: String = EquipmentIdentity.spec(unit.equipment_id).get("role", "")
-		token.kind = role if role in ["drone", "medic"] else unit.visual_kind
+		# The strongest unit leads the stack, so its type is the stack's symbol.
+		token.kind = UnitClasses.of(unit)
 		token.count = group.size()
 		token.health = hp
 		token.own = unit.country == GameSession.player_country
