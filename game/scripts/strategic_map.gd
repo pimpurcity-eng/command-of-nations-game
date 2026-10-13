@@ -82,7 +82,17 @@ func terrain_at(point: Vector2) -> String:
 	return TerrainProfile.sample(point)
 func position_at(point: Vector2) -> Vector3:
 	return Vector3(point.x, elevation(point), point.y)
-func _build_sector(t: Dictionary) -> void :
+## Province ground meshes are baked once (tools/bake_map_cache.gd) and loaded at startup;
+## computing the relief for every vertex took ~9 s on desktop and far longer on phones.
+## A cached mesh is only used when its key matches the province data and relief settings.
+const MESH_CACHE_DIR: = "res://assets/map_cache/"
+const MESH_CACHE_VERSION: = 1
+static func mesh_cache_key(t: Dictionary) -> String:
+	var depth: int = 3 if t.playable and t.get("terrain", "") in ["hills", "mountains"] else 2
+	return str(MESH_CACHE_VERSION) + ":" + str(hash(var_to_str(t.get("mesh_polygons", [t.polygon])))) + ":" + str(depth)
+static func mesh_cache_path(t: Dictionary) -> String:
+	return MESH_CACHE_DIR + str(t.id).validate_filename() + ".res"
+func build_sector_mesh(t: Dictionary) -> ArrayMesh:
 	var poly: PackedVector2Array = t.polygon
 	var surface: = SurfaceTool.new()
 	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
@@ -91,8 +101,28 @@ func _build_sector(t: Dictionary) -> void :
 		for i in range(0, triangles.size(), 3):
 			_subdivide(surface, patch[triangles[i]], patch[triangles[i + 1]], patch[triangles[i + 2]], 3 if t.playable and t.get("terrain", "") in ["hills", "mountains"] else 2)
 	surface.index()
-	var mesh: = surface.commit()
+	var built: = surface.commit()
+	built.set_meta("cache_key", mesh_cache_key(t))
 	_surface_samples.clear()
+	return built
+func _cached_sector_mesh(t: Dictionary) -> ArrayMesh:
+	var path: = mesh_cache_path(t)
+	if not ResourceLoader.exists(path): return null
+	var cached: = load(path) as ArrayMesh
+	if cached == null or str(cached.get_meta("cache_key", "")) != mesh_cache_key(t): return null
+	# Rebuild the ground lookup (on_land / heights) from the cached triangles.
+	var arrays: = cached.surface_get_arrays(0)
+	var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+	var indices: PackedInt32Array = arrays[Mesh.ARRAY_INDEX]
+	if indices.is_empty():
+		for i in range(0, vertices.size(), 3): _register_ground(vertices[i], vertices[i + 1], vertices[i + 2])
+	else:
+		for i in range(0, indices.size(), 3): _register_ground(vertices[indices[i]], vertices[indices[i + 1]], vertices[indices[i + 2]])
+	return cached
+func _build_sector(t: Dictionary) -> void :
+	var poly: PackedVector2Array = t.polygon
+	var mesh: ArrayMesh = _cached_sector_mesh(t)
+	if mesh == null: mesh = build_sector_mesh(t)
 	var material: = ShaderMaterial.new()
 	material.shader = load("res://assets/terrain.gdshader")
 	material.set_shader_parameter("terrain_types", TerrainVisualMap.get_texture())

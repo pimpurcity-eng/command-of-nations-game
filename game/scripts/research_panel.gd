@@ -115,6 +115,10 @@ func setup(system: ResearchSystem, theme: Theme) -> void:
 	grid.add_theme_constant_override("h_separation", 0)
 	grid.add_theme_constant_override("v_separation", 0)
 	tree_content.add_child(grid)
+	# Room under the last row so level 5 is never hidden behind the scroll bar.
+	var bottom_space: = Control.new()
+	bottom_space.custom_minimum_size.y = 28
+	tree_content.add_child(bottom_space)
 	# Selected technology: cost, time and RESEARCH.
 	var bar: = PanelContainer.new()
 	bar.add_theme_stylebox_override("panel", CowUI.skin("header", 4, 8))
@@ -324,7 +328,10 @@ func _build_tree() -> void:
 			var tier: = EquipmentIdentity.research_tier(spec.id, level)
 			var previous_tier: = EquipmentIdentity.research_tier(spec.id, maxi(1,level-1))
 			var upgrade: bool = level > 1 and tier.get("model", "") == previous_tier.get("model", "")
-			var ribbon: = CowUI.label(("UPGRADE · " if upgrade else "") + EquipmentIdentity.research_title(spec.id, level).trim_suffix(" · upgrade") + "\nDay " + str(_system().unlock_day(spec.id, level)), 16, Color("fff7e5"))
+			# Two lines that always fit the card: the name (shortened if needed) and "Day N · Upgrade".
+			var ribbon: = CowUI.label(EquipmentIdentity.research_title(spec.id, level).trim_suffix(" · upgrade").replace(" · technology", "") + "\nDay " + str(_system().unlock_day(spec.id, level)) + (" · Upgrade" if upgrade else ""), 15, Color("fff7e5"))
+			ribbon.max_lines_visible = 2
+			ribbon.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 			ribbon.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			ribbon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			ribbon.add_theme_stylebox_override("normal", CowUI.box(Color(0.06, 0.08, 0.09, 0.86), 8, Color.TRANSPARENT, 0, 3))
@@ -334,7 +341,8 @@ func _build_tree() -> void:
 			ribbon.offset_right = cell_size.x * 0.45 if air_tree else 52
 			ribbon.offset_top = cell_size.y - 68
 			ribbon.offset_bottom = cell_size.y - 18
-			ribbon.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			ribbon.autowrap_mode = TextServer.AUTOWRAP_OFF
+			ribbon.clip_text = true
 			cell.add_child(ribbon)
 			grid.add_child(cell)
 			cells.append({"card": card, "id": spec.id, "level": level})

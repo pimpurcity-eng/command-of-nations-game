@@ -112,8 +112,10 @@ func _ready() -> void :
 		await map.map_ready
 	rig = StrategyCamera.new()
 	add_child(rig)
-	audio = GameAudio.new()
-	add_child(audio)
+	audio = get_tree().root.get_node_or_null("GameAudio") as GameAudio
+	if audio == null:
+		audio = GameAudio.new()
+		add_child(audio)
 	audio.rig = rig
 	audio.play_music("menu_theme")
 	units = UnitSystem.new()
@@ -450,7 +452,9 @@ func _ready() -> void :
 		JavaScriptBridge.get_interface("window").conGameVisible = browser_resume_callback
 		JavaScriptBridge.eval("document.addEventListener('visibilitychange',()=>{if(document.hidden)window.conGameHidden();else window.conGameVisible();});window.addEventListener('pagehide',()=>window.conGameHidden());window.addEventListener('pageshow',()=>{if(!document.hidden)window.conGameVisible();});")
 func _process(delta: float) -> void :
-	if map != null and rig != null: map.set_view_distance(rig.distance)
+	if map != null and rig != null:
+		map.set_view_distance(rig.distance)
+		if units != null: units.view_distance = rig.rendered_distance
 	if session == null or session.match_rules == null: return
 	if mobile_start != null and mobile_start.visible: return
 	autosave_timer += delta

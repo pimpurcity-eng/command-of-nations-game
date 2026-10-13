@@ -58,7 +58,16 @@ func run() -> void:
 		check(not game.map.on_land(Vector2(ship.node.position.x,ship.node.position.z)),"ship starts on visible water: " + ship.id)
 	check(game.units.sea_navigation.find_path(GeographicProjection.project(37.6,55.75),GeographicProjection.project(30.7,46.5)).is_empty(),"sea routes reject a start on visible land")
 	game.mobile_start.hide()
-	for i in 5: await process_frame
-	check(game.badges.buttons.values().any(func(b):return b.visible and b.text.begins_with("L") and b.has_node("Health")),"unit level and health visible on map")
+	# Owner 2026-10-13: far zoom shows unit-type symbols, close zoom the level and health bar.
+	var capital_point: Vector2 = game.buildings.capital("russia").point
+	game.rig.target = Vector3(capital_point.x, 0, capital_point.y)
+	game.rig.distance = UnitSystem.CLOSE_ZOOM - 3.0
+	game.rig._snap(1.0)
+	for i in 8: await process_frame
+	check(game.badges.buttons.values().any(func(b):return b.visible and b.get_node("Level").visible and b.get_node("Level").text.begins_with("L") and b.has_node("Health")),"unit level and health visible on map when zoomed in")
+	game.rig.distance = UnitSystem.FAR_ZOOM + 10.0
+	game.rig._snap(1.0)
+	for i in 8: await process_frame
+	check(game.badges.buttons.values().any(func(b):return b.visible and b.get_node("Icon").visible),"unit-type symbols shown when zoomed out")
 	print("RESULT checks=",checks," failures=",failures)
 	quit(0 if failures == 0 else 1)

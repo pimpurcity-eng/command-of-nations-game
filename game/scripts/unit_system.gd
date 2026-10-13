@@ -15,6 +15,12 @@ const SEA_WATERLINE: = -0.06
 # Only a small number of original high-detail vehicles are resident on Android.
 # All armies retain their gameplay data and low-cost selection markers.
 const MOBILE_MAX_DETAILED_UNITS := 12
+## Zoom levels (owner request 2026-10-13): beyond FAR_ZOOM armies are map symbols only (no 3D
+## models); closer, the 3D models show; within CLOSE_ZOOM the health bar and level appear.
+## An army whose model is not loaded (phone cap) shows its symbol instead of a placeholder box.
+const FAR_ZOOM := 24.0
+const CLOSE_ZOOM := 11.0
+var view_distance := 20.0
 var _mobile_visual_refresh_budget := 1
 const MARCH_HEALTH_PER_SECOND: = 5.0 / (3600.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND)
 func vision_radius(unit: Dictionary) -> float:
@@ -257,7 +263,7 @@ func _spawn(data: Dictionary, point: Vector2, color: Color) -> void :
 	ink.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	ring.material_override = ink
 	marker.add_child(ring)
-	units.append({"fire_mode": data.get("fire_mode", "at_will"), "attack_target": data.get("attack_target", ""), "firing_halt": false, "level": data.get("level", 1), "upgrade_remaining": data.get("upgrade_remaining", 0.0), "upgrade_target": data.get("upgrade_target", data.get("level", 1)), "stack_id": data.get("stack_id", data.id), "equipment_id": equipment_id, "id": data.id, "country": data.country, "name": spec[0], "visual_kind": visual_kind, "presentation": data.get("presentation", ""), "node": marker, "target": spec[1], "moving": false, "engaged": false, "waypoints": [], "health": 100.0, "heading": _facing_enemy(data.country, point), "ring": ring, "faction_color": color})
+	units.append({"fire_mode": data.get("fire_mode", "at_will"), "attack_target": data.get("attack_target", ""), "firing_halt": false, "level": data.get("level", 1), "upgrade_remaining": data.get("upgrade_remaining", 0.0), "upgrade_target": data.get("upgrade_target", data.get("level", 1)), "stack_id": data.get("stack_id", data.id), "equipment_id": equipment_id, "id": data.id, "country": data.country, "name": spec[0], "visual_kind": visual_kind, "presentation": data.get("presentation", ""), "node": marker, "target": spec[1], "moving": false, "engaged": false, "waypoints": [], "health": 100.0, "heading": _facing_enemy(data.country, point), "ring": ring, "faction_color": color, "icon_only": false})
 	model.rotation.y = units[-1].heading
 	air.configure(units[-1], data)
 	units[-1].forced_march = data.get("forced_march", false)
@@ -628,6 +634,11 @@ func _process(delta: float) -> void :
 		# Off-screen units should not force fog calculations or keep heavyweight models.
 		var on_screen: bool = camera == null or (not camera.is_position_behind(unit.node.position) and view.has_point(camera.unproject_position(unit.node.position)))
 		var is_leader: bool = leader_ids.has(unit.id)
+		unit.icon_only = false
+		if on_screen and is_leader and view_distance > FAR_ZOOM:
+			unit.node.visible = false
+			unit.icon_only = visible_to_player(unit)
+			continue
 		if not on_screen or not is_leader:
 			unit.node.visible = false
 			if mobile and not unit.node.get_child(0).get_meta("startup_lightweight", false):
@@ -645,6 +656,9 @@ func _process(delta: float) -> void :
 					detailed += 1
 				else:
 					_replace_visual(unit, UnitVisual.lightweight(unit.visual_kind, unit.faction_color, unit.equipment_id, unit.level))
+					unit.node.visible = false
+					unit.icon_only = true
+					continue
 			elif upgrades_left > 0 and detailed < MOBILE_MAX_DETAILED_UNITS and not visual.get_meta("missing_original_model", false):
 				# One expensive model import per frame; missing originals are not retried forever.
 				var replacement: Node3D = UnitVisual.create(unit.visual_kind, unit.faction_color, unit.equipment_id, unit.level)
@@ -655,6 +669,11 @@ func _process(delta: float) -> void :
 					_replace_visual(unit, replacement)
 					detailed += 1
 				upgrades_left -= 1
+		if unit.node.get_child(0).get_meta("startup_lightweight", false):
+			# Model not loaded yet (phone cap): show the map symbol, never a placeholder box.
+			unit.node.visible = false
+			unit.icon_only = true
+			continue
 		var ground: = Vector3(unit.node.position.x, SEA_WATERLINE, unit.node.position.z) if is_naval(unit) else terrain.position_at(Vector2(unit.node.position.x, unit.node.position.z))
 		if is_naval(unit):
 			unit.node.position.y = SEA_WATERLINE

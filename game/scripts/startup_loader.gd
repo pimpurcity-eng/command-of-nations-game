@@ -7,8 +7,12 @@ var audio: GameAudio
 
 func _ready() -> void:
 	get_viewport().disable_3d = true
+	# One music player for the whole game (owner: the start song played twice). It lives on the
+	# root so it survives this loader and the campaign reuses it instead of starting a second copy.
 	audio = GameAudio.new()
-	add_child(audio)
+	audio.name = "GameAudio"
+	get_tree().root.add_child.call_deferred(audio)
+	await audio.ready
 	audio.play_music("menu_theme")
 	panel = MobileStartPanel.new()
 	panel.audio = audio
@@ -36,8 +40,6 @@ func _ready() -> void:
 		return
 	panel.set_progress(40, "Preparing map")
 	await get_tree().process_frame
-	if get_tree().node_added.is_connected(audio._watch_button):
-		get_tree().node_added.disconnect(audio._watch_button)
 	var game = scene.instantiate()
 	game.boot_progress.connect(func(done: int, total: int):
 		if is_instance_valid(panel):
