@@ -126,7 +126,7 @@ func _build_top_bar(root: Control) -> void:
 	var row: = HBoxContainer.new()
 	row.add_theme_constant_override("separation", 6)
 	column.add_child(row)
-	flag_badge = Glyph.new("flag", Color.WHITE, Vector2(40, 36))
+	flag_badge = Glyph.new("flag", Color.WHITE, Vector2(52, 44))
 	row.add_child(flag_badge)
 	for resource in ProductionSystem.RESOURCES:
 		var cell: = VBoxContainer.new()
@@ -134,13 +134,13 @@ func _build_top_bar(root: Control) -> void:
 		cell.add_theme_constant_override("separation", 0)
 		cell.alignment = BoxContainer.ALIGNMENT_CENTER
 		row.add_child(cell)
-		var icon: = Glyph.new(resource, Color.WHITE, Vector2(26, 22))
+		var icon: = Glyph.new(resource, Color.WHITE, Vector2(44, 36), 1.45)
 		icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 		cell.add_child(icon)
 		var value: = Label.new()
 		value.text = "0"
 		value.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		value.add_theme_font_size_override("font_size", 16)
+		value.add_theme_font_size_override("font_size", 22)
 		value.add_theme_color_override("font_color", INK)
 		value.tooltip_text = resource.capitalize()
 		cell.add_child(value)
@@ -155,9 +155,9 @@ func _build_top_bar(root: Control) -> void:
 	# Gold for this match, with "+" to spend or buy more (Call of War style).
 	gold_button = _small_button("10,000  +")
 	gold_button.icon = ResourceSites.icon("gold")
-	gold_button.add_theme_constant_override("icon_max_width", 20)
+	gold_button.add_theme_constant_override("icon_max_width", 28)
 	gold_button.add_theme_color_override("font_color", GOLD)
-	gold_button.custom_minimum_size.x = 104
+	gold_button.custom_minimum_size.x = 132
 	gold_button.tooltip_text = "Gold: finish production, construction and research now, or buy resources"
 	gold_button.pressed.connect(func(): gold_requested.emit())
 	second.add_child(gold_button)
@@ -332,7 +332,7 @@ func _build_bottom(root: Control) -> void:
 	card.add_theme_constant_override("separation", 8)
 	column.add_child(card)
 	unit_portrait = TextureRect.new()
-	unit_portrait.custom_minimum_size = Vector2(112, 80)
+	unit_portrait.custom_minimum_size = Vector2(128, 92)
 	unit_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	unit_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	# Owner 2026-10-13: tap the army picture (own or enemy) for the full Army Details.
@@ -366,7 +366,7 @@ func _build_bottom(root: Control) -> void:
 	column.add_child(health_bar)
 	status = Label.new()
 	status.text = "Select an army or a city."
-	status.add_theme_font_size_override("font_size", 18)
+	status.add_theme_font_size_override("font_size", 21)
 	status.add_theme_color_override("font_color", MUTED)
 	status.max_lines_visible = 2
 	status.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
@@ -421,15 +421,15 @@ func _skinned(name: String, margin: Vector4, corner: int = 10, tint: Color = Col
 func _chip_label(text: String) -> Label:
 	var label: = Label.new()
 	label.text = text
-	label.add_theme_font_size_override("font_size", 13)
+	label.add_theme_font_size_override("font_size", 18)
 	label.add_theme_color_override("font_color", INK)
 	label.add_theme_stylebox_override("normal", _flat(Color(0, 0, 0, 0.35), 4, Vector4(8, 3, 8, 3)))
 	return label
 func _small_button(text: String) -> Button:
 	var button: = Button.new()
 	button.text = text
-	button.custom_minimum_size = Vector2(58, 34)
-	button.add_theme_font_size_override("font_size", 14)
+	button.custom_minimum_size = Vector2(70, 46)
+	button.add_theme_font_size_override("font_size", 19)
 	for state in ["normal", "hover", "pressed", "disabled"]:
 		button.add_theme_stylebox_override(state, _skinned("btn_dark", Vector4(8, 2, 8, 2), 10, Color(1.25, 1.25, 1.25) if state == "pressed" else Color.WHITE))
 	button.add_theme_font_override("font", CowUI.title_font())
@@ -439,11 +439,11 @@ func _square(kind: String) -> Button:
 	_style_square(button, kind)
 	return button
 func _style_square(button: Button, kind: String) -> void:
-	button.custom_minimum_size = Vector2(44, 44)
+	button.custom_minimum_size = Vector2(56, 56)
 	button.flat = false
 	for state in ["normal", "hover", "pressed", "disabled"]:
 		button.add_theme_stylebox_override(state, _skinned("frame", Vector4.ZERO, 10, Color(1.2, 1.15, 1.05) if state == "pressed" else Color.WHITE))
-	var glyph: = Glyph.new(kind, GOLD, Vector2(44, 44), 0.62)
+	var glyph: = Glyph.new(kind, GOLD, Vector2(56, 56), 0.62)
 	glyph.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	glyph.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	button.add_child(glyph)
@@ -453,34 +453,34 @@ func _order_button(kind: String, text: String, color: Color) -> Button:
 	return button
 func _style_order(button: Button, kind: String, text: String, color: Color) -> void:
 	button.text = text
-	button.custom_minimum_size = Vector2(54, 76)
+	button.custom_minimum_size = Vector2(54, 90)
 	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	button.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
-	button.add_theme_font_size_override("font_size", 15)
+	button.add_theme_font_size_override("font_size", 19)
 	button.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	# Glossy bevelled faces (tools/make_ui_skin.py): red Attack, green Move, metal otherwise.
 	var face: = "btn_red" if color.r > color.g * 1.4 else ("btn_green" if color.g > color.r * 1.25 else "btn_dark")
 	for state in ["normal", "hover", "pressed", "disabled"]:
 		var texture: = "btn_grey" if state == "disabled" else face
-		button.add_theme_stylebox_override(state, _skinned(texture, Vector4(4, 30, 4, 4), 12, Color(1.15, 1.15, 1.15) if state == "pressed" else Color.WHITE))
+		button.add_theme_stylebox_override(state, _skinned(texture, Vector4(4, 40, 4, 4), 12, Color(1.15, 1.15, 1.15) if state == "pressed" else Color.WHITE))
 	button.add_theme_font_override("font", CowUI.title_font())
 	button.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.6))
 	button.add_theme_constant_override("shadow_offset_y", 1)
-	var glyph: = Glyph.new(kind, Color.WHITE, Vector2(28, 28))
+	var glyph: = Glyph.new(kind, Color.WHITE, Vector2(36, 36))
 	glyph.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	glyph.anchor_left = 0.5
 	glyph.anchor_right = 0.5
-	glyph.offset_left = -14
-	glyph.offset_right = 14
+	glyph.offset_left = -18
+	glyph.offset_right = 18
 	glyph.offset_top = 5
-	glyph.offset_bottom = 33
+	glyph.offset_bottom = 41
 	button.add_child(glyph)
 func _tab(kind: String, text: String) -> Button:
 	var button: = Button.new()
 	button.text = text
-	button.custom_minimum_size = Vector2(0, 72)
+	button.custom_minimum_size = Vector2(0, 80)
 	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	button.add_theme_font_size_override("font_size", 15)
+	button.add_theme_font_size_override("font_size", 18)
 	button.add_theme_color_override("font_color", INK)
 	for state in ["normal", "hover", "pressed", "disabled"]:
 		button.add_theme_stylebox_override(state, _flat(Color(0, 0, 0, 0) if state != "pressed" else Color(1, 1, 1, 0.08), 0, Vector4(0, 30, 0, 2)))
@@ -499,12 +499,13 @@ func _tab(kind: String, text: String) -> Button:
 func _responsive_layout() -> void :
 	var size: = get_viewport().get_visible_rect().size
 	top_bar.offset_bottom = top_bar.get_combined_minimum_size().y
-	toolbar.offset_left = -52
+	toolbar.offset_left = -64
 	toolbar.offset_right = -8
 	toolbar.offset_top = top_bar.get_combined_minimum_size().y + 10
 	var compact: = size.x < 520
-	for value in resource_values.values(): value.add_theme_font_size_override("font_size", 14 if compact else 16)
-	for tab in nav_row.get_children(): tab.add_theme_font_size_override("font_size", 11 if compact else 12)
+	# Owner 2026-10-13: "I can't see anything" - Call of War sized top bar and tabs.
+	for value in resource_values.values(): value.add_theme_font_size_override("font_size", 20 if compact else 23)
+	for tab in nav_row.get_children(): tab.add_theme_font_size_override("font_size", 15 if compact else 17)
 func _refresh_sheet() -> void:
 	var commanding: = inspecting_unit and own_unit
 	action_row.visible = commanding or choosing_destination
