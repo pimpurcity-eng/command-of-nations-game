@@ -1,0 +1,78 @@
+{
+  "generated_with": "built-in Imagegen",
+  "reference": "game/assets/interface/illustrations/strela10.png",
+  "total": 168,
+  "completed": [
+    {
+      "key": "factory",
+      "name": "Ordnance factory",
+      "path": "game/assets/interface/buildings/factory.webp",
+      "sha": "5ec94635a636b7f95d73b02c5938ac80cb748398",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: military ordnance manufacturing hall, brick and concrete workshops, loading bays and a few supply crates. Three-quarter elevated view of the complete building or compact compound. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "model": null,
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "recruitment_center",
+      "name": "Recruitment centre",
+      "path": "game/assets/interface/buildings/recruitment_center.webp",
+      "sha": "6bc6322f258c7d1b2b5cd5f0a803c7e6599efb87",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: military recruitment administration building, subdued masonry facade, entrance courtyard, a few uniformed foot soldiers. Three-quarter elevated view of the complete building or compact compound. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "model": null,
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "hospital",
+      "name": "Hospital",
+      "path": "game/assets/interface/buildings/hospital.webp",
+      "sha": "75f63288c472f66f177d78eb42851447b67186a2",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: realistic city hospital with glass entrance, modest medical cross and a military ambulance by the entrance. Three-quarter elevated view of the complete building or compact compound. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "model": null,
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "barracks",
+      "name": "Barracks",
+      "path": "game/assets/interface/buildings/barracks.webp",
+      "sha": "b3d9edcd5f04295e01cfe017aa9d5bfbe8fb2479",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: military barracks compound, realistic brick accommodation buildings around an open parade yard. Three-quarter elevated view of the complete building or compact compound. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "model": null,
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "airbase",
+      "name": "Airbase",
+      "path": "game/assets/interface/buildings/airbase.webp",
+      "sha": "0b469794c88bf032b93cd5aababacaf24fdb5c67",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: military airfield with a concrete runway, hardened shelter, control tower and a taxiing jet. Three-quarter elevated view of the complete building or compact compound. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "model": null,
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "industry",
+      "name": "Industrial complex",
+      "path": "game/assets/interface/buildings/industry.webp",
+      "sha": "60249bc030ece5a8ac1ed64aba82e077f4502a7d",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: compact brick-and-concrete industrial complex with workshop halls, loading bays and chimneys. Three-quarter elevated view of the complete building or compact compound. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "model": null,
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "bunker",
+      "name": "Bunkers",
+      "path": "game/assets/interface/buildings/bunker.webp",
+      "sha": "c424034eb41135616b5f1c0016108154de04e24b",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: low reinforced concrete defence bunker partly set into grassy earth, a visible defensive embrasure. Three-quarter elevated view of the complete building or compact compound. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "model": null,
+      "width": 512,
+      "height": 512
+    }
+  ],
+  "failed": []
+}
