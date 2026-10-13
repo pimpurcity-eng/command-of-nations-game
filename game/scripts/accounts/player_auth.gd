@@ -140,16 +140,22 @@ func request(path: String,payload: Dictionary,method: int=HTTPClient.METHOD_POST
 	else:response=await http(path,payload,method,bearer)
 	busy=false
 	return response
+func endpoint(path: String) -> String:
+	return base_url+path if path.begins_with("/rest/v1/") else base_url+"/auth/v1"+path
+static func response_data(decoded: Variant) -> Dictionary:
+	if decoded is Dictionary:return decoded
+	if decoded is Array:return {"rows":decoded}
+	return {}
 func http(path: String,payload: Dictionary,method: int,bearer: String) -> Dictionary:
 	var client:=HTTPRequest.new();client.timeout=20;add_child(client)
 	var headers:=PackedStringArray(["Content-Type: application/json","apikey: "+public_key])
 	if not bearer.is_empty():headers.append("Authorization: Bearer "+bearer)
-	var error:=client.request(base_url+"/auth/v1"+path,headers,method,JSON.stringify(payload))
+	var error:=client.request(endpoint(path),headers,method,JSON.stringify(payload))
 	if error!=OK:client.queue_free();return failure("Could not connect. Please try again.")
 	var raw: Array=await client.request_completed;client.queue_free()
 	if int(raw[0])!=HTTPRequest.RESULT_SUCCESS:return failure("Connection interrupted. Please try again.")
 	var status:=int(raw[1]);var decoded: Variant=JSON.parse_string(raw[3].get_string_from_utf8())
-	var data: Dictionary=decoded if decoded is Dictionary else {}
+	var data: Dictionary=response_data(decoded)
 	if status>=200 and status<300:return {"ok":true,"data":data,"status":status}
 	# Do not expose raw backend errors, account existence, tokens, or response bodies.
 	if status==429:return failure("Too many attempts. Wait a moment and try again.",status)
