@@ -167,7 +167,18 @@ static func status_box(kind: String) -> Dictionary:
 	bar.add_theme_stylebox_override("fill", box(Color("b8863b"), 2))
 	bar.visible = false
 	column.add_child(bar)
-	return {"panel": panel, "picture": picture, "icon": icon, "text": text, "bar": bar}
+	# Finish now with gold (owner 2026-10-13); the screen shows it when something is running.
+	var gold: = Button.new()
+	gold.icon = ResourceSites.icon("gold")
+	gold.add_theme_constant_override("icon_max_width", 22)
+	gold.custom_minimum_size = Vector2(80, 56)
+	gold.add_theme_font_size_override("font_size", 16)
+	gold.add_theme_color_override("font_color", Color("2b2410"))
+	for state in ["normal", "hover", "pressed", "disabled"]: gold.add_theme_stylebox_override(state, box(Color("e9c46a") if state != "disabled" else Color("8a8270"), 6))
+	gold.tooltip_text = "Finish now with gold"
+	gold.visible = false
+	row.add_child(gold)
+	return {"panel": panel, "picture": picture, "icon": icon, "text": text, "bar": bar, "gold": gold}
 
 ## Tab row button (icon above caption); `selected` gets the gold underline.
 static func tab(caption: String, kind: String, selected: bool) -> Button:
@@ -292,3 +303,10 @@ class Icon extends Control:
 				draw_colored_polygon(PackedVector2Array([c + Vector2(-3, -9) * u, c + Vector2(3, -9) * u, c + Vector2(3, -2) * u, c + Vector2(9, 9) * u, c + Vector2(-9, 9) * u, c + Vector2(-3, -2) * u]), tint)
 			"chevrons":
 				for dx in [-4, 4]: draw_polyline(PackedVector2Array([c + Vector2(dx - 4, -7) * u, c + Vector2(dx + 3, 0) * u, c + Vector2(dx - 4, 7) * u]), tint, 3.0 * u)
+
+## Points a status-box gold button at `action` with `price` (hidden when price <= 0).
+static func gold_button(button: Button, price: int, action: Callable) -> void:
+	button.visible = price > 0
+	button.text = StrategyHUD._thousands(price)
+	for connection in button.pressed.get_connections(): button.pressed.disconnect(connection.callable)
+	if price > 0: button.pressed.connect(action)

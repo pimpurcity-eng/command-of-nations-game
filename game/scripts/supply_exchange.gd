@@ -8,7 +8,7 @@ var diplomacy: Diplomacy
 func transact(resource: String, quantity: float, buying: bool, country: String = "") -> String:
 	if country.is_empty(): country = GameSession.player_country
 	if not PRICES.has(resource): return "This resource is not traded"
-	if not is_finite(quantity) or quantity <= 0 or quantity != floor(quantity) or quantity > 10000: return "Choose a whole quantity between 1 and 10,000"
+	if not is_finite(quantity) or quantity <= 0 or quantity != floor(quantity) or quantity > 100000: return "Choose a whole quantity between 1 and 100,000"
 	if not economy.stockpiles.has(country): return "Unknown country"
 	var stock: Dictionary = economy.stockpiles[country]
 	var sanction: = diplomacy.sanction_factor(country) if diplomacy != null else 1.0

@@ -440,11 +440,14 @@ func _refresh() -> void:
 		if jobs.size() > 1: construction.text.text += "  (+" + str(jobs.size() - 1) + ")"
 		construction.bar.max_value = total
 		construction.bar.value = job.progress
+	CowUI.gold_button(construction.gold, buildings.speedup_price(city_id) if own and not jobs.is_empty() else 0, func():
+		message_gold(buildings.finish_now(city_id, GameSession.player_country), "Construction finished with gold"))
 	# Production status.
 	production.text.text = "No production" if own else "Hidden"
 	production.bar.visible = false
 	production.picture.visible = false
 	production.icon.visible = true
+	production.gold.visible = false
 	if own:
 		for job in buildings.economy.jobs:
 			if job.city != place.name or buildings.economy.equipment(job.equipment).country != GameSession.player_country: continue
@@ -457,6 +460,9 @@ func _refresh() -> void:
 			production.bar.visible = true
 			production.bar.max_value = spec.seconds
 			production.bar.value = job.progress
+			var city_name: String = place.name
+			CowUI.gold_button(production.gold, buildings.economy.unit_speedup_price(job), func():
+				message_gold(buildings.economy.finish_unit_now(city_name, GameSession.player_country), "Unit finished with gold"))
 			break
 	if not own: return
 	if tab_index >= 0:
@@ -508,3 +514,7 @@ class Chevrons extends Control:
 		for i in clampi(level, 1, 5):
 			var y: = h * 0.72 - i * step
 			draw_polyline(PackedVector2Array([Vector2(w * 0.18, y + step * 0.6), Vector2(w * 0.5, y), Vector2(w * 0.82, y + step * 0.6)]), Color("f3dc9a"), 2.4)
+
+func message_gold(error: String, done: String) -> void:
+	if message != null: message.text = error if not error.is_empty() else done
+	_refresh()

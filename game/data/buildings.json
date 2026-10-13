@@ -7,11 +7,11 @@
     "max_level": 3,
     "hours": 2,
     "cost": {
-      "funds": 200,
-      "materials": 100,
-      "electronics": 30,
-      "fuel": 20,
-      "manpower": 20
+      "funds": 2000,
+      "materials": 1000,
+      "electronics": 300,
+      "fuel": 200,
+      "manpower": 200
     },
     "description": "Produces artillery, air defence and support units.",
     "starting_level": 0,
@@ -35,11 +35,11 @@
     "max_level": 3,
     "hours": 3,
     "cost": {
-      "funds": 240,
-      "materials": 120,
-      "electronics": 20,
-      "fuel": 30,
-      "manpower": 25
+      "funds": 2400,
+      "materials": 1200,
+      "electronics": 200,
+      "fuel": 300,
+      "manpower": 250
     },
     "description": "Each level above 1 increases this city’s currency, manpower and main commodity income by 25%.",
     "starting_level": 0,
@@ -63,11 +63,11 @@
     "max_level": 3,
     "hours": 4,
     "cost": {
-      "funds": 300,
-      "materials": 100,
-      "electronics": 70,
-      "fuel": 15,
-      "manpower": 20
+      "funds": 3000,
+      "materials": 1000,
+      "electronics": 700,
+      "fuel": 150,
+      "manpower": 200
     },
     "description": "Research is national and independent of this legacy building. Two research slots.",
     "starting_level": 0,
@@ -85,11 +85,11 @@
     "max_level": 5,
     "hours": 3,
     "cost": {
-      "funds": 220,
-      "materials": 110,
-      "electronics": 45,
-      "fuel": 30,
-      "manpower": 20
+      "funds": 2200,
+      "materials": 1100,
+      "electronics": 450,
+      "fuel": 300,
+      "manpower": 200
     },
     "description": "Enables fighter production and provides a home base. Each extra level reduces refueling time by 25%.",
     "colour": "819aaa",
@@ -122,11 +122,11 @@
     "hours": 2,
     "starting_level": 0,
     "cost": {
-      "funds": 180,
-      "materials": 90,
-      "electronics": 20,
-      "fuel": 15,
-      "manpower": 15
+      "funds": 1800,
+      "materials": 900,
+      "electronics": 200,
+      "fuel": 150,
+      "manpower": 150
     },
     "description": "Each level increases this city’s funds income by 25%.",
     "save_default": true,
@@ -145,11 +145,11 @@
     "hours": 2,
     "starting_level": 0,
     "cost": {
-      "funds": 180,
-      "materials": 90,
-      "electronics": 20,
-      "fuel": 15,
-      "manpower": 15
+      "funds": 1800,
+      "materials": 900,
+      "electronics": 200,
+      "fuel": 150,
+      "manpower": 150
     },
     "description": "Each level increases this city’s materials income by 25%.",
     "save_default": true,
@@ -168,11 +168,11 @@
     "hours": 2,
     "starting_level": 0,
     "cost": {
-      "funds": 180,
-      "materials": 90,
-      "electronics": 20,
-      "fuel": 15,
-      "manpower": 15
+      "funds": 1800,
+      "materials": 900,
+      "electronics": 200,
+      "fuel": 150,
+      "manpower": 150
     },
     "description": "Each level increases this city’s electronics income by 25%.",
     "save_default": true,
@@ -191,11 +191,11 @@
     "hours": 2,
     "starting_level": 0,
     "cost": {
-      "funds": 180,
-      "materials": 90,
-      "electronics": 20,
-      "fuel": 15,
-      "manpower": 15
+      "funds": 1800,
+      "materials": 900,
+      "electronics": 200,
+      "fuel": 150,
+      "manpower": 150
     },
     "description": "Each level increases this city’s fuel income by 25%.",
     "save_default": true,
@@ -214,13 +214,13 @@
     "hours": 2,
     "starting_level": 0,
     "cost": {
-      "funds": 180,
-      "materials": 90,
-      "electronics": 20,
-      "fuel": 15,
-      "manpower": 15
+      "funds": 1800,
+      "materials": 900,
+      "electronics": 200,
+      "fuel": 150,
+      "manpower": 150
     },
-    "description": "Each level increases this city’s manpower income by 25%.",
+    "description": "Recruits manpower: each level adds manpower income in this city (cities without one recruit none). The capital starts with one.",
     "save_default": true,
     "model_tiers": [
       "res://assets/library/buildings_oct12/recruitment_center.glb",
@@ -231,7 +231,7 @@
     ],
     "preview": "res://assets/library/buildings_oct12/recruitment_center_menu.png",
     "original_colors": true,
-    "capital_starting_level": 0
+    "capital_starting_level": 1
   },
   {
     "id": "barracks",
@@ -242,11 +242,11 @@
     "max_level": 3,
     "hours": 2,
     "cost": {
-      "funds": 180,
-      "materials": 100,
-      "electronics": 15,
-      "fuel": 15,
-      "manpower": 40
+      "funds": 1800,
+      "materials": 1000,
+      "electronics": 150,
+      "fuel": 150,
+      "manpower": 400
     },
     "description": "Produces infantry. Each level above 1 increases infantry production speed by 25%.",
     "starting_level": 0,
@@ -271,11 +271,11 @@
     "max_level": 3,
     "hours": 3,
     "cost": {
-      "funds": 280,
-      "materials": 170,
-      "electronics": 45,
-      "fuel": 45,
-      "manpower": 30
+      "funds": 2800,
+      "materials": 1700,
+      "electronics": 450,
+      "fuel": 450,
+      "manpower": 300
     },
     "description": "Produces tanks and mechanized vehicles. Each level above 1 increases their production speed by 25%.",
     "starting_level": 0,
@@ -300,11 +300,11 @@
     "max_level": 3,
     "hours": 4,
     "cost": {
-      "funds": 320,
-      "materials": 180,
-      "electronics": 55,
-      "fuel": 60,
-      "manpower": 35
+      "funds": 3200,
+      "materials": 1800,
+      "electronics": 550,
+      "fuel": 600,
+      "manpower": 350
     },
     "description": "Coastal cities only. Each level increases ship production speed by 25%.",
     "starting_level": 0,
@@ -330,11 +330,11 @@
     "max_level": 5,
     "hours": 3,
     "cost": {
-      "funds": 220,
-      "materials": 180,
-      "electronics": 20,
-      "fuel": 20,
-      "manpower": 25
+      "funds": 2200,
+      "materials": 1800,
+      "electronics": 200,
+      "fuel": 200,
+      "manpower": 250
     },
     "description": "Each level reduces incoming damage to friendly ground units within 0.6 of a controlled city by 20%, up to 60%.",
     "starting_level": 0,
@@ -359,11 +359,11 @@
     "max_level": 3,
     "hours": 2,
     "cost": {
-      "funds": 200,
-      "materials": 140,
-      "electronics": 25,
-      "fuel": 20,
-      "manpower": 30
+      "funds": 2000,
+      "materials": 1400,
+      "electronics": 250,
+      "fuel": 200,
+      "manpower": 300
     },
     "description": "Train station. The capital starts with one; build a second station and a railway line joins them over your own land (armies move twice as fast along it) and improves construction speed by 15% per level. Rural provinces build roads and logistics instead.",
     "starting_level": 0,
@@ -391,11 +391,11 @@
     "max_level": 3,
     "hours": 2,
     "cost": {
-      "funds": 200,
-      "materials": 140,
-      "electronics": 25,
-      "fuel": 20,
-      "manpower": 30
+      "funds": 2000,
+      "materials": 1400,
+      "electronics": 250,
+      "fuel": 200,
+      "manpower": 300
     },
     "description": "Train station. The capital starts with one; build a second station and a railway joins them over your own land (armies move twice as fast along it) and improves construction speed by 15% per level. Rural provinces build roads and logistics instead.",
     "starting_level": 0,
@@ -415,7 +415,6 @@
       "res://assets/library/buildings_oct12/road_straight.glb",
       "res://assets/library/buildings_oct12/road_straight.glb"
     ],
-    "capital_starting_level": 1,
     "starting_note": "Owner 2026-10-13 (Call of War start): every city starts with a train station and nothing else."
   },
   {
@@ -426,11 +425,11 @@
     "max_level": 1,
     "hours": 4,
     "cost": {
-      "funds": 300,
-      "materials": 100,
-      "electronics": 70,
-      "fuel": 15,
-      "manpower": 20
+      "funds": 3000,
+      "materials": 1000,
+      "electronics": 700,
+      "fuel": 150,
+      "manpower": 200
     },
     "description": "Moves your national capital to this city when construction completes.",
     "starting_level": 0,
@@ -449,11 +448,11 @@
     "max_level": 3,
     "hours": 2,
     "cost": {
-      "funds": 200,
-      "materials": 100,
-      "electronics": 30,
-      "fuel": 20,
-      "manpower": 20
+      "funds": 2000,
+      "materials": 1000,
+      "electronics": 300,
+      "fuel": 200,
+      "manpower": 200
     },
     "description": "Produces ballistic and cruise missile launchers. Uses the ordnance building model until the supplied missile-factory model arrives.",
     "starting_level": 0,
@@ -480,11 +479,11 @@
     "max_level": 5,
     "hours": 3,
     "cost": {
-      "funds": 200,
-      "materials": 90,
-      "electronics": 60,
-      "fuel": 15,
-      "manpower": 15
+      "funds": 2000,
+      "materials": 900,
+      "electronics": 600,
+      "fuel": 150,
+      "manpower": 150
     },
     "description": "Builds drones: reconnaissance, strike, loitering and one-way attack drones. Each level above 1 speeds drone production by 25%.",
     "colour": "6d7f8c",
@@ -509,11 +508,11 @@
     "max_level": 5,
     "hours": 2,
     "cost": {
-      "funds": 180,
-      "materials": 100,
-      "electronics": 25,
-      "fuel": 20,
-      "manpower": 25
+      "funds": 1800,
+      "materials": 1000,
+      "electronics": 250,
+      "fuel": 200,
+      "manpower": 250
     },
     "description": "Builds support units: combat engineers, bridge layers, recovery vehicles, supply trucks and field medics.",
     "colour": "8a7d5c",
@@ -538,11 +537,11 @@
     "max_level": 5,
     "hours": 2,
     "cost": {
-      "funds": 160,
-      "materials": 80,
-      "electronics": 30,
-      "fuel": 10,
-      "manpower": 20
+      "funds": 1600,
+      "materials": 800,
+      "electronics": 300,
+      "fuel": 100,
+      "manpower": 200
     },
     "description": "Heals your armies in this city or province: +2 health per hour per level.",
     "colour": "d8d4c8",

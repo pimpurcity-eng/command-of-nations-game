@@ -448,6 +448,7 @@ func _refresh() -> void:
 		slot.bar.visible = not job.is_empty()
 		if job.is_empty():
 			slot.text.text = "No research"
+			slot.gold.visible = false
 			continue
 		var total: = system.job_duration(job)
 		slot.picture.texture = CowUI.research_picture(job.equipment, job.level)
@@ -459,6 +460,10 @@ func _refresh() -> void:
 		slot.cancel.pressed.connect(func():
 			system.cancel(id)
 			message.text = "Research cancelled · unused resources refunded"
+			_refresh())
+		CowUI.gold_button(slot.gold, system.speedup_price(job), func():
+			var error: String = system.finish_now(id, GameSession.player_country)
+			message.text = error if not error.is_empty() else "Research finished with gold"
 			_refresh())
 	if not tree_view.visible or selected_id.is_empty(): return
 	# Tree cards.

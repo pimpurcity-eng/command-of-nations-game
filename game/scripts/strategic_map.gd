@@ -405,10 +405,10 @@ static func _polygon_area(polygon: PackedVector2Array) -> float:
 	for i in polygon.size(): area += polygon[i].cross(polygon[(i + 1) % polygon.size()])
 	return absf(area) * 0.5
 
-## A flag post at every province centre without a city (cities mark their own centre): the
-## point an army must hold to capture the province. The flag shows who controls it.
+## A small grey marker at every province centre without a city (cities mark their own centre):
+## the point an army must hold to capture the province. Owner 2026-10-13: no flags on it, like
+## Call of War; the province colour already shows who holds it.
 func _add_province_posts(city_points: Array) -> void :
-	var flags: = {"russia": [Color("f2f2ee"), Color("2853a8"), Color("c8372d")], "ukraine": [Color("2f6bc7"), Color("f2c418")]}
 	for title in province_hubs:
 		var hub: Vector2 = province_hubs[title]
 		if city_points.any(func(city: Vector2): return city.distance_to(hub) < 0.5): continue
@@ -417,7 +417,7 @@ func _add_province_posts(city_points: Array) -> void :
 		post.position = position_at(hub)
 		add_child(post)
 		var dark: = StandardMaterial3D.new()
-		dark.albedo_color = Color("2e302c")
+		dark.albedo_color = Color("5a5d58")
 		var base: = MeshInstance3D.new()
 		var plinth: = CylinderMesh.new()
 		plinth.top_radius = 0.07
@@ -428,40 +428,13 @@ func _add_province_posts(city_points: Array) -> void :
 		base.material_override = dark
 		base.position.y = 0.02
 		post.add_child(base)
-		var pole: = MeshInstance3D.new()
-		var stick: = CylinderMesh.new()
-		stick.top_radius = 0.007
-		stick.bottom_radius = 0.007
-		stick.height = 0.36
-		stick.radial_segments = 6
-		pole.mesh = stick
-		pole.material_override = dark
-		pole.position.y = 0.2
-		post.add_child(pole)
-		for country in flags:
-			var flag: = Node3D.new()
-			flag.name = country
-			flag.position = Vector3(0.075, 0.33, 0)
-			var stripes: Array = flags[country]
-			for i in stripes.size():
-				var stripe: = MeshInstance3D.new()
-				var cloth: = BoxMesh.new()
-				cloth.size = Vector3(0.14, 0.09 / stripes.size(), 0.006)
-				stripe.mesh = cloth
-				var paint: = StandardMaterial3D.new()
-				paint.albedo_color = stripes[i]
-				stripe.material_override = paint
-				stripe.position.y = 0.045 - 0.09 * (i + 0.5) / stripes.size()
-				flag.add_child(stripe)
-			post.add_child(flag)
 		province_posts[title] = post
 	_update_posts()
 func _update_posts() -> void :
 	for territory in territories:
 		if not territory.playable or not province_posts.has(territory.title): continue
 		var post: Node3D = province_posts[territory.title]
-		for flag in post.get_children():
-			if flag.name in ["russia", "ukraine"]: flag.visible = flag.name == territory.controller
+		post.visible = true
 
 ## Points along the road from start to end (both included), bowed sideways by `bend`.
 static func road_curve(start: Vector2, end: Vector2, bend: float) -> PackedVector2Array:

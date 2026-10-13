@@ -214,3 +214,20 @@ func restore(state: Dictionary) -> void :
 	for id in levels: levels[id] = int(state.get("levels", {}).get(id, initial_level(economy.equipment(id))))
 	jobs = state.get("jobs", []).duplicate(true)
 	changed.emit()
+
+## Gold to finish a running research now.
+func speedup_price(job: Dictionary) -> int:
+	var country: String = economy.equipment(job.equipment).country
+	return GoldWallet.speedup((job_duration(job) - float(job.progress)) / maxf(rate(country), 0.001))
+
+## Finishes the research of `id` now, for gold.
+func finish_now(id: String, country: String) -> String:
+	for job in jobs:
+		if job.equipment != id: continue
+		if economy.equipment(id).country != country: return "Not your research"
+		var error: = economy.spend_gold(country, speedup_price(job))
+		if not error.is_empty(): return error
+		job.progress = job_duration(job)
+		advance(0.000001)
+		return ""
+	return "Nothing is being researched"

@@ -40,6 +40,7 @@ signal production_requested
 signal pause_requested
 signal speed_requested(speed: float)
 signal guard_requested
+signal gold_requested
 signal save_requested
 signal load_requested
 signal stop_requested
@@ -72,6 +73,7 @@ var navigation_menu: MenuButton
 var pause_button: Button
 var speed_button: Button
 var guard_button: Button
+var gold_button: Button
 var time_label: Label
 var score_label: Label
 var war_label: Label
@@ -148,6 +150,15 @@ func _build_top_bar(root: Control) -> void:
 	second.add_child(time_label)
 	war_label = _chip_label("PEACE")
 	second.add_child(war_label)
+	# Gold for this match, with "+" to spend or buy more (Call of War style).
+	gold_button = _small_button("10,000  +")
+	gold_button.icon = ResourceSites.icon("gold")
+	gold_button.add_theme_constant_override("icon_max_width", 20)
+	gold_button.add_theme_color_override("font_color", GOLD)
+	gold_button.custom_minimum_size.x = 104
+	gold_button.tooltip_text = "Gold: finish production, construction and research now, or buy resources"
+	gold_button.pressed.connect(func(): gold_requested.emit())
+	second.add_child(gold_button)
 	var spacer: = Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -579,6 +590,15 @@ func clear_unit_selection() -> void :
 	selection_title.text = "REGIONAL COMMAND"
 	detail.text = "Select an army or city"
 	_refresh_sheet()
+func show_gold(amount: int) -> void:
+	if gold_button != null: gold_button.text = _thousands(amount) + "  +"
+static func _thousands(amount: int) -> String:
+	var digits: = str(absi(amount))
+	var result: = ""
+	while digits.length() > 3:
+		result = "," + digits.substr(digits.length() - 3) + result
+		digits = digits.substr(0, digits.length() - 3)
+	return ("-" if amount < 0 else "") + digits + result
 func show_resources(_country: String, stockpile: Dictionary) -> void :
 	for resource in ProductionSystem.RESOURCES:
 		var amount: = int(stockpile.get(resource, 0))

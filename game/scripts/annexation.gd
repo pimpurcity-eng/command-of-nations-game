@@ -7,8 +7,8 @@ extends RefCounted
 const OCCUPIED_OUTPUT: = 0.25
 const ANNEXED_OUTPUT: = 0.6
 const ANNEX_TIME: = VictoryRules.DAY
-const BASE_COST: = 400.0
-const COST_PER_POINT: = 120.0
+const BASE_COST: = 4000.0  # economy x10 (owner 2026-10-13)
+const COST_PER_POINT: = 1200.0
 
 var annexed: Dictionary = {}   # territory id -> country that annexed it
 var jobs: Dictionary = {}      # territory id -> {"country", "remaining"}

@@ -274,6 +274,14 @@ for e in catalog:
     e["cost"]["food"] = int(round(e["cost"].get("manpower", 0) * 0.6 + 5))
     e.setdefault("upkeep", {})["food"] = round(max(0.5, e["upkeep"].get("manpower", 0) * 2), 1)
 
+# Economy scale (owner 2026-10-13: "starting resources are too low ... make the units cost a
+# little higher"): costs x12 and upkeep x10, with city income x10 and starting stock x30.
+for e in catalog:
+    for k, v in e["cost"].items():
+        e["cost"][k] = int(round(v * 12))
+    for k, v in e["upkeep"].items():
+        e["upkeep"][k] = round(v * 10, 1)
+
 starters = {}
 for e in catalog:
     if e.get("starter"):

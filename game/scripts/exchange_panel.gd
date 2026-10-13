@@ -41,8 +41,8 @@ func setup(economy: ProductionSystem, theme: Theme) -> void :
 	body.add_child(note)
 	quantity = SpinBox.new()
 	quantity.min_value = 1
-	quantity.max_value = 10000
-	quantity.value = 10
+	quantity.max_value = 100000
+	quantity.value = 1000
 	quantity.custom_minimum_size.y = 48
 	body.add_child(quantity)
 	for resource in SupplyExchange.PRICES:

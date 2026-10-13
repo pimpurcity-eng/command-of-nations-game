@@ -54,6 +54,7 @@ var append_order: = false
 var order_mode: = false
 ## Last map tap, so tapping the same spot again steps to the next army or the city under it.
 var _tap_cycle: Dictionary = {}
+var gold_panel: GoldPanel
 var selecting_armies: = false
 var patrol_order: = false
 var clock: SimulationClock
@@ -290,6 +291,15 @@ func _ready() -> void :
 		resource_country = GameSession.player_country
 		hud.show_resources(resource_country, production.stockpiles[resource_country]))
 	hud.show_resources(resource_country, production.stockpiles[resource_country])
+	# Gold (owner 2026-10-13): 10,000 per match; top-bar "+" opens the gold screen.
+	production.changed.connect(func(): hud.show_gold(int(production.gold.get(GameSession.player_country, 0))))
+	hud.show_gold(int(production.gold.get(GameSession.player_country, 0)))
+	hud.gold_requested.connect(func():
+		if gold_panel == null:
+			gold_panel = GoldPanel.new()
+			add_child(gold_panel)
+			gold_panel.setup(production, hud.get_child(0).theme)
+		gold_panel.open())
 	clock.advanced.connect(production.advance)
 	clock.advanced.connect(buildings.advance)
 	production_panel = ProductionPanel.new()

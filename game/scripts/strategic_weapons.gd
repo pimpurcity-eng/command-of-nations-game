@@ -8,9 +8,9 @@ extends RefCounted
 const DAY: = VictoryRules.DAY
 const WEAPONS: = {
 	"chemical": {"name": "Chemical missile", "unlock_day": 12, "build": DAY * 0.5, "radius": 1.0, "damage": 45.0, "armor_factor": 0.3, "fallout": 0.0,
-		"cost": {"funds": 6000.0, "materials": 1500.0, "electronics": 800.0, "fuel": 600.0, "manpower": 0.0}},
+		"cost": {"funds": 60000.0, "materials": 15000.0, "electronics": 8000.0, "fuel": 6000.0, "manpower": 0.0}},
 	"nuclear": {"name": "Nuclear missile", "unlock_day": 25, "build": DAY * 2.0, "radius": 1.6, "damage": 90.0, "armor_factor": 0.85, "fallout": DAY * 3.0,
-		"cost": {"funds": 25000.0, "materials": 5000.0, "electronics": 4000.0, "fuel": 2500.0, "manpower": 500.0}},
+		"cost": {"funds": 250000.0, "materials": 50000.0, "electronics": 40000.0, "fuel": 25000.0, "manpower": 5000.0}},
 }
 const ABM_RANGE: = 3.5
 const ABM_LEVEL: = 3

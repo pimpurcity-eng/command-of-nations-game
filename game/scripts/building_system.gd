@@ -257,3 +257,28 @@ func incoming_damage_factor(unit: Dictionary) -> float:
 		if economy.controlled(place, unit.country) and point.distance_to(place.point) <= 0.6:
 			protection = maxf(protection, 0.2 * level(place.id, "bunker"))
 	return 1.0 - minf(0.6, protection)
+
+## Gold to finish the construction running in a city now (its first job), or 0 if none.
+func speedup_price(city_id: String) -> int:
+	for job in jobs:
+		if job.city == city_id: return GoldWallet.speedup((duration(job.building, job.level) - float(job.progress)) / maxf(construction_rate(city_id), 0.001))
+	return 0
+
+## Finishes the construction running in a city now, for gold.
+func finish_now(city_id: String, country: String) -> String:
+	for job in jobs:
+		if job.city != city_id: continue
+		if job.get("country", country) != country: return "Not your construction"
+		var bill: = cost(job.building, job.level)
+		if not job.get("paid", true):
+			for resource in ProductionSystem.RESOURCES:
+				if economy.stockpiles[country][resource] < bill[resource]: return "Not enough " + resource + " to start it"
+		var error: = economy.spend_gold(country, speedup_price(city_id))
+		if not error.is_empty(): return error
+		if not job.get("paid", true):
+			for resource in ProductionSystem.RESOURCES: economy.stockpiles[country][resource] -= bill[resource]
+			job.paid = true
+		job.progress = duration(job.building, job.level)
+		advance(0.000001)
+		return ""
+	return "Nothing is being built here"

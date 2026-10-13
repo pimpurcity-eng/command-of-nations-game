@@ -31,14 +31,16 @@ func run():
  check(game.resource_sites.sites.all(func(s):return not s.city.is_empty()),"no resource sites in provinces")
  check(game.resource_sites.income(1.0).is_empty(),"provinces earn nothing")
  var rural: Dictionary = game.buildings.provinces.places.values()[0]
- check(game.production.province_income(rural).values().all(func(v):return v == 0.0),"province income is zero")
+ var rural_income: Dictionary = game.production.province_income(rural)
+ check(rural_income.funds > 0 and ProductionSystem.RESOURCES.all(func(r):return r == "funds" or rural_income[r] == 0.0),"provinces pay money only (owner 2026-10-13)")
  var city_total: = {"russia":{},"ukraine":{}}
  for c in game.production.cities:
   var who: String = game.production.controller(c)
   var made: Dictionary = game.production.city_income(c)
   for r in made: city_total[who][r] = city_total[who].get(r,0.0)+made[r]
  for who in ["russia","ukraine"]:
-  check(ProductionSystem.RESOURCES.all(func(r):return is_equal_approx(city_total[who][r],gross[who][r])),"all of %s's income comes from its cities" % who)
+  check(ProductionSystem.RESOURCES.all(func(r):return r == "funds" or is_equal_approx(city_total[who][r],gross[who][r])),"all of %s's resources come from its cities" % who)
+  check(gross[who].funds > city_total[who].funds,"%s also earns money from provinces" % who)
   check(ProductionSystem.RESOURCES.all(func(r):return gross[who][r]>0),"%s's seven cities make every resource" % who)
  check(gross.russia.fuel>gross.ukraine.fuel,"Russia has more oil")
  check(gross.ukraine.electronics>gross.russia.electronics,"Ukraine has more rare earths")
@@ -49,7 +51,42 @@ func run():
  for who in old_save.stockpiles: old_save.stockpiles[who].erase("food")
  check(game.production.validate(old_save),"saves from before food still load")
  game.production.restore(old_save)
- check(game.production.stockpiles.russia.food==300.0,"older saves start with the normal food stock")
+ check(game.production.stockpiles.russia.food==ProductionSystem.START_STOCK.food,"older saves start with the normal food stock")
+ # Manpower comes from recruitment centres only; the capital starts with one.
+ var kyiv: Dictionary = game.buildings.capital("ukraine")
+ var lviv: Dictionary = game.buildings.city("lviv")
+ check(game.buildings.level(kyiv.id,"recruitment_center") == 1 and game.production.city_income(kyiv).manpower > 0,"the capital's recruitment centre recruits manpower")
+ check(game.buildings.level(lviv.id,"recruitment_center") == 0 and game.production.city_income(lviv).manpower == 0.0,"a city without a recruitment centre recruits none")
+ game.buildings.levels[lviv.id].recruitment_center = 2
+ check(game.production.city_income(lviv).manpower > game.production.city_income(kyiv).manpower,"more recruitment levels recruit more")
+ game.buildings.levels[lviv.id].recruitment_center = 0
+ # Call of War scale.
+ check(ProductionSystem.START_STOCK.funds >= 30000.0,"starting money is Call of War sized")
+ # Gold.
+ check(game.production.gold.ukraine == GoldWallet.START and game.production.gold.russia == GoldWallet.START,"every player starts the match with 10,000 gold")
+ for r in ProductionSystem.RESOURCES: game.production.stockpiles.ukraine[r] = 1000000.0
+ var fuel_before: float = game.production.stockpiles.ukraine.fuel
+ check(game.production.buy_with_gold("ukraine","fuel",1000).is_empty() and game.production.stockpiles.ukraine.fuel == fuel_before + 1000.0,"gold buys resources")
+ check(game.production.gold.ukraine == GoldWallet.START - GoldWallet.resource_price("fuel",1000),"and costs the shown gold")
+ game.production.jobs.clear()
+ check(game.production.schedule("infantry_ukraine",kyiv.name).is_empty(),"a unit is queued")
+ var units_before: int = game.units.units.size()
+ var price: int = game.production.unit_speedup_price(game.production.active_job(kyiv.name))
+ check(price >= GoldWallet.MINIMUM,"the unit has a gold price to finish now (%d)" % price)
+ var gold_before: int = game.production.gold.ukraine
+ check(game.production.finish_unit_now(kyiv.name,"ukraine").is_empty() and game.units.units.size() == units_before + 1,"gold finishes the unit at once")
+ check(game.production.gold.ukraine == gold_before - price,"finishing costs the shown gold")
+ check(game.buildings.schedule(kyiv.id,"industry").is_empty(),"construction is queued")
+ var level_before: int = game.buildings.level(kyiv.id,"industry")
+ check(game.buildings.finish_now(kyiv.id,"ukraine").is_empty() and game.buildings.level(kyiv.id,"industry") == level_before + 1,"gold finishes construction at once")
+ game.production.gold.ukraine = 0
+ game.production.schedule("infantry_ukraine",kyiv.name)
+ check(not game.production.finish_unit_now(kyiv.name,"ukraine").is_empty(),"no gold, no finishing early")
+ var saved: Dictionary = game.production.snapshot()
+ check(saved.gold.ukraine == 0 and game.production.validate(saved),"gold is saved with the match")
+ saved.erase("gold")
+ game.production.restore(saved)
+ check(game.production.gold.ukraine == GoldWallet.START,"older saves get the match gold")
  var unit: Dictionary = game.units.units.filter(func(u):return u.country=="ukraine" and u.visual_kind!="fighter")[0]
  for r in ProductionSystem.RESOURCES:game.production.stockpiles.ukraine[r] = 100000.0
  var russian: Dictionary = game.production.stockpiles.russia.duplicate()
