@@ -312,6 +312,46 @@
       "sha": "82bedf4f3d00b10046bc3e333b9b9d1c22c41579",
       "width": 512,
       "height": 512
+    },
+    {
+      "key": "euro_tornado_ids",
+      "name": "Tornado IDS",
+      "model": "res://assets/library/arsenal/euro_tornado_ids.glb",
+      "path": "game/assets/interface/unit_art/euro_tornado_ids.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: Tornado IDS aircraft in flight, correct wing/fuselage/engine arrangement, clear complete silhouette against a soft clouded sky. This is the European equipment from model euro_tornado_ids; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "c5c82c0347d8ebc80ac3e17cf11adb2ff4f4f6ed",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_pluton",
+      "name": "Pluton",
+      "model": "res://assets/library/arsenal/euro_pluton.glb",
+      "path": "game/assets/interface/unit_art/euro_pluton.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: Pluton (euro_pluton), a Missiles weapon or vehicle on dry grass and packed earth, correct identifying turret, wheels, tracks or weapon tubes, entire subject visible from low front three-quarter angle. This is the European equipment from model euro_pluton; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "b8b88e688b005bc6a63155381d5562eca1bdd991",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_avangard_silo",
+      "name": "Avangard silo",
+      "model": "res://assets/library/arsenal/russia_avangard_silo.glb",
+      "path": "game/assets/interface/unit_art/russia_avangard_silo.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: Avangard silo hardened missile-silo emplacement set into grass, visible circular hatch and low reinforced structures, not a truck. This is the Russian equipment from model russia_avangard_silo; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "f69824da9b91136217b7efcacaffda3055c721bf",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_mig29smt",
+      "name": "MiG-29SMT",
+      "model": "res://assets/library/arsenal/russia_mig29smt.glb",
+      "path": "game/assets/interface/unit_art/russia_mig29smt.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: MiG-29SMT aircraft in flight, correct wing/fuselage/engine arrangement, clear complete silhouette against a soft clouded sky. This is the Russian equipment from model russia_mig29smt; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "bc5d75368508bc506b9acf011670c8b2ab22a82a",
+      "width": 512,
+      "height": 512
     }
   ],
   "failed": []
