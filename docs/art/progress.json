@@ -462,6 +462,16 @@
       "sha": "73654dbb85a4ce4ba578f0c6093e551bd84e9fe5",
       "width": 512,
       "height": 512
+    },
+    {
+      "key": "russia_brem1m_recovery",
+      "name": "BREM-1M recovery",
+      "model": "res://assets/library/arsenal/russia_brem1m_recovery.glb",
+      "path": "game/assets/interface/unit_art/russia_brem1m_recovery.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: BREM-1M recovery (russia_brem1m_recovery), a Support weapon or vehicle on dry grass and packed earth, correct identifying turret, wheels, tracks or weapon tubes, entire subject visible from low front three-quarter angle. This is the Russian equipment from model russia_brem1m_recovery; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "04ce4f267f2c9e3688dc9ca09520c24efe1efb0f",
+      "width": 512,
+      "height": 512
     }
   ],
   "failed": []
