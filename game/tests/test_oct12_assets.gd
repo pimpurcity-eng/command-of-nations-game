@@ -45,13 +45,14 @@ func run():
 	var rail: RailwayMap = game.map.get_node("Railways")
 	check(not rail.links.is_empty(),"completed nearby stations create a railway")
 	for link in rail.links:
-		check(link.route.all(func(point):return game.units.navigation.on_land(point) and game.units.navigation.controller_at(point)=="russia"),"rail route stays on friendly land")
+		var owner: String = game.units.navigation.controller_at(game.buildings.city(link.a).point)  # every city starts with a station (owner 2026-10-13)
+		check(link.route.all(func(point):return game.units.navigation.on_land(point) and game.units.navigation.controller_at(point)==owner),"rail route stays on friendly land")
 	check(rail.get_child_count()>0,"supplied tracks are rendered in batches")
 	var saved: Dictionary = game.buildings.snapshot()
 	check(game.buildings.validate(saved),"new facility levels and stations save")
-	game.buildings.levels.kursk.infrastructure = 0
+	game.buildings.levels.kursk.train_station = 0
 	game.buildings.changed.emit()
-	check(rail.links.is_empty(),"removing station state removes its tracks")
+	check(not rail.links.any(func(l):return "kursk" in [l.a,l.b]),"removing station state removes its tracks")
 	game.buildings.restore(saved)
 	check(not rail.links.is_empty(),"save restoration restores railway")
 	print("RESULT checks=",checks," failures=",failures)

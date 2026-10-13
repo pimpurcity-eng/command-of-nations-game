@@ -17,7 +17,7 @@ func run() -> void:
 	for i in 5: await process_frame
 	game.clock.paused = true
 	game.match_rules.ai_enabled = false
-	check(game.units.units.size() == EquipmentIdentity.catalog.size()*3,"three units of each family")
+	check(game.units.units.size() == EquipmentIdentity.catalog.size() and game.units.units.all(func(u):return u.level == 1),"one level-1 unit of each family (owner 2026-10-13, Call of War start)")
 	check(ProductionGroups.TITLES == ["Economy","Aircraft","Ordnance","Tanks","Naval","Barracks"],"six requested research groups")
 	var schedules := {}
 	for spec in EquipmentIdentity.catalog:

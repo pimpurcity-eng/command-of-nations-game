@@ -8,6 +8,10 @@ extends Node3D
 ## in cities, and some scattered across some provinces".
 const DATA_PATH: = "res://data/resource_sites.json"
 const ICON_DISTANCE: = 65.0
+## Owner 2026-10-13: "I don't know what all them squares are … cities should only be starting
+## with a train station." Like Call of War, a resource province shows only its resource icon;
+## set true to draw the original installation models (assets/library/buildings_oct12) again.
+const SHOW_INSTALLATIONS: = false
 static var _data: Dictionary = {}
 var sites: Array = []  # {name, resource, point: Vector2, territory: Dictionary}
 var terrain: StrategicMap
@@ -122,7 +126,7 @@ func _build(site: Dictionary) -> void:
 	anchor.scale = Vector3.ONE * 1.6
 	add_child(anchor)
 	var original: String = {"fuel":"resource_oil","materials":"resource_metal","electronics":"resource_rare_earth"}.get(site.resource,"")
-	if not original.is_empty():
+	if SHOW_INSTALLATIONS and not original.is_empty():
 		var source: String = "res://assets/library/buildings_oct12/"+original+".glb"
 		var model: = UnitVisual.merged((load(source) as PackedScene).instantiate() as Node3D)
 		var bounds: = UnitVisual.model_bounds(model,0.0)
