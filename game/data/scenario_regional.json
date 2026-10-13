@@ -1,6 +1,6 @@
 {
   "id": "russia_ukraine_regional_v2",
-  "name": "Russia\u2013Ukraine regional sandbox",
+  "name": "Russia–Ukraine regional sandbox",
   "countries": [
     {
       "id": "ukraine",
@@ -668,9 +668,7 @@
     }
   ],
   "starting_tiers": [
-    1,
-    3,
-    5
+    1
   ],
-  "starting_force_note": "Three units per equipment family: early, middle and top tier. Applies to new campaigns only."
+  "starting_force_note": "Owner 2026-10-13 (Call of War style start): one level-1 unit of every equipment family, spread over the country's cities. Applies to new campaigns only."
 }

@@ -41,7 +41,7 @@
       "fuel": 30,
       "manpower": 25
     },
-    "description": "Each level above 1 increases this city\u2019s currency, manpower and main commodity income by 25%.",
+    "description": "Each level above 1 increases this city’s currency, manpower and main commodity income by 25%.",
     "starting_level": 0,
     "colour": "c7ab65",
     "model_tiers": [
@@ -128,7 +128,7 @@
       "fuel": 15,
       "manpower": 15
     },
-    "description": "Each level increases this city\u2019s funds income by 25%.",
+    "description": "Each level increases this city’s funds income by 25%.",
     "save_default": true,
     "capital_starting_level": 0,
     "retired": true
@@ -151,7 +151,7 @@
       "fuel": 15,
       "manpower": 15
     },
-    "description": "Each level increases this city\u2019s materials income by 25%.",
+    "description": "Each level increases this city’s materials income by 25%.",
     "save_default": true,
     "capital_starting_level": 0,
     "retired": true
@@ -174,7 +174,7 @@
       "fuel": 15,
       "manpower": 15
     },
-    "description": "Each level increases this city\u2019s electronics income by 25%.",
+    "description": "Each level increases this city’s electronics income by 25%.",
     "save_default": true,
     "capital_starting_level": 0,
     "retired": true
@@ -197,7 +197,7 @@
       "fuel": 15,
       "manpower": 15
     },
-    "description": "Each level increases this city\u2019s fuel income by 25%.",
+    "description": "Each level increases this city’s fuel income by 25%.",
     "save_default": true,
     "capital_starting_level": 0,
     "retired": true
@@ -220,7 +220,7 @@
       "fuel": 15,
       "manpower": 15
     },
-    "description": "Each level increases this city\u2019s manpower income by 25%.",
+    "description": "Each level increases this city’s manpower income by 25%.",
     "save_default": true,
     "model_tiers": [
       "res://assets/library/buildings_oct12/recruitment_center.glb",
@@ -398,7 +398,7 @@
       "manpower": 30
     },
     "description": "City train station. Connects to nearby friendly completed stations by rail and improves construction speed by 15% per level. Rural provinces build roads and logistics instead.",
-    "starting_level": 0,
+    "starting_level": 1,
     "save_default": true,
     "model_tiers": [
       "res://assets/library/buildings_oct12/train_station.glb",
@@ -414,7 +414,8 @@
       "res://assets/library/buildings_oct12/road_straight.glb",
       "res://assets/library/buildings_oct12/road_straight.glb"
     ],
-    "capital_starting_level": 1
+    "capital_starting_level": 1,
+    "starting_note": "Owner 2026-10-13 (Call of War start): every city starts with a train station and nothing else."
   },
   {
     "id": "capitol",

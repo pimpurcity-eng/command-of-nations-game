@@ -172,16 +172,48 @@ def interceptor():
     return normalize(fade_out(reverb(x + hiss, 1.2, 0.25, 5000), 0.5))
 
 
-def jet_flyby(seconds=3.2):
-    """Jet passing over: filtered roar with a doppler sweep, loud in the middle."""
+def flyover(seconds, speed=260.0, altitude=180.0, whine=1150.0, rumble=1.0, bright=1.0, centre=0.45):
+    """Physically modelled aircraft pass (owner: the old jet sounds were poor).
+    Distance r(t) from a listener under the flight path gives: loudness ~1/r, air absorption
+    (duller far away), the true Doppler shift of the turbine whine, and the ground-reflection
+    comb filter that makes the classic 'flanging' roar as a jet passes overhead."""
     t = t_axis(seconds)
-    center = seconds * 0.45
-    loud = 1 / (1 + ((t - center) / (seconds * 0.16)) ** 2)
-    base = noise(seconds)
-    # Doppler: the whine falls as the jet passes.
-    whine = np.sin(sweep(seconds, 1400, 700, "lin")) * 0.12
-    roar = filt(base, "band", (150, 2500)) + 0.6 * filt(base, "low", 160)
-    return roar * loud + whine * loud
+    c = 343.0
+    x_pos = (t - seconds * centre) * speed                  # metres along track, 0 = overhead
+    r = np.sqrt(x_pos ** 2 + altitude ** 2)
+    approach = -x_pos / r                                    # +1 coming, -1 going
+    doppler = c / (c - speed * approach)
+    loud = (altitude / r) ** 1.15
+    # Broadband jet roar: brown + pink-ish noise, brightness follows distance.
+    n = noise(seconds)
+    brown = np.cumsum(n)
+    brown = filt(brown - np.convolve(brown, np.ones(2205) / 2205, mode="same"), "high", 25)
+    brown /= np.max(np.abs(brown)) + 1e-9
+    near = filt(n, "band", (180, 6500 * bright)) * 0.8
+    far = filt(n, "band", (90, 1400 * bright))
+    closeness = np.clip(altitude / r, 0, 1) ** 1.5
+    roar = near * closeness + far * (1 - closeness) * 0.9 + brown * 0.9 * rumble
+    # Turbine whine with harmonics, Doppler shifted.
+    phase = 2 * np.pi * np.cumsum(whine * doppler) / SR
+    turbine = 0.10 * np.sin(phase) + 0.05 * np.sin(2 * phase + 0.4) + 0.025 * np.sin(3.01 * phase)
+    turbine = filt(turbine, "low", 5000 * bright) * closeness ** 0.5
+    body = roar + turbine
+    # Ground reflection: a delayed copy whose delay changes as the plane passes (flanging).
+    ear = 1.7
+    delay = 2 * altitude * ear / (c * r)                    # seconds, path difference
+    idx = np.arange(len(t)) - delay * SR
+    reflected = np.interp(idx, np.arange(len(t)), body, left=0.0)
+    body = body + 0.75 * reflected
+    # Low engine rumble felt near the pass.
+    thump = filt(n, "low", 120) * 1.4 * rumble * closeness
+    out = (body + thump) * loud
+    edge = np.clip(t / 0.25, 0, 1) * np.clip((seconds - t) / 0.4, 0, 1)
+    return out * edge
+
+
+def jet_flyby(seconds=3.2):
+    """Fast jet pass (fighters)."""
+    return flyover(seconds, speed=280.0, altitude=150.0, whine=1250.0, rumble=0.8, bright=1.0)
 
 
 def air_strike():
@@ -402,6 +434,84 @@ def battle_theme():
     return normalize(loopable(music, total, tail), -4)
 
 
+def strings(freq, seconds, bright=1800, swell=1.5):
+    """Section strings: many detuned saws with slow vibrato, soft attack (an ensemble, not a synth)."""
+    t = t_axis(seconds)
+    x = sum(signal.sawtooth(2 * np.pi * freq * d * t + 0.25 * np.sin(2 * np.pi * (5.0 + k * 0.3) * t + k))
+            for k, d in enumerate((1.0, 1.0035, 0.9965, 1.007, 0.993)))
+    x = filt(x, "low", bright) * 0.8 + filt(x, "band", (250, 900)) * 0.4
+    a = np.clip(t / swell, 0, 1) * np.clip((seconds - t) / 1.2, 0, 1)
+    return x * a / 5
+
+
+def timpani(f=55, accent=1.0, seconds=2.2):
+    x = np.sin(sweep(seconds, f * 1.25, f)) * env(seconds, 0.002, 1.4) * accent
+    x += 0.4 * np.sin(sweep(seconds, f * 2.5, f * 2)) * env(seconds, 0.002, 0.6) * accent
+    x += filt(noise(seconds), "band", (60, 500)) * env(seconds, 0.001, 0.08) * 0.6 * accent
+    return x
+
+
+def cymbal_swell(seconds=4.0):
+    t = t_axis(seconds)
+    return filt(noise(seconds), "high", 5000) * (t / seconds) ** 3 * 0.35
+
+
+def campaign_theme():
+    """In-game music (owner: the RAVNIR song is for the start screen only; make another one
+    for the game). Cinematic strategy theme, D minor, 84 bpm, ~2 min seamless loop:
+    A (calm map ambience) -> B (low string ostinato + timpani) -> C (full: horns, choir) -> back to A."""
+    bpm = 84
+    beat = 60 / bpm
+    bar = 4 * beat
+    sections = [("A", 12), ("B", 12), ("C", 16)]
+    bars = sum(n for _, n in sections)
+    total = bars * bar
+    tail = 3.0
+    length = total + tail
+    chords = [("D2", ["D3", "F3", "A3"]), ("Bb1", ["Bb2", "D3", "F3"]), ("G1", ["G2", "Bb2", "D3"]), ("A1", ["A2", "C#3", "E3"])]
+    layers = {k: [] for k in ("pad", "bass", "ostinato", "drums", "horn", "choir", "fx")}
+    b0 = 0
+    for name, n in sections:
+        for k in range(n):
+            pos = (b0 + k) * bar
+            root, triad = chords[(b0 + k) % 4]
+            # Strings pad holds each chord for a bar (always on, quiet in A).
+            level = {"A": 0.55, "B": 0.75, "C": 1.0}[name]
+            pad = mix(*[strings(note(v), bar + 0.8, 1500 if name == "A" else 2200) for v in triad])
+            layers["pad"].append(at(pad * level, pos, length))
+            layers["bass"].append(at(low_drone(note(root), bar + 0.5) * (0.6 if name == "A" else 0.9), pos, length))
+            if name in ("B", "C"):
+                # Driving eighth-note ostinato on the root, accented on 1 and the "and" of 2.
+                for e in range(8):
+                    acc = 1.0 if e in (0, 3) else 0.55
+                    o = filt(tone(note(root) * 2, beat * 0.42, "saw") + 0.4 * tone(note(root) * 4, beat * 0.42, "saw"), "low", 1100)
+                    layers["ostinato"].append(at(o * env(beat * 0.42, 0.004, beat * 0.4) * acc, pos + e * beat * 0.5, length))
+                layers["drums"].append(at(timpani(note(root) * 2 if note(root) < 50 else note(root), 1.0), pos, length))
+                if name == "C" or k % 2 == 1:
+                    layers["drums"].append(at(timpani(note(root) * 2 if note(root) < 50 else note(root), 0.6), pos + 2.5 * beat, length))
+                if name == "C":
+                    layers["drums"].append(at(frame_drum(0.8, 70, 0.5), pos + beat, length))
+                    layers["drums"].append(at(frame_drum(0.8, 70, 0.7), pos + 3 * beat, length))
+            if name == "A" and k % 4 == 0:
+                layers["fx"].append(at(timpani(46, 0.7, 3.0), pos, length))
+        if name == "C":
+            melody = [("D4", 3), ("F4", 1), ("A4", 4), ("G4", 2), ("F4", 2), ("E4", 4),
+                      ("D4", 3), ("E4", 1), ("F4", 2), ("G4", 2), ("A4", 6), ("-", 2),
+                      ("Bb4", 3), ("A4", 1), ("G4", 4), ("F4", 2), ("E4", 2), ("D4", 4),
+                      ("C#4", 4), ("E4", 4), ("D4", 8)]
+            layers["horn"].append(at(horn_line(melody, beat, sum(l for _, l in melody) * beat + 1), b0 * bar, length))
+            for k in range(0, n, 2):
+                layers["choir"].append(at(choir(note(["D3", "Bb2", "G2", "A2"][(k // 2) % 4]), 2 * bar + 1.0), (b0 + k) * bar, length))
+        # Cymbal swell into each new section.
+        layers["fx"].append(at(cymbal_swell(4 * beat), (b0 + n) * bar - 4 * beat, length))
+        b0 += n
+    m = {k: (mix(*v) if v else np.zeros(int(SR * length))) for k, v in layers.items()}
+    music = (m["pad"] * 0.55 + m["bass"] * 0.35 + m["ostinato"] * 0.32 + m["drums"] * 0.7
+             + m["horn"] * 0.45 + m["choir"] * 0.3 + m["fx"] * 0.6)
+    music = reverb(music, 2.6, 0.3, 4200)
+    return normalize(loopable(music, total, tail), -5)
+
+
 # ---- every weapon type (owner: "make sound for all weapons") ----------------------------------
 def gunshot(seconds=0.35, low=900, high=7000, thump=180, decay=0.12, crack=1.0):
     x = filt(noise(seconds), "band", (low, high)) * env(seconds, 0.0003, decay * 0.5) * crack
@@ -505,15 +615,16 @@ def jet_cannon():
 
 
 def bomber_strike():
-    """Heavy bomber drone overhead, then falling-bomb whistles (impacts play in game)."""
-    seconds = 5.0
+    """Heavy bomber high overhead (slow, deep, four engines), then falling-bomb whistles."""
+    seconds = 6.0
     t = t_axis(seconds)
-    engines = sum(signal.sawtooth(2 * np.pi * f * t) for f in (61, 62.3, 91.5))
-    engines = filt(engines, "low", 700) * 0.25 + filt(noise(seconds), "low", 300) * 0.5
-    loud = 1 / (1 + ((t - 2.0) / 1.4) ** 2)
-    whistles = mix(*[at(np.sin(sweep(1.5, 2300 - i * 120, 700, "lin")) * env(1.5, 0.2, 2.0, 0.5) * 0.1, 2.0 + i * 0.35, seconds)
+    pass_ = flyover(seconds, speed=190.0, altitude=420.0, whine=620.0, rumble=1.6, bright=0.55, centre=0.4)
+    # Four-engine beat: slightly detuned low harmonics give the throbbing drone.
+    engines = sum(np.sin(2 * np.pi * f * t) for f in (58.0, 58.7, 87.0, 88.1)) * 0.06
+    engines *= 1 / (1 + ((t - seconds * 0.4) / 1.8) ** 2)
+    whistles = mix(*[at(np.sin(sweep(1.5, 2300 - i * 120, 700, "lin")) * env(1.5, 0.2, 2.0, 0.5) * 0.08, 2.6 + i * 0.35, seconds)
                      for i in range(4)])
-    return normalize(fade_out(reverb(engines * loud + whistles, 1.6, 0.3, 3000), 0.8))
+    return normalize(fade_out(reverb(pass_ + engines + whistles, 1.8, 0.3, 3000), 0.8))
 
 
 def helicopter_rockets():
@@ -586,7 +697,7 @@ SFX = {
     "ship_missile": ship_missile, "torpedo_launch": torpedo_launch, "sonar_ping": sonar_ping,
     "depth_explosion": depth_explosion, "carrier_launch": carrier_launch,
 }
-MUSIC = {"menu_theme": menu_theme, "battle_theme": battle_theme}
+MUSIC = {"menu_theme": menu_theme, "battle_theme": campaign_theme}
 
 
 def main():

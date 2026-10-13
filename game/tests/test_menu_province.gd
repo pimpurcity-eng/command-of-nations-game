@@ -18,10 +18,10 @@ func run():
  while not game.boot_finished: await process_frame
  for i in 3:await process_frame
  game.mobile_start.hide();game.clock.paused=true;game.match_rules.ai_enabled=false
- check(game.units.units.size()==EquipmentIdentity.catalog.size()*3,"three starting units per equipment family")
+ check(game.units.units.size()==EquipmentIdentity.catalog.size(),"one level-1 starting unit per equipment family (owner 2026-10-13, Call of War start)")
  for family in EquipmentIdentity.catalog:
   var units=game.units.units.filter(func(u):return u.equipment_id==family.id)
-  check(units.size()==3 and units.map(func(u):return int(u.level))==[1,3,5],family.id+" early/middle/top starting tiers")
+  check(units.size()==1 and int(units[0].level)==1,family.id+" starts with one level-1 unit")
   check(not CowUI.equipment_picture(family.id).resource_path.contains("_flag") and not UnitVisual.preview_texture(family.id).resource_path.contains("_flag"),family.id+" equipment image is not a nation flag")
  check(game.units.units.filter(func(u):return u.visual_kind=="naval").all(func(u):return game.units.sea_navigation.on_sea(Vector2(u.node.position.x,u.node.position.z))),"starting fleet is on water")
  check(game.research.level("tanks_russia")==1,"starting top-tier units do not unlock future production research")

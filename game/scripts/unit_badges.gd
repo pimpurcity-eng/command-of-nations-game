@@ -60,7 +60,8 @@ func _process(_delta: float) -> void :
 		var health: ProgressBar = button.get_node("Health")
 		var level: Label = button.get_node("Level")
 		icon.visible = icon_mode
-		level.visible = not icon_mode
+		# Owner 2026-10-13: no "L1/L2" text on the map, just a small health bar.
+		level.visible = false
 		icon.kind = unit.visual_kind
 		icon.faction = unit.faction_color
 		icon.selected = selected
@@ -71,8 +72,8 @@ func _process(_delta: float) -> void :
 		var fill: StyleBoxFlat = health.get_theme_stylebox("fill")
 		fill.bg_color = Color("d65448") if hp < 30 else Color("dfba58") if hp < 60 else Color("5fb04a")
 		var tag: StyleBoxFlat = button.get_meta("style")
-		tag.bg_color = Color(0, 0, 0, 0) if icon_mode else (Color(0.6, 0.47, 0.19, 0.9) if selected else (Color(0.32, 0.08, 0.06, 0.85) if hostile else Color(0.035, 0.06, 0.07, 0.82)))
-		button.custom_minimum_size = Vector2(34, 38) if icon_mode else Vector2(44, 24)
+		tag.bg_color = Color(0, 0, 0, 0) if icon_mode else (Color(0.85, 0.66, 0.27, 0.95) if selected else (Color(0.55, 0.12, 0.08, 0.9) if hostile else Color(0, 0, 0, 0.55)))
+		button.custom_minimum_size = Vector2(34, 38) if icon_mode else Vector2(40, 9)
 		button.size = button.custom_minimum_size
 		button.tooltip_text = unit.country.capitalize() + " · " + armies.stacks.summary(unit)
 		var anchor: Vector3 = unit.node.global_position + Vector3.UP * 0.15
@@ -80,7 +81,7 @@ func _process(_delta: float) -> void :
 		var point: = transform * camera.unproject_position(anchor)
 		var footprint: = button.custom_minimum_size
 		# Symbols sit on the unit; health tags sit just below its model.
-		var offsets: Array = [Vector2(-footprint.x * 0.5, -footprint.y * 0.5)] if icon_mode else [Vector2(-footprint.x * 0.5, 8), Vector2(14, -footprint.y * 0.5), Vector2(-footprint.x - 14, -footprint.y * 0.5)]
+		var offsets: Array = [Vector2(-footprint.x * 0.5, -footprint.y * 0.5)] if icon_mode else [Vector2(-footprint.x * 0.5, 10), Vector2(-footprint.x * 0.5, 22), Vector2(-footprint.x * 0.5, -18)]
 		for extra in [Vector2(20, 0), Vector2(-20, 0), Vector2(0, 22), Vector2(0, -22)]: if icon_mode: offsets.append(offsets[0] + extra)
 		for offset in offsets:
 			var bounds: = Rect2(point + offset, footprint)
@@ -135,9 +136,9 @@ func _badge(unit: Dictionary) -> Button:
 	health.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	health.show_percentage = false
 	health.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
-	health.offset_left = 3
-	health.offset_right = -3
-	health.offset_top = -5
+	health.offset_left = 2
+	health.offset_right = -2
+	health.offset_top = -7
 	health.offset_bottom = -2
 	var back: = StyleBoxFlat.new()
 	back.bg_color = Color(0, 0, 0, 0.6)

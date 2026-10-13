@@ -20,8 +20,8 @@ func run():
 		for level in [1,3,5]:
 			var tier: = EquipmentIdentity.research_tier(spec.id,level)
 			originals[tier.model]=true
-			var unit = game.units.units.filter(func(u):return u.equipment_id==spec.id and u.level==level)[0]
-			check(game.units.sea_navigation.on_sea(Vector2(unit.node.position.x,unit.node.position.z)),spec.id+" tier starts at sea")
+			var starting = game.units.units.filter(func(u):return u.equipment_id==spec.id and u.level==level)
+			if level == 1: check(not starting.is_empty() and game.units.sea_navigation.on_sea(Vector2(starting[0].node.position.x,starting[0].node.position.z)),spec.id+" level-1 ship starts at sea")
 		check(originals.size()==3,spec.id+" has three distinct original model eras")
 	var city: Dictionary = game.buildings.city("moscow")
 	game.buildings.levels.moscow.airbase = 5

@@ -28,7 +28,7 @@ func run() -> void:
 	check(not game.research_panel._families(0).is_empty(),"economy research has usable projects")
 	for city in game.cities.cities:
 		for spec in game.buildings.catalog:
-			var expected := 1 if spec.id == "train_station" and game.buildings.is_capital(city) else 0
+			var expected := 1 if spec.id == "train_station" else 0  # owner 2026-10-13: every city starts with a train station only
 			check(game.buildings.level(city.id,spec.id) == expected,"starting buildings: " + city.name + " / " + spec.id)
 	game.production_panel.open("Moscow")
 	check(game.production_panel.city_names.all(func(name):return game.production.cities.any(func(c):return c.name == name and game.production.controlled(c,"russia"))),"production lists controlled cities only")
@@ -64,7 +64,7 @@ func run() -> void:
 	game.rig.distance = UnitSystem.CLOSE_ZOOM - 3.0
 	game.rig._snap(1.0)
 	for i in 8: await process_frame
-	check(game.badges.buttons.values().any(func(b):return b.visible and b.get_node("Level").visible and b.get_node("Level").text.begins_with("L") and b.has_node("Health")),"unit level and health visible on map when zoomed in")
+	check(game.badges.buttons.values().any(func(b):return b.visible and not b.get_node("Icon").visible and b.get_node("Health").visible and not b.get_node("Level").visible),"small health bar (no level text) on units when zoomed in")
 	game.rig.distance = UnitSystem.FAR_ZOOM + 10.0
 	game.rig._snap(1.0)
 	for i in 8: await process_frame

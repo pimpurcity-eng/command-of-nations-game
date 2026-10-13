@@ -52,7 +52,7 @@ func run() -> void:
 	game.match_rules.ai_enabled = false
 	var units: UnitSystem = game.units
 	var helicopters: Array = units.units.filter(func(u): return u.equipment_id == "helicopters_russia")
-	check(helicopters.size() == 3 and helicopters.map(func(h):return int(h.level)) == [1,3,5], "live campaign starts with early, middle and top-tier Russian helicopters")
+	check(helicopters.size() == 1 and int(helicopters[0].level) == 1, "live campaign starts with a level-1 Russian helicopter")
 	if not helicopters.is_empty():
 		var heli: Dictionary = helicopters[0]
 		var start: = Vector2(heli.node.position.x, heli.node.position.z)
