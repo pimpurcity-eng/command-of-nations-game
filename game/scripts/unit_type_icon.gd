@@ -26,9 +26,11 @@ static func category(visual_kind: String) -> String:
 		"infantry": return "infantry"
 		"artillery": return "artillery"
 		"missile_launcher": return "missile"
-		"fighter", "bomber", "helicopter", "drone", "radar_aircraft": return "air"
+		"fighter", "bomber", "helicopter", "radar_aircraft": return "air"
 		"naval", "carrier", "submarine": return "ship"
 		"air_defense": return "air_defense"
+		"drone": return "drone"
+		"medic": return "medic"
 	return "support"
 
 func _init() -> void:
@@ -72,6 +74,15 @@ func _draw() -> void:
 			draw_colored_polygon(PackedVector2Array([c + Vector2(-12, 1) * u, c + Vector2(12, 1) * u, c + Vector2(8, 7) * u, c + Vector2(-9, 7) * u]), ink)
 			draw_rect(Rect2(c + Vector2(-4, -5) * u, Vector2(8, 6) * u), ink)
 			draw_line(c + Vector2(1, -5) * u, c + Vector2(1, -10) * u, ink, 1.6 * u)
+		"drone":
+			draw_line(c + Vector2(-9, -9) * u, c + Vector2(9, 9) * u, ink, 2.2 * u)
+			draw_line(c + Vector2(9, -9) * u, c + Vector2(-9, 9) * u, ink, 2.2 * u)
+			for corner in [Vector2(-9, -9), Vector2(9, -9), Vector2(-9, 9), Vector2(9, 9)]:
+				draw_arc(c + corner * u, 3.4 * u, 0, TAU, 12, ink, 1.6 * u)
+			draw_rect(Rect2(c + Vector2(-3, -3) * u, Vector2(6, 6) * u), ink)
+		"medic":
+			draw_rect(Rect2(c + Vector2(-3, -10) * u, Vector2(6, 20) * u), ink)
+			draw_rect(Rect2(c + Vector2(-10, -3) * u, Vector2(20, 6) * u), ink)
 		"air_defense":
 			draw_arc(c + Vector2(0, 2) * u, 8.0 * u, PI, TAU, 14, ink, 2.2 * u)          # radar dish
 			draw_line(c + Vector2(0, 2) * u, c + Vector2(6, -7) * u, ink, 2.0 * u)

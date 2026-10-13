@@ -1,7 +1,7 @@
 class_name ProvinceConstruction
 extends RefCounted
 ## Rural construction shares city costs/queues, but never joins the city production list.
-const ALLOWED: = ["industry", "bunker", "infrastructure", "airbase", "train_station", "naval_base"]
+const ALLOWED: = ["industry", "bunker", "infrastructure", "airbase", "train_station", "naval_base", "hospital"]
 const NAMES: = {"industry":"Local industry", "bunker":"Fortifications", "infrastructure":"Roads & logistics", "airbase":"Airfield", "train_station":"Train station", "naval_base":"Naval base"}
 var _owner: WeakRef
 var buildings: BuildingSystem:

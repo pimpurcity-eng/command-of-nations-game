@@ -167,7 +167,7 @@ func _populate_equipment() -> void :
 	equipment_list.clear()
 	for spec in production.catalog:
 		if spec.country != _country(): continue
-		if category_picker.selected != 0 and ProductionGroups.index(spec) != category_picker.selected-1: continue
+		if not ProductionGroups.offered(spec) or (category_picker.selected != 0 and ProductionGroups.index(spec) != category_picker.selected-1): continue
 		if spec.visual_kind == "naval" and (city_picker.selected < 0 or not production.cities.filter(func(c):return c.name == city_names[city_picker.selected])[0].has("naval_spawn")): continue
 		filtered.append(spec)
 		equipment_list.add_item(spec.name + " · " + ProductionGroups.title(spec), CowUI.equipment_picture(spec.id))

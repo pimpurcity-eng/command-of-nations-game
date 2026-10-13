@@ -56,7 +56,8 @@ func _process(_delta: float) -> void :
 		hp /= maxf(1.0, group.size())
 		var token: UnitToken = button.get_node("Token")
 		token.mode = "token" if icon_mode else "tag"
-		token.kind = unit.visual_kind
+		var role: String = EquipmentIdentity.spec(unit.equipment_id).get("role", "")
+		token.kind = role if role in ["drone", "medic"] else unit.visual_kind
 		token.count = group.size()
 		token.health = hp
 		token.own = unit.country == GameSession.player_country

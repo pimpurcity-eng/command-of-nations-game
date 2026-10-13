@@ -18,17 +18,19 @@ func run():
  while not game.boot_finished: await process_frame
  for i in 3:await process_frame
  game.mobile_start.hide();game.clock.paused=true;game.match_rules.ai_enabled=false
- check(game.units.units.size()==EquipmentIdentity.catalog.size(),"one level-1 starting unit per equipment family (owner 2026-10-13, Call of War start)")
+ var starters: Array = EquipmentIdentity.catalog.filter(func(f):return f.get("starter",false))
+ check(game.units.units.size()==starters.size(),"a small starting army: one level-1 unit of each starter weapon (owner 2026-10-13, Call of War start)")
  for family in EquipmentIdentity.catalog:
   var units=game.units.units.filter(func(u):return u.equipment_id==family.id)
-  check(units.size()==1 and int(units[0].level)==1,family.id+" starts with one level-1 unit")
+  if family.get("starter",false): check(units.size()==1 and int(units[0].level)==1,family.id+" starts with one level-1 unit")
+  else: check(units.is_empty(),family.id+" is not in the starting army")
   check(not CowUI.equipment_picture(family.id).resource_path.contains("_flag") and not UnitVisual.preview_texture(family.id).resource_path.contains("_flag"),family.id+" equipment image is not a nation flag")
  check(game.units.units.filter(func(u):return u.visual_kind=="naval").all(func(u):return game.units.sea_navigation.on_sea(Vector2(u.node.position.x,u.node.position.z))),"starting fleet is on water")
  check(game.research.level("tanks_russia")==1,"starting top-tier units do not unlock future production research")
  game.research_panel.open();game.research_panel.show_category(2)
  for i in 4:await process_frame
  var research=game.research_panel
- check(ResearchPanel.CATEGORIES.size()==7,"seven research groups (Missiles added by owner 2026-10-13)")
+ check(ResearchPanel.CATEGORIES.size()==9,"research groups incl. Missiles, Drones and Support (owner 2026-10-13)")
  var families=research._families(2)
  check(families.any(func(f):return f.category=="Air defense") and families.any(func(f):return f.category=="Artillery"),"artillery and air defence together in Support Factory")
  var card=research.cells[0].card
@@ -46,7 +48,7 @@ func run():
  var start=list.get_global_transform_with_canvas()*Vector2(200,280)
  drag(start,start-Vector2(0,200));await process_frame
  check(list.get_v_scroll_bar().value>50,"production equipment list responds to finger swipe")
- check(game.production_panel.category_picker.item_count==8,"production uses the seven groups (with Missiles) plus All")
+ check(game.production_panel.category_picker.item_count==10,"production uses the nine groups plus All")
  game.production_panel.category_picker.select(5);game.production_panel._populate_equipment()
  check(game.production_panel.filtered.is_empty(),"no inland naval production options")
  game.production_panel.hide()

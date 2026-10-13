@@ -918,12 +918,14 @@ func restore_campaign_forces() -> void:
 
 func populate_campaign_forces(staged: bool = false) -> void:
 	units.restore([])
-	var count_total: int = maxi(1, EquipmentIdentity.catalog.size() * session.scenario.get("starting_tiers", [1, 3, 5]).size())
+	var count_total: int = maxi(1, EquipmentIdentity.catalog.filter(func(f: Dictionary): return f.get("starter", false)).size() * session.scenario.get("starting_tiers", [1, 3, 5]).size())
 	var spawned: int = 0
 	var counts: Dictionary = {}
 	var occupied_sea: Array[Vector2] = []
 	var occupied_air: Array[Vector2] = []
 	for family in EquipmentIdentity.catalog:
+		# Owner 2026-10-13 (Call of War start): a small army of the weakest starter weapons only.
+		if not family.get("starter", false) or family.get("retired", false): continue
 		var kind: String = family.visual_kind
 		var bases: Array = production.cities.filter(func(city: Dictionary):
 			return city.country.to_lower() == family.country and (kind != "naval" or city.has("naval_spawn")))
@@ -962,6 +964,7 @@ func populate_weapons_test(show_progress: bool = false) -> void:
 	var occupied_sea: Array[Vector2] = []
 	var occupied_air: Array[Vector2] = []
 	for family in EquipmentIdentity.catalog:
+		if family.get("retired", false): continue
 		var tiers: Array = family.get("research_tiers", [])
 		# Archived campaigns predate tier models; retain their one-army-per-family setup.
 		var tiered: bool = not tiers.is_empty()

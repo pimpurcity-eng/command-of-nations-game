@@ -125,6 +125,8 @@ func enqueue(equipment_id: String, city_name: String) -> String:
 	if MatchClient.active != null: return MatchClient.active.send("produce", {"equipment": equipment_id, "city": city_name})
 	var spec: = equipment(equipment_id)
 	if spec.is_empty(): return "Unknown equipment"
+	var locked: = research_lock(spec)
+	if not locked.is_empty(): return locked
 	var city: Dictionary = {}
 	for entry in cities:
 		if entry.name == city_name: city = entry
@@ -142,6 +144,11 @@ func enqueue(equipment_id: String, city_name: String) -> String:
 	jobs.append({"id": next_id, "equipment": equipment_id, "city": city_name, "progress": 0.0})
 	next_id += 1
 	changed.emit()
+	return ""
+## Weapons must be researched (level 1+) before they can be built; retired ones never.
+func research_lock(spec: Dictionary) -> String:
+	if spec.get("retired", false): return "No longer in service"
+	if research != null and not str(spec.get("id", "")).begins_with("economy_") and research.level(spec.id) < 1: return "Research " + str(spec.get("research_branch", spec.name)) + " first"
 	return ""
 func cancel(id: int) -> void :
 	for i in jobs.size():
@@ -256,6 +263,8 @@ func restore(state: Dictionary) -> void :
 func schedule(equipment_id: String, city_name: String) -> String:
 	var spec: = equipment(equipment_id)
 	if spec.is_empty(): return "Choose equipment"
+	var locked: = research_lock(spec)
+	if not locked.is_empty(): return locked
 	var place: Dictionary = {}
 	for entry in cities:
 		if entry.name == city_name: place = entry

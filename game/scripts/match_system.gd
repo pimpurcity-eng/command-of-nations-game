@@ -182,6 +182,7 @@ func advance(seconds: float) -> void :
 	for done in strategic.advance(seconds):
 		report.emit("%s completed a %s" % [str(done[0]).capitalize(), StrategicWeapons.WEAPONS[done[1]].name.to_lower()])
 	_update_entrenchment(seconds)
+	SupportRoles.heal(armies, production.buildings if production != null else null, seconds)
 	# Victory is checked in peace too (economic victory, time limit).
 	var result: = victory.evaluate(self, seconds)
 	if not result.is_empty():
@@ -293,7 +294,9 @@ func _update_entrenchment(seconds: float) -> void:
 			if terrain.province_hubs[title].distance_to(point) <= CAPTURE_RADIUS:
 				at_centre = true
 				break
-		unit.dug_in = unit.get("dug_in", 0.0) + seconds if at_centre else 0.0
+		# Combat engineers dig the army in anywhere, twice as fast.
+		var engineers: float = SupportRoles.entrench_factor(armies.stacks.members(unit))
+		unit.dug_in = unit.get("dug_in", 0.0) + seconds * engineers if at_centre or engineers > 1.0 else 0.0
 		unit.entrenched = unit.dug_in >= ENTRENCH_TIME
 ## Retreat (Conflict of Nations style): the army pulls back to the nearest province centre its
 ## country holds, at the cost of RETREAT_DAMAGE of its health, and stops firing on the way.

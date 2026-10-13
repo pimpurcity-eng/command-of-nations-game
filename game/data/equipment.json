@@ -2,7 +2,7 @@
   {
     "id": "patriot_russia",
     "country": "russia",
-    "name": "Long-range air defense",
+    "name": "Long-range air defence",
     "category": "Air defense",
     "visual_kind": "air_defense",
     "asset_roster_id": "patriot",
@@ -19,63 +19,64 @@
     },
     "aa_range": 3.5,
     "aa_damage": 10.0,
-    "research_branch": "Long range",
+    "research_branch": "Long-range air defence",
     "research_tiers": [
       {
         "name": "Buk-M3",
+        "improvement": "",
+        "model": "res://assets/library/airdefense/russia_buk_m3.glb",
         "range": 3.5,
-        "damage": 10,
-        "improvement": "Baseline coverage",
-        "model": "res://assets/library/airdefense/russia_buk_m3.glb"
+        "damage": 10
       },
       {
-        "name": "Buk-M3 \u00b7 upgrade",
-        "range": 3.8,
-        "damage": 11.5,
+        "name": "Buk-M3 · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "model": "res://assets/library/airdefense/russia_buk_m3.glb"
+        "model": "res://assets/library/airdefense/russia_buk_m3.glb",
+        "range": 4.0,
+        "damage": 12
       },
       {
         "name": "S-400 Triumf",
-        "range": 4.2,
-        "damage": 13,
-        "improvement": "Wider coverage",
-        "model": "res://assets/library/airdefense/russia_s400.glb"
+        "improvement": "",
+        "model": "res://assets/library/airdefense/russia_s400.glb",
+        "range": 4.4,
+        "damage": 13.5
       },
       {
-        "name": "S-400 Triumf \u00b7 upgrade",
-        "range": 4.5,
-        "damage": 14.5,
+        "name": "S-400 Triumf · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "model": "res://assets/library/airdefense/russia_s400.glb"
+        "model": "res://assets/library/airdefense/russia_s400.glb",
+        "range": 4.7,
+        "damage": 15
       },
       {
         "name": "S-500 Prometey",
-        "range": 5.0,
-        "damage": 16,
-        "improvement": "Advanced interception",
-        "model": "res://assets/library/airdefense/russia_s500_prometey.glb"
+        "improvement": "",
+        "model": "res://assets/library/airdefense/russia_s500_prometey.glb",
+        "range": 5.2,
+        "damage": 16.5
       }
     ],
     "model_status": "Original supplied air-defense model",
     "research_days": [
-      1,
-      4,
-      8,
-      12,
-      18
+      6,
+      10,
+      14,
+      18,
+      22
     ],
     "upkeep": {
       "funds": 25.0,
       "fuel": 2.0,
       "manpower": 0.3
     },
-    "production_building": "factory"
+    "production_building": "factory",
+    "starter": false
   },
   {
     "id": "skyguard_russia",
     "country": "russia",
-    "name": "Short-range air defense",
+    "name": "Short-range air defence",
     "category": "Air defense",
     "visual_kind": "air_defense",
     "asset_roster_id": "skyguard",
@@ -92,63 +93,64 @@
     },
     "aa_range": 2.4,
     "aa_damage": 7.0,
-    "research_branch": "Short range",
+    "research_branch": "Short-range air defence",
     "research_tiers": [
       {
         "name": "Strela-10",
-        "range": 2.4,
-        "damage": 7,
-        "improvement": "Baseline coverage",
-        "model": "res://assets/library/airdefense/russia_strela10.glb"
+        "improvement": "",
+        "model": "res://assets/library/airdefense/russia_strela10.glb",
+        "range": 1.8,
+        "damage": 5
       },
       {
-        "name": "Strela-10 \u00b7 upgrade",
-        "range": 2.5,
-        "damage": 8,
+        "name": "Strela-10 · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "model": "res://assets/library/airdefense/russia_strela10.glb"
+        "model": "res://assets/library/airdefense/russia_strela10.glb",
+        "range": 2.2,
+        "damage": 7
       },
       {
         "name": "Tor-M2",
-        "range": 2.7,
-        "damage": 9,
-        "improvement": "Wider coverage",
-        "model": "res://assets/library/airdefense/russia_tor_m2.glb"
+        "improvement": "",
+        "model": "res://assets/library/airdefense/russia_tor_m2.glb",
+        "range": 2.5,
+        "damage": 8.5
       },
       {
-        "name": "Tor-M2 \u00b7 upgrade",
-        "range": 2.8,
-        "damage": 10,
+        "name": "Tor-M2 · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "model": "res://assets/library/airdefense/russia_tor_m2.glb"
+        "model": "res://assets/library/airdefense/russia_tor_m2.glb",
+        "range": 2.8,
+        "damage": 10
       },
       {
-        "name": "Tor-M2 \u00b7 interception",
-        "range": 3.0,
-        "damage": 11,
-        "improvement": "Advanced interception",
-        "model": "res://assets/library/airdefense/russia_tor_m2.glb"
+        "name": "Pantsir-S1",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_pantsir_s1.glb",
+        "range": 3.1,
+        "damage": 11.5
       }
     ],
     "model_status": "Original supplied air-defense model",
     "research_days": [
       1,
-      3,
-      6,
-      9,
-      14
+      4,
+      7,
+      10,
+      13
     ],
     "upkeep": {
       "funds": 20.0,
       "fuel": 2.0,
       "manpower": 0.3
     },
-    "production_building": "factory"
+    "production_building": "factory",
+    "starter": true
   },
   {
     "id": "patriot_ukraine",
     "country": "ukraine",
-    "name": "European long range air defense",
+    "name": "Long-range air defence",
     "category": "Air defense",
     "visual_kind": "air_defense",
     "asset_roster_id": "patriot",
@@ -165,7 +167,7 @@
     },
     "aa_range": 3.5,
     "aa_damage": 10.0,
-    "research_branch": "Long range",
+    "research_branch": "Long-range air defence",
     "research_tiers": [
       {
         "name": "IRIS-T SLM",
@@ -175,53 +177,54 @@
         "model": "res://assets/library/airdefense/nato_iris_t_slm.glb"
       },
       {
-        "name": "IRIS-T SLM \u00b7 upgrade",
-        "range": 3.8,
-        "damage": 11.5,
+        "name": "IRIS-T SLM · upgrade",
+        "range": 4.0,
+        "damage": 12,
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/airdefense/nato_iris_t_slm.glb"
       },
       {
         "name": "SAMP/T",
-        "range": 4.2,
-        "damage": 13,
+        "range": 4.4,
+        "damage": 13.5,
         "improvement": "Wider coverage",
         "model": "res://assets/library/airdefense/nato_samp_t.glb"
       },
       {
-        "name": "SAMP/T \u00b7 upgrade",
-        "range": 4.5,
-        "damage": 14.5,
+        "name": "SAMP/T · upgrade",
+        "range": 4.7,
+        "damage": 15,
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/airdefense/nato_samp_t.glb"
       },
       {
         "name": "ASTER 30",
-        "range": 5.0,
-        "damage": 16,
+        "range": 5.2,
+        "damage": 16.5,
         "improvement": "Advanced interception",
         "model": "res://assets/library/airdefense/nato_aster30.glb"
       }
     ],
     "model_status": "Original supplied air-defense model",
     "research_days": [
-      1,
-      4,
-      8,
-      12,
-      18
+      6,
+      10,
+      14,
+      18,
+      22
     ],
     "upkeep": {
       "funds": 25.0,
       "fuel": 2.0,
       "manpower": 0.3
     },
-    "production_building": "factory"
+    "production_building": "factory",
+    "starter": false
   },
   {
     "id": "skyguard_ukraine",
     "country": "ukraine",
-    "name": "European short range air defense",
+    "name": "Short-range air defence",
     "category": "Air defense",
     "visual_kind": "air_defense",
     "asset_roster_id": "skyguard",
@@ -238,40 +241,40 @@
     },
     "aa_range": 2.4,
     "aa_damage": 7.0,
-    "research_branch": "Short range",
+    "research_branch": "Short-range air defence",
     "research_tiers": [
       {
         "name": "Roland",
-        "range": 2.4,
-        "damage": 7,
+        "range": 1.8,
+        "damage": 5,
         "improvement": "Baseline coverage",
         "model": "res://assets/library/airdefense/nato_roland.glb"
       },
       {
-        "name": "Roland \u00b7 upgrade",
-        "range": 2.5,
-        "damage": 8,
+        "name": "Roland · upgrade",
+        "range": 2.2,
+        "damage": 7,
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/airdefense/nato_roland.glb"
       },
       {
         "name": "NASAMS",
-        "range": 2.7,
-        "damage": 9,
+        "range": 2.5,
+        "damage": 8.5,
         "improvement": "Wider coverage",
         "model": "res://assets/library/airdefense/nato_nasams.glb"
       },
       {
-        "name": "NASAMS \u00b7 upgrade",
+        "name": "NASAMS · upgrade",
         "range": 2.8,
         "damage": 10,
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/airdefense/nato_nasams.glb"
       },
       {
-        "name": "NASAMS \u00b7 interception",
-        "range": 3.0,
-        "damage": 11,
+        "name": "NASAMS · interception",
+        "range": 3.1,
+        "damage": 11.5,
         "improvement": "Advanced interception",
         "model": "res://assets/library/airdefense/nato_nasams.glb"
       }
@@ -279,17 +282,18 @@
     "model_status": "Original supplied air-defense model",
     "research_days": [
       1,
-      3,
-      6,
-      9,
-      14
+      4,
+      7,
+      10,
+      13
     ],
     "upkeep": {
       "funds": 20.0,
       "fuel": 2.0,
       "manpower": 0.3
     },
-    "production_building": "factory"
+    "production_building": "factory",
+    "starter": true
   },
   {
     "id": "tanks_russia",
@@ -297,7 +301,7 @@
     "name": "Main battle tanks",
     "category": "Armor",
     "visual_kind": "armor",
-    "research_branch": "Tanks",
+    "research_branch": "Main battle tank",
     "seconds": 45,
     "cost": {
       "funds": 280,
@@ -309,27 +313,27 @@
     "research_tiers": [
       {
         "name": "T-62",
-        "improvement": "Baseline armour",
+        "improvement": "",
         "model": "res://assets/library/arsenal/russia_t62.glb"
       },
       {
-        "name": "T-62 \u00b7 upgrade",
+        "name": "T-62 · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/russia_t62.glb"
       },
       {
         "name": "T-72B3",
-        "improvement": "Modern fire control",
+        "improvement": "",
         "model": "res://assets/library/arsenal/russia_t72b3.glb"
       },
       {
-        "name": "T-72B3 \u00b7 upgrade",
+        "name": "T-72B3 · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/russia_t72b3.glb"
       },
       {
         "name": "T-90A",
-        "improvement": "Best protection",
+        "improvement": "",
         "model": "res://assets/library/arsenal/russia_t90a.glb"
       }
     ],
@@ -339,17 +343,18 @@
     "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
     "research_days": [
       1,
-      6,
-      10,
-      14,
-      20
+      5,
+      9,
+      13,
+      17
     ],
     "upkeep": {
       "funds": 28.0,
       "fuel": 3.2,
       "manpower": 0.3
     },
-    "production_building": "tank_plant"
+    "production_building": "tank_plant",
+    "starter": true
   },
   {
     "id": "apcs_russia",
@@ -357,7 +362,7 @@
     "name": "Armoured personnel carriers",
     "category": "Mechanized",
     "visual_kind": "ifv",
-    "research_branch": "APCs",
+    "research_branch": "Armoured personnel carrier",
     "seconds": 28,
     "cost": {
       "funds": 160,
@@ -369,27 +374,27 @@
     "research_tiers": [
       {
         "name": "BTR-60PB",
-        "improvement": "Baseline carrier",
+        "improvement": "",
         "model": "res://assets/library/arsenal/russia_btr60pb.glb"
       },
       {
-        "name": "BTR-60PB \u00b7 upgrade",
+        "name": "BTR-60PB · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/russia_btr60pb.glb"
       },
       {
         "name": "BTR-80",
-        "improvement": "Diesel and armour",
+        "improvement": "",
         "model": "res://assets/library/arsenal/russia_btr80.glb"
       },
       {
-        "name": "BTR-80 \u00b7 upgrade",
+        "name": "BTR-80 · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/russia_btr80.glb"
       },
       {
         "name": "BTR-90",
-        "improvement": "Heavy firepower",
+        "improvement": "",
         "model": "res://assets/library/arsenal/russia_btr90.glb"
       }
     ],
@@ -399,17 +404,18 @@
     "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
     "research_days": [
       1,
-      5,
-      9,
-      13,
-      18
+      4,
+      7,
+      10,
+      13
     ],
     "upkeep": {
       "funds": 16.0,
       "fuel": 2.0,
       "manpower": 0.4
     },
-    "production_building": "barracks"
+    "production_building": "barracks",
+    "starter": true
   },
   {
     "id": "bombers_russia",
@@ -418,7 +424,7 @@
     "category": "Bombers",
     "visual_kind": "fighter",
     "role": "bomber",
-    "research_branch": "Bombers",
+    "research_branch": "Strategic bomber",
     "seconds": 80,
     "cost": {
       "funds": 420,
@@ -437,47 +443,45 @@
     "research_tiers": [
       {
         "name": "Tu-22M3",
-        "improvement": "Supersonic strike",
+        "improvement": "",
         "model": "res://assets/library/arsenal/russia_tu22m3.glb"
       },
       {
-        "name": "Tu-22M3 \u00b7 upgrade",
+        "name": "Tu-22M3 · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/russia_tu22m3.glb"
       },
       {
         "name": "Tu-95MS",
-        "improvement": "Long range",
-        "model": "res://assets/library/arsenal/russia_tu95ms.glb",
-        "projectile_model": "res://assets/library/arsenal/russia_kh101.glb"
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_tu95ms.glb"
       },
       {
-        "name": "Tu-95MS \u00b7 upgrade",
+        "name": "Tu-95MS · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "model": "res://assets/library/arsenal/russia_tu95ms.glb",
-        "projectile_model": "res://assets/library/arsenal/russia_kh101.glb"
+        "model": "res://assets/library/arsenal/russia_tu95ms.glb"
       },
       {
         "name": "Tu-160",
-        "improvement": "Heavy supersonic bomber",
-        "model": "res://assets/library/arsenal/russia_tu160.glb",
-        "projectile_model": "res://assets/library/arsenal/russia_kh101.glb"
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_tu160.glb"
       }
     ],
     "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
     "research_days": [
-      1,
-      5,
-      10,
-      15,
-      22
+      13,
+      16,
+      19,
+      22,
+      25
     ],
     "upkeep": {
       "funds": 42.0,
       "fuel": 9.6,
       "manpower": 0.3
     },
-    "production_building": "airbase"
+    "production_building": "airbase",
+    "starter": false
   },
   {
     "id": "tanks_ukraine",
@@ -485,7 +489,7 @@
     "name": "Main battle tanks",
     "category": "Armor",
     "visual_kind": "armor",
-    "research_branch": "Tanks",
+    "research_branch": "Main battle tank",
     "seconds": 45,
     "cost": {
       "funds": 280,
@@ -497,28 +501,28 @@
     "research_tiers": [
       {
         "name": "Leopard 1",
-        "improvement": "Baseline armour",
+        "improvement": "",
         "model": "res://assets/library/arsenal/euro_leopard1.glb"
       },
       {
-        "name": "Leopard 1 \u00b7 upgrade",
+        "name": "Leopard 1 · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_leopard1.glb"
+      },
+      {
+        "name": "Leopard 2A6",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_leopard2a6.glb"
+      },
+      {
+        "name": "Leopard 2A6 · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_leopard2a6.glb"
       },
       {
         "name": "Challenger 2",
-        "improvement": "Heavy protection",
+        "improvement": "",
         "model": "res://assets/library/arsenal/euro_challenger2.glb"
-      },
-      {
-        "name": "Challenger 2 \u00b7 upgrade",
-        "improvement": "Improved targeting, reliability and combat effectiveness",
-        "model": "res://assets/library/arsenal/euro_challenger2.glb"
-      },
-      {
-        "name": "Leclerc",
-        "improvement": "Autoloader",
-        "model": "res://assets/library/arsenal/euro_leclerc.glb"
       }
     ],
     "building_requirements": {
@@ -527,17 +531,18 @@
     "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
     "research_days": [
       1,
-      4,
-      8,
-      12,
-      18
+      5,
+      9,
+      13,
+      17
     ],
     "upkeep": {
       "funds": 28.0,
       "fuel": 3.2,
       "manpower": 0.3
     },
-    "production_building": "tank_plant"
+    "production_building": "tank_plant",
+    "starter": true
   },
   {
     "id": "apcs_ukraine",
@@ -545,7 +550,7 @@
     "name": "Armoured personnel carriers",
     "category": "Mechanized",
     "visual_kind": "ifv",
-    "research_branch": "APCs",
+    "research_branch": "Armoured personnel carrier",
     "seconds": 28,
     "cost": {
       "funds": 160,
@@ -557,28 +562,27 @@
     "research_tiers": [
       {
         "name": "VAB",
-        "improvement": "Supplied equipment",
-        "model": "res://assets/library/arsenal/euro_vab.glb",
-        "preview": "res://assets/library/arsenal/euro_vab.png"
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_vab.glb"
       },
       {
-        "name": "VAB \u00b7 upgrade",
+        "name": "VAB · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_vab.glb"
       },
       {
-        "name": "Piranha V",
-        "improvement": "Modular armour",
-        "model": "res://assets/library/arsenal/euro_piranha_v.glb"
+        "name": "Patria AMV",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_patria_amv.glb"
       },
       {
-        "name": "Piranha V \u00b7 upgrade",
+        "name": "Patria AMV · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "model": "res://assets/library/arsenal/euro_piranha_v.glb"
+        "model": "res://assets/library/arsenal/euro_patria_amv.glb"
       },
       {
         "name": "Boxer",
-        "improvement": "Heavy wheeled carrier",
+        "improvement": "",
         "model": "res://assets/library/arsenal/euro_boxer.glb"
       }
     ],
@@ -589,25 +593,26 @@
     "research_days": [
       1,
       4,
-      8,
-      12,
-      17
+      7,
+      10,
+      13
     ],
     "upkeep": {
       "funds": 16.0,
       "fuel": 2.0,
       "manpower": 0.4
     },
-    "production_building": "barracks"
+    "production_building": "barracks",
+    "starter": true
   },
   {
     "id": "bombers_ukraine",
     "country": "ukraine",
-    "name": "Bombers",
+    "name": "Strategic bombers",
     "category": "Bombers",
     "visual_kind": "fighter",
     "role": "bomber",
-    "research_branch": "Bombers",
+    "research_branch": "Strategic bomber",
     "seconds": 80,
     "cost": {
       "funds": 420,
@@ -630,7 +635,7 @@
         "model": "res://assets/library/arsenal/euro_mirage_iv.glb"
       },
       {
-        "name": "Mirage IV \u00b7 upgrade",
+        "name": "Mirage IV · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_mirage_iv.glb"
       },
@@ -640,7 +645,7 @@
         "model": "res://assets/library/arsenal/euro_vulcan.glb"
       },
       {
-        "name": "Vulcan \u00b7 upgrade",
+        "name": "Vulcan · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_vulcan.glb"
       },
@@ -652,18 +657,19 @@
     ],
     "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
     "research_days": [
-      1,
-      6,
-      11,
+      13,
       16,
-      23
+      19,
+      22,
+      25
     ],
     "upkeep": {
       "funds": 42.0,
       "fuel": 9.6,
       "manpower": 0.3
     },
-    "production_building": "airbase"
+    "production_building": "airbase",
+    "starter": false
   },
   {
     "id": "strike_ukraine",
@@ -671,7 +677,7 @@
     "name": "Strike fighters",
     "category": "Fighters",
     "visual_kind": "fighter",
-    "research_branch": "Strike",
+    "research_branch": "Strike fighter",
     "seconds": 60,
     "cost": {
       "funds": 300,
@@ -695,7 +701,7 @@
         "projectile_model": "res://assets/library/arsenal/euro_taurus_kepd350.glb"
       },
       {
-        "name": "Tornado IDS \u00b7 upgrade",
+        "name": "Tornado IDS · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_tornado_ids.glb",
         "projectile_model": "res://assets/library/arsenal/euro_taurus_kepd350.glb"
@@ -707,7 +713,7 @@
         "projectile_model": "res://assets/library/arsenal/euro_storm_shadow.glb"
       },
       {
-        "name": "Rafale \u00b7 upgrade",
+        "name": "Rafale · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_rafale.glb",
         "projectile_model": "res://assets/library/arsenal/euro_storm_shadow.glb"
@@ -720,27 +726,28 @@
     ],
     "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
     "research_days": [
-      1,
-      6,
+      7,
       10,
-      14,
-      20
+      13,
+      16,
+      19
     ],
     "upkeep": {
       "funds": 30.0,
       "fuel": 6.4,
       "manpower": 0.2
     },
-    "production_building": "airbase"
+    "production_building": "airbase",
+    "starter": false
   },
   {
     "id": "artillery_russia",
     "country": "russia",
-    "name": "Artillery",
+    "name": "Self-propelled artillery",
     "category": "Artillery",
     "visual_kind": "artillery",
     "asset_roster_id": "artillery_russia",
-    "research_branch": "Artillery",
+    "research_branch": "Self-propelled artillery",
     "seconds": 70,
     "cost": {
       "funds": 330,
@@ -753,99 +760,38 @@
       "factory": 1
     },
     "research_days": [
-      1,
-      6,
-      9,
-      13,
-      18
-    ],
-    "model_status": "Original supplied model (Weapons folder 2026-10-10)",
-    "research_tiers": [
-      {
-        "name": "2S1 Gvozdika",
-        "model": "res://assets/library/arsenal/russia_2s1_gvozdika.glb",
-        "improvement": "Baseline"
-      },
-      {
-        "name": "2S1 Gvozdika \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/russia_2s1_gvozdika.glb",
-        "improvement": "Improved targeting, reliability and combat effectiveness"
-      },
-      {
-        "name": "2S5 Giatsint",
-        "model": "res://assets/library/arsenal/russia_2s5_giatsint.glb",
-        "improvement": "+24% damage"
-      },
-      {
-        "name": "2S5 Giatsint \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/russia_2s5_giatsint.glb",
-        "improvement": "Improved targeting, reliability and combat effectiveness"
-      },
-      {
-        "name": "2S35 Koalitsiya-SV",
-        "model": "res://assets/library/arsenal/russia_2s35_koalitsiya.glb",
-        "improvement": "+48% damage"
-      }
-    ],
-    "upkeep": {
-      "funds": 33.0,
-      "fuel": 4.0,
-      "manpower": 0.4
-    },
-    "production_building": "factory"
-  },
-  {
-    "id": "artillery_ukraine",
-    "country": "ukraine",
-    "name": "Artillery",
-    "category": "Artillery",
-    "visual_kind": "artillery",
-    "asset_roster_id": "artillery_ukraine",
-    "research_branch": "Artillery",
-    "seconds": 70,
-    "cost": {
-      "funds": 330,
-      "materials": 100,
-      "electronics": 65,
-      "fuel": 50,
-      "manpower": 20
-    },
-    "building_requirements": {
-      "factory": 1
-    },
-    "research_days": [
-      1,
       4,
       7,
-      11,
+      10,
+      13,
       16
     ],
     "model_status": "Original supplied model (Weapons folder 2026-10-10)",
     "research_tiers": [
       {
-        "name": "FH70",
-        "model": "res://assets/library/arsenal/euro_fh70.glb",
-        "improvement": "Baseline"
+        "name": "2S1 Gvozdika",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_2s1_gvozdika.glb"
       },
       {
-        "name": "FH70 \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/euro_fh70.glb",
-        "improvement": "Improved targeting, reliability and combat effectiveness"
+        "name": "2S1 Gvozdika · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_2s1_gvozdika.glb"
       },
       {
-        "name": "CAESAR",
-        "model": "res://assets/library/arsenal/euro_caesar.glb",
-        "improvement": "+24% damage"
+        "name": "2S19 Msta-S",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_2s19_msta.glb"
       },
       {
-        "name": "CAESAR \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/euro_caesar.glb",
-        "improvement": "Improved targeting, reliability and combat effectiveness"
+        "name": "2S19 Msta-S · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_2s19_msta.glb"
       },
       {
-        "name": "Archer",
-        "model": "res://assets/library/arsenal/euro_archer.glb",
-        "improvement": "+48% damage"
+        "name": "2S35 Koalitsiya-SV",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_2s35_koalitsiya.glb"
       }
     ],
     "upkeep": {
@@ -853,7 +799,70 @@
       "fuel": 4.0,
       "manpower": 0.4
     },
-    "production_building": "factory"
+    "production_building": "factory",
+    "starter": false
+  },
+  {
+    "id": "artillery_ukraine",
+    "country": "ukraine",
+    "name": "Self-propelled artillery",
+    "category": "Artillery",
+    "visual_kind": "artillery",
+    "asset_roster_id": "artillery_ukraine",
+    "research_branch": "Self-propelled artillery",
+    "seconds": 70,
+    "cost": {
+      "funds": 330,
+      "materials": 100,
+      "electronics": 65,
+      "fuel": 50,
+      "manpower": 20
+    },
+    "building_requirements": {
+      "factory": 1
+    },
+    "research_days": [
+      4,
+      7,
+      10,
+      13,
+      16
+    ],
+    "model_status": "Original supplied model (Weapons folder 2026-10-10)",
+    "research_tiers": [
+      {
+        "name": "2S1 Gvozdika (PL)",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_gvozdika_pl.glb"
+      },
+      {
+        "name": "2S1 Gvozdika (PL) · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_gvozdika_pl.glb"
+      },
+      {
+        "name": "CAESAR",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_caesar.glb"
+      },
+      {
+        "name": "CAESAR · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_caesar.glb"
+      },
+      {
+        "name": "PzH 2000",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_pzh2000.glb"
+      }
+    ],
+    "upkeep": {
+      "funds": 33.0,
+      "fuel": 4.0,
+      "manpower": 0.4
+    },
+    "production_building": "factory",
+    "starter": false
   },
   {
     "id": "rockets_russia",
@@ -862,7 +871,7 @@
     "category": "Missiles",
     "visual_kind": "missile_launcher",
     "asset_roster_id": "rockets_russia",
-    "research_branch": "Rockets",
+    "research_branch": "Rocket artillery",
     "seconds": 70,
     "cost": {
       "funds": 330,
@@ -875,38 +884,38 @@
       "missile_factory": 1
     },
     "research_days": [
-      1,
-      5,
+      2,
+      6,
       10,
-      16,
-      23
+      14,
+      18
     ],
     "model_status": "Original supplied model (Weapons folder 2026-10-10)",
     "research_tiers": [
       {
         "name": "BM-21 Grad",
-        "model": "res://assets/library/arsenal/russia_bm21_grad.glb",
-        "improvement": "Baseline"
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_bm21_grad.glb"
       },
       {
-        "name": "BM-21 Grad \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/russia_bm21_grad.glb",
-        "improvement": "Improved targeting, reliability and combat effectiveness"
+        "name": "BM-21 Grad · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_bm21_grad.glb"
+      },
+      {
+        "name": "BM-27 Uragan",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_bm27_uragan.glb"
+      },
+      {
+        "name": "BM-27 Uragan · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_bm27_uragan.glb"
       },
       {
         "name": "BM-30 Smerch",
-        "model": "res://assets/library/arsenal/russia_bm30_smerch.glb",
-        "improvement": "+24% damage"
-      },
-      {
-        "name": "BM-30 Smerch \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/russia_bm30_smerch.glb",
-        "improvement": "Improved targeting, reliability and combat effectiveness"
-      },
-      {
-        "name": "TOS-1A",
-        "model": "res://assets/library/arsenal/russia_tos1a.glb",
-        "improvement": "+48% damage"
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_bm30_smerch.glb"
       }
     ],
     "strike_range": 3.5,
@@ -917,7 +926,8 @@
       "fuel": 4.0,
       "manpower": 0.4
     },
-    "production_building": "factory"
+    "production_building": "missile_factory",
+    "starter": false
   },
   {
     "id": "rockets_ukraine",
@@ -926,7 +936,7 @@
     "category": "Missiles",
     "visual_kind": "missile_launcher",
     "asset_roster_id": "rockets_ukraine",
-    "research_branch": "Rockets",
+    "research_branch": "Rocket artillery",
     "seconds": 70,
     "cost": {
       "funds": 330,
@@ -939,11 +949,11 @@
       "missile_factory": 1
     },
     "research_days": [
-      1,
+      2,
       6,
-      11,
-      17,
-      24
+      10,
+      14,
+      18
     ],
     "model_status": "Original supplied model (Weapons folder 2026-10-10)",
     "research_tiers": [
@@ -953,18 +963,18 @@
         "improvement": "Baseline"
       },
       {
-        "name": "LAR-160 \u00b7 upgrade",
+        "name": "LAR-160 · upgrade",
         "model": "res://assets/library/arsenal/euro_lar160.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness"
       },
       {
-        "name": "RM-70 Vampire \u00b7 modernization",
+        "name": "RM-70 Vampire · modernization",
         "model": "res://assets/library/arsenal/euro_rm70_vampire.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_rm70_vampire.png"
       },
       {
-        "name": "RM-70 Vampire \u00b7 modernization \u00b7 upgrade",
+        "name": "RM-70 Vampire · modernization · upgrade",
         "model": "res://assets/library/arsenal/euro_rm70_vampire.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness"
       },
@@ -982,16 +992,17 @@
       "fuel": 4.0,
       "manpower": 0.4
     },
-    "production_building": "factory"
+    "production_building": "missile_factory",
+    "starter": false
   },
   {
     "id": "helicopters_russia",
     "country": "russia",
-    "name": "Helicopters",
+    "name": "Attack helicopters",
     "category": "Helicopters",
     "visual_kind": "fighter",
     "asset_roster_id": "helicopters_russia",
-    "research_branch": "Helicopters",
+    "research_branch": "Attack helicopter",
     "seconds": 70,
     "cost": {
       "funds": 330,
@@ -1004,38 +1015,38 @@
       "airbase": 1
     },
     "research_days": [
-      1,
-      4,
+      2,
+      5,
       8,
-      12,
-      17
+      11,
+      14
     ],
     "model_status": "Original supplied model (Weapons folder 2026-10-10)",
     "research_tiers": [
       {
-        "name": "Mi-8 / Mi-17",
-        "model": "res://assets/library/arsenal/russia_mi8_mi17.glb",
-        "improvement": "Baseline"
+        "name": "Mi-24 / Mi-35",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_mi24_mi35.glb"
       },
       {
-        "name": "Mi-8 / Mi-17 \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/russia_mi8_mi17.glb",
-        "improvement": "Improved targeting, reliability and combat effectiveness"
+        "name": "Mi-24 / Mi-35 · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_mi24_mi35.glb"
       },
       {
-        "name": "Ka-50",
-        "model": "res://assets/library/arsenal/russia_ka50.glb",
-        "improvement": "+24% damage"
+        "name": "Mi-28N",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_mi28n.glb"
       },
       {
-        "name": "Ka-50 \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/russia_ka50.glb",
-        "improvement": "Improved targeting, reliability and combat effectiveness"
+        "name": "Mi-28N · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_mi28n.glb"
       },
       {
         "name": "Ka-52",
-        "model": "res://assets/library/arsenal/russia_ka52.glb",
-        "improvement": "+48% damage"
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_ka52.glb"
       }
     ],
     "role": "helicopter",
@@ -1048,16 +1059,17 @@
       "fuel": 4.0,
       "manpower": 0.4
     },
-    "production_building": "airbase"
+    "production_building": "airbase",
+    "starter": false
   },
   {
     "id": "helicopters_ukraine",
     "country": "ukraine",
-    "name": "Helicopters",
+    "name": "Attack helicopters",
     "category": "Helicopters",
     "visual_kind": "fighter",
     "asset_roster_id": "helicopters_ukraine",
-    "research_branch": "Helicopters",
+    "research_branch": "Attack helicopter",
     "seconds": 70,
     "cost": {
       "funds": 330,
@@ -1070,38 +1082,38 @@
       "airbase": 1
     },
     "research_days": [
-      1,
+      2,
       5,
-      9,
-      13,
-      18
+      8,
+      11,
+      14
     ],
     "model_status": "Original supplied model (Weapons folder 2026-10-10)",
     "research_tiers": [
       {
-        "name": "Lynx",
-        "model": "res://assets/library/arsenal/euro_lynx.glb",
-        "improvement": "Baseline"
+        "name": "Tiger HAP",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_tiger.glb"
       },
       {
-        "name": "Lynx \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/euro_lynx.glb",
-        "improvement": "Improved targeting, reliability and combat effectiveness"
+        "name": "Tiger HAP · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_tiger.glb"
       },
       {
-        "name": "NH90",
-        "model": "res://assets/library/arsenal/euro_nh90.glb",
-        "improvement": "+24% damage"
+        "name": "Tiger HAP · Hellfire",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_tiger.glb"
       },
       {
-        "name": "NH90 \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/euro_nh90.glb",
-        "improvement": "Improved targeting, reliability and combat effectiveness"
+        "name": "Tiger HAP · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_tiger.glb"
       },
       {
-        "name": "NH90 Block 2",
-        "model": "res://assets/library/arsenal/euro_nh90_block2.glb",
-        "improvement": "+48% damage"
+        "name": "Tiger HAP · Tiger Mk III",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_tiger.glb"
       }
     ],
     "role": "helicopter",
@@ -1114,12 +1126,13 @@
       "fuel": 4.0,
       "manpower": 0.4
     },
-    "production_building": "airbase"
+    "production_building": "airbase",
+    "starter": false
   },
   {
     "id": "missiles_russia",
     "country": "russia",
-    "name": "Mobile missiles",
+    "name": "Tactical ballistic missiles",
     "category": "Missiles",
     "visual_kind": "missile_launcher",
     "role": "missile_launcher",
@@ -1136,43 +1149,38 @@
       "missile_factory": 1
     },
     "research_days": [
-      1,
-      7,
-      12,
-      18,
-      25
+      8,
+      11,
+      14,
+      17,
+      20
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
       {
         "name": "Iskander-M",
-        "improvement": "Baseline equipment",
-        "model": "res://assets/library/arsenal/russia_iskander_m.glb",
-        "preview": "res://assets/library/arsenal/russia_iskander_m_ready.png"
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_iskander_m.glb"
       },
       {
-        "name": "Iskander-M \u00b7 upgrade",
+        "name": "Iskander-M · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "model": "res://assets/library/arsenal/russia_iskander_m.glb",
-        "preview": "res://assets/library/arsenal/russia_topol_m_ready.png"
+        "model": "res://assets/library/arsenal/russia_iskander_m.glb"
       },
       {
-        "name": "Yars RS-24",
-        "improvement": "Modernization level 3; combat effectiveness +24%",
-        "model": "res://assets/library/arsenal/russia_yars.glb",
-        "preview": "res://assets/library/arsenal/russia_yars_ready.png"
-      },
-      {
-        "name": "Yars RS-24 \u00b7 upgrade",
+        "name": "Iskander-M · decoys",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "model": "res://assets/library/arsenal/russia_yars.glb",
-        "preview": "res://assets/library/arsenal/russia_yars_ready.png"
+        "model": "res://assets/library/arsenal/russia_iskander_m.glb"
       },
       {
-        "name": "Yars \u00b7 advanced",
-        "improvement": "Modernization level 5; combat effectiveness +48%",
-        "model": "res://assets/library/arsenal/russia_yars.glb",
-        "preview": "res://assets/library/arsenal/russia_yars_ready.png"
+        "name": "Iskander-M · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_iskander_m.glb"
+      },
+      {
+        "name": "Iskander-M · manoeuvring warhead",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_iskander_m.glb"
       }
     ],
     "strike_range": 6.0,
@@ -1183,12 +1191,14 @@
       "fuel": 4.8,
       "manpower": 0.5
     },
-    "production_building": "factory"
+    "production_building": "missile_factory",
+    "research_branch": "Tactical ballistic missile",
+    "starter": false
   },
   {
     "id": "missiles_ukraine",
     "country": "ukraine",
-    "name": "European mobile missiles",
+    "name": "Tactical ballistic missiles",
     "category": "Missiles",
     "visual_kind": "missile_launcher",
     "role": "missile_launcher",
@@ -1205,11 +1215,11 @@
       "missile_factory": 1
     },
     "research_days": [
-      1,
-      5,
-      10,
-      16,
-      23
+      8,
+      11,
+      14,
+      17,
+      20
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -1220,10 +1230,10 @@
         "preview": "res://assets/library/arsenal/euro_pluton_ready.png"
       },
       {
-        "name": "Pluton \u00b7 upgrade",
+        "name": "Pluton · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_pluton.glb",
-        "preview": "res://assets/library/arsenal/euro_hades_ready.png"
+        "preview": "res://assets/library/arsenal/euro_pluton_ready.png"
       },
       {
         "name": "Sentinel SR",
@@ -1232,16 +1242,16 @@
         "preview": "res://assets/library/arsenal/euro_sentinel_sr_ready.png"
       },
       {
-        "name": "Sentinel SR \u00b7 upgrade",
+        "name": "Sentinel SR · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_sentinel_sr.glb",
-        "preview": "res://assets/library/arsenal/euro_fulgur_ebm_ready.png"
+        "preview": "res://assets/library/arsenal/euro_sentinel_sr_ready.png"
       },
       {
-        "name": "Fulgur \u00b7 guidance",
-        "improvement": "Modernization level 5; combat effectiveness +48%",
-        "model": "res://assets/library/arsenal/euro_fulgur_ebm.glb",
-        "preview": "res://assets/library/arsenal/euro_fulgur_ebm_ready.png"
+        "name": "Sentinel SR · advanced",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_sentinel_sr.glb",
+        "preview": "res://assets/library/arsenal/euro_sentinel_sr_ready.png"
       }
     ],
     "strike_range": 6.0,
@@ -1252,12 +1262,14 @@
       "fuel": 4.8,
       "manpower": 0.5
     },
-    "production_building": "factory"
+    "production_building": "missile_factory",
+    "research_branch": "Tactical ballistic missile",
+    "starter": false
   },
   {
     "id": "silos_russia",
     "country": "russia",
-    "name": "Fixed missile silos",
+    "name": "Missile silos",
     "category": "Missiles",
     "visual_kind": "missile_launcher",
     "role": "silo",
@@ -1274,11 +1286,11 @@
       "missile_factory": 1
     },
     "research_days": [
-      1,
-      5,
-      10,
-      16,
-      23
+      26,
+      29,
+      32,
+      35,
+      38
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -1289,7 +1301,7 @@
         "preview": "res://assets/library/arsenal/russia_avangard_silo_ready.png"
       },
       {
-        "name": "Avangard silo \u00b7 upgrade",
+        "name": "Avangard silo · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/russia_avangard_silo.glb",
         "preview": "res://assets/library/arsenal/russia_avangard_silo_ready.png"
@@ -1301,13 +1313,13 @@
         "preview": "res://assets/library/arsenal/russia_sarmat_silo_ready.png"
       },
       {
-        "name": "Sarmat silo \u00b7 upgrade",
+        "name": "Sarmat silo · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/russia_sarmat_silo.glb",
         "preview": "res://assets/library/arsenal/russia_sarmat_silo_ready.png"
       },
       {
-        "name": "Sarmat \u00b7 advanced",
+        "name": "Sarmat · advanced",
         "improvement": "Modernization level 5; combat effectiveness +48%",
         "model": "res://assets/library/arsenal/russia_sarmat_silo.glb",
         "preview": "res://assets/library/arsenal/russia_sarmat_silo_ready.png"
@@ -1322,12 +1334,14 @@
       "fuel": 4.8,
       "manpower": 0.5
     },
-    "production_building": "factory"
+    "production_building": "missile_factory",
+    "research_branch": "Missile silo",
+    "starter": false
   },
   {
     "id": "silos_ukraine",
     "country": "ukraine",
-    "name": "European fixed missile silos",
+    "name": "Missile silos",
     "category": "Missiles",
     "visual_kind": "missile_launcher",
     "role": "silo",
@@ -1344,11 +1358,11 @@
       "missile_factory": 1
     },
     "research_days": [
-      1,
-      6,
-      11,
-      17,
-      24
+      26,
+      29,
+      32,
+      35,
+      38
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -1359,25 +1373,25 @@
         "preview": "res://assets/library/arsenal/euro_s3_silo_ready.png"
       },
       {
-        "name": "S3 silo \u00b7 upgrade",
+        "name": "S3 silo · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_s3_silo.glb",
         "preview": "res://assets/library/arsenal/euro_s3_silo_ready.png"
       },
       {
-        "name": "S3 \u00b7 hardening",
+        "name": "S3 · hardening",
         "improvement": "Modernization level 3; combat effectiveness +24%",
         "model": "res://assets/library/arsenal/euro_s3_silo.glb",
         "preview": "res://assets/library/arsenal/euro_s3_silo_ready.png"
       },
       {
-        "name": "S3 \u00b7 hardening \u00b7 upgrade",
+        "name": "S3 · hardening · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_s3_silo.glb",
         "preview": "res://assets/library/arsenal/euro_s3_silo_ready.png"
       },
       {
-        "name": "S3 \u00b7 advanced",
+        "name": "S3 · advanced",
         "improvement": "Modernization level 5; combat effectiveness +48%",
         "model": "res://assets/library/arsenal/euro_s3_silo.glb",
         "preview": "res://assets/library/arsenal/euro_s3_silo_ready.png"
@@ -1392,12 +1406,14 @@
       "fuel": 4.8,
       "manpower": 0.5
     },
-    "production_building": "factory"
+    "production_building": "missile_factory",
+    "research_branch": "Missile silo",
+    "starter": false
   },
   {
     "id": "drones_russia",
     "country": "russia",
-    "name": "Reconnaissance and strike drones",
+    "name": "Reconnaissance drones",
     "category": "Drones",
     "visual_kind": "fighter",
     "role": "drone",
@@ -1411,73 +1427,60 @@
       "manpower": 25
     },
     "building_requirements": {
-      "airbase": 1
+      "drone_factory": 1
     },
     "research_days": [
       1,
       4,
       7,
       10,
-      14
+      13
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
       {
         "name": "Orlan-10",
-        "improvement": "Reconnaissance; no attack damage",
-        "model": "res://assets/library/arsenal/russia_orlan10_drone_only.glb",
-        "preview": "res://assets/library/arsenal/russia_orlan10_drone_only.png",
-        "ground_damage": 0,
-        "air_damage": 0
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_orlan10_drone_only.glb"
       },
       {
-        "name": "Orlan-10 \u00b7 upgrade",
+        "name": "Orlan-10 · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "model": "res://assets/library/arsenal/russia_orlan10_drone_only.glb",
-        "preview": "res://assets/library/arsenal/russia_forpost.png",
-        "ground_damage": 2,
-        "air_damage": 0
+        "model": "res://assets/library/arsenal/russia_orlan10_drone_only.glb"
       },
       {
-        "name": "Inokhodets / Orion",
-        "improvement": "Modernization level 3; combat effectiveness +24%",
-        "model": "res://assets/library/arsenal/russia_inokhodets.glb",
-        "preview": "res://assets/library/arsenal/russia_inokhodets.png",
-        "ground_damage": 4,
-        "air_damage": 0
-      },
-      {
-        "name": "Inokhodets / Orion \u00b7 upgrade",
+        "name": "Orlan-10 · thermal camera",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "model": "res://assets/library/arsenal/russia_inokhodets.glb",
-        "preview": "res://assets/library/arsenal/russia_sirius.png",
-        "ground_damage": 6,
-        "air_damage": 0
+        "model": "res://assets/library/arsenal/russia_orlan10_drone_only.glb"
       },
       {
-        "name": "Sirius \u00b7 advanced",
-        "improvement": "Modernization level 5; combat effectiveness +48%",
-        "model": "res://assets/library/arsenal/russia_sirius.glb",
-        "preview": "res://assets/library/arsenal/russia_sirius.png",
-        "ground_damage": 8,
-        "air_damage": 0
+        "name": "Orlan-10 · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_orlan10_drone_only.glb"
+      },
+      {
+        "name": "Orlan-10 · relay",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_orlan10_drone_only.glb"
       }
     ],
     "air_range": 12.0,
     "air_speed": 2.2,
     "air_damage": 0.0,
-    "ground_damage": 4.0,
+    "ground_damage": 1.0,
     "upkeep": {
       "funds": 40.0,
       "fuel": 4.8,
       "manpower": 0.5
     },
-    "production_building": "airbase"
+    "production_building": "drone_factory",
+    "research_branch": "Reconnaissance drone",
+    "starter": true
   },
   {
     "id": "drones_ukraine",
     "country": "ukraine",
-    "name": "European drones",
+    "name": "Reconnaissance drones",
     "category": "Drones",
     "visual_kind": "fighter",
     "role": "drone",
@@ -1491,73 +1494,65 @@
       "manpower": 25
     },
     "building_requirements": {
-      "airbase": 1
+      "drone_factory": 1
     },
     "research_days": [
       1,
-      5,
-      8,
-      11,
-      15
+      4,
+      7,
+      10,
+      13
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
       {
         "name": "Camcopter S-100",
-        "improvement": "Reconnaissance; no attack damage",
+        "improvement": "",
         "model": "res://assets/library/arsenal/euro_camcopter_s100.glb",
-        "preview": "res://assets/library/arsenal/euro_camcopter_s100.png",
-        "ground_damage": 0,
-        "air_damage": 0
+        "ground_damage": 1
       },
       {
-        "name": "Camcopter S-100 \u00b7 upgrade",
+        "name": "Camcopter S-100 · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_camcopter_s100.glb",
-        "preview": "res://assets/library/arsenal/euro_watchkeeper.png",
-        "ground_damage": 2,
-        "air_damage": 0
+        "ground_damage": 1
       },
       {
-        "name": "Hermes 450",
-        "improvement": "Modernization level 3; combat effectiveness +24%",
-        "model": "res://assets/library/arsenal/euro_hermes450.glb",
-        "preview": "res://assets/library/arsenal/euro_hermes450.png",
-        "ground_damage": 4,
-        "air_damage": 0
+        "name": "Watchkeeper",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_watchkeeper.glb",
+        "ground_damage": 1
       },
       {
-        "name": "Hermes 450 \u00b7 upgrade",
+        "name": "Watchkeeper · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "model": "res://assets/library/arsenal/euro_hermes450.glb",
-        "preview": "res://assets/library/arsenal/euro_eurodrone.png",
-        "ground_damage": 6,
-        "air_damage": 0
+        "model": "res://assets/library/arsenal/euro_watchkeeper.glb",
+        "ground_damage": 1
       },
       {
-        "name": "nEUROn",
-        "improvement": "Modernization level 5; combat effectiveness +48%",
-        "model": "res://assets/library/arsenal/euro_neuron.glb",
-        "preview": "res://assets/library/arsenal/euro_neuron.png",
-        "ground_damage": 8,
-        "air_damage": 0
+        "name": "Watchkeeper · relay",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_watchkeeper.glb",
+        "ground_damage": 1
       }
     ],
     "air_range": 12.0,
     "air_speed": 2.2,
     "air_damage": 0.0,
-    "ground_damage": 4.0,
+    "ground_damage": 1.0,
     "upkeep": {
       "funds": 40.0,
       "fuel": 4.8,
       "manpower": 0.5
     },
-    "production_building": "airbase"
+    "production_building": "drone_factory",
+    "research_branch": "Reconnaissance drone",
+    "starter": true
   },
   {
     "id": "loitering_russia",
     "country": "russia",
-    "name": "Loitering strike drones",
+    "name": "Loitering munitions",
     "category": "Drones",
     "visual_kind": "fighter",
     "role": "drone",
@@ -1571,14 +1566,14 @@
       "manpower": 25
     },
     "building_requirements": {
-      "airbase": 1
+      "drone_factory": 1
     },
     "research_days": [
-      1,
-      5,
-      8,
-      11,
-      15
+      4,
+      7,
+      10,
+      13,
+      16
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -1589,25 +1584,25 @@
         "preview": "res://assets/library/arsenal/russia_lancet3_drone_only.png"
       },
       {
-        "name": "Lancet-3 \u00b7 upgrade",
+        "name": "Lancet-3 · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/russia_lancet3_drone_only.glb",
         "preview": "res://assets/library/arsenal/russia_lancet3_drone_only.png"
       },
       {
-        "name": "Lancet \u00b7 optics",
+        "name": "Lancet · optics",
         "improvement": "Modernization level 3; combat effectiveness +24%",
         "model": "res://assets/library/arsenal/russia_lancet3_drone_only.glb",
         "preview": "res://assets/library/arsenal/russia_lancet3_drone_only.png"
       },
       {
-        "name": "Lancet \u00b7 optics \u00b7 upgrade",
+        "name": "Lancet · optics · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/russia_lancet3_drone_only.glb",
         "preview": "res://assets/library/arsenal/russia_lancet3_drone_only.png"
       },
       {
-        "name": "Lancet \u00b7 advanced",
+        "name": "Lancet · advanced",
         "improvement": "Modernization level 5; combat effectiveness +48%",
         "model": "res://assets/library/arsenal/russia_lancet3_drone_only.glb",
         "preview": "res://assets/library/arsenal/russia_lancet3_drone_only.png"
@@ -1623,12 +1618,14 @@
       "fuel": 4.8,
       "manpower": 0.5
     },
-    "production_building": "airbase"
+    "production_building": "drone_factory",
+    "research_branch": "Loitering munition",
+    "starter": false
   },
   {
     "id": "fighters_russia",
     "country": "russia",
-    "name": "Fighters",
+    "name": "Air superiority fighters",
     "category": "Fighters",
     "visual_kind": "fighter",
     "role": "fighter",
@@ -1645,43 +1642,37 @@
       "airbase": 1
     },
     "research_days": [
-      1,
       4,
       8,
       12,
-      18
+      16,
+      20
     ],
     "research_tiers": [
       {
         "name": "MiG-29SMT",
-        "model": "res://assets/library/arsenal/russia_mig29smt.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_mig29smt.png"
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_mig29smt.glb"
       },
       {
-        "name": "MiG-29SMT \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/russia_mig29smt.glb",
+        "name": "MiG-29SMT · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "preview": "res://assets/library/arsenal/russia_mig31bm.png"
+        "model": "res://assets/library/arsenal/russia_mig29smt.glb"
       },
       {
-        "name": "Su-34",
-        "model": "res://assets/library/arsenal/russia_su34.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_su34.png",
-        "projectile_model": "res://assets/library/arsenal/russia_kh59mk2.glb"
+        "name": "Su-35S",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_su35s.glb"
       },
       {
-        "name": "Su-34 \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/russia_su34.glb",
+        "name": "Su-35S · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "preview": "res://assets/library/arsenal/russia_su35s.png"
+        "model": "res://assets/library/arsenal/russia_su35s.glb"
       },
       {
         "name": "Su-57",
-        "model": "res://assets/library/arsenal/russia_su57.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_su57.png"
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_su57.glb"
       }
     ],
     "model_status": "Original supplied model",
@@ -1695,12 +1686,14 @@
       "fuel": 2.4,
       "manpower": 0.6
     },
-    "production_building": "airbase"
+    "production_building": "airbase",
+    "research_branch": "Air superiority fighter",
+    "starter": false
   },
   {
     "id": "fighters_ukraine",
     "country": "ukraine",
-    "name": "European fighters",
+    "name": "Air superiority fighters",
     "category": "Fighters",
     "visual_kind": "fighter",
     "role": "fighter",
@@ -1717,11 +1710,11 @@
       "airbase": 1
     },
     "research_days": [
-      1,
       4,
       8,
       12,
-      18
+      16,
+      20
     ],
     "research_tiers": [
       {
@@ -1731,19 +1724,19 @@
         "preview": "res://assets/library/arsenal/euro_mirage2000.png"
       },
       {
-        "name": "Mirage 2000 \u00b7 upgrade",
+        "name": "Mirage 2000 · upgrade",
         "model": "res://assets/library/arsenal/euro_mirage2000.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_gripen_e.png"
       },
       {
-        "name": "Gripen E \u00b7 sensors",
+        "name": "Gripen E · sensors",
         "model": "res://assets/library/arsenal/euro_gripen_e.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_gripen_e.png"
       },
       {
-        "name": "Gripen E \u00b7 sensors \u00b7 upgrade",
+        "name": "Gripen E · sensors · upgrade",
         "model": "res://assets/library/arsenal/euro_gripen_e.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_ngf_fcas.png"
@@ -1766,12 +1759,14 @@
       "fuel": 2.4,
       "manpower": 0.6
     },
-    "production_building": "airbase"
+    "production_building": "airbase",
+    "research_branch": "Air superiority fighter",
+    "starter": false
   },
   {
     "id": "infantry_russia",
     "country": "russia",
-    "name": "Infantry",
+    "name": "Motorized infantry",
     "category": "Infantry",
     "visual_kind": "infantry",
     "role": "infantry",
@@ -1797,33 +1792,28 @@
     "research_tiers": [
       {
         "name": "Motor riflemen",
-        "model": "res://assets/library/arsenal/russia_motor_rifleman.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_motor_rifleman.png"
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_motor_rifleman.glb"
       },
       {
-        "name": "Motor riflemen \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/russia_motor_rifleman.glb",
+        "name": "Motor riflemen · Ratnik kit",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "preview": "res://assets/library/arsenal/russia_naval_infantry.png"
+        "model": "res://assets/library/arsenal/russia_motor_rifleman.glb"
       },
       {
-        "name": "VDV paratroopers",
-        "model": "res://assets/library/arsenal/russia_vdv_paratrooper.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_vdv_paratrooper.png"
+        "name": "Guards motor riflemen",
+        "improvement": "Better training and night vision",
+        "model": "res://assets/library/arsenal/russia_motor_rifleman.glb"
       },
       {
-        "name": "VDV paratroopers \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/russia_vdv_paratrooper.glb",
+        "name": "Guards motor riflemen · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "preview": "res://assets/library/arsenal/russia_sniper.png"
+        "model": "res://assets/library/arsenal/russia_motor_rifleman.glb"
       },
       {
-        "name": "Spetsnaz",
-        "model": "res://assets/library/arsenal/russia_spetsnaz.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_spetsnaz.png"
+        "name": "Guards motor riflemen · Sotnik kit",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_motor_rifleman.glb"
       }
     ],
     "model_status": "Original supplied model",
@@ -1832,12 +1822,14 @@
       "fuel": 0.4,
       "manpower": 1.2
     },
-    "production_building": "barracks"
+    "production_building": "barracks",
+    "research_branch": "Motorized infantry",
+    "starter": true
   },
   {
     "id": "infantry_ukraine",
     "country": "ukraine",
-    "name": "Infantry",
+    "name": "Motorized infantry",
     "category": "Infantry",
     "visual_kind": "infantry",
     "role": "infantry",
@@ -1862,34 +1854,29 @@
     ],
     "research_tiers": [
       {
-        "name": "Royal Marines",
-        "model": "res://assets/library/arsenal/euro_uk_royal_marine.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/euro_uk_royal_marine.png"
+        "name": "Mechanised infantry",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_fr_foreign_legion.glb"
       },
       {
-        "name": "Royal Marines \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/euro_uk_royal_marine.glb",
+        "name": "Mechanised infantry · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "preview": "res://assets/library/arsenal/euro_fr_foreign_legion.png"
+        "model": "res://assets/library/arsenal/euro_fr_foreign_legion.glb"
       },
       {
-        "name": "Folgore paratroopers",
-        "model": "res://assets/library/arsenal/euro_it_folgore_paratrooper.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/euro_it_folgore_paratrooper.png"
-      },
-      {
-        "name": "Folgore paratroopers \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/euro_it_folgore_paratrooper.glb",
+        "name": "Mechanised infantry · NATO kit",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "preview": "res://assets/library/arsenal/euro_fi_winter_sniper.png"
+        "model": "res://assets/library/arsenal/euro_fr_foreign_legion.glb"
       },
       {
-        "name": "KSK",
-        "model": "res://assets/library/arsenal/euro_de_ksk.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/euro_de_ksk.png"
+        "name": "Mechanised infantry · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_fr_foreign_legion.glb"
+      },
+      {
+        "name": "Mechanised infantry · night vision",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_fr_foreign_legion.glb"
       }
     ],
     "model_status": "Original supplied model",
@@ -1898,15 +1885,17 @@
       "fuel": 0.4,
       "manpower": 1.2
     },
-    "production_building": "barracks"
+    "production_building": "barracks",
+    "research_branch": "Motorized infantry",
+    "starter": true
   },
   {
     "id": "kamaz5350_supply_russia",
     "country": "russia",
-    "name": "KamAZ-5350 supply",
+    "name": "Supply trucks",
     "category": "Support",
     "visual_kind": "support",
-    "role": "support",
+    "role": "supply",
     "asset_roster_id": "kamaz5350_supply_russia",
     "seconds": 60,
     "cost": {
@@ -1917,14 +1906,14 @@
       "manpower": 30
     },
     "building_requirements": {
-      "factory": 1
+      "support_depot": 1
     },
     "research_days": [
       1,
-      6,
+      4,
+      7,
       10,
-      14,
-      20
+      13
     ],
     "research_tiers": [
       {
@@ -1934,25 +1923,25 @@
         "preview": "res://assets/library/arsenal/russia_kamaz5350_supply.png"
       },
       {
-        "name": "KamAZ-5350 supply \u00b7 upgrade",
+        "name": "KamAZ-5350 supply · upgrade",
         "model": "res://assets/library/arsenal/russia_kamaz5350_supply.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_kamaz5350_supply.png"
       },
       {
-        "name": "KamAZ-5350 supply \u00b7 L3",
+        "name": "KamAZ-5350 supply · L3",
         "model": "res://assets/library/arsenal/russia_kamaz5350_supply.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_kamaz5350_supply.png"
       },
       {
-        "name": "KamAZ-5350 supply \u00b7 L3 \u00b7 upgrade",
+        "name": "KamAZ-5350 supply · L3 · upgrade",
         "model": "res://assets/library/arsenal/russia_kamaz5350_supply.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_kamaz5350_supply.png"
       },
       {
-        "name": "KamAZ-5350 supply \u00b7 L5",
+        "name": "KamAZ-5350 supply · L5",
         "model": "res://assets/library/arsenal/russia_kamaz5350_supply.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_kamaz5350_supply.png"
@@ -1964,15 +1953,17 @@
       "fuel": 2.4,
       "manpower": 0.6
     },
-    "production_building": "factory"
+    "production_building": "support_depot",
+    "research_branch": "Supply truck",
+    "starter": false
   },
   {
     "id": "brem1m_recovery_russia",
     "country": "russia",
-    "name": "BREM-1M recovery",
+    "name": "Recovery vehicles",
     "category": "Support",
     "visual_kind": "support",
-    "role": "support",
+    "role": "recovery",
     "asset_roster_id": "brem1m_recovery_russia",
     "seconds": 60,
     "cost": {
@@ -1983,14 +1974,14 @@
       "manpower": 30
     },
     "building_requirements": {
-      "factory": 1
+      "support_depot": 1
     },
     "research_days": [
-      1,
-      6,
+      4,
+      7,
       10,
-      14,
-      20
+      13,
+      16
     ],
     "research_tiers": [
       {
@@ -2000,25 +1991,25 @@
         "preview": "res://assets/library/arsenal/russia_brem1m_recovery.png"
       },
       {
-        "name": "BREM-1M recovery \u00b7 upgrade",
+        "name": "BREM-1M recovery · upgrade",
         "model": "res://assets/library/arsenal/russia_brem1m_recovery.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_brem1m_recovery.png"
       },
       {
-        "name": "BREM-1M recovery \u00b7 L3",
+        "name": "BREM-1M recovery · L3",
         "model": "res://assets/library/arsenal/russia_brem1m_recovery.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_brem1m_recovery.png"
       },
       {
-        "name": "BREM-1M recovery \u00b7 L3 \u00b7 upgrade",
+        "name": "BREM-1M recovery · L3 · upgrade",
         "model": "res://assets/library/arsenal/russia_brem1m_recovery.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_brem1m_recovery.png"
       },
       {
-        "name": "BREM-1M recovery \u00b7 L5",
+        "name": "BREM-1M recovery · L5",
         "model": "res://assets/library/arsenal/russia_brem1m_recovery.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_brem1m_recovery.png"
@@ -2030,15 +2021,17 @@
       "fuel": 2.4,
       "manpower": 0.6
     },
-    "production_building": "factory"
+    "production_building": "support_depot",
+    "research_branch": "Recovery vehicle",
+    "starter": false
   },
   {
     "id": "imr3m_engineer_russia",
     "country": "russia",
-    "name": "IMR-3M engineer",
+    "name": "Combat engineers",
     "category": "Support",
     "visual_kind": "support",
-    "role": "support",
+    "role": "engineer",
     "asset_roster_id": "imr3m_engineer_russia",
     "seconds": 60,
     "cost": {
@@ -2049,14 +2042,14 @@
       "manpower": 30
     },
     "building_requirements": {
-      "factory": 1
+      "support_depot": 1
     },
     "research_days": [
       1,
       4,
-      8,
-      12,
-      18
+      7,
+      10,
+      13
     ],
     "research_tiers": [
       {
@@ -2066,25 +2059,25 @@
         "preview": "res://assets/library/arsenal/russia_imr3m_engineer.png"
       },
       {
-        "name": "IMR-3M engineer \u00b7 upgrade",
+        "name": "IMR-3M engineer · upgrade",
         "model": "res://assets/library/arsenal/russia_imr3m_engineer.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_imr3m_engineer.png"
       },
       {
-        "name": "IMR-3M engineer \u00b7 L3",
+        "name": "IMR-3M engineer · L3",
         "model": "res://assets/library/arsenal/russia_imr3m_engineer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_imr3m_engineer.png"
       },
       {
-        "name": "IMR-3M engineer \u00b7 L3 \u00b7 upgrade",
+        "name": "IMR-3M engineer · L3 · upgrade",
         "model": "res://assets/library/arsenal/russia_imr3m_engineer.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_imr3m_engineer.png"
       },
       {
-        "name": "IMR-3M engineer \u00b7 L5",
+        "name": "IMR-3M engineer · L5",
         "model": "res://assets/library/arsenal/russia_imr3m_engineer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_imr3m_engineer.png"
@@ -2096,15 +2089,17 @@
       "fuel": 2.4,
       "manpower": 0.6
     },
-    "production_building": "factory"
+    "production_building": "support_depot",
+    "research_branch": "Combat engineers",
+    "starter": false
   },
   {
     "id": "mtu72_bridgelayer_russia",
     "country": "russia",
-    "name": "MTU-72 bridgelayer",
+    "name": "Bridge layers",
     "category": "Support",
     "visual_kind": "support",
-    "role": "support",
+    "role": "bridge",
     "asset_roster_id": "mtu72_bridgelayer_russia",
     "seconds": 60,
     "cost": {
@@ -2115,14 +2110,14 @@
       "manpower": 30
     },
     "building_requirements": {
-      "factory": 1
+      "support_depot": 1
     },
     "research_days": [
-      1,
-      4,
+      5,
       8,
-      12,
-      18
+      11,
+      14,
+      17
     ],
     "research_tiers": [
       {
@@ -2132,25 +2127,25 @@
         "preview": "res://assets/library/arsenal/russia_mtu72_bridgelayer.png"
       },
       {
-        "name": "MTU-72 bridgelayer \u00b7 upgrade",
+        "name": "MTU-72 bridgelayer · upgrade",
         "model": "res://assets/library/arsenal/russia_mtu72_bridgelayer.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_mtu72_bridgelayer.png"
       },
       {
-        "name": "MTU-72 bridgelayer \u00b7 L3",
+        "name": "MTU-72 bridgelayer · L3",
         "model": "res://assets/library/arsenal/russia_mtu72_bridgelayer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_mtu72_bridgelayer.png"
       },
       {
-        "name": "MTU-72 bridgelayer \u00b7 L3 \u00b7 upgrade",
+        "name": "MTU-72 bridgelayer · L3 · upgrade",
         "model": "res://assets/library/arsenal/russia_mtu72_bridgelayer.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_mtu72_bridgelayer.png"
       },
       {
-        "name": "MTU-72 bridgelayer \u00b7 L5",
+        "name": "MTU-72 bridgelayer · L5",
         "model": "res://assets/library/arsenal/russia_mtu72_bridgelayer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_mtu72_bridgelayer.png"
@@ -2162,7 +2157,9 @@
       "fuel": 2.4,
       "manpower": 0.6
     },
-    "production_building": "factory"
+    "production_building": "support_depot",
+    "research_branch": "Bridge layer",
+    "starter": false
   },
   {
     "id": "ur77_mineclearing_russia",
@@ -2198,25 +2195,25 @@
         "preview": "res://assets/library/arsenal/russia_ur77_mineclearing.png"
       },
       {
-        "name": "UR-77 mine clearing \u00b7 upgrade",
+        "name": "UR-77 mine clearing · upgrade",
         "model": "res://assets/library/arsenal/russia_ur77_mineclearing.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_ur77_mineclearing.png"
       },
       {
-        "name": "UR-77 mine clearing \u00b7 L3",
+        "name": "UR-77 mine clearing · L3",
         "model": "res://assets/library/arsenal/russia_ur77_mineclearing.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_ur77_mineclearing.png"
       },
       {
-        "name": "UR-77 mine clearing \u00b7 L3 \u00b7 upgrade",
+        "name": "UR-77 mine clearing · L3 · upgrade",
         "model": "res://assets/library/arsenal/russia_ur77_mineclearing.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_ur77_mineclearing.png"
       },
       {
-        "name": "UR-77 mine clearing \u00b7 L5",
+        "name": "UR-77 mine clearing · L5",
         "model": "res://assets/library/arsenal/russia_ur77_mineclearing.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_ur77_mineclearing.png"
@@ -2228,15 +2225,17 @@
       "fuel": 2.4,
       "manpower": 0.6
     },
-    "production_building": "factory"
+    "production_building": "factory",
+    "retired": true,
+    "starter": false
   },
   {
     "id": "man_hx77_supply_ukraine",
     "country": "ukraine",
-    "name": "MAN HX77 supply",
+    "name": "Supply trucks",
     "category": "Support",
     "visual_kind": "support",
-    "role": "support",
+    "role": "supply",
     "asset_roster_id": "man_hx77_supply_ukraine",
     "seconds": 60,
     "cost": {
@@ -2247,14 +2246,14 @@
       "manpower": 30
     },
     "building_requirements": {
-      "factory": 1
+      "support_depot": 1
     },
     "research_days": [
       1,
-      5,
-      9,
-      13,
-      19
+      4,
+      7,
+      10,
+      13
     ],
     "research_tiers": [
       {
@@ -2264,25 +2263,25 @@
         "preview": "res://assets/library/arsenal/euro_man_hx77_supply.png"
       },
       {
-        "name": "MAN HX77 supply \u00b7 upgrade",
+        "name": "MAN HX77 supply · upgrade",
         "model": "res://assets/library/arsenal/euro_man_hx77_supply.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_man_hx77_supply.png"
       },
       {
-        "name": "MAN HX77 supply \u00b7 L3",
+        "name": "MAN HX77 supply · L3",
         "model": "res://assets/library/arsenal/euro_man_hx77_supply.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_man_hx77_supply.png"
       },
       {
-        "name": "MAN HX77 supply \u00b7 L3 \u00b7 upgrade",
+        "name": "MAN HX77 supply · L3 · upgrade",
         "model": "res://assets/library/arsenal/euro_man_hx77_supply.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_man_hx77_supply.png"
       },
       {
-        "name": "MAN HX77 supply \u00b7 L5",
+        "name": "MAN HX77 supply · L5",
         "model": "res://assets/library/arsenal/euro_man_hx77_supply.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_man_hx77_supply.png"
@@ -2294,15 +2293,17 @@
       "fuel": 2.4,
       "manpower": 0.6
     },
-    "production_building": "factory"
+    "production_building": "support_depot",
+    "research_branch": "Supply truck",
+    "starter": false
   },
   {
     "id": "buffel_recovery_ukraine",
     "country": "ukraine",
-    "name": "B\u00fcffel recovery",
+    "name": "Recovery vehicles",
     "category": "Support",
     "visual_kind": "support",
-    "role": "support",
+    "role": "recovery",
     "asset_roster_id": "buffel_recovery_ukraine",
     "seconds": 60,
     "cost": {
@@ -2313,42 +2314,42 @@
       "manpower": 30
     },
     "building_requirements": {
-      "factory": 1
+      "support_depot": 1
     },
     "research_days": [
-      1,
-      6,
+      4,
+      7,
       10,
-      14,
-      20
+      13,
+      16
     ],
     "research_tiers": [
       {
-        "name": "B\u00fcffel recovery",
+        "name": "Büffel recovery",
         "model": "res://assets/library/arsenal/euro_buffel_recovery.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_buffel_recovery.png"
       },
       {
-        "name": "B\u00fcffel recovery \u00b7 upgrade",
+        "name": "Büffel recovery · upgrade",
         "model": "res://assets/library/arsenal/euro_buffel_recovery.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_buffel_recovery.png"
       },
       {
-        "name": "B\u00fcffel recovery \u00b7 L3",
+        "name": "Büffel recovery · L3",
         "model": "res://assets/library/arsenal/euro_buffel_recovery.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_buffel_recovery.png"
       },
       {
-        "name": "B\u00fcffel recovery \u00b7 L3 \u00b7 upgrade",
+        "name": "Büffel recovery · L3 · upgrade",
         "model": "res://assets/library/arsenal/euro_buffel_recovery.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_buffel_recovery.png"
       },
       {
-        "name": "B\u00fcffel recovery \u00b7 L5",
+        "name": "Büffel recovery · L5",
         "model": "res://assets/library/arsenal/euro_buffel_recovery.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_buffel_recovery.png"
@@ -2360,15 +2361,17 @@
       "fuel": 2.4,
       "manpower": 0.6
     },
-    "production_building": "factory"
+    "production_building": "support_depot",
+    "research_branch": "Recovery vehicle",
+    "starter": false
   },
   {
     "id": "kodiak_engineer_ukraine",
     "country": "ukraine",
-    "name": "Kodiak engineer",
+    "name": "Combat engineers",
     "category": "Support",
     "visual_kind": "support",
-    "role": "support",
+    "role": "engineer",
     "asset_roster_id": "kodiak_engineer_ukraine",
     "seconds": 60,
     "cost": {
@@ -2379,14 +2382,14 @@
       "manpower": 30
     },
     "building_requirements": {
-      "factory": 1
+      "support_depot": 1
     },
     "research_days": [
       1,
-      6,
+      4,
+      7,
       10,
-      14,
-      20
+      13
     ],
     "research_tiers": [
       {
@@ -2396,25 +2399,25 @@
         "preview": "res://assets/library/arsenal/euro_kodiak_engineer.png"
       },
       {
-        "name": "Kodiak engineer \u00b7 upgrade",
+        "name": "Kodiak engineer · upgrade",
         "model": "res://assets/library/arsenal/euro_kodiak_engineer.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_kodiak_engineer.png"
       },
       {
-        "name": "Kodiak engineer \u00b7 L3",
+        "name": "Kodiak engineer · L3",
         "model": "res://assets/library/arsenal/euro_kodiak_engineer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_kodiak_engineer.png"
       },
       {
-        "name": "Kodiak engineer \u00b7 L3 \u00b7 upgrade",
+        "name": "Kodiak engineer · L3 · upgrade",
         "model": "res://assets/library/arsenal/euro_kodiak_engineer.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_kodiak_engineer.png"
       },
       {
-        "name": "Kodiak engineer \u00b7 L5",
+        "name": "Kodiak engineer · L5",
         "model": "res://assets/library/arsenal/euro_kodiak_engineer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_kodiak_engineer.png"
@@ -2426,15 +2429,17 @@
       "fuel": 2.4,
       "manpower": 0.6
     },
-    "production_building": "factory"
+    "production_building": "support_depot",
+    "research_branch": "Combat engineers",
+    "starter": false
   },
   {
     "id": "leguan_bridgelayer_ukraine",
     "country": "ukraine",
-    "name": "Leguan bridgelayer",
+    "name": "Bridge layers",
     "category": "Support",
     "visual_kind": "support",
-    "role": "support",
+    "role": "bridge",
     "asset_roster_id": "leguan_bridgelayer_ukraine",
     "seconds": 60,
     "cost": {
@@ -2445,14 +2450,14 @@
       "manpower": 30
     },
     "building_requirements": {
-      "factory": 1
+      "support_depot": 1
     },
     "research_days": [
-      1,
-      4,
+      5,
       8,
-      12,
-      18
+      11,
+      14,
+      17
     ],
     "research_tiers": [
       {
@@ -2462,25 +2467,25 @@
         "preview": "res://assets/library/arsenal/euro_leguan_bridgelayer.png"
       },
       {
-        "name": "Leguan bridgelayer \u00b7 upgrade",
+        "name": "Leguan bridgelayer · upgrade",
         "model": "res://assets/library/arsenal/euro_leguan_bridgelayer.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_leguan_bridgelayer.png"
       },
       {
-        "name": "Leguan bridgelayer \u00b7 L3",
+        "name": "Leguan bridgelayer · L3",
         "model": "res://assets/library/arsenal/euro_leguan_bridgelayer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_leguan_bridgelayer.png"
       },
       {
-        "name": "Leguan bridgelayer \u00b7 L3 \u00b7 upgrade",
+        "name": "Leguan bridgelayer · L3 · upgrade",
         "model": "res://assets/library/arsenal/euro_leguan_bridgelayer.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_leguan_bridgelayer.png"
       },
       {
-        "name": "Leguan bridgelayer \u00b7 L5",
+        "name": "Leguan bridgelayer · L5",
         "model": "res://assets/library/arsenal/euro_leguan_bridgelayer.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_leguan_bridgelayer.png"
@@ -2492,7 +2497,9 @@
       "fuel": 2.4,
       "manpower": 0.6
     },
-    "production_building": "factory"
+    "production_building": "support_depot",
+    "research_branch": "Bridge layer",
+    "starter": false
   },
   {
     "id": "trojan_breacher_ukraine",
@@ -2528,25 +2535,25 @@
         "preview": "res://assets/library/arsenal/euro_trojan_breacher.png"
       },
       {
-        "name": "Trojan breacher \u00b7 upgrade",
+        "name": "Trojan breacher · upgrade",
         "model": "res://assets/library/arsenal/euro_trojan_breacher.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_trojan_breacher.png"
       },
       {
-        "name": "Trojan breacher \u00b7 L3",
+        "name": "Trojan breacher · L3",
         "model": "res://assets/library/arsenal/euro_trojan_breacher.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_trojan_breacher.png"
       },
       {
-        "name": "Trojan breacher \u00b7 L3 \u00b7 upgrade",
+        "name": "Trojan breacher · L3 · upgrade",
         "model": "res://assets/library/arsenal/euro_trojan_breacher.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_trojan_breacher.png"
       },
       {
-        "name": "Trojan breacher \u00b7 L5",
+        "name": "Trojan breacher · L5",
         "model": "res://assets/library/arsenal/euro_trojan_breacher.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_trojan_breacher.png"
@@ -2558,12 +2565,14 @@
       "fuel": 2.4,
       "manpower": 0.6
     },
-    "production_building": "factory"
+    "production_building": "factory",
+    "retired": true,
+    "starter": false
   },
   {
     "id": "2b14_mortar_82_russia",
     "country": "russia",
-    "name": "2B14 82 mm mortar",
+    "name": "Mortars",
     "category": "Artillery",
     "visual_kind": "artillery",
     "role": "artillery",
@@ -2581,41 +2590,36 @@
     },
     "research_days": [
       1,
-      5,
-      8,
-      12,
-      17
+      4,
+      7,
+      10,
+      13
     ],
     "research_tiers": [
       {
         "name": "2B14 82 mm mortar",
-        "model": "res://assets/library/arsenal/russia_2b14_mortar_82.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_2b14_mortar_82.png"
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_2b14_mortar_82.glb"
       },
       {
-        "name": "2B14 82 mm mortar \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/russia_2b14_mortar_82.glb",
+        "name": "2B14 82 mm mortar · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "preview": "res://assets/library/arsenal/russia_2b14_mortar_82.png"
+        "model": "res://assets/library/arsenal/russia_2b14_mortar_82.glb"
       },
       {
-        "name": "2B14 82 mm mortar \u00b7 L3",
-        "model": "res://assets/library/arsenal/russia_2b14_mortar_82.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_2b14_mortar_82.png"
+        "name": "2B11 120 mm mortar",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_2b11_mortar_120.glb"
       },
       {
-        "name": "2B14 82 mm mortar \u00b7 L3 \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/russia_2b14_mortar_82.glb",
+        "name": "2B11 120 mm mortar · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "preview": "res://assets/library/arsenal/russia_2b14_mortar_82.png"
+        "model": "res://assets/library/arsenal/russia_2b11_mortar_120.glb"
       },
       {
-        "name": "2B14 82 mm mortar \u00b7 L5",
-        "model": "res://assets/library/arsenal/russia_2b14_mortar_82.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_2b14_mortar_82.png"
+        "name": "2B11 120 mm mortar · guided rounds",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_2b11_mortar_120.glb"
       }
     ],
     "model_status": "Original supplied model",
@@ -2624,7 +2628,9 @@
       "fuel": 2.4,
       "manpower": 0.6
     },
-    "production_building": "factory"
+    "production_building": "factory",
+    "research_branch": "Mortars",
+    "starter": true
   },
   {
     "id": "2b11_mortar_120_russia",
@@ -2660,25 +2666,25 @@
         "preview": "res://assets/library/arsenal/russia_2b11_mortar_120.png"
       },
       {
-        "name": "2B11 120 mm mortar \u00b7 upgrade",
+        "name": "2B11 120 mm mortar · upgrade",
         "model": "res://assets/library/arsenal/russia_2b11_mortar_120.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_2b11_mortar_120.png"
       },
       {
-        "name": "2B11 120 mm mortar \u00b7 L3",
+        "name": "2B11 120 mm mortar · L3",
         "model": "res://assets/library/arsenal/russia_2b11_mortar_120.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_2b11_mortar_120.png"
       },
       {
-        "name": "2B11 120 mm mortar \u00b7 L3 \u00b7 upgrade",
+        "name": "2B11 120 mm mortar · L3 · upgrade",
         "model": "res://assets/library/arsenal/russia_2b11_mortar_120.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_2b11_mortar_120.png"
       },
       {
-        "name": "2B11 120 mm mortar \u00b7 L5",
+        "name": "2B11 120 mm mortar · L5",
         "model": "res://assets/library/arsenal/russia_2b11_mortar_120.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_2b11_mortar_120.png"
@@ -2690,12 +2696,14 @@
       "fuel": 2.4,
       "manpower": 0.6
     },
-    "production_building": "factory"
+    "production_building": "factory",
+    "retired": true,
+    "starter": false
   },
   {
     "id": "d30_howitzer_russia",
     "country": "russia",
-    "name": "D-30 howitzer",
+    "name": "Towed artillery",
     "category": "Artillery",
     "visual_kind": "artillery",
     "role": "artillery",
@@ -2713,41 +2721,36 @@
     },
     "research_days": [
       1,
-      6,
-      9,
-      13,
-      18
+      4,
+      7,
+      10,
+      13
     ],
     "research_tiers": [
       {
         "name": "D-30 howitzer",
-        "model": "res://assets/library/arsenal/russia_d30_howitzer.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_d30_howitzer.png"
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_d30_howitzer.glb"
       },
       {
-        "name": "D-30 howitzer \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/russia_d30_howitzer.glb",
+        "name": "D-30 howitzer · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "preview": "res://assets/library/arsenal/russia_d30_howitzer.png"
+        "model": "res://assets/library/arsenal/russia_d30_howitzer.glb"
       },
       {
-        "name": "D-30 howitzer \u00b7 L3",
-        "model": "res://assets/library/arsenal/russia_d30_howitzer.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_d30_howitzer.png"
-      },
-      {
-        "name": "D-30 howitzer \u00b7 L3 \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/russia_d30_howitzer.glb",
+        "name": "D-30 howitzer · modernised",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "preview": "res://assets/library/arsenal/russia_d30_howitzer.png"
+        "model": "res://assets/library/arsenal/russia_d30_howitzer.glb"
       },
       {
-        "name": "D-30 howitzer \u00b7 L5",
-        "model": "res://assets/library/arsenal/russia_d30_howitzer.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_d30_howitzer.png"
+        "name": "D-30 howitzer · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_d30_howitzer.glb"
+      },
+      {
+        "name": "D-30 howitzer · guided shells",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_d30_howitzer.glb"
       }
     ],
     "model_status": "Original supplied model",
@@ -2756,12 +2759,14 @@
       "fuel": 2.4,
       "manpower": 0.6
     },
-    "production_building": "factory"
+    "production_building": "factory",
+    "research_branch": "Towed artillery",
+    "starter": false
   },
   {
     "id": "l16_mortar_81_ukraine",
     "country": "ukraine",
-    "name": "L16 81 mm mortar",
+    "name": "Mortars",
     "category": "Artillery",
     "visual_kind": "artillery",
     "role": "artillery",
@@ -2779,41 +2784,36 @@
     },
     "research_days": [
       1,
-      6,
-      9,
-      13,
-      18
+      4,
+      7,
+      10,
+      13
     ],
     "research_tiers": [
       {
         "name": "L16 81 mm mortar",
-        "model": "res://assets/library/arsenal/euro_l16_mortar_81.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/euro_l16_mortar_81.png"
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_l16_mortar_81.glb"
       },
       {
-        "name": "L16 81 mm mortar \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/euro_l16_mortar_81.glb",
+        "name": "L16 81 mm mortar · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "preview": "res://assets/library/arsenal/euro_l16_mortar_81.png"
+        "model": "res://assets/library/arsenal/euro_l16_mortar_81.glb"
       },
       {
-        "name": "L16 81 mm mortar \u00b7 L3",
-        "model": "res://assets/library/arsenal/euro_l16_mortar_81.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/euro_l16_mortar_81.png"
+        "name": "MO-120-RT 120 mm mortar",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_mo120rt_mortar.glb"
       },
       {
-        "name": "L16 81 mm mortar \u00b7 L3 \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/euro_l16_mortar_81.glb",
+        "name": "MO-120-RT 120 mm mortar · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "preview": "res://assets/library/arsenal/euro_l16_mortar_81.png"
+        "model": "res://assets/library/arsenal/euro_mo120rt_mortar.glb"
       },
       {
-        "name": "L16 81 mm mortar \u00b7 L5",
-        "model": "res://assets/library/arsenal/euro_l16_mortar_81.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/euro_l16_mortar_81.png"
+        "name": "MO-120-RT 120 mm mortar · guided rounds",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_mo120rt_mortar.glb"
       }
     ],
     "model_status": "Original supplied model",
@@ -2822,7 +2822,9 @@
       "fuel": 2.4,
       "manpower": 0.6
     },
-    "production_building": "factory"
+    "production_building": "factory",
+    "research_branch": "Mortars",
+    "starter": true
   },
   {
     "id": "mo120rt_mortar_ukraine",
@@ -2858,25 +2860,25 @@
         "preview": "res://assets/library/arsenal/euro_mo120rt_mortar.png"
       },
       {
-        "name": "MO-120-RT mortar \u00b7 upgrade",
+        "name": "MO-120-RT mortar · upgrade",
         "model": "res://assets/library/arsenal/euro_mo120rt_mortar.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_mo120rt_mortar.png"
       },
       {
-        "name": "MO-120-RT mortar \u00b7 L3",
+        "name": "MO-120-RT mortar · L3",
         "model": "res://assets/library/arsenal/euro_mo120rt_mortar.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_mo120rt_mortar.png"
       },
       {
-        "name": "MO-120-RT mortar \u00b7 L3 \u00b7 upgrade",
+        "name": "MO-120-RT mortar · L3 · upgrade",
         "model": "res://assets/library/arsenal/euro_mo120rt_mortar.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_mo120rt_mortar.png"
       },
       {
-        "name": "MO-120-RT mortar \u00b7 L5",
+        "name": "MO-120-RT mortar · L5",
         "model": "res://assets/library/arsenal/euro_mo120rt_mortar.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_mo120rt_mortar.png"
@@ -2888,12 +2890,14 @@
       "fuel": 2.4,
       "manpower": 0.6
     },
-    "production_building": "factory"
+    "production_building": "factory",
+    "retired": true,
+    "starter": false
   },
   {
     "id": "l118_lightgun_ukraine",
     "country": "ukraine",
-    "name": "L118 light gun",
+    "name": "Towed artillery",
     "category": "Artillery",
     "visual_kind": "artillery",
     "role": "artillery",
@@ -2913,39 +2917,34 @@
       1,
       4,
       7,
-      11,
-      16
+      10,
+      13
     ],
     "research_tiers": [
       {
         "name": "L118 light gun",
-        "model": "res://assets/library/arsenal/euro_l118_lightgun.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/euro_l118_lightgun.png"
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_l118_lightgun.glb"
       },
       {
-        "name": "L118 light gun \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/euro_l118_lightgun.glb",
+        "name": "L118 light gun · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "preview": "res://assets/library/arsenal/euro_l118_lightgun.png"
+        "model": "res://assets/library/arsenal/euro_l118_lightgun.glb"
       },
       {
-        "name": "L118 light gun \u00b7 L3",
-        "model": "res://assets/library/arsenal/euro_l118_lightgun.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/euro_l118_lightgun.png"
+        "name": "FH70",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_fh70.glb"
       },
       {
-        "name": "L118 light gun \u00b7 L3 \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/euro_l118_lightgun.glb",
+        "name": "FH70 · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "preview": "res://assets/library/arsenal/euro_l118_lightgun.png"
+        "model": "res://assets/library/arsenal/euro_fh70.glb"
       },
       {
-        "name": "L118 light gun \u00b7 L5",
-        "model": "res://assets/library/arsenal/euro_l118_lightgun.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/euro_l118_lightgun.png"
+        "name": "FH70 · guided shells",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_fh70.glb"
       }
     ],
     "model_status": "Original supplied model",
@@ -2954,12 +2953,14 @@
       "fuel": 2.4,
       "manpower": 0.6
     },
-    "production_building": "factory"
+    "production_building": "factory",
+    "research_branch": "Towed artillery",
+    "starter": false
   },
   {
     "id": "il76md_russia",
     "country": "russia",
-    "name": "Il-76MD transport",
+    "name": "Transport aircraft",
     "category": "Support",
     "visual_kind": "fighter",
     "role": "transport",
@@ -2976,11 +2977,11 @@
       "airbase": 1
     },
     "research_days": [
-      1,
-      5,
-      9,
-      13,
-      19
+      8,
+      11,
+      14,
+      17,
+      20
     ],
     "research_tiers": [
       {
@@ -2990,25 +2991,25 @@
         "preview": "res://assets/library/arsenal/russia_il76md.png"
       },
       {
-        "name": "Il-76MD transport \u00b7 upgrade",
+        "name": "Il-76MD transport · upgrade",
         "model": "res://assets/library/arsenal/russia_il76md.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_il76md.png"
       },
       {
-        "name": "Il-76MD transport \u00b7 L3",
+        "name": "Il-76MD transport · L3",
         "model": "res://assets/library/arsenal/russia_il76md.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_il76md.png"
       },
       {
-        "name": "Il-76MD transport \u00b7 L3 \u00b7 upgrade",
+        "name": "Il-76MD transport · L3 · upgrade",
         "model": "res://assets/library/arsenal/russia_il76md.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_il76md.png"
       },
       {
-        "name": "Il-76MD transport \u00b7 L5",
+        "name": "Il-76MD transport · L5",
         "model": "res://assets/library/arsenal/russia_il76md.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_il76md.png"
@@ -3025,12 +3026,14 @@
       "fuel": 2.4,
       "manpower": 0.6
     },
-    "production_building": "airbase"
+    "production_building": "airbase",
+    "research_branch": "Transport aircraft",
+    "starter": false
   },
   {
     "id": "a50u_russia",
     "country": "russia",
-    "name": "A-50U airborne radar",
+    "name": "Airborne early warning",
     "category": "Support",
     "visual_kind": "fighter",
     "role": "radar_aircraft",
@@ -3047,11 +3050,11 @@
       "airbase": 1
     },
     "research_days": [
-      1,
-      5,
-      9,
-      13,
-      19
+      15,
+      18,
+      21,
+      24,
+      27
     ],
     "research_tiers": [
       {
@@ -3061,25 +3064,25 @@
         "preview": "res://assets/library/arsenal/russia_a50u.png"
       },
       {
-        "name": "A-50U airborne radar \u00b7 upgrade",
+        "name": "A-50U airborne radar · upgrade",
         "model": "res://assets/library/arsenal/russia_a50u.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_a50u.png"
       },
       {
-        "name": "A-50U airborne radar \u00b7 L3",
+        "name": "A-50U airborne radar · L3",
         "model": "res://assets/library/arsenal/russia_a50u.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_a50u.png"
       },
       {
-        "name": "A-50U airborne radar \u00b7 L3 \u00b7 upgrade",
+        "name": "A-50U airborne radar · L3 · upgrade",
         "model": "res://assets/library/arsenal/russia_a50u.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_a50u.png"
       },
       {
-        "name": "A-50U airborne radar \u00b7 L5",
+        "name": "A-50U airborne radar · L5",
         "model": "res://assets/library/arsenal/russia_a50u.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_a50u.png"
@@ -3096,12 +3099,14 @@
       "fuel": 2.4,
       "manpower": 0.6
     },
-    "production_building": "airbase"
+    "production_building": "airbase",
+    "research_branch": "Airborne early warning",
+    "starter": false
   },
   {
     "id": "yak130_russia",
     "country": "russia",
-    "name": "Yak-130",
+    "name": "Light attack aircraft",
     "category": "Fighters",
     "visual_kind": "fighter",
     "role": "fighter",
@@ -3119,41 +3124,36 @@
     },
     "research_days": [
       1,
-      6,
+      4,
+      7,
       10,
-      14,
-      20
+      13
     ],
     "research_tiers": [
       {
         "name": "Yak-130",
-        "model": "res://assets/library/arsenal/russia_yak130.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_yak130.png"
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_yak130.glb"
       },
       {
-        "name": "Yak-130 \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/russia_yak130.glb",
+        "name": "Yak-130 · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "preview": "res://assets/library/arsenal/russia_yak130.png"
+        "model": "res://assets/library/arsenal/russia_yak130.glb"
       },
       {
-        "name": "Yak-130 \u00b7 L3",
-        "model": "res://assets/library/arsenal/russia_yak130.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_yak130.png"
-      },
-      {
-        "name": "Yak-130 \u00b7 L3 \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/russia_yak130.glb",
+        "name": "Yak-130 · guided bombs",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "preview": "res://assets/library/arsenal/russia_yak130.png"
+        "model": "res://assets/library/arsenal/russia_yak130.glb"
       },
       {
-        "name": "Yak-130 \u00b7 L5",
-        "model": "res://assets/library/arsenal/russia_yak130.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_yak130.png"
+        "name": "Yak-130 · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_yak130.glb"
+      },
+      {
+        "name": "Yak-130 · advanced",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_yak130.glb"
       }
     ],
     "model_status": "Original supplied model",
@@ -3167,12 +3167,14 @@
       "fuel": 2.4,
       "manpower": 0.6
     },
-    "production_building": "airbase"
+    "production_building": "airbase",
+    "research_branch": "Light attack aircraft",
+    "starter": true
   },
   {
     "id": "a400m_atlas_ukraine",
     "country": "ukraine",
-    "name": "A400M Atlas transport",
+    "name": "Transport aircraft",
     "category": "Support",
     "visual_kind": "fighter",
     "role": "transport",
@@ -3189,10 +3191,10 @@
       "airbase": 1
     },
     "research_days": [
-      1,
-      6,
-      10,
+      8,
+      11,
       14,
+      17,
       20
     ],
     "research_tiers": [
@@ -3203,25 +3205,25 @@
         "preview": "res://assets/library/arsenal/euro_a400m_atlas.png"
       },
       {
-        "name": "A400M Atlas transport \u00b7 upgrade",
+        "name": "A400M Atlas transport · upgrade",
         "model": "res://assets/library/arsenal/euro_a400m_atlas.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_a400m_atlas.png"
       },
       {
-        "name": "A400M Atlas transport \u00b7 L3",
+        "name": "A400M Atlas transport · L3",
         "model": "res://assets/library/arsenal/euro_a400m_atlas.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_a400m_atlas.png"
       },
       {
-        "name": "A400M Atlas transport \u00b7 L3 \u00b7 upgrade",
+        "name": "A400M Atlas transport · L3 · upgrade",
         "model": "res://assets/library/arsenal/euro_a400m_atlas.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_a400m_atlas.png"
       },
       {
-        "name": "A400M Atlas transport \u00b7 L5",
+        "name": "A400M Atlas transport · L5",
         "model": "res://assets/library/arsenal/euro_a400m_atlas.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_a400m_atlas.png"
@@ -3238,12 +3240,14 @@
       "fuel": 2.4,
       "manpower": 0.6
     },
-    "production_building": "airbase"
+    "production_building": "airbase",
+    "research_branch": "Transport aircraft",
+    "starter": false
   },
   {
     "id": "hawk_t2_ukraine",
     "country": "ukraine",
-    "name": "Hawk T2",
+    "name": "Light attack aircraft",
     "category": "Fighters",
     "visual_kind": "fighter",
     "role": "fighter",
@@ -3262,40 +3266,35 @@
     "research_days": [
       1,
       4,
-      8,
-      12,
-      18
+      7,
+      10,
+      13
     ],
     "research_tiers": [
       {
         "name": "Hawk T2",
-        "model": "res://assets/library/arsenal/euro_hawk_t2.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/euro_hawk_t2.png"
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_hawk_t2.glb"
       },
       {
-        "name": "Hawk T2 \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/euro_hawk_t2.glb",
+        "name": "Hawk T2 · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "preview": "res://assets/library/arsenal/euro_hawk_t2.png"
+        "model": "res://assets/library/arsenal/euro_hawk_t2.glb"
       },
       {
-        "name": "Hawk T2 \u00b7 L3",
-        "model": "res://assets/library/arsenal/euro_hawk_t2.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/euro_hawk_t2.png"
-      },
-      {
-        "name": "Hawk T2 \u00b7 L3 \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/euro_hawk_t2.glb",
+        "name": "Hawk T2 · guided bombs",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "preview": "res://assets/library/arsenal/euro_hawk_t2.png"
+        "model": "res://assets/library/arsenal/euro_hawk_t2.glb"
       },
       {
-        "name": "Hawk T2 \u00b7 L5",
-        "model": "res://assets/library/arsenal/euro_hawk_t2.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/euro_hawk_t2.png"
+        "name": "Hawk T2 · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_hawk_t2.glb"
+      },
+      {
+        "name": "Hawk T2 · advanced",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_hawk_t2.glb"
       }
     ],
     "model_status": "Original supplied model",
@@ -3309,12 +3308,14 @@
       "fuel": 2.4,
       "manpower": 0.6
     },
-    "production_building": "airbase"
+    "production_building": "airbase",
+    "research_branch": "Light attack aircraft",
+    "starter": true
   },
   {
     "id": "advanced_tanks_russia",
     "country": "russia",
-    "name": "T-14 Armata",
+    "name": "Next-generation tanks",
     "category": "Armor",
     "visual_kind": "armor",
     "role": "armor",
@@ -3331,42 +3332,37 @@
       "tank_plant": 1
     },
     "research_days": [
-      1,
-      4,
-      8,
-      12,
-      18
+      10,
+      13,
+      16,
+      19,
+      22
     ],
     "research_tiers": [
       {
+        "name": "T-80BVM",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_t80bvm.glb"
+      },
+      {
+        "name": "T-80BVM · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_t80bvm.glb"
+      },
+      {
+        "name": "T-90M Proryv",
+        "improvement": "",
+        "model": "res://assets/library/t90m_russian.glb"
+      },
+      {
+        "name": "T-90M Proryv · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/t90m_russian.glb"
+      },
+      {
         "name": "T-14 Armata",
-        "model": "res://assets/library/arsenal/russia_t14_armata.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_t14_armata.png"
-      },
-      {
-        "name": "T-14 Armata \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/russia_t14_armata.glb",
-        "improvement": "Improved targeting, reliability and combat effectiveness",
-        "preview": "res://assets/library/arsenal/russia_t14_armata.png"
-      },
-      {
-        "name": "T-14 Armata \u00b7 L3",
-        "model": "res://assets/library/arsenal/russia_t14_armata.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_t14_armata.png"
-      },
-      {
-        "name": "T-14 Armata \u00b7 L3 \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/russia_t14_armata.glb",
-        "improvement": "Improved targeting, reliability and combat effectiveness",
-        "preview": "res://assets/library/arsenal/russia_t14_armata.png"
-      },
-      {
-        "name": "T-14 Armata \u00b7 L5",
-        "model": "res://assets/library/arsenal/russia_t14_armata.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/russia_t14_armata.png"
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_t14_armata.glb"
       }
     ],
     "model_status": "Original supplied model",
@@ -3375,12 +3371,14 @@
       "fuel": 2.4,
       "manpower": 0.6
     },
-    "production_building": "tank_plant"
+    "production_building": "tank_plant",
+    "research_branch": "Next-generation tank",
+    "starter": false
   },
   {
     "id": "advanced_tanks_ukraine",
     "country": "ukraine",
-    "name": "KF51 Panther",
+    "name": "Next-generation tanks",
     "category": "Armor",
     "visual_kind": "armor",
     "role": "armor",
@@ -3397,42 +3395,37 @@
       "tank_plant": 1
     },
     "research_days": [
-      1,
-      5,
-      9,
+      10,
       13,
-      19
+      16,
+      19,
+      22
     ],
     "research_tiers": [
       {
+        "name": "Leclerc",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_leclerc.glb"
+      },
+      {
+        "name": "Leclerc · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_leclerc.glb"
+      },
+      {
+        "name": "M1A2 Abrams",
+        "improvement": "",
+        "model": "res://assets/library/abrams_european.glb"
+      },
+      {
+        "name": "M1A2 Abrams · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/abrams_european.glb"
+      },
+      {
         "name": "KF51 Panther",
-        "model": "res://assets/library/arsenal/euro_kf51_panther.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/euro_kf51_panther.png"
-      },
-      {
-        "name": "KF51 Panther \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/euro_kf51_panther.glb",
-        "improvement": "Improved targeting, reliability and combat effectiveness",
-        "preview": "res://assets/library/arsenal/euro_kf51_panther.png"
-      },
-      {
-        "name": "KF51 Panther \u00b7 L3",
-        "model": "res://assets/library/arsenal/euro_kf51_panther.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/euro_kf51_panther.png"
-      },
-      {
-        "name": "KF51 Panther \u00b7 L3 \u00b7 upgrade",
-        "model": "res://assets/library/arsenal/euro_kf51_panther.glb",
-        "improvement": "Improved targeting, reliability and combat effectiveness",
-        "preview": "res://assets/library/arsenal/euro_kf51_panther.png"
-      },
-      {
-        "name": "KF51 Panther \u00b7 L5",
-        "model": "res://assets/library/arsenal/euro_kf51_panther.glb",
-        "improvement": "Supplied equipment",
-        "preview": "res://assets/library/arsenal/euro_kf51_panther.png"
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_kf51_panther.glb"
       }
     ],
     "model_status": "Original supplied model",
@@ -3441,12 +3434,14 @@
       "fuel": 2.4,
       "manpower": 0.6
     },
-    "production_building": "tank_plant"
+    "production_building": "tank_plant",
+    "research_branch": "Next-generation tank",
+    "starter": false
   },
   {
     "id": "coastal_missiles_russia",
     "country": "russia",
-    "name": "Coastal missiles",
+    "name": "Coastal anti-ship missiles",
     "category": "Missiles",
     "visual_kind": "missile_launcher",
     "role": "missile_launcher",
@@ -3463,11 +3458,11 @@
       "missile_factory": 1
     },
     "research_days": [
-      1,
-      6,
-      11,
-      17,
-      24
+      9,
+      12,
+      15,
+      18,
+      21
     ],
     "research_tiers": [
       {
@@ -3478,7 +3473,7 @@
         "projectile_model": "res://assets/library/arsenal/russia_p800_oniks.glb"
       },
       {
-        "name": "P-800 Oniks \u00b7 upgrade",
+        "name": "P-800 Oniks · upgrade",
         "model": "res://assets/library/arsenal/russia_bastion_p_launcher.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_bastion_p_launcher.png",
@@ -3492,14 +3487,14 @@
         "projectile_model": "res://assets/library/arsenal/russia_3m22_zircon.glb"
       },
       {
-        "name": "3M22 Zircon \u00b7 upgrade",
+        "name": "3M22 Zircon · upgrade",
         "model": "res://assets/library/arsenal/russia_bastion_p_launcher.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_bastion_p_launcher.png",
         "projectile_model": "res://assets/library/arsenal/russia_3m22_zircon.glb"
       },
       {
-        "name": "Zircon \u00b7 advanced",
+        "name": "Zircon · advanced",
         "model": "res://assets/library/arsenal/russia_bastion_p_launcher.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/russia_bastion_p_launcher.png",
@@ -3516,12 +3511,14 @@
       "fuel": 2.4,
       "manpower": 0.6
     },
-    "production_building": "factory"
+    "production_building": "missile_factory",
+    "research_branch": "Coastal anti-ship missile",
+    "starter": false
   },
   {
     "id": "coastal_missiles_ukraine",
     "country": "ukraine",
-    "name": "Coastal missiles",
+    "name": "Coastal anti-ship missiles",
     "category": "Missiles",
     "visual_kind": "missile_launcher",
     "role": "missile_launcher",
@@ -3538,11 +3535,11 @@
       "missile_factory": 1
     },
     "research_days": [
-      1,
-      7,
+      9,
       12,
+      15,
       18,
-      25
+      21
     ],
     "research_tiers": [
       {
@@ -3553,28 +3550,28 @@
         "projectile_model": "res://assets/library/arsenal/euro_nsm.glb"
       },
       {
-        "name": "NSM \u00b7 upgrade",
+        "name": "NSM · upgrade",
         "model": "res://assets/library/arsenal/euro_nsm_coastal_launcher.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_nsm_coastal_launcher.png",
         "projectile_model": "res://assets/library/arsenal/euro_nsm.glb"
       },
       {
-        "name": "NSM \u00b7 sensors",
+        "name": "NSM · sensors",
         "model": "res://assets/library/arsenal/euro_nsm_coastal_launcher.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_nsm_coastal_launcher.png",
         "projectile_model": "res://assets/library/arsenal/euro_nsm.glb"
       },
       {
-        "name": "NSM \u00b7 sensors \u00b7 upgrade",
+        "name": "NSM · sensors · upgrade",
         "model": "res://assets/library/arsenal/euro_nsm_coastal_launcher.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_nsm_coastal_launcher.png",
         "projectile_model": "res://assets/library/arsenal/euro_nsm.glb"
       },
       {
-        "name": "NSM \u00b7 advanced",
+        "name": "NSM · advanced",
         "model": "res://assets/library/arsenal/euro_nsm_coastal_launcher.glb",
         "improvement": "Supplied equipment",
         "preview": "res://assets/library/arsenal/euro_nsm_coastal_launcher.png",
@@ -3591,7 +3588,9 @@
       "fuel": 2.4,
       "manpower": 0.6
     },
-    "production_building": "factory"
+    "production_building": "missile_factory",
+    "research_branch": "Coastal anti-ship missile",
+    "starter": false
   },
   {
     "id": "fleet_russia",
@@ -3613,11 +3612,11 @@
       "naval_base": 1
     },
     "research_days": [
-      1,
-      6,
-      11,
+      4,
+      8,
+      12,
       16,
-      22
+      20
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -3628,7 +3627,7 @@
         "preview": "res://assets/library/arsenal/russia_frigate_t1_starting_krivak_oct12_preview.png"
       },
       {
-        "name": "Krivak \u00b7 upgrade",
+        "name": "Krivak · upgrade",
         "model": "res://assets/library/arsenal/russia_frigate_t1_starting_krivak.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_frigate_t1_starting_krivak_oct12_preview.png"
@@ -3640,7 +3639,7 @@
         "preview": "res://assets/library/arsenal/russia_frigate_t2_mid_admiral_grigorovich_oct12_preview.png"
       },
       {
-        "name": "Admiral Grigorovich \u00b7 upgrade",
+        "name": "Admiral Grigorovich · upgrade",
         "model": "res://assets/library/arsenal/russia_frigate_t2_mid_admiral_grigorovich.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_frigate_t2_mid_admiral_grigorovich_oct12_preview.png"
@@ -3665,7 +3664,8 @@
     "aa_range": 2.5,
     "shore_bombardment": true,
     "production_building": "naval_base",
-    "research_branch": "Frigates"
+    "research_branch": "Frigates",
+    "starter": false
   },
   {
     "id": "fleet_ukraine",
@@ -3687,10 +3687,10 @@
       "naval_base": 1
     },
     "research_days": [
-      1,
       4,
-      9,
-      14,
+      8,
+      12,
+      16,
       20
     ],
     "model_status": "Original supplied model",
@@ -3702,7 +3702,7 @@
         "preview": "res://assets/library/arsenal/euro_type23_oct12_preview.png"
       },
       {
-        "name": "Type 23 Duke \u00b7 upgrade",
+        "name": "Type 23 Duke · upgrade",
         "model": "res://assets/library/arsenal/euro_type23.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_type23_oct12_preview.png"
@@ -3714,7 +3714,7 @@
         "preview": "res://assets/library/arsenal/euro_fremm_oct12_preview.png"
       },
       {
-        "name": "FREMM Aquitaine \u00b7 upgrade",
+        "name": "FREMM Aquitaine · upgrade",
         "model": "res://assets/library/arsenal/euro_fremm.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_fremm_oct12_preview.png"
@@ -3739,7 +3739,8 @@
     "aa_range": 2.5,
     "shore_bombardment": true,
     "production_building": "naval_base",
-    "research_branch": "Frigates"
+    "research_branch": "Frigates",
+    "starter": false
   },
   {
     "id": "destroyers_russia",
@@ -3761,11 +3762,11 @@
       "naval_base": 1
     },
     "research_days": [
-      1,
-      4,
-      9,
-      14,
-      20
+      8,
+      12,
+      16,
+      20,
+      24
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -3776,7 +3777,7 @@
         "preview": "res://assets/library/arsenal/russia_destroyer_t1_starting_sovremenny_oct12_preview.png"
       },
       {
-        "name": "Sovremenny \u00b7 upgrade",
+        "name": "Sovremenny · upgrade",
         "model": "res://assets/library/arsenal/russia_destroyer_t1_starting_sovremenny.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_destroyer_t1_starting_sovremenny_oct12_preview.png"
@@ -3788,7 +3789,7 @@
         "preview": "res://assets/library/arsenal/russia_destroyer_t2_mid_slava_oct12_preview.png"
       },
       {
-        "name": "Slava \u00b7 upgrade",
+        "name": "Slava · upgrade",
         "model": "res://assets/library/arsenal/russia_destroyer_t2_mid_slava.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_destroyer_t2_mid_slava_oct12_preview.png"
@@ -3813,7 +3814,8 @@
     "aa_range": 2.5,
     "shore_bombardment": true,
     "production_building": "naval_base",
-    "research_branch": "Destroyers"
+    "research_branch": "Destroyers",
+    "starter": false
   },
   {
     "id": "destroyers_ukraine",
@@ -3835,11 +3837,11 @@
       "naval_base": 1
     },
     "research_days": [
-      1,
-      5,
-      10,
-      15,
-      21
+      8,
+      12,
+      16,
+      20,
+      24
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -3850,7 +3852,7 @@
         "preview": "res://assets/library/arsenal/euro_destroyer_t1_starting_type42_oct12_preview.png"
       },
       {
-        "name": "Type 42 \u00b7 upgrade",
+        "name": "Type 42 · upgrade",
         "model": "res://assets/library/arsenal/euro_destroyer_t1_starting_type42.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_destroyer_t1_starting_type42_oct12_preview.png"
@@ -3862,7 +3864,7 @@
         "preview": "res://assets/library/arsenal/euro_horizon_oct12_preview.png"
       },
       {
-        "name": "Horizon Andrea Doria \u00b7 upgrade",
+        "name": "Horizon Andrea Doria · upgrade",
         "model": "res://assets/library/arsenal/euro_horizon.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_horizon_oct12_preview.png"
@@ -3887,7 +3889,8 @@
     "aa_range": 2.5,
     "shore_bombardment": true,
     "production_building": "naval_base",
-    "research_branch": "Destroyers"
+    "research_branch": "Destroyers",
+    "starter": false
   },
   {
     "id": "corvettes_russia",
@@ -3911,9 +3914,9 @@
     "research_days": [
       1,
       5,
-      10,
-      15,
-      21
+      9,
+      13,
+      17
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -3924,7 +3927,7 @@
         "preview": "res://assets/library/arsenal/russia_corvette_t1_starting_grisha_oct12_preview.png"
       },
       {
-        "name": "Grisha \u00b7 upgrade",
+        "name": "Grisha · upgrade",
         "model": "res://assets/library/arsenal/russia_corvette_t1_starting_grisha.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_corvette_t1_starting_grisha_oct12_preview.png"
@@ -3936,7 +3939,7 @@
         "preview": "res://assets/library/arsenal/russia_buyan_m_oct12_preview.png"
       },
       {
-        "name": "Buyan-M \u00b7 upgrade",
+        "name": "Buyan-M · upgrade",
         "model": "res://assets/library/arsenal/russia_buyan_m.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_buyan_m_oct12_preview.png"
@@ -3961,7 +3964,8 @@
     "aa_range": 2.5,
     "shore_bombardment": true,
     "production_building": "naval_base",
-    "research_branch": "Corvettes"
+    "research_branch": "Corvettes",
+    "starter": true
   },
   {
     "id": "corvettes_ukraine",
@@ -3984,10 +3988,10 @@
     },
     "research_days": [
       1,
-      6,
-      11,
-      16,
-      22
+      5,
+      9,
+      13,
+      17
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -3998,7 +4002,7 @@
         "preview": "res://assets/library/arsenal/euro_corvette_t1_starting_minerva_oct12_preview.png"
       },
       {
-        "name": "Minerva \u00b7 upgrade",
+        "name": "Minerva · upgrade",
         "model": "res://assets/library/arsenal/euro_corvette_t1_starting_minerva.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_corvette_t1_starting_minerva_oct12_preview.png"
@@ -4010,7 +4014,7 @@
         "preview": "res://assets/library/arsenal/euro_corvette_t2_mid_k130_braunschweig_oct12_preview.png"
       },
       {
-        "name": "K130 Braunschweig \u00b7 upgrade",
+        "name": "K130 Braunschweig · upgrade",
         "model": "res://assets/library/arsenal/euro_corvette_t2_mid_k130_braunschweig.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_corvette_t2_mid_k130_braunschweig_oct12_preview.png"
@@ -4035,7 +4039,8 @@
     "aa_range": 2.5,
     "shore_bombardment": true,
     "production_building": "naval_base",
-    "research_branch": "Corvettes"
+    "research_branch": "Corvettes",
+    "starter": true
   },
   {
     "id": "submarines_russia",
@@ -4057,10 +4062,10 @@
       "naval_base": 1
     },
     "research_days": [
-      1,
       6,
-      11,
-      16,
+      10,
+      14,
+      18,
       22
     ],
     "model_status": "Original supplied model",
@@ -4072,7 +4077,7 @@
         "preview": "res://assets/library/arsenal/russia_kilo_sub_oct12_preview.png"
       },
       {
-        "name": "Kilo \u00b7 upgrade",
+        "name": "Kilo · upgrade",
         "model": "res://assets/library/arsenal/russia_kilo_sub.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_kilo_sub_oct12_preview.png"
@@ -4084,7 +4089,7 @@
         "preview": "res://assets/library/arsenal/russia_submarine_t2_mid_akula_oct12_preview.png"
       },
       {
-        "name": "Akula \u00b7 upgrade",
+        "name": "Akula · upgrade",
         "model": "res://assets/library/arsenal/russia_submarine_t2_mid_akula.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_submarine_t2_mid_akula_oct12_preview.png"
@@ -4109,7 +4114,8 @@
     "aa_range": 2.5,
     "shore_bombardment": false,
     "production_building": "naval_base",
-    "research_branch": "Submarines"
+    "research_branch": "Submarines",
+    "starter": false
   },
   {
     "id": "submarines_ukraine",
@@ -4131,11 +4137,11 @@
       "naval_base": 1
     },
     "research_days": [
-      1,
-      4,
-      9,
+      6,
+      10,
       14,
-      20
+      18,
+      22
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -4146,7 +4152,7 @@
         "preview": "res://assets/library/arsenal/euro_submarine_t1_starting_type209_oct12_preview.png"
       },
       {
-        "name": "Type 209 \u00b7 upgrade",
+        "name": "Type 209 · upgrade",
         "model": "res://assets/library/arsenal/euro_submarine_t1_starting_type209.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_submarine_t1_starting_type209_oct12_preview.png"
@@ -4158,7 +4164,7 @@
         "preview": "res://assets/library/arsenal/euro_submarine_t2_mid_type212a_oct12_preview.png"
       },
       {
-        "name": "Type 212A \u00b7 upgrade",
+        "name": "Type 212A · upgrade",
         "model": "res://assets/library/arsenal/euro_submarine_t2_mid_type212a.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_submarine_t2_mid_type212a_oct12_preview.png"
@@ -4183,7 +4189,8 @@
     "aa_range": 2.5,
     "shore_bombardment": false,
     "production_building": "naval_base",
-    "research_branch": "Submarines"
+    "research_branch": "Submarines",
+    "starter": false
   },
   {
     "id": "carriers_russia",
@@ -4205,11 +4212,11 @@
       "naval_base": 1
     },
     "research_days": [
-      1,
-      4,
-      9,
-      14,
-      20
+      18,
+      22,
+      26,
+      30,
+      34
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -4220,7 +4227,7 @@
         "preview": "res://assets/library/arsenal/russia_carrier_t1_starting_kiev_oct12_preview.png"
       },
       {
-        "name": "Kiev \u00b7 upgrade",
+        "name": "Kiev · upgrade",
         "model": "res://assets/library/arsenal/russia_carrier_t1_starting_kiev.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_carrier_t1_starting_kiev_oct12_preview.png"
@@ -4232,7 +4239,7 @@
         "preview": "res://assets/library/arsenal/russia_admiral_kuznetsov_oct12_preview.png"
       },
       {
-        "name": "Admiral Kuznetsov \u00b7 upgrade",
+        "name": "Admiral Kuznetsov · upgrade",
         "model": "res://assets/library/arsenal/russia_admiral_kuznetsov.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/russia_admiral_kuznetsov_oct12_preview.png"
@@ -4257,7 +4264,8 @@
     "aa_range": 2.5,
     "shore_bombardment": false,
     "production_building": "naval_base",
-    "research_branch": "Aircraft carriers"
+    "research_branch": "Aircraft carriers",
+    "starter": false
   },
   {
     "id": "carriers_ukraine",
@@ -4279,11 +4287,11 @@
       "naval_base": 1
     },
     "research_days": [
-      1,
-      5,
-      10,
-      15,
-      21
+      18,
+      22,
+      26,
+      30,
+      34
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -4294,7 +4302,7 @@
         "preview": "res://assets/library/arsenal/euro_carrier_t1_starting_clemenceau_oct12_preview.png"
       },
       {
-        "name": "Clemenceau \u00b7 upgrade",
+        "name": "Clemenceau · upgrade",
         "model": "res://assets/library/arsenal/euro_carrier_t1_starting_clemenceau.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_carrier_t1_starting_clemenceau_oct12_preview.png"
@@ -4306,7 +4314,7 @@
         "preview": "res://assets/library/arsenal/euro_carrier_t2_mid_charles_de_gaulle_oct12_preview.png"
       },
       {
-        "name": "Charles de Gaulle \u00b7 upgrade",
+        "name": "Charles de Gaulle · upgrade",
         "model": "res://assets/library/arsenal/euro_carrier_t2_mid_charles_de_gaulle.glb",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "preview": "res://assets/library/arsenal/euro_carrier_t2_mid_charles_de_gaulle_oct12_preview.png"
@@ -4331,6 +4339,1626 @@
     "aa_range": 2.5,
     "shore_bombardment": false,
     "production_building": "naval_base",
-    "research_branch": "Aircraft carriers"
+    "research_branch": "Aircraft carriers",
+    "starter": false
+  },
+  {
+    "id": "airborne_russia",
+    "country": "russia",
+    "name": "Airborne infantry",
+    "category": "Infantry",
+    "visual_kind": "infantry",
+    "role": "infantry",
+    "asset_roster_id": "airborne_russia",
+    "seconds": 35,
+    "cost": {
+      "funds": 120,
+      "materials": 25,
+      "electronics": 10,
+      "fuel": 5,
+      "manpower": 60
+    },
+    "building_requirements": {
+      "barracks": 1
+    },
+    "research_days": [
+      3,
+      6,
+      9,
+      12,
+      15
+    ],
+    "research_tiers": [
+      {
+        "name": "VDV paratroopers",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_vdv_paratrooper.glb"
+      },
+      {
+        "name": "VDV paratroopers · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_vdv_paratrooper.glb"
+      },
+      {
+        "name": "VDV paratroopers · air assault",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_vdv_paratrooper.glb"
+      },
+      {
+        "name": "VDV paratroopers · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_vdv_paratrooper.glb"
+      },
+      {
+        "name": "VDV paratroopers · guards",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_vdv_paratrooper.glb"
+      }
+    ],
+    "model_status": "Original supplied model",
+    "upkeep": {
+      "funds": 12.0,
+      "fuel": 0.4,
+      "manpower": 1.2
+    },
+    "production_building": "barracks",
+    "research_branch": "Airborne infantry",
+    "starter": false
+  },
+  {
+    "id": "special_forces_russia",
+    "country": "russia",
+    "name": "Special forces",
+    "category": "Infantry",
+    "visual_kind": "infantry",
+    "role": "infantry",
+    "asset_roster_id": "special_forces_russia",
+    "seconds": 35,
+    "cost": {
+      "funds": 120,
+      "materials": 25,
+      "electronics": 10,
+      "fuel": 5,
+      "manpower": 60
+    },
+    "building_requirements": {
+      "barracks": 1
+    },
+    "research_days": [
+      6,
+      9,
+      12,
+      15,
+      18
+    ],
+    "research_tiers": [
+      {
+        "name": "Spetsnaz",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_spetsnaz.glb"
+      },
+      {
+        "name": "Spetsnaz · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_spetsnaz.glb"
+      },
+      {
+        "name": "Spetsnaz · raid tactics",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_spetsnaz.glb"
+      },
+      {
+        "name": "Spetsnaz · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_spetsnaz.glb"
+      },
+      {
+        "name": "Spetsnaz · elite",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_spetsnaz.glb"
+      }
+    ],
+    "model_status": "Original supplied model",
+    "upkeep": {
+      "funds": 12.0,
+      "fuel": 0.4,
+      "manpower": 1.2
+    },
+    "production_building": "barracks",
+    "research_branch": "Special forces",
+    "starter": false
+  },
+  {
+    "id": "naval_infantry_russia",
+    "country": "russia",
+    "name": "Naval infantry",
+    "category": "Infantry",
+    "visual_kind": "infantry",
+    "role": "infantry",
+    "asset_roster_id": "naval_infantry_russia",
+    "seconds": 35,
+    "cost": {
+      "funds": 120,
+      "materials": 25,
+      "electronics": 10,
+      "fuel": 5,
+      "manpower": 60
+    },
+    "building_requirements": {
+      "barracks": 1
+    },
+    "research_days": [
+      4,
+      7,
+      10,
+      13,
+      16
+    ],
+    "research_tiers": [
+      {
+        "name": "Naval infantry",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_naval_infantry.glb"
+      },
+      {
+        "name": "Naval infantry · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_naval_infantry.glb"
+      },
+      {
+        "name": "Naval infantry · amphibious",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_naval_infantry.glb"
+      },
+      {
+        "name": "Naval infantry · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_naval_infantry.glb"
+      },
+      {
+        "name": "Naval infantry · guards",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_naval_infantry.glb"
+      }
+    ],
+    "model_status": "Original supplied model",
+    "upkeep": {
+      "funds": 12.0,
+      "fuel": 0.4,
+      "manpower": 1.2
+    },
+    "production_building": "barracks",
+    "research_branch": "Naval infantry",
+    "starter": false
+  },
+  {
+    "id": "snipers_russia",
+    "country": "russia",
+    "name": "Snipers",
+    "category": "Infantry",
+    "visual_kind": "infantry",
+    "role": "infantry",
+    "asset_roster_id": "snipers_russia",
+    "seconds": 35,
+    "cost": {
+      "funds": 120,
+      "materials": 25,
+      "electronics": 10,
+      "fuel": 5,
+      "manpower": 60
+    },
+    "building_requirements": {
+      "barracks": 1
+    },
+    "research_days": [
+      1,
+      4,
+      7,
+      10,
+      13
+    ],
+    "research_tiers": [
+      {
+        "name": "Sniper team",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_sniper.glb"
+      },
+      {
+        "name": "Sniper team · SV-98",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_sniper.glb"
+      },
+      {
+        "name": "Sniper team · thermal optics",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_sniper.glb"
+      },
+      {
+        "name": "Sniper team · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_sniper.glb"
+      },
+      {
+        "name": "Sniper team · ASh-12",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_sniper.glb"
+      }
+    ],
+    "model_status": "Original supplied model",
+    "upkeep": {
+      "funds": 12.0,
+      "fuel": 0.4,
+      "manpower": 1.2
+    },
+    "production_building": "barracks",
+    "research_branch": "Snipers",
+    "starter": false
+  },
+  {
+    "id": "ifv_russia",
+    "country": "russia",
+    "name": "Infantry fighting vehicles",
+    "category": "Mechanized",
+    "visual_kind": "ifv",
+    "research_branch": "Infantry fighting vehicle",
+    "seconds": 28,
+    "cost": {
+      "funds": 160,
+      "materials": 60,
+      "electronics": 20,
+      "fuel": 25,
+      "manpower": 20
+    },
+    "research_tiers": [
+      {
+        "name": "BMP-1",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_bmp1.glb"
+      },
+      {
+        "name": "BMP-1 · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_bmp1.glb"
+      },
+      {
+        "name": "BMP-2",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_bmp2.glb"
+      },
+      {
+        "name": "BMP-2 · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_bmp2.glb"
+      },
+      {
+        "name": "BMP-3",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_bmp3.glb"
+      }
+    ],
+    "building_requirements": {
+      "barracks": 1
+    },
+    "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
+    "research_days": [
+      2,
+      5,
+      8,
+      11,
+      14
+    ],
+    "upkeep": {
+      "funds": 16.0,
+      "fuel": 2.0,
+      "manpower": 0.4
+    },
+    "production_building": "barracks",
+    "starter": false,
+    "asset_roster_id": "ifv_russia"
+  },
+  {
+    "id": "airborne_ifv_russia",
+    "country": "russia",
+    "name": "Airborne fighting vehicles",
+    "category": "Mechanized",
+    "visual_kind": "ifv",
+    "research_branch": "Airborne fighting vehicle",
+    "seconds": 28,
+    "cost": {
+      "funds": 160,
+      "materials": 60,
+      "electronics": 20,
+      "fuel": 25,
+      "manpower": 20
+    },
+    "research_tiers": [
+      {
+        "name": "BMD-2",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_bmd2.glb"
+      },
+      {
+        "name": "BMD-2 · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_bmd2.glb"
+      },
+      {
+        "name": "BMD-4M",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_bmd4m.glb"
+      },
+      {
+        "name": "BMD-4M · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_bmd4m.glb"
+      },
+      {
+        "name": "BMD-4M · advanced",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_bmd4m.glb"
+      }
+    ],
+    "building_requirements": {
+      "barracks": 1
+    },
+    "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
+    "research_days": [
+      5,
+      8,
+      11,
+      14,
+      17
+    ],
+    "upkeep": {
+      "funds": 16.0,
+      "fuel": 2.0,
+      "manpower": 0.4
+    },
+    "production_building": "barracks",
+    "starter": false,
+    "asset_roster_id": "airborne_ifv_russia"
+  },
+  {
+    "id": "light_tank_russia",
+    "country": "russia",
+    "name": "Light tanks",
+    "category": "Armor",
+    "visual_kind": "armor",
+    "research_branch": "Light tank",
+    "seconds": 45,
+    "cost": {
+      "funds": 280,
+      "materials": 95,
+      "electronics": 35,
+      "fuel": 40,
+      "manpower": 15
+    },
+    "research_tiers": [
+      {
+        "name": "PL-01 light tank",
+        "improvement": "",
+        "model": "res://assets/library/pl01_russian.glb"
+      },
+      {
+        "name": "PL-01 light tank · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/pl01_russian.glb"
+      },
+      {
+        "name": "PL-01 light tank · thermal sights",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/pl01_russian.glb"
+      },
+      {
+        "name": "PL-01 light tank · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/pl01_russian.glb"
+      },
+      {
+        "name": "PL-01 light tank · advanced",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/pl01_russian.glb"
+      }
+    ],
+    "building_requirements": {
+      "tank_plant": 1
+    },
+    "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
+    "research_days": [
+      2,
+      5,
+      8,
+      11,
+      14
+    ],
+    "upkeep": {
+      "funds": 28.0,
+      "fuel": 3.2,
+      "manpower": 0.3
+    },
+    "production_building": "tank_plant",
+    "starter": false,
+    "asset_roster_id": "light_tank_russia"
+  },
+  {
+    "id": "strategic_russia",
+    "country": "russia",
+    "name": "Strategic nuclear missiles",
+    "category": "Missiles",
+    "visual_kind": "missile_launcher",
+    "role": "missile_launcher",
+    "asset_roster_id": "strategic_russia",
+    "seconds": 80,
+    "cost": {
+      "funds": 400,
+      "materials": 120,
+      "electronics": 100,
+      "fuel": 60,
+      "manpower": 25
+    },
+    "building_requirements": {
+      "missile_factory": 1
+    },
+    "research_days": [
+      22,
+      25,
+      28,
+      31,
+      34
+    ],
+    "model_status": "Original supplied model",
+    "research_tiers": [
+      {
+        "name": "Topol-M",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_topol_m.glb",
+        "preview": "res://assets/library/arsenal/russia_topol_m_ready.png"
+      },
+      {
+        "name": "Topol-M · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_topol_m.glb",
+        "preview": "res://assets/library/arsenal/russia_topol_m_ready.png"
+      },
+      {
+        "name": "Yars RS-24",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_yars.glb"
+      },
+      {
+        "name": "Yars RS-24 · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_yars.glb"
+      },
+      {
+        "name": "Yars RS-24 · advanced",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_yars.glb"
+      }
+    ],
+    "strike_range": 14.0,
+    "strike_damage": 40.0,
+    "reload_rounds": 3.0,
+    "upkeep": {
+      "funds": 40.0,
+      "fuel": 4.8,
+      "manpower": 0.5
+    },
+    "production_building": "missile_factory",
+    "research_branch": "Strategic nuclear missile",
+    "starter": false
+  },
+  {
+    "id": "strike_russia",
+    "country": "russia",
+    "name": "Strike fighters",
+    "category": "Fighters",
+    "visual_kind": "fighter",
+    "role": "fighter",
+    "asset_roster_id": "strike_russia",
+    "seconds": 60,
+    "cost": {
+      "funds": 250,
+      "materials": 80,
+      "electronics": 40,
+      "fuel": 30,
+      "manpower": 30
+    },
+    "building_requirements": {
+      "airbase": 1
+    },
+    "research_days": [
+      7,
+      10,
+      13,
+      16,
+      19
+    ],
+    "research_tiers": [
+      {
+        "name": "Su-34",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_su34.glb"
+      },
+      {
+        "name": "Su-34 · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_su34.glb"
+      },
+      {
+        "name": "Su-34 · precision bombs",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_su34.glb"
+      },
+      {
+        "name": "Su-34 · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_su34.glb"
+      },
+      {
+        "name": "Su-34 · advanced",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_su34.glb"
+      }
+    ],
+    "model_status": "Original supplied model",
+    "air_speed": 3.2,
+    "air_range": 14.0,
+    "air_damage": 5.0,
+    "ground_damage": 11.0,
+    "requires_airbase": true,
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    },
+    "production_building": "airbase",
+    "research_branch": "Strike fighter",
+    "starter": false
+  },
+  {
+    "id": "interceptor_russia",
+    "country": "russia",
+    "name": "Interceptors",
+    "category": "Fighters",
+    "visual_kind": "fighter",
+    "role": "fighter",
+    "asset_roster_id": "interceptor_russia",
+    "seconds": 60,
+    "cost": {
+      "funds": 250,
+      "materials": 80,
+      "electronics": 40,
+      "fuel": 30,
+      "manpower": 30
+    },
+    "building_requirements": {
+      "airbase": 1
+    },
+    "research_days": [
+      9,
+      12,
+      15,
+      18,
+      21
+    ],
+    "research_tiers": [
+      {
+        "name": "MiG-31BM",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_mig31bm.glb"
+      },
+      {
+        "name": "MiG-31BM · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_mig31bm.glb"
+      },
+      {
+        "name": "MiG-31BM · R-37M",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_mig31bm.glb"
+      },
+      {
+        "name": "MiG-31BM · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_mig31bm.glb"
+      },
+      {
+        "name": "MiG-31BM · advanced",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_mig31bm.glb"
+      }
+    ],
+    "model_status": "Original supplied model",
+    "air_speed": 4.0,
+    "air_range": 14.0,
+    "air_damage": 13.0,
+    "ground_damage": 2.0,
+    "requires_airbase": true,
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    },
+    "production_building": "airbase",
+    "research_branch": "Interceptor",
+    "starter": false
+  },
+  {
+    "id": "transport_heli_russia",
+    "country": "russia",
+    "name": "Transport helicopters",
+    "category": "Helicopters",
+    "visual_kind": "fighter",
+    "asset_roster_id": "transport_heli_russia",
+    "research_branch": "Transport helicopter",
+    "seconds": 70,
+    "cost": {
+      "funds": 330,
+      "materials": 100,
+      "electronics": 65,
+      "fuel": 50,
+      "manpower": 20
+    },
+    "building_requirements": {
+      "airbase": 1
+    },
+    "research_days": [
+      1,
+      4,
+      7,
+      10,
+      13
+    ],
+    "model_status": "Original supplied model (Weapons folder 2026-10-10)",
+    "research_tiers": [
+      {
+        "name": "Mi-8 / Mi-17",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_mi8_mi17.glb"
+      },
+      {
+        "name": "Mi-8 / Mi-17 · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_mi8_mi17.glb"
+      },
+      {
+        "name": "Mi-8 / Mi-17 · armour",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_mi8_mi17.glb"
+      },
+      {
+        "name": "Mi-8 / Mi-17 · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_mi8_mi17.glb"
+      },
+      {
+        "name": "Mi-8 / Mi-17 · advanced",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_mi8_mi17.glb"
+      }
+    ],
+    "role": "helicopter",
+    "air_range": 10.0,
+    "air_speed": 1.8,
+    "air_damage": 2.0,
+    "ground_damage": 2.0,
+    "upkeep": {
+      "funds": 33.0,
+      "fuel": 4.0,
+      "manpower": 0.4
+    },
+    "production_building": "airbase",
+    "starter": false
+  },
+  {
+    "id": "strike_drone_russia",
+    "country": "russia",
+    "name": "Strike drones",
+    "category": "Drones",
+    "visual_kind": "fighter",
+    "role": "drone",
+    "asset_roster_id": "strike_drone_russia",
+    "seconds": 80,
+    "cost": {
+      "funds": 400,
+      "materials": 120,
+      "electronics": 100,
+      "fuel": 60,
+      "manpower": 25
+    },
+    "building_requirements": {
+      "drone_factory": 1
+    },
+    "research_days": [
+      5,
+      8,
+      11,
+      14,
+      17
+    ],
+    "model_status": "Original supplied model",
+    "research_tiers": [
+      {
+        "name": "Forpost",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_forpost.glb"
+      },
+      {
+        "name": "Forpost · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_forpost.glb"
+      },
+      {
+        "name": "Inokhodets / Orion",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_inokhodets.glb"
+      },
+      {
+        "name": "Inokhodets / Orion · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_inokhodets.glb"
+      },
+      {
+        "name": "Sirius",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_sirius.glb"
+      }
+    ],
+    "air_range": 12.0,
+    "air_speed": 2.2,
+    "air_damage": 0.0,
+    "ground_damage": 6.0,
+    "upkeep": {
+      "funds": 40.0,
+      "fuel": 4.8,
+      "manpower": 0.5
+    },
+    "production_building": "drone_factory",
+    "research_branch": "Strike drone",
+    "starter": false
+  },
+  {
+    "id": "geran_russia",
+    "country": "russia",
+    "name": "One-way attack drones",
+    "category": "Drones",
+    "visual_kind": "fighter",
+    "role": "drone",
+    "asset_roster_id": "geran_russia",
+    "seconds": 80,
+    "cost": {
+      "funds": 400,
+      "materials": 120,
+      "electronics": 100,
+      "fuel": 60,
+      "manpower": 25
+    },
+    "building_requirements": {
+      "drone_factory": 1
+    },
+    "research_days": [
+      6,
+      9,
+      12,
+      15,
+      18
+    ],
+    "model_status": "Original model (tools/make_new_models.gd)",
+    "research_tiers": [
+      {
+        "name": "Geran-2",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_geran2.glb"
+      },
+      {
+        "name": "Geran-2 · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_geran2.glb"
+      },
+      {
+        "name": "Geran-2 · jam-resistant navigation",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_geran2.glb"
+      },
+      {
+        "name": "Geran-2 · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_geran2.glb"
+      },
+      {
+        "name": "Geran-2 · jet engine",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_geran2.glb"
+      }
+    ],
+    "air_range": 30.0,
+    "air_speed": 1.6,
+    "air_damage": 0.0,
+    "ground_damage": 12.0,
+    "single_use": true,
+    "upkeep": {
+      "funds": 40.0,
+      "fuel": 4.8,
+      "manpower": 0.5
+    },
+    "production_building": "drone_factory",
+    "research_branch": "One-way attack drone",
+    "starter": false
+  },
+  {
+    "id": "medic_russia",
+    "country": "russia",
+    "name": "Field medics",
+    "category": "Support",
+    "visual_kind": "support",
+    "role": "medic",
+    "asset_roster_id": "medic_russia",
+    "seconds": 60,
+    "cost": {
+      "funds": 250,
+      "materials": 80,
+      "electronics": 40,
+      "fuel": 30,
+      "manpower": 30
+    },
+    "building_requirements": {
+      "support_depot": 1
+    },
+    "research_days": [
+      3,
+      6,
+      9,
+      12,
+      15
+    ],
+    "research_tiers": [
+      {
+        "name": "BMM-80 Simfoniya",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/russia_bmm80_medical.glb"
+      },
+      {
+        "name": "BMM-80 Simfoniya · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_bmm80_medical.glb"
+      },
+      {
+        "name": "BMM-80 Simfoniya · field surgery",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_bmm80_medical.glb"
+      },
+      {
+        "name": "BMM-80 Simfoniya · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_bmm80_medical.glb"
+      },
+      {
+        "name": "BMM-80 Simfoniya · evacuation",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/russia_bmm80_medical.glb"
+      }
+    ],
+    "model_status": "BTR-80 with medical markings (tools/make_new_models.gd)",
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    },
+    "production_building": "support_depot",
+    "research_branch": "Field medics",
+    "starter": false
+  },
+  {
+    "id": "airborne_ukraine",
+    "country": "ukraine",
+    "name": "Airborne infantry",
+    "category": "Infantry",
+    "visual_kind": "infantry",
+    "role": "infantry",
+    "asset_roster_id": "airborne_ukraine",
+    "seconds": 35,
+    "cost": {
+      "funds": 120,
+      "materials": 25,
+      "electronics": 10,
+      "fuel": 5,
+      "manpower": 60
+    },
+    "building_requirements": {
+      "barracks": 1
+    },
+    "research_days": [
+      3,
+      6,
+      9,
+      12,
+      15
+    ],
+    "research_tiers": [
+      {
+        "name": "Air assault troops",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_it_folgore_paratrooper.glb"
+      },
+      {
+        "name": "Air assault troops · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_it_folgore_paratrooper.glb"
+      },
+      {
+        "name": "Air assault troops · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_it_folgore_paratrooper.glb"
+      },
+      {
+        "name": "Air assault troops · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_it_folgore_paratrooper.glb"
+      },
+      {
+        "name": "Air assault troops · elite",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_it_folgore_paratrooper.glb"
+      }
+    ],
+    "model_status": "Original supplied model",
+    "upkeep": {
+      "funds": 12.0,
+      "fuel": 0.4,
+      "manpower": 1.2
+    },
+    "production_building": "barracks",
+    "research_branch": "Airborne infantry",
+    "starter": false
+  },
+  {
+    "id": "special_forces_ukraine",
+    "country": "ukraine",
+    "name": "Special forces",
+    "category": "Infantry",
+    "visual_kind": "infantry",
+    "role": "infantry",
+    "asset_roster_id": "special_forces_ukraine",
+    "seconds": 35,
+    "cost": {
+      "funds": 120,
+      "materials": 25,
+      "electronics": 10,
+      "fuel": 5,
+      "manpower": 60
+    },
+    "building_requirements": {
+      "barracks": 1
+    },
+    "research_days": [
+      6,
+      9,
+      12,
+      15,
+      18
+    ],
+    "research_tiers": [
+      {
+        "name": "Special operations forces",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_de_ksk.glb"
+      },
+      {
+        "name": "Special operations forces · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_de_ksk.glb"
+      },
+      {
+        "name": "Special operations forces · raid tactics",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_de_ksk.glb"
+      },
+      {
+        "name": "Special operations forces · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_de_ksk.glb"
+      },
+      {
+        "name": "Special operations forces · elite",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_de_ksk.glb"
+      }
+    ],
+    "model_status": "Original supplied model",
+    "upkeep": {
+      "funds": 12.0,
+      "fuel": 0.4,
+      "manpower": 1.2
+    },
+    "production_building": "barracks",
+    "research_branch": "Special forces",
+    "starter": false
+  },
+  {
+    "id": "naval_infantry_ukraine",
+    "country": "ukraine",
+    "name": "Naval infantry",
+    "category": "Infantry",
+    "visual_kind": "infantry",
+    "role": "infantry",
+    "asset_roster_id": "naval_infantry_ukraine",
+    "seconds": 35,
+    "cost": {
+      "funds": 120,
+      "materials": 25,
+      "electronics": 10,
+      "fuel": 5,
+      "manpower": 60
+    },
+    "building_requirements": {
+      "barracks": 1
+    },
+    "research_days": [
+      4,
+      7,
+      10,
+      13,
+      16
+    ],
+    "research_tiers": [
+      {
+        "name": "Marines",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_uk_royal_marine.glb"
+      },
+      {
+        "name": "Marines · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_uk_royal_marine.glb"
+      },
+      {
+        "name": "Marines · amphibious",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_uk_royal_marine.glb"
+      },
+      {
+        "name": "Marines · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_uk_royal_marine.glb"
+      },
+      {
+        "name": "Marines · elite",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_uk_royal_marine.glb"
+      }
+    ],
+    "model_status": "Original supplied model",
+    "upkeep": {
+      "funds": 12.0,
+      "fuel": 0.4,
+      "manpower": 1.2
+    },
+    "production_building": "barracks",
+    "research_branch": "Naval infantry",
+    "starter": false
+  },
+  {
+    "id": "snipers_ukraine",
+    "country": "ukraine",
+    "name": "Snipers",
+    "category": "Infantry",
+    "visual_kind": "infantry",
+    "role": "infantry",
+    "asset_roster_id": "snipers_ukraine",
+    "seconds": 35,
+    "cost": {
+      "funds": 120,
+      "materials": 25,
+      "electronics": 10,
+      "fuel": 5,
+      "manpower": 60
+    },
+    "building_requirements": {
+      "barracks": 1
+    },
+    "research_days": [
+      1,
+      4,
+      7,
+      10,
+      13
+    ],
+    "research_tiers": [
+      {
+        "name": "Sniper team",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_fi_winter_sniper.glb"
+      },
+      {
+        "name": "Sniper team · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_fi_winter_sniper.glb"
+      },
+      {
+        "name": "Sniper team · thermal optics",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_fi_winter_sniper.glb"
+      },
+      {
+        "name": "Sniper team · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_fi_winter_sniper.glb"
+      },
+      {
+        "name": "Sniper team · long range",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_fi_winter_sniper.glb"
+      }
+    ],
+    "model_status": "Original supplied model",
+    "upkeep": {
+      "funds": 12.0,
+      "fuel": 0.4,
+      "manpower": 1.2
+    },
+    "production_building": "barracks",
+    "research_branch": "Snipers",
+    "starter": false
+  },
+  {
+    "id": "ifv_ukraine",
+    "country": "ukraine",
+    "name": "Infantry fighting vehicles",
+    "category": "Mechanized",
+    "visual_kind": "ifv",
+    "research_branch": "Infantry fighting vehicle",
+    "seconds": 28,
+    "cost": {
+      "funds": 160,
+      "materials": 60,
+      "electronics": 20,
+      "fuel": 25,
+      "manpower": 20
+    },
+    "research_tiers": [
+      {
+        "name": "Marder 1A3",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_marder1a3.glb"
+      },
+      {
+        "name": "Marder 1A3 · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_marder1a3.glb"
+      },
+      {
+        "name": "CV9030",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_cv9030.glb"
+      },
+      {
+        "name": "CV9030 · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_cv9030.glb"
+      },
+      {
+        "name": "Puma",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_puma.glb"
+      }
+    ],
+    "building_requirements": {
+      "barracks": 1
+    },
+    "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
+    "research_days": [
+      2,
+      5,
+      8,
+      11,
+      14
+    ],
+    "upkeep": {
+      "funds": 16.0,
+      "fuel": 2.0,
+      "manpower": 0.4
+    },
+    "production_building": "barracks",
+    "starter": false,
+    "asset_roster_id": "ifv_ukraine"
+  },
+  {
+    "id": "light_tank_ukraine",
+    "country": "ukraine",
+    "name": "Light tanks",
+    "category": "Armor",
+    "visual_kind": "armor",
+    "research_branch": "Light tank",
+    "seconds": 45,
+    "cost": {
+      "funds": 280,
+      "materials": 95,
+      "electronics": 35,
+      "fuel": 40,
+      "manpower": 15
+    },
+    "research_tiers": [
+      {
+        "name": "PL-01 light tank",
+        "improvement": "",
+        "model": "res://assets/library/pl01_european.glb"
+      },
+      {
+        "name": "PL-01 light tank · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/pl01_european.glb"
+      },
+      {
+        "name": "PL-01 light tank · thermal sights",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/pl01_european.glb"
+      },
+      {
+        "name": "PL-01 light tank · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/pl01_european.glb"
+      },
+      {
+        "name": "PL-01 light tank · advanced",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/pl01_european.glb"
+      }
+    ],
+    "building_requirements": {
+      "tank_plant": 1
+    },
+    "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
+    "research_days": [
+      2,
+      5,
+      8,
+      11,
+      14
+    ],
+    "upkeep": {
+      "funds": 28.0,
+      "fuel": 3.2,
+      "manpower": 0.3
+    },
+    "production_building": "tank_plant",
+    "starter": false,
+    "asset_roster_id": "light_tank_ukraine"
+  },
+  {
+    "id": "strategic_ukraine",
+    "country": "ukraine",
+    "name": "Strategic missiles",
+    "category": "Missiles",
+    "visual_kind": "missile_launcher",
+    "role": "missile_launcher",
+    "asset_roster_id": "strategic_ukraine",
+    "seconds": 80,
+    "cost": {
+      "funds": 400,
+      "materials": 120,
+      "electronics": 100,
+      "fuel": 60,
+      "manpower": 25
+    },
+    "building_requirements": {
+      "missile_factory": 1
+    },
+    "research_days": [
+      22,
+      25,
+      28,
+      31,
+      34
+    ],
+    "model_status": "Original supplied model",
+    "research_tiers": [
+      {
+        "name": "Fulgur",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_fulgur_ebm.glb",
+        "preview": "res://assets/library/arsenal/euro_fulgur_ebm_ready.png"
+      },
+      {
+        "name": "Fulgur · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_fulgur_ebm.glb",
+        "preview": "res://assets/library/arsenal/euro_fulgur_ebm_ready.png"
+      },
+      {
+        "name": "Fulgur · guidance",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_fulgur_ebm.glb",
+        "preview": "res://assets/library/arsenal/euro_fulgur_ebm_ready.png"
+      },
+      {
+        "name": "Fulgur · guidance · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_fulgur_ebm.glb",
+        "preview": "res://assets/library/arsenal/euro_fulgur_ebm_ready.png"
+      },
+      {
+        "name": "Fulgur · advanced",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_fulgur_ebm.glb",
+        "preview": "res://assets/library/arsenal/euro_fulgur_ebm_ready.png"
+      }
+    ],
+    "strike_range": 14.0,
+    "strike_damage": 40.0,
+    "reload_rounds": 3.0,
+    "upkeep": {
+      "funds": 40.0,
+      "fuel": 4.8,
+      "manpower": 0.5
+    },
+    "production_building": "missile_factory",
+    "research_branch": "Strategic missile",
+    "starter": false
+  },
+  {
+    "id": "transport_heli_ukraine",
+    "country": "ukraine",
+    "name": "Transport helicopters",
+    "category": "Helicopters",
+    "visual_kind": "fighter",
+    "asset_roster_id": "transport_heli_ukraine",
+    "research_branch": "Transport helicopter",
+    "seconds": 70,
+    "cost": {
+      "funds": 330,
+      "materials": 100,
+      "electronics": 65,
+      "fuel": 50,
+      "manpower": 20
+    },
+    "building_requirements": {
+      "airbase": 1
+    },
+    "research_days": [
+      1,
+      4,
+      7,
+      10,
+      13
+    ],
+    "model_status": "Original supplied model (Weapons folder 2026-10-10)",
+    "research_tiers": [
+      {
+        "name": "Lynx",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_lynx.glb"
+      },
+      {
+        "name": "Lynx · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_lynx.glb"
+      },
+      {
+        "name": "NH90",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_nh90.glb"
+      },
+      {
+        "name": "NH90 · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_nh90.glb"
+      },
+      {
+        "name": "NH90 Block 2",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_nh90_block2.glb"
+      }
+    ],
+    "role": "helicopter",
+    "air_range": 10.0,
+    "air_speed": 1.8,
+    "air_damage": 2.0,
+    "ground_damage": 2.0,
+    "upkeep": {
+      "funds": 33.0,
+      "fuel": 4.0,
+      "manpower": 0.4
+    },
+    "production_building": "airbase",
+    "starter": false
+  },
+  {
+    "id": "strike_drone_ukraine",
+    "country": "ukraine",
+    "name": "Strike drones",
+    "category": "Drones",
+    "visual_kind": "fighter",
+    "role": "drone",
+    "asset_roster_id": "strike_drone_ukraine",
+    "seconds": 80,
+    "cost": {
+      "funds": 400,
+      "materials": 120,
+      "electronics": 100,
+      "fuel": 60,
+      "manpower": 25
+    },
+    "building_requirements": {
+      "drone_factory": 1
+    },
+    "research_days": [
+      5,
+      8,
+      11,
+      14,
+      17
+    ],
+    "model_status": "Original supplied model",
+    "research_tiers": [
+      {
+        "name": "Hermes 450",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_hermes450.glb"
+      },
+      {
+        "name": "Hermes 450 · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_hermes450.glb"
+      },
+      {
+        "name": "Eurodrone",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_eurodrone.glb"
+      },
+      {
+        "name": "Eurodrone · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_eurodrone.glb"
+      },
+      {
+        "name": "nEUROn",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_neuron.glb"
+      }
+    ],
+    "air_range": 12.0,
+    "air_speed": 2.2,
+    "air_damage": 0.0,
+    "ground_damage": 6.0,
+    "upkeep": {
+      "funds": 40.0,
+      "fuel": 4.8,
+      "manpower": 0.5
+    },
+    "production_building": "drone_factory",
+    "research_branch": "Strike drone",
+    "starter": false
+  },
+  {
+    "id": "liutyi_ukraine",
+    "country": "ukraine",
+    "name": "Long-range attack drones",
+    "category": "Drones",
+    "visual_kind": "fighter",
+    "role": "drone",
+    "asset_roster_id": "liutyi_ukraine",
+    "seconds": 80,
+    "cost": {
+      "funds": 400,
+      "materials": 120,
+      "electronics": 100,
+      "fuel": 60,
+      "manpower": 25
+    },
+    "building_requirements": {
+      "drone_factory": 1
+    },
+    "research_days": [
+      6,
+      9,
+      12,
+      15,
+      18
+    ],
+    "model_status": "Original model (tools/make_new_models.gd)",
+    "research_tiers": [
+      {
+        "name": "FP-1 / Liutyi",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/ukraine_liutyi.glb"
+      },
+      {
+        "name": "FP-1 / Liutyi · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/ukraine_liutyi.glb"
+      },
+      {
+        "name": "FP-1 / Liutyi · jam-resistant navigation",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/ukraine_liutyi.glb"
+      },
+      {
+        "name": "FP-1 / Liutyi · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/ukraine_liutyi.glb"
+      },
+      {
+        "name": "FP-1 / Liutyi · heavier warhead",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/ukraine_liutyi.glb"
+      }
+    ],
+    "air_range": 30.0,
+    "air_speed": 1.8,
+    "air_damage": 0.0,
+    "ground_damage": 12.0,
+    "upkeep": {
+      "funds": 40.0,
+      "fuel": 4.8,
+      "manpower": 0.5
+    },
+    "production_building": "drone_factory",
+    "research_branch": "One-way attack drone",
+    "starter": false,
+    "single_use": true
+  },
+  {
+    "id": "medic_ukraine",
+    "country": "ukraine",
+    "name": "Field medics",
+    "category": "Support",
+    "visual_kind": "support",
+    "role": "medic",
+    "asset_roster_id": "medic_ukraine",
+    "seconds": 60,
+    "cost": {
+      "funds": 250,
+      "materials": 80,
+      "electronics": 40,
+      "fuel": 30,
+      "manpower": 30
+    },
+    "building_requirements": {
+      "support_depot": 1
+    },
+    "research_days": [
+      3,
+      6,
+      9,
+      12,
+      15
+    ],
+    "research_tiers": [
+      {
+        "name": "Boxer ambulance",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_boxer_ambulance.glb"
+      },
+      {
+        "name": "Boxer ambulance · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_boxer_ambulance.glb"
+      },
+      {
+        "name": "Boxer ambulance · field surgery",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_boxer_ambulance.glb"
+      },
+      {
+        "name": "Boxer ambulance · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_boxer_ambulance.glb"
+      },
+      {
+        "name": "Boxer ambulance · evacuation",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_boxer_ambulance.glb"
+      }
+    ],
+    "model_status": "Boxer with medical markings (tools/make_new_models.gd)",
+    "upkeep": {
+      "funds": 25.0,
+      "fuel": 2.4,
+      "manpower": 0.6
+    },
+    "production_building": "support_depot",
+    "research_branch": "Field medics",
+    "starter": false
   }
 ]

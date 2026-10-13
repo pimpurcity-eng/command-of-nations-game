@@ -2,6 +2,13 @@ class_name AirBattleSystem
 extends RefCounted
 signal weapon_fired(source: Dictionary, target_unit: Dictionary, effect: String)
 const ROUND_SECONDS: = CombatSystem.ROUND_SECONDS
+## Owner 2026-10-13: air defence fires a missile every 7 minutes at 1x speed. Aircraft only
+## passing through take half damage; aircraft attacking or patrolling inside the range take
+## full damage.
+const AA_INTERVAL: = 7.0 * 60.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
+const AA_PASSING_FACTOR: = 0.5
+static func aa_factor(aircraft: Dictionary) -> float:
+	return 1.0 if aircraft.get("flight_mode", "") in ["attack", "patrol"] else AA_PASSING_FACTOR
 var cooldowns: Dictionary = {}
 func value(unit: Dictionary, name: String, defending: bool = false) -> float:
 	var base: float = EquipmentIdentity.spec(unit.equipment_id).get(name, 0.0)
@@ -70,7 +77,7 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 			var enemy: Dictionary = strike[1]
 			if not ready.has(unit.id): continue
 			var stat: = "aa_damage" if strike[2] else ("air_damage" if enemy.visual_kind == "fighter" else "ground_damage")
-			damage[enemy.id] = damage.get(enemy.id, 0.0) + value(unit, stat) * (0.5 if unit.get("flight_mode", "") == "patrol" else 1.0)
+			damage[enemy.id] = damage.get(enemy.id, 0.0) + value(unit, stat) * (aa_factor(enemy) if strike[2] else (0.5 if unit.get("flight_mode", "") == "patrol" else 1.0))
 			var missile_loadout: bool = EquipmentIdentity.research_tier(unit.equipment_id, unit.get("level", 1)).has("projectile_model")
 			weapon_fired.emit(unit, enemy, "interceptor" if strike[2] else "missile" if missile_loadout else "drone_strike" if EquipmentIdentity.spec(unit.equipment_id).get("role", "") == "drone" else "air_strike")
 			if not strike[2] and EquipmentIdentity.spec(unit.equipment_id).get("single_use", false): damage[unit.id] = damage.get(unit.id, 0.0) + unit.health
@@ -81,7 +88,7 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 					if defender.visual_kind in ["air_defense","naval"] and defender.health > 0 and value(defender,"aa_damage")>0:
 						damage[unit.id] = damage.get(unit.id, 0.0) + value(defender, "aa_damage", true)
 						weapon_fired.emit(defender, unit, "interceptor")
-			cooldowns[unit.id] = ROUND_SECONDS * (0.5 if unit.get("flight_mode", "") == "patrol" else 1.0)
+			cooldowns[unit.id] = AA_INTERVAL if strike[2] else ROUND_SECONDS * (0.5 if unit.get("flight_mode", "") == "patrol" else 1.0)
 			if unit.get("flight_mode", "") == "attack": armies.air.return_home(unit)
 		if resolve_now:
 			for id in damage: pending[id] = pending.get(id, 0.0) + damage[id]

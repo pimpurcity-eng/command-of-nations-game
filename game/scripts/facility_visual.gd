@@ -17,7 +17,7 @@ static func create(definition: Dictionary, country: String, level: int, rural: b
 	var assembly: = Node3D.new()
 	assembly.set_meta("facility_model", source)
 	var original: = (load(source) as PackedScene).instantiate() as Node3D
-	if not source.contains("/buildings_oct12/"):
+	if not source.contains("/buildings_oct12/") and not definition.get("normalize", false):
 		assembly.add_child(original)
 		return assembly
 	var merged: = UnitVisual.merged(original)

@@ -16,10 +16,20 @@ func decide(armies: UnitSystem, terrain: StrategicMap, cities: Array, production
 				for job in production.jobs:
 					if job.city == city.name and production.equipment(job.equipment).country == country: queued = true
 				if queued: continue
-				for equipment in production.catalog:
-					if equipment.country == country:
-						production.enqueue(equipment.id, city.name)
-						break
+				# Build something researched; rotate through the options instead of always the first.
+				var options: Array = production.catalog.filter(func(e: Dictionary): return e.country == country and production.research_lock(e).is_empty() and not e.get("requires_port", false))
+				if options.is_empty(): break
+				var choice: Dictionary = options[(count + city.name.length()) % options.size()]
+				# Cities start with only a train station: build the factory first, then the unit.
+				var system: BuildingSystem = production.buildings
+				if system != null:
+					for building_id in choice.get("building_requirements", {}):
+						if system.level(city.id, building_id) < int(choice.building_requirements[building_id]):
+							if not system.jobs.any(func(j: Dictionary): return j.city == city.id and j.building == building_id):
+								system.schedule(city.id, building_id, country)
+							choice = {}
+							break
+				if not choice.is_empty(): production.enqueue(choice.id, city.name)
 				break
 	for group in armies.stacks.groups():
 		var unit: = armies.stacks.leader(group)

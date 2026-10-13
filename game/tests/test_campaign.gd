@@ -39,12 +39,14 @@ func run() -> void:
 		game.production_panel.open()
 		check(game.production_panel._country() == country, country + " production country")
 		check(game.production_panel.filtered.all(func(spec): return spec.country == country), country + " production filter")
-		var first = game.production_panel.filtered[0]
+		var first = game.production.catalog.filter(func(spec): return spec.country == country and game.production.research_lock(spec).is_empty() and not spec.get("requires_port", false))[0]
 		var base = game.buildings.capital(country)
 		check(game.production.schedule(first.id, base.name).is_empty(), country + " production queues")
+		var locked = game.production.catalog.filter(func(spec): return spec.country == country and not game.production.research_lock(spec).is_empty())[0]
+		check(not game.production.schedule(locked.id, base.name).is_empty(), country + " unresearched weapons cannot be built")
 		game.research_panel.open()
-		var research_spec = game.production.catalog.filter(func(spec): return spec.country == country)[0]
-		check(game.research.start(research_spec.id, 2).is_empty(), country + " research starts")
+		var research_spec = game.production.catalog.filter(func(spec): return spec.country == country and game.research.reason(spec.id, game.research.level(spec.id) + 1, country).is_empty())[0]
+		check(game.research.start(research_spec.id, game.research.level(research_spec.id) + 1, country).is_empty(), country + " research starts on day 1 (" + research_spec.research_branch + ")")
 		var cash = game.production.stockpiles[country].funds
 		var exchange = SupplyExchange.new(); exchange.economy = game.production
 		check(exchange.transact("fuel", 1, true).is_empty(), country + " market buys")

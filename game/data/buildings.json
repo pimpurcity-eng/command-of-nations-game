@@ -468,5 +468,99 @@
     "original_colors": true,
     "capital_starting_level": 0,
     "save_default": true
+  },
+  {
+    "id": "drone_factory",
+    "name": "Drone factory",
+    "asset_roster_id": "facility_factory",
+    "capital_only": false,
+    "starting_level": 0,
+    "capital_starting_level": 0,
+    "max_level": 5,
+    "hours": 3,
+    "cost": {
+      "funds": 200,
+      "materials": 90,
+      "electronics": 60,
+      "fuel": 15,
+      "manpower": 15
+    },
+    "description": "Builds drones: reconnaissance, strike, loitering and one-way attack drones. Each level above 1 speeds drone production by 25%.",
+    "colour": "6d7f8c",
+    "model_tiers": [
+      "res://assets/library/buildings_oct12/drone_factory.glb",
+      "res://assets/library/buildings_oct12/drone_factory.glb",
+      "res://assets/library/buildings_oct12/drone_factory.glb",
+      "res://assets/library/buildings_oct12/drone_factory.glb",
+      "res://assets/library/buildings_oct12/drone_factory.glb"
+    ],
+    "preview": "res://assets/library/buildings_oct12/drone_factory_menu.png",
+    "original_colors": true,
+    "save_default": true
+  },
+  {
+    "id": "support_depot",
+    "name": "Support depot",
+    "asset_roster_id": "facility_factory",
+    "capital_only": false,
+    "starting_level": 0,
+    "capital_starting_level": 0,
+    "max_level": 5,
+    "hours": 2,
+    "cost": {
+      "funds": 180,
+      "materials": 100,
+      "electronics": 25,
+      "fuel": 20,
+      "manpower": 25
+    },
+    "description": "Builds support units: combat engineers, bridge layers, recovery vehicles, supply trucks and field medics.",
+    "colour": "8a7d5c",
+    "model_tiers": [
+      "res://assets/library/buildings_oct12/support_depot.glb",
+      "res://assets/library/buildings_oct12/support_depot.glb",
+      "res://assets/library/buildings_oct12/support_depot.glb",
+      "res://assets/library/buildings_oct12/support_depot.glb",
+      "res://assets/library/buildings_oct12/support_depot.glb"
+    ],
+    "preview": "res://assets/library/buildings_oct12/support_depot_menu.png",
+    "original_colors": true,
+    "save_default": true
+  },
+  {
+    "id": "hospital",
+    "name": "Hospital",
+    "asset_roster_id": "facility_factory",
+    "capital_only": false,
+    "starting_level": 0,
+    "capital_starting_level": 0,
+    "max_level": 5,
+    "hours": 2,
+    "cost": {
+      "funds": 160,
+      "materials": 80,
+      "electronics": 30,
+      "fuel": 10,
+      "manpower": 20
+    },
+    "description": "Heals your armies in this city or province: +2 health per hour per level.",
+    "colour": "d8d4c8",
+    "model_tiers": [
+      "res://assets/library/buildings_oct12/hospital.glb",
+      "res://assets/library/buildings_oct12/hospital.glb",
+      "res://assets/library/buildings_oct12/hospital.glb",
+      "res://assets/library/buildings_oct12/hospital.glb",
+      "res://assets/library/buildings_oct12/hospital.glb"
+    ],
+    "rural_model_tiers": [
+      "res://assets/library/buildings_oct12/hospital.glb",
+      "res://assets/library/buildings_oct12/hospital.glb",
+      "res://assets/library/buildings_oct12/hospital.glb",
+      "res://assets/library/buildings_oct12/hospital.glb",
+      "res://assets/library/buildings_oct12/hospital.glb"
+    ],
+    "preview": "res://assets/library/buildings_oct12/hospital_menu.png",
+    "original_colors": true,
+    "save_default": true
   }
 ]

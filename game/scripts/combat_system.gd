@@ -44,7 +44,9 @@ func attack_reach(unit: Dictionary) -> float:
 		if unit.visual_kind == "naval": return EquipmentIdentity.spec(unit.equipment_id).get("sea_range", 2.8)
 		if unit.visual_kind == "artillery": return 2.4
 		if unit.visual_kind == "missile_launcher": return EquipmentIdentity.spec(unit.equipment_id).get("strike_range", 8.0)
-	return 1.1 if unit.get("moving", false) else 0.0
+	# Close combat: armies on the move, or that were ordered to attack / are already in a
+	# battle, keep fighting after they arrive (a stopped attacker used to freeze the battle).
+	return 1.1 if unit.get("moving", false) or not str(unit.get("attack_target", "")).is_empty() or unit.get("engaged", false) else 0.0
 func eligible(group: Array, distance: float) -> Array:
 	return group.filter( func(unit: Dictionary): return unit.health > 0 and attack_reach(unit) > 0 and attack_reach(unit) + 1e-06 >= distance)
 func potential(group: Array, target_kind: String, ranged: bool = false, defending: bool = false) -> float:

@@ -12,7 +12,7 @@ signal production_requested(city_name: String)
 signal research_requested  # kept for compatibility; research is opened from the HUD tab
 const SECONDS_PER_HOUR: = 3600.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
 const HIDDEN_BUILDINGS: = ["research_center", "finance", "material_works", "electronics_plant", "fuel_depot"]  # research is national, not a city building
-const SECTIONS := [["Economy", ["industry", "recruitment_center", "train_station", "capitol"]], ["Unit production", ["barracks", "tank_plant", "factory", "missile_factory", "airbase", "naval_base"]], ["Defence & roads", ["bunker", "infrastructure"]]]
+const SECTIONS := [["Economy", ["industry", "recruitment_center", "train_station", "capitol"]], ["Unit production", ["barracks", "tank_plant", "factory", "missile_factory", "airbase", "drone_factory", "naval_base", "support_depot"]], ["Defence, medical & roads", ["bunker", "hospital", "infrastructure"]]]
 var clock: SimulationClock
 var research: ResearchSystem
 var tab_row: HBoxContainer
@@ -223,7 +223,7 @@ func show_tab(index: int) -> void:
 	for child in unit_list.get_children(): unit_list.remove_child(child); child.queue_free()
 	unit_rows.clear()
 	if index >= 0 and research != null:
-		var families: Array = buildings.economy.catalog.filter(func(spec: Dictionary): return spec.country == GameSession.player_country and ProductionGroups.index(spec) == index)
+		var families: Array = buildings.economy.catalog.filter(func(spec: Dictionary): return spec.country == GameSession.player_country and ProductionGroups.index(spec) == index and ProductionGroups.offered(spec))
 		families.sort_custom(func(a, b): return a.category < b.category if a.category != b.category else a.name < b.name)
 		for spec in families: _add_unit_row(spec)
 	if scroll != null: scroll.scroll_vertical = 0
@@ -326,17 +326,20 @@ func _refresh_units(place: Dictionary) -> void:
 		var row: Dictionary = unit_rows[id]
 		var spec: = buildings.economy.equipment(id)
 		var level: = research.level(id)
-		row.picture.texture = CowUI.research_picture(id, level)
-		row.rank.level = level
+		var shown: = maxi(1, level)  # level 0 = not researched yet: show what level 1 would be
+		row.picture.texture = CowUI.research_picture(id, shown)
+		row.picture.modulate = Color.WHITE if level > 0 else Color(0.55, 0.55, 0.55)
+		row.rank.level = shown
+		row.rank.visible = level > 0
 		row.rank.queue_redraw()
-		row.name.text = EquipmentIdentity.research_title(id, level).trim_suffix(" · upgrade").replace(" · technology", "")
-		row.kind.text = (str(spec.get("research_branch", "")) if not str(spec.get("research_branch", "")).is_empty() else str(spec.get("category", ""))) + " Lvl. " + str(level)
+		row.name.text = EquipmentIdentity.research_title(id, shown).trim_suffix(" · upgrade").replace(" · technology", "")
+		row.kind.text = (str(spec.get("research_branch", "")) if not str(spec.get("research_branch", "")).is_empty() else str(spec.get("category", ""))) + (" Lvl. " + str(level) if level > 0 else " · not researched")
 		for child in row.costs.get_children(): row.costs.remove_child(child); child.queue_free()
 		for resource in ProductionSystem.RESOURCES:
 			if spec.cost[resource] > 0: row.costs.add_child(CowUI.cost(resource, spec.cost[resource], stock[resource] >= spec.cost[resource]))
 		row.time.text = " " + SimulationClock.duration(spec.seconds / maxf(buildings.production_rate(city_id, spec), 0.01))
-		var blocked: = ""
-		if spec.get("requires_port", false) and not place.has("naval_spawn"): blocked = "COASTAL ONLY"
+		var blocked: = "" if level > 0 else "RESEARCH FIRST"
+		if blocked.is_empty() and spec.get("requires_port", false) and not place.has("naval_spawn"): blocked = "COASTAL ONLY"
 		for building_id in spec.get("building_requirements", {}):
 			if blocked.is_empty() and buildings.level(city_id, building_id) < int(spec.building_requirements[building_id]):
 				blocked = "NEEDS " + buildings.spec(building_id).get("name", building_id).to_upper()
@@ -353,7 +356,7 @@ func _refresh_units(place: Dictionary) -> void:
 			var total: = research.job_duration(job)
 			row.bar.max_value = total
 			row.bar.value = job.progress
-			row.next.text = "Lvl. " + str(target) + "   " + SimulationClock.duration(total - job.progress, research.clock.speed if research.clock != null else 1.0)
+			row.next.text = ("Unlock" if target == 1 else "Lvl. " + str(target)) + "   " + SimulationClock.duration(total - job.progress, research.clock.speed if research.clock != null else 1.0)
 			caption.text = "RESEARCHING"
 			row.research.disabled = true
 			continue
@@ -361,8 +364,8 @@ func _refresh_units(place: Dictionary) -> void:
 		row.bar.value = 0.0
 		var reason: = research.reason(id, target)
 		var day: = research.unlock_day(id, target)
-		row.next.text = "Lvl. " + str(target) + "   " + (("Day " + str(day)) if research.day() < day else SimulationClock.duration(research.duration(target)))
-		caption.text = "RESEARCH"
+		row.next.text = ("Unlock" if target == 1 else "Lvl. " + str(target)) + "   " + (("Day " + str(day)) if research.day() < day else SimulationClock.duration(research.duration(target)))
+		caption.text = "UNLOCK" if target == 1 else "RESEARCH"
 		row.research.disabled = not reason.is_empty()
 		row.research.tooltip_text = reason
 
@@ -374,6 +377,9 @@ func _effect(definition: Dictionary) -> String:
 		"barracks": return "Infantry production"
 		"naval_base": return "Ships, submarines & carriers · coastal cities"
 		"airbase": return "Base for aircraft; more per level"
+		"drone_factory": return "Drones: recon, strike, loitering, one-way attack"
+		"support_depot": return "Engineers, bridge layers, recovery, supply, medics"
+		"hospital": return "Heals your armies here: +2 health/hour per level"
 	return ""
 
 func open(place: Dictionary) -> void:

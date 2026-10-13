@@ -17,15 +17,15 @@ func run() -> void:
 	for i in 5: await process_frame
 	game.clock.paused = true
 	game.match_rules.ai_enabled = false
-	check(game.units.units.size() == EquipmentIdentity.catalog.size() and game.units.units.all(func(u):return u.level == 1),"one level-1 unit of each family (owner 2026-10-13, Call of War start)")
-	check(ProductionGroups.TITLES == ["Economy","Aircraft","Ordnance","Tanks","Naval","Barracks","Missiles"],"requested research groups incl. Missiles")
+	check(game.units.units.size() == EquipmentIdentity.catalog.filter(func(f):return f.get("starter",false)).size() and game.units.units.all(func(u):return u.level == 1),"one level-1 unit of each starter weapon (owner 2026-10-13, Call of War start)")
+	check(ProductionGroups.TITLES == ["Economy","Aircraft","Ordnance","Tanks","Naval","Barracks","Missiles","Drones","Support"],"requested research groups incl. Missiles, Drones, Support")
 	var schedules := {}
-	for spec in EquipmentIdentity.catalog:
+	for spec in EquipmentIdentity.catalog.filter(func(f):return not f.get("retired",false)):
 		var tiers: Array = spec.research_tiers
 		check(tiers[0].model == tiers[1].model and tiers[2].model == tiers[3].model,"model upgrades between major variants: " + spec.id)
 		schedules[str(spec.research_days)] = true
 	check(schedules.size() > 6,"different branch research days")
-	check(not game.research_panel._families(0).is_empty(),"economy research has usable projects")
+	check(game.research_panel._families(0).is_empty(),"economy is built in the cities, not researched (owner 2026-10-13)")
 	for city in game.cities.cities:
 		for spec in game.buildings.catalog:
 			var expected := 1 if spec.id == "train_station" else 0  # owner 2026-10-13: every city starts with a train station only

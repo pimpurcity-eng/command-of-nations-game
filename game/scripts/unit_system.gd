@@ -427,7 +427,7 @@ func advance(delta: float) -> void :
 			var step: = minf(minf(remaining * speed, distance), 0.1)
 			current = current.move_toward(goal, step)
 			remaining -= step / speed
-			if unit.forced_march:
+			if unit.forced_march and not SupportRoles.prevents_march_wear(group):
 				for member in group: member.health = maxf(1.0, member.health - step / speed * MARCH_HEALTH_PER_SECOND)
 			if current.distance_to(goal) < 0.001: unit.waypoints.pop_front()
 			else: continue
@@ -830,6 +830,7 @@ func set_fire_mode(mode: String) -> void :
 		if air.is_air(leader): continue
 		for member in stacks.members(leader): member.fire_mode = mode
 	status_changed.emit("Fire control: " + FireControlPanel.MODES[mode].title)
+const DIRECT_ATTACK_RANGE: = 6.0
 func attack_selected(enemy: Dictionary) -> bool:
 	if selected < 0 or enemy.is_empty() or enemy.country == units[selected].country or not at_war: return false
 	var army: Dictionary = units[selected]
@@ -842,16 +843,38 @@ func attack_selected(enemy: Dictionary) -> bool:
 		var candidate: Dictionary = member.duplicate()
 		candidate.attack_target = enemy.id
 		return candidate.visual_kind in ["artillery","missile_launcher","naval"] and fire_control.attack_reach(candidate) >= distance)
-	var accepted: bool = in_range or order(enemy.node.position)
+	# Nearby enemy with open land in between: drive straight at it (owner: "some units don't
+	# attack"). Roads only lead province centre to centre, which can stop short of the enemy.
+	var army_point: = Vector2(army.node.position.x, army.node.position.z)
+	var enemy_at: = Vector2(enemy.node.position.x, enemy.node.position.z)
+	var direct: bool = not in_range and not air.is_air(army) and not is_naval(army) and distance <= DIRECT_ATTACK_RANGE \
+		and navigation.on_land(enemy_at) and navigation.clear_segment(army_point, enemy_at) \
+		and not group.any(func(m): return EquipmentIdentity.spec(m.equipment_id).get("stationary", false))
+	if direct:
+		for member in group:
+			member.waypoints = [enemy_at]
+			member.target = enemy_at
+			member.moving = true
+		_update_heading(army)
+		_draw_route()
+	var accepted: bool = in_range or direct or order(enemy.node.position)
 	if in_range:
 		for member in group:
 			member.moving = false
 			member.waypoints.clear()
 			member.target = Vector2(member.node.position.x,member.node.position.z)
 	if accepted:
+		var enemy_point: = Vector2(enemy.node.position.x, enemy.node.position.z)
 		for member in stacks.members(units[selected]):
 			member.attack_target = enemy.id
 			if air.is_air(member): member.flight_mode = "attack"
+			# Roads end at the province centre; finish the attack with a direct approach to the
+			# enemy's actual position so armies parked off the centre are reached and engaged.
+			elif not in_range and not direct and not is_naval(member) and member.moving and not member.waypoints.is_empty():
+				var last: Vector2 = member.waypoints[-1]
+				if last.distance_to(enemy_point) > 0.05 and navigation.on_land(enemy_point) and navigation.clear_segment(last, enemy_point):
+					member.waypoints.append(enemy_point)
+					member.target = enemy_point
 	return accepted
 
 func attack_many(enemy: Dictionary) -> int:

@@ -3,7 +3,7 @@ extends RefCounted
 signal changed
 signal completed(equipment_id: String, country: String)
 const DAYS: = [1, 1, 2, 4, 6]
-const HOURS: = [0, 2, 4, 6, 8]
+const HOURS: = [1, 2, 4, 6, 8]  # level 1 must now be researched too (owner 2026-10-13)
 const SLOTS: = 2
 var economy: ProductionSystem
 var clock: SimulationClock
@@ -18,8 +18,17 @@ func setup(production: ProductionSystem, time: SimulationClock, units: UnitSyste
 	armies = units
 	refinements.clear()
 	EquipmentIdentity.refinements = refinements
-	for spec in economy.catalog + EconomyResearch.catalog(): levels[spec.id] = 1
+	for spec in economy.catalog + EconomyResearch.catalog(): levels[spec.id] = initial_level(spec)
 	EconomyResearch.levels = levels
+
+## Owner 2026-10-13: "beginning of game no research is done". Only the weak starter units
+## (spec "starter") are known at the start; everything else, level 1 included, is researched.
+## Economy upgrades are city buildings now and stay at their neutral level 1.
+static func initial_level(spec: Dictionary) -> int:
+	# Catalogues from before this rule (archived test arsenals, older data) have no "starter"
+	# flags: everything in them stays known, as before.
+	if not spec.has("starter"): return 1
+	return 1 if spec.starter else 0
 
 func day() -> int:
 	return 1 + int(clock.elapsed * SimulationClock.REAL_SECONDS_PER_SIM_SECOND / 86400.0)
@@ -27,7 +36,7 @@ func unlock_day(id: String, target: int) -> int:
 	var days: Array = economy.equipment(id).get("research_days", DAYS)
 	return int(days[clampi(target - 1, 0, days.size() - 1)])
 func level(id: String) -> int:
-	return int(levels.get(id, 1))
+	return int(levels.get(id, initial_level(economy.equipment(id)) if economy != null else 1))
 func duration(target: int) -> float:
 	return HOURS[target - 1] * 3600.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
 func cost(id: String, target: int) -> Dictionary:
@@ -35,7 +44,7 @@ func cost(id: String, target: int) -> Dictionary:
 	var spec: = economy.equipment(id)
 	if spec.is_empty(): return result
 	for resource in ProductionSystem.RESOURCES:
-		result[resource] = ceili(spec.cost[resource] * (0.5 + 0.3 * (target - 2)))
+		result[resource] = ceili(spec.cost[resource] * maxf(0.3, 0.5 + 0.3 * (target - 2)))
 	return result
 func active(id: String) -> Dictionary:
 	for job in jobs:
@@ -52,7 +61,8 @@ func reason(id: String, target: int, country: String = "") -> String:
 	var spec: = economy.equipment(id)
 	if spec.is_empty() or spec.country != country: return "Choose your country's equipment"
 	if rate(country) <= 0: return capital_status(country)
-	if target < 2 or target > 5: return "Level 1 is available from the start"
+	if spec.get("retired", false): return "No longer in service"
+	if target < 1 or target > 5: return "Choose a level from 1 to 5"
 	if target <= level(id): return "Already researched"
 	if target != level(id) + 1: return "Research the previous level first"
 	if day() < unlock_day(id, target): return "Available on Day " + str(unlock_day(id, target))
@@ -138,7 +148,8 @@ func advance(seconds: float) -> void :
 			jobs.remove_at(i)
 			finished_any = true
 
-	for spec in economy.catalog + EconomyResearch.catalog():
+	for spec in economy.catalog:  # economy upgrades are buildings now; retired families are skipped
+		if spec.get("retired", false): continue
 		if spec.country == GameSession.opponent_country() and level(spec.id) < 5 and reason(spec.id, level(spec.id) + 1, GameSession.opponent_country()).is_empty():
 			start(spec.id, level(spec.id) + 1, GameSession.opponent_country())
 	if finished_any: changed.emit()
@@ -171,7 +182,7 @@ func validate(state: Variant) -> bool:
 	if not state is Dictionary or not state.get("levels") is Dictionary or not state.get("jobs") is Array or state.jobs.size() > 4: return false
 	for id in state.levels:
 		var value = state.levels[id]
-		if economy.equipment(str(id)).is_empty() or not (value is int or value is float) or not is_finite(float(value)) or value != floor(value) or value < 1 or value > 5: return false
+		if economy.equipment(str(id)).is_empty() or not (value is int or value is float) or not is_finite(float(value)) or value != floor(value) or value < 0 or value > 5: return false
 	var saved_refinements = state.get("refinements",{})
 	if not saved_refinements is Dictionary: return false
 	for id in saved_refinements:
@@ -192,13 +203,14 @@ func validate(state: Variant) -> bool:
 		if job.has("refinement") and not job.refinement is bool: return false
 		if job.get("refinement",false):
 			if target < 1 or target > 4 or target > int(state.levels.get(job.equipment,1)) or saved_refinements.get(job.equipment,{}).get(str(int(target)),false): return false
-		elif target < 2 or target > 5 or target != int(state.levels.get(job.equipment,1))+1: return false
+		elif target < 1 or target > 5 or target != int(state.levels.get(job.equipment, initial_level(spec)))+1: return false
 		var progress = job.get("progress")
 		if not (progress is int or progress is float) or not is_finite(float(progress)) or progress < 0 or progress >= job_duration(job): return false
 	return true
 func restore(state: Dictionary) -> void :
 	refinements = state.get("refinements",{}).duplicate(true)
 	EquipmentIdentity.refinements = refinements
-	for id in levels: levels[id] = int(state.get("levels", {}).get(id, 1))
+	# Families added after a save was made start at their normal opening level.
+	for id in levels: levels[id] = int(state.get("levels", {}).get(id, initial_level(economy.equipment(id))))
 	jobs = state.get("jobs", []).duplicate(true)
 	changed.emit()

@@ -224,7 +224,8 @@ func _system() -> ResearchSystem:
 	return research
 
 func _families(index: int) -> Array:
-	var result: Array = (_system().economy.catalog + EconomyResearch.catalog()).filter(func(spec: Dictionary): return spec.country == GameSession.player_country and ProductionGroups.index(spec) == index)
+	# Owner 2026-10-13: economy upgrades are city buildings, not research; retired families are hidden.
+	var result: Array = _system().economy.catalog.filter(func(spec: Dictionary): return spec.country == GameSession.player_country and ProductionGroups.index(spec) == index and ProductionGroups.offered(spec))
 	result.sort_custom(func(a, b):
 		if a.category == "Air defense" and b.category == "Air defense": return a.get("aa_range",0.0) < b.get("aa_range",0.0)
 		if a.category == "Air defense" or b.category == "Air defense": return a.category == "Air defense"
@@ -237,7 +238,7 @@ func show_category(index: int) -> void:
 	category_index = index
 	var families: = _families(index)
 	selected_id = families[0].id if not families.is_empty() else ""
-	selected_level = clampi(_system().level(selected_id) + 1, 2, 5) if not selected_id.is_empty() else 2
+	selected_level = clampi(_system().level(selected_id) + 1, 1, 5) if not selected_id.is_empty() else 1
 	_build_tree()
 	_show_overview(false)
 	tree_scroll.scroll_vertical = 0
@@ -488,7 +489,7 @@ func _refresh() -> void:
 	for child in detail.costs.get_children(): detail.costs.remove_child(child);child.queue_free()
 	var caption: Label = detail.start.get_meta("caption")
 	var state: = _state(selected_id, selected_level,selected_upgrade)
-	if (selected_level <= 1 and not selected_upgrade) or state == "done":
+	if state == "done":
 		detail.time.text = ""
 		caption.text = "RESEARCHED"
 		detail.start.disabled = true
