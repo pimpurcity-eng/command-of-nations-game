@@ -4,7 +4,7 @@ extends RefCounted
 ## Map footprint (longest horizontal side, before the 0.65 marker scale) per unit type, so
 ## every original model reads at a consistent size against the cities instead of keeping
 ## whatever scale its source file happened to use.
-const FOOTPRINT: = {"helicopter": 1.6, "bomber": 2.3, "armor": 1.35, "ifv": 1.25, "artillery": 1.3, "air_defense": 1.3, "missile_launcher": 1.4, "silo": 1.5, "fighter": 1.5, "drone": 1.1, "naval": 2.2, "submarine": 1.85, "carrier": 3.9, "support": 1.3, "transport": 2.3, "radar_aircraft": 2.3, "infantry": 0.42}
+const FOOTPRINT = UnitMapSize.FOOTPRINT
 ## Extra yaw (degrees) for source models that face backwards after long-axis alignment,
 ## keyed by model file prefix. Checked with tests/model_lineup.gd (all models face north).
 const YAW_FIX: = {"su57": 180.0, "f18a": 180.0, "destroyer": 180.0, "kclass": 180.0, "upload20ab": 180.0, "ad": 180.0}  # ad_*: owner weapons.zip air defence (+X forward)
@@ -49,23 +49,29 @@ static func stand_in_path(equipment_id: String, kind: String) -> String:
 
 ## Fast, low-memory stand-in used during Android map startup and when a unit is
 ## off-camera. The real owner-supplied model is loaded only when needed on-screen.
-static func lightweight(kind: String, faction: Color, _equipment_id: String = "", level: int = 1) -> Node3D:
+static func lightweight(kind: String, faction: Color, equipment_id: String = "", level: int = 1) -> Node3D:
 	var assembly := Node3D.new()
 	assembly.set_meta("visual_level", level)
 	assembly.set_meta("startup_lightweight", true)
 	assembly.set_meta("missing_original_model", false)
-	assembly.set_meta("ground_shadow_size", Vector2(0.9, 0.9))
-	assembly.set_meta("pick_bounds", AABB(Vector3(-0.42, 0, -0.42), Vector3(0.84, 0.7, 0.84)))
 	var mesh := MeshInstance3D.new()
 	mesh.name = "LowMemoryMarker"
 	var shape := BoxMesh.new()
 	shape.size = Vector3(0.52, 0.26, 0.8)
-	if kind in ["fighter", "bomber", "helicopter", "drone", "radar_aircraft"]:
+	if kind in ["fighter", "bomber", "helicopter", "drone", "transport", "radar_aircraft"]:
 		shape.size = Vector3(0.85, 0.14, 0.85)
 	elif kind in ["naval", "carrier", "submarine"]:
 		shape.size = Vector3(0.36, 0.2, 1.05)
 	elif kind == "infantry":
 		shape.size = Vector3(0.2, 0.45, 0.2)
+	var spec := EquipmentIdentity.spec(equipment_id)
+	var role: String = spec.get("role", "")
+	if role.is_empty(): role = spec.get("visual_kind", kind)
+	var path: String = EquipmentIdentity.research_tier(equipment_id, level).get("model", "")
+	shape.size *= UnitMapSize.fit_factor(shape.size, role, path)
+	mesh.position.y = shape.size.y * 0.5
+	assembly.set_meta("pick_bounds", AABB(Vector3(-shape.size.x * 0.5, 0, -shape.size.z * 0.5), shape.size))
+	assembly.set_meta("ground_shadow_size", Vector2(shape.size.x, shape.size.z) * 0.65)
 	mesh.mesh = shape
 	var material := StandardMaterial3D.new()
 	material.albedo_color = faction
@@ -154,9 +160,7 @@ static func _fit(pivot: Node3D, vehicle: Node3D, role: String, path: String) -> 
 	yaw += deg_to_rad(YAW_FIX.get(path.get_file().get_basename().get_slice("_", 0), 0.0))
 	if owner_model(path): yaw = PI * 0.5  # Source +X cab faces game -Z.
 	var bounds: = model_bounds(vehicle, yaw)
-	var longest: = maxf(maxf(bounds.size.x, bounds.size.z), 0.001)
-	var footprint: float = FOOTPRINT.get(role, 0.62)
-	var factor: float = footprint / longest
+	var factor := UnitMapSize.fit_factor(bounds.size, role, path)
 	var center: = bounds.get_center()
 	pivot.transform = Transform3D(Basis(Vector3.UP, yaw).scaled(Vector3.ONE * factor), Vector3(-center.x, 0.0 if role == "silo" else -bounds.position.y, -center.z) * factor)
 
