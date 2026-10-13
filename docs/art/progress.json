@@ -232,6 +232,46 @@
       "model": "res://assets/library/arsenal/euro_s3_silo.glb",
       "width": 512,
       "height": 512
+    },
+    {
+      "key": "euro_mirage_iv",
+      "name": "Mirage IV",
+      "model": "res://assets/library/arsenal/euro_mirage_iv.glb",
+      "path": "game/assets/interface/unit_art/euro_mirage_iv.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: Mirage IV aircraft in flight, correct wing/fuselage/engine arrangement, clear complete silhouette against a soft clouded sky. This is the European equipment from model euro_mirage_iv; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "b38126156056354dd33557162713488ea4768a3e",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_leopard1",
+      "name": "Leopard 1",
+      "model": "res://assets/library/arsenal/euro_leopard1.glb",
+      "path": "game/assets/interface/unit_art/euro_leopard1.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: Leopard 1 (euro_leopard1), a Armor weapon or vehicle on dry grass and packed earth, correct identifying turret, wheels, tracks or weapon tubes, entire subject visible from low front three-quarter angle. This is the European equipment from model euro_leopard1; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "c174b20a28c29eaf311d63db962ffb759c58ab43",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "support_depot",
+      "name": "Support depot",
+      "model": null,
+      "path": "game/assets/interface/buildings/support_depot.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: military logistics compound with stores, fuel tanks, pallets and one heavy military supply truck. Three-quarter elevated view of the complete building or compact compound. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "1a15322567a93a95286f7177a869955bc6cc8f24",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "drone_factory",
+      "name": "Drone factory",
+      "model": null,
+      "path": "game/assets/interface/buildings/drone_factory.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: modern compact drone assembly workshop with light industrial buildings and a small fixed-wing drone outside. Three-quarter elevated view of the complete building or compact compound. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "57842d904e3da0d7e81ef141d9937d4e7af89a02",
+      "width": 512,
+      "height": 512
     }
   ],
   "failed": []
