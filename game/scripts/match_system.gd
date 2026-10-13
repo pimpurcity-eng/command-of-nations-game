@@ -38,6 +38,8 @@ var chronicle: = WarChronicle.new()
 var annexation: = Annexation.new()
 ## Chemical and nuclear missiles.
 var strategic: = StrategicWeapons.new()
+## Trade routes (TradeNetwork, set by main) — saved with the match.
+var trade: TradeNetwork
 ## Relations, coalitions and messages.
 var diplomacy: = Diplomacy.new()
 ## Entrenchment (Conflict of Nations style): an army that has stood still for ENTRENCH_TIME at
@@ -286,7 +288,7 @@ func end_match(country: String, kind: String = "elimination") -> void :
 	report.emit(VICTORY_NAMES.get(kind, "VICTORY") + " · " + country.capitalize() + " wins. Choose New match to play again.")
 	finished.emit(country)
 func snapshot() -> Dictionary:
-	return {"last_day": last_day, "air_cooldowns": air_combat.snapshot(), "combat_cooldowns": combat.snapshot(), "at_war": at_war, "winner": winner, "decision_timer": decision_timer, "recruitment_timer": ai.recruitment_timer, "capture_progress": capture_progress.duplicate(true), "victory_type": victory_type, "victory": victory.snapshot(), "chronicle": chronicle.snapshot(), "annexation": annexation.snapshot(), "strategic": strategic.snapshot(), "doctrines": Doctrine.snapshot(), "diplomacy": diplomacy.snapshot()}
+	return {"last_day": last_day, "air_cooldowns": air_combat.snapshot(), "combat_cooldowns": combat.snapshot(), "at_war": at_war, "winner": winner, "decision_timer": decision_timer, "recruitment_timer": ai.recruitment_timer, "capture_progress": capture_progress.duplicate(true), "victory_type": victory_type, "victory": victory.snapshot(), "chronicle": chronicle.snapshot(), "annexation": annexation.snapshot(), "strategic": strategic.snapshot(), "trade": trade.snapshot() if trade != null else {}, "doctrines": Doctrine.snapshot(), "diplomacy": diplomacy.snapshot()}
 func restore(state: Dictionary) -> void :
 	last_day = int(state.get("last_day",1+int(clock.elapsed/ProductionSystem.DAY_SECONDS)))
 	combat.restore(state.get("combat_cooldowns", {}))
@@ -302,6 +304,7 @@ func restore(state: Dictionary) -> void :
 	chronicle.restore(state.get("chronicle", {}))
 	annexation.restore(state.get("annexation", {}))
 	strategic.restore(state.get("strategic", {}))
+	if trade != null: trade.restore(state.get("trade", {}))
 	if state.has("doctrines"): Doctrine.restore(state.doctrines)
 	diplomacy.restore(state.get("diplomacy", {}))
 	diplomacy.relation(GameSession.player_country, GameSession.opponent_country()).war = at_war

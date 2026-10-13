@@ -350,7 +350,7 @@ func _build_bottom(root: Control) -> void:
 	nav_row = HBoxContainer.new()
 	nav_row.add_theme_constant_override("separation", 0)
 	column.add_child(nav_row)
-	for entry in [["diplomacy", "Diplomacy"], ["produce", "Produce"], ["provinces", "Provinces"], ["market", "Market"], ["research", "Research"], ["more", "More"]]:
+	for entry in [["diplomacy", "Diplomacy"], ["produce", "Produce"], ["provinces", "Provinces"], ["market", "Trade"], ["research", "Research"], ["more", "More"]]:
 		var tab: = _tab(entry[0], entry[1])
 		nav_row.add_child(tab)
 		match entry[0]:

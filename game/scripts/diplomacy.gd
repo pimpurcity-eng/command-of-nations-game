@@ -32,7 +32,7 @@ static func pair(a: String, b: String) -> String:
 
 func relation(a: String, b: String) -> Dictionary:
 	var key: = pair(a, b)
-	if not relations.has(key): relations[key] = {"war": false, "right_of_way": false, "shared_vision": false, "since": now}
+	if not relations.has(key): relations[key] = {"war": false, "right_of_way": false, "shared_vision": false, "trade": false, "since": now}
 	return relations[key]
 
 func at_war(a: String, b: String) -> bool:
@@ -46,6 +46,7 @@ func set_war(a: String, b: String, war: bool) -> void:
 	if war:
 		r.right_of_way = false
 		r.shared_vision = false
+		r.trade = false
 		for name in coalitions.keys():
 			var members: Array = coalitions[name].members
 			if a in members and b in members: leave(b, true)
@@ -155,6 +156,7 @@ func propose(from: String, to: String, kind: String, standing: Dictionary = {}) 
 			"peace": set_war(from, to, false)
 			"right_of_way": relation(from, to).right_of_way = true
 			"shared_vision": relation(from, to).shared_vision = true
+			"trade": relation(from, to).trade = true
 	post(to, from, answer.message)
 	changed.emit()
 	return answer
@@ -169,6 +171,7 @@ func answer(responder: String, proposer: String, kind: String, accept: bool) -> 
 			"peace": set_war(proposer, responder, false)
 			"right_of_way": relation(proposer, responder).right_of_way = true
 			"shared_vision": relation(proposer, responder).shared_vision = true
+			"trade": relation(proposer, responder).trade = true
 			"coalition":
 				var name: = coalition_of(proposer)
 				if name.is_empty() or not coalition_of(responder).is_empty(): return "That coalition offer has lapsed"
@@ -191,6 +194,10 @@ func _ai_answer(from: String, to: String, kind: String, standing: Dictionary) ->
 		"right_of_way", "shared_vision":
 			if r.war or now - r.since < 2.0 * DAY: return {"accepted": false, "message": "We do not trust you yet."}
 			return {"accepted": true, "message": "Agreed. Let this mark a new friendship."}
+		"trade":
+			# Trade (owner 2026-10-13): trains and ships between the two countries.
+			if r.war or now - r.since < 1.0 * DAY: return {"accepted": false, "message": "Trade must wait until the guns have been quiet for a day."}
+			return {"accepted": true, "message": "Agreed. Our trains and ships are welcome at your stations and ports."}
 		"coalition":
 			return {"accepted": false, "message": "We stand alone."}
 	return {"accepted": false, "message": "We do not understand."}

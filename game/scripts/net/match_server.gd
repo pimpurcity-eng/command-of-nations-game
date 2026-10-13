@@ -276,7 +276,7 @@ func command(country: String, message: Dictionary) -> String:
 		"propose":
 			var to: = str(message.get("to", ""))
 			if not to in COUNTRIES or to == country: return "Choose another country"
-			if not str(message.get("kind", "")) in ["peace", "right_of_way", "shared_vision", "coalition"]: return "Unknown proposal"
+			if not str(message.get("kind", "")) in ["peace", "right_of_way", "shared_vision", "trade", "coalition"]: return "Unknown proposal"
 			return talks.propose(country, to, message.kind, VictoryRules.standings(game.map.territories, rules.cities, COUNTRIES)).message.replace("Proposal sent", "")
 		"answer":
 			return talks.answer(country, str(message.get("from", "")), str(message.get("kind", "")), bool(message.get("accept", false)))

@@ -114,6 +114,9 @@ func movement_speed(group: Array, point: Variant = null) -> float:
 		speed = minf(speed, member_speed)
 	if point != null and armies.air.economy != null and armies.air.economy.buildings != null and not group.is_empty():
 		speed *= armies.air.economy.buildings.provinces.movement_factor(point, group[0].country)
+	# Rail transport (owner 2026-10-13): twice as fast through friendly provinces with a train station.
+	if point != null and TradeNetwork.active != null and not group.is_empty() and group.all(func(u: Dictionary): return u.visual_kind not in ["fighter", "naval"]):
+		speed *= TradeNetwork.active.rail_factor(point, group[0].country)
 	return speed * SimulationClock.MOVEMENT_PACE
 
 func split_units(ids: Array[String]) -> String:

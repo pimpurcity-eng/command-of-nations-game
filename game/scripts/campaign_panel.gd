@@ -122,6 +122,7 @@ func _diplomacy() -> void:
 			else: rules.declare_war())
 		_action(row, "Right of way", func(): hud_status(talks.propose(me, other, "right_of_way", table).message), r.war or r.right_of_way)
 		_action(row, "Shared vision", func(): hud_status(talks.propose(me, other, "shared_vision", table).message), r.war or r.shared_vision)
+		_action(row, "Trade deal", func(): hud_status(talks.propose(me, other, "trade", table).message), r.war or r.get("trade", false))
 		_action(row, "Lift embargo" if talks.embargoed(me, other) else "Embargo", func(): talks.set_embargo(me, other, not talks.embargoed(me, other)))
 		content.add_child(row)
 	_label("COALITION", true)

@@ -31,6 +31,8 @@ var buildings: BuildingSystem
 var city_panel: CityPanel
 var province_panel: ProvincePanel
 var exchange_panel: ExchangePanel
+var trade: TradeNetwork
+var trade_panel: TradePanel
 var weapon_showcase: WeaponShowcase
 var mobile_start: MobileStartPanel
 var autosave_timer: = 0.0
@@ -152,13 +154,13 @@ func _ready() -> void :
 			add_child(weapon_showcase)
 			weapon_showcase.setup(hud.get_child(0).theme, clock)
 		weapon_showcase.open())
+	# Owner 2026-10-13: trade (trains and ships to partners) replaces the market.
 	hud.exchange_requested.connect( func():
-		if exchange_panel == null:
-			exchange_panel = ExchangePanel.new()
-			add_child(exchange_panel)
-			exchange_panel.setup(production, hud.get_child(0).theme)
-			exchange_panel.exchange.diplomacy = match_rules.diplomacy
-		exchange_panel.open())
+		if trade_panel == null:
+			trade_panel = TradePanel.new()
+			add_child(trade_panel)
+			trade_panel.setup(trade, hud.get_child(0).theme)
+		trade_panel.open())
 	hud.add_destination_requested.connect( func():
 		if units.selected < 0 or units.units[units.selected].country != GameSession.player_country or not units.units[units.selected].moving:
 			hud.show_status("Select a your army with a movement order first")
@@ -399,6 +401,14 @@ func _ready() -> void :
 	match_rules.combat.weapon_fired.connect(_attack_alert)
 	match_rules.air_combat.weapon_fired.connect(_attack_alert)
 	clock.advanced.connect(match_rules.advance)
+	trade = TradeNetwork.new()
+	add_child(trade)
+	trade.setup(map, units, production, buildings, match_rules.diplomacy)
+	trade.ai_countries = [GameSession.opponent_country()]
+	match_rules.trade = trade
+	clock.advanced.connect(trade.advance)
+	trade.delivered.connect(func(country: String, partner: String, cargo: String, amount: float):
+		if country == GameSession.player_country: hud.show_status("TRADE · %s delivered %d %s" % [trade.partner_name(partner), roundi(amount), cargo]))
 	units.status_changed.connect( func(_message: String): refresh_hud())
 	hud.show_status("PLANNING · Issue orders and queue production, then tap Play. Win by domination, economy or elimination.")
 	apply_player_country()
@@ -604,6 +614,7 @@ func _touch_over_ui(screen: Vector2) -> bool:
 	if account_panel != null and account_panel.overlay.visible: return true
 	if badges != null and badges.contains(screen): return true
 	if exchange_panel != null and exchange_panel.visible: return true
+	if trade_panel != null and trade_panel.visible: return true
 	if weapon_showcase != null and weapon_showcase.visible: return true
 	if mobile_start != null and mobile_start.visible: return true
 	if campaign_panel != null and campaign_panel.visible: return true

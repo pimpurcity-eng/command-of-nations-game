@@ -82,7 +82,7 @@ func _process(delta: float) -> void:
 	_poll = 0.0
 	# The card steps aside while a full-screen menu is open (it covered the menu titles).
 	var menu_open: = false
-	for name in ["city_panel", "province_panel", "research_panel", "production_panel", "campaign_panel", "exchange_panel", "army_selection", "army_command"]:
+	for name in ["city_panel", "province_panel", "research_panel", "production_panel", "campaign_panel", "exchange_panel", "trade_panel", "army_selection", "army_command"]:
 		var menu = game.get(name)
 		if menu != null and is_instance_valid(menu) and menu.visible: menu_open = true
 	panel.visible = not menu_open
