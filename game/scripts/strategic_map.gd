@@ -1,5 +1,7 @@
 class_name StrategicMap
 extends Node3D
+signal map_ready
+var build_finished := false
 signal territory_selected(territory: Dictionary)
 var territories: Array = RegionData.territories()
 var bodies: Dictionary = {}
@@ -30,6 +32,8 @@ func _ready() -> void :
 	for city in GeographicProjection.load_cities(): _city_points.append(city.point)
 	for territory in territories:
 		_build_sector(territory)
+		if OS.has_feature("mobile"):
+			await get_tree().process_frame
 	_ground_ready = true
 	var province_lines: = MapBorder.build_segments(MapBorder.unique_segments(_border_rings), self, 0.9, Color(0.21, 0.23, 0.2, 0.75))
 	province_lines.name = "ProvinceBorders"
@@ -37,6 +41,8 @@ func _ready() -> void :
 	_add_landscape()
 	_add_country_outlines()
 	_add_connections()
+	build_finished = true
+	map_ready.emit()
 func on_land(point: Vector2) -> bool:
 	for tri in _ground_cells.get(Vector2i(floori(point.x / GROUND_CELL), floori(point.y / GROUND_CELL)), []):
 		var a: Vector3 = tri[0]
