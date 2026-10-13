@@ -369,6 +369,16 @@ func _ready() -> void :
 		hud.detail.text = ("YOURS · YOUR COUNTRY" if controller == GameSession.player_country else controller.to_upper()) + (" · CAPITAL" if buildings.is_capital(city) else "")
 		hud.show_status("City hub · " + city.name)
 		if match_rules == null or match_rules.winner.is_empty(): city_panel.open(city))
+	hud.city_choices = func() -> Array:
+		var result: Array = []
+		for i in cities.cities.size():
+			var place: Dictionary = cities.cities[i]
+			if not production.controlled(place, GameSession.player_country): continue
+			var capital: bool = buildings.is_capital(place)
+			var entry: = [place.name + (" · Capital" if capital else ""), i]
+			if capital: result.push_front(entry)
+			else: result.append(entry)
+		return result
 	hud.city_requested.connect( func(index: int):
 		var city: Dictionary = cities.cities[index]
 		rig.target = Vector3(city.point.x, 0, city.point.y)

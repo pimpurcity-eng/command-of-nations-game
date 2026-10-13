@@ -124,6 +124,8 @@ func declare_war() -> void :
 	diplomacy.set_war(GameSession.player_country, GameSession.opponent_country(), true)
 	at_war = true
 	armies.at_war = true
+	# Owner 2026-10-13: the enemy turns red the moment war is declared.
+	terrain.update_relations(true)
 	report.emit("WAR DECLARED · " + GameSession.opponent_country().capitalize() + " AI will defend and counterattack")
 func ceasefire() -> void :
 	if not at_war or not winner.is_empty(): return

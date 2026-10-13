@@ -379,7 +379,7 @@ func advance(delta: float) -> void :
 			continue
 		unit.engaged = false
 		var current: = Vector2(unit.node.position.x, unit.node.position.z)
-		var reach: = 1.1
+		var reach: = CombatSystem.CLOSE_COMBAT_REACH  # armies must actually touch to fight
 		var neighbours: Array = []
 		if at_war:
 			var cell: = Vector2i(floori(current.x / 1.1), floori(current.y / 1.1))
@@ -425,7 +425,7 @@ func advance(delta: float) -> void :
 		var can_defer: bool = at_war and unit.moving and (unit.fire_mode in ["offensive", "aggressive"] or not unit.attack_target.is_empty()) and group.any( func(member: Dictionary): return member.visual_kind in ["artillery", "missile_launcher", "naval"])
 		var opponents: Array = fire_control.target(group, army_groups, self) if can_defer else []
 		if not opponents.is_empty() and group.any( func(member: Dictionary): return member.visual_kind in ["artillery", "missile_launcher", "naval"]):
-			unit.firing_halt = current.distance_to(Vector2(opponents[0].node.position.x, opponents[0].node.position.z)) > 1.1
+			unit.firing_halt = current.distance_to(Vector2(opponents[0].node.position.x, opponents[0].node.position.z)) > CombatSystem.CLOSE_COMBAT_REACH
 		for member in group: member.firing_halt = unit.firing_halt
 		var remaining: = delta
 		var waiting: = minf(remaining, unit.delay_remaining)

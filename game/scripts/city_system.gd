@@ -279,7 +279,10 @@ func _process(delta: float) -> void :
 		var size: = label.size
 		var offsets: = [Vector2( - size.x * 0.5, - size.y - 10), Vector2( - size.x * 0.5, 12), Vector2(16, - size.y * 0.5), Vector2( - size.x - 16, - size.y * 0.5), Vector2(16, - size.y - 18), Vector2( - size.x - 16, 18), Vector2( - size.x * 0.5, - size.y - 42), Vector2( - size.x * 0.5, 42)]
 		for offset in offsets:
-			var bounds: = Rect2(point + offset, size)
+			# Include the resource / capital boxes under the name so tags never overlap them.
+			var boxes: = label.get_node_or_null("Boxes") as Control
+			var reach: = maxf(size.x, 36.0 + (boxes.size.x if boxes != null else 0.0))
+			var bounds: = Rect2(point + offset, Vector2(reach, size.y + 40))
 			if not safe.encloses(bounds): continue
 			var clear: = true
 			for previous in occupied:

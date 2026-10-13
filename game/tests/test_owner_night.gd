@@ -1,0 +1,40 @@
+extends SceneTree
+## Owner 2026-10-13 (night): enemy turns red at war (also under fog); armies only fight when
+## they touch; the city list holds only your own cities (all seven).
+##   xvfb-run -a godot --path . --script tests/test_owner_night.gd
+var failures: = 0
+func check(ok: bool, text: String) -> void:
+	if not ok: failures += 1
+	print("PASS " if ok else "FAIL ", text)
+func _initialize() -> void: call_deferred("run")
+func run() -> void:
+	GameSession.player_country = "russia"
+	var game = load("res://scenes/main.tscn").instantiate()
+	root.add_child(game)
+	while not game.boot_finished: await process_frame
+	game.mobile_start.hide()
+	game.clock.paused = true
+	game.match_rules.ai_enabled = false
+	var choices: Array = game.hud.city_choices.call()
+	check(choices.size() == 7 and choices.all(func(c): return game.production.controlled(game.cities.cities[c[1]], "russia")), "city list: the seven Russian cities only (%d)" % choices.size())
+	check(str(choices[0][0]).contains("Capital"), "capital first")
+	game.hud.declare_war_requested.emit()
+	var hostile: = 0
+	for t in game.map.territories:
+		if t.playable and t.controller == "ukraine" and game.map.materials[t.id].get_shader_parameter("hostile"): hostile += 1
+	check(hostile > 20, "Ukraine turns red the moment war is declared (%d)" % hostile)
+	# Armies in Belgorod and Kharkiv do not fight; they are not touching.
+	var belgorod: Vector2 = game.buildings.city("belgorod").point
+	var kharkiv: Vector2 = game.buildings.city("kharkiv").point
+	var ours: Array = game.units.units.filter(func(u): return u.country == "russia" and u.visual_kind == "infantry")
+	var theirs: Array = game.units.units.filter(func(u): return u.country == "ukraine" and u.visual_kind == "infantry")
+	ours[0].node.position = Vector3(belgorod.x, ours[0].node.position.y, belgorod.y)
+	theirs[0].node.position = Vector3(kharkiv.x, theirs[0].node.position.y, kharkiv.y)
+	ours[0].moving = true
+	ours[0].target = belgorod
+	var before: float = theirs[0].health
+	game.units.fog_enabled = false
+	for i in 60: game.clock.paused = false; game.clock.advance(60.0)
+	check(theirs[0].health == before, "no fighting between armies a city apart (%.0f%%)" % theirs[0].health)
+	print("RESULT failures=", failures)
+	quit(1 if failures > 0 else 0)

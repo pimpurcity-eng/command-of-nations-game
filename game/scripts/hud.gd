@@ -74,6 +74,8 @@ var pause_button: Button
 var speed_button: Button
 var guard_button: Button
 var gold_button: Button
+## Returns [[label, city index], ...] for the city list (set by main).
+var city_choices: Callable
 var time_label: Label
 var score_label: Label
 var war_label: Label
@@ -197,8 +199,12 @@ func _build_toolbar(root: Control) -> void:
 		toolbar.add_child(button)
 	var city_menu: = MenuButton.new()
 	_style_square(city_menu, "city")
-	for entry in [["Kyiv · Capital", 0], ["Lviv", 1], ["Odesa", 2], ["Kharkiv", 3], ["Dnipro", 4], ["Moscow · Capital", 5], ["Kursk", 6], ["Belgorod", 7], ["Voronezh", 8], ["Rostov-on-Don", 9]]:
-		city_menu.get_popup().add_item(entry[0], entry[1])
+	# Owner: only your own cities (all seven, captured ones too), capital first; built fresh
+	# each time it opens from main's city_choices ([[label, city index], ...]).
+	city_menu.get_popup().about_to_popup.connect(func():
+		var popup: = city_menu.get_popup()
+		popup.clear()
+		for entry in (city_choices.call() if city_choices.is_valid() else []): popup.add_item(entry[0], entry[1]))
 	city_menu.get_popup().id_pressed.connect(func(index: int): city_requested.emit(index))
 	toolbar.add_child(city_menu)
 	mode_button = _square("terrain")

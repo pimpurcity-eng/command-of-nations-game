@@ -131,7 +131,10 @@ void fragment() {
 	if (fog_enabled) {
 		float visibility = texture(visibility_mask, uv).r;
 		float luminance = dot(color, vec3(0.2126, 0.7152, 0.0722));
-		color = mix(vec3(luminance) * vec3(0.64, 0.68, 0.70), color, visibility);
+		// Owner 2026-10-13 ("Ukraine didn't go red"): like Call of War, unseen land keeps its
+		// political colour (red at war) and is only darkened, not turned grey.
+		vec3 fogged = mix(vec3(luminance), color, 0.6) * 0.72;
+		color = mix(fogged, color, visibility);
 	}
 	vec3 context = mix(vec3(0.44, 0.50, 0.40), vec3(0.52, 0.57, 0.46), fine) * clamp(mix(1.0, shade, 0.6), 0.6, 1.3);
 	ALBEDO = blank_context ? context : color;
