@@ -6,6 +6,7 @@ var panel: MobileStartPanel
 var audio: GameAudio
 
 func _ready() -> void:
+	get_viewport().disable_3d = true
 	audio = GameAudio.new()
 	add_child(audio)
 	audio.play_music("menu_theme")
@@ -48,4 +49,26 @@ func _ready() -> void:
 	if not game.boot_finished:
 		await game.boot_ready
 	panel.set_progress(100, "Ready")
+	if "--startup-smoke" in OS.get_cmdline_user_args():
+		panel.hide()
+		print("WF_SMOKE READY")
+		for i in 4: await get_tree().process_frame
+		var point: Vector2 = game.mobile_start.fresh_button.get_global_rect().get_center()
+		var click := InputEventMouseButton.new()
+		click.button_index = MOUSE_BUTTON_LEFT
+		click.position = point
+		click.global_position = point
+		click.pressed = true
+		get_viewport().push_input(click, true)
+		click = click.duplicate()
+		click.pressed = false
+		get_viewport().push_input(click, true)
+		for i in 8: await get_tree().process_frame
+		if game.mobile_start.visible or game.clock.paused:
+			print("WF_SMOKE FAIL Start button did not open campaign")
+		else:
+			print("WF_SMOKE MAP_OPEN units=", game.units.units.size())
+			var until := Time.get_ticks_msec() + 30000
+			while Time.get_ticks_msec() < until: await get_tree().process_frame
+			print("WF_SMOKE MAP_RUNNING time=", game.clock.elapsed)
 	queue_free()
