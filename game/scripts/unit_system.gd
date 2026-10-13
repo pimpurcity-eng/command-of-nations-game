@@ -406,7 +406,20 @@ func advance(delta: float) -> void :
 				for member in group: member.attack_target = ""
 			elif unit_visible(enemy, unit.country):
 				var enemy_point: = Vector2(enemy.node.position.x, enemy.node.position.z)
-				if enemy_point.distance_to(unit.target) > 0.25:
+				# Owner 2026-10-13: artillery/rockets stop and fire once the target is in range;
+				# they only move while it is out of range.
+				var gun_reach: = 0.0
+				for member in group:
+					if member.visual_kind in ["artillery", "missile_launcher", "naval"]:
+						var ready: Dictionary = member.duplicate()
+						ready.moving = false
+						gun_reach = maxf(gun_reach, fire_control.attack_reach(ready))
+				if gun_reach > 0.0 and current.distance_to(enemy_point) <= gun_reach:
+					for member in group:
+						member.moving = false
+						member.waypoints.clear()
+						member.target = current
+				elif enemy_point.distance_to(unit.target) > 0.25:
 					var pursuit: = path_for(unit, current, enemy_point)
 					if not pursuit.is_empty(): unit.target = enemy_point;unit.waypoints = pursuit;unit.moving = true
 		var can_defer: bool = at_war and unit.moving and (unit.fire_mode in ["offensive", "aggressive"] or not unit.attack_target.is_empty()) and group.any( func(member: Dictionary): return member.visual_kind in ["artillery", "missile_launcher", "naval"])

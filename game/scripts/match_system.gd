@@ -143,6 +143,14 @@ func ceasefire() -> void :
 	report.emit("CEASEFIRE · Combat and occupation stopped; existing control retained")
 const CAPTURE_RADIUS: = 0.6
 var capture_progress: Dictionary = {}
+var _capture_points: Dictionary = {}
+func capture_point(territory: Dictionary) -> Vector2:
+	if _capture_points.has(territory.id): return _capture_points[territory.id]
+	var point: Vector2 = territory.center
+	var hub: Variant = terrain.province_hubs.get(territory.get("title", ""))
+	if hub is Vector2 and RegionData.contains(territory, hub): point = hub
+	_capture_points[territory.id] = point
+	return point
 func setup(map: StrategicMap, units: UnitSystem, city_data: Array, time: SimulationClock) -> void :
 	terrain = map
 	armies = units
@@ -226,13 +234,17 @@ func advance(seconds: float) -> void :
 		if not territory.playable: continue
 		var occupant: = ""
 		var contested: = false
-		var cell: = Vector2i(floori(territory.center.x / CAPTURE_RADIUS), floori(territory.center.y / CAPTURE_RADIUS))
+		# Owner 2026-10-13 ("Russia took my land and it never changed"): armies stop at the
+		# province hub (road network), which can be far from the sector's centre in big
+		# provinces, so the hub is the capture point when it lies inside this sector.
+		var anchor: = capture_point(territory)
+		var cell: = Vector2i(floori(anchor.x / CAPTURE_RADIUS), floori(anchor.y / CAPTURE_RADIUS))
 		var candidates: Array = []
 		for dx in range(-1,2):
 			for dy in range(-1,2): candidates.append_array(nearby.get(cell + Vector2i(dx,dy), []))
 		for unit in candidates:
 			var point: = Vector2(unit.node.position.x, unit.node.position.z)
-			if point.distance_squared_to(territory.center) > CAPTURE_RADIUS * CAPTURE_RADIUS: continue
+			if point.distance_squared_to(anchor) > CAPTURE_RADIUS * CAPTURE_RADIUS: continue
 			if not RegionData.contains(territory, point): continue
 			if occupant.is_empty(): occupant = unit.country
 			elif occupant != unit.country: contested = true

@@ -88,7 +88,9 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 					if defender.visual_kind in ["air_defense","naval"] and defender.health > 0 and value(defender,"aa_damage")>0:
 						damage[unit.id] = damage.get(unit.id, 0.0) + value(defender, "aa_damage", true)
 						weapon_fired.emit(defender, unit, "interceptor")
-			cooldowns[unit.id] = AA_INTERVAL if strike[2] else ROUND_SECONDS * (0.5 if unit.get("flight_mode", "") == "patrol" else 1.0)
+			# Owner 2026-10-13: patrolling aircraft also strike every 7 minutes (half damage, above);
+			# an attack order hits at full damage and then the aircraft returns to land.
+			cooldowns[unit.id] = AA_INTERVAL if strike[2] or unit.get("flight_mode", "") == "patrol" else ROUND_SECONDS
 			if unit.get("flight_mode", "") == "attack": armies.air.return_home(unit)
 		if resolve_now:
 			for id in damage: pending[id] = pending.get(id, 0.0) + damage[id]

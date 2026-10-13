@@ -86,5 +86,37 @@
       "longitude": 37.5,
       "latitude": 46.0
     }
+  },
+  {
+    "name": "Bryansk",
+    "country": "Russia",
+    "longitude": 34.3634,
+    "latitude": 53.2434,
+    "id": "bryansk",
+    "capital": false
+  },
+  {
+    "name": "Tula",
+    "country": "Russia",
+    "longitude": 37.6173,
+    "latitude": 54.1931,
+    "id": "tula",
+    "capital": false
+  },
+  {
+    "name": "Poltava",
+    "country": "Ukraine",
+    "longitude": 34.5514,
+    "latitude": 49.5883,
+    "id": "poltava",
+    "capital": false
+  },
+  {
+    "name": "Vinnytsia",
+    "country": "Ukraine",
+    "longitude": 28.4682,
+    "latitude": 49.2331,
+    "id": "vinnytsia",
+    "capital": false
   }
 ]

@@ -322,6 +322,12 @@ func _build_bottom(root: Control) -> void:
 	unit_portrait.custom_minimum_size = Vector2(112, 80)
 	unit_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	unit_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	# Owner 2026-10-13: tap the army picture (own or enemy) for the full Army Details.
+	unit_portrait.mouse_filter = Control.MOUSE_FILTER_STOP
+	unit_portrait.tooltip_text = "Army details"
+	unit_portrait.gui_input.connect(func(event: InputEvent):
+		if inspecting_unit and ((event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT) or (event is InputEventScreenTouch and event.pressed)):
+			stack_info_requested.emit())
 	card.add_child(unit_portrait)
 	detail = Label.new()
 	detail.text = "REGIONAL COMMAND"
