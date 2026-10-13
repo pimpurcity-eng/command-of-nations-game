@@ -412,6 +412,16 @@
       "sha": "0dbc2408053f1c7a7f32642355d796c4efa6c218",
       "width": 512,
       "height": 512
+    },
+    {
+      "key": "russia_t90a",
+      "name": "T-90A",
+      "model": "res://assets/library/arsenal/russia_t90a.glb",
+      "path": "game/assets/interface/unit_art/russia_t90a.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square 1024x1024 game-menu portrait for Warfront Mandate. Input image 1 is STYLE REFERENCE ONLY: match its very detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. New subject: T-90A (russia_t90a), a Armor weapon or vehicle on dry grass and packed earth, correct identifying turret, wheels, tracks or weapon tubes, entire subject visible from low front three-quarter angle. This is the Russian equipment from model russia_t90a; make the exact named equipment recognizable rather than a generic vehicle. Main subject occupies the central 76% of the square with generous safe padding on every edge, readable in a 128-pixel research/city/unit card. Softly defocused woodland/clouded sky or the appropriate sea/air/city setting; subdued foreground and background. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent full-bleed illustration.",
+      "sha": "52dfcfb7b293753eb1b6b45b674cf2a6011f96cc",
+      "width": 512,
+      "height": 512
     }
   ],
   "failed": []
