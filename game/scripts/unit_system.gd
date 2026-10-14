@@ -631,8 +631,8 @@ func _replace_visual(unit: Dictionary, replacement: Node3D) -> void:
 	unit.node.add_child(replacement)
 	unit.node.move_child(replacement, 0)
 
-const CITY_GARRISON_SCALE: = 1.35
-const SMALL_GARRISON_READABILITY: = 1.25
+const CITY_GARRISON_SCALE: = 1.60
+const SMALL_GARRISON_READABILITY: = 1.50
 
 static func garrison_scale(unit: Dictionary) -> float:
 	var small: bool = unit.visual_kind == "infantry"
