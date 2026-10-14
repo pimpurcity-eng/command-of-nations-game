@@ -94,7 +94,7 @@ func run():
  var base_damage=CombatSystem.new().damage_value(sample,"armor")
  check(research_system.start_upgrade("tanks_russia",1).is_empty(),"intermediate model upgrade can be researched")
  check(research_system.validate(research_system.snapshot()),"active intermediate research saves")
- research_system.advance(research_system.upgrade_duration(1)+0.01)
+ research_system.advance(research_system.upgrade_duration(1)/research_system.rate("russia")+0.01) # Russia researches 15% slower (country traits)
  check(research_system.refined("tanks_russia",1) and research_system.level("tanks_russia")==1,"upgrade completes without replacing model or skipping tier")
  check(is_equal_approx(CombatSystem.new().damage_value(sample,"armor"),base_damage*1.06),"intermediate upgrade improves actual combat values")
  var saved_research=research_system.snapshot()
