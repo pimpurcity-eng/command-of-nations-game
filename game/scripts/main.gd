@@ -55,9 +55,10 @@ var order_mode: = false
 ## Last map tap, so tapping the same spot again steps to the next army or the city under it.
 var _tap_cycle: Dictionary = {}
 var gold_panel: GoldPanel
-## Owner 2026-10-14 start: in every city 2 infantry, 3 light tanks and 3 air defence (4 in the
-## capital); one infantry posted in every province outside the cities; one plane at the capital.
-const STARTING_ARMY: = {"infantry": 2, "light_tank": 3, "air_defence": 3, "capital_air_defence": 4, "province_infantry": 1, "plane": 1}
+## Owner 2026-10-14 start, 40 units a side: the capital holds 2 infantry, 2 light tanks and 3 air
+## defence; every other city 1 infantry, 1 light tank and 2 air defence; 8 infantry are scattered
+## through the provinces; one plane waits at the capital's airbase.
+const STARTING_ARMY: = {"capital": {"infantry": 2, "light_tank": 2, "skyguard": 3}, "city": {"infantry": 1, "light_tank": 1, "skyguard": 2}, "scattered_infantry": 8, "plane": 1}
 ## Each side's starter light attack jet.
 const STARTING_PLANE: = {"russia": "yak130_russia", "ukraine": "hawk_t2_ukraine"}
 var selecting_armies: = false
@@ -770,7 +771,7 @@ func refresh_hud() -> void :
 		hud.stack_count = units.stacks.members(unit).size()
 		hud.show_air_commands(units.air.is_air(unit))
 		if hud.inspecting_unit:
-			var state: = "WAIT " + SimulationClock.duration(unit.get("delay_remaining", 0.0), clock.speed) if unit.get("delay_remaining", 0.0) > 0 else "MODERNIZING" if unit.get("upgrade_remaining", 0.0) > 0 else "ENGAGED" if unit.engaged else "FIRING" if unit.get("firing_halt", false) else ("MOVING" if unit.moving else "READY")
+			var state: = "WAIT " + SimulationClock.duration(unit.get("delay_remaining", 0.0), clock.speed) if unit.get("delay_remaining", 0.0) > 0 else "MODERNIZING" if unit.get("upgrade_remaining", 0.0) > 0 else ("DEFENDING" if units._land_owner(unit) == unit.country else "ATTACKING") if unit.engaged else "FIRING" if unit.get("firing_halt", false) else ("MOVING" if unit.moving else "READY")
 			var group: = units.stacks.members(unit)
 			var hp: = 0.0
 			for member in group: hp += member.health
@@ -1008,7 +1009,7 @@ func restore_campaign_forces() -> void:
 
 func populate_campaign_forces(staged: bool = false) -> void:
 	units.restore([])
-	var count_total: int = 190
+	var count_total: int = 80
 	var spawned: int = 0
 	var counts: Dictionary = {}
 	var occupied_sea: Array[Vector2] = []
@@ -1022,19 +1023,31 @@ func populate_campaign_forces(staged: bool = false) -> void:
 		if homes.is_empty(): continue
 		var plan: Array = []  # [family id, city]
 		for home in homes:
-			for i in STARTING_ARMY.infantry: plan.append(["infantry_" + country, home])
-			for i in STARTING_ARMY.light_tank: plan.append(["light_tank_" + country, home])
-			for i in (STARTING_ARMY.capital_air_defence if home.id == capital.id else STARTING_ARMY.air_defence): plan.append(["skyguard_" + country, home])
+			var garrison: Dictionary = STARTING_ARMY.capital if home.id == capital.id else STARTING_ARMY.city
+			for prefix in garrison:
+				for i in garrison[prefix]: plan.append([prefix + "_" + country, home])
 		for i in STARTING_ARMY.plane: plan.append([STARTING_PLANE[country], homes[0]])
-		# One infantry at the centre of every province of this country that is not a city.
-		var posted: Dictionary = {}
+		# Scatter infantry: each one goes to the province centre farthest from the cities and
+		# from the infantry already posted, so they spread across the country.
+		var posts: Array = []
+		var seen: Dictionary = {}
 		for territory in map.territories:
-			if not territory.playable or territory.owner != country or posted.has(territory.title): continue
-			posted[territory.title] = true
-			var post: Vector2 = match_rules.capture_point(territory)
-			if city_points.any(func(p: Vector2): return p.distance_to(post) < 0.8): continue
-			for i in STARTING_ARMY.province_infantry:
-				plan.append(["infantry_" + country, {"id": "province_" + str(territory.id), "point": post}])
+			if not territory.playable or territory.owner != country or seen.has(territory.title): continue
+			seen[territory.title] = true
+			posts.append({"id": "province_" + str(territory.id), "point": match_rules.capture_point(territory)})
+		var taken: Array = city_points.duplicate()
+		for i in STARTING_ARMY.scattered_infantry:
+			var best: Dictionary = {}
+			var best_gap: = -1.0
+			for post in posts:
+				var gap: = INF
+				for other in taken: gap = minf(gap, post.point.distance_to(other))
+				if gap > best_gap:
+					best_gap = gap
+					best = post
+			if best.is_empty(): break
+			taken.append(best.point)
+			plan.append(["infantry_" + country, best])
 		for entry in plan:
 			var family: Dictionary = EquipmentIdentity.spec(entry[0])
 			if family.is_empty(): continue

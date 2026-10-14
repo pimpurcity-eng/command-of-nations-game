@@ -20,20 +20,31 @@ func alive(group: Array) -> Array:
 	return group.filter( func(unit: Dictionary): return unit.health > 0)
 ## Owner 2026-10-13: every weapon attacks and defends against the six unit types only.
 ## Damage per round at full health and level 1, by the attacker's kind and the target's class.
+## Owner 2026-10-14 ("Check Call of War ... all the units for attack and defense"): Call of War
+## level-1 damage turned into percent of the target's health (Call of War hit points: infantry 15,
+## light armour 20, heavy armour 30). Battles keep the half-hour rounds; each round now hurts as
+## much as in Call of War (about 2.5x more than before). Infantry and anti-air defend better than
+## they attack; tanks, artillery and IFVs attack better than they defend (light tank 2.7 attacking
+## infantry, 1.8 defending, as on the Call of War wiki).
 const ATTACK: = {
-	"armor": {"infantry": 8.0, "light": 8.0, "heavy": 7.0},
-	"ifv": {"infantry": 7.0, "light": 6.0, "heavy": 4.0},
-	"artillery": {"infantry": 6.0, "light": 6.0, "heavy": 4.0},
-	"air_defense": {"infantry": 2.0, "light": 1.5, "heavy": 1.0},
-	"infantry": {"infantry": 5.0, "light": 3.0, "heavy": 1.5},
+	"armor": {"infantry": 23.0, "light": 20.0, "heavy": 10.0},
+	"light_tank": {"infantry": 18.0, "light": 12.5, "heavy": 5.0},
+	"ifv": {"infantry": 17.0, "light": 7.5, "heavy": 2.5},
+	"artillery": {"infantry": 23.0, "light": 12.5, "heavy": 8.0},
+	"air_defense": {"infantry": 6.5, "light": 2.5, "heavy": 1.0},
+	"infantry": {"infantry": 13.0, "light": 5.0, "heavy": 1.5},
 }
 const DEFENCE: = {
-	"armor": {"infantry": 7.0, "light": 7.0, "heavy": 6.0},
-	"ifv": {"infantry": 6.0, "light": 7.0, "heavy": 5.0},
-	"artillery": {"infantry": 3.0, "light": 2.0, "heavy": 2.0},
-	"air_defense": {"infantry": 3.0, "light": 2.0, "heavy": 2.0},
-	"infantry": {"infantry": 5.0, "light": 3.0, "heavy": 1.5},
+	"armor": {"infantry": 17.0, "light": 17.5, "heavy": 10.0},
+	"light_tank": {"infantry": 12.0, "light": 10.0, "heavy": 4.0},
+	"ifv": {"infantry": 13.0, "light": 7.5, "heavy": 3.5},
+	"artillery": {"infantry": 6.5, "light": 2.5, "heavy": 1.5},
+	"air_defense": {"infantry": 10.0, "light": 3.5, "heavy": 1.5},
+	"infantry": {"infantry": 20.0, "light": 7.5, "heavy": 3.5},
 }
+## Call of War "Home Defence": armies on their own land deal 15% more damage and take 15% less.
+const HOME_DAMAGE: = 1.15
+const HOME_PROTECTION: = 0.85
 ## Ships by role against ships and submarines.
 const NAVAL: = {"naval": {"naval": 9.0, "submarine": 6.0}, "submarine": {"naval": 13.0, "submarine": 8.0}, "carrier": {"naval": 2.0, "submarine": 1.0}}
 func damage_value(unit: Dictionary, target_kind: String, defending: bool = false) -> float:
@@ -48,7 +59,8 @@ func damage_value(unit: Dictionary, target_kind: String, defending: bool = false
 		var base: float = NAVAL.get(str(spec.get("role", "naval")), {}).get(target, 0.0)
 		if target in ["infantry", "light", "heavy"] and spec.get("shore_bombardment", false): base = 4.0 if not defending else 0.0
 		return base * scale
-	return (DEFENCE if defending else ATTACK).get(unit.visual_kind, {}).get(target, 0.0) * scale
+	var row: String = "light_tank" if unit.visual_kind == "armor" and str(unit.equipment_id).begins_with("light_tank") else unit.visual_kind
+	return (DEFENCE if defending else ATTACK).get(row, {}).get(target, 0.0) * scale
 func ranged_ready(unit: Dictionary) -> bool:
 	return not unit.get("moving", false) or unit.get("fire_mode", "at_will") in ["offensive", "aggressive"] or not unit.get("attack_target", "").is_empty()
 func attack_reach(unit: Dictionary) -> float:
@@ -156,14 +168,16 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 			var distance: = a.distance_to(b)
 			var ranged: = distance > 1.1
 			var contributors: = eligible(attackers, distance)
+			var attackers_home: = _home(armies, attackers[0])
+			var defenders_home: = _home(armies, defenders[0])
 			for defender in defenders:
 				var strike: = potential(contributors, target_class(defender), ranged) / defenders.size()
+				strike *= (HOME_DAMAGE if attackers_home else 1.0) * (HOME_PROTECTION if defenders_home else 1.0)
 				damage[defender.id] = damage.get(defender.id, 0.0) + strike
 			if not ranged:
-
-
 				for attacker in attackers:
 					var response: = potential(defenders, target_class(attacker), false, true) / attackers.size()
+					response *= (HOME_DAMAGE if defenders_home else 1.0) * (HOME_PROTECTION if attackers_home else 1.0)
 					damage[attacker.id] = damage.get(attacker.id, 0.0) + response
 				for defender in defenders:
 					if potential([defender], attackers[0].visual_kind, false, true) > 0:
@@ -185,6 +199,9 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 			for id in damage: pending[id] = pending.get(id, 0.0) + damage[id]
 		else:
 			for unit in armies.units: unit.health = maxf(0, unit.health - damage.get(unit.id, 0.0))
+## True when the army stands on land its own country holds (Call of War Home Defence).
+func _home(armies: UnitSystem, unit: Dictionary) -> bool:
+	return armies != null and armies.navigation != null and armies.navigation.terrain != null and armies._land_owner(unit) == unit.country
 func remaining_for(unit: Dictionary) -> float:
 	return cooldowns.get(unit.country + ":" + unit.stack_id, 0.0)
 func snapshot() -> Dictionary:

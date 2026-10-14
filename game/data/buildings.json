@@ -81,7 +81,7 @@
     "asset_roster_id": "facility_airbase",
     "capital_only": false,
     "starting_level": 0,
-    "capital_starting_level": 0,
+    "capital_starting_level": 1,
     "max_level": 5,
     "hours": 3,
     "cost": {
