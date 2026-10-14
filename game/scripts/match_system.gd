@@ -145,6 +145,19 @@ func ceasefire() -> void :
 	terrain.update_relations(false)
 	report.emit("CEASEFIRE · Combat and occupation stopped; existing control retained")
 const CAPTURE_RADIUS: = 0.6
+## Owner 2026-10-14: a province switches over about 10 real seconds after an army reaches its
+## centre unopposed (it took 12 real minutes before), close to Call of War's instant capture.
+const CAPTURE_SECONDS: = 10.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
+func _player_crossed_border() -> bool:
+	var enemy: = GameSession.opponent_country()
+	if diplomacy.right_of_way(GameSession.player_country, enemy): return false
+	for unit in armies.units:
+		if unit.country != GameSession.player_country or unit.health <= 0: continue
+		if unit.visual_kind in ["fighter", "naval"]: continue
+		if armies._land_owner(unit) == enemy:
+			report.emit(unit.name + " crossed into " + enemy.capitalize() + " · war declared")
+			return true
+	return false
 var capture_progress: Dictionary = {}
 var _capture_points: Dictionary = {}
 func capture_point(territory: Dictionary) -> Vector2:
@@ -216,6 +229,9 @@ func advance(seconds: float) -> void :
 	if not result.is_empty():
 		end_match(result[0], result[1])
 		return
+	# Owner 2026-10-14 ("I went onto Ukrainian territory ... it never switched over"): marching an
+	# army onto the enemy's land declares war, as in Call of War, so the land can be taken.
+	if not at_war and _player_crossed_border(): declare_war()
 	if not at_war: return
 	advance_battles(seconds)
 	var selected_stack: = ""
@@ -275,7 +291,7 @@ func advance(seconds: float) -> void :
 		if progress.country != occupant: progress = {"country": occupant, "seconds": 0.0}
 		progress.seconds += seconds
 		capture_progress[territory.id] = progress
-		if progress.seconds < 6: continue
+		if progress.seconds < CAPTURE_SECONDS: continue
 		for guarded_country in guards:
 			if territory.controller == guarded_country: guards[guarded_country].lost_places.append(territory.title)
 			elif occupant == guarded_country: guards[guarded_country].retaken.append(territory.title)

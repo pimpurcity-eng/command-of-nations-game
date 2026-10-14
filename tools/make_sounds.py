@@ -285,28 +285,44 @@ def ui_click():
 
 
 def war_declared():
-    """Air-raid siren (owner 2026-10-13: "make a different air raid siren, like a normal one you
-    hear"): the familiar single-tone civil-defence wail - a slow rise, a short hold and a slow
-    fall, twice - with the volume swell of a rotating siren head, heard across a town."""
-    seconds = 14.0
+    """Air-raid siren (owner 2026-10-14: "I don't like the sound of the air raid siren"): a real
+    motor-driven civil-defence siren heard across a town. The rotor winds up from a low growl,
+    wails up and down twice, then winds down as the motor coasts to a stop. Two rotors sound a
+    minor-third chord like the wartime sirens; chopped air gives the hollow horn tone, the turning
+    head sweeps the loudness, and the sound echoes back off buildings."""
+    seconds = 19.0
     t = t_axis(seconds)
-    cycle = 7.0
-    phase = np.mod(t, cycle)
-    # 0-3 s rise, 3-4 s hold, 4-7 s fall (smooth, like a motor spinning up and down).
-    rise = 0.5 - 0.5 * np.cos(np.pi * np.clip(phase / 3.0, 0, 1))
-    fall = 0.5 + 0.5 * np.cos(np.pi * np.clip((phase - 4.0) / 3.0, 0, 1))
-    shape = np.where(phase < 4.0, rise, fall)
-    pitch = 160 + 380 * shape
-    angle = 2 * np.pi * np.cumsum(pitch) / SR
-    # A siren's chopped air gives a buzzy, horn-like tone: strong odd harmonics.
-    tone = (np.sin(angle) + 0.55 * np.sin(3 * angle) + 0.3 * np.sin(5 * angle)
-            + 0.18 * np.sin(2 * angle) + 0.12 * np.sin(7 * angle))
-    tone = filt(tone, "low", 2200)
-    swell = 0.72 + 0.28 * np.sin(2 * np.pi * t / 2.6)  # rotating head
-    level = (0.3 + 0.7 * shape) * swell
-    fade = np.clip(t / 0.5, 0, 1) * np.clip((seconds - t) / 1.2, 0, 1)
-    return normalize(reverb(tone * level * fade, 2.8, 0.45, 2600))
-
+    top, low = 470.0, 330.0
+    # Motor curve: wind-up 0-5 s (fast at first, then easing in), two wails, wind-down 14-19 s.
+    up = 1.0 - np.exp(-np.clip(t, 0, 5.0) / 1.3)
+    up = up / up[int(SR * 5.0) - 1]
+    wail_t = np.clip(t - 5.0, 0, 9.0)
+    wail = 0.5 + 0.5 * np.cos(2 * np.pi * wail_t / 4.5)      # 1 -> 0 -> 1 every 4.5 s
+    down = np.exp(-np.clip(t - 14.0, 0, None) / 1.6)
+    pitch = np.where(t < 5.0, 55 + (top - 55) * up,
+                     np.where(t < 14.0, low + (top - low) * wail, 55 + (top - 55) * down))
+    # Tiny motor wobble so it never sounds like a pure synthesizer.
+    pitch = pitch * (1 + 0.004 * np.sin(2 * np.pi * 5.3 * t) + 0.002 * filt(noise(seconds), "low", 3))
+    def rotor(ratio):
+        angle = 2 * np.pi * np.cumsum(pitch * ratio) / SR
+        # Ports opening and closing: a hollow pulse wave, rich in harmonics, softened.
+        wave_ = sum((0.85 ** k) * np.sin(k * angle) / k ** 0.6 for k in range(1, 9))
+        return wave_
+    tone = rotor(1.0) + 0.75 * rotor(1.2)
+    air = filt(noise(seconds), "band", (300, 2400)) * 0.18      # rushing air through the ports
+    sound = filt(tone, "low", 2600) * 0.5 + air * np.clip(pitch / top, 0, 1)
+    # The siren head turns: louder and brighter as it faces us (one turn every 6 s).
+    facing = 0.5 + 0.5 * np.cos(2 * np.pi * t / 6.0)
+    sound = sound * (0.45 + 0.55 * facing) + filt(sound, "high", 1200) * 0.25 * facing
+    level = np.clip(pitch / top, 0, 1) ** 1.3
+    sound = sound * level * np.clip(t / 0.3, 0, 1)
+    # Heard from a few streets away: soften the top, add echoes off buildings and the open air.
+    sound = filt(sound, "low", 3200)
+    echo = np.zeros_like(sound)
+    for delay, gain in ((0.21, 0.35), (0.47, 0.22), (0.83, 0.12)):
+        d = int(SR * delay)
+        echo[d:] += sound[:-d] * gain
+    return normalize(fade_out(reverb(sound + filt(echo, "low", 1800), 3.2, 0.4, 2400), 1.5))
 
 
 def jet_flyby():
@@ -386,19 +402,36 @@ def wheels_moving():
 
 
 def march():
-    """Infantry moving out: boots in step and rattling gear."""
-    seconds = 3.5
+    """Infantry on the move (owner 2026-10-14: "I want it marching"): a squad in step at marching
+    pace - left, right, two steps a second - boots landing together with a heavy heel thud and a
+    gravel crunch, rifles and kit rattling on every step, in the open air."""
+    seconds = 4.5
     t = t_axis(seconds)
     x = np.zeros_like(t)
-    for k in range(int(seconds * 4)):
-        for offset in (0.0, 0.035, 0.07):
-            start = int(SR * (k * 0.25 + offset + RNG.uniform(0, 0.02)))
-            if start >= len(t): continue
-            step = filt(noise(0.07), "band", (120, 1400)) * env(0.07, 0.002, 0.05) * 0.6
-            x[start:start + len(step)] += step[: len(t) - start]
-    gear = filt(noise(seconds), "band", (2500, 6000)) * 0.05 * (0.5 + 0.5 * np.sin(2 * np.pi * 4 * t))
-    return normalize(fade_out(reverb(x + gear, 0.8, 0.2, 4000), 0.6))
-
+    soldiers = 14
+    beat = 0.5                                   # 120 steps a minute
+    for k in range(int(seconds / beat)):
+        left = k % 2 == 0
+        accent = 1.0 if left else 0.82          # the left foot lands a little harder
+        for s in range(soldiers):
+            # Everyone in step, but each boot lands a few milliseconds apart.
+            start = int(SR * (0.15 + k * beat + RNG.normal(0, 0.009)))
+            if start < 0 or start >= len(t): continue
+            length = 0.16
+            heel = filt(noise(length), "band", (60, 260)) * env(length, 0.001, 0.07) * 1.4
+            crunch = filt(noise(length), "band", (700, 4200)) * env(length, 0.002, 0.11, 0.8)
+            grit = filt(noise(length) * (RNG.random(int(SR * length)) < 0.02), "high", 1500) * 0.8
+            step = (heel + crunch * 0.7 + grit * env(length, 0.002, 0.14)) * accent * RNG.uniform(0.7, 1.0)
+            n = min(len(step), len(t) - start)
+            x[start:start + n] += step[:n]
+        # Kit and rifle slings jingle just after each footfall.
+        kit_start = int(SR * (0.15 + k * beat + 0.03))
+        if kit_start < len(t):
+            kit = filt(noise(0.2) * (RNG.random(int(SR * 0.2)) < 0.01), "band", (2500, 7000)) * env(0.2, 0.005, 0.18) * 2.5
+            n = min(len(kit), len(t) - kit_start)
+            x[kit_start:kit_start + n] += kit[:n] * accent
+    fade_in = np.clip(t / 0.4, 0, 1)
+    return normalize(fade_out(reverb(x * fade_in, 0.9, 0.18, 5000), 0.9))
 
 
 def nuclear_alarm():
