@@ -4,7 +4,20 @@
 # browser version of the game. Game connections (WebSocket) go to the match server; everything
 # else is the web game from /opt/warfront/web (kept up to date by server/web-sync.sh).
 play.warfrontmandate.com {
-	encode zstd gzip
+	# Compress the game download (the engine shrinks from 35 MB to 9 MB) and let browsers keep
+	# their copy: the second visit only checks the version instead of downloading it again.
+	encode {
+		zstd
+		gzip
+		match {
+			header Content-Type text/*
+			header Content-Type application/javascript*
+			header Content-Type application/wasm*
+			header Content-Type application/octet-stream*
+			header Content-Type application/json*
+		}
+	}
+	header /index.* Cache-Control "public, max-age=0, must-revalidate"
 	@game_socket {
 		header Connection *Upgrade*
 		header Upgrade websocket
