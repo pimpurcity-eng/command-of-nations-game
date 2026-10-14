@@ -363,6 +363,7 @@ func order(position: Vector3, append: bool = false) -> bool:
 	status_changed.emit(units[selected].name + " • movement order accepted")
 	_draw_route()
 	return true
+var _route_drawn_at: = -1000
 func advance(delta: float) -> void :
 	if delta <= 0 or not is_finite(delta): return
 	var army_groups: = stacks.groups()
@@ -470,15 +471,30 @@ func advance(delta: float) -> void :
 			member.moving = unit.moving
 			member.waypoints = unit.waypoints.duplicate()
 			member.heading = unit.heading
+	# Armies that meet merge into one stack. Performance (owner 2026-10-14, bigger start army):
+	# leaders are worked out once and only armies in neighbouring grid cells are compared,
+	# instead of every army against every other army.
 	var groups: = stacks.groups()
-	for i in groups.size():
-		for j in range(i + 1, groups.size()):
-			var a: = stacks.leader(groups[i])
-			var b: = stacks.leader(groups[j])
-			if a.node.position.distance_to(b.node.position) <= 0.3: stacks.join(a, b)
+	var leaders: Array = groups.map(func(group: Array): return stacks.leader(group))
+	var cells: Dictionary = {}
+	for leader in leaders:
+		var cell: = Vector2i(floori(leader.node.position.x / 0.3), floori(leader.node.position.z / 0.3))
+		if not cells.has(cell): cells[cell] = []
+		cells[cell].append(leader)
+	for i in leaders.size():
+		var a: Dictionary = leaders[i]
+		var cell: = Vector2i(floori(a.node.position.x / 0.3), floori(a.node.position.z / 0.3))
+		for dx in range(-1, 2):
+			for dy in range(-1, 2):
+				for b in cells.get(cell + Vector2i(dx, dy), []):
+					if leaders.find(b) > i and a.node.position.distance_to(b.node.position) <= 0.3: stacks.join(a, b)
 	if selected >= 0:
 		selected = units.find(stacks.leader(stacks.members(units[selected])))
-	_draw_route()
+	# Route lines are redrawn 5 times a second at most (they cost 12 ms with the bigger army).
+	var now: = Time.get_ticks_msec()
+	if now - _route_drawn_at >= 200:
+		_route_drawn_at = now
+		_draw_route()
 func _draw_route() -> void :
 	if route == null: return
 	_update_order_markers()

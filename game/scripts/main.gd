@@ -55,7 +55,9 @@ var order_mode: = false
 ## Last map tap, so tapping the same spot again steps to the next army or the city under it.
 var _tap_cycle: Dictionary = {}
 var gold_panel: GoldPanel
-const STARTING_ARMY: = {"infantry": 15, "light_tank": 2, "air_defence": 5, "plane": 1}
+## Owner 2026-10-14 start: in every city 2 infantry, 3 light tanks and 3 air defence (4 in the
+## capital); one infantry posted in every province outside the cities; one plane at the capital.
+const STARTING_ARMY: = {"infantry": 2, "light_tank": 3, "air_defence": 3, "capital_air_defence": 4, "province_infantry": 1, "plane": 1}
 ## Each side's starter light attack jet.
 const STARTING_PLANE: = {"russia": "yak130_russia", "ukraine": "hawk_t2_ukraine"}
 var selecting_armies: = false
@@ -1006,23 +1008,33 @@ func restore_campaign_forces() -> void:
 
 func populate_campaign_forces(staged: bool = false) -> void:
 	units.restore([])
-	var count_total: int = 2 * (STARTING_ARMY.infantry + STARTING_ARMY.light_tank + STARTING_ARMY.air_defence + STARTING_ARMY.plane)
+	var count_total: int = 190
 	var spawned: int = 0
 	var counts: Dictionary = {}
 	var occupied_sea: Array[Vector2] = []
 	var occupied_air: Array[Vector2] = []
-	# Owner 2026-10-13 (Call of War start): 15 infantry, 2 light tanks, 1 plane and 5 air
-	# defence per country, all level 1, stacked in their cities (capital first).
+	# Owner 2026-10-14: every city holds a garrison and infantry is scattered through the provinces.
+	var city_points: Array = production.cities.map(func(city: Dictionary): return city.point)
 	for country in ["russia", "ukraine"]:
 		var capital: Dictionary = buildings.capital(country)
 		var homes: Array = production.cities.filter(func(city: Dictionary): return city.country.to_lower() == country)
 		homes.sort_custom(func(a: Dictionary, b: Dictionary): return a.id == capital.id and b.id != capital.id)
 		if homes.is_empty(): continue
 		var plan: Array = []  # [family id, city]
-		for i in STARTING_ARMY.infantry: plan.append(["infantry_" + country, homes[0] if i < 3 else homes[1 + (i - 3) % (homes.size() - 1)] if homes.size() > 1 else homes[0]])
-		for i in STARTING_ARMY.light_tank: plan.append(["light_tank_" + country, homes[0]])
-		for i in STARTING_ARMY.air_defence: plan.append(["skyguard_" + country, homes[i % homes.size()]])
+		for home in homes:
+			for i in STARTING_ARMY.infantry: plan.append(["infantry_" + country, home])
+			for i in STARTING_ARMY.light_tank: plan.append(["light_tank_" + country, home])
+			for i in (STARTING_ARMY.capital_air_defence if home.id == capital.id else STARTING_ARMY.air_defence): plan.append(["skyguard_" + country, home])
 		for i in STARTING_ARMY.plane: plan.append([STARTING_PLANE[country], homes[0]])
+		# One infantry at the centre of every province of this country that is not a city.
+		var posted: Dictionary = {}
+		for territory in map.territories:
+			if not territory.playable or territory.owner != country or posted.has(territory.title): continue
+			posted[territory.title] = true
+			var post: Vector2 = match_rules.capture_point(territory)
+			if city_points.any(func(p: Vector2): return p.distance_to(post) < 0.8): continue
+			for i in STARTING_ARMY.province_infantry:
+				plan.append(["infantry_" + country, {"id": "province_" + str(territory.id), "point": post}])
 		for entry in plan:
 			var family: Dictionary = EquipmentIdentity.spec(entry[0])
 			if family.is_empty(): continue
@@ -1327,6 +1339,9 @@ func show_guard_report(text: String) -> void:
 		var lines: = CowUI.label("", 18, Color("efe6cf"))
 		lines.name = "Lines"
 		lines.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		# Owner 2026-10-14 (empty dark panel stuck on screen): a wrapping label with no width
+		# wraps every word onto its own line and pushes the title and OK button off screen.
+		lines.custom_minimum_size.x = card.custom_minimum_size.x - 36.0
 		body.add_child(lines)
 		var ok: = CowUI.action("OK", "")
 		ok.custom_minimum_size = Vector2(160, 52)
@@ -1342,3 +1357,8 @@ func show_guard_report(text: String) -> void:
 	var card: Control = guard_popup.get_node("Card")
 	card.reset_size()
 	card.position = (get_viewport().get_visible_rect().size - card.get_combined_minimum_size()) * 0.5
+	# Centre again once the text has been laid out (its height is only known after a frame).
+	await get_tree().process_frame
+	if not is_instance_valid(card): return
+	card.reset_size()
+	card.position = ((get_viewport().get_visible_rect().size - card.size) * 0.5).max(Vector2(8, 8))

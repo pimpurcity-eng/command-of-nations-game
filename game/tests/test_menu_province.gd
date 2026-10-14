@@ -18,14 +18,17 @@ func run():
  while not game.boot_finished: await process_frame
  for i in 3:await process_frame
  game.mobile_start.hide();game.clock.paused=true;game.match_rules.ai_enabled=false
- # Owner 2026-10-13 (Call of War start): 15 infantry, 2 light tanks, 5 air defence and 1 plane each.
- var expected := {"infantry": 15, "light_tank": 2, "skyguard": 5, "plane": 1}
- check(game.units.units.size()==2*23,"starting army: 23 level-1 units per country (%d)" % game.units.units.size())
+ # Owner 2026-10-14 start: per city 2 infantry, 3 light tanks, 3 air defence (4 in the capital);
+ # one infantry in every province outside the cities; one plane.
  for country in ["russia","ukraine"]:
-  for prefix in expected:
-   var id: String = game.STARTING_PLANE[country] if prefix == "plane" else prefix+"_"+country
-   var have=game.units.units.filter(func(u):return u.equipment_id==id and int(u.level)==1).size()
-   check(have==expected[prefix],"%s starts with %d %s (%d)" % [country,expected[prefix],prefix,have])
+  var city_count: int = game.production.cities.filter(func(c):return c.country.to_lower()==country).size()
+  var mine: Array = game.units.units.filter(func(u):return u.country==country)
+  check(mine.all(func(u):return int(u.level)==1),"%s starts with every unit at level 1" % country)
+  var count: = func(id: String) -> int: return mine.filter(func(u):return u.equipment_id==id).size()
+  check(count.call("light_tank_"+country)==3*city_count,"%s: 3 light tanks per city (%d)" % [country,count.call("light_tank_"+country)])
+  check(count.call("skyguard_"+country)==3*city_count+1,"%s: 3 air defence per city, 4 in the capital (%d)" % [country,count.call("skyguard_"+country)])
+  check(count.call("infantry_"+country)>2*city_count,"%s: 2 infantry per city plus infantry in the provinces (%d)" % [country,count.call("infantry_"+country)])
+  check(count.call(game.STARTING_PLANE[country])==1,"%s starts with one plane" % country)
  for family in EquipmentIdentity.catalog:
   check(not CowUI.equipment_picture(family.id).resource_path.contains("_flag") and not UnitVisual.preview_texture(family.id).resource_path.contains("_flag"),family.id+" equipment image is not a nation flag")
  check(game.units.units.filter(func(u):return u.visual_kind=="naval").all(func(u):return game.units.sea_navigation.on_sea(Vector2(u.node.position.x,u.node.position.z))),"starting fleet is on water")

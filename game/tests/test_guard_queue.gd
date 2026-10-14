@@ -52,7 +52,10 @@ func run() -> void:
 	var responders: Array = game.units.units.filter(func(u): return u.country == "russia" and u.moving and not u.id in before)
 	check(not responders.is_empty(), "an enemy inside Russia makes the guard send defenders (" + said + ")")
 	check(responders.all(func(u): return game.units.navigation.controller_at(u.target) == "russia" and u.waypoints.all(func(p): return game.units.navigation.controller_at(p) == "russia")), "defenders never leave Russian land")
-	check(game.units.units.filter(func(u): return u.country == "russia" and u.moving).size() - before.size() <= DefenceAI.MAX_RESPONDERS * 2, "only a few armies respond")
+	# Counted in armies (stacks): a city army is 5 units with the 2026-10-14 start army.
+	var responding_armies: Dictionary = {}
+	for u in responders: responding_armies[u.stack_id] = true
+	check(responding_armies.size() <= DefenceAI.MAX_RESPONDERS, "only a few armies respond (%d)" % responding_armies.size())
 	# A battle while guarding is counted for the morning report.
 	enemy.health = 0.0
 	rules.advance(0.1)
