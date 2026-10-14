@@ -42,6 +42,8 @@ func run() -> void:
 		game.mobile_start.show()
 		game.mobile_start.cancel_loading("Ready")
 		game.mobile_start.test_button.pressed.emit()
+		# The weapons range now offers separate test maps; "All weapons" is the last choice.
+		game.mobile_start.range_picker.get_child(game.mobile_start.range_picker.get_child_count() - 1).pressed.emit()
 		await process_frame
 		check(game.mobile_start.loading,"button starts loading")
 		var partial: = false

@@ -39,7 +39,7 @@ func _process(delta: float) -> void :
 	# Momentum after a flick, like Call of War's map.
 	if fling.length() > 0.01 and touches.is_empty() and not dragging:
 		target += fling * delta
-		fling *= exp(-delta * 4.0)
+		fling *= exp(-delta * 7.0)
 	else:
 		fling = Vector3.ZERO if not touches.is_empty() or dragging else fling
 	_snap(1.0 - exp( - delta * 12.0))
@@ -52,8 +52,10 @@ func _snap(weight: float) -> void :
 	# Tilt the camera when zoomed in so units and cities read as 3D (Call of War style);
 	# look more straight down when zoomed out over the whole theater.
 	# Owner 2026-10-14 ("the camera's not right"): zoomed in it lay almost flat; keep it looking down.
+	# Owner 2026-10-14 ("it's the camera, the zoom"): the tilt follows the zoom at once instead of
+	# catching up afterwards, so the map no longer swims after a pinch.
 	var tilt: = lerpf(0.88, 1.1, smoothstep(5.0, 32.0, rendered_distance))
-	rendered_pitch = lerpf(rendered_pitch, minf(pitch, tilt), weight)
+	rendered_pitch = minf(pitch, tilt)
 	var offset: = Vector3(sin(rendered_yaw) * cos(rendered_pitch), sin(rendered_pitch), cos(rendered_yaw) * cos(rendered_pitch)) * rendered_distance
 	camera.position = rendered_target + offset
 	camera.look_at(rendered_target)
@@ -64,17 +66,20 @@ func _pan(motion: Vector2) -> void :
 func zoom(amount: float) -> void :
 	distance = clampf(distance * exp(amount), 4.5, 60.0)
 func zoom_at(amount: float, screen: Vector2) -> void :
-	var ground: = Plane(Vector3.UP, 0.0)
-	var anchor = ground.intersects_ray(camera.project_ray_origin(screen), camera.project_ray_normal(screen))
+	# The ground point under the fingers stays under the fingers while zooming.
+	_snap(1.0)
+	var before = _ground_at(screen)
 	var old_distance: = distance
 	zoom(amount)
 	if is_equal_approx(old_distance, distance): return
-	if anchor != null:
-
-		var point: Vector3 = anchor
-		target = point + (rendered_target - point) * (distance / rendered_distance)
-
 	_snap(1.0)
+	var after = _ground_at(screen)
+	if before != null and after != null:
+		target += (before as Vector3) - (after as Vector3)
+		_snap(1.0)
+func _ground_at(screen: Vector2) -> Variant:
+	var hit = Plane(Vector3.UP, 0.0).intersects_ray(camera.project_ray_origin(screen), camera.project_ray_normal(screen))
+	return hit if hit != null and (hit as Vector3).is_finite() else null
 func reset() -> void :
 	target = Vector3(3, 0, -5)
 	yaw = 0
@@ -121,7 +126,7 @@ func _unhandled_input(event: InputEvent) -> void :
 		else:
 			if event.canceled: touch_moved = true
 			if touches.has(event.index) and touches.size() == 1 and not touch_moved and press.distance_to(event.position) < TAP_SLOP: map_clicked.emit(event.position, false)
-			if touches.size() == 1 and touch_moved and not pinch_active: fling = _drag_velocity
+			if touches.size() == 1 and touch_moved and not pinch_active: fling = _drag_velocity.limit_length(distance * 2.0) if _drag_velocity.length() > distance * 0.15 else Vector3.ZERO
 			touches.erase(event.index)
 			if touches.is_empty(): pinch_active = false
 	elif event is InputEventScreenDrag:
@@ -134,6 +139,7 @@ func _unhandled_input(event: InputEvent) -> void :
 			var old_midpoint: Vector2 = (touches[event.index] + other) * 0.5
 			var new_midpoint: Vector2 = (event.position + other) * 0.5
 			_drag_map(old_midpoint, new_midpoint)
+			_drag_velocity = Vector3.ZERO
 			if previous.length() >= 16 and current.length() >= 16:
 				zoom_at(log(previous.length() / current.length()), new_midpoint)
 

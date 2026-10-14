@@ -36,11 +36,16 @@ func run() -> void:
 	var enemy: Dictionary = game.units.units.filter(func(u):return u.country == "ukraine")[0]
 	tap(game,enemy)
 	check(game.units.command_ids.size() == 3 and GameSession.player_country == "russia","enemy tap preserves side/selection")
+	# Ground armies are drawn bigger since 2026-10-14; pick a meeting point clear of every army.
 	var destination: Vector3 = armies[0].node.position+Vector3(2,0,2)
-	game.rig.target = Vector3(destination.x,0,destination.z)
-	game.rig.distance = 5
-	game.rig._snap(1.0)
-	var screen: Vector2 = game.rig.camera.unproject_position(Vector3(destination.x,0,destination.z))
+	var screen: Vector2
+	for offset in [Vector3(2,0,2),Vector3(-2,0,2),Vector3(2,0,-2),Vector3(-2,0,-2),Vector3(3,0,0),Vector3(0,0,3),Vector3(-3,0,0),Vector3(0,0,-3)]:
+		destination = armies[0].node.position+offset
+		game.rig.target = Vector3(destination.x,0,destination.z)
+		game.rig.distance = 5
+		game.rig._snap(1.0)
+		screen = game.rig.camera.unproject_position(Vector3(destination.x,0,destination.z))
+		if game.units.pick_screen(game.rig.camera,screen).is_empty(): break
 	check(game.units.pick_screen(game.rig.camera,screen).is_empty(),"meeting point empty")
 	game._map_click(screen,false)
 	check(not game.selecting_armies and not game.order_mode,"meeting tap completes selection")
