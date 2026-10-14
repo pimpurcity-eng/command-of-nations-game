@@ -1115,6 +1115,8 @@ func populate_weapons_test(show_progress: bool = false) -> void:
 			if kind == "fighter":
 				point = weapons_test_air_slot(base.point, family.country, occupied_air, float(family.get("air_range",14.0)))
 				occupied_air.append(point)
+				# Aircraft need an airbase (owner 2026-10-14): the showcase city gets one.
+				if buildings.level(base.id, "airbase") < 1: buildings.levels[base.id].airbase = 1
 			if kind == "naval":
 				var anchor: = GeographicProjection.project(base.naval_spawn.longitude, base.naval_spawn.latitude)
 				point = weapons_test_sea_slot(anchor, occupied_sea)

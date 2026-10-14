@@ -27,6 +27,9 @@ func run():
 		var box: AABB = model.get_meta("pick_bounds")
 		for fraction in [0.15,0.5,0.85]:
 			var p: Vector3 = model.to_global(box.position + box.size * Vector3(fraction,0.5,0.5))
+			# Each tap is a fresh first tap (tapping the same spot again steps to the next army).
+			game._tap_cycle = {}
+			game.units.select_unit(-1)
 			game._map_click(game.rig.camera.unproject_position(p),false)
 			check(game.units.selected == game.units.units.find(drone),drone.id+" tap visible body/wing "+str(fraction))
 		# Repeat at actual flight height, away from the ground marker.
