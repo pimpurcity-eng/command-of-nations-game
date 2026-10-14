@@ -32,6 +32,13 @@ func input(key: String,placeholder: String,secret: bool=false) -> void:
 	field.max_length=128 if secret else 254;field.virtual_keyboard_type=LineEdit.KEYBOARD_TYPE_PASSWORD if secret else LineEdit.KEYBOARD_TYPE_EMAIL_ADDRESS if key=="email" else LineEdit.KEYBOARD_TYPE_NUMBER if key=="code" else LineEdit.KEYBOARD_TYPE_DEFAULT
 	if key=="email":field.text=email
 	inputs[key]=field;fields.add_child(field)
+	# Owner 2026-10-14: "can you have a show password on there?"
+	if secret and key!="confirm":
+		var reveal:=CheckButton.new();reveal.text="Show password";reveal.custom_minimum_size.y=48
+		reveal.toggled.connect(func(shown: bool):
+			for name in ["password","confirm"]:
+				if inputs.has(name):inputs[name].secret=not shown)
+		fields.add_child(reveal)
 func button(text: String,action: Callable) -> void:
 	var item:=Button.new();item.text=text;item.custom_minimum_size.y=64;item.pressed.connect(func():
 		if not working:action.call())

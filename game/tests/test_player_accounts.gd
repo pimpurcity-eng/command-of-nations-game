@@ -36,6 +36,10 @@ func run() -> void:
 	reply={"ok":true,"data":{}}
 	r=await auth.signup("tester@example.org","A8passw!","Tester")
 	check(r.ok and calls[-1][0]=="/signup" and calls[-1][1].data.commander_name=="Tester","Registration sends commander metadata")
+	r=await auth.signup("tester@example.org","A8passw!","Sir  Matthew ")
+	check(r.ok and calls[-1][1].data.commander_name=="Sir_Matthew","A name with spaces is accepted as underscores")
+	check(PlayerAuth.signup_problem("tester@example.org","short","Tester").contains("8 characters"),"Short password names the password")
+	check(PlayerAuth.signup_problem("tester@example.org","A8passw!","Al!").contains("letters, numbers"),"Bad name names the commander name")
 	check(calls[-1][1].password=="A8passw!","Eight-character registration password reaches the account service")
 	check(not auth.signed_in(),"Registration waits for confirmation")
 	reply={"ok":true,"data":session(false)}

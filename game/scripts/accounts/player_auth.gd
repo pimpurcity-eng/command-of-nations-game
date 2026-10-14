@@ -44,8 +44,25 @@ static func code_valid(code: String) -> bool:
 	var regex:=RegEx.new();regex.compile("^[0-9]{6}$");return regex.search(code)!=null
 static func username_valid(value: String) -> bool:
 	var regex:=RegEx.new();regex.compile("^[A-Za-z0-9_]{3,24}$");return regex.search(value)!=null
+## Owner 2026-10-14 ("Sir Matthew" was refused): spaces become underscores, as the account
+## database only accepts letters, numbers and underscores.
+static func commander_name(value: String) -> String:
+	var cleaned:=value.strip_edges()
+	while cleaned.contains("  "):cleaned=cleaned.replace("  "," ")
+	return cleaned.replace(" ","_")
+## Says exactly which field is wrong (owner: the combined message did not say what to fix).
+static func signup_problem(email: String,password: String,commander: String) -> String:
+	if not email_valid(email):return "That email address does not look right."
+	if not password_valid(password):return "The password needs at least 8 characters."
+	var name:=commander_name(commander)
+	if name.length()<3:return "The commander name needs at least 3 letters."
+	if name.length()>24:return "The commander name can have at most 24 letters."
+	if not username_valid(name):return "The commander name can only use letters, numbers and spaces."
+	return ""
 func signup(email: String,password: String,commander: String) -> Dictionary:
-	if not email_valid(email) or not password_valid(password) or not username_valid(commander):return failure("Enter a valid email, an 8–128 character password and a commander name (3–24 letters, numbers or underscores).")
+	var problem:=signup_problem(email,password,commander)
+	if not problem.is_empty():return failure(problem)
+	commander=commander_name(commander)
 	var result:=await request("/signup",{"email":email.strip_edges(),"password":password,"data":{"commander_name":commander}})
 	# Even if the server is misconfigured to auto-confirm, this UI never silently logs in after signup.
 	return result

@@ -39,7 +39,12 @@ func setup(map: StrategicMap, camera_rig: StrategyCamera) -> void :
 				city.sector = territory.id
 		var district: = Node3D.new()
 		district.position = terrain.position_at(city.point)
-		district.scale = Vector3.ONE * 0.72
+		# Owner 2026-10-14 ("cities connecting", Belgorod and Kharkiv): a city close to another is
+		# drawn smaller so the two never run into each other (outer houses reach ~1.42 units).
+		var neighbour: = INF
+		for other in cities:
+			if other != city: neighbour = minf(neighbour, city.point.distance_to(other.point))
+		district.scale = Vector3.ONE * clampf((neighbour * 0.5 - 0.08) / 1.42, 0.40, 0.72)
 		add_child(district)
 		districts[city.id] = district
 		var ink: = StandardMaterial3D.new()
@@ -76,18 +81,28 @@ func setup(map: StrategicMap, camera_rig: StrategyCamera) -> void :
 		label.add_theme_stylebox_override("pressed", hover)
 		# Call of War city tag (owner approved preview 2026-10-13): flag, spaced name, and under
 		# it a box with the city's resource and, for capitals, a star with its victory points.
-		style.content_margin_left = 40
-		hover.content_margin_left = 40
-		var flag: = FlagSwatch.new()
-		flag.name = "Flag"
-		flag.country = controller_of(city)
-		flag.anchor_top = 0.5
-		flag.anchor_bottom = 0.5
-		flag.offset_left = 7
-		flag.offset_right = 33
-		flag.offset_top = -8
-		flag.offset_bottom = 8
-		label.add_child(flag)
+		style.content_margin_left = 46
+		hover.content_margin_left = 46
+		# Owner 2026-10-14: "put the resource where the flag is on the city tab, don't need the flag".
+		var resources: Array = ResourceSites.city_resources(city.name)
+		if not resources.is_empty():
+			var symbol: = TextureRect.new()
+			symbol.name = "Resource"
+			symbol.texture = resource_picture(resources[0])
+			symbol.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			symbol.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			symbol.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			symbol.tooltip_text = RESOURCE_WORDS.get(resources[0], str(resources[0]).to_upper())
+			symbol.anchor_top = 0.5
+			symbol.anchor_bottom = 0.5
+			symbol.offset_left = 2
+			symbol.offset_right = 42
+			symbol.offset_top = -20
+			symbol.offset_bottom = 20
+			label.add_child(symbol)
+		else:
+			style.content_margin_left = 6
+			hover.content_margin_left = 6
 		var boxes: = HBoxContainer.new()
 		boxes.name = "Boxes"
 		boxes.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -98,7 +113,7 @@ func setup(map: StrategicMap, camera_rig: StrategyCamera) -> void :
 		boxes.offset_top = -6
 		boxes.offset_bottom = 34
 		# Owner 2026-10-13: "I can't tell what resource it is" - a big icon with its name.
-		for resource in ResourceSites.city_resources(city.name):
+		for resource in resources.slice(1):
 			var box: = _tag_box()
 			var stack: = HBoxContainer.new()
 			stack.mouse_filter = Control.MOUSE_FILTER_IGNORE
