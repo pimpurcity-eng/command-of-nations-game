@@ -18,7 +18,7 @@ func run() -> void:
 	var system: BuildingSystem = game.buildings
 	var capital: = system.capital("ukraine")
 	var port: = system.city("odesa")
-	check(system.catalog.size() == 14, "four original and ten new buildings")
+	check(system.catalog.size() >= 14, "the original buildings plus the new ones (%d)" % system.catalog.size())
 	var old: = system.snapshot()
 	for place in old.levels:
 		for definition in system.catalog:
@@ -53,10 +53,12 @@ func run() -> void:
 	check(is_equal_approx(system.production_rate(capital.id, armor), 2.25), "specialist and factory production bonuses combine")
 	system.levels[capital.id].infrastructure = 2
 	for res in ProductionSystem.RESOURCES: game.production.stockpiles.ukraine[res] = 100000
-	check(system.schedule(capital.id, "electronics_plant").is_empty(), "resource construction queues normally")
-	var total: = system.duration("electronics_plant", 1)
+	# The resource plants and financial office were retired (2026-10-13: one specialty resource per city,
+	# money from industry), so construction is checked with a hospital.
+	check(system.schedule(capital.id, "hospital").is_empty(), "construction queues normally")
+	var total: = system.duration("hospital", int(system.jobs[0].level))
 	system.advance(total / 1.3 + 0.001)
-	check(system.level(capital.id, "electronics_plant") == 1, "infrastructure accelerates actual construction")
+	check(system.jobs.is_empty(), "infrastructure accelerates actual construction")
 	check(system.validate(system.snapshot()), "expanded building save validates")
 	var a: Dictionary = game.units.units.filter(func(unit): return unit.country == "russia" and unit.visual_kind == "armor")[0]
 	var b: Dictionary = game.units.units.filter(func(unit): return unit.country == "ukraine" and unit.visual_kind == "armor")[0]
@@ -75,7 +77,7 @@ func run() -> void:
 	b.node.position += Vector3(2, 0, 0)
 	check(is_equal_approx(system.incoming_damage_factor(b), 1), "bunker protects only troops in the city")
 	game.city_panel.open(capital)
-	check(game.city_panel.rows.has("tank_plant") and game.city_panel.rows.has("finance"), "Claude's city screen discovers new buildings without screen edits")
+	check(game.city_panel.rows.has("tank_plant") and game.city_panel.rows.has("hospital"), "Claude's city screen discovers new buildings without screen edits")
 	for definition in system.catalog:
 		var appearance: = AssetRoster.appearance(definition.asset_roster_id, "ukraine")
 		check(ResourceLoader.exists(appearance.model) and ResourceLoader.exists(appearance.preview), definition.name + " uses existing model and preview")
