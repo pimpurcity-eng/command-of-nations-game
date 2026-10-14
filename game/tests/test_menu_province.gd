@@ -90,7 +90,8 @@ func run():
  check(not game.buildings.validate(forged),"invalid rural building levels rejected")
  var apc_picture: String = CowUI.equipment_picture("apcs_russia").resource_path
  check(apc_picture==str(EquipmentIdentity.research_tier("apcs_russia",1).model).trim_suffix(".glb")+".png" or apc_picture.begins_with("res://assets/interface/unit_art/"),"APC thumbnail uses its model or its shared illustration, not the Russian flag (%s)" % apc_picture)
- check(CowUI.equipment_picture("fleet_russia").resource_path==str(EquipmentIdentity.research_tier("fleet_russia",1).preview),"naval thumbnail uses actual ship")
+ var ship_picture: String = CowUI.equipment_picture("fleet_russia").resource_path
+ check(ship_picture==str(EquipmentIdentity.research_tier("fleet_russia",1).preview) or ship_picture.begins_with("res://assets/interface/unit_art/"),"naval thumbnail uses actual ship or its new illustration (%s)" % ship_picture)
  var research_system=game.research
  game.clock.elapsed=(game.research.upgrade_day("tanks_russia",1)-1)*86400.0/SimulationClock.REAL_SECONDS_PER_SIM_SECOND
  research_system.jobs.clear()

@@ -206,7 +206,7 @@ func _build_banners() -> void:
 		for spec in families:
 			if _system().unlock_day(spec.id, 1) < _system().unlock_day(hero.id, 1): hero = spec
 		var picture := TextureRect.new()
-		picture.texture = CowUI.equipment_picture(hero.id)
+		picture.texture = CowUI.research_picture(hero.id, 1)
 		picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		picture.anchor_left = 1.0
@@ -426,6 +426,19 @@ func open() -> void:
 	_layout()
 	_refresh()
 
+## Opens the research card of one unit at one level (from a unit picture on the map cards).
+func open_unit(id: String, level: int) -> void:
+	open()
+	var spec: Dictionary = {}
+	for entry in _system().economy.catalog:
+		if entry.id == id: spec = entry
+	if spec.is_empty(): return
+	show_category(ProductionGroups.index(spec))
+	selected_id = id
+	selected_level = clampi(level, 1, 5)
+	selected_upgrade = false
+	message.text = ""
+	_refresh()
 func _layout() -> void:
 	var size: = get_viewport().get_visible_rect().size
 	var width: = minf(760.0, size.x)

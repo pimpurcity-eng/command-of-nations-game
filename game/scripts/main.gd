@@ -1269,6 +1269,9 @@ func show_stack_info() -> void :
 		stack_dialog = ArmyDetailsPanel.new()
 		add_child(stack_dialog)
 		stack_dialog.setup(hud.get_child(0).theme)
+		stack_dialog.unit_info_requested.connect(func(id: String, level: int):
+			stack_dialog.hide()
+			research_panel.open_unit(id, level))
 	stack_dialog.open(units, map)
 
 ## Online matches (owner request 2026-10-12): the server address is in user://settings.cfg

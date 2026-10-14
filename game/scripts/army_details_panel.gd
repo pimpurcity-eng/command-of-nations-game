@@ -8,6 +8,8 @@ extends CanvasLayer
 const TARGETS: = [["infantry", "Infantry"], ["light", "Light armour"], ["heavy", "Heavy armour"], ["naval", "Ships"], ["submarine", "Submarines"]]
 const CLASS_NAMES: = {"infantry": "Infantry", "ifv": "Light armour", "armor": "Heavy armour", "artillery": "Artillery", "missile_launcher": "Missiles",
 	"air_defense": "Air defence", "support": "Support", "fighter": "Aircraft", "naval": "Ships"}
+## Tapping a unit picture opens that unit's research card (owner 2026-10-14).
+signal unit_info_requested(equipment_id: String, level: int)
 var panel: PanelContainer
 var content: VBoxContainer
 var title: Label
@@ -111,13 +113,24 @@ static func strength(unit: Dictionary) -> float:
 
 # ---------------------------------------------------------------- open
 
+func _link_picture(picture: TextureRect, unit: Dictionary) -> void:
+	var id: String = unit.equipment_id
+	var level: = int(unit.get("level", 1))
+	picture.mouse_filter = Control.MOUSE_FILTER_STOP
+	picture.tooltip_text = "Unit card"
+	picture.gui_input.connect(func(event: InputEvent):
+		if (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT) or (event is InputEventScreenTouch and event.pressed):
+			unit_info_requested.emit(id, level))
 func open(armies: UnitSystem, terrain: StrategicMap) -> void :
 	for child in content.get_children(): content.remove_child(child); child.queue_free()
 	var lead: Dictionary = armies.units[armies.selected]
 	var group: Array = armies.stacks.members(lead).duplicate()
 	# Strongest unit on top (owner).
 	group.sort_custom(func(a, b): return strength(a) > strength(b))
-	var top: Dictionary = group[0]
+	# The same top unit as the map badge and the unit card, so all show the same picture.
+	var top: Dictionary = armies.stacks.leader(group)
+	group.erase(top)
+	group.push_front(top)
 	var own: bool = lead.country == GameSession.player_country
 	title.text = "Army Details" if own else "Enemy Army"
 	# Header card: picture, flag, name, country, terrain.
@@ -129,6 +142,7 @@ func open(armies: UnitSystem, terrain: StrategicMap) -> void :
 	picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	picture.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_link_picture(picture, top)
 	hero.add_child(picture)
 	var level_badge := CityPanel.Chevrons.new()
 	level_badge.level = int(top.get("level", 1))
@@ -219,6 +233,7 @@ func open(armies: UnitSystem, terrain: StrategicMap) -> void :
 		pic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		pic.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		pic.offset_bottom = -18
+		_link_picture(pic, member)
 		stack.add_child(pic)
 		var rank: = CityPanel.Chevrons.new()
 		rank.level = int(member.get("level", 1))
