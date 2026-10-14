@@ -17,7 +17,7 @@ func run() -> void:
 	for i in 5: await process_frame
 	game.clock.paused = true
 	game.match_rules.ai_enabled = false
-	check(game.units.units.size() > 100 and game.units.units.all(func(u):return u.level == 1),"start: garrisons in every city and infantry in the provinces, all level 1 (owner 2026-10-14)")
+	check(game.units.units.size() == 80 and game.units.units.all(func(u):return u.level == 1),"start: 40 units a side, all level 1 (owner 2026-10-14)")
 	check(ProductionGroups.TITLES == ["Economy","Aircraft","Ordnance","Tanks","Naval","Barracks","Missiles","Drones","Support"],"requested research groups incl. Missiles, Drones, Support")
 	var schedules := {}
 	for spec in EquipmentIdentity.catalog.filter(func(f):return not f.get("retired",false)):

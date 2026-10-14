@@ -1026,7 +1026,15 @@ func populate_campaign_forces(staged: bool = false) -> void:
 			var garrison: Dictionary = STARTING_ARMY.capital if home.id == capital.id else STARTING_ARMY.city
 			for prefix in garrison:
 				for i in garrison[prefix]: plan.append([prefix + "_" + country, home])
-		for i in STARTING_ARMY.plane: plan.append([STARTING_PLANE[country], homes[0]])
+		# Owner 2026-10-14: "I want the plane in a province" with an airport - the province
+		# nearest the capital gets a level-1 airport and the plane starts there, on the ground.
+		var airfield: Dictionary = {}
+		for place in buildings.provinces.places.values():
+			if str(place.country).to_lower() != country: continue
+			if airfield.is_empty() or place.point.distance_to(capital.point) < airfield.point.distance_to(capital.point): airfield = place
+		if not airfield.is_empty():
+			buildings.provinces.levels[airfield.id].airbase = maxi(1, buildings.provinces.level(airfield.id, "airbase"))
+			for i in STARTING_ARMY.plane: plan.append([STARTING_PLANE[country], airfield])
 		# Scatter infantry: each one goes to the province centre farthest from the cities and
 		# from the infantry already posted, so they spread across the country.
 		var posts: Array = []
@@ -1054,7 +1062,7 @@ func populate_campaign_forces(staged: bool = false) -> void:
 			var base: Dictionary = entry[1]
 			var kind: String = family.visual_kind
 			var point: Vector2 = base.point
-			if kind == "fighter":
+			if kind == "fighter" and not str(base.id).begins_with("province:"):
 				point = weapons_test_air_slot(base.point, country, occupied_air, float(family.get("air_range", 14.0)))
 				occupied_air.append(point)
 			var number: int = counts.get(family.id, 0)

@@ -17,6 +17,8 @@ func spawn(family: Dictionary, level: int, point: Vector2, id: String) -> Dictio
 	var base: Dictionary = {}
 	for city in game.production.cities:
 		if city.country.to_lower() == family.country and (base.is_empty() or city.point.distance_to(point) < base.point.distance_to(point)): base = city
+	# Aircraft need an airbase (owner 2026-10-14), so the home city gets one.
+	if family.visual_kind == "fighter" and game.buildings.level(base.id, "airbase") < 1: game.buildings.levels[base.id].airbase = 1
 	var data: = {"id": id, "name": EquipmentIdentity.research_title(family.id, level), "country": family.country, "equipment_id": family.id,
 		"level": level, "visual_kind": family.visual_kind, "base_city": base.id}
 	game.units._spawn(data, point, Color("ef827c") if family.country == "russia" else Color("73bcff"))
