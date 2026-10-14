@@ -54,8 +54,19 @@ func cost(building_id: String, target: int) -> Dictionary:
 	if definition.is_empty(): return bill
 	for resource in ProductionSystem.RESOURCES: bill[resource] = ceili(float(definition.cost.get(resource, 0.0)) * (1.0 + 0.5 * maxi(0, target - 2)))
 	return bill
+## Build times (owner 2026-10-14): level 1 takes about 15 real minutes, never more than 30 (barracks,
+## research centre, naval base, capitol), and every level after that takes 1.5 times longer.
+## A building can set "minutes" in buildings.json; otherwise its old "hours" maps to 15 / 20 / 30 minutes.
+const LEVEL_ONE_MINUTES: = {2: 15.0, 3: 20.0, 4: 30.0}
+const SLOWEST_LEVEL_ONE: = ["barracks"]
+const LEVEL_GROWTH: = 1.5
+static func level_one_minutes(building: Dictionary) -> float:
+	if building.has("minutes"): return minf(30.0, float(building.minutes))
+	if str(building.get("id", "")) in SLOWEST_LEVEL_ONE: return 30.0
+	return float(LEVEL_ONE_MINUTES.get(int(building.get("hours", 2)), 30.0))
 func duration(building_id: String, target: int) -> float:
-	return spec(building_id).hours * 3600.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND * maxi(1, target - 1)
+	var minutes: float = level_one_minutes(spec(building_id)) * pow(LEVEL_GROWTH, maxi(0, target - 1))
+	return minutes * 60.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
 func reason(city_id: String, building_id: String, country: String = "", check_resources: bool = true) -> String:
 	if city_id.begins_with("province:"): return provinces.reason(city_id,building_id,country,check_resources)
 	if country.is_empty(): country = GameSession.player_country

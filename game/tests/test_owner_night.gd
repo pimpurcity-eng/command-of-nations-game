@@ -43,5 +43,13 @@ func run() -> void:
 	check(game.research.rate("russia") < game.research.rate("ukraine"), "but Russia researches slower")
 	check(int(EquipmentIdentity.spec("drones_ukraine").cost.funds) < int(EquipmentIdentity.spec("drones_russia").cost.funds) / 0.85, "Ukrainian drones are cheaper")
 	check(not CountryTraits.summary("china").is_empty() and not CountryTraits.summary("united_states").is_empty() and not CountryTraits.summary("france").is_empty(), "China, America and Europe have traits ready")
+	# Build times (owner 2026-10-14): level 1 about 15 minutes, never over 30; higher levels take longer.
+	var minutes: = func(id: String, level: int) -> float: return game.buildings.duration(id, level) * SimulationClock.REAL_SECONDS_PER_SIM_SECOND / 60.0
+	var slowest: = 0.0
+	for building in game.buildings.catalog: slowest = maxf(slowest, minutes.call(building.id, 1))
+	check(is_equal_approx(minutes.call("recruitment_center", 1), 15.0) and is_equal_approx(minutes.call("industry", 1), 20.0), "level-1 recruitment takes 15 min, industry 20 min")
+	check(is_equal_approx(minutes.call("barracks", 1), 30.0) and slowest <= 30.0, "no level-1 building takes over 30 minutes (barracks is the slowest)")
+	check(minutes.call("recruitment_center", 2) > minutes.call("recruitment_center", 1) and minutes.call("recruitment_center", 5) > minutes.call("recruitment_center", 4), "every higher level takes longer")
+	check(is_equal_approx(game.production.stockpiles.russia.funds, 60000.0) or ProductionSystem.START_STOCK.funds == 60000.0, "starting money doubled to 60,000")
 	print("RESULT failures=", failures)
 	quit(1 if failures > 0 else 0)

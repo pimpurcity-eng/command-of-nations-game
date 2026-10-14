@@ -27,7 +27,7 @@ func run() -> void:
 	check(not "doctrine_picker" in game.mobile_start, "the doctrine comes with the country (no separate doctrine choice)")
 	var tank: = {"country": "russia", "visual_kind": "armor"}
 	check(is_equal_approx(Doctrine.combat_factor(tank, "attack"), 1.15) and is_equal_approx(Doctrine.combat_factor({"country": "ukraine", "visual_kind": "armor"}, "defense"), 1.10), "Eastern tanks attack +15%, European armies defend +10%")
-	check(is_equal_approx(game.research.rate("ukraine"), 1.15) and is_equal_approx(game.research.rate("russia"), 1.0), "European research is 15% faster")
+	check(is_equal_approx(game.research.rate("ukraine"), 1.15) and is_equal_approx(game.research.rate("russia"), 0.85), "European research is 15% faster; Russian research 15% slower (country trait)")
 	check(is_equal_approx(Doctrine.combat_factor({"country": "united_states", "visual_kind": "fighter"}, "attack"), 1.15) and Doctrine.stealth({"country": "united_states", "visual_kind": "fighter"}) and not Doctrine.stealth({"country": "ukraine", "visual_kind": "fighter"}), "Western aircraft are stronger and stealthy")
 	# Stealth and radar.
 	units.fog_enabled = true

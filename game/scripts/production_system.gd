@@ -29,7 +29,8 @@ const CITY_BASE: = {"funds": 13.5, "materials": 2.4, "electronics": 1.6, "fuel":
 const RECRUITMENT_PER_LEVEL: = 4.0
 ## Money per elapsed unit from each held province without a city.
 const PROVINCE_FUNDS: = 0.8
-const START_STOCK: = {"funds": 30000.0, "manpower": 6000.0, "food": 9000.0, "materials": 12000.0, "fuel": 7500.0, "electronics": 4500.0}
+## Owner 2026-10-14: "give yourself more money" - starting money doubled (every country).
+const START_STOCK: = {"funds": 60000.0, "manpower": 6000.0, "food": 9000.0, "materials": 12000.0, "fuel": 7500.0, "electronics": 4500.0}
 const DAY_SECONDS: = 86400.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
 var shortage_resources: Dictionary = {}
 ## Gold per country for this match only (GoldWallet.START at the start).
