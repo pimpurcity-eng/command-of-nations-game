@@ -22,7 +22,7 @@ func _initialize() -> void:
 			district.scale = Vector3.ONE * 0.72
 			system._build_city_district(district, {"name": city.name, "capital": capital}, StandardMaterial3D.new())
 			check(district.get_meta("urban_building_count") > 30, "City still has buildings")
-			check(is_equal_approx(district.get_meta("garrison_plaza_radius"), 0.504), "Courtyard world size")
+			check(is_equal_approx(district.get_meta("garrison_plaza_radius"), 0.3888), "Courtyard world size")
 			var tall := 0
 			for child in district.get_children():
 				if not child is MeshInstance3D: continue
@@ -35,7 +35,10 @@ func _initialize() -> void:
 			check(tall > 0, "Retains skyscrapers")
 			district.free()
 	check(is_equal_approx(UnitMapSize.limits("armor").x, 1.056), "Tank increased by 20 percent plus readability adjustment")
-	check(UnitMapSize.limits("armor").x * 0.65 * 0.71 < CitySystem.GARRISON_PLAZA_RADIUS * 0.72, "Rotated tank fits in courtyard")
+	check(UnitMapSize.limits("infantry").x * 0.65 * UnitSystem.garrison_scale({"visual_kind":"infantry", "equipment_id":"infantry_russia"}) * 0.71 < CitySystem.GARRISON_PLAZA_RADIUS * 0.72, "Readable infantry fits in compact courtyard")
+	check(not CitySystem.SHOW_COURTYARD_DISK, "No white pavement disc")
+	check(is_equal_approx(UnitSystem.garrison_scale({"visual_kind":"infantry", "equipment_id":"infantry_russia"}),1.6875), "Infantry readability boost")
+	check(is_equal_approx(UnitSystem.garrison_scale({"visual_kind":"armor", "equipment_id":"tanks_russia"}),1.35), "Tank retains Claude garrison sizing")
 	system.free()
 	flat.free()
 	print("CITY COURTYARD: ", checks, " checks; ", failures, " failures")
