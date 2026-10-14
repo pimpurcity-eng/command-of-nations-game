@@ -197,7 +197,7 @@ func _send() -> void:
 func refresh() -> void:
 	var player: = GameSession.player_country
 	var mine: Array = match_rules.espionage.owned(player)
-	summary.text = "Spies %d / %d  ·  each spy costs %s money and %d manpower" % [mine.size(), Espionage.MAX_SPIES, StrategyHUD._thousands(int(Espionage.COST.funds)), int(Espionage.COST.manpower)]
+	summary.text = "Spies %d / %d  ·  each spy costs %s money and %d manpower\nSpies do their work at the end of each day" % [mine.size(), Espionage.MAX_SPIES, StrategyHUD._thousands(int(Espionage.COST.funds)), int(Espionage.COST.manpower)]
 	for id in mission_buttons:
 		mission_buttons[id].modulate = Color.WHITE if id == mission else Color(1, 1, 1, 0.55)
 	mission_text.text = Espionage.MISSIONS[mission].name + ": " + Espionage.MISSIONS[mission].text

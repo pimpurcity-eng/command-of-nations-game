@@ -233,7 +233,7 @@ func advance(seconds: float) -> void :
 		report.emit("%s completed a %s" % [str(done[0]).capitalize(), StrategicWeapons.WEAPONS[done[1]].name.to_lower()])
 	if production != null:
 		var world: = spy_world()
-		for line in espionage.advance(seconds, world, GameSession.player_country): report.emit(line)
+		for line in espionage.advance(seconds, world, GameSession.player_country, 1 + int(clock.elapsed / ProductionSystem.DAY_SECONDS)): report.emit(line)
 		if at_war and not online:
 			spy_ai_timer -= seconds
 			if spy_ai_timer <= 0.0:

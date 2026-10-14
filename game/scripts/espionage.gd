@@ -3,33 +3,34 @@ extends RefCounted
 ## Espionage (owner request 2026-10-14, Call of War style). Spies are trained for money and sent
 ## to a city. After a short journey each spy works on one mission until it is recalled or caught:
 ##   intel     - shows every enemy army near the city
-##   steal     - takes part of the enemy's stock of money and metal every hour
+##   steal     - takes part of the enemy's stock of money and metal every day
 ##   sabotage  - halves building and production speed in the city
 ##   army      - wounds the enemy armies standing in the city
 ##   morale    - lowers the morale of the city's province
 ##   counter   - (in your own city) makes enemy spies there much more likely to be caught
-## Every enemy spy has a small chance each hour of being caught; counter-spies and garrisons raise it.
+## Owner 2026-10-14 ("usually it's day end", as in Call of War): spies do their work - and risk
+## being caught - once, at the end of each game day. Intelligence and sabotage work all the time.
 const HOUR: = 3600.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND  # one real hour
 const TRAVEL: = HOUR * 0.5  # half an hour to reach the city
 const MAX_SPIES: = 6
 const COST: = {"funds": 3000.0, "manpower": 100.0}
-const CATCH_CHANCE: = 0.04       # per hour, per enemy spy
-const COUNTER_FACTOR: = 3.0      # with a counter-spy in the city
-const GARRISON_BONUS: = 0.02     # with an army in the city
+const CATCH_CHANCE: = 0.20       # per day end, per enemy spy
+const COUNTER_FACTOR: = 2.5      # with a counter-spy in the city
+const GARRISON_BONUS: = 0.10     # with an army in the city
 const INTEL_RADIUS: = 6.0  # owner 2026-10-14: "can only see local armies" - the city and the land around it
-const STEAL_SHARE: = 0.01        # of the target's money and metal, per hour
-const STEAL_CAP: = 1500.0        # per resource, per hour
+const STEAL_SHARE: = 0.10        # of the target's money and metal, per day
+const STEAL_CAP: = 15000.0       # per resource, per day
 const SABOTAGE_FACTOR: = 0.5
-const ARMY_DAMAGE: = 3.0         # health per hour
+const ARMY_DAMAGE: = 20.0        # health per day
 const ARMY_FLOOR: = 25.0         # spies never finish an army off
-const MORALE_LOSS: = 4.0         # per hour
+const MORALE_LOSS: = 20.0        # per day
 const MORALE_FLOOR: = 20.0
 const MISSIONS: = {
 	"intel": {"name": "Intelligence", "text": "See every enemy army near the city.", "icon": "research", "enemy": true},
-	"steal": {"name": "Steal resources", "text": "Take money and metal from the enemy every hour.", "icon": "market", "enemy": true},
+	"steal": {"name": "Steal resources", "text": "At the end of each day, takes 10% of the enemy's money and metal.", "icon": "market", "enemy": true},
 	"sabotage": {"name": "Sabotage", "text": "Building and production in the city run at half speed.", "icon": "hammer", "enemy": true},
-	"army": {"name": "Attack the army", "text": "Enemy armies in the city lose health every hour.", "icon": "attack", "enemy": true},
-	"morale": {"name": "Lower morale", "text": "The province's morale drops every hour.", "icon": "provinces", "enemy": true},
+	"army": {"name": "Attack the army", "text": "At the end of each day, enemy armies in the city lose health.", "icon": "attack", "enemy": true},
+	"morale": {"name": "Lower morale", "text": "At the end of each day, the province's morale drops.", "icon": "provinces", "enemy": true},
 	"counter": {"name": "Counter-spy", "text": "Guard one of your cities: enemy spies there are caught far more often.", "icon": "stop", "enemy": false},
 }
 
@@ -47,7 +48,8 @@ var hacks: Array = []   # active {country, kind, city, remaining}
 static var satellite_countries: Dictionary = {}  # country -> true while its satellite hack runs
 static var blacked_out: Dictionary = {}          # city id -> true
 
-var spies: Array = []   # {id, country, city, mission, travel, hour}
+var spies: Array = []   # {id, country, city, mission, travel}
+var last_day: = 0       # game day the spies last worked
 var next_id: = 1
 var rng: = RandomNumberGenerator.new()
 ## Read every frame by the fog of war and every build tick: kept as simple lists.
@@ -74,7 +76,7 @@ func send(country: String, city: Dictionary, mission: String, city_owner: String
 	var why: = reason(country, city, mission, city_owner, stockpile)
 	if not why.is_empty(): return why
 	for resource in COST: stockpile[resource] = float(stockpile.get(resource, 0.0)) - COST[resource]
-	spies.append({"id": next_id, "country": country, "city": str(city.id), "mission": mission, "travel": TRAVEL, "hour": HOUR})
+	spies.append({"id": next_id, "country": country, "city": str(city.id), "mission": mission, "travel": TRAVEL})
 	next_id += 1
 	return ""
 
@@ -120,8 +122,9 @@ func recall(country: String, id: int) -> bool:
 ##   city(id) -> Dictionary, owner(city) -> String, stockpile(country) -> Dictionary,
 ##   armies_in(city) -> Array of units, territory(city) -> Dictionary, garrisoned(city, country) -> bool
 ## Returns report lines for the player.
-func advance(seconds: float, world: Dictionary, player: String) -> Array:
+func advance(seconds: float, world: Dictionary, player: String, day: int = 0) -> Array:
 	var reports: Array = []
+	if last_day == 0: last_day = day
 	for active in hacks.duplicate():
 		active.remaining -= seconds
 		if active.remaining <= 0.0:
@@ -138,15 +141,29 @@ func advance(seconds: float, world: Dictionary, player: String) -> Array:
 		if spy.travel > 0.0:
 			spy.travel = maxf(0.0, spy.travel - seconds)
 			if spy.travel == 0.0 and spy.country == player: reports.append("Our spy reached %s · %s" % [city.name, MISSIONS[spy.mission].name])
+	if day > last_day:
+		last_day = day
+		reports.append_array(end_of_day(world, player))
+	_refresh_static(world)
+	return reports
+
+## The day ends: every spy at work tries its mission, and enemy spies may be caught.
+func end_of_day(world: Dictionary, player: String) -> Array:
+	var reports: Array = []
+	var stolen: Dictionary = {}
+	for spy in spies.duplicate():
+		if spy.travel > 0.0 or not spies.has(spy): continue
+		var city: Dictionary = world.city.call(spy.city)
+		if city.is_empty(): continue
+		var city_owner: String = world.owner.call(city)
+		if MISSIONS[spy.mission].enemy and rng.randf() < catch_chance(spy, city_owner, world.garrisoned.call(city, city_owner)):
+			spies.erase(spy)
+			reports.append(("Our spy was caught in %s" if spy.country == player else "Enemy spy caught in %s") % city.name + " · " + MISSIONS[spy.mission].name.to_lower())
 			continue
-		spy.hour -= seconds
-		while spy.hour <= 0.0 and spies.has(spy):
-			spy.hour += HOUR
-			if MISSIONS[spy.mission].enemy and rng.randf() < catch_chance(spy, city_owner, world.garrisoned.call(city, city_owner)):
-				spies.erase(spy)
-				reports.append(("Our spy was caught in %s" if spy.country == player else "Enemy spy caught in %s") % city.name + " · " + MISSIONS[spy.mission].name.to_lower())
-				break
-			_hourly(spy, city, city_owner, world)
+		var taken: = _daily(spy, city, city_owner, world)
+		if spy.country == player and taken > 0.0: stolen[city.name] = taken
+		elif spy.country != player and taken > 0.0: reports.append("Enemy spies stole %s money and metal in %s" % [StrategyHUD._thousands(int(taken)), city.name])
+	for name in stolen: reports.append("Our spy stole %s money and metal in %s" % [StrategyHUD._thousands(int(stolen[name])), name])
 	_refresh_static(world)
 	return reports
 
@@ -156,9 +173,11 @@ func catch_chance(spy: Dictionary, city_owner: String, garrison: bool) -> float:
 		if other.mission == "counter" and other.city == spy.city and other.country == city_owner and other.travel <= 0.0:
 			chance *= COUNTER_FACTOR
 			break
-	return minf(chance, 0.6)
+	return minf(chance, 0.8)
 
-func _hourly(spy: Dictionary, city: Dictionary, city_owner: String, world: Dictionary) -> void:
+## One day's work of a spy. Returns the money and metal it took (steal missions).
+func _daily(spy: Dictionary, city: Dictionary, city_owner: String, world: Dictionary) -> float:
+	var total: = 0.0
 	match spy.mission:
 		"steal":
 			var theirs: Dictionary = world.stockpile.call(city_owner)
@@ -167,6 +186,7 @@ func _hourly(spy: Dictionary, city: Dictionary, city_owner: String, world: Dicti
 				var amount: = minf(maxf(0.0, float(theirs.get(resource, 0.0))) * STEAL_SHARE, STEAL_CAP)
 				theirs[resource] = float(theirs.get(resource, 0.0)) - amount
 				ours[resource] = float(ours.get(resource, 0.0)) + amount
+				total += amount
 		"army":
 			for unit in world.armies_in.call(city):
 				if unit.country == city_owner and unit.health > ARMY_FLOOR: unit.health = maxf(ARMY_FLOOR, unit.health - ARMY_DAMAGE)
@@ -175,6 +195,7 @@ func _hourly(spy: Dictionary, city: Dictionary, city_owner: String, world: Dicti
 			if not territory.is_empty():
 				var morale: = float(territory.get("morale", 100.0))
 				territory.morale = maxf(MORALE_FLOOR, morale - MORALE_LOSS)
+	return total
 
 func _refresh_static(world: Dictionary) -> void:
 	intel_zones.clear()
@@ -232,13 +253,14 @@ func ai_hack(country: String, enemy: String, targets: Array, gold: int, spend_go
 	return kind if result.is_empty() else ("blocked" if result.begins_with("BLOCKED") else "")
 
 func snapshot() -> Dictionary:
-	return {"spies": spies.duplicate(true), "next_id": next_id, "hacks": hacks.duplicate(true)}
+	return {"spies": spies.duplicate(true), "next_id": next_id, "hacks": hacks.duplicate(true), "last_day": last_day}
 
 func restore(state: Dictionary) -> void:
 	spies.clear()
 	for spy in state.get("spies", []):
 		if spy is Dictionary and MISSIONS.has(str(spy.get("mission", ""))) and str(spy.get("country", "")) in ["russia", "ukraine"]:
-			spies.append({"id": int(spy.get("id", 0)), "country": str(spy.country), "city": str(spy.get("city", "")), "mission": str(spy.mission), "travel": clampf(float(spy.get("travel", 0.0)), 0.0, TRAVEL), "hour": clampf(float(spy.get("hour", HOUR)), 0.0, HOUR)})
+			spies.append({"id": int(spy.get("id", 0)), "country": str(spy.country), "city": str(spy.get("city", "")), "mission": str(spy.mission), "travel": clampf(float(spy.get("travel", 0.0)), 0.0, TRAVEL)})
+	last_day = maxi(0, int(state.get("last_day", 0)))
 	next_id = maxi(int(state.get("next_id", 1)), spies.reduce(func(top: int, spy: Dictionary): return maxi(top, int(spy.id) + 1), 1))
 	hacks.clear()
 	for active in state.get("hacks", []):

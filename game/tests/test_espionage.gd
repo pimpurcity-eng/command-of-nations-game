@@ -47,24 +47,26 @@ func run() -> void:
 	spies.advance(Espionage.TRAVEL, world, "russia")
 	check(Espionage.reveals(kharkiv.point + Vector2(1, 0), "russia") and not Espionage.reveals(kharkiv.point, "ukraine"), "Intelligence spy reveals the area around the city")
 	check(is_equal_approx(Espionage.sabotage_factor("kharkiv"), Espionage.SABOTAGE_FACTOR) and Espionage.sabotage_factor("kyiv") == 1.0, "Sabotage halves the city's building speed")
-	# Two hours at work with catching switched off (the spies are seeded below for catching).
-	for spy in spies.spies: spy.hour = 0.0
+	# Nothing happens to money during the day: spies work at the day's end.
+	spies.advance(1.0, world, "russia", 1)
+	check(is_equal_approx(float(theirs.funds), their_money), "Spies wait for the end of the day")
 	var survivors: = spies.spies.size()
 	spies.rng.seed = 12345
-	spies.advance(1.0, world, "russia")
+	var day_reports: = spies.advance(1.0, world, "russia", 2)
 	var stolen_ok: bool = float(theirs.funds) < their_money and float(ours.funds) > our_money
-	check(spies.spies.size() < survivors or stolen_ok, "Stealing moves money from the enemy to us")
+	check(spies.spies.size() < survivors or stolen_ok, "At the day's end stealing moves money from the enemy to us")
+	check(not stolen_ok or day_reports.any(func(line): return str(line).contains("stole")), "The day's theft is reported")
 	if spies.owned("russia").any(func(spy): return spy.mission == "army"):
 		check(defender.health < health_before or health_before <= Espionage.ARMY_FLOOR, "Army spy wounds the garrison")
 	if spies.owned("russia").any(func(spy): return spy.mission == "morale"):
 		check(float(territory.morale) < morale_before or morale_before <= Espionage.MORALE_FLOOR, "Morale spy lowers the province's morale")
 	# Catching: over many hours every enemy spy is eventually caught.
-	var steal_spy: Dictionary = {"id": 99, "country": "russia", "city": "kharkiv", "mission": "steal", "travel": 0.0, "hour": Espionage.HOUR}
+	var steal_spy: Dictionary = {"id": 99, "country": "russia", "city": "kharkiv", "mission": "steal", "travel": 0.0}
 	var plain: = spies.catch_chance(steal_spy, "ukraine", false)
-	spies.spies.append({"id": 98, "country": "ukraine", "city": "kharkiv", "mission": "counter", "travel": 0.0, "hour": Espionage.HOUR})
-	check(spies.catch_chance(steal_spy, "ukraine", true) > plain * 2.5, "Counter-spy and garrison raise the catch chance")
+	spies.spies.append({"id": 98, "country": "ukraine", "city": "kharkiv", "mission": "counter", "travel": 0.0})
+	check(spies.catch_chance(steal_spy, "ukraine", true) > plain * 2.0, "Counter-spy and garrison raise the catch chance")
 	var reports: Array = []
-	for hour in 400: reports.append_array(spies.advance(Espionage.HOUR, world, "russia"))
+	for day in 60: reports.append_array(spies.advance(Espionage.HOUR, world, "russia", 3 + day))
 	check(spies.owned("russia").all(func(spy): return spy.mission == "counter"), "Enemy-city spies are caught in the end")
 	check(reports.any(func(line): return str(line).contains("caught")), "Caught spies are reported")
 	# Saving.
