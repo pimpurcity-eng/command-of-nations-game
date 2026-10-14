@@ -8,8 +8,8 @@ static var GARRISON_SQUARE := Rect2(-0.30, -0.28, 0.60, 0.56)
 ## Where a city's army stands (owner review 2026-10-14): "centre", or at the city's edge -
 ## "front" (facing the camera), "side" (east edge) or "outside" (just past the last houses).
 ## The spot is filled with buildings while no army is there.
-static var garrison_layout: = "centre"
-const GARRISON_LAYOUTS: = {"centre": Rect2(-0.30, -0.28, 0.60, 0.56), "front": Rect2(-0.30, 0.62, 0.60, 0.50), "side": Rect2(0.68, -0.25, 0.56, 0.52), "outside": Rect2(-0.30, 1.16, 0.60, 0.46)}
+static var garrison_layout: = "side"  # owner chose B (side edge) 2026-10-14
+const GARRISON_LAYOUTS: = {"centre": Rect2(-0.30, -0.28, 0.60, 0.56), "front": Rect2(-0.30, 0.62, 0.60, 0.50), "side": Rect2(0.50, -0.26, 0.50, 0.52), "outside": Rect2(-0.30, 1.16, 0.60, 0.46)}
 ## World offset of each city's army spot from the city point, keyed by city_key(point).
 static var plaza_offsets: Dictionary = {}
 static func city_key(point: Vector2) -> String: return "%.3f,%.3f" % [point.x, point.y]
@@ -19,7 +19,7 @@ static func near_city(point: Vector2, city_point: Vector2) -> bool:
 	return point.distance_to(city_point) < UnitSystem.CITY_RADIUS or point.distance_to(plaza_point(city_point)) < 0.45
 const SHOW_COURTYARD_DISK: = false
 ## City look being reviewed with the owner (2026-10-14): classic, downtown, grid or green.
-static var city_style: = "classic"
+static var city_style: = "grid"  # owner chose B (grid) 2026-10-14
 const RESOURCE_WORDS: = {"materials": "METAL", "electronics": "RARE EARTHS", "fuel": "OIL", "food": "FOOD"}
 const RESOURCE_COLOURS: = {"materials": Color("d4dade"), "electronics": Color("d7a8ff"), "fuel": Color("ff9a7a"), "food": Color("9ee07e")}
 var cities: Array = GeographicProjection.load_cities()
