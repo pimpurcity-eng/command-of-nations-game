@@ -37,6 +37,8 @@ func visible_to_country(unit: Dictionary, country: String) -> bool:
 func point_visible(point: Vector2, country: String = "") -> bool:
 	if country.is_empty(): country = GameSession.player_country
 	if not fog_enabled: return true
+	# Intelligence spies show everything around their city.
+	if Espionage.reveals(point, country): return true
 	for scout in units:
 		if not _sees_for(scout.country, country) or scout.health <= 0: continue
 		var origin: = Vector2(scout.node.position.x, scout.node.position.z)

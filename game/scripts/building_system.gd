@@ -256,7 +256,8 @@ func production_rate(city_id: String, equipment: Dictionary) -> float:
 	var special: String = ProductionGroups.building(equipment)
 	return rate(city_id, special) * morale_speed(city_id) * CountryTraits.build_factor(str(equipment.get("country", "")))
 func morale_speed(city_id: String) -> float:
-	return clampf(economy.morale_factor(city(city_id))/0.8,0.25,1.0)
+	# An enemy saboteur in the city halves its building and production speed.
+	return clampf(economy.morale_factor(city(city_id))/0.8,0.25,1.0) * Espionage.sabotage_factor(city_id)
 func construction_rate(city_id: String) -> float:
 	var owner: String = economy.controller(city(city_id))
 	return (1.0 + 0.15 * level(city_id, "infrastructure")) * morale_speed(city_id) * EconomyResearch.factor(owner,"infrastructure") * CountryTraits.build_factor(owner)

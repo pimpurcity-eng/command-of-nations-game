@@ -66,6 +66,9 @@ var chronicle: = WarChronicle.new()
 var annexation: = Annexation.new()
 ## Chemical and nuclear missiles.
 var strategic: = StrategicWeapons.new()
+## Spies (Call of War style espionage).
+var espionage: = Espionage.new()
+var spy_ai_timer: = Espionage.HOUR * 6.0
 ## Trade routes (TradeNetwork, set by main) — saved with the match.
 var trade: TradeNetwork
 ## Relations, coalitions and messages.
@@ -228,6 +231,14 @@ func advance(seconds: float) -> void :
 	for title in annexation.advance(seconds, terrain.territories): report.emit(title + " annexed")
 	for done in strategic.advance(seconds):
 		report.emit("%s completed a %s" % [str(done[0]).capitalize(), StrategicWeapons.WEAPONS[done[1]].name.to_lower()])
+	if production != null:
+		var world: = spy_world()
+		for line in espionage.advance(seconds, world, GameSession.player_country): report.emit(line)
+		if at_war and not online:
+			spy_ai_timer -= seconds
+			if spy_ai_timer <= 0.0:
+				spy_ai_timer = Espionage.HOUR * 12.0
+				_ai_spies(world)
 	_update_entrenchment(seconds)
 	SupportRoles.heal(armies, production.buildings if production != null else null, seconds)
 	# Victory is checked in peace too (economic victory, time limit).
@@ -391,8 +402,30 @@ func end_match(country: String, kind: String = "elimination") -> void :
 	clock.state_changed.emit()
 	report.emit(VICTORY_NAMES.get(kind, "VICTORY") + " · " + country.capitalize() + " wins. Choose New match to play again.")
 	finished.emit(country)
+## The game state the spies work on (see Espionage.advance).
+func spy_world() -> Dictionary:
+	return {
+		"city": func(id: String) -> Dictionary: return production.buildings.city(id) if production.buildings != null else {},
+		"owner": func(city: Dictionary) -> String: return production.controller(city),
+		"stockpile": func(country: String) -> Dictionary:
+			if not production.stockpiles.has(country): production.stockpiles[country] = {}
+			return production.stockpiles[country],
+		"armies_in": func(city: Dictionary) -> Array: return armies.units.filter(func(unit: Dictionary): return not armies.is_naval(unit) and not armies.air.is_air(unit) and CitySystem.near_city(Vector2(unit.node.position.x, unit.node.position.z), city.point)),
+		"territory": func(city: Dictionary) -> Dictionary:
+			for territory in terrain.territories:
+				if territory.id == city.get("sector", ""): return territory
+			return {},
+		"garrisoned": func(city: Dictionary, country: String) -> bool: return armies.units.any(func(unit: Dictionary): return unit.country == country and unit.health > 0 and CitySystem.near_city(Vector2(unit.node.position.x, unit.node.position.z), city.point)),
+	}
+func _ai_spies(world: Dictionary) -> void:
+	var country: = GameSession.opponent_country()
+	var player: = GameSession.player_country
+	var home: Dictionary = production.buildings.capital(country) if production.buildings != null else {}
+	var targets: Array = production.cities.filter(func(city: Dictionary): return production.controller(city) == player)
+	if not home.is_empty(): targets.sort_custom(func(a: Dictionary, b: Dictionary): return a.point.distance_to(home.point) < b.point.distance_to(home.point))
+	espionage.ai_turn(country, targets, home, world)
 func snapshot() -> Dictionary:
-	return {"last_day": last_day, "air_cooldowns": air_combat.snapshot(), "combat_cooldowns": combat.snapshot(), "at_war": at_war, "winner": winner, "decision_timer": decision_timer, "recruitment_timer": ai.recruitment_timer, "capture_progress": capture_progress.duplicate(true), "victory_type": victory_type, "victory": victory.snapshot(), "chronicle": chronicle.snapshot(), "annexation": annexation.snapshot(), "strategic": strategic.snapshot(), "trade": trade.snapshot() if trade != null else {}, "doctrines": Doctrine.snapshot(), "diplomacy": diplomacy.snapshot(), "guards": guards.keys(), "guard_logs": guard_logs()}
+	return {"last_day": last_day, "air_cooldowns": air_combat.snapshot(), "combat_cooldowns": combat.snapshot(), "at_war": at_war, "winner": winner, "decision_timer": decision_timer, "recruitment_timer": ai.recruitment_timer, "capture_progress": capture_progress.duplicate(true), "victory_type": victory_type, "victory": victory.snapshot(), "chronicle": chronicle.snapshot(), "annexation": annexation.snapshot(), "strategic": strategic.snapshot(), "trade": trade.snapshot() if trade != null else {}, "doctrines": Doctrine.snapshot(), "diplomacy": diplomacy.snapshot(), "espionage": espionage.snapshot(), "spy_ai_timer": spy_ai_timer, "guards": guards.keys(), "guard_logs": guard_logs()}
 func restore(state: Dictionary) -> void :
 	last_day = int(state.get("last_day",1+int(clock.elapsed/ProductionSystem.DAY_SECONDS)))
 	combat.restore(state.get("combat_cooldowns", {}))
@@ -416,4 +449,6 @@ func restore(state: Dictionary) -> void :
 	if trade != null: trade.restore(state.get("trade", {}))
 	if state.has("doctrines"): Doctrine.restore(state.doctrines)
 	diplomacy.restore(state.get("diplomacy", {}))
+	espionage.restore(state.get("espionage", {}))
+	spy_ai_timer = clampf(float(state.get("spy_ai_timer", Espionage.HOUR * 6.0)), 0.0, Espionage.HOUR * 12.0)
 	diplomacy.relation(GameSession.player_country, GameSession.opponent_country()).war = at_war

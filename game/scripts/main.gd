@@ -33,6 +33,7 @@ var province_panel: ProvincePanel
 var exchange_panel: ExchangePanel
 var trade: TradeNetwork
 var trade_panel: TradePanel
+var espionage_panel: EspionagePanel
 var weapon_showcase: WeaponShowcase
 var mobile_start: MobileStartPanel
 var autosave_timer: = 0.0
@@ -173,6 +174,13 @@ func _ready() -> void :
 			add_child(weapon_showcase)
 			weapon_showcase.setup(hud.get_child(0).theme, clock)
 		weapon_showcase.open())
+	# Owner 2026-10-14: espionage (Call of War style spies).
+	hud.espionage_requested.connect(func():
+		if espionage_panel == null:
+			espionage_panel = EspionagePanel.new()
+			add_child(espionage_panel)
+			espionage_panel.setup(match_rules, production, hud.get_child(0).theme)
+		espionage_panel.open())
 	# Owner 2026-10-13: trade (trains and ships to partners) replaces the market.
 	hud.exchange_requested.connect( func():
 		if trade_panel == null:
