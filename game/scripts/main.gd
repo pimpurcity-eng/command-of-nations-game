@@ -480,6 +480,7 @@ func _ready() -> void :
 		add_child(mobile_start)
 		mobile_start.audio = audio
 		mobile_start.setup(hud.get_child(0).theme, FileAccess.file_exists(SAVE_PATH))
+		mobile_start.account_requested.connect(open_home_account)
 		visible = false
 		mobile_start.visibility_changed.connect(func():
 			visible = not mobile_start.visible
@@ -1234,6 +1235,20 @@ func show_stack_info() -> void :
 ## [online] server_url (default below, set up per docs/MULTIPLAYER_SERVER.md) and match.
 const ONLINE_SERVER: = "wss://play.warfrontmandate.com"
 var online: MatchClient
+func open_home_account() -> void:
+	if account_panel == null:
+		account_panel = AccountPanel.new()
+		add_child(account_panel)
+	if not account_panel.auth.session_changed.is_connected(refresh_home_commander):
+		account_panel.auth.session_changed.connect(refresh_home_commander)
+	account_panel.open()
+	refresh_home_commander()
+
+func refresh_home_commander() -> void:
+	if mobile_start == null or account_panel == null: return
+	var name_text: String = str(account_panel.auth.user.get("user_metadata", {}).get("commander_name", "Commander"))
+	mobile_start.set_commander(name_text, account_panel.auth.signed_in())
+
 func join_online() -> void:
 	if account_panel == null:
 		account_panel = AccountPanel.new()

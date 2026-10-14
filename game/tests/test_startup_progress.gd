@@ -53,6 +53,7 @@ func run() -> void:
 		check(partial,"weapons preparation shows real progress")
 		var expected: Dictionary = {}
 		for family in EquipmentIdentity.catalog:
+			if family.get("retired", false): continue
 			for tier in family.research_tiers: expected[tier.model] = true
 		check(not game.mobile_start.visible and game.units.units.size() == expected.size(),"all current weapons loading completes")
 		game.queue_free()
