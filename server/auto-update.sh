@@ -10,6 +10,8 @@ cd "$DEST"
 BRANCH="$(git branch --show-current)"
 git fetch --quiet origin "$BRANCH"
 if [[ "$(git rev-parse HEAD)" == "$(git rev-parse "origin/$BRANCH")" ]]; then
+  # No new server code; still bring the browser version of the game up to date.
+  bash server/web-sync.sh || echo "Web game update failed; the current one keeps running."
   exit 0
 fi
 echo "New game code on $BRANCH: $(git rev-parse --short HEAD) -> $(git rev-parse --short "origin/$BRANCH")"
@@ -22,4 +24,5 @@ if [[ -f server/Caddyfile ]] && ! cmp -s server/Caddyfile /etc/caddy/Caddyfile; 
   caddy validate --config /etc/caddy/Caddyfile && systemctl reload caddy
 fi
 docker image prune -f >/dev/null
+bash server/web-sync.sh || echo "Web game update failed; the current one keeps running."
 echo "Match server updated to $(git rev-parse --short HEAD)."

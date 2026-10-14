@@ -1,6 +1,15 @@
 # Caddy terminates TLS (free automatic certificates) so phones connect with wss://.
-# DNS: an A record play.warfrontmandate.com → the server's IP address (Cloudflare: DNS only, grey cloud,
-# or orange cloud with WebSockets on).
+# DNS: an A record play.warfrontmandate.com → the server's IP address (Cloudflare: DNS only, grey cloud).
+# Owner 2026-10-14 ("all the other games run off the website"): the same address also serves the
+# browser version of the game. Game connections (WebSocket) go to the match server; everything
+# else is the web game from /opt/warfront/web (kept up to date by server/web-sync.sh).
 play.warfrontmandate.com {
-	reverse_proxy 127.0.0.1:8910
+	encode zstd gzip
+	@game_socket {
+		header Connection *Upgrade*
+		header Upgrade websocket
+	}
+	reverse_proxy @game_socket 127.0.0.1:8910
+	root * /opt/warfront/web
+	file_server
 }
