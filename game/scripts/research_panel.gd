@@ -487,7 +487,7 @@ func _refresh() -> void:
 	if not tier.is_empty():
 		detail.name.text = EquipmentIdentity.research_title(selected_id, selected_level) + " · L" + str(selected_level) + " · Day " + str(system.unlock_day(selected_id, selected_level))
 		if tier.has("range") and tier.has("damage"):
-			detail.name.text += "\n" + tier.get("improvement", "") + " · Range " + str(tier.range) + " · AA " + str(tier.damage) + "\nAircraft & drones · " + EquipmentIdentity.spec(selected_id).get("model_status", "")
+			detail.name.text += "\n" + tier.get("improvement", "") + " · Range " + str(tier.range) + " · AA " + str(tier.damage) + "\n" + ("Jets, bombers, helicopters · cannot see drones" if selected_id.begins_with("patriot") else "Drones, helicopters, attacking jets · cannot reach bombers") + " · " + EquipmentIdentity.spec(selected_id).get("model_status", "")
 		else:
 			detail.name.text += "\n" + tier.get("improvement", "")
 	if selected_upgrade:

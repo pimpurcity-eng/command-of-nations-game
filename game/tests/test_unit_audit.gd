@@ -82,7 +82,10 @@ func run() -> void:
 				# Aircraft start parked at their home airbase: send it on a patrol over the site.
 				var flight: String = game.units.air.order(plane, start + Vector2(0.4, 0.0), "patrol")
 				simulate(1.0)
-				check(flight.is_empty() and (plane.health < 100.0 or game.units.find_id("t").is_empty()), label + " shoots at aircraft patrolling in range (flight %s, plane %.0f%%)" % [flight if not flight.is_empty() else "ok", plane.health])
+				var hits: bool = plane.health < 100.0 or game.units.find_id("t").is_empty()
+				# Layered air defence (owner 2026-10-14): short-range AA cannot reach jets patrolling high.
+				if not AirBattleSystem.can_engage(site, plane): check(flight.is_empty() and not hits, label + " (short range) leaves high-flying patrols to the long-range SAMs")
+				else: check(flight.is_empty() and hits, label + " shoots at aircraft patrolling in range (flight %s, plane %.0f%%)" % [flight if not flight.is_empty() else "ok", plane.health])
 				continue
 			if family.visual_kind == "support":
 				var helper: = spawn(family, level, start, "a")

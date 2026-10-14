@@ -7,6 +7,27 @@ const ROUND_SECONDS: = CombatSystem.ROUND_SECONDS
 ## full damage.
 const AA_INTERVAL: = 7.0 * 60.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
 const AA_PASSING_FACTOR: = 0.5
+## Layered air defence (owner 2026-10-14): long-range SAMs (Patriot / S-300 / S-400 family) track only
+## big targets - jets, bombers, radar and transport planes, helicopters - and cannot see small drones,
+## so drones can hit them unopposed at any level. Short-range air defence (Skyguard / Tor / Pantsir
+## family) shoots down drones, helicopters and jets diving in on an attack run, but cannot reach
+## high-flying bombers, radar or transport planes, or jets just passing over. Ships cover every layer.
+## A family can override this with an "engages" list in equipment.json: drone, low, attack, high.
+const SHORT_RANGE_LAYERS: = ["drone", "low", "attack"]
+const LONG_RANGE_LAYERS: = ["low", "attack", "high"]
+static func air_layer(aircraft: Dictionary) -> String:
+	var role: = str(EquipmentIdentity.spec(aircraft.equipment_id).get("role", ""))
+	if role == "drone": return "drone"
+	if role == "helicopter": return "low"
+	if role in ["fighter", ""] and aircraft.get("flight_mode", "") == "attack": return "attack"
+	return "high"
+static func engages(defender: Dictionary) -> Array:
+	var spec: Dictionary = EquipmentIdentity.spec(defender.equipment_id)
+	if spec.get("engages") is Array: return spec.engages
+	if defender.visual_kind == "naval": return ["drone", "low", "attack", "high"]
+	return LONG_RANGE_LAYERS if str(defender.equipment_id).begins_with("patriot") else SHORT_RANGE_LAYERS
+static func can_engage(defender: Dictionary, aircraft: Dictionary) -> bool:
+	return air_layer(aircraft) in engages(defender)
 static func aa_factor(aircraft: Dictionary) -> float:
 	return 1.0 if aircraft.get("flight_mode", "") in ["attack", "patrol"] else AA_PASSING_FACTOR
 var cooldowns: Dictionary = {}
@@ -45,6 +66,7 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 			for enemy in armies.units:
 				if enemy.health <= 0 or enemy.country == unit.country: continue
 				if aa and (enemy.visual_kind != "fighter" or enemy.flight_mode == "grounded"): continue
+				if aa and not can_engage(unit, enemy): continue
 				var point: = Vector2(enemy.node.position.x, enemy.node.position.z)
 				if origin.distance_squared_to(point) > reach * reach: continue
 				if not armies.unit_visible(enemy, unit.country): continue
@@ -85,7 +107,7 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 
 
 				for defender in armies.stacks.members(enemy):
-					if defender.visual_kind in ["air_defense","naval"] and defender.health > 0 and value(defender,"aa_damage")>0:
+					if defender.visual_kind in ["air_defense","naval"] and defender.health > 0 and value(defender,"aa_damage")>0 and can_engage(defender, unit):
 						damage[unit.id] = damage.get(unit.id, 0.0) + value(defender, "aa_damage", true)
 						weapon_fired.emit(defender, unit, "interceptor")
 			# Owner 2026-10-13: patrolling aircraft also strike every 7 minutes (half damage, above);
