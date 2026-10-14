@@ -8,3 +8,6 @@ game/config/accounts.cfg
 
 # Licensed music (bought; permission to use in the game, not to redistribute). Not in public Git.
 game/assets/audio/start_theme.*
+
+# Godot Android build template (installed locally for Play Store .aab exports)
+game/android/
