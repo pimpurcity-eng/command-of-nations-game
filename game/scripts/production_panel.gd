@@ -165,7 +165,9 @@ func _populate() -> void :
 func _populate_equipment() -> void :
 	filtered.clear()
 	equipment_list.clear()
-	for spec in production.catalog:
+	var ordered := production.catalog.duplicate()
+	ordered.sort_custom(ProductionGroups.before)
+	for spec in ordered:
 		if spec.country != _country(): continue
 		if not ProductionGroups.offered(spec) or (category_picker.selected != 0 and ProductionGroups.index(spec) != category_picker.selected-1): continue
 		if spec.visual_kind == "naval" and (city_picker.selected < 0 or not production.cities.filter(func(c):return c.name == city_names[city_picker.selected])[0].has("naval_spawn")): continue

@@ -24,6 +24,7 @@ var buildings: BuildingSystem
 var panel: PanelContainer
 var title: Label
 var summary: Label
+var city_picture: TextureRect
 var income_row: HBoxContainer
 var construction: Dictionary
 var production: Dictionary
@@ -56,8 +57,18 @@ func setup(system: BuildingSystem, theme: Theme) -> void:
 	var info: = PanelContainer.new()
 	info.add_theme_stylebox_override("panel", CowUI.box(Color(0, 0, 0, 0), 0, Color(0, 0, 0, 0), 0, 8))
 	column.add_child(info)
+	var info_row := HBoxContainer.new()
+	info_row.add_theme_constant_override("separation", 12)
+	info.add_child(info_row)
+	city_picture = TextureRect.new()
+	city_picture.custom_minimum_size = Vector2(92, 80)
+	city_picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	city_picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	info_row.add_child(city_picture)
 	var info_column: = VBoxContainer.new()
-	info.add_child(info_column)
+	info_column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	info_column.alignment = BoxContainer.ALIGNMENT_CENTER
+	info_row.add_child(info_column)
 	summary = CowUI.label("", 14, Color("c9c3ae"))
 	summary.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	summary.clip_text = true
@@ -156,8 +167,7 @@ func _add_row(definition: Dictionary) -> void:
 	image.custom_minimum_size = Vector2(88, 80)
 	image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	var picture: String = str(definition.get("preview", AssetRoster.appearance(definition.asset_roster_id, GameSession.player_country).preview))
-	image.texture = load(picture) if WebExtras.has(picture) else null  # browser: may still be downloading
+	image.texture = FacilityVisual.preview(definition, GameSession.player_country, 1)
 	frame.add_child(image)
 	var middle: = VBoxContainer.new()
 	middle.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -225,7 +235,7 @@ func show_tab(index: int) -> void:
 	unit_rows.clear()
 	if index >= 0 and research != null:
 		var families: Array = buildings.economy.catalog.filter(func(spec: Dictionary): return spec.country == GameSession.player_country and ProductionGroups.index(spec) == index and ProductionGroups.offered(spec))
-		families.sort_custom(func(a, b): return a.category < b.category if a.category != b.category else a.name < b.name)
+		families.sort_custom(ProductionGroups.before)
 		for spec in families: _add_unit_row(spec)
 	if scroll != null: scroll.scroll_vertical = 0
 	if visible: _refresh()
@@ -246,7 +256,7 @@ func _add_unit_row(spec: Dictionary) -> void:
 	var image: = TextureRect.new()
 	image.custom_minimum_size = Vector2(96, 80)
 	image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	frame.add_child(image)
 	var rank: = Chevrons.new()
 	rank.custom_minimum_size = Vector2(26, 30)
@@ -406,6 +416,7 @@ func _jobs_here() -> Array:
 func _refresh() -> void:
 	var place: = buildings.city(city_id)
 	if place.is_empty(): return
+	city_picture.texture = MenuArt.city(buildings.economy.controller(place))
 	var controlled: = buildings.economy.controlled(place, GameSession.player_country)
 	var own: bool = controlled
 	var scouted := controlled or (buildings.economy.armies != null and buildings.economy.armies.point_visible(place.point))

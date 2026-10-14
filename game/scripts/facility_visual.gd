@@ -2,6 +2,8 @@ class_name FacilityVisual
 extends RefCounted
 
 static func preview(definition: Dictionary, country: String, level: int, rural: bool = false) -> Texture2D:
+	var art := MenuArt.facility(definition)
+	if art != null: return art
 	var source: String = path(definition,country,level,rural)
 	var supplied: String = source.trim_suffix(".glb")+"_menu.png"
 	if WebExtras.has(supplied): return load(supplied)

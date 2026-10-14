@@ -23,3 +23,15 @@ const CITY_TABS := [5, 2, 3, 6, 1, 7, 4, 8]
 const CITY_TITLES := {5: "Infantry", 2: "Ordnance", 3: "Tanks", 6: "Missiles", 1: "Air", 7: "Drones", 4: "Naval", 8: "Support"}
 ## Families the owner retired (e.g. mine clearing) stay loadable but are never offered.
 static func offered(spec: Dictionary) -> bool: return not spec.get("retired", false)
+
+## Consistent naval order in research and production; carriers are the last column.
+static func before(a: Dictionary, b: Dictionary) -> bool:
+	if index(a) != index(b): return index(a) < index(b)
+	if index(a) == 4:
+		var order := {"corvettes": 0, "fleet": 1, "destroyers": 2, "submarines": 3, "carriers": 4}
+		var left: int = order.get(str(a.id).get_slice("_", 0), 3)
+		var right: int = order.get(str(b.id).get_slice("_", 0), 3)
+		if left != right: return left < right
+	if a.category == "Air defense" and b.category == "Air defense": return a.get("aa_range", 0.0) < b.get("aa_range", 0.0)
+	if a.category == "Air defense" or b.category == "Air defense": return a.category == "Air defense"
+	return a.category < b.category if a.category != b.category else a.name < b.name

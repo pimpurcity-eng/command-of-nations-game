@@ -44,6 +44,8 @@ static func icon_texture(kind: String) -> Texture2D:
 
 static func equipment_picture(id: String) -> Texture2D:
 	if id.begins_with("economy_"): return research_picture(id,1)
+	var art := MenuArt.unit(str(EquipmentIdentity.research_tier(id, 1).get("model", "")))
+	if art != null: return art
 	var air_drawing: String = {"skyguard_russia": "strela10", "patriot_russia": "bukm3", "skyguard_ukraine": "roland", "patriot_ukraine": "iris_t_slm"}.get(id, "")
 	var air_path: String = "res://assets/interface/illustrations/" + air_drawing + ".png"
 	if not air_drawing.is_empty() and WebExtras.has(air_path): return load(air_path)
@@ -69,6 +71,8 @@ static func research_picture(id: String, level: int) -> Texture2D:
 		var spec := EconomyResearch.spec(id)
 		return FacilityVisual.preview(spec,spec.country,level)
 	var tier_name: String = EquipmentIdentity.research_title(id, level)
+	var art := MenuArt.unit(str(EquipmentIdentity.research_tier(id, level).get("model", "")))
+	if art != null: return art
 	var drawing: String = ""
 	if id.ends_with("_russia"):
 		for pair in [["Strela-10", "strela10"], ["Tor-M2", "torm2"], ["Buk-M3", "bukm3"], ["S-400", "s400"], ["S-500", "s500"]]:
