@@ -106,9 +106,9 @@ func _ready() -> void :
 	# 0.02 / 0.5 caused shadow acne (thin stripes across vehicles on phones).
 	sun.shadow_bias = 0.08
 	sun.shadow_normal_bias = 1.2
-	# Phone browsers (owner 2026-10-14: "game and start screen lagging bad"; the app is fine):
-	# map shadows draw the whole map twice more every frame. Units keep their own ground shadows.
-	if OS.has_feature("web") and UnitSystem.mobile_device(): sun.shadow_enabled = false
+	# Phones (owner 2026-10-14: "really slow and lagging"): map shadows drew the whole map
+	# (450k triangles, 300-600 draws) twice more every frame. Units keep their own ground shadows.
+	if UnitSystem.mobile_device(): sun.shadow_enabled = false
 	add_child(sun)
 	var sea: = MeshInstance3D.new()
 	var plane: = PlaneMesh.new()

@@ -637,7 +637,7 @@ func _garrison_spot(city: Vector2, stack_id: String) -> Vector2:
 		if not stack_id.is_empty() and unit.stack_id == stack_id: return at
 		stacks_here[unit.stack_id] = true
 	if stacks_here.is_empty(): return city
-	return city + Vector2.from_angle(-PI * 0.25 + PI * 0.5 * (stacks_here.size() - 1)) * 0.28
+	return city + Vector2.from_angle(-PI * 0.25 + PI * 0.5 * (stacks_here.size() - 1)) * 0.14
 func _in_city(point: Vector2) -> bool:
 	if _city_points.is_empty():
 		for city in GeographicProjection.load_cities(): _city_points.append(city.point)

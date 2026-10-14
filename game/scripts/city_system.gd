@@ -2,8 +2,9 @@ class_name CitySystem
 extends Node3D
 signal city_selected(city: Dictionary)
 ## Clear space at the actual city destination. Sized for the enlarged map units.
-const GARRISON_PLAZA_RADIUS := 0.54
-const GARRISON_SQUARE := Rect2(-0.65, -0.60, 1.30, 1.25)
+const GARRISON_PLAZA_RADIUS := 0.30
+# Owner 2026-10-14: "make the square in the middle a lot smaller".
+const GARRISON_SQUARE := Rect2(-0.30, -0.28, 0.60, 0.56)
 const SHOW_COURTYARD_DISK: = false
 const RESOURCE_WORDS: = {"materials": "METAL", "electronics": "RARE EARTHS", "fuel": "OIL", "food": "FOOD"}
 const RESOURCE_COLOURS: = {"materials": Color("d4dade"), "electronics": Color("d7a8ff"), "fuel": Color("ff9a7a"), "food": Color("9ee07e")}
@@ -107,16 +108,17 @@ func setup(map: StrategicMap, camera_rig: StrategyCamera) -> void :
 			picture.texture = resource_picture(resource)
 			picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 			picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-			picture.custom_minimum_size = Vector2(34, 34)
+			# Owner 2026-10-14: "take off the word metal and oil... just put a symbol beside the city".
+			picture.custom_minimum_size = Vector2(40, 40)
 			picture.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			picture.tooltip_text = RESOURCE_WORDS.get(resource, resource.to_upper())
 			stack.add_child(picture)
-			var word: = Label.new()
-			word.text = RESOURCE_WORDS.get(resource, resource.to_upper())
-			word.add_theme_font_size_override("font_size", 16)
-			word.add_theme_font_override("font", StrategyTheme.font("Oswald", 600))
-			word.add_theme_color_override("font_color", RESOURCE_COLOURS.get(resource, Color.WHITE))
-			word.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-			stack.add_child(word)
+			# A coloured edge in the resource's colour keeps the symbol readable on any terrain.
+			var edge: = box.get_theme_stylebox("panel").duplicate() as StyleBoxFlat if box.get_theme_stylebox("panel") is StyleBoxFlat else null
+			if edge != null:
+				edge.border_color = RESOURCE_COLOURS.get(resource, Color.WHITE)
+				edge.set_border_width_all(2)
+				box.add_theme_stylebox_override("panel", edge)
 			boxes.add_child(box)
 		if city.get("capital", false):
 			var star: = _tag_box()
@@ -458,12 +460,12 @@ func _build_city_district(district: Node3D, city: Dictionary, _ink: StandardMate
 	trunk.albedo_color = Color("5a4632")
 	var park_rng: = RandomNumberGenerator.new()
 	park_rng.seed = city.name.hash() + 7
-	for i in 22:
-		var t: = float(i) / 22.0 * 4.0
+	for i in 12:
+		var t: = float(i) / 12.0 * 4.0
 		var side: = int(t)
 		var along: = fmod(t, 1.0) * 2.0 - 1.0
 		var edge: = [Vector2(along, -1), Vector2(1, along), Vector2(-along, 1), Vector2(-1, -along)][side] as Vector2
-		var spot: = centre + edge * (GARRISON_SQUARE.size * 0.5 - Vector2(0.06, 0.06))
+		var spot: = centre + edge * (GARRISON_SQUARE.size * 0.5 - Vector2(0.04, 0.04))
 		spot += Vector2(park_rng.randf_range(-0.015, 0.015), park_rng.randf_range(-0.015, 0.015))
 		var stem: = CylinderMesh.new()
 		stem.top_radius = 0.006
