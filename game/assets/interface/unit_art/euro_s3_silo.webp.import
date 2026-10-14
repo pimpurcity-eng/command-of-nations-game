@@ -15,9 +15,9 @@ dest_files=["res://.godot/imported/euro_s3_silo.webp-49e1aea59a5009380fb86f39dae
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
-compress/lossy_quality=0.7
+compress/lossy_quality=0.85
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
