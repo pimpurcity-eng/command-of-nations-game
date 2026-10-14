@@ -88,27 +88,32 @@ func run() -> void:
 	# Hackers (paid with gold).
 	var net: = Espionage.new()
 	var spend: = economy.spend_gold
+	economy.gold.russia = 20000
 	var gold_before: = int(economy.gold.russia)
 	var their_cash: = float(theirs.funds)
 	check(net.hack("russia", "bank", {}, "", "ukraine", int(economy.gold.russia), spend, world).is_empty(), "Bank hack works")
 	check(int(economy.gold.russia) == gold_before - Espionage.HACKS.bank.gold and float(theirs.funds) < their_cash, "Bank hack costs gold and takes enemy money")
 	check(not net.hack("russia", "blackout", belgorod, "russia", "ukraine", int(economy.gold.russia), spend, world).is_empty(), "No blackout on your own city")
 	check(net.hack("russia", "blackout", kharkiv, "ukraine", "ukraine", int(economy.gold.russia), spend, world).is_empty() and is_equal_approx(Espionage.sabotage_factor("kharkiv"), Espionage.BLACKOUT_FACTOR), "Blackout almost stops Kharkiv's production")
-	check(net.hack("russia", "satellite", {}, "", "ukraine", int(economy.gold.russia), spend, world).is_empty() and Espionage.reveals(game.buildings.city("lviv").point if not game.buildings.city("lviv").is_empty() else Vector2(-30, 0), "russia"), "Satellite hack shows the whole map")
-	check(not net.hack("russia", "satellite", {}, "", "ukraine", int(economy.gold.russia), spend, world).is_empty(), "The same hack cannot run twice")
+	economy.gold.russia = 20000
+	var kyiv: Dictionary = game.buildings.city("kyiv")
+	check(not net.hack("russia", "satellite", {}, "", "ukraine", int(economy.gold.russia), spend, world).is_empty(), "Satellite hack needs an enemy city")
+	check(net.hack("russia", "satellite", kyiv, "ukraine", "ukraine", int(economy.gold.russia), spend, world).is_empty() and Espionage.reveals(kyiv.point + Vector2(2, 0), "russia"), "Satellite hack shows the area around the city")
+	check(not Espionage.reveals(kyiv.point + Vector2(8, 0), "russia") and not Espionage.reveals(Vector2(-30, 0), "russia"), "Satellite hack never shows the whole map")
+	check(not net.hack("russia", "satellite", kyiv, "ukraine", "ukraine", int(economy.gold.russia), spend, world).is_empty(), "The same hack cannot run twice")
 	net.advance(Espionage.HOUR * 1.01, world, "russia")
-	check(not Espionage.reveals(Vector2(-30, 0), "russia"), "Satellite hack ends after an hour")
+	check(not Espionage.reveals(kyiv.point + Vector2(2, 0), "russia"), "Satellite hack ends after an hour")
 	net.advance(Espionage.HOUR * 2.0, world, "russia")
 	check(Espionage.sabotage_factor("kharkiv") == 1.0, "Blackout ends after three hours")
-	economy.gold.ukraine = 5000
-	check(net.hack("ukraine", "firewall", {}, "", "russia", 5000, spend, world).is_empty() and net.firewall("ukraine"), "Firewall goes up")
+	economy.gold.ukraine = 20000
+	check(net.hack("ukraine", "firewall", {}, "", "russia", 20000, spend, world).is_empty() and net.firewall("ukraine"), "Firewall goes up")
 	var gold_now: = int(economy.gold.russia)
 	check(net.hack("russia", "bank", {}, "", "ukraine", gold_now, spend, world).begins_with("BLOCKED") and int(economy.gold.russia) < gold_now, "Firewall blocks the hack (gold is still spent)")
 	var poor: = Espionage.new()
 	check(not poor.hack("russia", "satellite", {}, "", "ukraine", 10, spend, world).is_empty(), "Not enough gold")
 	var bot: = Espionage.new()
-	economy.gold.ukraine = 5000
-	check(bot.ai_hack("ukraine", "russia", [belgorod], 5000, spend, world) == "firewall" and bot.ai_hack("ukraine", "russia", [belgorod], int(economy.gold.ukraine), spend, world) in ["blackout", "satellite", "bank"], "AI puts up a firewall, then hacks")
+	economy.gold.ukraine = 20000
+	check(bot.ai_hack("ukraine", "russia", [belgorod], 20000, spend, world) == "firewall" and bot.ai_hack("ukraine", "russia", [belgorod], int(economy.gold.ukraine), spend, world) in ["blackout", "satellite", "bank"], "AI puts up a firewall, then hacks")
 	var saved_net: = Espionage.new()
 	saved_net.restore(bot.snapshot())
 	check(saved_net.hacks.size() == bot.hacks.size(), "Hacks are saved and loaded")

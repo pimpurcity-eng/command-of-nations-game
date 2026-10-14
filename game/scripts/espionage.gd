@@ -34,18 +34,20 @@ const MISSIONS: = {
 	"counter": {"name": "Counter-spy", "text": "Guard one of your cities: enemy spies there are caught far more often.", "icon": "stop", "enemy": false},
 }
 
-## Hackers (owner 2026-10-14): paid with gold, they work at once or for a few hours.
+## Hackers (owner 2026-10-14): paid with gold, they work at once or for a few hours. Owner: "never
+## the whole map, maybe a small area, but prices must be way higher".
 const HACKS: = {
-	"blackout": {"name": "Power blackout", "text": "Cuts the power in an enemy city: building and production almost stop for 3 hours.", "gold": 600, "hours": 3.0, "target": "city", "icon": "hammer"},
-	"satellite": {"name": "Satellite hack", "text": "Shows every enemy army on the whole map for 1 hour.", "gold": 900, "hours": 1.0, "target": "none", "icon": "research"},
-	"bank": {"name": "Bank hack", "text": "Takes 5% of the enemy's money and metal at once (up to 10,000 each).", "gold": 700, "hours": 0.0, "target": "none", "icon": "market"},
-	"firewall": {"name": "Firewall", "text": "Blocks every enemy hack against you for 6 hours.", "gold": 400, "hours": 6.0, "target": "none", "icon": "stop"},
+	"blackout": {"name": "Power blackout", "text": "Cuts the power in an enemy city: building and production almost stop for 3 hours.", "gold": 3000, "hours": 3.0, "target": "city", "icon": "hammer"},
+	"satellite": {"name": "Satellite hack", "text": "Shows the enemy armies in a small area around an enemy city for 1 hour.", "gold": 3500, "hours": 1.0, "target": "city", "icon": "research"},
+	"bank": {"name": "Bank hack", "text": "Takes 5% of the enemy's money and metal at once (up to 10,000 each).", "gold": 2500, "hours": 0.0, "target": "none", "icon": "market"},
+	"firewall": {"name": "Firewall", "text": "Blocks every enemy hack against you for 6 hours.", "gold": 2000, "hours": 6.0, "target": "none", "icon": "stop"},
 }
+const SATELLITE_RADIUS: = 3.0
 const BLACKOUT_FACTOR: = 0.1
 const BANK_SHARE: = 0.05
 const BANK_CAP: = 10000.0
 var hacks: Array = []   # active {country, kind, city, remaining}
-static var satellite_countries: Dictionary = {}  # country -> true while its satellite hack runs
+static var satellite_zones: Array = []  # [country, Vector2] while a satellite hack runs
 static var blacked_out: Dictionary = {}          # city id -> true
 
 var spies: Array = []   # {id, country, city, mission, travel}
@@ -107,7 +109,8 @@ func hack(country: String, kind: String, city: Dictionary, city_owner: String, e
 			theirs[resource] = float(theirs.get(resource, 0.0)) - amount
 			ours[resource] = float(ours.get(resource, 0.0)) + amount
 	else:
-		hacks.append({"country": country, "kind": kind, "city": str(city.get("id", "")), "remaining": float(HACKS[kind].hours) * HOUR})
+		var at: Array = [city.point.x, city.point.y] if city.has("point") else []
+		hacks.append({"country": country, "kind": kind, "city": str(city.get("id", "")), "at": at, "remaining": float(HACKS[kind].hours) * HOUR})
 	_refresh_static(world)
 	return ""
 
@@ -210,14 +213,16 @@ func _refresh_static(world: Dictionary) -> void:
 			sabotaged[spy.city] = true
 
 func _refresh_hacks() -> void:
-	satellite_countries.clear()
+	satellite_zones.clear()
 	blacked_out.clear()
 	for active in hacks:
-		if active.kind == "satellite": satellite_countries[active.country] = true
+		if active.kind == "satellite" and active.get("at", []).size() == 2:
+			satellite_zones.append([active.country, Vector2(float(active.at[0]), float(active.at[1]))])
 		elif active.kind == "blackout": blacked_out[active.city] = true
 
 static func reveals(point: Vector2, country: String) -> bool:
-	if satellite_countries.has(country): return true
+	for zone in satellite_zones:
+		if zone[0] == country and point.distance_to(zone[1]) <= SATELLITE_RADIUS: return true
 	for zone in intel_zones:
 		if zone[0] == country and point.distance_to(zone[1]) <= INTEL_RADIUS: return true
 	return false
@@ -265,7 +270,9 @@ func restore(state: Dictionary) -> void:
 	hacks.clear()
 	for active in state.get("hacks", []):
 		if active is Dictionary and HACKS.has(str(active.get("kind", ""))) and str(active.get("country", "")) in ["russia", "ukraine"]:
-			hacks.append({"country": str(active.country), "kind": str(active.kind), "city": str(active.get("city", "")), "remaining": clampf(float(active.get("remaining", 0.0)), 0.0, 6.0 * HOUR)})
+			var at: Array = []
+			if active.get("at") is Array and active.at.size() == 2: at = [float(active.at[0]), float(active.at[1])]
+			hacks.append({"country": str(active.country), "kind": str(active.kind), "city": str(active.get("city", "")), "at": at, "remaining": clampf(float(active.get("remaining", 0.0)), 0.0, 6.0 * HOUR)})
 	intel_zones.clear()
 	sabotaged.clear()
 	_refresh_hacks()

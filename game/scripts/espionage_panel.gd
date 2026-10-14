@@ -87,7 +87,7 @@ func setup(rules: MatchSystem, system: ProductionSystem, theme: Theme) -> void:
 	body.add_child(_heading("Hackers · paid with gold"))
 	gold_label = CowUI.label("", 20, CowUI.GOLD)
 	body.add_child(gold_label)
-	body.add_child(CowUI.label("Blackout target:", 19))
+	body.add_child(CowUI.label("Target city (blackout and satellite):", 19))
 	hack_city_picker = OptionButton.new()
 	hack_city_picker.custom_minimum_size.y = 56
 	hack_city_picker.add_theme_font_size_override("font_size", 21)

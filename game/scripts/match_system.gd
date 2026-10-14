@@ -428,7 +428,7 @@ func _ai_spies(world: Dictionary) -> void:
 	var used: = espionage.ai_hack(country, player, targets, int(production.gold.get(country, 0)), production.spend_gold, world)
 	match used:
 		"blackout": report.emit("Enemy hackers cut the power in " + str(targets[0].name) + " for 3 hours")
-		"satellite": report.emit("Enemy hackers took over a satellite: they can see all your armies for 1 hour")
+		"satellite": report.emit("Enemy hackers took over a satellite: they can see your armies around " + str(targets[0].name) + " for 1 hour")
 		"bank": report.emit("Enemy hackers raided your bank: money and metal stolen")
 		"blocked": report.emit("Your firewall stopped an enemy hack")
 func snapshot() -> Dictionary:
