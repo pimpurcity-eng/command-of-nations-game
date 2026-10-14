@@ -353,7 +353,14 @@ func order(position: Vector3, append: bool = false) -> bool:
 		status_changed.emit("No connected sea route. Ships cannot cross land." if is_naval(units[selected]) else "No connected land route. Ground units cannot cross water or neutral countries.")
 		return false
 	# Armies go to the province centre by road; the route's end is the real destination.
-	if not is_naval(units[selected]): destination = path.back()
+	if not is_naval(units[selected]):
+		destination = path.back()
+		# An army sent to a city walks on to the city's army spot (centre or edge).
+		var city = _city_at(destination)
+		if city != null and CitySystem.garrison_layout != "centre":
+			var spot: = _garrison_spot(city as Vector2, str(units[selected].stack_id))
+			path.append(spot)
+			destination = spot
 	if append and units[selected].moving:
 		if units[selected].waypoints.size() + path.size() > 256:
 			status_changed.emit("Route queue is full")
@@ -624,7 +631,7 @@ static var _city_points: = PackedVector2Array()
 func _city_at(point: Vector2) -> Variant:
 	if _city_points.is_empty(): _in_city(point)
 	for city_point in _city_points:
-		if point.distance_to(city_point) < CITY_RADIUS: return city_point
+		if CitySystem.near_city(point, city_point): return city_point
 	return null
 ## Owner 2026-10-14: "don't put units beside the city, put them in the middle". An army joins its
 ## stack's spot; the first army stands in the city centre, further ones close by in the park.
@@ -633,16 +640,17 @@ func _garrison_spot(city: Vector2, stack_id: String) -> Vector2:
 	for unit in units:
 		if is_naval(unit) or air.is_air(unit): continue
 		var at: = Vector2(unit.node.position.x, unit.node.position.z)
-		if at.distance_to(city) >= CITY_RADIUS: continue
+		if not CitySystem.near_city(at, city): continue
 		if not stack_id.is_empty() and unit.stack_id == stack_id: return at
 		stacks_here[unit.stack_id] = true
-	if stacks_here.is_empty(): return city
-	return city + Vector2.from_angle(-PI * 0.25 + PI * 0.5 * (stacks_here.size() - 1)) * 0.14
+	var spot: = CitySystem.plaza_point(city)
+	if stacks_here.is_empty(): return spot
+	return spot + Vector2.from_angle(-PI * 0.25 + PI * 0.5 * (stacks_here.size() - 1)) * 0.14
 func _in_city(point: Vector2) -> bool:
 	if _city_points.is_empty():
 		for city in GeographicProjection.load_cities(): _city_points.append(city.point)
 	for city_point in _city_points:
-		if point.distance_to(city_point) < CITY_RADIUS: return true
+		if CitySystem.near_city(point, city_point): return true
 	return false
 ## Ukrainian idle units face the nearest Russian city; orders face their destination.
 func _facing_enemy(country: String, point: Vector2) -> float:

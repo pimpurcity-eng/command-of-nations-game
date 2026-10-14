@@ -4,7 +4,19 @@ signal city_selected(city: Dictionary)
 ## Clear space at the actual city destination. Sized for the enlarged map units.
 const GARRISON_PLAZA_RADIUS := 0.30
 # Owner 2026-10-14: "make the square in the middle a lot smaller".
-const GARRISON_SQUARE := Rect2(-0.30, -0.28, 0.60, 0.56)
+static var GARRISON_SQUARE := Rect2(-0.30, -0.28, 0.60, 0.56)
+## Where a city's army stands (owner review 2026-10-14): "centre", or at the city's edge -
+## "front" (facing the camera), "side" (east edge) or "outside" (just past the last houses).
+## The spot is filled with buildings while no army is there.
+static var garrison_layout: = "centre"
+const GARRISON_LAYOUTS: = {"centre": Rect2(-0.30, -0.28, 0.60, 0.56), "front": Rect2(-0.30, 0.62, 0.60, 0.50), "side": Rect2(0.68, -0.25, 0.56, 0.52), "outside": Rect2(-0.30, 1.16, 0.60, 0.46)}
+## World offset of each city's army spot from the city point, keyed by city_key(point).
+static var plaza_offsets: Dictionary = {}
+static func city_key(point: Vector2) -> String: return "%.3f,%.3f" % [point.x, point.y]
+static func plaza_point(city_point: Vector2) -> Vector2: return city_point + plaza_offsets.get(city_key(city_point), Vector2.ZERO)
+## True for the city itself and for its army spot (which can lie at or past the city edge).
+static func near_city(point: Vector2, city_point: Vector2) -> bool:
+	return point.distance_to(city_point) < UnitSystem.CITY_RADIUS or point.distance_to(plaza_point(city_point)) < 0.45
 const SHOW_COURTYARD_DISK: = false
 ## City look being reviewed with the owner (2026-10-14): classic, downtown, grid or green.
 static var city_style: = "classic"
@@ -28,6 +40,7 @@ func setup(map: StrategicMap, camera_rig: StrategyCamera) -> void :
 	label_layer = CanvasLayer.new()
 	label_layer.layer = 2
 	add_child(label_layer)
+	GARRISON_SQUARE = GARRISON_LAYOUTS.get(garrison_layout, GARRISON_LAYOUTS.centre)
 	for city in cities:
 		var nearest: = INF
 		for territory in terrain.territories:
@@ -47,6 +60,7 @@ func setup(map: StrategicMap, camera_rig: StrategyCamera) -> void :
 		for other in cities:
 			if other != city: neighbour = minf(neighbour, city.point.distance_to(other.point))
 		district.scale = Vector3.ONE * clampf((neighbour * 0.5 - 0.08) / 1.42, 0.40, 0.72)
+		plaza_offsets[city_key(city.point)] = GARRISON_SQUARE.get_center() * district.scale.x
 		add_child(district)
 		districts[city.id] = district
 		var ink: = StandardMaterial3D.new()
@@ -611,7 +625,7 @@ func _city_has_garrison(city: Dictionary) -> bool:
 		if armies.air.is_air(unit) and unit.get("flight_mode","grounded") != "grounded": continue
 		if not armies.visible_to_player(unit): continue
 		var at := Vector2(unit.node.position.x,unit.node.position.z)
-		if at.distance_to(city.point) <= UnitSystem.CITY_RADIUS: return true
+		if near_city(at, city.point): return true
 	return false
 
 
