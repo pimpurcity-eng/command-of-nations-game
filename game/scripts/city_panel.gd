@@ -156,7 +156,8 @@ func _add_row(definition: Dictionary) -> void:
 	image.custom_minimum_size = Vector2(88, 80)
 	image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	image.texture = load(definition.get("preview", AssetRoster.appearance(definition.asset_roster_id, GameSession.player_country).preview))
+	var picture: String = str(definition.get("preview", AssetRoster.appearance(definition.asset_roster_id, GameSession.player_country).preview))
+	image.texture = load(picture) if WebExtras.has(picture) else null  # browser: may still be downloading
 	frame.add_child(image)
 	var middle: = VBoxContainer.new()
 	middle.size_flags_horizontal = Control.SIZE_EXPAND_FILL

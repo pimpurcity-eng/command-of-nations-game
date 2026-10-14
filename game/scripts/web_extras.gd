@@ -10,6 +10,12 @@ signal progress(fraction: float)
 const FILE: = "index.extras.pck"
 const LOCAL: = "/tmp/warfront_extras.pck"
 static var available: bool = not OS.has_feature("web")
+## True when the resource can be loaded now. In the browser version a file from the weapons pack
+## is still listed by ResourceLoader.exists before the pack arrives, so look for its import file.
+static func has(path: String) -> bool:
+	if path.is_empty(): return false
+	if not OS.has_feature("web") or available: return ResourceLoader.exists(path)
+	return FileAccess.file_exists(path + ".import") or FileAccess.file_exists(path + ".remap") or (FileAccess.file_exists(path) and ResourceLoader.exists(path))
 var _http: HTTPRequest
 var _size: = 0
 

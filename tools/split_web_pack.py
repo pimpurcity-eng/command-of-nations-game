@@ -65,10 +65,12 @@ CORE_MODELS = [
     "arsenal/russia_motor_rifleman", "pl01_russian", "airdefense/russia_strela10", "skyguard_russian",
     "arsenal/russia_yak130", "arsenal/euro_hawk_t2", "arsenal/euro_fr_foreign_legion",
     "arsenal/euro_uk_royal_marine", "pl01_european", "airdefense/nato_roland", "skyguard_european",
-    "arsenal/russia_t90a", "arsenal/euro_leclerc", "upload661a_original", "upload7a7e_original",
-    "arsenal/russia_su57", "arsenal/euro_mirage2000", "arsenal/russia_iskander_m", "arsenal/euro_pluton",
+    # Buildings standing at the start (capital recruitment centre and train station, the
+    # province airport of the starting plane) and the rail and road pieces drawn on the map.
+    "buildings_oct12/recruitment_center", "buildings_oct12/train_station", "buildings_oct12/road_straight",
+    "buildings_oct12/rail_straight", "buildings_oct12/province_airport_l1",
 ]
-KEEP_FOLDERS = ("assets/library/buildings_oct12/", "assets/library/transport/")
+KEEP_FOLDERS = ()
 core_prefixes = ["assets/library/" + m for m in CORE_MODELS]
 # Buildings and their pictures (data/buildings.json, its asset-roster entries and the facility
 # scenes) are drawn and listed from the start; some are loaded without an existence check.
@@ -80,13 +82,15 @@ for entry in json.load(open(os.path.join(game, "data/asset_roster.json"))):
 for root, _dirs, files in os.walk(os.path.join(game, "scenes/facilities")):
     for name in files: building_text += open(os.path.join(root, name), errors="ignore").read()
 for path in re.findall(r"res://(assets/library/[A-Za-z0-9_./-]+)", building_text):
-    core_prefixes.append(path.rsplit(".", 1)[0])
+    if not path.startswith("assets/library/buildings_oct12/"):
+        core_prefixes.append(path.rsplit(".", 1)[0])
 
 def is_extra(source):
-    # Building levels 2-5 come later too: a new game starts with level-1 buildings, and a building
-    # shows its highest model already here until the rest arrives (FacilityVisual.path).
-    if source.startswith("assets/library/buildings_oct12/") and re.search(r"_l[2-5][._]", source): return True
-    if not source.startswith("assets/library/") or source.startswith(KEEP_FOLDERS): return False
+    # Unused vehicle set, and everything in the library the start does not show: other weapons,
+    # stand-ins, other buildings and levels, trade ships and trains (all loaded on demand with
+    # existence checks; WebExtras swaps them in when the pack arrives).
+    if source.startswith("assets/vehicles/"): return True
+    if not source.startswith("assets/library/"): return False
     return not any(source.startswith(p) for p in core_prefixes)
 
 def targets(entry_name):

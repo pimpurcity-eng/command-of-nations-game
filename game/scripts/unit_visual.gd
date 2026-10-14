@@ -86,13 +86,13 @@ static func create(kind: String, _faction: Color, equipment_id: String = "", lev
 	assembly.set_meta("visual_level", level)
 	var tier: Dictionary = EquipmentIdentity.research_tier(equipment_id, level)
 	var path: String = tier.get("model", asset_path(equipment_id))
-	if path.is_empty() or not ResourceLoader.exists(path):
+	if path.is_empty() or not WebExtras.has(path):
 		var spec_kind: String = EquipmentIdentity.spec(equipment_id).get("visual_kind", kind)
 		path = stand_in_path(equipment_id, spec_kind)
 		assembly.set_meta("stand_in_model", true)
 	assembly.set_meta("asset_path", path)
 	assembly.set_meta("original_vehicle_asset", true)
-	if path.is_empty() or not ResourceLoader.exists(path):
+	if path.is_empty() or not WebExtras.has(path):
 		assembly.set_meta("missing_original_model", true)
 		return assembly
 	var vehicle: = (load(path) as PackedScene).instantiate() as Node3D
@@ -240,11 +240,11 @@ static func preview_texture(equipment_id: String) -> Texture2D:
 	var tier: = EquipmentIdentity.research_tier(equipment_id,1)
 	var stem: String = str(tier.get("model", "")).trim_suffix(".glb")
 	for candidate in [str(tier.get("preview", "")),stem+"_ready.png",stem+".png",stem+"_preview.png"]:
-		if not candidate.is_empty() and ResourceLoader.exists(candidate): return load(candidate)
+		if not candidate.is_empty() and WebExtras.has(candidate): return load(candidate)
 	var rendered: = "res://assets/library/previews/" + equipment_id + ".png"
-	if ResourceLoader.exists(rendered): return load(rendered)
+	if WebExtras.has(rendered): return load(rendered)
 	var path: = preview_path(equipment_id)
-	if not path.is_empty() and ResourceLoader.exists(path): return load(path)
+	if not path.is_empty() and WebExtras.has(path): return load(path)
 	return load("res://assets/interface/icons/produce.svg")
 
 

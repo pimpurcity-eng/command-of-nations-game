@@ -38,7 +38,7 @@ static func skin(name: String, _corner: int = 8, margin: int = 0, tint: Color = 
 static var _icons: Dictionary = {}
 static func icon_texture(kind: String) -> Texture2D:
 	var path: = "res://assets/interface/icons/" + kind + ".svg"
-	if not ResourceLoader.exists(path): return null
+	if not WebExtras.has(path): return null
 	if not _icons.has(kind): _icons[kind] = load(path)
 	return _icons[kind]
 
@@ -46,22 +46,22 @@ static func equipment_picture(id: String) -> Texture2D:
 	if id.begins_with("economy_"): return research_picture(id,1)
 	var air_drawing: String = {"skyguard_russia": "strela10", "patriot_russia": "bukm3", "skyguard_ukraine": "roland", "patriot_ukraine": "iris_t_slm"}.get(id, "")
 	var air_path: String = "res://assets/interface/illustrations/" + air_drawing + ".png"
-	if not air_drawing.is_empty() and ResourceLoader.exists(air_path): return load(air_path)
+	if not air_drawing.is_empty() and WebExtras.has(air_path): return load(air_path)
 	# Equipment families must show their real tier model, never a faction flag placeholder.
 	var tier: = EquipmentIdentity.research_tier(id, 1)
 	var supplied: String = tier.get("preview", "")
 	var model_stem: String = str(tier.get("model", "")).trim_suffix(".glb")
 	for candidate in [supplied, model_stem+"_ready.png", model_stem+".png", model_stem+"_preview.png"]:
-		if not candidate.is_empty() and ResourceLoader.exists(candidate): return load(candidate)
+		if not candidate.is_empty() and WebExtras.has(candidate): return load(candidate)
 	var portrait: = "res://assets/interface/portraits/" + id + ".png"
-	if ResourceLoader.exists(portrait): return load(portrait)
+	if WebExtras.has(portrait): return load(portrait)
 	var direct: = UnitVisual.preview_path(id)
-	if not direct.is_empty() and ResourceLoader.exists(direct): return load(direct)
+	if not direct.is_empty() and WebExtras.has(direct): return load(direct)
 	var spec: = EquipmentIdentity.spec(id)
 	var path: = UnitVisual.stand_in_path(id, spec.get("visual_kind", "armor"))
 	for suffix in [".png", "_preview.png"]:
 		var candidate: String = path.trim_suffix(".glb") + suffix
-		if ResourceLoader.exists(candidate): return load(candidate)
+		if WebExtras.has(candidate): return load(candidate)
 	return UnitVisual.preview_texture(id)
 
 static func research_picture(id: String, level: int) -> Texture2D:
@@ -75,11 +75,11 @@ static func research_picture(id: String, level: int) -> Texture2D:
 			if tier_name.begins_with(pair[0]): drawing = pair[1]
 	var tier: Dictionary = EquipmentIdentity.research_tier(id, level)
 	var original_preview: String = str(tier.get("preview", str(tier.get("model", "")).trim_suffix(".glb") + ".png"))
-	if str(tier.get("model", "")).contains("/arsenal/") and ResourceLoader.exists(original_preview):
+	if str(tier.get("model", "")).contains("/arsenal/") and WebExtras.has(original_preview):
 		return load(original_preview)
 	if str(tier.get("model", "")).contains("/nato_"): drawing = str(tier.model).get_file().get_basename().trim_prefix("nato_")
 	var path: String = "res://assets/interface/illustrations/" + drawing + ".png"
-	return load(path) if not drawing.is_empty() and ResourceLoader.exists(path) else equipment_picture(id)
+	return load(path) if not drawing.is_empty() and WebExtras.has(path) else equipment_picture(id)
 
 static func title_font() -> Font:
 	return StrategyTheme.font("RobotoCondensed", 600)

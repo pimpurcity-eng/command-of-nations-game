@@ -208,5 +208,16 @@ func _start_music(name: String) -> void:
 		_music.play())
 	fade.tween_property(_music, "volume_db", MUSIC_DB, 1.2)
 
+## Browsers only allow sound after the first tap (owner 2026-10-14: "no music" on the website).
+## Music asked for before that tap was blocked, so start it again on the first tap.
+var _web_unlocked: = not OS.has_feature("web")
+func _input(event: InputEvent) -> void:
+	if _web_unlocked: return
+	if (event is InputEventScreenTouch or event is InputEventMouseButton) and event.pressed:
+		_web_unlocked = true
+		if music_enabled and not _music_name.is_empty():
+			_music.stop()
+			_music.volume_db = MUSIC_DB
+			_music.play()
 func music_playing() -> String:
 	return _music_name if _music.playing else ""

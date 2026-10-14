@@ -525,7 +525,7 @@ var web_extras: WebExtras
 func _web_extras_loaded() -> void:
 	for unit in units.units:
 		var model: Node3D = unit.node.get_child(0) if unit.node.get_child_count() > 0 else null
-		if model != null and model.get_meta("stand_in_model", false): model.set_meta("visual_level", -1)
+		if model != null and (model.get_meta("stand_in_model", false) or model.get_meta("missing_original_model", false)): model.set_meta("visual_level", -1)
 	if cities != null: cities.sync_buildings()
 func _process(delta: float) -> void :
 	if map != null and rig != null:

@@ -305,6 +305,7 @@ func rail_factor(point: Vector2, country: String) -> float:
 
 func _model(path: String, length: float) -> Node3D:
 	if not _models.has(path):
+		if not WebExtras.has(path): return null  # browser version: still downloading
 		var scene: = load(path) as PackedScene
 		if scene == null: return null
 		var merged: = UnitVisual.merged(scene.instantiate() as Node3D)

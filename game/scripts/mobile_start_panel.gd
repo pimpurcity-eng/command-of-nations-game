@@ -291,7 +291,9 @@ func _chip(text: String) -> Button:
 func _nation_card(id: String, title: String, stripes: Array, subtitle: String) -> Button:
 	var card := Button.new()
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	card.custom_minimum_size.y = 108
+	# Tall enough for the flag, name, doctrine and both country-trait lines (owner 2026-10-14:
+	# the trait lines spilled over the Start Campaign button).
+	card.custom_minimum_size.y = 146
 	card.toggle_mode = true
 	var body := VBoxContainer.new()
 	body.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)

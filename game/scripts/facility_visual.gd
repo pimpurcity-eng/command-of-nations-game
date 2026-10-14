@@ -4,8 +4,10 @@ extends RefCounted
 static func preview(definition: Dictionary, country: String, level: int, rural: bool = false) -> Texture2D:
 	var source: String = path(definition,country,level,rural)
 	var supplied: String = source.trim_suffix(".glb")+"_menu.png"
-	if ResourceLoader.exists(supplied): return load(supplied)
-	return load(AssetRoster.appearance(definition.asset_roster_id,country).preview)
+	if WebExtras.has(supplied): return load(supplied)
+	var fallback: String = str(AssetRoster.appearance(definition.asset_roster_id,country).get("preview", ""))
+	# Browser version: pictures of buildings you don't have yet may still be downloading.
+	return load(fallback) if WebExtras.has(fallback) else null
 
 static func path(definition: Dictionary, country: String, level: int, rural: bool = false) -> String:
 	var tiers: Array = definition.get("rural_model_tiers" if rural else "model_tiers", [])
@@ -13,7 +15,7 @@ static func path(definition: Dictionary, country: String, level: int, rural: boo
 		# Browser version: higher levels arrive with the background download (WebExtras); until
 		# then the building shows its own highest model that is already here.
 		var index: = clampi(level - 1, 0, tiers.size() - 1)
-		while index > 0 and not ResourceLoader.exists(str(tiers[index])): index -= 1
+		while index > 0 and not WebExtras.has(str(tiers[index])): index -= 1
 		return str(tiers[index])
 	return str(AssetRoster.appearance(definition.asset_roster_id, country).get("model", ""))
 
@@ -21,6 +23,11 @@ static func create(definition: Dictionary, country: String, level: int, rural: b
 	var source: String = path(definition, country, level, rural)
 	var assembly: = Node3D.new()
 	assembly.set_meta("facility_model", source)
+	if not WebExtras.has(source):
+		# Browser version: the model is still downloading; an empty marker is replaced as soon as it
+		# arrives (an empty facility_model makes the next city sync rebuild it).
+		assembly.set_meta("facility_model", "")
+		return assembly
 	var original: = (load(source) as PackedScene).instantiate() as Node3D
 	if not source.contains("/buildings_oct12/") and not definition.get("normalize", false):
 		assembly.add_child(original)
