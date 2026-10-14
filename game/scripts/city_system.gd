@@ -3,6 +3,7 @@ extends Node3D
 signal city_selected(city: Dictionary)
 ## Clear space at the actual city destination. Sized for the enlarged map units.
 const GARRISON_PLAZA_RADIUS := 0.54
+const GARRISON_SQUARE := Rect2(-0.65, -0.60, 1.30, 1.25)
 const SHOW_COURTYARD_DISK: = false
 const RESOURCE_WORDS: = {"materials": "METAL", "electronics": "RARE EARTHS", "fuel": "OIL", "food": "FOOD"}
 const RESOURCE_COLOURS: = {"materials": Color("d4dade"), "electronics": Color("d7a8ff"), "fuel": Color("ff9a7a"), "food": Color("9ee07e")}
@@ -243,6 +244,7 @@ func _process(delta: float) -> void :
 		for city in cities:
 			var controller: = controller_of(city)
 			districts[city.id].visible = true
+			set_garrison_visible(districts[city.id], _city_has_garrison(city))
 			for facility in districts[city.id].get_children():
 				if facility.has_meta("building_level"): facility.visible = controller == GameSession.player_country or armies.point_visible(city.point)
 			var captured: bool = controller != city.country.to_lower()
@@ -430,121 +432,113 @@ func _build_city_district(district: Node3D, city: Dictionary, _ink: StandardMate
 		tile.albedo_color = Color(color)
 		tile.roughness = 0.9
 		roof_tiles.append(tile)
-	var taken: Array = []  # [Vector2 position, radius]
-	var avenues: Array = []
-	var avenue_count: = rng.randi_range(4, 6)
-	var base_angle: = rng.randf() * TAU
-	for i in avenue_count:
-		var angle: = base_angle + TAU * i / avenue_count + rng.randf_range(-0.2, 0.2)
-		avenues.append(angle)
-		# Owner review: no extra road strips inside cities; the avenues stay as gaps between
-		# the buildings (streets) without asphalt bands radiating from the centre.
-	# Irregular city outline instead of a perfect circle.
-	var phase_a: = rng.randf() * TAU
-	var phase_b: = rng.randf() * TAU
-	var reach: = func(angle: float) -> float:
-		return 1.0 + 0.10 * sin(2.0 * angle + phase_a) + 0.07 * sin(3.0 * angle + phase_b)
-	var courtyard := CylinderMesh.new()
-	courtyard.top_radius = GARRISON_PLAZA_RADIUS
-	courtyard.bottom_radius = GARRISON_PLAZA_RADIUS
-	courtyard.height = 0.008
-	courtyard.radial_segments = 48
-	# Owner 2026-10-13: "take out the disks" - the centre stays clear for the garrison, but
-	# no pavement disk is drawn (it read as a white disc on phones).
-	if SHOW_COURTYARD_DISK: _city_mesh(district, courtyard, Vector3(0, 0.004, 0), plaza)
-	district.set_meta("garrison_plaza_radius", GARRISON_PLAZA_RADIUS * district.scale.x)
-	taken.append([Vector2.ZERO, GARRISON_PLAZA_RADIUS + 0.025])
-	var place: = func(point: Vector2, radius: float) -> bool:
-		for angle in avenues:
-			var direction: = Vector2(cos(angle), sin(angle))
-			var along: = point.dot(direction)
-			if along > 0 and absf(point.cross(direction)) < radius + 0.022: return false
-		for item in taken:
-			if point.distance_to(item[0]) < radius + item[1] + 0.008: return false
-		taken.append([point, radius])
-		return true
-	var built: = 0
-	# Downtown skyscrapers.
-	var tower_count: = 22 if capital else 13
-	var tallest: = 1.05 if capital else 0.62
-	for attempt in 400:
-		if built >= tower_count: break
-		var r: = rng.randf_range(0.64, 1.04)
-		# Tall skyline behind the courtyard; lower buildings encircle the units.
-		var a: = -PI * 0.5 + rng.randf_range(-0.9, 0.9)
-		var point: = Vector2(cos(a), sin(a)) * r
-		var footprint: = rng.randf_range(0.075, 0.12)
-		if not place.call(point, footprint * 0.72): continue
-		var height: = lerpf(tallest, tallest * 0.35, (r - 0.64) / 0.40) * rng.randf_range(0.7, 1.0)
-		var material: = towers[rng.randi_range(0, towers.size() - 1)]
-		var turn: = base_angle + rng.randf_range(-0.15, 0.15)
-		_city_block(district, Vector3(footprint, height, footprint * rng.randf_range(0.75, 1.0)), Vector3(point.x, 0.02 + height * 0.5, point.y), turn, material)
-		if rng.randf() < 0.45:
-			var crown: = height * rng.randf_range(0.12, 0.25)
-			_city_block(district, Vector3(footprint * 0.66, crown, footprint * 0.66), Vector3(point.x, 0.02 + height + crown * 0.5, point.y), turn, material)
-			if height > tallest * 0.8:
-				_city_block(district, Vector3(0.006, 0.12, 0.006), Vector3(point.x, 0.02 + height + crown + 0.06, point.y), turn, plaza)
-		built += 1
-	# Apartment blocks (long slabs) around downtown.
-	for attempt in 900:
-		if built >= tower_count + 95: break
-		var a: = rng.randf() * TAU
-		var r: float = rng.randf_range(0.62, 1.13) * float(reach.call(a))
-		var point: = Vector2(cos(a), sin(a)) * r
-		var length: = rng.randf_range(0.1, 0.19)
-		if not place.call(point, length * 0.5): continue
-		var height: = rng.randf_range(0.11, 0.23)
-		var facing: = -a + (PI * 0.5 if rng.randf() < 0.6 else 0.0)
-		_city_block(district, Vector3(length, height, 0.060), Vector3(point.x, 0.02 + height * 0.5, point.y), facing, blocks[rng.randi_range(0, blocks.size() - 1)])
-		built += 1
-	# Parks.
-	for attempt in 60:
-		var a: = rng.randf() * TAU
-		var r: float = rng.randf_range(0.72, 1.0) * float(reach.call(a))
-		var point: = Vector2(cos(a), sin(a)) * r
-		if place.call(point, 0.06): _city_block(district, Vector3(0.12, 0.011, 0.1), Vector3(point.x, 0.017, point.y), -a, park)
-	# Low-rise houses with pitched roofs on the outskirts.
-	for attempt in 1400:
-		if built >= tower_count + 95 + 190: break
-		var a: = rng.randf() * TAU
-		var r: float = rng.randf_range(0.80, 1.23) * float(reach.call(a))
-		var point: = Vector2(cos(a), sin(a)) * r
-		if not place.call(point, 0.048): continue
-		var height: = rng.randf_range(0.040, 0.075)
-		var turn: = -a + rng.randf_range(-0.2, 0.2)
-		var width: = rng.randf_range(0.045, 0.068)
-		_city_block(district, Vector3(width, height, width * 0.8), Vector3(point.x, 0.02 + height * 0.5, point.y), turn, houses[rng.randi_range(0, houses.size() - 1)])
-		var pitched: = PrismMesh.new()
-		pitched.size = Vector3(width + 0.006, 0.018, width * 0.8 + 0.006)
-		var batches: Dictionary = district.get_meta("building_batches", {})
-		var roof: StandardMaterial3D = roof_tiles[rng.randi_range(0, roof_tiles.size() - 1)]
-		var key: = roof.get_instance_id()
-		if not batches.has(key):
-			var tool: = SurfaceTool.new()
-			tool.begin(Mesh.PRIMITIVE_TRIANGLES)
-			tool.set_material(roof)
-			batches[key] = tool
-			district.set_meta("building_batches", batches)
-		batches[key].append_from(pitched, 0, Transform3D(Basis(Vector3.UP, turn), Vector3(point.x, 0.02 + height + 0.009, point.y)))
-		built += 1
-	district.set_meta("urban_building_count", built)
-	for tool in district.get_meta("building_batches").values():
-		var visual: = MeshInstance3D.new()
+	# Dense streets and clustered skyline, with a reversible centre rather than a ring.
+	var core := Node3D.new()
+	core.name = "CityCore"
+	district.add_child(core)
+	var square := Node3D.new()
+	square.name = "GarrisonSquare"
+	district.add_child(square)
+	var paving := ShaderMaterial.new()
+	paving.shader = load("res://assets/garrison_paving.gdshader")
+	var surface := PlaneMesh.new()
+	surface.size = GARRISON_SQUARE.size
+	surface.subdivide_width = 10
+	surface.subdivide_depth = 10
+	var centre := GARRISON_SQUARE.get_center()
+	_city_mesh(square, surface, Vector3(centre.x, 0.005, centre.y), paving)
+	square.visible = false
+	var built := 0
+	var permanent := 0
+	var removable := 0
+	# A tight skyline behind the centre remains present while the garrison is visible.
+	for row in range(3):
+		for column in range(5 if capital else 4):
+			var point := Vector2((column - (2.0 if capital else 1.5)) * 0.22, -0.79 - row * 0.20)
+			point += Vector2(rng.randf_range(-0.025,0.025),rng.randf_range(-0.015,0.015))
+			var height := (1.15 if capital else 0.82) * (0.70 + 0.30 * (1.0 - absf(point.x))) * rng.randf_range(0.70,1.0)
+			var width := rng.randf_range(0.13,0.18)
+			_dense_tower(district, point, width, height, towers[(row+column)%towers.size()])
+			built += 1
+			permanent += 1
+	# Regular street blocks densely fill the city, including the removable garrison core.
+	for row in range(-7,8):
+		for column in range(-7,8):
+			var point := Vector2(column * 0.18, row * 0.18)
+			if point.length() > 1.34: continue
+			if point.y < -0.66 and absf(point.x) < 0.57: continue # permanent skyline
+			# Two small avenues run between rows of blocks, rather than cutting a circular void.
+			if column == 0 and row > 4: continue
+			point += Vector2(rng.randf_range(-0.012,0.012),rng.randf_range(-0.012,0.012))
+			var width := rng.randf_range(0.115,0.145)
+			var radius := width * 0.8
+			var inside := GARRISON_SQUARE.grow(radius).has_point(point)
+			var target: Node3D = core if inside else district
+			var central := point.length() < 0.55
+			if central:
+				var height := rng.randf_range(0.30,0.65) * (1.25 if capital else 1.0)
+				_dense_tower(target, point, width, height, towers[rng.randi_range(0,towers.size()-1)])
+			elif point.length() < 1.01:
+				var height := rng.randf_range(0.13,0.25)
+				_city_block(target,Vector3(width,height,width*0.78),Vector3(point.x,0.02+height*0.5,point.y),0,blocks[rng.randi_range(0,blocks.size()-1)])
+				# Roof parapets make apartments read as buildings, not featureless blocks.
+				_city_block(target,Vector3(width*0.9,0.018,width*0.7),Vector3(point.x,0.02+height+0.009,point.y),0,roof_tiles[1])
+			else:
+				var height := rng.randf_range(0.065,0.10)
+				_city_block(target,Vector3(width,height,width*0.78),Vector3(point.x,0.02+height*0.5,point.y),0,houses[rng.randi_range(0,houses.size()-1)])
+				var roof := PrismMesh.new()
+				roof.size = Vector3(width+0.008,0.04,width*0.78+0.008)
+				_city_mesh(target,roof,Vector3(point.x,0.02+height+0.02,point.y),roof_tiles[rng.randi_range(0,roof_tiles.size()-1)])
+			built += 1
+			if inside: removable += 1
+			else: permanent += 1
+	district.set_meta("urban_building_count",built)
+	district.set_meta("permanent_building_count",permanent)
+	district.set_meta("core_building_count",removable)
+	district.set_meta("garrison_plaza_radius",GARRISON_PLAZA_RADIUS*district.scale.x)
+	_finish_city_batches(district,district)
+	_finish_city_batches(core,district)
+	_finish_city_batches(square,district)
+	set_garrison_visible(district,false)
+
+func _dense_tower(parent: Node3D, point: Vector2, width: float, height: float, material: Material) -> void:
+	_city_block(parent,Vector3(width,height,width*0.85),Vector3(point.x,0.02+height*0.5,point.y),0,material)
+	var crown := height*0.16
+	_city_block(parent,Vector3(width*0.70,crown,width*0.60),Vector3(point.x,0.02+height+crown*0.5,point.y),0,material)
+
+func _finish_city_batches(parent: Node3D, district: Node3D) -> void:
+	for tool in parent.get_meta("building_batches",{}).values():
+		var visual := MeshInstance3D.new()
 		tool.index()
 		var original: ArrayMesh = tool.commit()
-		var arrays: = original.surface_get_arrays(0)
+		var arrays := original.surface_get_arrays(0)
 		var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
-
 		for i in vertices.size():
-			var world: = district.position + vertices[i] * district.scale
-			vertices[i].y += (terrain.elevation(Vector2(world.x, world.z)) - district.position.y) / district.scale.y
+			var world := district.position + vertices[i] * district.scale
+			vertices[i].y += (terrain.elevation(Vector2(world.x,world.z))-district.position.y)/district.scale.y
 		arrays[Mesh.ARRAY_VERTEX] = vertices
-		var fitted: = ArrayMesh.new()
-		fitted.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
-		fitted.surface_set_material(0, original.surface_get_material(0))
+		var fitted := ArrayMesh.new()
+		fitted.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,arrays)
+		fitted.surface_set_material(0,original.surface_get_material(0))
 		visual.mesh = fitted
-		district.add_child(visual)
-	district.remove_meta("building_batches")
+		parent.add_child(visual)
+	parent.remove_meta("building_batches")
+
+static func set_garrison_visible(district: Node3D, occupied: bool) -> void:
+	district.get_node("CityCore").visible = not occupied
+	district.get_node("GarrisonSquare").visible = occupied
+	district.set_meta("has_garrison",occupied)
+
+func _city_has_garrison(city: Dictionary) -> bool:
+	if armies == null: return false
+	for unit in armies.units:
+		if unit.health <= 0 or armies.is_naval(unit): continue
+		if armies.air.is_air(unit) and unit.get("flight_mode","grounded") != "grounded": continue
+		if not armies.visible_to_player(unit): continue
+		var at := Vector2(unit.node.position.x,unit.node.position.z)
+		if at.distance_to(city.point) <= UnitSystem.CITY_RADIUS: return true
+	return false
+
 
 
 ## "MOSCOW" -> "M O S C O W", like Call of War city names.
