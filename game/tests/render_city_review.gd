@@ -23,7 +23,7 @@ func run() -> void:
 	scene.add_child(sun)
 	var camera := Camera3D.new()
 	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
-	camera.size = 3.7
+	camera.size = 3.9
 	camera.position = Vector3(0, 4.8, 3.0)
 	scene.add_child(camera)
 	camera.look_at(Vector3(0, 0.15, 0))
@@ -45,13 +45,16 @@ func run() -> void:
 		district.scale = Vector3.ONE * 0.72
 		scene.add_child(district)
 		cities._build_city_district(district,{"name":spec[0],"capital":spec[1]}, StandardMaterial3D.new())
+		for i in 20: await process_frame
+		root.get_texture().get_image().save_png(out.path_join(spec[0]+"_Empty.png"))
+		CitySystem.set_garrison_visible(district,true)
 		var unit := UnitVisual.create(spec[2],Color("77a87a"),spec[3],1)
 		unit.scale = Vector3.ONE * 0.65 * UnitSystem.garrison_scale({"visual_kind":spec[2],"equipment_id":spec[3],"level":1})
 		unit.position.y = 0.018
 		unit.rotation_degrees.y = -35
 		scene.add_child(unit)
 		for i in 30: await process_frame
-		root.get_texture().get_image().save_png(out.path_join(spec[0]+".png"))
+		root.get_texture().get_image().save_png(out.path_join(spec[0]+"_Occupied.png"))
 		print(spec[0], " original=",not unit.get_meta("missing_original_model",false)," bounds=",UnitVisual.model_bounds(unit,0))
 		district.free();unit.free()
 	cities.free();flat.free()
