@@ -106,6 +106,9 @@ func _ready() -> void :
 	# 0.02 / 0.5 caused shadow acne (thin stripes across vehicles on phones).
 	sun.shadow_bias = 0.08
 	sun.shadow_normal_bias = 1.2
+	# Phone browsers (owner 2026-10-14: "game and start screen lagging bad"; the app is fine):
+	# map shadows draw the whole map twice more every frame. Units keep their own ground shadows.
+	if OS.has_feature("web") and UnitSystem.mobile_device(): sun.shadow_enabled = false
 	add_child(sun)
 	var sea: = MeshInstance3D.new()
 	var plane: = PlaneMesh.new()
@@ -486,6 +489,9 @@ func _ready() -> void :
 			visible = not mobile_start.visible
 			get_viewport().disable_3d = mobile_start.visible
 		)
+		# The start screen covers the map: do not draw the 3D map behind it from the very first
+		# frame (owner 2026-10-14: start screen lagging; it was only switched off after a game).
+		get_viewport().disable_3d = mobile_start.visible
 		mobile_start.continue_requested.connect( func():
 			load_game()
 			start_campaign_play()

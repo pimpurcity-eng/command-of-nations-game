@@ -250,8 +250,12 @@ func _spawn(data: Dictionary, point: Vector2, color: Color) -> void :
 	if data.get("visual_kind", "") == "naval" and not sea_navigation.on_sea(point):
 		point = sea_navigation.coastal_destination(point)
 	if data.get("visual_kind", "armor") not in ["fighter", "naval"]:
-		var centre: = navigation.hub_for(navigation.nearest_land(point))
-		point = navigation.on_road(centre, ground_positions(), 0.7, data.get("country", ""))
+		var city = _city_at(point)
+		if city != null:
+			point = _garrison_spot(city as Vector2, str(data.get("stack_id", "")))
+		else:
+			var centre: = navigation.hub_for(navigation.nearest_land(point))
+			point = navigation.on_road(centre, ground_positions(), 0.7, data.get("country", ""))
 	var spec: = [data.name, point, color]
 	var marker: = Node3D.new()
 	marker.position = Vector3(point.x, SEA_WATERLINE, point.y) if data.get("visual_kind", "") == "naval" else footprint_ground(spec[1])
@@ -617,6 +621,23 @@ func restore(state: Array) -> void :
 const CITY_SCALE: = 0.55
 const CITY_RADIUS: = 0.8
 static var _city_points: = PackedVector2Array()
+func _city_at(point: Vector2) -> Variant:
+	if _city_points.is_empty(): _in_city(point)
+	for city_point in _city_points:
+		if point.distance_to(city_point) < CITY_RADIUS: return city_point
+	return null
+## Owner 2026-10-14: "don't put units beside the city, put them in the middle". An army joins its
+## stack's spot; the first army stands in the city centre, further ones close by in the park.
+func _garrison_spot(city: Vector2, stack_id: String) -> Vector2:
+	var stacks_here: Dictionary = {}
+	for unit in units:
+		if is_naval(unit) or air.is_air(unit): continue
+		var at: = Vector2(unit.node.position.x, unit.node.position.z)
+		if at.distance_to(city) >= CITY_RADIUS: continue
+		if not stack_id.is_empty() and unit.stack_id == stack_id: return at
+		stacks_here[unit.stack_id] = true
+	if stacks_here.is_empty(): return city
+	return city + Vector2.from_angle(-PI * 0.25 + PI * 0.5 * (stacks_here.size() - 1)) * 0.28
 func _in_city(point: Vector2) -> bool:
 	if _city_points.is_empty():
 		for city in GeographicProjection.load_cities(): _city_points.append(city.point)
@@ -651,16 +672,20 @@ func _replace_visual(unit: Dictionary, replacement: Node3D) -> void:
 	unit.node.add_child(replacement)
 	unit.node.move_child(replacement, 0)
 
-const CITY_GARRISON_SCALE: = 1.45
+const CITY_GARRISON_SCALE: = 1.15
 const SMALL_GARRISON_READABILITY: = 1.40
 # Owner 2026-10-14: ground armies out in the provinces were too small; cities a little too big.
 const FIELD_GROUND_SCALE: = 1.45
 
 static func garrison_scale(unit: Dictionary) -> float:
-	var small: bool = unit.visual_kind == "infantry"
-	var path: String = EquipmentIdentity.research_tier(unit.equipment_id, int(unit.get("level", 1))).get("model", "")
-	small = small or path.get_file().contains("mortar")
-	return CITY_GARRISON_SCALE * (SMALL_GARRISON_READABILITY if small else 1.0)
+	# Cached per unit and level: this runs every frame for every ground army.
+	var key: = str(unit.get("equipment_id", "")) + ":" + str(unit.get("level", 1))
+	if unit.get("_small_key", "") != key:
+		var small: bool = unit.visual_kind == "infantry"
+		var path: String = EquipmentIdentity.research_tier(unit.equipment_id, int(unit.get("level", 1))).get("model", "")
+		unit["_small"] = small or path.get_file().contains("mortar")
+		unit["_small_key"] = key
+	return CITY_GARRISON_SCALE * (SMALL_GARRISON_READABILITY if unit._small else 1.0)
 static func field_scale(unit: Dictionary) -> float:
 	return garrison_scale(unit) / CITY_GARRISON_SCALE * FIELD_GROUND_SCALE
 func _process(delta: float) -> void :
