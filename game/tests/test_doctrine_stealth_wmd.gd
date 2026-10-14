@@ -65,9 +65,9 @@ func run() -> void:
 	# Weapons of mass destruction.
 	var strategic: StrategicWeapons = rules.strategic
 	var stock: Dictionary = game.production.stockpiles.russia
-	for resource in stock: stock[resource] = 100000.0
+	for resource in stock: stock[resource] = 1000000.0  # a nuke costs 250,000 funds at Call of War scale
 	check(strategic.reason("russia", "nuclear", 5, stock).begins_with("Available on day"), "nuclear missiles unlock late (day 25)")
-	check(strategic.build("russia", "nuclear", 25, stock).is_empty() and stock.funds < 100000.0, "building a nuclear missile costs a fortune")
+	check(strategic.build("russia", "nuclear", 25, stock).is_empty() and stock.funds <= 1000000.0 - 250000.0, "building a nuclear missile costs a fortune")
 	strategic.advance(StrategicWeapons.WEAPONS.nuclear.build + 1.0)
 	check(strategic.count("russia", "nuclear") == 1, "the missile is ready after two days")
 	var target_unit: Dictionary = {}
@@ -97,8 +97,10 @@ func run() -> void:
 	defender.level = 5
 	check(strategic.interception_chance("russia", target, units) > 0.5, "a level-5 SAM battery can shoot nuclear missiles down")
 	# Counters come first: long-range SAMs at level 3 exist well before nuclear missiles.
+	# Checked against the real weapons data (this test otherwise runs on the archived catalogue).
+	var real_catalog: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/equipment.json"))
 	for country in ["russia", "ukraine"]:
-		var sam: Dictionary = EquipmentIdentity.spec("patriot_" + country)
+		var sam: Dictionary = real_catalog.filter(func(f): return f is Dictionary and f.get("id", "") == "patriot_" + country)[0]
 		check(int(sam.research_days[2]) < int(StrategicWeapons.WEAPONS.nuclear.unlock_day) and int(sam.research_days[0]) < int(StrategicWeapons.WEAPONS.chemical.unlock_day), "%s: missile defence (day %d / L3 day %d) comes before chemical (day %d) and nuclear (day %d) missiles" % [country, sam.research_days[0], sam.research_days[2], StrategicWeapons.WEAPONS.chemical.unlock_day, StrategicWeapons.WEAPONS.nuclear.unlock_day])
 	# A big stack survives a nuclear hit; a small army does not.
 	var pool: = StrategicWeapons.new()
