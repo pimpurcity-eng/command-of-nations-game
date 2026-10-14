@@ -344,7 +344,7 @@ func _refresh_units(place: Dictionary) -> void:
 		row.rank.visible = level > 0
 		row.rank.queue_redraw()
 		row.name.text = EquipmentIdentity.research_title(id, shown).trim_suffix(" · upgrade").replace(" · technology", "")
-		row.kind.text = (str(spec.get("research_branch", "")) if not str(spec.get("research_branch", "")).is_empty() else str(spec.get("category", ""))) + (" Lvl. " + str(level) if level > 0 else " · not researched")
+		row.kind.text = (str(spec.get("research_branch", "")) if not str(spec.get("research_branch", "")).is_empty() else str(spec.get("category", ""))) + (" · Level " + EquipmentIdentity.roman_level(level) if level > 0 else " · not researched")
 		for child in row.costs.get_children(): row.costs.remove_child(child); child.queue_free()
 		for resource in ProductionSystem.RESOURCES:
 			if float(spec.cost.get(resource, 0.0)) > 0: row.costs.add_child(CowUI.cost(resource, float(spec.cost.get(resource, 0.0)), stock[resource] >= float(spec.cost.get(resource, 0.0))))
@@ -367,7 +367,7 @@ func _refresh_units(place: Dictionary) -> void:
 			var total: = research.job_duration(job)
 			row.bar.max_value = total
 			row.bar.value = job.progress
-			row.next.text = ("Unlock" if target == 1 else "Lvl. " + str(target)) + "   " + SimulationClock.duration(total - job.progress, research.clock.speed if research.clock != null else 1.0)
+			row.next.text = ("Unlock I" if target == 1 else "Level " + EquipmentIdentity.roman_level(target)) + "   " + SimulationClock.duration(total - job.progress, research.clock.speed if research.clock != null else 1.0)
 			caption.text = "RESEARCHING"
 			row.research.disabled = true
 			continue
@@ -375,7 +375,7 @@ func _refresh_units(place: Dictionary) -> void:
 		row.bar.value = 0.0
 		var reason: = research.reason(id, target)
 		var day: = research.unlock_day(id, target)
-		row.next.text = ("Unlock" if target == 1 else "Lvl. " + str(target)) + "   " + (("Day " + str(day)) if research.day() < day else SimulationClock.duration(research.duration(target)))
+		row.next.text = ("Unlock I" if target == 1 else "Level " + EquipmentIdentity.roman_level(target)) + "   " + (("Day " + str(day)) if research.day() < day else SimulationClock.duration(research.duration(target)))
 		caption.text = "UNLOCK" if target == 1 else "RESEARCH"
 		row.research.disabled = not reason.is_empty()
 		row.research.tooltip_text = reason
@@ -518,7 +518,7 @@ func _process(delta: float) -> void:
 		ui_timer = 0
 		_refresh()
 
-## Call of War rank badge: a dark shield with one chevron per level.
+## Roman level badge; the class name is retained for existing card callers.
 class Chevrons extends Control:
 	var level: = 1
 	func _init() -> void: mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -526,10 +526,12 @@ class Chevrons extends Control:
 		var w: = size.x
 		var h: = size.y
 		draw_colored_polygon(PackedVector2Array([Vector2(0, 0), Vector2(w, 0), Vector2(w, h * 0.78), Vector2(w * 0.5, h), Vector2(0, h * 0.78)]), Color(0.08, 0.08, 0.07, 0.92))
-		var step: = h * 0.15
-		for i in clampi(level, 1, 5):
-			var y: = h * 0.72 - i * step
-			draw_polyline(PackedVector2Array([Vector2(w * 0.18, y + step * 0.6), Vector2(w * 0.5, y), Vector2(w * 0.82, y + step * 0.6)]), Color("f3dc9a"), 2.4)
+		var numeral := EquipmentIdentity.roman_level(clampi(level, 1, 5))
+		var font := CowUI.title_font()
+		var font_size := int(clampf(h * 0.58, 14.0, 23.0))
+		var text_width := font.get_string_size(numeral, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
+		var baseline := (h - font.get_height(font_size)) * 0.5 + font.get_ascent(font_size) - h * 0.05
+		draw_string(font, Vector2((w - text_width) * 0.5, baseline), numeral, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, Color("f3dc9a"))
 
 func message_gold(error: String, done: String) -> void:
 	if message != null: message.text = error if not error.is_empty() else done

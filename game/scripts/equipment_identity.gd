@@ -32,5 +32,7 @@ static func research_tier(id: String, level: int) -> Dictionary:
 	return tiers[clampi(level - 1, 0, tiers.size() - 1)] if not tiers.is_empty() else {}
 static func research_title(id: String, level: int) -> String:
 	return research_tier(id, level).get("name", title(id))
+static func roman_level(level: int) -> String:
+	return ["I", "II", "III", "IV", "V"][level - 1] if level >= 1 and level <= 5 else str(level)
 static func air_defense_range(unit: Dictionary) -> float:
 	return float(research_tier(unit.equipment_id, unit.get("level", 1)).get("range", spec(unit.equipment_id).get("aa_range", 2.4)))

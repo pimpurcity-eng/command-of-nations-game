@@ -187,7 +187,7 @@ func _show_details() -> void :
 	if production.buildings != null and city_picker.selected >= 0:
 		for place in production.cities:
 			if place.name == city_names[city_picker.selected]: multiplier = production.buildings.production_rate(place.id, spec)
-	details.text = spec.name + " · " + SimulationClock.duration(spec.seconds / multiplier) + " at 1x · L" + str(production.research.level(spec.id) if production.research != null else 1) + "\n"
+	details.text = spec.name + " · " + SimulationClock.duration(spec.seconds / multiplier) + " at 1x · Level " + EquipmentIdentity.roman_level(production.research.level(spec.id) if production.research != null else 1) + "\n"
 	for resource in ProductionSystem.RESOURCES:
 		details.text += resource.capitalize() + " " + str(int(float(spec.cost.get(resource, 0.0)))) + "  "
 	for id in spec.get("building_requirements", {}): details.text += "\nRequires " + production.buildings.spec(id).name + " L" + str(int(spec.building_requirements[id]))

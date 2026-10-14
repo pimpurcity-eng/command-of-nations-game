@@ -159,7 +159,7 @@ func setup(system: ResearchSystem, theme: Theme) -> void:
 	var start: = CowUI.action("RESEARCH", "flask")
 	start.pressed.connect(func():
 		var error: = _system().start_upgrade(selected_id, selected_level) if selected_upgrade else _system().start(selected_id, selected_level)
-		message.text = (EquipmentIdentity.title(selected_id) + " level " + str(selected_level) + (" upgrade" if selected_upgrade else "") + " research started") if error.is_empty() else error
+		message.text = (EquipmentIdentity.title(selected_id) + " level " + EquipmentIdentity.roman_level(selected_level) + (" upgrade" if selected_upgrade else "") + " research started") if error.is_empty() else error
 		_refresh())
 	side.add_child(start)
 	detail = {"picture": picture, "name": name_label, "costs": costs, "time": time, "start": start}
@@ -368,7 +368,7 @@ func _build_tree() -> void:
 				message.text = ""
 				_refresh())
 			cell.add_child(card)
-			var caption: = CowUI.label("Level " + str(level), 15, Color("f4ecd8"))
+			var caption: = CowUI.label("Level " + EquipmentIdentity.roman_level(level), 15, Color("f4ecd8"))
 			caption.add_theme_font_override("font", CowUI.title_font())
 			caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			caption.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -457,7 +457,7 @@ func _refresh() -> void:
 			continue
 		var total: = system.job_duration(job)
 		slot.picture.texture = CowUI.research_picture(job.equipment, job.level)
-		slot.text.text = ("Upgrade L" if job.get("refinement",false) else "L") + str(job.level) + " · " + SimulationClock.duration(total - job.progress, system.clock.speed)
+		slot.text.text = ("Upgrade " if job.get("refinement",false) else "Level ") + EquipmentIdentity.roman_level(job.level) + " · " + SimulationClock.duration(total - job.progress, system.clock.speed)
 		slot.bar.max_value = total
 		slot.bar.value = job.progress
 		for connection in slot.cancel.pressed.get_connections(): slot.cancel.pressed.disconnect(connection.callable)
@@ -486,16 +486,16 @@ func _refresh() -> void:
 		cell.card.modulate = Color.WHITE
 	# Selected technology.
 	detail.picture.texture = CowUI.research_picture(selected_id, selected_level)
-	detail.name.text = EquipmentIdentity.title(selected_id) + " · Level " + str(selected_level) + ("  (+" + str((selected_level - 1) * 12) + "% damage)" if selected_level > 1 else "")
+	detail.name.text = EquipmentIdentity.title(selected_id) + " · Level " + EquipmentIdentity.roman_level(selected_level) + ("  (+" + str((selected_level - 1) * 12) + "% damage)" if selected_level > 1 else "")
 	var tier: Dictionary = EquipmentIdentity.research_tier(selected_id, selected_level)
 	if not tier.is_empty():
-		detail.name.text = EquipmentIdentity.research_title(selected_id, selected_level) + " · L" + str(selected_level) + " · Day " + str(system.unlock_day(selected_id, selected_level))
+		detail.name.text = EquipmentIdentity.research_title(selected_id, selected_level) + " · Level " + EquipmentIdentity.roman_level(selected_level) + " · Day " + str(system.unlock_day(selected_id, selected_level))
 		if tier.has("range") and tier.has("damage"):
 			detail.name.text += "\n" + tier.get("improvement", "") + " · Range " + str(tier.range) + " · AA " + str(tier.damage) + "\n" + ("Jets, bombers, helicopters · cannot see drones" if selected_id.begins_with("patriot") else "Drones, helicopters, attacking jets · cannot reach bombers") + " · " + EquipmentIdentity.spec(selected_id).get("model_status", "")
 		else:
 			detail.name.text += "\n" + tier.get("improvement", "")
 	if selected_upgrade:
-		detail.name.text = EquipmentIdentity.research_title(selected_id,selected_level)+" · Upgrade · Day "+str(system.upgrade_day(selected_id,selected_level))+"\n+6% combat effectiveness for this model · applies nationally"
+		detail.name.text = EquipmentIdentity.research_title(selected_id,selected_level)+" · Upgrade "+EquipmentIdentity.roman_level(selected_level)+" · Day "+str(system.upgrade_day(selected_id,selected_level))+"\n+6% combat effectiveness for this model · applies nationally"
 	for child in detail.costs.get_children(): detail.costs.remove_child(child);child.queue_free()
 	var caption: Label = detail.start.get_meta("caption")
 	var state: = _state(selected_id, selected_level,selected_upgrade)

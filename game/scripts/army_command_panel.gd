@@ -78,7 +78,7 @@ func open_split(units: UnitSystem) -> void :
 	var group: = units.stacks.members(units.units[units.selected])
 	for unit in group:
 		var check: = CheckBox.new()
-		check.text = EquipmentIdentity.research_title(unit.equipment_id, unit.get("level", 1)) + " · L" + str(unit.level) + " · " + str(int(unit.health)) + " HP"
+		check.text = EquipmentIdentity.research_title(unit.equipment_id, unit.get("level", 1)) + " · " + EquipmentIdentity.roman_level(unit.level) + " · " + str(int(unit.health)) + " HP"
 		check.custom_minimum_size.y = 48
 		check.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		check.icon = CowUI.research_picture(unit.equipment_id, unit.get("level", 1))

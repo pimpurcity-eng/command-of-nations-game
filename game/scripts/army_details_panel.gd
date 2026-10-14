@@ -130,6 +130,15 @@ func open(armies: UnitSystem, terrain: StrategicMap) -> void :
 	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	picture.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	hero.add_child(picture)
+	var level_badge := CityPanel.Chevrons.new()
+	level_badge.level = int(top.get("level", 1))
+	level_badge.anchor_left = 1.0
+	level_badge.anchor_right = 1.0
+	level_badge.offset_left = -64
+	level_badge.offset_right = -12
+	level_badge.offset_top = 12
+	level_badge.offset_bottom = 72
+	hero.add_child(level_badge)
 	var band: = PanelContainer.new()
 	band.add_theme_stylebox_override("panel", CowUI.box(Color(0, 0, 0, 0.72), 0, Color(0, 0, 0, 0), 0, 10))
 	band.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
@@ -231,7 +240,7 @@ func open(armies: UnitSystem, terrain: StrategicMap) -> void :
 		unit_name.clip_text = true
 		unit_name.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		name_box.add_child(unit_name)
-		name_box.add_child(CowUI.label("Level " + str(int(member.get("level", 1))) + " · " + str(EquipmentIdentity.spec(member.equipment_id).get("research_branch", "")), 14, Color("bfb8a6")))
+		name_box.add_child(CowUI.label("Level " + EquipmentIdentity.roman_level(int(member.get("level", 1))) + " · " + str(EquipmentIdentity.spec(member.equipment_id).get("research_branch", "")), 14, Color("bfb8a6")))
 		for value in ["%.0f / 100" % member.health, "%.1f" % strength(member)]:
 			var cell: = CowUI.label(value, 17, Color("efe6cf"))
 			cell.custom_minimum_size.x = 110

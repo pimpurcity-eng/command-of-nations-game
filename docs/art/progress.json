@@ -682,6 +682,395 @@
       "sha": "ffeb93a4553fb67cfbae8f7bb938c1bc8362345e",
       "width": 512,
       "height": 512
+    },
+    {
+      "key": "russia_tu95ms",
+      "name": "Tu-95MS",
+      "path": "game/assets/interface/unit_art/russia_tu95ms.webp",
+      "model": "res://assets/library/arsenal/russia_tu95ms.glb",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_aquila_eb1",
+      "name": "Aquila EB-1",
+      "model": "res://assets/library/arsenal/euro_aquila_eb1.glb",
+      "path": "game/assets/interface/unit_art/euro_aquila_eb1.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match its detailed realistic hand-painted military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: the game's fictional Aquila EB-1 European strategic bomber, believable modern low-observable delta-wing aircraft (bomber equipment). Scene: in flight over distant woodland, softly defocused cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies only central 65% of image; keep at least 15% clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate, with no part touching image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_vulcan",
+      "name": "Vulcan",
+      "model": "res://assets/library/arsenal/euro_vulcan.glb",
+      "path": "game/assets/interface/unit_art/euro_vulcan.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match its detailed realistic hand-painted military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: Avro Vulcan delta-wing bomber, distinctive very broad triangular wing and blended fuselage, restrained green/grey camouflage (bomber equipment). Scene: in flight over distant woodland, softly defocused cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies only central 65% of image; keep at least 15% clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate, with no part touching image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_pzh2000",
+      "name": "PzH 2000",
+      "model": "res://assets/library/arsenal/euro_pzh2000.glb",
+      "path": "game/assets/interface/unit_art/euro_pzh2000.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match its detailed realistic hand-painted military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: PzH 2000 (artillery equipment). Scene: on subdued grass/dirt clearing with softly defocused woodland and cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies only central 65% of image; keep at least 15% clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate, with no part touching image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_2s35_koalitsiya",
+      "name": "2S35 Koalitsiya-SV",
+      "model": "res://assets/library/arsenal/russia_2s35_koalitsiya.glb",
+      "path": "game/assets/interface/unit_art/russia_2s35_koalitsiya.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match its detailed realistic hand-painted military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: 2S35 Koalitsiya-SV (artillery equipment). Scene: on subdued grass/dirt clearing with softly defocused woodland and cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies only central 65% of image; keep at least 15% clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate, with no part touching image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_tu160",
+      "name": "Tu-160",
+      "model": "res://assets/library/arsenal/russia_tu160.glb",
+      "path": "game/assets/interface/unit_art/russia_tu160.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match its detailed realistic hand-painted military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: Tupolev Tu-160 strategic bomber, white/light grey slender fuselage and broad swept variable-sweep wings, four rear jet engines (bomber equipment). Scene: in flight over distant woodland, softly defocused cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies only central 65% of image; keep at least 15% clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate, with no part touching image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_boxer",
+      "name": "Boxer",
+      "model": "res://assets/library/arsenal/euro_boxer.glb",
+      "path": "game/assets/interface/unit_art/euro_boxer.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match its detailed realistic hand-painted military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: Boxer eight-wheeled armored personnel carrier, large boxy modular hull, rugged tires and woodland camouflage (ifv equipment). Scene: on subdued grass/dirt clearing with softly defocused woodland and cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies only central 65% of image; keep at least 15% clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate, with no part touching image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_bm30_smerch",
+      "name": "BM-30 Smerch",
+      "model": "res://assets/library/arsenal/russia_bm30_smerch.glb",
+      "path": "game/assets/interface/unit_art/russia_bm30_smerch.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: BM-30 Smerch (missile_launcher equipment). Scene: in a subdued grass/dirt clearing, softly defocused woodland and cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_europuls",
+      "name": "EuroPULS",
+      "model": "res://assets/library/arsenal/euro_europuls.glb",
+      "path": "game/assets/interface/unit_art/euro_europuls.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: EuroPULS (missile_launcher equipment). Scene: in a subdued grass/dirt clearing, softly defocused woodland and cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_ka52",
+      "name": "Ka-52",
+      "model": "res://assets/library/arsenal/russia_ka52.glb",
+      "path": "game/assets/interface/unit_art/russia_ka52.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: Ka-52 (helicopter equipment). Scene: in flight above distant woodland, against softly defocused cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_watchkeeper",
+      "name": "Watchkeeper",
+      "model": "res://assets/library/arsenal/euro_watchkeeper.glb",
+      "path": "game/assets/interface/unit_art/euro_watchkeeper.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: Watchkeeper (drone equipment). Scene: in flight above distant woodland, against softly defocused cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_rm70_vampire",
+      "name": "RM-70 Vampire \u00b7 modernization",
+      "model": "res://assets/library/arsenal/euro_rm70_vampire.glb",
+      "path": "game/assets/interface/unit_art/euro_rm70_vampire.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: RM-70 Vampire (missile_launcher equipment). Scene: in a subdued grass/dirt clearing, softly defocused woodland and cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_gripen_e",
+      "name": "Gripen E \u00b7 sensors",
+      "model": "res://assets/library/arsenal/euro_gripen_e.glb",
+      "path": "game/assets/interface/unit_art/euro_gripen_e.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: Gripen E (fighter equipment). Scene: in flight above distant woodland, against softly defocused cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_su57",
+      "name": "Su-57",
+      "model": "res://assets/library/arsenal/russia_su57.glb",
+      "path": "game/assets/interface/unit_art/russia_su57.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: Su-57 (fighter equipment). Scene: in flight above distant woodland, against softly defocused cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_sarmat_silo",
+      "name": "Sarmat silo",
+      "model": "res://assets/library/arsenal/russia_sarmat_silo.glb",
+      "path": "game/assets/interface/unit_art/russia_sarmat_silo.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: ground-level concrete circular intercontinental missile silo with its protective heavy lid opened and an upright missile visible within the shaft (silo equipment). Scene: in a subdued grass/dirt clearing, softly defocused woodland and cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_sentinel_sr",
+      "name": "Sentinel SR",
+      "model": "res://assets/library/arsenal/euro_sentinel_sr.glb",
+      "path": "game/assets/interface/unit_art/euro_sentinel_sr.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: the game's fictional Sentinel SR short-range missile launcher, a modern four-wheel military vehicle carrying two enclosed launch tubes (missile_launcher equipment). Scene: in a subdued grass/dirt clearing, softly defocused woodland and cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_su35s",
+      "name": "Su-35S",
+      "model": "res://assets/library/arsenal/russia_su35s.glb",
+      "path": "game/assets/interface/unit_art/russia_su35s.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: Su-35S (fighter equipment). Scene: in flight above distant woodland, against softly defocused cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_bm27_uragan",
+      "name": "BM-27 Uragan",
+      "model": "res://assets/library/arsenal/russia_bm27_uragan.glb",
+      "path": "game/assets/interface/unit_art/russia_bm27_uragan.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: BM-27 Uragan (missile_launcher equipment). Scene: in a subdued grass/dirt clearing, softly defocused woodland and cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_mi28n",
+      "name": "Mi-28N",
+      "model": "res://assets/library/arsenal/russia_mi28n.glb",
+      "path": "game/assets/interface/unit_art/russia_mi28n.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: Mi-28N (helicopter equipment). Scene: in flight above distant woodland, against softly defocused cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_kamaz5350_supply",
+      "name": "KamAZ-5350 supply",
+      "model": "res://assets/library/arsenal/russia_kamaz5350_supply.glb",
+      "path": "game/assets/interface/unit_art/russia_kamaz5350_supply.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: KamAZ-5350 supply (supply equipment). Scene: in a subdued grass/dirt clearing, softly defocused woodland and cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_imr3m_engineer",
+      "name": "IMR-3M engineer",
+      "model": "res://assets/library/arsenal/russia_imr3m_engineer.glb",
+      "path": "game/assets/interface/unit_art/russia_imr3m_engineer.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: IMR-3M engineer (engineer equipment). Scene: in a subdued grass/dirt clearing, softly defocused woodland and cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_mtu72_bridgelayer",
+      "name": "MTU-72 bridgelayer",
+      "model": "res://assets/library/arsenal/russia_mtu72_bridgelayer.glb",
+      "path": "game/assets/interface/unit_art/russia_mtu72_bridgelayer.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: MTU-72 bridgelayer (bridge equipment). Scene: in a subdued grass/dirt clearing, softly defocused woodland and cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_man_hx77_supply",
+      "name": "MAN HX77 supply",
+      "model": "res://assets/library/arsenal/euro_man_hx77_supply.glb",
+      "path": "game/assets/interface/unit_art/euro_man_hx77_supply.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: MAN HX77 supply (supply equipment). Scene: in a subdued grass/dirt clearing, softly defocused woodland and cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_leguan_bridgelayer",
+      "name": "Leguan bridgelayer",
+      "model": "res://assets/library/arsenal/euro_leguan_bridgelayer.glb",
+      "path": "game/assets/interface/unit_art/euro_leguan_bridgelayer.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: Leguan bridgelayer (bridge equipment). Scene: in a subdued grass/dirt clearing, softly defocused woodland and cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_buffel_recovery",
+      "name": "B\u00fcffel recovery",
+      "model": "res://assets/library/arsenal/euro_buffel_recovery.glb",
+      "path": "game/assets/interface/unit_art/euro_buffel_recovery.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: B\u00fcffel recovery (recovery equipment). Scene: in a subdued grass/dirt clearing, softly defocused woodland and cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_d30_howitzer",
+      "name": "D-30 howitzer",
+      "model": "res://assets/library/arsenal/russia_d30_howitzer.glb",
+      "path": "game/assets/interface/unit_art/russia_d30_howitzer.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: D-30 howitzer (artillery equipment). Scene: in a subdued grass/dirt clearing, softly defocused woodland and cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_l118_lightgun",
+      "name": "L118 light gun",
+      "model": "res://assets/library/arsenal/euro_l118_lightgun.glb",
+      "path": "game/assets/interface/unit_art/euro_l118_lightgun.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: L118 light gun (artillery equipment). Scene: in a subdued grass/dirt clearing, softly defocused woodland and cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_fh70",
+      "name": "FH70",
+      "model": "res://assets/library/arsenal/euro_fh70.glb",
+      "path": "game/assets/interface/unit_art/euro_fh70.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: FH70 (artillery equipment). Scene: in a subdued grass/dirt clearing, softly defocused woodland and cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_il76md",
+      "name": "Il-76MD transport",
+      "model": "res://assets/library/arsenal/russia_il76md.glb",
+      "path": "game/assets/interface/unit_art/russia_il76md.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: Il-76MD transport (transport equipment). Scene: in flight above distant woodland, against softly defocused cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_tempest_gcap",
+      "name": "Tempest / GCAP",
+      "model": "res://assets/library/arsenal/euro_tempest_gcap.glb",
+      "path": "game/assets/interface/unit_art/euro_tempest_gcap.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: Tempest / GCAP (fighter equipment). Scene: in flight above distant woodland, against softly defocused cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_a50u",
+      "name": "A-50U airborne radar",
+      "model": "res://assets/library/arsenal/russia_a50u.glb",
+      "path": "game/assets/interface/unit_art/russia_a50u.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: A-50U airborne radar (radar_aircraft equipment). Scene: in flight above distant woodland, against softly defocused cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_yak130",
+      "name": "Yak-130",
+      "model": "res://assets/library/arsenal/russia_yak130.glb",
+      "path": "game/assets/interface/unit_art/russia_yak130.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: Yak-130 (fighter equipment). Scene: in flight above distant woodland, against softly defocused cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_t80bvm",
+      "name": "T-80BVM",
+      "model": "res://assets/library/arsenal/russia_t80bvm.glb",
+      "path": "game/assets/interface/unit_art/russia_t80bvm.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: T-80BVM (armor equipment). Scene: in a subdued grass/dirt clearing, softly defocused woodland and cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "t90m_russian",
+      "name": "T-90M Proryv",
+      "model": "res://assets/library/t90m_russian.glb",
+      "path": "game/assets/interface/unit_art/t90m_russian.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: T-90M Proryv (armor equipment). Scene: in a subdued grass/dirt clearing, softly defocused woodland and cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_leclerc",
+      "name": "Leclerc",
+      "model": "res://assets/library/arsenal/euro_leclerc.glb",
+      "path": "game/assets/interface/unit_art/euro_leclerc.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: Leclerc (armor equipment). Scene: in a subdued grass/dirt clearing, softly defocused woodland and cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "abrams_european",
+      "name": "M1A2 Abrams",
+      "model": "res://assets/library/abrams_european.glb",
+      "path": "game/assets/interface/unit_art/abrams_european.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: M1A2 Abrams (armor equipment). Scene: in a subdued grass/dirt clearing, softly defocused woodland and cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "russia_bastion_p_launcher",
+      "name": "P-800 Oniks",
+      "model": "res://assets/library/arsenal/russia_bastion_p_launcher.glb",
+      "path": "game/assets/interface/unit_art/russia_bastion_p_launcher.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: P-800 Oniks (missile_launcher equipment). Scene: in a subdued grass/dirt clearing, softly defocused woodland and cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_kf51_panther",
+      "name": "KF51 Panther",
+      "model": "res://assets/library/arsenal/euro_kf51_panther.glb",
+      "path": "game/assets/interface/unit_art/euro_kf51_panther.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: KF51 Panther (armor equipment). Scene: in a subdued grass/dirt clearing, softly defocused woodland and cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "key": "euro_nsm_coastal_launcher",
+      "name": "NSM",
+      "model": "res://assets/library/arsenal/euro_nsm_coastal_launcher.glb",
+      "path": "game/assets/interface/unit_art/euro_nsm_coastal_launcher.webp",
+      "prompt": "Use case: stylized-concept. ONE standalone square game-menu portrait for Warfront Mandate. Input image is STYLE REFERENCE ONLY. Match detailed realistic military catalogue illustration, convincing proportions, tactile weathered materials, restrained natural colours and soft late-afternoon light. Subject: NSM (missile_launcher equipment). Scene: in a subdued grass/dirt clearing, softly defocused woodland and cloudy sky. SINGLE complete subject in three-quarter side view. Zoom out: entire subject occupies central 65% of image, with generous clear margin on ALL FOUR edges. All extremities, wheels, barrels, rotors, wings, bow and stern fully visible as appropriate; nothing touches image edge. Readable at 128 pixels. No text, labels, flags, insignia, ranks, borders, UI, diagrams, watermark, collage, explosions or active firing. Single coherent illustration.",
+      "generated_with": "built-in Imagegen",
+      "width": 512,
+      "height": 512
     }
   ],
   "failed": []
