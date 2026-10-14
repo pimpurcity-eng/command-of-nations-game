@@ -88,9 +88,9 @@ func _ready() -> void :
 	settings.ambient_light_color = Color("b8c8d5")
 	environment.environment = settings
 	add_child(environment)
-	# Phone browsers (owner 2026-10-14: "WebGL context lost") have far less graphics memory than
-	# the app: no MSAA, 3D at 75% resolution (menus stay sharp) and a smaller shadow map.
-	if OS.has_feature("web") and UnitSystem.mobile_device():
+	# Phones (owner 2026-10-14: "WebGL context lost" in the browser, "lagging really bad" in the
+	# app): no MSAA, 3D at 75% resolution (menus stay sharp) and a smaller shadow map.
+	if UnitSystem.mobile_device():
 		get_viewport().msaa_3d = Viewport.MSAA_DISABLED
 		get_viewport().scaling_3d_scale = 0.75
 		RenderingServer.directional_shadow_atlas_set_size(2048, true)
@@ -499,7 +499,7 @@ func _ready() -> void :
 			start_campaign_play()
 			mobile_start.hide())
 		mobile_start.online_requested.connect(join_online)
-		mobile_start.test_requested.connect(func():
+		mobile_start.test_requested.connect(func(scenario: String):
 			GameSession.player_country = mobile_start.selected_country()
 			# The weapons range shows every model; in the browser wait for the weapons download.
 			if web_extras != null: web_extras.start()
@@ -507,14 +507,21 @@ func _ready() -> void :
 				mobile_start.set_progress(100.0 * web_extras.fraction(), "Downloading weapons")
 				await get_tree().process_frame
 			GameSession.weapons_test = true
-			await populate_weapons_test(true)
+			await populate_weapons_test(true, scenario)
 			apply_player_country()
 			rig.target = Vector3(0, 0, 5)
 			rig.distance = 26
+			if scenario != "all":
+				# Frame the two sides of this test map.
+				var middle: = Vector2.ZERO
+				for unit in units.units: middle += Vector2(unit.node.position.x, unit.node.position.z)
+				middle /= maxf(1.0, units.units.size())
+				rig.target = Vector3(middle.x, 0, middle.y)
+				rig.distance = 13
 			rig._snap(1.0)
 			clock.paused = true
 			refresh_hud()
-			hud.show_status("All original weapons · real campaign map · tap your armies to control them; enemy units can be inspected. Tap Play to move.")
+			hud.show_status(WeaponScenarios.title(scenario) + " · tap your armies to control them; enemy units can be inspected. Tap Play to move.")
 			mobile_start.hide())
 	boot_finished = true
 	boot_ready.emit()
@@ -1116,10 +1123,12 @@ func populate_campaign_forces(staged: bool = false) -> void:
 				boot_progress.emit(spawned, count_total)
 				await get_tree().process_frame
 	boot_progress.emit(count_total, count_total)
+	# The start plane's province airport (set above) must be drawn under it.
+	if cities != null: cities.sync_buildings()
 	units.fog_enabled = true
 	fog.refresh(true)
 
-func populate_weapons_test(show_progress: bool = false) -> void:
+func populate_weapons_test(show_progress: bool = false, scenario: String = "all") -> void:
 	var total: Dictionary = {}
 	if show_progress:
 		for family in EquipmentIdentity.catalog:
@@ -1131,8 +1140,19 @@ func populate_weapons_test(show_progress: bool = false) -> void:
 	var counts: Dictionary = {}
 	var occupied_sea: Array[Vector2] = []
 	var occupied_air: Array[Vector2] = []
+	var focused: = scenario != "all"
+	# A focused test map lines the two sides up face to face: Ukraine's city nearest Moscow and
+	# the Russian city nearest that one (Kharkiv and Belgorod).
+	var front: Dictionary = {}
+	if focused:
+		var moscow: Dictionary = buildings.capital("russia")
+		for city in city_data:
+			if city.country.to_lower() == "ukraine" and not moscow.is_empty() and (front.get("ukraine", {}).is_empty() or city.point.distance_to(moscow.point) < front.ukraine.point.distance_to(moscow.point)): front.ukraine = city
+		for city in city_data:
+			if city.country.to_lower() == "russia" and front.has("ukraine") and (front.get("russia", {}).is_empty() or city.point.distance_to(front.ukraine.point) < front.russia.point.distance_to(front.ukraine.point)): front.russia = city
 	for family in EquipmentIdentity.catalog:
 		if family.get("retired", false): continue
+		if not WeaponScenarios.includes(scenario, family): continue
 		var tiers: Array = family.get("research_tiers", [])
 		# Archived campaigns predate tier models; retain their one-army-per-family setup.
 		var tiered: bool = not tiers.is_empty()
@@ -1146,12 +1166,20 @@ func populate_weapons_test(show_progress: bool = false) -> void:
 			var bases: Array = city_data.filter(func(city: Dictionary):
 				return city.country.to_lower() == family.country and (kind != "naval" or city.has("naval_spawn")))
 			if bases.is_empty(): continue
-			var key: String = family.country + ":" + kind
+			# A focused test map lines each side up behind its city nearest the enemy capital.
+			var enemy: Dictionary = front.get("ukraine" if family.country == "russia" else "russia", {})
+			if focused and not enemy.is_empty():
+				bases.sort_custom(func(a: Dictionary, b: Dictionary): return a.point.distance_to(enemy.point) < b.point.distance_to(enemy.point))
+				bases = bases.slice(0, 1)
+			var key: String = family.country + ":" + (scenario if focused else kind)
 			var number: int = counts.get(key, 0)
 			counts[key] = number + 1
 			var base: Dictionary = bases[number % bases.size()]
 			var slot: int = number / bases.size()
 			var point: Vector2 = base.point + Vector2(-2.0 + float(slot % 4) * 1.5, -1.8 - float(slot / 4) * 1.5)
+			if focused and not enemy.is_empty():
+				var back: Vector2 = (base.point - enemy.point).normalized()
+				point = base.point + back.orthogonal() * (-2.25 + float(slot % 4) * 1.5) + back * (1.8 + float(slot / 4) * 1.5)
 			if kind == "fighter":
 				point = weapons_test_air_slot(base.point, family.country, occupied_air, float(family.get("air_range",14.0)))
 				occupied_air.append(point)

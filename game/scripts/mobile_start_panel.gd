@@ -3,7 +3,7 @@ extends CanvasLayer
 ## Shared command centre for the native app and browser game.
 signal continue_requested
 signal fresh_requested
-signal test_requested
+signal test_requested(scenario: String)
 signal online_requested
 signal account_requested
 const GOLD := Color("e2b866")
@@ -19,6 +19,7 @@ var content: VBoxContainer
 var artwork: TextureRect
 var fresh_button: Button
 var test_button: Button
+var range_picker: GridContainer
 var progress: ProgressBar
 var loading_label: Label
 var branding: VBoxContainer
@@ -267,11 +268,26 @@ func _build_home() -> void:
 	online_button = _button("ONLINE MATCH")
 	online_button.pressed.connect(func(): request_start("online"))
 	test_button = _button("WEAPONS RANGE")
-	test_button.pressed.connect(func(): request_start("test"))
+	test_button.pressed.connect(func():
+		range_picker.visible = not range_picker.visible
+		if range_picker.visible: scroll.ensure_control_visible.call_deferred(range_picker))
 	for button in [online_button, test_button]:
 		button.add_theme_font_size_override("font_size", 20)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		secondary.add_child(button)
+	# Owner 2026-10-14: separate test maps per kind of unit ("too much if they're all in one").
+	range_picker = GridContainer.new()
+	range_picker.columns = 2
+	range_picker.add_theme_constant_override("h_separation", 10)
+	range_picker.add_theme_constant_override("v_separation", 10)
+	range_picker.visible = false
+	play.add_child(range_picker)
+	for scenario in WeaponScenarios.LIST:
+		var choice: = _button(str(scenario.title).to_upper())
+		choice.add_theme_font_size_override("font_size", 18)
+		choice.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		choice.pressed.connect(func(): range_picker.hide(); request_start("test:" + str(scenario.id)))
+		range_picker.add_child(choice)
 	play.add_child(_label("Offline against AI · Online with an account", 17, MUTED))
 	loading_label = _label("Ready to command", 18, MUTED)
 	play.add_child(loading_label)
@@ -478,10 +494,13 @@ func request_start(mode: String) -> void:
 	if loading: return
 	begin_loading()
 	await get_tree().process_frame
+	if mode.begins_with("test:"):
+		test_requested.emit(mode.get_slice(":", 1))
+		return
 	match mode:
 		"continue": continue_requested.emit()
 		"fresh": fresh_requested.emit()
-		"test": test_requested.emit()
+		"test": test_requested.emit("all")
 		"online": online_requested.emit()
 func cancel_loading(message: String) -> void:
 	loading = false

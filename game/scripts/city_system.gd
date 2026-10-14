@@ -208,6 +208,8 @@ func sync_province_buildings(system: BuildingSystem) -> void:
 				visual.name = kind
 				var angle: = TAU*index/ProvinceConstruction.ALLOWED.size()
 				visual.position = Vector3(cos(angle)*0.28,0.03,sin(angle)*0.28)
+				# Aircraft land on the province point, so its airfield sits right under them.
+				if kind == "airbase": visual.position = Vector3(0, 0.03, 0)
 				if not visual.get_meta("original_colors", false): _paint_infrastructure(visual)
 				group.add_child(visual)
 			visual.scale = Vector3.ONE*(0.13+0.015*(current-1))
@@ -440,13 +442,41 @@ func _build_city_district(district: Node3D, city: Dictionary, _ink: StandardMate
 	square.name = "GarrisonSquare"
 	district.add_child(square)
 	var paving := ShaderMaterial.new()
-	paving.shader = load("res://assets/garrison_paving.gdshader")
+	paving.shader = load("res://assets/garrison_park.gdshader")
+	paving.set_shader_parameter("half_size", GARRISON_SQUARE.size * 0.5)
 	var surface := PlaneMesh.new()
 	surface.size = GARRISON_SQUARE.size
 	surface.subdivide_width = 10
 	surface.subdivide_depth = 10
 	var centre := GARRISON_SQUARE.get_center()
 	_city_mesh(square, surface, Vector3(centre.x, 0.005, centre.y), paving)
+	# Park trees along the edge, clear of the middle where the garrison stands.
+	var leaves: = StandardMaterial3D.new()
+	leaves.albedo_color = Color("3f6a32")
+	leaves.roughness = 1.0
+	var trunk: = StandardMaterial3D.new()
+	trunk.albedo_color = Color("5a4632")
+	var park_rng: = RandomNumberGenerator.new()
+	park_rng.seed = city.name.hash() + 7
+	for i in 22:
+		var t: = float(i) / 22.0 * 4.0
+		var side: = int(t)
+		var along: = fmod(t, 1.0) * 2.0 - 1.0
+		var edge: = [Vector2(along, -1), Vector2(1, along), Vector2(-along, 1), Vector2(-1, -along)][side] as Vector2
+		var spot: = centre + edge * (GARRISON_SQUARE.size * 0.5 - Vector2(0.06, 0.06))
+		spot += Vector2(park_rng.randf_range(-0.015, 0.015), park_rng.randf_range(-0.015, 0.015))
+		var stem: = CylinderMesh.new()
+		stem.top_radius = 0.006
+		stem.bottom_radius = 0.008
+		stem.height = 0.04
+		_city_mesh(square, stem, Vector3(spot.x, 0.025, spot.y), trunk)
+		var crown: = SphereMesh.new()
+		var r: = park_rng.randf_range(0.032, 0.045)
+		crown.radius = r
+		crown.height = r * 2.0
+		crown.radial_segments = 8
+		crown.rings = 4
+		_city_mesh(square, crown, Vector3(spot.x, 0.045 + r * 0.8, spot.y), leaves)
 	square.visible = false
 	var built := 0
 	var permanent := 0
