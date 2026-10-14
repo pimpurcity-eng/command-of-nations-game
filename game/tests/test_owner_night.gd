@@ -36,5 +36,12 @@ func run() -> void:
 	game.units.fog_enabled = false
 	for i in 60: game.clock.paused = false; game.clock.advance(60.0)
 	check(theirs[0].health == before, "no fighting between armies a city apart (%.0f%%)" % theirs[0].health)
+	# Country traits (owner 2026-10-14): one strength, one weakness, some unlock early.
+	var ru: Dictionary = EquipmentIdentity.spec("infantry_russia")
+	var ua: Dictionary = EquipmentIdentity.spec("infantry_ukraine")
+	check(float(ru.cost.funds) < float(ua.cost.funds), "Russian units are cheaper (%d vs %d)" % [ru.cost.funds, ua.cost.funds])
+	check(game.research.rate("russia") < game.research.rate("ukraine"), "but Russia researches slower")
+	check(int(EquipmentIdentity.spec("drones_ukraine").cost.funds) < int(EquipmentIdentity.spec("drones_russia").cost.funds) / 0.85, "Ukrainian drones are cheaper")
+	check(not CountryTraits.summary("china").is_empty() and not CountryTraits.summary("united_states").is_empty() and not CountryTraits.summary("france").is_empty(), "China, America and Europe have traits ready")
 	print("RESULT failures=", failures)
 	quit(1 if failures > 0 else 0)

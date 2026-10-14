@@ -455,7 +455,8 @@ func _refresh() -> void:
 			var spec: Dictionary = buildings.economy.equipment(job.equipment)
 			var seconds: float = (spec.seconds - job.progress) / buildings.production_rate(city_id, spec)
 			production.text.text = EquipmentIdentity.title(job.equipment) + "  ·  " + ("paused" if paused else SimulationClock.duration(seconds))
-			production.picture.texture = CowUI.equipment_picture(job.equipment)
+			# Same picture as in research (owner 2026-10-14).
+			production.picture.texture = CowUI.research_picture(job.equipment, maxi(1, research.level(job.equipment)) if research != null else 1)
 			production.picture.visible = true
 			production.icon.visible = false
 			production.bar.visible = true

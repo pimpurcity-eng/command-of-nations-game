@@ -58,7 +58,7 @@ func city_income(city: Dictionary) -> Dictionary:
 		if resource == "manpower":
 			# Manpower is recruited by recruitment centres only (owner 2026-10-13).
 			var centre: = buildings.level(city.id,"recruitment_center") if buildings != null else 1
-			result[resource] = CITY_BASE.manpower * RECRUITMENT_PER_LEVEL * centre * multiplier * EconomyResearch.factor(controller(city),"recruitment_center")
+			result[resource] = CITY_BASE.manpower * RECRUITMENT_PER_LEVEL * centre * multiplier * EconomyResearch.factor(controller(city),"recruitment_center") * CountryTraits.manpower_factor(controller(city))
 			continue
 		result[resource] = CITY_BASE[resource] * multiplier * facility * (1.0 if resource == "funds" else 1.5 if resource in specialties else 0.0)
 	return result

@@ -178,7 +178,8 @@ func setup(theme: Theme, saved: bool) -> void:
 	var nations := HBoxContainer.new()
 	nations.add_theme_constant_override("separation", 12)
 	content.add_child(nations)
-	for spec in [["russia", "RUSSIA", [Color.WHITE, Color("1c3f94"), Color("d52b1e")], "Eastern doctrine"], ["ukraine", "UKRAINE", [Color("0057b7"), Color("ffd700")], "European doctrine"]]:
+	# Doctrine plus the country's strength / weakness (owner 2026-10-14).
+	for spec in [["russia", "RUSSIA", [Color.WHITE, Color("1c3f94"), Color("d52b1e")], "Eastern doctrine\n+ " + str(CountryTraits.TRAITS.russia.plus) + "\n− " + str(CountryTraits.TRAITS.russia.minus)], ["ukraine", "UKRAINE", [Color("0057b7"), Color("ffd700")], "European doctrine\n+ " + str(CountryTraits.TRAITS.ukraine.plus) + "\n− " + str(CountryTraits.TRAITS.ukraine.minus)]]:
 		nations.add_child(_nation_card(spec[0], spec[1], spec[2], spec[3]))
 	_show_nation()
 	continue_button = _button("CONTINUE CAMPAIGN", saved)

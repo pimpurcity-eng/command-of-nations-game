@@ -190,6 +190,7 @@ func _strategic() -> void:
 	for country in buildings.economy.stockpiles.keys():
 		var id: = Doctrine.of(country)
 		_label("%s%s · %s: %s" % [country.capitalize(), " (you)" if country == me else "", Doctrine.DOCTRINES[id].name, Doctrine.DOCTRINES[id].summary])
+		if not CountryTraits.summary(country).is_empty(): _label("     " + CountryTraits.summary(country))
 	_label("STRATEGIC WEAPONS", true)
 	_label("Tap a target province or enemy army on the map, then launch. Upgraded air defence (level %d+) within range can shoot missiles down. Strikes hit every army in the blast, including yours. Nuclear fallout cuts nearby output to %d%% for 3 days." % [StrategicWeapons.ABM_LEVEL, roundi(StrategicWeapons.FALLOUT_OUTPUT * 100)])
 	var day: = 1 + int(rules.clock.elapsed / VictoryRules.DAY) if rules.clock != null else 1
