@@ -6,246 +6,10 @@
   "research_cards": 420,
   "unique_models": 161,
   "reused_card_slots": 259,
-  "models_with_custom_art": 100,
-  "cards_with_custom_art": 249,
-  "missing_unique_models": 61,
+  "models_with_custom_art": 113,
+  "cards_with_custom_art": 278,
+  "missing_unique_models": 48,
   "remaining_models": [
-    {
-      "model": "res://assets/library/arsenal/russia_2b11_mortar_120.glb",
-      "picture": "res://assets/interface/unit_art/russia_2b11_mortar_120.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "2b14_mortar_82_russia",
-          "level": 3,
-          "name": "2B11 120 mm mortar"
-        },
-        {
-          "family": "2b14_mortar_82_russia",
-          "level": 4,
-          "name": "2B11 120 mm mortar \u00b7 upgrade"
-        },
-        {
-          "family": "2b14_mortar_82_russia",
-          "level": 5,
-          "name": "2B11 120 mm mortar \u00b7 guided rounds"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/euro_a400m_atlas.glb",
-      "picture": "res://assets/interface/unit_art/euro_a400m_atlas.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "a400m_atlas_ukraine",
-          "level": 1,
-          "name": "A400M Atlas transport"
-        },
-        {
-          "family": "a400m_atlas_ukraine",
-          "level": 2,
-          "name": "A400M Atlas transport \u00b7 upgrade"
-        },
-        {
-          "family": "a400m_atlas_ukraine",
-          "level": 3,
-          "name": "A400M Atlas transport \u00b7 L3"
-        },
-        {
-          "family": "a400m_atlas_ukraine",
-          "level": 4,
-          "name": "A400M Atlas transport \u00b7 L3 \u00b7 upgrade"
-        },
-        {
-          "family": "a400m_atlas_ukraine",
-          "level": 5,
-          "name": "A400M Atlas transport \u00b7 L5"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/euro_hawk_t2.glb",
-      "picture": "res://assets/interface/unit_art/euro_hawk_t2.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "hawk_t2_ukraine",
-          "level": 1,
-          "name": "Hawk T2"
-        },
-        {
-          "family": "hawk_t2_ukraine",
-          "level": 2,
-          "name": "Hawk T2 \u00b7 upgrade"
-        },
-        {
-          "family": "hawk_t2_ukraine",
-          "level": 3,
-          "name": "Hawk T2 \u00b7 guided bombs"
-        },
-        {
-          "family": "hawk_t2_ukraine",
-          "level": 4,
-          "name": "Hawk T2 \u00b7 upgrade"
-        },
-        {
-          "family": "hawk_t2_ukraine",
-          "level": 5,
-          "name": "Hawk T2 \u00b7 advanced"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_frigate_t1_starting_krivak.glb",
-      "picture": "res://assets/interface/unit_art/russia_frigate_t1_starting_krivak.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "fleet_russia",
-          "level": 1,
-          "name": "Krivak"
-        },
-        {
-          "family": "fleet_russia",
-          "level": 2,
-          "name": "Krivak \u00b7 upgrade"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_frigate_t2_mid_admiral_grigorovich.glb",
-      "picture": "res://assets/interface/unit_art/russia_frigate_t2_mid_admiral_grigorovich.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "fleet_russia",
-          "level": 3,
-          "name": "Admiral Grigorovich"
-        },
-        {
-          "family": "fleet_russia",
-          "level": 4,
-          "name": "Admiral Grigorovich \u00b7 upgrade"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_admiral_gorshkov.glb",
-      "picture": "res://assets/interface/unit_art/russia_admiral_gorshkov.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "fleet_russia",
-          "level": 5,
-          "name": "Admiral Gorshkov"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/euro_type23.glb",
-      "picture": "res://assets/interface/unit_art/euro_type23.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "fleet_ukraine",
-          "level": 1,
-          "name": "Type 23 Duke"
-        },
-        {
-          "family": "fleet_ukraine",
-          "level": 2,
-          "name": "Type 23 Duke \u00b7 upgrade"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/euro_fremm.glb",
-      "picture": "res://assets/interface/unit_art/euro_fremm.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "fleet_ukraine",
-          "level": 3,
-          "name": "FREMM Aquitaine"
-        },
-        {
-          "family": "fleet_ukraine",
-          "level": 4,
-          "name": "FREMM Aquitaine \u00b7 upgrade"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/euro_type26.glb",
-      "picture": "res://assets/interface/unit_art/euro_type26.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "fleet_ukraine",
-          "level": 5,
-          "name": "Type 26 Glasgow"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_destroyer_t1_starting_sovremenny.glb",
-      "picture": "res://assets/interface/unit_art/russia_destroyer_t1_starting_sovremenny.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "destroyers_russia",
-          "level": 1,
-          "name": "Sovremenny"
-        },
-        {
-          "family": "destroyers_russia",
-          "level": 2,
-          "name": "Sovremenny \u00b7 upgrade"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_destroyer_t2_mid_slava.glb",
-      "picture": "res://assets/interface/unit_art/russia_destroyer_t2_mid_slava.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "destroyers_russia",
-          "level": 3,
-          "name": "Slava"
-        },
-        {
-          "family": "destroyers_russia",
-          "level": 4,
-          "name": "Slava \u00b7 upgrade"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_destroyer_t3_modern_lider.glb",
-      "picture": "res://assets/interface/unit_art/russia_destroyer_t3_modern_lider.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "destroyers_russia",
-          "level": 5,
-          "name": "Lider"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_steregushchiy.glb",
-      "picture": "res://assets/interface/unit_art/russia_steregushchiy.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "corvettes_russia",
-          "level": 5,
-          "name": "Steregushchiy"
-        }
-      ]
-    },
     {
       "model": "res://assets/library/arsenal/euro_corvette_t1_starting_minerva.glb",
       "picture": "res://assets/interface/unit_art/euro_corvette_t1_starting_minerva.webp",
@@ -2830,21 +2594,21 @@
           "name": "2B11 120 mm mortar",
           "model": "res://assets/library/arsenal/russia_2b11_mortar_120.glb",
           "picture": "res://assets/interface/unit_art/russia_2b11_mortar_120.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "2B11 120 mm mortar \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_2b11_mortar_120.glb",
           "picture": "res://assets/interface/unit_art/russia_2b11_mortar_120.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "2B11 120 mm mortar \u00b7 guided rounds",
           "model": "res://assets/library/arsenal/russia_2b11_mortar_120.glb",
           "picture": "res://assets/interface/unit_art/russia_2b11_mortar_120.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -3110,35 +2874,35 @@
           "name": "A400M Atlas transport",
           "model": "res://assets/library/arsenal/euro_a400m_atlas.glb",
           "picture": "res://assets/interface/unit_art/euro_a400m_atlas.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "A400M Atlas transport \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_a400m_atlas.glb",
           "picture": "res://assets/interface/unit_art/euro_a400m_atlas.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "A400M Atlas transport \u00b7 L3",
           "model": "res://assets/library/arsenal/euro_a400m_atlas.glb",
           "picture": "res://assets/interface/unit_art/euro_a400m_atlas.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "A400M Atlas transport \u00b7 L3 \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_a400m_atlas.glb",
           "picture": "res://assets/interface/unit_art/euro_a400m_atlas.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "A400M Atlas transport \u00b7 L5",
           "model": "res://assets/library/arsenal/euro_a400m_atlas.glb",
           "picture": "res://assets/interface/unit_art/euro_a400m_atlas.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -3152,35 +2916,35 @@
           "name": "Hawk T2",
           "model": "res://assets/library/arsenal/euro_hawk_t2.glb",
           "picture": "res://assets/interface/unit_art/euro_hawk_t2.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "Hawk T2 \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_hawk_t2.glb",
           "picture": "res://assets/interface/unit_art/euro_hawk_t2.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "Hawk T2 \u00b7 guided bombs",
           "model": "res://assets/library/arsenal/euro_hawk_t2.glb",
           "picture": "res://assets/interface/unit_art/euro_hawk_t2.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "Hawk T2 \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_hawk_t2.glb",
           "picture": "res://assets/interface/unit_art/euro_hawk_t2.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "Hawk T2 \u00b7 advanced",
           "model": "res://assets/library/arsenal/euro_hawk_t2.glb",
           "picture": "res://assets/interface/unit_art/euro_hawk_t2.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -3362,35 +3126,35 @@
           "name": "Krivak",
           "model": "res://assets/library/arsenal/russia_frigate_t1_starting_krivak.glb",
           "picture": "res://assets/interface/unit_art/russia_frigate_t1_starting_krivak.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "Krivak \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_frigate_t1_starting_krivak.glb",
           "picture": "res://assets/interface/unit_art/russia_frigate_t1_starting_krivak.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "Admiral Grigorovich",
           "model": "res://assets/library/arsenal/russia_frigate_t2_mid_admiral_grigorovich.glb",
           "picture": "res://assets/interface/unit_art/russia_frigate_t2_mid_admiral_grigorovich.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "Admiral Grigorovich \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_frigate_t2_mid_admiral_grigorovich.glb",
           "picture": "res://assets/interface/unit_art/russia_frigate_t2_mid_admiral_grigorovich.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "Admiral Gorshkov",
           "model": "res://assets/library/arsenal/russia_admiral_gorshkov.glb",
           "picture": "res://assets/interface/unit_art/russia_admiral_gorshkov.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -3404,35 +3168,35 @@
           "name": "Type 23 Duke",
           "model": "res://assets/library/arsenal/euro_type23.glb",
           "picture": "res://assets/interface/unit_art/euro_type23.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "Type 23 Duke \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_type23.glb",
           "picture": "res://assets/interface/unit_art/euro_type23.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "FREMM Aquitaine",
           "model": "res://assets/library/arsenal/euro_fremm.glb",
           "picture": "res://assets/interface/unit_art/euro_fremm.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "FREMM Aquitaine \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_fremm.glb",
           "picture": "res://assets/interface/unit_art/euro_fremm.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "Type 26 Glasgow",
           "model": "res://assets/library/arsenal/euro_type26.glb",
           "picture": "res://assets/interface/unit_art/euro_type26.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -3446,35 +3210,35 @@
           "name": "Sovremenny",
           "model": "res://assets/library/arsenal/russia_destroyer_t1_starting_sovremenny.glb",
           "picture": "res://assets/interface/unit_art/russia_destroyer_t1_starting_sovremenny.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "Sovremenny \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_destroyer_t1_starting_sovremenny.glb",
           "picture": "res://assets/interface/unit_art/russia_destroyer_t1_starting_sovremenny.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "Slava",
           "model": "res://assets/library/arsenal/russia_destroyer_t2_mid_slava.glb",
           "picture": "res://assets/interface/unit_art/russia_destroyer_t2_mid_slava.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "Slava \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_destroyer_t2_mid_slava.glb",
           "picture": "res://assets/interface/unit_art/russia_destroyer_t2_mid_slava.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "Lider",
           "model": "res://assets/library/arsenal/russia_destroyer_t3_modern_lider.glb",
           "picture": "res://assets/interface/unit_art/russia_destroyer_t3_modern_lider.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -3558,7 +3322,7 @@
           "name": "Steregushchiy",
           "model": "res://assets/library/arsenal/russia_steregushchiy.glb",
           "picture": "res://assets/interface/unit_art/russia_steregushchiy.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
