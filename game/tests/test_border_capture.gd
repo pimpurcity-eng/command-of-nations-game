@@ -32,13 +32,25 @@ func run() -> void:
 			unit.node.position += Vector3(30, 0, 30)
 	var army: Dictionary = game.units.units.filter(func(u): return u.country == "russia" and u.visual_kind == "infantry")[0]
 	check(not rules.at_war, "the match starts at peace")
-	# Walk the army to the province centre (as the player's move order does).
+	# Standing on their land away from the province centre does not start a war.
+	var inside: = Vector2.INF
+	for ring in range(8, 30):
+		for step in 16:
+			var probe: Vector2 = hub + Vector2.from_angle(TAU * step / 16.0) * ring * 0.1
+			if inside == Vector2.INF and RegionData.contains(donetsk, probe): inside = probe
+	check(inside != Vector2.INF, "found a spot in Donetsk away from its centre")
+	if inside != Vector2.INF:
+		army.node.position = Vector3(inside.x, army.node.position.y, inside.y)
+		army.moving = false
+		await simulate(2.0)
+		check(not rules.at_war, "crossing the border alone does not declare war")
+	# Reaching the province centre (as the player's move order does) declares war and takes it.
 	army.node.position = Vector3(hub.x + 0.05, army.node.position.y, hub.y)
 	army.moving = false
 	await simulate(2.0)
-	check(rules.at_war, "marching onto Ukrainian land declares war")
-	await simulate(15.0)
+	check(rules.at_war, "reaching the centre of a Ukrainian province declares war")
+	await simulate(2.0)
 	var now: Dictionary = game.map.territories.filter(func(t): return t.id == donetsk.id)[0]
-	check(now.controller == "russia", "Donetsk switches to Russia about 10 seconds after the army arrives (now %s)" % now.controller)
+	check(now.controller == "russia", "Donetsk switches to Russia straight away (now %s)" % now.controller)
 	print("RESULT failures=", failures)
 	quit(1 if failures > 0 else 0)

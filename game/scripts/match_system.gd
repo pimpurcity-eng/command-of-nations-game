@@ -145,18 +145,24 @@ func ceasefire() -> void :
 	terrain.update_relations(false)
 	report.emit("CEASEFIRE · Combat and occupation stopped; existing control retained")
 const CAPTURE_RADIUS: = 0.6
-## Owner 2026-10-14: a province switches over about 10 real seconds after an army reaches its
-## centre unopposed (it took 12 real minutes before), close to Call of War's instant capture.
-const CAPTURE_SECONDS: = 10.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
-func _player_crossed_border() -> bool:
+## Owner 2026-10-14: a province switches over as soon as an army reaches its centre unopposed
+## (it took 12 real minutes before), like Call of War.
+const CAPTURE_SECONDS: = 1.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
+## Owner 2026-10-14: "As soon as I hit the center of that province, it should declare war."
+## Walking over the border is not enough; reaching an enemy province's centre is.
+func _player_reached_enemy_centre() -> bool:
 	var enemy: = GameSession.opponent_country()
 	if diplomacy.right_of_way(GameSession.player_country, enemy): return false
 	for unit in armies.units:
 		if unit.country != GameSession.player_country or unit.health <= 0: continue
 		if unit.visual_kind in ["fighter", "naval"]: continue
-		if armies._land_owner(unit) == enemy:
-			report.emit(unit.name + " crossed into " + enemy.capitalize() + " · war declared")
-			return true
+		if armies._land_owner(unit) != enemy: continue
+		var point: = Vector2(unit.node.position.x, unit.node.position.z)
+		for territory in terrain.territories:
+			if not territory.playable or territory.controller != enemy or not RegionData.contains(territory, point): continue
+			if point.distance_squared_to(capture_point(territory)) <= CAPTURE_RADIUS * CAPTURE_RADIUS:
+				report.emit(unit.name + " reached " + str(territory.title) + " · war declared")
+				return true
 	return false
 var capture_progress: Dictionary = {}
 var _capture_points: Dictionary = {}
@@ -229,9 +235,9 @@ func advance(seconds: float) -> void :
 	if not result.is_empty():
 		end_match(result[0], result[1])
 		return
-	# Owner 2026-10-14 ("I went onto Ukrainian territory ... it never switched over"): marching an
-	# army onto the enemy's land declares war, as in Call of War, so the land can be taken.
-	if not at_war and _player_crossed_border(): declare_war()
+	# Owner 2026-10-14 ("I went onto Ukrainian territory ... it never switched over"): an army
+	# reaching the centre of an enemy province declares war, and the province is taken at once.
+	if not at_war and _player_reached_enemy_centre(): declare_war()
 	if not at_war: return
 	advance_battles(seconds)
 	var selected_stack: = ""
