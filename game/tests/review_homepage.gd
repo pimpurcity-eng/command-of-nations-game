@@ -41,6 +41,9 @@ func run() -> void:
 		await frames()
 		check(lobby.current_page == id and lobby.pages[id].visible, "navigation opens " + id)
 		check(lobby.pages.values().filter(func(p): return p.visible).size() == 1, "only the selected page is visible")
+		if id == "features" and DisplayServer.get_name() != "headless":
+			await RenderingServer.frame_post_draw
+			root.get_texture().get_image().save_png(OS.get_environment("HOME_REVIEW_DIR").path_join("Features_Home.png"))
 	if DisplayServer.get_name() != "headless":
 		await RenderingServer.frame_post_draw
 		root.get_texture().get_image().save_png(OS.get_environment("HOME_REVIEW_DIR").path_join("App_Game_Home.png"))

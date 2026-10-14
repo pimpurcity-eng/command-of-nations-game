@@ -215,6 +215,9 @@ func _build_home() -> void:
 	heading.add_theme_constant_override("shadow_offset_y", 3)
 	branding.add_child(heading)
 	branding.add_child(_label(str(catalogue.tagline), 23))
+	var pillars := _label("AI DEFENCE  ·  ECONOMIC VICTORY  ·  REAL TRADE", 16, GOLD)
+	pillars.add_theme_font_override("font", _font(500, 1))
+	branding.add_child(pillars)
 	var margin := MarginContainer.new()
 	for side in ["left", "right", "top", "bottom"]: margin.add_theme_constant_override("margin_" + side, 32)
 	home.add_child(margin)
@@ -296,7 +299,8 @@ func _build_home() -> void:
 		credit_label.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
 		body.add_child(credit_label)
 	_section(body, "MORE THAN CONQUEST")
-	for i in [2, 3, 5]: _feature_card(body, catalogue.features[i])
+	for id in ["guard", "economy", "trade"]:
+		_feature_card(body, catalogue.features.filter(func(f: Dictionary): return f.id == id)[0])
 	var all_features := _button("EXPLORE ALL FEATURES  →")
 	all_features.pressed.connect(_select_page.bind("features"))
 	body.add_child(all_features)
@@ -369,7 +373,11 @@ func _build_features() -> void:
 	page.add_child(_label("THE GAME", 18, GOLD))
 	page.add_child(_label("A nation is more\nthan its army.", 48))
 	page.add_child(_label("Military power, industry, trade and diplomacy shape the same campaign.", 24, MUTED))
-	for feature in catalogue.features: _feature_card(page, feature)
+	var priorities := ["guard", "economy", "trade"]
+	for id in priorities:
+		_feature_card(page, catalogue.features.filter(func(f: Dictionary): return f.id == id)[0])
+	for feature in catalogue.features:
+		if feature.id not in priorities: _feature_card(page, feature)
 	page.add_child(_label(catalogue.roadmap, 21, MUTED))
 	var play := _button("BACK TO YOUR CAMPAIGN  →", true)
 	play.pressed.connect(_select_page.bind("home"))
