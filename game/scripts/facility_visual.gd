@@ -9,7 +9,12 @@ static func preview(definition: Dictionary, country: String, level: int, rural: 
 
 static func path(definition: Dictionary, country: String, level: int, rural: bool = false) -> String:
 	var tiers: Array = definition.get("rural_model_tiers" if rural else "model_tiers", [])
-	if not tiers.is_empty(): return str(tiers[clampi(level - 1, 0, tiers.size() - 1)])
+	if not tiers.is_empty():
+		# Browser version: higher levels arrive with the background download (WebExtras); until
+		# then the building shows its own highest model that is already here.
+		var index: = clampi(level - 1, 0, tiers.size() - 1)
+		while index > 0 and not ResourceLoader.exists(str(tiers[index])): index -= 1
+		return str(tiers[index])
 	return str(AssetRoster.appearance(definition.asset_roster_id, country).get("model", ""))
 
 static func create(definition: Dictionary, country: String, level: int, rural: bool = false) -> Node3D:

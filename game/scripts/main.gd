@@ -493,6 +493,10 @@ func _ready() -> void :
 		mobile_start.online_requested.connect(join_online)
 		mobile_start.test_requested.connect(func():
 			GameSession.player_country = mobile_start.selected_country()
+			# The weapons range shows every model; in the browser wait for the weapons download.
+			while web_extras != null and not WebExtras.available:
+				mobile_start.set_progress(100.0 * web_extras.fraction(), "Downloading weapons")
+				await get_tree().process_frame
 			GameSession.weapons_test = true
 			await populate_weapons_test(true)
 			apply_player_country()
@@ -505,12 +509,24 @@ func _ready() -> void :
 			mobile_start.hide())
 	boot_finished = true
 	boot_ready.emit()
+	if OS.has_feature("web") and not WebExtras.available:
+		web_extras = WebExtras.new()
+		add_child(web_extras)
+		web_extras.loaded.connect(_web_extras_loaded)
+		web_extras.start()
 	if OS.has_feature("web"):
 		browser_callback = JavaScriptBridge.create_callback(_browser_hidden)
 		browser_resume_callback = JavaScriptBridge.create_callback(_browser_visible)
 		JavaScriptBridge.get_interface("window").conGameHidden = browser_callback
 		JavaScriptBridge.get_interface("window").conGameVisible = browser_resume_callback
 		JavaScriptBridge.eval("document.addEventListener('visibilitychange',()=>{if(document.hidden)window.conGameHidden();else window.conGameVisible();});window.addEventListener('pagehide',()=>window.conGameHidden());window.addEventListener('pageshow',()=>{if(!document.hidden)window.conGameVisible();});")
+var web_extras: WebExtras
+## The background weapons download finished: swap stand-ins and early buildings for the real models.
+func _web_extras_loaded() -> void:
+	for unit in units.units:
+		var model: Node3D = unit.node.get_child(0) if unit.node.get_child_count() > 0 else null
+		if model != null and model.get_meta("stand_in_model", false): model.set_meta("visual_level", -1)
+	if cities != null: cities.sync_buildings()
 func _process(delta: float) -> void :
 	if map != null and rig != null:
 		map.set_view_distance(rig.distance)
