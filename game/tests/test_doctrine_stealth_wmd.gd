@@ -85,12 +85,33 @@ func run() -> void:
 	check(strategic.count("russia", "nuclear") == 0 and not strategic.fallout.is_empty(), "the missile is spent and leaves fallout")
 	var fallout_id: String = strategic.fallout.keys()[0]
 	check(is_equal_approx(strategic.output(fallout_id), StrategicWeapons.FALLOUT_OUTPUT), "fallout cuts output to 20%")
-	var defender: Dictionary = {}
-	for unit in units.units:
-		if unit.country == "ukraine" and unit.visual_kind == "air_defense" and defender.is_empty(): defender = unit
+	# Owner 2026-10-14: only long-range SAMs (S-300/S-400/Patriot families) stop strategic
+	# missiles, nuclear ones from level 3; short-range air defence cannot.
+	var short_range: Dictionary = units.units.filter(func(u): return u.country == "ukraine" and u.visual_kind == "air_defense")[0]
+	short_range.level = 5
+	short_range.node.position = Vector3(target.x + 1.0, 0, target.y)
+	check(is_zero_approx(strategic.interception_chance("russia", target, units)), "short-range air defence cannot stop a nuclear missile")
+	units._spawn({"id": "abm", "name": "SAM", "country": "ukraine", "equipment_id": "patriot_ukraine", "level": 2, "visual_kind": "air_defense", "base_city": "kyiv"}, target + Vector2(1.0, 0.3), Color("73bcff"))
+	var defender: Dictionary = units.find_id("abm")
+	check(is_zero_approx(strategic.interception_chance("russia", target, units)) and strategic.interception_chance("russia", target, units, "chemical") > 0.0, "a level-2 SAM stops chemical but not nuclear missiles")
 	defender.level = 5
-	defender.node.position = Vector3(target.x + 1.0, 0, target.y)
-	check(strategic.interception_chance("russia", target, units) > 0.3, "upgraded air defence can shoot missiles down")
+	check(strategic.interception_chance("russia", target, units) > 0.5, "a level-5 SAM battery can shoot nuclear missiles down")
+	# Counters come first: long-range SAMs at level 3 exist well before nuclear missiles.
+	for country in ["russia", "ukraine"]:
+		var sam: Dictionary = EquipmentIdentity.spec("patriot_" + country)
+		check(int(sam.research_days[2]) < int(StrategicWeapons.WEAPONS.nuclear.unlock_day) and int(sam.research_days[0]) < int(StrategicWeapons.WEAPONS.chemical.unlock_day), "%s: missile defence (day %d / L3 day %d) comes before chemical (day %d) and nuclear (day %d) missiles" % [country, sam.research_days[0], sam.research_days[2], StrategicWeapons.WEAPONS.chemical.unlock_day, StrategicWeapons.WEAPONS.nuclear.unlock_day])
+	# A big stack survives a nuclear hit; a small army does not.
+	var pool: = StrategicWeapons.new()
+	pool.stock["russia"] = {"nuclear": 2}
+	var ground_zero: Vector2 = game.buildings.city("lviv").point + Vector2(0.5, 0.5)
+	for i in 14: units._spawn({"id": "big%d" % i, "name": "Inf", "country": "ukraine", "equipment_id": "infantry_ukraine", "level": 1, "visual_kind": "infantry", "base_city": "lviv", "stack_id": "bigstack"}, ground_zero, Color("73bcff"))
+	pool.launch("russia", "nuclear", ground_zero, units, game.map.territories)
+	var left: = units.units.filter(func(u): return str(u.id).begins_with("big") and u.health > 0).size()
+	check(left == 14, "a 14-unit stack at ground zero is badly hurt but survives (%d left)" % left)
+	var lone: Vector2 = game.buildings.city("odesa").point + Vector2(0.4, 0.4)
+	units._spawn({"id": "lone", "name": "Inf", "country": "ukraine", "equipment_id": "infantry_ukraine", "level": 1, "visual_kind": "infantry", "base_city": "odesa"}, lone, Color("73bcff"))
+	pool.launch("russia", "nuclear", lone, units, game.map.territories)
+	check(units.find_id("lone").health <= 0.0, "a single army at ground zero is wiped out")
 	strategic.stock["russia"] = {"chemical": 3}
 	var results: = []
 	for i in 3: results.append(strategic.launch("russia", "chemical", target, units, game.map.territories).intercepted)
