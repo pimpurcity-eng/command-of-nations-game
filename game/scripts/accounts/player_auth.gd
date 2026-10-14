@@ -66,6 +66,48 @@ func signup(email: String,password: String,commander: String) -> Dictionary:
 	var result:=await request("/signup",{"email":email.strip_edges(),"password":password,"data":{"commander_name":commander}})
 	# Even if the server is misconfigured to auto-confirm, this UI never silently logs in after signup.
 	return result
+## Sign in with Google (owner 2026-10-14). The website sends the player to Google through the
+## account service and comes back with the session in the address (#access_token=...), which
+## finish_google_from_url() reads once and wipes from the address bar. The app keeps email
+## sign-in until it has a return link of its own.
+static func google_available() -> bool:return OS.has_feature("web")
+## True once the owner has switched Google on in the account service (checked, never assumed).
+var google_enabled:=false
+func check_google() -> bool:
+	if not configured() or not google_available():return false
+	var result:=await request("/settings",{},HTTPClient.METHOD_GET)
+	google_enabled=result.ok and bool(result.data.get("external",{}).get("google",false))
+	return google_enabled
+func google_url(return_to: String) -> String:
+	return base_url+"/auth/v1/authorize?provider=google&redirect_to="+return_to.uri_encode()
+func google_sign_in() -> Dictionary:
+	if not configured():return failure("Online accounts are being connected. You can keep playing offline.")
+	if not google_available():return failure("Google sign-in works on the website for now. In the app, use email.")
+	var here:=str(JavaScriptBridge.eval("window.location.origin + window.location.pathname"))
+	JavaScriptBridge.eval("window.location.assign("+JSON.stringify(google_url(here))+")")
+	return {"ok":true,"data":{},"message":"Opening Google…"}
+static func address_values(fragment: String) -> Dictionary:
+	var values: Dictionary={}
+	for pair in fragment.trim_prefix("#").split("&",false):
+		var parts:=pair.split("=",true,1)
+		if parts.size()==2:values[parts[0].uri_decode()]=parts[1].replace("+"," ").uri_decode()
+	return values
+func finish_google_from_url() -> Dictionary:
+	if not OS.has_feature("web"):return failure("Not a browser.")
+	var fragment:=str(JavaScriptBridge.eval("window.location.hash"))
+	var values:=address_values(fragment)
+	if not values.has("access_token") and not values.has("error"):return failure("No Google sign-in in the address.")
+	# Never leave tokens in the address bar or browser history.
+	JavaScriptBridge.eval("history.replaceState(null, '', window.location.pathname + window.location.search)")
+	return await accept_google(values)
+func accept_google(values: Dictionary) -> Dictionary:
+	if values.has("error"):return failure("Google sign-in was cancelled or refused.")
+	var token:=str(values.get("access_token",""))
+	var who:=await request("/user",{},HTTPClient.METHOD_GET,token)
+	if not who.ok:return failure("Google sign-in could not be completed. Please try again.")
+	var result:=accept_session({"access_token":token,"refresh_token":values.get("refresh_token",""),"expires_in":float(values.get("expires_in",3600)),"user":who.data},false)
+	if result.ok:await load_profile()
+	return result
 func login(email: String,password: String) -> Dictionary:
 	if not email_valid(email) or password.is_empty():return failure("Enter your email and password.")
 	var result:=await request("/token?grant_type=password",{"email":email.strip_edges(),"password":password})

@@ -531,6 +531,12 @@ func _ready() -> void :
 			mobile_start.hide())
 	boot_finished = true
 	boot_ready.emit()
+	# Coming back from "Sign in with Google" on the website: finish it and show the account.
+	if OS.has_feature("web") and str(JavaScriptBridge.eval("/[#&](access_token|error)=/.test(window.location.hash)")) == "true":
+		open_home_account()
+		await account_panel.auth.finish_google_from_url()
+		account_panel.open()
+		refresh_home_commander()
 	if OS.has_feature("web") and not WebExtras.available:
 		web_extras = WebExtras.new()
 		add_child(web_extras)

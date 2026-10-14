@@ -25,6 +25,9 @@ func _ready() -> void:
 	if preview_open:open()
 func open() -> void:
 	build("profile" if auth.signed_in() else "new_password" if auth.recovery_pending else "login");overlay.show()
+	# Add the Google button as soon as the account service says Google is switched on.
+	if PlayerAuth.google_available() and not auth.google_enabled and not working:
+		if await auth.check_google() and mode in ["login","signup"] and overlay.visible:build(mode)
 func label_text(text: String,size: int=28) -> Label:
 	var item:=Label.new();item.text=text;item.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;item.add_theme_font_size_override("font_size",size);fields.add_child(item);return item
 func input(key: String,placeholder: String,secret: bool=false) -> void:
@@ -90,6 +93,13 @@ func build(page: String) -> void:
 		button("Delete my account forever",delete_account)
 		button("Keep my account",func():build("profile"))
 	else:
+		# Owner 2026-10-14: "add a sign in with Google" (website for now).
+		if page in ["login","signup"] and PlayerAuth.google_available() and auth.google_enabled:
+			button("Sign in with Google",func():
+				status.text="Opening Google…"
+				var result:=auth.google_sign_in()
+				if not result.ok:status.text=str(result.message))
+			label_text("or use your email",22)
 		if page in ["login","signup","recover"]:input("email","Email address")
 		if page=="signup":input("commander","Commander name")
 		if page in ["login","signup","new_password"]:input("password","Password (8+ characters)" if page!="login" else "Password",true)
