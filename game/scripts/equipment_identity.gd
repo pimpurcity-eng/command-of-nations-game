@@ -1,6 +1,7 @@
 class_name EquipmentIdentity
 extends RefCounted
 static var _by_id: Dictionary = {}
+static var _picture_by_model: Dictionary = {}
 static var refinements: Dictionary = {}
 static func upgrade_factor(unit: Dictionary) -> float:
 	return 1.06 if refinements.get(unit.equipment_id,{}).get(str(int(unit.get("level",1))),false) else 1.0
@@ -8,6 +9,7 @@ static var catalog: Array = CountryTraits.apply(JSON.parse_string(FileAccess.get
 	set(value):
 		catalog = value
 		_by_id.clear()
+		_picture_by_model.clear()
 static func spec(id: String) -> Dictionary:
 	if id.begins_with("economy_"): return EconomyResearch.spec(id)
 	if _by_id.is_empty():
@@ -30,6 +32,17 @@ static func title(id: String) -> String:
 static func research_tier(id: String, level: int) -> Dictionary:
 	var tiers: Array = spec(id).get("research_tiers", [])
 	return tiers[clampi(level - 1, 0, tiers.size() - 1)] if not tiers.is_empty() else {}
+static func picture_tier(id: String, level: int) -> Dictionary:
+	# Stats and titles keep the requested level; repeated models share one picture source.
+	var selected := research_tier(id, level)
+	if _picture_by_model.is_empty():
+		for equipment in catalog:
+			for tier in equipment.get("research_tiers", []):
+				var model: String = tier.get("model", "")
+				if model.is_empty(): continue
+				if not _picture_by_model.has(model) or (str(_picture_by_model[model].get("preview", "")).is_empty() and not str(tier.get("preview", "")).is_empty()):
+					_picture_by_model[model] = tier
+	return _picture_by_model.get(str(selected.get("model", "")), selected)
 static func research_title(id: String, level: int) -> String:
 	return research_tier(id, level).get("name", title(id))
 static func roman_level(level: int) -> String:
