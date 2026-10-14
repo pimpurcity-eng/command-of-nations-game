@@ -6,1057 +6,10 @@
   "research_cards": 420,
   "unique_models": 161,
   "reused_card_slots": 259,
-  "models_with_custom_art": 113,
-  "cards_with_custom_art": 278,
-  "missing_unique_models": 48,
-  "remaining_models": [
-    {
-      "model": "res://assets/library/arsenal/euro_corvette_t1_starting_minerva.glb",
-      "picture": "res://assets/interface/unit_art/euro_corvette_t1_starting_minerva.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "corvettes_ukraine",
-          "level": 1,
-          "name": "Minerva"
-        },
-        {
-          "family": "corvettes_ukraine",
-          "level": 2,
-          "name": "Minerva \u00b7 upgrade"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/euro_corvette_t3_modern_visby.glb",
-      "picture": "res://assets/interface/unit_art/euro_corvette_t3_modern_visby.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "corvettes_ukraine",
-          "level": 5,
-          "name": "Visby"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_submarine_t2_mid_akula.glb",
-      "picture": "res://assets/interface/unit_art/russia_submarine_t2_mid_akula.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "submarines_russia",
-          "level": 3,
-          "name": "Akula"
-        },
-        {
-          "family": "submarines_russia",
-          "level": 4,
-          "name": "Akula \u00b7 upgrade"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_yasen_sub.glb",
-      "picture": "res://assets/interface/unit_art/russia_yasen_sub.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "submarines_russia",
-          "level": 5,
-          "name": "Yasen"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/euro_submarine_t1_starting_type209.glb",
-      "picture": "res://assets/interface/unit_art/euro_submarine_t1_starting_type209.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "submarines_ukraine",
-          "level": 1,
-          "name": "Type 209"
-        },
-        {
-          "family": "submarines_ukraine",
-          "level": 2,
-          "name": "Type 209 \u00b7 upgrade"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/euro_submarine_t3_modern_astute.glb",
-      "picture": "res://assets/interface/unit_art/euro_submarine_t3_modern_astute.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "submarines_ukraine",
-          "level": 5,
-          "name": "Astute"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_carrier_t1_starting_kiev.glb",
-      "picture": "res://assets/interface/unit_art/russia_carrier_t1_starting_kiev.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "carriers_russia",
-          "level": 1,
-          "name": "Kiev"
-        },
-        {
-          "family": "carriers_russia",
-          "level": 2,
-          "name": "Kiev \u00b7 upgrade"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_carrier_t3_modern_shtorm.glb",
-      "picture": "res://assets/interface/unit_art/russia_carrier_t3_modern_shtorm.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "carriers_russia",
-          "level": 5,
-          "name": "Shtorm"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/euro_carrier_t1_starting_clemenceau.glb",
-      "picture": "res://assets/interface/unit_art/euro_carrier_t1_starting_clemenceau.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "carriers_ukraine",
-          "level": 1,
-          "name": "Clemenceau"
-        },
-        {
-          "family": "carriers_ukraine",
-          "level": 2,
-          "name": "Clemenceau \u00b7 upgrade"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/euro_carrier_t2_mid_charles_de_gaulle.glb",
-      "picture": "res://assets/interface/unit_art/euro_carrier_t2_mid_charles_de_gaulle.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "carriers_ukraine",
-          "level": 3,
-          "name": "Charles de Gaulle"
-        },
-        {
-          "family": "carriers_ukraine",
-          "level": 4,
-          "name": "Charles de Gaulle \u00b7 upgrade"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/euro_hms_queen_elizabeth.glb",
-      "picture": "res://assets/interface/unit_art/euro_hms_queen_elizabeth.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "carriers_ukraine",
-          "level": 5,
-          "name": "Queen Elizabeth"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_vdv_paratrooper.glb",
-      "picture": "res://assets/interface/unit_art/russia_vdv_paratrooper.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "airborne_russia",
-          "level": 1,
-          "name": "VDV paratroopers"
-        },
-        {
-          "family": "airborne_russia",
-          "level": 2,
-          "name": "VDV paratroopers \u00b7 upgrade"
-        },
-        {
-          "family": "airborne_russia",
-          "level": 3,
-          "name": "VDV paratroopers \u00b7 air assault"
-        },
-        {
-          "family": "airborne_russia",
-          "level": 4,
-          "name": "VDV paratroopers \u00b7 upgrade"
-        },
-        {
-          "family": "airborne_russia",
-          "level": 5,
-          "name": "VDV paratroopers \u00b7 guards"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_spetsnaz.glb",
-      "picture": "res://assets/interface/unit_art/russia_spetsnaz.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "special_forces_russia",
-          "level": 1,
-          "name": "Spetsnaz"
-        },
-        {
-          "family": "special_forces_russia",
-          "level": 2,
-          "name": "Spetsnaz \u00b7 upgrade"
-        },
-        {
-          "family": "special_forces_russia",
-          "level": 3,
-          "name": "Spetsnaz \u00b7 raid tactics"
-        },
-        {
-          "family": "special_forces_russia",
-          "level": 4,
-          "name": "Spetsnaz \u00b7 upgrade"
-        },
-        {
-          "family": "special_forces_russia",
-          "level": 5,
-          "name": "Spetsnaz \u00b7 elite"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_naval_infantry.glb",
-      "picture": "res://assets/interface/unit_art/russia_naval_infantry.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "naval_infantry_russia",
-          "level": 1,
-          "name": "Naval infantry"
-        },
-        {
-          "family": "naval_infantry_russia",
-          "level": 2,
-          "name": "Naval infantry \u00b7 upgrade"
-        },
-        {
-          "family": "naval_infantry_russia",
-          "level": 3,
-          "name": "Naval infantry \u00b7 amphibious"
-        },
-        {
-          "family": "naval_infantry_russia",
-          "level": 4,
-          "name": "Naval infantry \u00b7 upgrade"
-        },
-        {
-          "family": "naval_infantry_russia",
-          "level": 5,
-          "name": "Naval infantry \u00b7 guards"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_sniper.glb",
-      "picture": "res://assets/interface/unit_art/russia_sniper.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "snipers_russia",
-          "level": 1,
-          "name": "Sniper team"
-        },
-        {
-          "family": "snipers_russia",
-          "level": 2,
-          "name": "Sniper team \u00b7 SV-98"
-        },
-        {
-          "family": "snipers_russia",
-          "level": 3,
-          "name": "Sniper team \u00b7 thermal optics"
-        },
-        {
-          "family": "snipers_russia",
-          "level": 4,
-          "name": "Sniper team \u00b7 upgrade"
-        },
-        {
-          "family": "snipers_russia",
-          "level": 5,
-          "name": "Sniper team \u00b7 ASh-12"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_bmp1.glb",
-      "picture": "res://assets/interface/unit_art/russia_bmp1.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "ifv_russia",
-          "level": 1,
-          "name": "BMP-1"
-        },
-        {
-          "family": "ifv_russia",
-          "level": 2,
-          "name": "BMP-1 \u00b7 upgrade"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_bmp2.glb",
-      "picture": "res://assets/interface/unit_art/russia_bmp2.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "ifv_russia",
-          "level": 3,
-          "name": "BMP-2"
-        },
-        {
-          "family": "ifv_russia",
-          "level": 4,
-          "name": "BMP-2 \u00b7 upgrade"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_bmp3.glb",
-      "picture": "res://assets/interface/unit_art/russia_bmp3.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "ifv_russia",
-          "level": 5,
-          "name": "BMP-3"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_bmd2.glb",
-      "picture": "res://assets/interface/unit_art/russia_bmd2.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "airborne_ifv_russia",
-          "level": 1,
-          "name": "BMD-2"
-        },
-        {
-          "family": "airborne_ifv_russia",
-          "level": 2,
-          "name": "BMD-2 \u00b7 upgrade"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_bmd4m.glb",
-      "picture": "res://assets/interface/unit_art/russia_bmd4m.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "airborne_ifv_russia",
-          "level": 3,
-          "name": "BMD-4M"
-        },
-        {
-          "family": "airborne_ifv_russia",
-          "level": 4,
-          "name": "BMD-4M \u00b7 upgrade"
-        },
-        {
-          "family": "airborne_ifv_russia",
-          "level": 5,
-          "name": "BMD-4M \u00b7 advanced"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/pl01_russian.glb",
-      "picture": "res://assets/interface/unit_art/pl01_russian.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "light_tank_russia",
-          "level": 1,
-          "name": "PL-01 light tank"
-        },
-        {
-          "family": "light_tank_russia",
-          "level": 2,
-          "name": "PL-01 light tank \u00b7 upgrade"
-        },
-        {
-          "family": "light_tank_russia",
-          "level": 3,
-          "name": "PL-01 light tank \u00b7 thermal sights"
-        },
-        {
-          "family": "light_tank_russia",
-          "level": 4,
-          "name": "PL-01 light tank \u00b7 upgrade"
-        },
-        {
-          "family": "light_tank_russia",
-          "level": 5,
-          "name": "PL-01 light tank \u00b7 advanced"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_topol_m.glb",
-      "picture": "res://assets/interface/unit_art/russia_topol_m.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "strategic_russia",
-          "level": 1,
-          "name": "Topol-M"
-        },
-        {
-          "family": "strategic_russia",
-          "level": 2,
-          "name": "Topol-M \u00b7 upgrade"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_yars.glb",
-      "picture": "res://assets/interface/unit_art/russia_yars.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "strategic_russia",
-          "level": 3,
-          "name": "Yars RS-24"
-        },
-        {
-          "family": "strategic_russia",
-          "level": 4,
-          "name": "Yars RS-24 \u00b7 upgrade"
-        },
-        {
-          "family": "strategic_russia",
-          "level": 5,
-          "name": "Yars RS-24 \u00b7 advanced"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_su34.glb",
-      "picture": "res://assets/interface/unit_art/russia_su34.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "strike_russia",
-          "level": 1,
-          "name": "Su-34"
-        },
-        {
-          "family": "strike_russia",
-          "level": 2,
-          "name": "Su-34 \u00b7 upgrade"
-        },
-        {
-          "family": "strike_russia",
-          "level": 3,
-          "name": "Su-34 \u00b7 precision bombs"
-        },
-        {
-          "family": "strike_russia",
-          "level": 4,
-          "name": "Su-34 \u00b7 upgrade"
-        },
-        {
-          "family": "strike_russia",
-          "level": 5,
-          "name": "Su-34 \u00b7 advanced"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_mig31bm.glb",
-      "picture": "res://assets/interface/unit_art/russia_mig31bm.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "interceptor_russia",
-          "level": 1,
-          "name": "MiG-31BM"
-        },
-        {
-          "family": "interceptor_russia",
-          "level": 2,
-          "name": "MiG-31BM \u00b7 upgrade"
-        },
-        {
-          "family": "interceptor_russia",
-          "level": 3,
-          "name": "MiG-31BM \u00b7 R-37M"
-        },
-        {
-          "family": "interceptor_russia",
-          "level": 4,
-          "name": "MiG-31BM \u00b7 upgrade"
-        },
-        {
-          "family": "interceptor_russia",
-          "level": 5,
-          "name": "MiG-31BM \u00b7 advanced"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_mi8_mi17.glb",
-      "picture": "res://assets/interface/unit_art/russia_mi8_mi17.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "transport_heli_russia",
-          "level": 1,
-          "name": "Mi-8 / Mi-17"
-        },
-        {
-          "family": "transport_heli_russia",
-          "level": 2,
-          "name": "Mi-8 / Mi-17 \u00b7 upgrade"
-        },
-        {
-          "family": "transport_heli_russia",
-          "level": 3,
-          "name": "Mi-8 / Mi-17 \u00b7 armour"
-        },
-        {
-          "family": "transport_heli_russia",
-          "level": 4,
-          "name": "Mi-8 / Mi-17 \u00b7 upgrade"
-        },
-        {
-          "family": "transport_heli_russia",
-          "level": 5,
-          "name": "Mi-8 / Mi-17 \u00b7 advanced"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_forpost.glb",
-      "picture": "res://assets/interface/unit_art/russia_forpost.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "strike_drone_russia",
-          "level": 1,
-          "name": "Forpost"
-        },
-        {
-          "family": "strike_drone_russia",
-          "level": 2,
-          "name": "Forpost \u00b7 upgrade"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_inokhodets.glb",
-      "picture": "res://assets/interface/unit_art/russia_inokhodets.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "strike_drone_russia",
-          "level": 3,
-          "name": "Inokhodets / Orion"
-        },
-        {
-          "family": "strike_drone_russia",
-          "level": 4,
-          "name": "Inokhodets / Orion \u00b7 upgrade"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_sirius.glb",
-      "picture": "res://assets/interface/unit_art/russia_sirius.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "strike_drone_russia",
-          "level": 5,
-          "name": "Sirius"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_geran2.glb",
-      "picture": "res://assets/interface/unit_art/russia_geran2.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "geran_russia",
-          "level": 1,
-          "name": "Geran-2"
-        },
-        {
-          "family": "geran_russia",
-          "level": 2,
-          "name": "Geran-2 \u00b7 upgrade"
-        },
-        {
-          "family": "geran_russia",
-          "level": 3,
-          "name": "Geran-2 \u00b7 jam-resistant navigation"
-        },
-        {
-          "family": "geran_russia",
-          "level": 4,
-          "name": "Geran-2 \u00b7 upgrade"
-        },
-        {
-          "family": "geran_russia",
-          "level": 5,
-          "name": "Geran-2 \u00b7 jet engine"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/russia_bmm80_medical.glb",
-      "picture": "res://assets/interface/unit_art/russia_bmm80_medical.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "medic_russia",
-          "level": 1,
-          "name": "BMM-80 Simfoniya"
-        },
-        {
-          "family": "medic_russia",
-          "level": 2,
-          "name": "BMM-80 Simfoniya \u00b7 upgrade"
-        },
-        {
-          "family": "medic_russia",
-          "level": 3,
-          "name": "BMM-80 Simfoniya \u00b7 field surgery"
-        },
-        {
-          "family": "medic_russia",
-          "level": 4,
-          "name": "BMM-80 Simfoniya \u00b7 upgrade"
-        },
-        {
-          "family": "medic_russia",
-          "level": 5,
-          "name": "BMM-80 Simfoniya \u00b7 evacuation"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/euro_it_folgore_paratrooper.glb",
-      "picture": "res://assets/interface/unit_art/euro_it_folgore_paratrooper.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "airborne_ukraine",
-          "level": 1,
-          "name": "Air assault troops"
-        },
-        {
-          "family": "airborne_ukraine",
-          "level": 2,
-          "name": "Air assault troops \u00b7 upgrade"
-        },
-        {
-          "family": "airborne_ukraine",
-          "level": 3,
-          "name": "Air assault troops \u00b7 upgrade"
-        },
-        {
-          "family": "airborne_ukraine",
-          "level": 4,
-          "name": "Air assault troops \u00b7 upgrade"
-        },
-        {
-          "family": "airborne_ukraine",
-          "level": 5,
-          "name": "Air assault troops \u00b7 elite"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/euro_de_ksk.glb",
-      "picture": "res://assets/interface/unit_art/euro_de_ksk.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "special_forces_ukraine",
-          "level": 1,
-          "name": "Special operations forces"
-        },
-        {
-          "family": "special_forces_ukraine",
-          "level": 2,
-          "name": "Special operations forces \u00b7 upgrade"
-        },
-        {
-          "family": "special_forces_ukraine",
-          "level": 3,
-          "name": "Special operations forces \u00b7 raid tactics"
-        },
-        {
-          "family": "special_forces_ukraine",
-          "level": 4,
-          "name": "Special operations forces \u00b7 upgrade"
-        },
-        {
-          "family": "special_forces_ukraine",
-          "level": 5,
-          "name": "Special operations forces \u00b7 elite"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/euro_uk_royal_marine.glb",
-      "picture": "res://assets/interface/unit_art/euro_uk_royal_marine.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "naval_infantry_ukraine",
-          "level": 1,
-          "name": "Marines"
-        },
-        {
-          "family": "naval_infantry_ukraine",
-          "level": 2,
-          "name": "Marines \u00b7 upgrade"
-        },
-        {
-          "family": "naval_infantry_ukraine",
-          "level": 3,
-          "name": "Marines \u00b7 amphibious"
-        },
-        {
-          "family": "naval_infantry_ukraine",
-          "level": 4,
-          "name": "Marines \u00b7 upgrade"
-        },
-        {
-          "family": "naval_infantry_ukraine",
-          "level": 5,
-          "name": "Marines \u00b7 elite"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/euro_fi_winter_sniper.glb",
-      "picture": "res://assets/interface/unit_art/euro_fi_winter_sniper.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "snipers_ukraine",
-          "level": 1,
-          "name": "Sniper team"
-        },
-        {
-          "family": "snipers_ukraine",
-          "level": 2,
-          "name": "Sniper team \u00b7 upgrade"
-        },
-        {
-          "family": "snipers_ukraine",
-          "level": 3,
-          "name": "Sniper team \u00b7 thermal optics"
-        },
-        {
-          "family": "snipers_ukraine",
-          "level": 4,
-          "name": "Sniper team \u00b7 upgrade"
-        },
-        {
-          "family": "snipers_ukraine",
-          "level": 5,
-          "name": "Sniper team \u00b7 long range"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/euro_marder1a3.glb",
-      "picture": "res://assets/interface/unit_art/euro_marder1a3.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "ifv_ukraine",
-          "level": 1,
-          "name": "Marder 1A3"
-        },
-        {
-          "family": "ifv_ukraine",
-          "level": 2,
-          "name": "Marder 1A3 \u00b7 upgrade"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/euro_cv9030.glb",
-      "picture": "res://assets/interface/unit_art/euro_cv9030.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "ifv_ukraine",
-          "level": 3,
-          "name": "CV9030"
-        },
-        {
-          "family": "ifv_ukraine",
-          "level": 4,
-          "name": "CV9030 \u00b7 upgrade"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/euro_puma.glb",
-      "picture": "res://assets/interface/unit_art/euro_puma.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "ifv_ukraine",
-          "level": 5,
-          "name": "Puma"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/pl01_european.glb",
-      "picture": "res://assets/interface/unit_art/pl01_european.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "light_tank_ukraine",
-          "level": 1,
-          "name": "PL-01 light tank"
-        },
-        {
-          "family": "light_tank_ukraine",
-          "level": 2,
-          "name": "PL-01 light tank \u00b7 upgrade"
-        },
-        {
-          "family": "light_tank_ukraine",
-          "level": 3,
-          "name": "PL-01 light tank \u00b7 thermal sights"
-        },
-        {
-          "family": "light_tank_ukraine",
-          "level": 4,
-          "name": "PL-01 light tank \u00b7 upgrade"
-        },
-        {
-          "family": "light_tank_ukraine",
-          "level": 5,
-          "name": "PL-01 light tank \u00b7 advanced"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/euro_fulgur_ebm.glb",
-      "picture": "res://assets/interface/unit_art/euro_fulgur_ebm.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "strategic_ukraine",
-          "level": 1,
-          "name": "Fulgur"
-        },
-        {
-          "family": "strategic_ukraine",
-          "level": 2,
-          "name": "Fulgur \u00b7 upgrade"
-        },
-        {
-          "family": "strategic_ukraine",
-          "level": 3,
-          "name": "Fulgur \u00b7 guidance"
-        },
-        {
-          "family": "strategic_ukraine",
-          "level": 4,
-          "name": "Fulgur \u00b7 guidance \u00b7 upgrade"
-        },
-        {
-          "family": "strategic_ukraine",
-          "level": 5,
-          "name": "Fulgur \u00b7 advanced"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/euro_lynx.glb",
-      "picture": "res://assets/interface/unit_art/euro_lynx.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "transport_heli_ukraine",
-          "level": 1,
-          "name": "Lynx"
-        },
-        {
-          "family": "transport_heli_ukraine",
-          "level": 2,
-          "name": "Lynx \u00b7 upgrade"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/euro_nh90.glb",
-      "picture": "res://assets/interface/unit_art/euro_nh90.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "transport_heli_ukraine",
-          "level": 3,
-          "name": "NH90"
-        },
-        {
-          "family": "transport_heli_ukraine",
-          "level": 4,
-          "name": "NH90 \u00b7 upgrade"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/euro_nh90_block2.glb",
-      "picture": "res://assets/interface/unit_art/euro_nh90_block2.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "transport_heli_ukraine",
-          "level": 5,
-          "name": "NH90 Block 2"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/euro_hermes450.glb",
-      "picture": "res://assets/interface/unit_art/euro_hermes450.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "strike_drone_ukraine",
-          "level": 1,
-          "name": "Hermes 450"
-        },
-        {
-          "family": "strike_drone_ukraine",
-          "level": 2,
-          "name": "Hermes 450 \u00b7 upgrade"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/euro_eurodrone.glb",
-      "picture": "res://assets/interface/unit_art/euro_eurodrone.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "strike_drone_ukraine",
-          "level": 3,
-          "name": "Eurodrone"
-        },
-        {
-          "family": "strike_drone_ukraine",
-          "level": 4,
-          "name": "Eurodrone \u00b7 upgrade"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/euro_neuron.glb",
-      "picture": "res://assets/interface/unit_art/euro_neuron.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "strike_drone_ukraine",
-          "level": 5,
-          "name": "nEUROn"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/ukraine_liutyi.glb",
-      "picture": "res://assets/interface/unit_art/ukraine_liutyi.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "liutyi_ukraine",
-          "level": 1,
-          "name": "FP-1 / Liutyi"
-        },
-        {
-          "family": "liutyi_ukraine",
-          "level": 2,
-          "name": "FP-1 / Liutyi \u00b7 upgrade"
-        },
-        {
-          "family": "liutyi_ukraine",
-          "level": 3,
-          "name": "FP-1 / Liutyi \u00b7 jam-resistant navigation"
-        },
-        {
-          "family": "liutyi_ukraine",
-          "level": 4,
-          "name": "FP-1 / Liutyi \u00b7 upgrade"
-        },
-        {
-          "family": "liutyi_ukraine",
-          "level": 5,
-          "name": "FP-1 / Liutyi \u00b7 heavier warhead"
-        }
-      ]
-    },
-    {
-      "model": "res://assets/library/arsenal/euro_boxer_ambulance.glb",
-      "picture": "res://assets/interface/unit_art/euro_boxer_ambulance.webp",
-      "custom_art_present": false,
-      "uses": [
-        {
-          "family": "medic_ukraine",
-          "level": 1,
-          "name": "Boxer ambulance"
-        },
-        {
-          "family": "medic_ukraine",
-          "level": 2,
-          "name": "Boxer ambulance \u00b7 upgrade"
-        },
-        {
-          "family": "medic_ukraine",
-          "level": 3,
-          "name": "Boxer ambulance \u00b7 field surgery"
-        },
-        {
-          "family": "medic_ukraine",
-          "level": 4,
-          "name": "Boxer ambulance \u00b7 upgrade"
-        },
-        {
-          "family": "medic_ukraine",
-          "level": 5,
-          "name": "Boxer ambulance \u00b7 evacuation"
-        }
-      ]
-    }
-  ],
+  "models_with_custom_art": 161,
+  "cards_with_custom_art": 420,
+  "missing_unique_models": 0,
+  "remaining_models": [],
   "families": [
     {
       "id": "patriot_russia",
@@ -3336,14 +2289,14 @@
           "name": "Minerva",
           "model": "res://assets/library/arsenal/euro_corvette_t1_starting_minerva.glb",
           "picture": "res://assets/interface/unit_art/euro_corvette_t1_starting_minerva.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "Minerva \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_corvette_t1_starting_minerva.glb",
           "picture": "res://assets/interface/unit_art/euro_corvette_t1_starting_minerva.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
@@ -3364,7 +2317,7 @@
           "name": "Visby",
           "model": "res://assets/library/arsenal/euro_corvette_t3_modern_visby.glb",
           "picture": "res://assets/interface/unit_art/euro_corvette_t3_modern_visby.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -3392,21 +2345,21 @@
           "name": "Akula",
           "model": "res://assets/library/arsenal/russia_submarine_t2_mid_akula.glb",
           "picture": "res://assets/interface/unit_art/russia_submarine_t2_mid_akula.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "Akula \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_submarine_t2_mid_akula.glb",
           "picture": "res://assets/interface/unit_art/russia_submarine_t2_mid_akula.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "Yasen",
           "model": "res://assets/library/arsenal/russia_yasen_sub.glb",
           "picture": "res://assets/interface/unit_art/russia_yasen_sub.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -3420,14 +2373,14 @@
           "name": "Type 209",
           "model": "res://assets/library/arsenal/euro_submarine_t1_starting_type209.glb",
           "picture": "res://assets/interface/unit_art/euro_submarine_t1_starting_type209.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "Type 209 \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_submarine_t1_starting_type209.glb",
           "picture": "res://assets/interface/unit_art/euro_submarine_t1_starting_type209.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
@@ -3448,7 +2401,7 @@
           "name": "Astute",
           "model": "res://assets/library/arsenal/euro_submarine_t3_modern_astute.glb",
           "picture": "res://assets/interface/unit_art/euro_submarine_t3_modern_astute.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -3462,14 +2415,14 @@
           "name": "Kiev",
           "model": "res://assets/library/arsenal/russia_carrier_t1_starting_kiev.glb",
           "picture": "res://assets/interface/unit_art/russia_carrier_t1_starting_kiev.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "Kiev \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_carrier_t1_starting_kiev.glb",
           "picture": "res://assets/interface/unit_art/russia_carrier_t1_starting_kiev.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
@@ -3490,7 +2443,7 @@
           "name": "Shtorm",
           "model": "res://assets/library/arsenal/russia_carrier_t3_modern_shtorm.glb",
           "picture": "res://assets/interface/unit_art/russia_carrier_t3_modern_shtorm.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -3504,35 +2457,35 @@
           "name": "Clemenceau",
           "model": "res://assets/library/arsenal/euro_carrier_t1_starting_clemenceau.glb",
           "picture": "res://assets/interface/unit_art/euro_carrier_t1_starting_clemenceau.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "Clemenceau \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_carrier_t1_starting_clemenceau.glb",
           "picture": "res://assets/interface/unit_art/euro_carrier_t1_starting_clemenceau.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "Charles de Gaulle",
           "model": "res://assets/library/arsenal/euro_carrier_t2_mid_charles_de_gaulle.glb",
           "picture": "res://assets/interface/unit_art/euro_carrier_t2_mid_charles_de_gaulle.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "Charles de Gaulle \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_carrier_t2_mid_charles_de_gaulle.glb",
           "picture": "res://assets/interface/unit_art/euro_carrier_t2_mid_charles_de_gaulle.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "Queen Elizabeth",
           "model": "res://assets/library/arsenal/euro_hms_queen_elizabeth.glb",
           "picture": "res://assets/interface/unit_art/euro_hms_queen_elizabeth.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -3546,35 +2499,35 @@
           "name": "VDV paratroopers",
           "model": "res://assets/library/arsenal/russia_vdv_paratrooper.glb",
           "picture": "res://assets/interface/unit_art/russia_vdv_paratrooper.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "VDV paratroopers \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_vdv_paratrooper.glb",
           "picture": "res://assets/interface/unit_art/russia_vdv_paratrooper.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "VDV paratroopers \u00b7 air assault",
           "model": "res://assets/library/arsenal/russia_vdv_paratrooper.glb",
           "picture": "res://assets/interface/unit_art/russia_vdv_paratrooper.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "VDV paratroopers \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_vdv_paratrooper.glb",
           "picture": "res://assets/interface/unit_art/russia_vdv_paratrooper.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "VDV paratroopers \u00b7 guards",
           "model": "res://assets/library/arsenal/russia_vdv_paratrooper.glb",
           "picture": "res://assets/interface/unit_art/russia_vdv_paratrooper.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -3588,35 +2541,35 @@
           "name": "Spetsnaz",
           "model": "res://assets/library/arsenal/russia_spetsnaz.glb",
           "picture": "res://assets/interface/unit_art/russia_spetsnaz.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "Spetsnaz \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_spetsnaz.glb",
           "picture": "res://assets/interface/unit_art/russia_spetsnaz.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "Spetsnaz \u00b7 raid tactics",
           "model": "res://assets/library/arsenal/russia_spetsnaz.glb",
           "picture": "res://assets/interface/unit_art/russia_spetsnaz.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "Spetsnaz \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_spetsnaz.glb",
           "picture": "res://assets/interface/unit_art/russia_spetsnaz.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "Spetsnaz \u00b7 elite",
           "model": "res://assets/library/arsenal/russia_spetsnaz.glb",
           "picture": "res://assets/interface/unit_art/russia_spetsnaz.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -3630,35 +2583,35 @@
           "name": "Naval infantry",
           "model": "res://assets/library/arsenal/russia_naval_infantry.glb",
           "picture": "res://assets/interface/unit_art/russia_naval_infantry.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "Naval infantry \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_naval_infantry.glb",
           "picture": "res://assets/interface/unit_art/russia_naval_infantry.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "Naval infantry \u00b7 amphibious",
           "model": "res://assets/library/arsenal/russia_naval_infantry.glb",
           "picture": "res://assets/interface/unit_art/russia_naval_infantry.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "Naval infantry \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_naval_infantry.glb",
           "picture": "res://assets/interface/unit_art/russia_naval_infantry.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "Naval infantry \u00b7 guards",
           "model": "res://assets/library/arsenal/russia_naval_infantry.glb",
           "picture": "res://assets/interface/unit_art/russia_naval_infantry.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -3672,35 +2625,35 @@
           "name": "Sniper team",
           "model": "res://assets/library/arsenal/russia_sniper.glb",
           "picture": "res://assets/interface/unit_art/russia_sniper.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "Sniper team \u00b7 SV-98",
           "model": "res://assets/library/arsenal/russia_sniper.glb",
           "picture": "res://assets/interface/unit_art/russia_sniper.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "Sniper team \u00b7 thermal optics",
           "model": "res://assets/library/arsenal/russia_sniper.glb",
           "picture": "res://assets/interface/unit_art/russia_sniper.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "Sniper team \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_sniper.glb",
           "picture": "res://assets/interface/unit_art/russia_sniper.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "Sniper team \u00b7 ASh-12",
           "model": "res://assets/library/arsenal/russia_sniper.glb",
           "picture": "res://assets/interface/unit_art/russia_sniper.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -3714,35 +2667,35 @@
           "name": "BMP-1",
           "model": "res://assets/library/arsenal/russia_bmp1.glb",
           "picture": "res://assets/interface/unit_art/russia_bmp1.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "BMP-1 \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_bmp1.glb",
           "picture": "res://assets/interface/unit_art/russia_bmp1.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "BMP-2",
           "model": "res://assets/library/arsenal/russia_bmp2.glb",
           "picture": "res://assets/interface/unit_art/russia_bmp2.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "BMP-2 \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_bmp2.glb",
           "picture": "res://assets/interface/unit_art/russia_bmp2.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "BMP-3",
           "model": "res://assets/library/arsenal/russia_bmp3.glb",
           "picture": "res://assets/interface/unit_art/russia_bmp3.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -3756,35 +2709,35 @@
           "name": "BMD-2",
           "model": "res://assets/library/arsenal/russia_bmd2.glb",
           "picture": "res://assets/interface/unit_art/russia_bmd2.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "BMD-2 \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_bmd2.glb",
           "picture": "res://assets/interface/unit_art/russia_bmd2.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "BMD-4M",
           "model": "res://assets/library/arsenal/russia_bmd4m.glb",
           "picture": "res://assets/interface/unit_art/russia_bmd4m.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "BMD-4M \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_bmd4m.glb",
           "picture": "res://assets/interface/unit_art/russia_bmd4m.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "BMD-4M \u00b7 advanced",
           "model": "res://assets/library/arsenal/russia_bmd4m.glb",
           "picture": "res://assets/interface/unit_art/russia_bmd4m.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -3798,35 +2751,35 @@
           "name": "PL-01 light tank",
           "model": "res://assets/library/pl01_russian.glb",
           "picture": "res://assets/interface/unit_art/pl01_russian.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "PL-01 light tank \u00b7 upgrade",
           "model": "res://assets/library/pl01_russian.glb",
           "picture": "res://assets/interface/unit_art/pl01_russian.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "PL-01 light tank \u00b7 thermal sights",
           "model": "res://assets/library/pl01_russian.glb",
           "picture": "res://assets/interface/unit_art/pl01_russian.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "PL-01 light tank \u00b7 upgrade",
           "model": "res://assets/library/pl01_russian.glb",
           "picture": "res://assets/interface/unit_art/pl01_russian.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "PL-01 light tank \u00b7 advanced",
           "model": "res://assets/library/pl01_russian.glb",
           "picture": "res://assets/interface/unit_art/pl01_russian.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -3840,35 +2793,35 @@
           "name": "Topol-M",
           "model": "res://assets/library/arsenal/russia_topol_m.glb",
           "picture": "res://assets/interface/unit_art/russia_topol_m.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "Topol-M \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_topol_m.glb",
           "picture": "res://assets/interface/unit_art/russia_topol_m.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "Yars RS-24",
           "model": "res://assets/library/arsenal/russia_yars.glb",
           "picture": "res://assets/interface/unit_art/russia_yars.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "Yars RS-24 \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_yars.glb",
           "picture": "res://assets/interface/unit_art/russia_yars.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "Yars RS-24 \u00b7 advanced",
           "model": "res://assets/library/arsenal/russia_yars.glb",
           "picture": "res://assets/interface/unit_art/russia_yars.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -3882,35 +2835,35 @@
           "name": "Su-34",
           "model": "res://assets/library/arsenal/russia_su34.glb",
           "picture": "res://assets/interface/unit_art/russia_su34.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "Su-34 \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_su34.glb",
           "picture": "res://assets/interface/unit_art/russia_su34.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "Su-34 \u00b7 precision bombs",
           "model": "res://assets/library/arsenal/russia_su34.glb",
           "picture": "res://assets/interface/unit_art/russia_su34.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "Su-34 \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_su34.glb",
           "picture": "res://assets/interface/unit_art/russia_su34.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "Su-34 \u00b7 advanced",
           "model": "res://assets/library/arsenal/russia_su34.glb",
           "picture": "res://assets/interface/unit_art/russia_su34.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -3924,35 +2877,35 @@
           "name": "MiG-31BM",
           "model": "res://assets/library/arsenal/russia_mig31bm.glb",
           "picture": "res://assets/interface/unit_art/russia_mig31bm.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "MiG-31BM \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_mig31bm.glb",
           "picture": "res://assets/interface/unit_art/russia_mig31bm.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "MiG-31BM \u00b7 R-37M",
           "model": "res://assets/library/arsenal/russia_mig31bm.glb",
           "picture": "res://assets/interface/unit_art/russia_mig31bm.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "MiG-31BM \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_mig31bm.glb",
           "picture": "res://assets/interface/unit_art/russia_mig31bm.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "MiG-31BM \u00b7 advanced",
           "model": "res://assets/library/arsenal/russia_mig31bm.glb",
           "picture": "res://assets/interface/unit_art/russia_mig31bm.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -3966,35 +2919,35 @@
           "name": "Mi-8 / Mi-17",
           "model": "res://assets/library/arsenal/russia_mi8_mi17.glb",
           "picture": "res://assets/interface/unit_art/russia_mi8_mi17.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "Mi-8 / Mi-17 \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_mi8_mi17.glb",
           "picture": "res://assets/interface/unit_art/russia_mi8_mi17.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "Mi-8 / Mi-17 \u00b7 armour",
           "model": "res://assets/library/arsenal/russia_mi8_mi17.glb",
           "picture": "res://assets/interface/unit_art/russia_mi8_mi17.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "Mi-8 / Mi-17 \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_mi8_mi17.glb",
           "picture": "res://assets/interface/unit_art/russia_mi8_mi17.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "Mi-8 / Mi-17 \u00b7 advanced",
           "model": "res://assets/library/arsenal/russia_mi8_mi17.glb",
           "picture": "res://assets/interface/unit_art/russia_mi8_mi17.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -4008,35 +2961,35 @@
           "name": "Forpost",
           "model": "res://assets/library/arsenal/russia_forpost.glb",
           "picture": "res://assets/interface/unit_art/russia_forpost.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "Forpost \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_forpost.glb",
           "picture": "res://assets/interface/unit_art/russia_forpost.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "Inokhodets / Orion",
           "model": "res://assets/library/arsenal/russia_inokhodets.glb",
           "picture": "res://assets/interface/unit_art/russia_inokhodets.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "Inokhodets / Orion \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_inokhodets.glb",
           "picture": "res://assets/interface/unit_art/russia_inokhodets.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "Sirius",
           "model": "res://assets/library/arsenal/russia_sirius.glb",
           "picture": "res://assets/interface/unit_art/russia_sirius.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -4050,35 +3003,35 @@
           "name": "Geran-2",
           "model": "res://assets/library/arsenal/russia_geran2.glb",
           "picture": "res://assets/interface/unit_art/russia_geran2.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "Geran-2 \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_geran2.glb",
           "picture": "res://assets/interface/unit_art/russia_geran2.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "Geran-2 \u00b7 jam-resistant navigation",
           "model": "res://assets/library/arsenal/russia_geran2.glb",
           "picture": "res://assets/interface/unit_art/russia_geran2.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "Geran-2 \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_geran2.glb",
           "picture": "res://assets/interface/unit_art/russia_geran2.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "Geran-2 \u00b7 jet engine",
           "model": "res://assets/library/arsenal/russia_geran2.glb",
           "picture": "res://assets/interface/unit_art/russia_geran2.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -4092,35 +3045,35 @@
           "name": "BMM-80 Simfoniya",
           "model": "res://assets/library/arsenal/russia_bmm80_medical.glb",
           "picture": "res://assets/interface/unit_art/russia_bmm80_medical.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "BMM-80 Simfoniya \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_bmm80_medical.glb",
           "picture": "res://assets/interface/unit_art/russia_bmm80_medical.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "BMM-80 Simfoniya \u00b7 field surgery",
           "model": "res://assets/library/arsenal/russia_bmm80_medical.glb",
           "picture": "res://assets/interface/unit_art/russia_bmm80_medical.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "BMM-80 Simfoniya \u00b7 upgrade",
           "model": "res://assets/library/arsenal/russia_bmm80_medical.glb",
           "picture": "res://assets/interface/unit_art/russia_bmm80_medical.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "BMM-80 Simfoniya \u00b7 evacuation",
           "model": "res://assets/library/arsenal/russia_bmm80_medical.glb",
           "picture": "res://assets/interface/unit_art/russia_bmm80_medical.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -4134,35 +3087,35 @@
           "name": "Air assault troops",
           "model": "res://assets/library/arsenal/euro_it_folgore_paratrooper.glb",
           "picture": "res://assets/interface/unit_art/euro_it_folgore_paratrooper.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "Air assault troops \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_it_folgore_paratrooper.glb",
           "picture": "res://assets/interface/unit_art/euro_it_folgore_paratrooper.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "Air assault troops \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_it_folgore_paratrooper.glb",
           "picture": "res://assets/interface/unit_art/euro_it_folgore_paratrooper.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "Air assault troops \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_it_folgore_paratrooper.glb",
           "picture": "res://assets/interface/unit_art/euro_it_folgore_paratrooper.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "Air assault troops \u00b7 elite",
           "model": "res://assets/library/arsenal/euro_it_folgore_paratrooper.glb",
           "picture": "res://assets/interface/unit_art/euro_it_folgore_paratrooper.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -4176,35 +3129,35 @@
           "name": "Special operations forces",
           "model": "res://assets/library/arsenal/euro_de_ksk.glb",
           "picture": "res://assets/interface/unit_art/euro_de_ksk.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "Special operations forces \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_de_ksk.glb",
           "picture": "res://assets/interface/unit_art/euro_de_ksk.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "Special operations forces \u00b7 raid tactics",
           "model": "res://assets/library/arsenal/euro_de_ksk.glb",
           "picture": "res://assets/interface/unit_art/euro_de_ksk.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "Special operations forces \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_de_ksk.glb",
           "picture": "res://assets/interface/unit_art/euro_de_ksk.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "Special operations forces \u00b7 elite",
           "model": "res://assets/library/arsenal/euro_de_ksk.glb",
           "picture": "res://assets/interface/unit_art/euro_de_ksk.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -4218,35 +3171,35 @@
           "name": "Marines",
           "model": "res://assets/library/arsenal/euro_uk_royal_marine.glb",
           "picture": "res://assets/interface/unit_art/euro_uk_royal_marine.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "Marines \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_uk_royal_marine.glb",
           "picture": "res://assets/interface/unit_art/euro_uk_royal_marine.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "Marines \u00b7 amphibious",
           "model": "res://assets/library/arsenal/euro_uk_royal_marine.glb",
           "picture": "res://assets/interface/unit_art/euro_uk_royal_marine.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "Marines \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_uk_royal_marine.glb",
           "picture": "res://assets/interface/unit_art/euro_uk_royal_marine.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "Marines \u00b7 elite",
           "model": "res://assets/library/arsenal/euro_uk_royal_marine.glb",
           "picture": "res://assets/interface/unit_art/euro_uk_royal_marine.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -4260,35 +3213,35 @@
           "name": "Sniper team",
           "model": "res://assets/library/arsenal/euro_fi_winter_sniper.glb",
           "picture": "res://assets/interface/unit_art/euro_fi_winter_sniper.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "Sniper team \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_fi_winter_sniper.glb",
           "picture": "res://assets/interface/unit_art/euro_fi_winter_sniper.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "Sniper team \u00b7 thermal optics",
           "model": "res://assets/library/arsenal/euro_fi_winter_sniper.glb",
           "picture": "res://assets/interface/unit_art/euro_fi_winter_sniper.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "Sniper team \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_fi_winter_sniper.glb",
           "picture": "res://assets/interface/unit_art/euro_fi_winter_sniper.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "Sniper team \u00b7 long range",
           "model": "res://assets/library/arsenal/euro_fi_winter_sniper.glb",
           "picture": "res://assets/interface/unit_art/euro_fi_winter_sniper.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -4302,35 +3255,35 @@
           "name": "Marder 1A3",
           "model": "res://assets/library/arsenal/euro_marder1a3.glb",
           "picture": "res://assets/interface/unit_art/euro_marder1a3.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "Marder 1A3 \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_marder1a3.glb",
           "picture": "res://assets/interface/unit_art/euro_marder1a3.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "CV9030",
           "model": "res://assets/library/arsenal/euro_cv9030.glb",
           "picture": "res://assets/interface/unit_art/euro_cv9030.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "CV9030 \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_cv9030.glb",
           "picture": "res://assets/interface/unit_art/euro_cv9030.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "Puma",
           "model": "res://assets/library/arsenal/euro_puma.glb",
           "picture": "res://assets/interface/unit_art/euro_puma.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -4344,35 +3297,35 @@
           "name": "PL-01 light tank",
           "model": "res://assets/library/pl01_european.glb",
           "picture": "res://assets/interface/unit_art/pl01_european.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "PL-01 light tank \u00b7 upgrade",
           "model": "res://assets/library/pl01_european.glb",
           "picture": "res://assets/interface/unit_art/pl01_european.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "PL-01 light tank \u00b7 thermal sights",
           "model": "res://assets/library/pl01_european.glb",
           "picture": "res://assets/interface/unit_art/pl01_european.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "PL-01 light tank \u00b7 upgrade",
           "model": "res://assets/library/pl01_european.glb",
           "picture": "res://assets/interface/unit_art/pl01_european.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "PL-01 light tank \u00b7 advanced",
           "model": "res://assets/library/pl01_european.glb",
           "picture": "res://assets/interface/unit_art/pl01_european.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -4386,35 +3339,35 @@
           "name": "Fulgur",
           "model": "res://assets/library/arsenal/euro_fulgur_ebm.glb",
           "picture": "res://assets/interface/unit_art/euro_fulgur_ebm.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "Fulgur \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_fulgur_ebm.glb",
           "picture": "res://assets/interface/unit_art/euro_fulgur_ebm.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "Fulgur \u00b7 guidance",
           "model": "res://assets/library/arsenal/euro_fulgur_ebm.glb",
           "picture": "res://assets/interface/unit_art/euro_fulgur_ebm.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "Fulgur \u00b7 guidance \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_fulgur_ebm.glb",
           "picture": "res://assets/interface/unit_art/euro_fulgur_ebm.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "Fulgur \u00b7 advanced",
           "model": "res://assets/library/arsenal/euro_fulgur_ebm.glb",
           "picture": "res://assets/interface/unit_art/euro_fulgur_ebm.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -4428,35 +3381,35 @@
           "name": "Lynx",
           "model": "res://assets/library/arsenal/euro_lynx.glb",
           "picture": "res://assets/interface/unit_art/euro_lynx.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "Lynx \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_lynx.glb",
           "picture": "res://assets/interface/unit_art/euro_lynx.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "NH90",
           "model": "res://assets/library/arsenal/euro_nh90.glb",
           "picture": "res://assets/interface/unit_art/euro_nh90.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "NH90 \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_nh90.glb",
           "picture": "res://assets/interface/unit_art/euro_nh90.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "NH90 Block 2",
           "model": "res://assets/library/arsenal/euro_nh90_block2.glb",
           "picture": "res://assets/interface/unit_art/euro_nh90_block2.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -4470,35 +3423,35 @@
           "name": "Hermes 450",
           "model": "res://assets/library/arsenal/euro_hermes450.glb",
           "picture": "res://assets/interface/unit_art/euro_hermes450.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "Hermes 450 \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_hermes450.glb",
           "picture": "res://assets/interface/unit_art/euro_hermes450.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "Eurodrone",
           "model": "res://assets/library/arsenal/euro_eurodrone.glb",
           "picture": "res://assets/interface/unit_art/euro_eurodrone.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "Eurodrone \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_eurodrone.glb",
           "picture": "res://assets/interface/unit_art/euro_eurodrone.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "nEUROn",
           "model": "res://assets/library/arsenal/euro_neuron.glb",
           "picture": "res://assets/interface/unit_art/euro_neuron.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -4512,35 +3465,35 @@
           "name": "FP-1 / Liutyi",
           "model": "res://assets/library/arsenal/ukraine_liutyi.glb",
           "picture": "res://assets/interface/unit_art/ukraine_liutyi.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "FP-1 / Liutyi \u00b7 upgrade",
           "model": "res://assets/library/arsenal/ukraine_liutyi.glb",
           "picture": "res://assets/interface/unit_art/ukraine_liutyi.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "FP-1 / Liutyi \u00b7 jam-resistant navigation",
           "model": "res://assets/library/arsenal/ukraine_liutyi.glb",
           "picture": "res://assets/interface/unit_art/ukraine_liutyi.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "FP-1 / Liutyi \u00b7 upgrade",
           "model": "res://assets/library/arsenal/ukraine_liutyi.glb",
           "picture": "res://assets/interface/unit_art/ukraine_liutyi.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "FP-1 / Liutyi \u00b7 heavier warhead",
           "model": "res://assets/library/arsenal/ukraine_liutyi.glb",
           "picture": "res://assets/interface/unit_art/ukraine_liutyi.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     },
@@ -4554,35 +3507,35 @@
           "name": "Boxer ambulance",
           "model": "res://assets/library/arsenal/euro_boxer_ambulance.glb",
           "picture": "res://assets/interface/unit_art/euro_boxer_ambulance.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 2,
           "name": "Boxer ambulance \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_boxer_ambulance.glb",
           "picture": "res://assets/interface/unit_art/euro_boxer_ambulance.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 3,
           "name": "Boxer ambulance \u00b7 field surgery",
           "model": "res://assets/library/arsenal/euro_boxer_ambulance.glb",
           "picture": "res://assets/interface/unit_art/euro_boxer_ambulance.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 4,
           "name": "Boxer ambulance \u00b7 upgrade",
           "model": "res://assets/library/arsenal/euro_boxer_ambulance.glb",
           "picture": "res://assets/interface/unit_art/euro_boxer_ambulance.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         },
         {
           "level": 5,
           "name": "Boxer ambulance \u00b7 evacuation",
           "model": "res://assets/library/arsenal/euro_boxer_ambulance.glb",
           "picture": "res://assets/interface/unit_art/euro_boxer_ambulance.webp",
-          "custom_art_present": false
+          "custom_art_present": true
         }
       ]
     }

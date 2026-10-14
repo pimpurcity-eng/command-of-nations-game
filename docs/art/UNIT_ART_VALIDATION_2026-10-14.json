@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "engine": "Godot 4.6.3",
+  "command": "godot --headless --path game --script res://tests/test_unit_art_coverage.gd",
+  "checks": 3305,
+  "failures": 0,
+  "research_cards": 420,
+  "distinct_models": 161,
+  "distinct_image_hashes": 161,
+  "missing_pictures": 0,
+  "duplicate_model_images": 0,
+  "roman_levels": [
+    "I",
+    "II",
+    "III",
+    "IV",
+    "V"
+  ],
+  "shared_helpers": [
+    "MenuArt.unit",
+    "CowUI.research_picture",
+    "CowUI.equipment_picture"
+  ],
+  "manifest_git_blob": "db0b4232213ff94440f286ea9c160c1ea56ea704",
+  "catalog_git_blob": "cf037760ce463b8624dbd9f4f1ddf5fae0a09c73"
+}
