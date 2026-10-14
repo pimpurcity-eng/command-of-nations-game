@@ -55,10 +55,11 @@ var order_mode: = false
 ## Last map tap, so tapping the same spot again steps to the next army or the city under it.
 var _tap_cycle: Dictionary = {}
 var gold_panel: GoldPanel
-## Owner 2026-10-14 start, 40 units a side: the capital holds 2 infantry, 2 light tanks and 3 air
-## defence; every other city 1 infantry, 1 light tank and 2 air defence; 8 infantry are scattered
-## through the provinces; one plane waits at the capital's airbase.
-const STARTING_ARMY: = {"capital": {"infantry": 2, "light_tank": 2, "skyguard": 3}, "city": {"infantry": 1, "light_tank": 1, "skyguard": 2}, "scattered_infantry": 8, "plane": 1}
+## Owner 2026-10-14 start (Call of War style): 4 light tanks, 4 air defence, 1 plane and 22
+## infantry a side. The capital holds 3 infantry, 2 light tanks and 2 air defence; the two cities
+## nearest the enemy (the front) 2 infantry, 1 light tank and 1 air defence each; every other city
+## 1 infantry; 11 infantry are spread along the border; the plane waits at a province airport.
+const STARTING_ARMY: = {"capital": {"infantry": 3, "light_tank": 2, "skyguard": 2}, "front": {"infantry": 2, "light_tank": 1, "skyguard": 1}, "city": {"infantry": 1}, "front_cities": 2, "border_infantry": 11, "plane": 1}
 ## Each side's starter light attack jet.
 const STARTING_PLANE: = {"russia": "yak130_russia", "ukraine": "hawk_t2_ukraine"}
 var selecting_armies: = false
@@ -1047,8 +1048,13 @@ func populate_campaign_forces(staged: bool = false) -> void:
 		homes.sort_custom(func(a: Dictionary, b: Dictionary): return a.id == capital.id and b.id != capital.id)
 		if homes.is_empty(): continue
 		var plan: Array = []  # [family id, city]
+		# The front: the cities nearest the enemy capital.
+		var enemy_capital: Dictionary = buildings.capital("ukraine" if country == "russia" else "russia")
+		var by_front: Array = homes.filter(func(city: Dictionary): return city.id != capital.id)
+		if not enemy_capital.is_empty(): by_front.sort_custom(func(a: Dictionary, b: Dictionary): return a.point.distance_to(enemy_capital.point) < b.point.distance_to(enemy_capital.point))
+		var front: Array = by_front.slice(0, int(STARTING_ARMY.front_cities)).map(func(city: Dictionary): return city.id)
 		for home in homes:
-			var garrison: Dictionary = STARTING_ARMY.capital if home.id == capital.id else STARTING_ARMY.city
+			var garrison: Dictionary = STARTING_ARMY.capital if home.id == capital.id else STARTING_ARMY.front if home.id in front else STARTING_ARMY.city
 			for prefix in garrison:
 				for i in garrison[prefix]: plan.append([prefix + "_" + country, home])
 		# Owner 2026-10-14: "I want the plane in a province" with an airport - the province
@@ -1060,16 +1066,24 @@ func populate_campaign_forces(staged: bool = false) -> void:
 		if not airfield.is_empty():
 			buildings.provinces.levels[airfield.id].airbase = maxi(1, buildings.provinces.level(airfield.id, "airbase"))
 			for i in STARTING_ARMY.plane: plan.append([STARTING_PLANE[country], airfield])
-		# Scatter infantry: each one goes to the province centre farthest from the cities and
-		# from the infantry already posted, so they spread across the country.
+		# Border infantry (owner: "scattered along borders"): the provinces nearest the enemy's land,
+		# each one placed as far as possible from the cities and the posts already taken.
+		var enemy_country: String = "ukraine" if country == "russia" else "russia"
+		var enemy_land: Array = map.territories.filter(func(t: Dictionary): return t.playable and t.owner == enemy_country).map(func(t: Dictionary): return t.center)
 		var posts: Array = []
 		var seen: Dictionary = {}
 		for territory in map.territories:
 			if not territory.playable or territory.owner != country or seen.has(territory.title): continue
 			seen[territory.title] = true
-			posts.append({"id": "province_" + str(territory.id), "point": match_rules.capture_point(territory)})
+			var post: Vector2 = match_rules.capture_point(territory)
+			if city_points.any(func(p: Vector2): return p.distance_to(post) < 0.8): continue
+			var gap: = INF
+			for other in enemy_land: gap = minf(gap, post.distance_to(other))
+			posts.append({"id": "province_" + str(territory.id), "point": post, "front": gap})
+		posts.sort_custom(func(a: Dictionary, b: Dictionary): return a.front < b.front)
+		posts = posts.slice(0, maxi(int(STARTING_ARMY.border_infantry), int(posts.size() * 0.4)))
 		var taken: Array = city_points.duplicate()
-		for i in STARTING_ARMY.scattered_infantry:
+		for i in STARTING_ARMY.border_infantry:
 			var best: Dictionary = {}
 			var best_gap: = -1.0
 			for post in posts:

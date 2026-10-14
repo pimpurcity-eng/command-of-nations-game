@@ -115,10 +115,9 @@ static func create(kind: String, _faction: Color, equipment_id: String = "", lev
 	var spec: = EquipmentIdentity.spec(equipment_id)
 	var role: String = spec.get("role", "")
 	if role.is_empty(): role = spec.get("visual_kind", kind)
-	var keep_colors: bool = AssetRoster.appearance(spec.get("asset_roster_id", ""), spec.get("country", GameSession.player_country)).get("original_colors", false)
-	if owner_model(path) or keep_colors: pass  # Preserve supplied original paint.
-	elif spec.get("country", "") == "russia": paint_russian(vehicle, model_bounds(vehicle, 0.0))
-	elif spec.get("visual_kind", kind) in GROUND_KINDS: paint_camo(vehicle, model_bounds(vehicle, 0.0), UKRAINE_CAMO)
+	# Owner 2026-10-14 ("Where did you get the blue tanks?" - "whatever is in the research now"):
+	# every unit keeps its model's own paint, so the map matches the research pictures. The blue
+	# (Russia) and woodland (Ukraine) camouflage overlays (paint_camo) are no longer painted on.
 	# The pivot carries the fitting transform; the source scene's own transform is kept.
 	var pivot: = Node3D.new()
 	pivot.name = "ModelFit"

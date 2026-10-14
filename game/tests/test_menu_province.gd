@@ -18,17 +18,16 @@ func run():
  while not game.boot_finished: await process_frame
  for i in 3:await process_frame
  game.mobile_start.hide();game.clock.paused=true;game.match_rules.ai_enabled=false
- # Owner 2026-10-14 start, 40 units a side: capital 2 infantry, 2 light tanks, 3 air defence;
- # other cities 1 / 1 / 2; 8 infantry scattered in the provinces; a plane at a province airport.
+ # Owner 2026-10-14 start, 31 units a side: 4 light tanks, 4 air defence, 1 plane, 22 infantry
+ # (capital 3/2/2, the two front cities 2/1/1, other cities 2 infantry, 16 in the provinces).
  for country in ["russia","ukraine"]:
-  var city_count: int = game.production.cities.filter(func(c):return c.country.to_lower()==country).size()
   var mine: Array = game.units.units.filter(func(u):return u.country==country)
-  check(mine.size()==40,"%s starts with 40 units (%d)" % [country,mine.size()])
+  check(mine.size()==31,"%s starts with 31 units (%d)" % [country,mine.size()])
   check(mine.all(func(u):return int(u.level)==1),"%s starts with every unit at level 1" % country)
   var count: = func(id: String) -> int: return mine.filter(func(u):return u.equipment_id==id).size()
-  check(count.call("light_tank_"+country)==city_count+1,"%s: a light tank per city, 2 in the capital (%d)" % [country,count.call("light_tank_"+country)])
-  check(count.call("skyguard_"+country)==2*city_count+1,"%s: 2 air defence per city, 3 in the capital (%d)" % [country,count.call("skyguard_"+country)])
-  check(count.call("infantry_"+country)==city_count+1+8,"%s: infantry in every city plus 8 scattered (%d)" % [country,count.call("infantry_"+country)])
+  check(count.call("light_tank_"+country)==4,"%s: 4 light tanks (%d)" % [country,count.call("light_tank_"+country)])
+  check(count.call("skyguard_"+country)==4,"%s: 4 air defence (%d)" % [country,count.call("skyguard_"+country)])
+  check(count.call("infantry_"+country)==22,"%s: 22 infantry (%d)" % [country,count.call("infantry_"+country)])
   var plane: Array = mine.filter(func(u):return u.equipment_id==game.STARTING_PLANE[country])
   check(plane.size()==1 and str(plane[0].base_city).begins_with("province:") and game.buildings.level(plane[0].base_city,"airbase")>=1,"%s: the plane starts at a province airport" % country)
  for family in EquipmentIdentity.catalog:
