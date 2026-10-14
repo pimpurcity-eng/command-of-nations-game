@@ -6,6 +6,8 @@ const GARRISON_PLAZA_RADIUS := 0.30
 # Owner 2026-10-14: "make the square in the middle a lot smaller".
 const GARRISON_SQUARE := Rect2(-0.30, -0.28, 0.60, 0.56)
 const SHOW_COURTYARD_DISK: = false
+## City look being reviewed with the owner (2026-10-14): classic, downtown, grid or green.
+static var city_style: = "classic"
 const RESOURCE_WORDS: = {"materials": "METAL", "electronics": "RARE EARTHS", "fuel": "OIL", "food": "FOOD"}
 const RESOURCE_COLOURS: = {"materials": Color("d4dade"), "electronics": Color("d7a8ff"), "fuel": Color("ff9a7a"), "food": Color("9ee07e")}
 var cities: Array = GeographicProjection.load_cities()
@@ -508,22 +510,48 @@ func _build_city_district(district: Node3D, city: Dictionary, _ink: StandardMate
 			_dense_tower(district, point, width, height, towers[(row+column)%towers.size()])
 			built += 1
 			permanent += 1
+	# Style ground: asphalt for downtown and grid cities, a green base for the garden city.
+	if city_style in ["downtown", "grid", "green"]:
+		var ground_paint: = StandardMaterial3D.new()
+		ground_paint.albedo_color = Color("3b5532") if city_style == "green" else Color("55595d")
+		ground_paint.roughness = 1.0
+		var plate: Mesh
+		if city_style == "grid":
+			plate = BoxMesh.new(); (plate as BoxMesh).size = Vector3(2.2, 0.004, 2.2)
+		else:
+			plate = CylinderMesh.new(); (plate as CylinderMesh).top_radius = 1.12 if city_style == "downtown" else 1.3; (plate as CylinderMesh).bottom_radius = (plate as CylinderMesh).top_radius; (plate as CylinderMesh).height = 0.004; (plate as CylinderMesh).radial_segments = 40
+		_city_mesh(district, plate, Vector3(0, 0.002, 0), ground_paint)
 	# Regular street blocks densely fill the city, including the removable garrison core.
 	for row in range(-7,8):
 		for column in range(-7,8):
 			var point := Vector2(column * 0.18, row * 0.18)
-			if point.length() > 1.34: continue
+			match city_style:
+				"downtown": if point.length() > 1.02: continue
+				"grid":
+					if absf(point.x) > 1.0 or absf(point.y) > 1.0: continue
+					# Straight avenues every fourth row and column.
+					if (row % 4 == 0 or column % 4 == 0) and not GARRISON_SQUARE.has_point(point): continue
+				"green": if point.length() > 1.22: continue
+				_: if point.length() > 1.34: continue
 			if point.y < -0.66 and absf(point.x) < 0.57: continue # permanent skyline
 			# Two small avenues run between rows of blocks, rather than cutting a circular void.
-			if column == 0 and row > 4: continue
+			if city_style == "classic" and column == 0 and row > 4: continue
 			point += Vector2(rng.randf_range(-0.012,0.012),rng.randf_range(-0.012,0.012))
 			var width := rng.randf_range(0.115,0.145)
 			var radius := width * 0.8
 			var inside := GARRISON_SQUARE.grow(radius).has_point(point)
 			var target: Node3D = core if inside else district
-			var central := point.length() < 0.55
+			if city_style == "green" and point.length() > 0.62 and rng.randf() < 0.42:
+				# Garden city: trees between the apartment blocks.
+				var crown_size: = rng.randf_range(0.045, 0.065)
+				var crown: = SphereMesh.new(); crown.radius = crown_size; crown.height = crown_size * 2.0; crown.radial_segments = 8; crown.rings = 4
+				_city_mesh(target, crown, Vector3(point.x, 0.04 + crown_size, point.y), leaves)
+				continue
+			var central := point.length() < (0.78 if city_style == "downtown" else 0.6 if city_style == "grid" else 0.55)
+			if city_style == "grid": central = absf(point.x) < 0.5 and absf(point.y) < 0.5
 			if central:
 				var height := rng.randf_range(0.30,0.65) * (1.25 if capital else 1.0)
+				if city_style == "downtown": height *= 1.0 + 0.6 * (1.0 - point.length() / 0.78)
 				_dense_tower(target, point, width, height, towers[rng.randi_range(0,towers.size()-1)])
 			elif point.length() < 1.01:
 				var height := rng.randf_range(0.13,0.25)
