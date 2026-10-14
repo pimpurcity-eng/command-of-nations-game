@@ -44,13 +44,13 @@ static func icon_texture(kind: String) -> Texture2D:
 
 static func equipment_picture(id: String, level: int = 1) -> Texture2D:
 	if id.begins_with("economy_"): return research_picture(id,level)
-	var art := MenuArt.unit(str(EquipmentIdentity.research_tier(id, level).get("model", "")))
+	var tier := EquipmentIdentity.picture_tier(id, level)
+	var art := MenuArt.unit(str(tier.get("model", "")))
 	if art != null: return art
 	var air_drawing: String = {"skyguard_russia": "strela10", "patriot_russia": "bukm3", "skyguard_ukraine": "roland", "patriot_ukraine": "iris_t_slm"}.get(id, "")
 	var air_path: String = "res://assets/interface/illustrations/" + air_drawing + ".png"
 	if not air_drawing.is_empty() and WebExtras.has(air_path): return load(air_path)
 	# Equipment families must show their real tier model, never a faction flag placeholder.
-	var tier: = EquipmentIdentity.research_tier(id, level)
 	var supplied: String = tier.get("preview", "")
 	var model_stem: String = str(tier.get("model", "")).trim_suffix(".glb")
 	for candidate in [supplied, model_stem+"_ready.png", model_stem+".png", model_stem+"_preview.png"]:
@@ -71,13 +71,13 @@ static func research_picture(id: String, level: int) -> Texture2D:
 		var spec := EconomyResearch.spec(id)
 		return FacilityVisual.preview(spec,spec.country,level)
 	var tier_name: String = EquipmentIdentity.research_title(id, level)
-	var art := MenuArt.unit(str(EquipmentIdentity.research_tier(id, level).get("model", "")))
+	var tier := EquipmentIdentity.picture_tier(id, level)
+	var art := MenuArt.unit(str(tier.get("model", "")))
 	if art != null: return art
 	var drawing: String = ""
 	if id.ends_with("_russia"):
 		for pair in [["Strela-10", "strela10"], ["Tor-M2", "torm2"], ["Buk-M3", "bukm3"], ["S-400", "s400"], ["S-500", "s500"]]:
 			if tier_name.begins_with(pair[0]): drawing = pair[1]
-	var tier: Dictionary = EquipmentIdentity.research_tier(id, level)
 	var original_preview: String = str(tier.get("preview", str(tier.get("model", "")).trim_suffix(".glb") + ".png"))
 	if str(tier.get("model", "")).contains("/arsenal/") and WebExtras.has(original_preview):
 		return load(original_preview)

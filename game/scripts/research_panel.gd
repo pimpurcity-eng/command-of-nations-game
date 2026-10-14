@@ -134,6 +134,13 @@ func setup(system: ResearchSystem, theme: Theme) -> void:
 	picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	bar_row.add_child(picture)
+	var level_badge := CityPanel.Chevrons.new()
+	level_badge.anchor_left = 1.0
+	level_badge.anchor_right = 1.0
+	level_badge.offset_left = -22
+	level_badge.offset_top = 0
+	level_badge.offset_bottom = 30
+	picture.add_child(level_badge)
 	var info: = VBoxContainer.new()
 	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	bar_row.add_child(info)
@@ -162,7 +169,7 @@ func setup(system: ResearchSystem, theme: Theme) -> void:
 		message.text = (EquipmentIdentity.title(selected_id) + " level " + EquipmentIdentity.roman_level(selected_level) + (" upgrade" if selected_upgrade else "") + " research started") if error.is_empty() else error
 		_refresh())
 	side.add_child(start)
-	detail = {"picture": picture, "name": name_label, "costs": costs, "time": time, "start": start}
+	detail = {"picture": picture, "rank": level_badge, "name": name_label, "costs": costs, "time": time, "start": start}
 	var footer: = HBoxContainer.new()
 	tree_view.add_child(footer)
 	message = CowUI.label("", 13, CowUI.GOLD)
@@ -486,6 +493,8 @@ func _refresh() -> void:
 		cell.card.modulate = Color.WHITE
 	# Selected technology.
 	detail.picture.texture = CowUI.research_picture(selected_id, selected_level)
+	detail.rank.level = selected_level
+	detail.rank.queue_redraw()
 	detail.name.text = EquipmentIdentity.title(selected_id) + " · Level " + EquipmentIdentity.roman_level(selected_level) + ("  (+" + str((selected_level - 1) * 12) + "% damage)" if selected_level > 1 else "")
 	var tier: Dictionary = EquipmentIdentity.research_tier(selected_id, selected_level)
 	if not tier.is_empty():
