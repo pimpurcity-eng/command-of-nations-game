@@ -424,6 +424,13 @@ func _ai_spies(world: Dictionary) -> void:
 	var targets: Array = production.cities.filter(func(city: Dictionary): return production.controller(city) == player)
 	if not home.is_empty(): targets.sort_custom(func(a: Dictionary, b: Dictionary): return a.point.distance_to(home.point) < b.point.distance_to(home.point))
 	espionage.ai_turn(country, targets, home, world)
+	# Its hackers too (paid from its own match gold).
+	var used: = espionage.ai_hack(country, player, targets, int(production.gold.get(country, 0)), production.spend_gold, world)
+	match used:
+		"blackout": report.emit("Enemy hackers cut the power in " + str(targets[0].name) + " for 3 hours")
+		"satellite": report.emit("Enemy hackers took over a satellite: they can see all your armies for 1 hour")
+		"bank": report.emit("Enemy hackers raided your bank: money and metal stolen")
+		"blocked": report.emit("Your firewall stopped an enemy hack")
 func snapshot() -> Dictionary:
 	return {"last_day": last_day, "air_cooldowns": air_combat.snapshot(), "combat_cooldowns": combat.snapshot(), "at_war": at_war, "winner": winner, "decision_timer": decision_timer, "recruitment_timer": ai.recruitment_timer, "capture_progress": capture_progress.duplicate(true), "victory_type": victory_type, "victory": victory.snapshot(), "chronicle": chronicle.snapshot(), "annexation": annexation.snapshot(), "strategic": strategic.snapshot(), "trade": trade.snapshot() if trade != null else {}, "doctrines": Doctrine.snapshot(), "diplomacy": diplomacy.snapshot(), "espionage": espionage.snapshot(), "spy_ai_timer": spy_ai_timer, "guards": guards.keys(), "guard_logs": guard_logs()}
 func restore(state: Dictionary) -> void :

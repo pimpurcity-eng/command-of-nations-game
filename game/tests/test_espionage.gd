@@ -83,9 +83,37 @@ func run() -> void:
 	ai.ai_turn("ukraine", targets, ukraine_home, world)
 	ai.ai_turn("ukraine", targets, ukraine_home, world)
 	check(ai.owned("ukraine").size() == 2 and ai.owned("ukraine")[0].mission == "counter" and ai.owned("ukraine")[1].mission != "counter", "AI sends a counter-spy, then a mission spy")
+	# Hackers (paid with gold).
+	var net: = Espionage.new()
+	var spend: = economy.spend_gold
+	var gold_before: = int(economy.gold.russia)
+	var their_cash: = float(theirs.funds)
+	check(net.hack("russia", "bank", {}, "", "ukraine", int(economy.gold.russia), spend, world).is_empty(), "Bank hack works")
+	check(int(economy.gold.russia) == gold_before - Espionage.HACKS.bank.gold and float(theirs.funds) < their_cash, "Bank hack costs gold and takes enemy money")
+	check(not net.hack("russia", "blackout", belgorod, "russia", "ukraine", int(economy.gold.russia), spend, world).is_empty(), "No blackout on your own city")
+	check(net.hack("russia", "blackout", kharkiv, "ukraine", "ukraine", int(economy.gold.russia), spend, world).is_empty() and is_equal_approx(Espionage.sabotage_factor("kharkiv"), Espionage.BLACKOUT_FACTOR), "Blackout almost stops Kharkiv's production")
+	check(net.hack("russia", "satellite", {}, "", "ukraine", int(economy.gold.russia), spend, world).is_empty() and Espionage.reveals(game.buildings.city("lviv").point if not game.buildings.city("lviv").is_empty() else Vector2(-30, 0), "russia"), "Satellite hack shows the whole map")
+	check(not net.hack("russia", "satellite", {}, "", "ukraine", int(economy.gold.russia), spend, world).is_empty(), "The same hack cannot run twice")
+	net.advance(Espionage.HOUR * 1.01, world, "russia")
+	check(not Espionage.reveals(Vector2(-30, 0), "russia"), "Satellite hack ends after an hour")
+	net.advance(Espionage.HOUR * 2.0, world, "russia")
+	check(Espionage.sabotage_factor("kharkiv") == 1.0, "Blackout ends after three hours")
+	economy.gold.ukraine = 5000
+	check(net.hack("ukraine", "firewall", {}, "", "russia", 5000, spend, world).is_empty() and net.firewall("ukraine"), "Firewall goes up")
+	var gold_now: = int(economy.gold.russia)
+	check(net.hack("russia", "bank", {}, "", "ukraine", gold_now, spend, world).begins_with("BLOCKED") and int(economy.gold.russia) < gold_now, "Firewall blocks the hack (gold is still spent)")
+	var poor: = Espionage.new()
+	check(not poor.hack("russia", "satellite", {}, "", "ukraine", 10, spend, world).is_empty(), "Not enough gold")
+	var bot: = Espionage.new()
+	economy.gold.ukraine = 5000
+	check(bot.ai_hack("ukraine", "russia", [belgorod], 5000, spend, world) == "firewall" and bot.ai_hack("ukraine", "russia", [belgorod], int(economy.gold.ukraine), spend, world) in ["blackout", "satellite", "bank"], "AI puts up a firewall, then hacks")
+	var saved_net: = Espionage.new()
+	saved_net.restore(bot.snapshot())
+	check(saved_net.hacks.size() == bot.hacks.size(), "Hacks are saved and loaded")
+	net.hacks.clear(); net._refresh_hacks()
 	# The screen opens and sends a spy.
 	game.hud.espionage_requested.emit()
 	await process_frame
-	check(game.espionage_panel != null and game.espionage_panel.visible and game.espionage_panel.city_ids.size() > 0, "Espionage screen opens with enemy cities")
+	check(game.espionage_panel != null and game.espionage_panel.visible and game.espionage_panel.city_ids.size() > 0 and game.espionage_panel.hack_city_ids.size() > 0, "Espionage screen opens with enemy cities and hackers")
 	print("ESPIONAGE CHECKS ", checks, " failures=", failures)
 	quit(0 if failures == 0 else 1)

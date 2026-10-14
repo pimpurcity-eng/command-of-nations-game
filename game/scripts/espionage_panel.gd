@@ -12,6 +12,11 @@ var send_button: Button
 var message: Label
 var list: VBoxContainer
 var mission_buttons: Dictionary = {}
+var hack_buttons: Dictionary = {}
+var hack_city_picker: OptionButton
+var hack_city_ids: Array = []
+var gold_label: Label
+var hack_list: Label
 var mission: = "intel"
 var city_ids: Array = []
 var _tick: = 0.0
@@ -78,6 +83,35 @@ func setup(rules: MatchSystem, system: ProductionSystem, theme: Theme) -> void:
 	list = VBoxContainer.new()
 	list.add_theme_constant_override("separation", 6)
 	body.add_child(list)
+	# Hackers (owner 2026-10-14): paid with gold.
+	body.add_child(_heading("Hackers · paid with gold"))
+	gold_label = CowUI.label("", 20, CowUI.GOLD)
+	body.add_child(gold_label)
+	body.add_child(CowUI.label("Blackout target:", 19))
+	hack_city_picker = OptionButton.new()
+	hack_city_picker.custom_minimum_size.y = 56
+	hack_city_picker.add_theme_font_size_override("font_size", 21)
+	body.add_child(hack_city_picker)
+	for kind in Espionage.HACKS:
+		var card: = PanelContainer.new()
+		card.add_theme_stylebox_override("panel", CowUI.skin("row", 8, 10))
+		body.add_child(card)
+		var row: = HBoxContainer.new()
+		row.add_theme_constant_override("separation", 10)
+		card.add_child(row)
+		var info: = CowUI.label(Espionage.HACKS[kind].name + "\n" + Espionage.HACKS[kind].text, 18, CowUI.INK)
+		info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_child(info)
+		var start: = CowUI.action("%d GOLD" % int(Espionage.HACKS[kind].gold), "", CowUI.GREEN)
+		start.custom_minimum_size.x = 170
+		var chosen: String = kind
+		start.pressed.connect(func(): _hack(chosen))
+		row.add_child(start)
+		hack_buttons[kind] = start
+	hack_list = CowUI.label("", 19)
+	hack_list.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	body.add_child(hack_list)
 	get_viewport().size_changed.connect(_layout)
 	_layout()
 	hide()
@@ -102,6 +136,7 @@ func open(city_id: String = "") -> void:
 		var city: Dictionary = economy.buildings.city(city_id)
 		mission = "intel" if economy.controller(city) != GameSession.player_country else "counter"
 	_fill_cities(city_id)
+	_fill_hack_cities()
 	refresh()
 
 func _fill_cities(preferred: String = "") -> void:
@@ -118,6 +153,31 @@ func _fill_cities(preferred: String = "") -> void:
 		city_ids.append(city.id)
 	var index: = city_ids.find(previous)
 	if index >= 0: city_picker.select(index)
+
+func _fill_hack_cities() -> void:
+	var previous: String = hack_city_ids[hack_city_picker.selected] if hack_city_picker.selected >= 0 and hack_city_picker.selected < hack_city_ids.size() else ""
+	hack_city_picker.clear()
+	hack_city_ids.clear()
+	var player: = GameSession.player_country
+	var cities: Array = economy.cities.filter(func(city: Dictionary): return economy.controller(city) != player and not economy.controller(city).is_empty())
+	var home: Dictionary = economy.buildings.capital(player)
+	if not home.is_empty(): cities.sort_custom(func(a: Dictionary, b: Dictionary): return a.point.distance_to(home.point) < b.point.distance_to(home.point))
+	for city in cities:
+		hack_city_picker.add_item(city.name)
+		hack_city_ids.append(city.id)
+	var index: = hack_city_ids.find(previous)
+	if index >= 0: hack_city_picker.select(index)
+
+func _hack(kind: String) -> void:
+	var player: = GameSession.player_country
+	var city: Dictionary = {}
+	if Espionage.HACKS[kind].target == "city" and hack_city_picker.selected >= 0 and hack_city_picker.selected < hack_city_ids.size():
+		city = economy.buildings.city(hack_city_ids[hack_city_picker.selected])
+	var enemy: = GameSession.opponent_country()
+	var result: = match_rules.espionage.hack(player, kind, city, economy.controller(city) if not city.is_empty() else "", enemy, int(economy.gold.get(player, 0)), economy.spend_gold, match_rules.spy_world())
+	message.text = (Espionage.HACKS[kind].name + " started" + (" in " + city.name if not city.is_empty() else "")) if result.is_empty() else result
+	if result.is_empty() or result.begins_with("BLOCKED"): economy.changed.emit()
+	refresh()
 
 func _send() -> void:
 	if city_picker.selected < 0 or city_picker.selected >= city_ids.size():
@@ -141,6 +201,13 @@ func refresh() -> void:
 	for id in mission_buttons:
 		mission_buttons[id].modulate = Color.WHITE if id == mission else Color(1, 1, 1, 0.55)
 	mission_text.text = Espionage.MISSIONS[mission].name + ": " + Espionage.MISSIONS[mission].text
+	gold_label.text = "Your gold: " + StrategyHUD._thousands(int(economy.gold.get(player, 0)))
+	var running: Array = []
+	for active in match_rules.espionage.hacks:
+		if active.country == player:
+			var where: String = economy.buildings.city(active.city).get("name", "") if not str(active.city).is_empty() else ""
+			running.append("%s%s · %s left" % [Espionage.HACKS[active.kind].name, " (" + where + ")" if not where.is_empty() else "", SimulationClock.duration(active.remaining)])
+	hack_list.text = "Running: " + ", ".join(running) if not running.is_empty() else ""
 	for child in list.get_children(): list.remove_child(child); child.queue_free()
 	if mine.is_empty():
 		var none: = CowUI.label("No spies yet.", 19)

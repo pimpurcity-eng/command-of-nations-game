@@ -16,7 +16,7 @@ const COST: = {"funds": 3000.0, "manpower": 100.0}
 const CATCH_CHANCE: = 0.04       # per hour, per enemy spy
 const COUNTER_FACTOR: = 3.0      # with a counter-spy in the city
 const GARRISON_BONUS: = 0.02     # with an army in the city
-const INTEL_RADIUS: = 2.6
+const INTEL_RADIUS: = 6.0  # owner 2026-10-14: "can only see local armies" - the city and the land around it
 const STEAL_SHARE: = 0.01        # of the target's money and metal, per hour
 const STEAL_CAP: = 1500.0        # per resource, per hour
 const SABOTAGE_FACTOR: = 0.5
@@ -32,6 +32,20 @@ const MISSIONS: = {
 	"morale": {"name": "Lower morale", "text": "The province's morale drops every hour.", "icon": "provinces", "enemy": true},
 	"counter": {"name": "Counter-spy", "text": "Guard one of your cities: enemy spies there are caught far more often.", "icon": "stop", "enemy": false},
 }
+
+## Hackers (owner 2026-10-14): paid with gold, they work at once or for a few hours.
+const HACKS: = {
+	"blackout": {"name": "Power blackout", "text": "Cuts the power in an enemy city: building and production almost stop for 3 hours.", "gold": 600, "hours": 3.0, "target": "city", "icon": "hammer"},
+	"satellite": {"name": "Satellite hack", "text": "Shows every enemy army on the whole map for 1 hour.", "gold": 900, "hours": 1.0, "target": "none", "icon": "research"},
+	"bank": {"name": "Bank hack", "text": "Takes 5% of the enemy's money and metal at once (up to 10,000 each).", "gold": 700, "hours": 0.0, "target": "none", "icon": "market"},
+	"firewall": {"name": "Firewall", "text": "Blocks every enemy hack against you for 6 hours.", "gold": 400, "hours": 6.0, "target": "none", "icon": "stop"},
+}
+const BLACKOUT_FACTOR: = 0.1
+const BANK_SHARE: = 0.05
+const BANK_CAP: = 10000.0
+var hacks: Array = []   # active {country, kind, city, remaining}
+static var satellite_countries: Dictionary = {}  # country -> true while its satellite hack runs
+static var blacked_out: Dictionary = {}          # city id -> true
 
 var spies: Array = []   # {id, country, city, mission, travel, hour}
 var next_id: = 1
@@ -64,6 +78,37 @@ func send(country: String, city: Dictionary, mission: String, city_owner: String
 	next_id += 1
 	return ""
 
+func firewall(country: String) -> bool:
+	return hacks.any(func(active: Dictionary): return active.country == country and active.kind == "firewall")
+
+func hack_reason(country: String, kind: String, city: Dictionary, city_owner: String, gold: int) -> String:
+	if not HACKS.has(kind): return "Choose a hack"
+	if HACKS[kind].target == "city" and (city.is_empty() or city_owner == country): return "Choose an enemy city"
+	for active in hacks:
+		if active.country == country and active.kind == kind and (HACKS[kind].target != "city" or active.city == city.get("id", "")): return "That hack is already running"
+	if gold < int(HACKS[kind].gold): return "Needs %d gold" % int(HACKS[kind].gold)
+	return ""
+
+## Starts a hack. `spend_gold` takes (country, amount) and returns "" when paid. Returns "" on
+## success, or why it failed. A hack blocked by the enemy's firewall still costs its gold.
+func hack(country: String, kind: String, city: Dictionary, city_owner: String, enemy: String, gold: int, spend_gold: Callable, world: Dictionary) -> String:
+	var why: = hack_reason(country, kind, city, city_owner, gold)
+	if not why.is_empty(): return why
+	var paid: String = spend_gold.call(country, int(HACKS[kind].gold))
+	if not paid.is_empty(): return paid
+	if kind != "firewall" and firewall(enemy): return "BLOCKED: the enemy's firewall stopped the hack"
+	if kind == "bank":
+		var theirs: Dictionary = world.stockpile.call(enemy)
+		var ours: Dictionary = world.stockpile.call(country)
+		for resource in ["funds", "materials"]:
+			var amount: = minf(maxf(0.0, float(theirs.get(resource, 0.0))) * BANK_SHARE, BANK_CAP)
+			theirs[resource] = float(theirs.get(resource, 0.0)) - amount
+			ours[resource] = float(ours.get(resource, 0.0)) + amount
+	else:
+		hacks.append({"country": country, "kind": kind, "city": str(city.get("id", "")), "remaining": float(HACKS[kind].hours) * HOUR})
+	_refresh_static(world)
+	return ""
+
 func recall(country: String, id: int) -> bool:
 	for spy in spies:
 		if spy.country == country and int(spy.id) == id:
@@ -77,6 +122,11 @@ func recall(country: String, id: int) -> bool:
 ## Returns report lines for the player.
 func advance(seconds: float, world: Dictionary, player: String) -> Array:
 	var reports: Array = []
+	for active in hacks.duplicate():
+		active.remaining -= seconds
+		if active.remaining <= 0.0:
+			hacks.erase(active)
+			if active.country == player: reports.append(HACKS[active.kind].name + " ended")
 	for spy in spies.duplicate():
 		var city: Dictionary = world.city.call(spy.city)
 		var city_owner: String = world.owner.call(city) if not city.is_empty() else ""
@@ -129,6 +179,7 @@ func _hourly(spy: Dictionary, city: Dictionary, city_owner: String, world: Dicti
 func _refresh_static(world: Dictionary) -> void:
 	intel_zones.clear()
 	sabotaged.clear()
+	_refresh_hacks()
 	for spy in spies:
 		if spy.travel > 0.0: continue
 		if spy.mission == "intel":
@@ -137,12 +188,21 @@ func _refresh_static(world: Dictionary) -> void:
 		elif spy.mission == "sabotage":
 			sabotaged[spy.city] = true
 
+func _refresh_hacks() -> void:
+	satellite_countries.clear()
+	blacked_out.clear()
+	for active in hacks:
+		if active.kind == "satellite": satellite_countries[active.country] = true
+		elif active.kind == "blackout": blacked_out[active.city] = true
+
 static func reveals(point: Vector2, country: String) -> bool:
+	if satellite_countries.has(country): return true
 	for zone in intel_zones:
 		if zone[0] == country and point.distance_to(zone[1]) <= INTEL_RADIUS: return true
 	return false
 
 static func sabotage_factor(city_id: String) -> float:
+	if blacked_out.has(city_id): return BLACKOUT_FACTOR
 	return SABOTAGE_FACTOR if sabotaged.has(city_id) else 1.0
 
 func _city_name(city: Dictionary, spy: Dictionary) -> String:
@@ -160,8 +220,19 @@ func ai_turn(country: String, targets: Array, home: Dictionary, world: Dictionar
 	var target: Dictionary = targets[rng.randi_range(0, mini(2, targets.size() - 1))]
 	send(country, target, missions[rng.randi_range(0, missions.size() - 1)], world.owner.call(target), stockpile)
 
+## The computer opponent's hackers: keeps a firewall up when it can, otherwise hacks the player.
+## Returns the hack used ("" for none, "blocked" when the player's firewall stopped it).
+func ai_hack(country: String, enemy: String, targets: Array, gold: int, spend_gold: Callable, world: Dictionary) -> String:
+	if not firewall(country) and gold >= int(HACKS.firewall.gold) * 3:
+		return "firewall" if hack(country, "firewall", {}, "", enemy, gold, spend_gold, world).is_empty() else ""
+	var kinds: = ["blackout", "satellite", "bank"]
+	var kind: String = kinds[rng.randi_range(0, kinds.size() - 1)]
+	var target: Dictionary = targets[0] if not targets.is_empty() else {}
+	var result: = hack(country, kind, target, enemy, enemy, gold, spend_gold, world)
+	return kind if result.is_empty() else ("blocked" if result.begins_with("BLOCKED") else "")
+
 func snapshot() -> Dictionary:
-	return {"spies": spies.duplicate(true), "next_id": next_id}
+	return {"spies": spies.duplicate(true), "next_id": next_id, "hacks": hacks.duplicate(true)}
 
 func restore(state: Dictionary) -> void:
 	spies.clear()
@@ -169,5 +240,10 @@ func restore(state: Dictionary) -> void:
 		if spy is Dictionary and MISSIONS.has(str(spy.get("mission", ""))) and str(spy.get("country", "")) in ["russia", "ukraine"]:
 			spies.append({"id": int(spy.get("id", 0)), "country": str(spy.country), "city": str(spy.get("city", "")), "mission": str(spy.mission), "travel": clampf(float(spy.get("travel", 0.0)), 0.0, TRAVEL), "hour": clampf(float(spy.get("hour", HOUR)), 0.0, HOUR)})
 	next_id = maxi(int(state.get("next_id", 1)), spies.reduce(func(top: int, spy: Dictionary): return maxi(top, int(spy.id) + 1), 1))
+	hacks.clear()
+	for active in state.get("hacks", []):
+		if active is Dictionary and HACKS.has(str(active.get("kind", ""))) and str(active.get("country", "")) in ["russia", "ukraine"]:
+			hacks.append({"country": str(active.country), "kind": str(active.kind), "city": str(active.get("city", "")), "remaining": clampf(float(active.get("remaining", 0.0)), 0.0, 6.0 * HOUR)})
 	intel_zones.clear()
 	sabotaged.clear()
+	_refresh_hacks()
