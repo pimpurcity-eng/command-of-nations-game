@@ -10,13 +10,23 @@ signal progress(fraction: float)
 const FILE: = "index.extras.pck"
 const LOCAL: = "/tmp/warfront_extras.pck"
 static var available: bool = not OS.has_feature("web")
-## True when the resource can be loaded now. In the browser version a file from the weapons pack
-## is still listed by ResourceLoader.exists before the pack arrives, so look for its import file.
+## True when the resource can be loaded now. In the browser version the files listed in
+## res://web_extras_index.txt (written by tools/split_web_pack.py) arrive with the weapons pack.
+static var _later: Dictionary = {}
 static func has(path: String) -> bool:
 	if path.is_empty(): return false
 	if not OS.has_feature("web") or available: return ResourceLoader.exists(path)
-	return FileAccess.file_exists(path + ".import") or FileAccess.file_exists(path + ".remap") or (FileAccess.file_exists(path) and ResourceLoader.exists(path))
+	if _later.is_empty() and FileAccess.file_exists("res://web_extras_index.txt"):
+		for line in FileAccess.get_file_as_string("res://web_extras_index.txt").split("\n"): _later[line] = true
+	if not _later.has(path): return ResourceLoader.exists(path)
+	# On phones the pack is fetched only when something first needs it (memory is tight there).
+	if _instance != null and _instance._http == null:
+		print("Weapons pack: first needed for ", path)
+		_instance.start()
+	return false
+static var _instance: WebExtras
 var _http: HTTPRequest
+func _enter_tree() -> void: _instance = self
 var _size: = 0
 
 func start() -> void:

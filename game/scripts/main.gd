@@ -87,6 +87,12 @@ func _ready() -> void :
 	settings.ambient_light_color = Color("b8c8d5")
 	environment.environment = settings
 	add_child(environment)
+	# Phone browsers (owner 2026-10-14: "WebGL context lost") have far less graphics memory than
+	# the app: no MSAA, 3D at 75% resolution (menus stay sharp) and a smaller shadow map.
+	if OS.has_feature("web") and UnitSystem.mobile_device():
+		get_viewport().msaa_3d = Viewport.MSAA_DISABLED
+		get_viewport().scaling_3d_scale = 0.75
+		RenderingServer.directional_shadow_atlas_set_size(2048, true)
 	var sun: = DirectionalLight3D.new()
 	sun.rotation_degrees = Vector3(-42, -35, 0)
 	sun.light_color = Color("fff1d5")
@@ -494,6 +500,7 @@ func _ready() -> void :
 		mobile_start.test_requested.connect(func():
 			GameSession.player_country = mobile_start.selected_country()
 			# The weapons range shows every model; in the browser wait for the weapons download.
+			if web_extras != null: web_extras.start()
 			while web_extras != null and not WebExtras.available:
 				mobile_start.set_progress(100.0 * web_extras.fraction(), "Downloading weapons")
 				await get_tree().process_frame
@@ -513,7 +520,9 @@ func _ready() -> void :
 		web_extras = WebExtras.new()
 		add_child(web_extras)
 		web_extras.loaded.connect(_web_extras_loaded)
-		web_extras.start()
+		# Computers fetch the weapons pack at once; phones only when something first needs it
+		# (owner 2026-10-14: "WebGL context lost" - the phone browser ran out of memory).
+		if not UnitSystem.mobile_device(): web_extras.start()
 	if OS.has_feature("web"):
 		browser_callback = JavaScriptBridge.create_callback(_browser_hidden)
 		browser_resume_callback = JavaScriptBridge.create_callback(_browser_visible)

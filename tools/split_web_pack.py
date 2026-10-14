@@ -69,6 +69,8 @@ CORE_MODELS = [
     # province airport of the starting plane) and the rail and road pieces drawn on the map.
     "buildings_oct12/recruitment_center", "buildings_oct12/train_station", "buildings_oct12/road_straight",
     "buildings_oct12/rail_straight", "buildings_oct12/province_airport_l1",
+    # City resource emblems on the map tags.
+    "buildings_oct12/resource_",
 ]
 KEEP_FOLDERS = ()
 core_prefixes = ["assets/library/" + m for m in CORE_MODELS]
@@ -125,6 +127,13 @@ while moved:
                 moved = True
 
 core_entries = [e for e in entries if e["name"] not in extra]
+# List of everything that arrives later, so the game knows exactly which files to wait for
+# (WebExtras.has); ResourceLoader.exists cannot tell in an exported game.
+later = sorted({"res://" + n.rsplit(".", 1)[0] for n in extra if n.endswith((".import", ".remap"))})
+listing = "\n".join(later).encode()
+import hashlib
+core_entries.append({"name": "web_extras_index.txt", "size": len(listing), "data": listing,
+                     "md5": hashlib.md5(listing).digest(), "flags": 0})
 extra_entries = [e for e in entries if e["name"] in extra]
 write_pack(os.path.join(web, "index.pck"), header, core_entries)
 write_pack(os.path.join(web, "index.extras.pck"), header, extra_entries)
