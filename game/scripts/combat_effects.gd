@@ -209,7 +209,26 @@ func explode(position: Vector3, large: bool = false, power: float = 1.0) -> void
 	core.material_override.emission_enabled = true
 	core.material_override.emission = Color("ff9a30")
 	core.material_override.emission_energy_multiplier = 2.5
-	root.add_child(_burst(Color("fff4c8"), Color("ff7a1a"), Color(0.35, 0.08, 0.02, 0.0), int(22 * size), 0.95, 0.55 * size, 0.34 * size, -0.5, 0.0))  # fireball
+	# Owner 2026-10-14: the same glowing fire as the nuke, much smaller - a boiling fireball
+	# and, for missiles and bombs, a little mushroom of fire rising off it.
+	var fire: = _cloud_burst(Color(1.0, 0.97, 0.85, 1.0), Color(1.0, 0.55, 0.12, 0.9), Color(0.45, 0.12, 0.04, 0.0), int(18 * size), 1.1, 0.4 * size, 0.4 * size, -0.4, true)
+	fire.emission_sphere_radius = 0.08 * size
+	root.add_child(fire)
+	if large:
+		var stem: = _cloud_burst(Color(0.9, 0.5, 0.2, 0.45), Color(0.4, 0.3, 0.24, 0.25), Color(0.2, 0.18, 0.17, 0.0), int(12 * size), 1.4, 0.55 * size, 0.22 * size, 0.0, true)
+		stem.spread = 8.0
+		stem.emission_shape = CPUParticles3D.EMISSION_SHAPE_BOX
+		stem.emission_box_extents = Vector3(0.03, 0.01, 0.03) * size
+		root.add_child(stem)
+		var cap: = _cloud_burst(Color(1.0, 0.75, 0.4, 0.6), Color(0.5, 0.36, 0.28, 0.3), Color(0.25, 0.22, 0.2, 0.0), int(16 * size), 1.6, 0.15 * size, 0.32 * size, -0.05, true)
+		cap.emission_shape = CPUParticles3D.EMISSION_SHAPE_RING
+		cap.emission_ring_axis = Vector3.UP
+		cap.emission_ring_radius = 0.16 * size
+		cap.emission_ring_inner_radius = 0.06 * size
+		cap.emission_ring_height = 0.04 * size
+		cap.flatness = 0.4
+		cap.position.y = 0.55 * size
+		root.add_child(cap)
 	root.add_child(_burst(Color("ffe08a"), Color("ff9a2a"), Color(1, 0.5, 0.1, 0.0), int(14 * size), 0.5, 2.6 * size, 0.035 * size, 3.5, 0.0))  # sparks
 	root.add_child(_burst(Color(0.12, 0.11, 0.1, 1.0), Color(0.18, 0.16, 0.14, 1.0), Color(0.2, 0.18, 0.16, 0.0), int(8 * size), 1.1, 1.6 * size, 0.03 * size, 4.0, 0.0, true))  # debris
 	root.add_child(_burst(Color(0.22, 0.2, 0.19, 0.75), Color(0.3, 0.29, 0.28, 0.5), Color(0.45, 0.44, 0.42, 0.0), int(10 * size), 2.6, 0.35 * size, 0.22 * size, -0.25, 0.25))  # smoke

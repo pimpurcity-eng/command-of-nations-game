@@ -84,6 +84,8 @@ func launch(country: String, kind: String, target: Vector2, armies: UnitSystem, 
 		if distance > weapon.radius: continue
 		var falloff: float = 1.0 - 0.5 * distance / float(weapon.radius)
 		var damage: float = weapon.damage * falloff * (weapon.armor_factor if unit.visual_kind in ["armor", "naval"] else 1.0)
+		# Owner 2026-10-14: nothing inside a nuclear blast survives.
+		if kind == "nuclear": damage = unit.health
 		unit.health = maxf(0.0, unit.health - damage)
 		hits += 1
 	if weapon.fallout > 0:
