@@ -183,6 +183,23 @@ func advance_battles(seconds: float) -> void :
 			var factor: = production.buildings.incoming_damage_factor(unit) if production != null and production.buildings != null else 1.0
 			unit.health = maxf(0, unit.health - damage.get(unit.id, 0.0) * factor)
 		remaining = maxf(0, remaining - step)
+## Owner 2026-10-13: a nuclear strike all but destroys the cities it hits - every building
+## loses most of its levels and the people's morale collapses. Returns the cities hit.
+const NUCLEAR_BUILDING_KEEP: = 0.2
+func nuclear_aftermath(target: Vector2, radius: float) -> Array:
+	var hit: Array = []
+	if production == null or production.buildings == null: return hit
+	var system: BuildingSystem = production.buildings
+	for city in production.cities:
+		if city.point.distance_to(target) > radius: continue
+		hit.append(city.id)
+		for id in system.levels.get(city.id, {}).keys():
+			system.levels[city.id][id] = int(floor(int(system.levels[city.id][id]) * NUCLEAR_BUILDING_KEEP))
+		system.jobs = system.jobs.filter(func(job: Dictionary): return job.city != city.id)
+		var region: = production.province(city)
+		if not region.is_empty(): region.morale = 5.0
+	if not hit.is_empty(): system.changed.emit()
+	return hit
 func advance(seconds: float) -> void :
 	if seconds > 0: daily_provinces()
 	if not winner.is_empty() or seconds <= 0: return

@@ -831,17 +831,34 @@ func launch_strategic(kind: String) -> void:
 		if city.get("capital", false) and city.country.to_lower() == GameSession.player_country: start = Vector3(city.point.x, 0.6, city.point.y)
 	audio.play("ballistic_missile")
 	var finish: = Vector3(target.x, map.elevation(target), target.y)
-	combat_effects.launch(start, finish + Vector3.UP * 0.2, "missile", GameSession.player_country)
+	var flight: = 5.0 if kind == "nuclear" else 1.6
+	# Owner 2026-10-13: the whole screen strobes red while a nuke is incoming.
+	if kind == "nuclear": combat_effects.nuke_warning(flight)
+	combat_effects.launch(start, finish + Vector3.UP * 0.2, "missile", GameSession.player_country, "", flight)
 	if not result.intercepted:
 		var radius: float = StrategicWeapons.WEAPONS[kind].radius
-		get_tree().create_timer(1.6).timeout.connect(func():
+		get_tree().create_timer(flight).timeout.connect(func():
 			if kind == "nuclear":
-				combat_effects.nuke(finish, radius)
+				combat_effects.nuke(finish, radius, float(StrategicWeapons.WEAPONS.nuclear.fallout))
+				nuke_cinematic(finish)
+				for city_id in match_rules.nuclear_aftermath(target, radius): cities.devastate(city_id)
+				refresh_hud()
 				return
 			for i in 4:
 				var angle: = TAU * i / 4.0
 				combat_effects.explode(finish + Vector3(cos(angle), 0.1, sin(angle)) * radius * (0.0 if i == 0 else 0.6), true))
 	refresh_hud()
+## Owner 2026-10-13 ("make it amazing"): the camera swoops down low beside the blast to watch
+## the mushroom cloud rise, then returns to where the player was.
+func nuke_cinematic(point: Vector3) -> void:
+	var saved: = [rig.target, rig.distance, rig.pitch, rig.yaw]
+	rig.target = point + Vector3.UP * 0.8
+	rig.distance = 15.0
+	rig.pitch = 0.36
+	get_tree().create_timer(11.0).timeout.connect(func():
+		rig.target = saved[0]
+		rig.distance = saved[1]
+		rig.pitch = saved[2])
 ## Retreat: the selected army pulls back to the nearest friendly province centre.
 func retreat_selected() -> void:
 	if not friendly_selected():

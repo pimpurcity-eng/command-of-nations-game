@@ -400,6 +400,18 @@ def march():
     return normalize(fade_out(reverb(x + gear, 0.8, 0.2, 4000), 0.6))
 
 
+
+def nuclear_alarm():
+    """Nuclear launch klaxon under the siren: a harsh two-tone alarm pulsing fast."""
+    seconds = 5.0
+    t = t_axis(seconds)
+    high = (np.mod(t, 0.5) < 0.25)
+    f = np.where(high, 880.0, 660.0)
+    tone = np.sign(np.sin(2 * np.pi * np.cumsum(f) / SR)) * 0.5 + np.sin(2 * np.pi * np.cumsum(f) / SR) * 0.5
+    gate = 0.6 + 0.4 * (np.mod(t, 0.25) < 0.2)
+    return normalize(fade_out(reverb(filt(tone, "low", 3000) * gate * 0.7, 0.8, 0.25, 3500), 0.4))
+
+
 def fanfare(notes, beat=0.32, minor=False):
     total = beat * (len(notes) + 4)
     parts = []
@@ -789,6 +801,7 @@ def carrier_launch():
 
 
 SFX = {
+    "nuclear_alarm": nuclear_alarm,
     "tracks_moving": tracks_moving, "wheels_moving": wheels_moving, "march": march,
     "jet_flyby": jet_flyby, "bomb_whistle": bomb_whistle, "nuclear_blast": nuclear_blast,
     "tank_cannon": tank_cannon, "autocannon": autocannon, "artillery": artillery, "naval_gun": naval_gun,

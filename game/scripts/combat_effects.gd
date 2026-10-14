@@ -128,7 +128,7 @@ func muzzle_flash(source: Dictionary, position: Vector3, direction: Vector3, eff
 	model.position = offset + recoil
 	muzzles.append({"node": root, "model": model, "offset": offset, "recoil": recoil, "age": 0.0})
 	smoke_puff(position, false, 0.06)
-func launch(start: Vector3, finish: Vector3, effect: String, country: String = "russia", projectile_model: String = "") -> void :
+func launch(start: Vector3, finish: Vector3, effect: String, country: String = "russia", projectile_model: String = "", flight_time: float = 0.0) -> void :
 	if projectiles.size() >= MAX_PROJECTILES: return
 	var root: = Node3D.new()
 	add_child(root)
@@ -174,6 +174,7 @@ func launch(start: Vector3, finish: Vector3, effect: String, country: String = "
 	if effect in ["missile","interceptor"]: duration = clampf(start.distance_to(finish)*0.25+2.0,2.4,4.0)
 	if effect in ["cannon", "tracer"]: duration = clampf(start.distance_to(finish) * 0.08, 0.12, 0.4)
 	if effect == "bomb": duration = 1.3
+	if flight_time > 0.0: duration = flight_time
 	projectiles.append({"node": root, "start": start, "finish": finish, "effect": effect, "age": 0.0, "trail_age": 0.0, "duration": duration})
 func trajectory(job: Dictionary, fraction: float) -> Vector3:
 	var position: Vector3 = job.start.lerp(job.finish, fraction)
@@ -283,81 +284,266 @@ func _burst(start: Color, middle: Color, finish: Color, amount: int, life: float
 	particles.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	return particles
 
-## Owner 2026-10-13 ("make the nuclear bomb amazing"): a blinding flash over the whole screen,
-## a white-hot fireball that rises into a mushroom cloud on a churning stem, a ground-hugging
-## shock wave racing outwards, a dust ring, burning ground and a deep rolling blast.
-func nuke(position: Vector3, radius: float) -> void:
+## Owner 2026-10-13 ("it's the biggest point in the game ... make it amazing"): a nuclear
+## detonation - blinding flash and camera shake, a boiling fireball of cloud particles rising
+## into a rolling mushroom cap on a churning stem, a white condensation ring, a ground-hugging
+## shock wave and dust storm, burning ruins and a glowing radioactive fallout zone.
+func nuke(position: Vector3, radius: float, fallout_seconds: float = 0.0) -> void:
 	if audio != null: audio.play("nuclear_blast")
 	var root: = Node3D.new()
 	add_child(root)
 	root.position = position
+	var r: = radius
 	var light: = OmniLight3D.new()
 	light.light_color = Color("fff1d0")
-	light.light_energy = 40.0
-	light.omni_range = radius * 6.0
+	light.light_energy = 60.0
+	light.omni_range = r * 8.0
 	root.add_child(light)
-	var fireball: = sphere(root, radius * 0.25, Color(1.0, 0.85, 0.55, 1.0), true)
-	fireball.material_override.emission_enabled = true
-	fireball.material_override.emission = Color("ffb04a")
-	fireball.material_override.emission_energy_multiplier = 3.0
-	# The mushroom cloud: a churning column of fire and smoke feeding a rolling cap.
-	var stem: = _burst(Color(1.0, 0.7, 0.35, 0.95), Color(0.55, 0.36, 0.26, 0.85), Color(0.5, 0.48, 0.46, 0.0), 120, 2.6, radius * 0.9, radius * 0.4, -0.1, 0.0)
+	# Fireball: an emissive core inside boiling, glowing cloud puffs.
+	var fireball: = sphere(root, r * 0.28, Color(1.0, 0.92, 0.7, 1.0), true)
+	fireball.material_override.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	var fire_cloud: = _cloud_burst(Color(1.0, 0.97, 0.85, 1.0), Color(1.0, 0.55, 0.12, 0.95), Color(0.45, 0.12, 0.04, 0.0), 90, 2.8, r * 0.35, r * 0.75, 0.0, true)
+	fire_cloud.emission_sphere_radius = r * 0.3
+	fire_cloud.one_shot = false
+	fire_cloud.explosiveness = 0.2
+	root.add_child(fire_cloud)
+	# Stem: a churning column of fire at the bottom turning to brown smoke.
+	var stem: = _cloud_burst(Color(0.7, 0.36, 0.14, 0.32), Color(0.32, 0.25, 0.2, 0.2), Color(0.2, 0.18, 0.17, 0.0), 140, 3.4, r * 0.75, r * 0.45, 0.0, true)
 	stem.one_shot = false
 	stem.explosiveness = 0.0
-	stem.spread = 6.0
+	stem.spread = 5.0
 	stem.emission_shape = CPUParticles3D.EMISSION_SHAPE_BOX
-	stem.emission_box_extents = Vector3(radius * 0.12, 0.02, radius * 0.12)
+	stem.emission_box_extents = Vector3(r * 0.13, 0.02, r * 0.13)
 	stem.damping_min = 0.0
-	stem.damping_max = 0.2
+	stem.damping_max = 0.1
 	root.add_child(stem)
-	var cap: = _burst(Color(1.0, 0.62, 0.3, 0.95), Color(0.5, 0.33, 0.25, 0.9), Color(0.55, 0.52, 0.5, 0.0), 160, 6.0, radius * 0.55, radius * 0.75, -0.05, 0.0)
+	# Cap: a rolling ring of cloud, hot inside, dark and heavy outside.
+	var cap: = _cloud_burst(Color(0.75, 0.4, 0.17, 0.3), Color(0.36, 0.28, 0.23, 0.2), Color(0.22, 0.2, 0.19, 0.0), 220, 7.0, r * 0.38, r * 0.85, -0.02, true)
 	cap.one_shot = false
 	cap.explosiveness = 0.0
+	cap.emission_shape = CPUParticles3D.EMISSION_SHAPE_RING
+	cap.emission_ring_axis = Vector3.UP
+	cap.emission_ring_radius = r * 0.85
+	cap.emission_ring_inner_radius = r * 0.35
+	cap.emission_ring_height = r * 0.25
 	cap.direction = Vector3.UP
-	cap.spread = 65.0
-	cap.emission_sphere_radius = radius * 0.4
+	cap.spread = 80.0
+	cap.flatness = 0.45
 	root.add_child(cap)
+	var cap_glow: = _cloud_burst(Color(1.0, 0.7, 0.35, 0.5), Color(0.9, 0.35, 0.08, 0.35), Color(0.4, 0.1, 0.03, 0.0), 60, 2.5, r * 0.2, r * 0.6, 0.0, true)
+	cap_glow.one_shot = false
+	cap_glow.explosiveness = 0.0
+	cap_glow.emission_sphere_radius = r * 0.35
+	root.add_child(cap_glow)
+	# Condensation ring around the rising stem.
+	var halo: = MeshInstance3D.new()
+	var halo_shape: = TorusMesh.new()
+	halo_shape.inner_radius = 0.85
+	halo_shape.outer_radius = 1.0
+	halo_shape.rings = 64
+	halo_shape.ring_segments = 8
+	halo.mesh = halo_shape
+	halo.material_override = ink(Color(1, 1, 1, 0.55))
+	root.add_child(halo)
+	# Ground shock wave and the dust storm it pushes out.
 	var shock: = MeshInstance3D.new()
 	var wave: = TorusMesh.new()
-	wave.inner_radius = 0.92
+	wave.inner_radius = 0.93
 	wave.outer_radius = 1.0
-	wave.rings = 48
+	wave.rings = 64
 	wave.ring_segments = 6
 	shock.mesh = wave
-	shock.material_override = ink(Color(1.0, 0.95, 0.85, 0.7))
+	shock.material_override = ink(Color(1.0, 0.95, 0.85, 0.8))
 	root.add_child(shock)
-	var dust: = MeshInstance3D.new()
-	var base: = TorusMesh.new()
-	base.inner_radius = 0.6
-	base.outer_radius = 1.0
-	base.rings = 32
-	base.ring_segments = 8
-	dust.mesh = base
-	dust.material_override = ink(Color(0.55, 0.47, 0.38, 0.6))
+	var dust: = _cloud_burst(Color(0.62, 0.52, 0.42, 0.85), Color(0.55, 0.48, 0.4, 0.6), Color(0.55, 0.5, 0.45, 0.0), 140, 5.0, r * 2.4, r * 0.55, 0.0, false)
+	dust.direction = Vector3.RIGHT
+	dust.spread = 180.0
+	dust.flatness = 1.0
+	dust.emission_sphere_radius = r * 0.25
+	dust.damping_min = r * 0.4
+	dust.damping_max = r * 0.6
 	root.add_child(dust)
-	root.add_child(_burst(Color("fffbe8"), Color("ff8a2a"), Color(0.4, 0.1, 0.02, 0.0), 60, 2.2, radius * 2.2, radius * 0.35, -0.3, 0.0))
-	root.add_child(_burst(Color(0.4, 0.3, 0.25, 0.9), Color(0.45, 0.38, 0.33, 0.7), Color(0.5, 0.48, 0.45, 0.0), 40, 9.0, radius * 0.5, radius * 0.6, -0.35, 0.0))
-	root.add_child(_burst(Color("ffe08a"), Color("ff6a1a"), Color(0.6, 0.15, 0.0, 0.0), 50, 1.6, radius * 4.0, radius * 0.06, 2.0, 0.0))
-	nuke_jobs.append({"node": root, "light": light, "fireball": fireball, "cap": cap, "stem": stem, "shock": shock, "dust": dust, "radius": radius, "age": 0.0})
-	fireball.material_override.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	_screen_flash()
-	for i in 8:
-		var angle: = TAU * i / 8.0
-		explode(position + Vector3(cos(angle), 0.05, sin(angle)) * radius * 0.7, true)
+	root.add_child(_burst(Color("ffe08a"), Color("ff6a1a"), Color(0.6, 0.15, 0.0, 0.0), 70, 1.8, r * 4.0, r * 0.07, 2.0, 0.0))
+	# Scorched ground and burning ruins.
+	var scorch: = MeshInstance3D.new()
+	var disc: = CylinderMesh.new()
+	disc.top_radius = r * 1.1
+	disc.bottom_radius = r * 1.1
+	disc.height = 0.01
+	disc.radial_segments = 48
+	scorch.mesh = disc
+	var burnt: = StandardMaterial3D.new()
+	burnt.albedo_texture = _scorch_texture()
+	burnt.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	burnt.albedo_color = Color(1, 1, 1, 0.0)
+	scorch.material_override = burnt
+	scorch.position.y = 0.02
+	root.add_child(scorch)
+	var fires: Array = []
+	for i in 10:
+		var spot: = Vector3.FORWARD.rotated(Vector3.UP, TAU * i / 10.0 + randf() * 0.4) * r * randf_range(0.15, 0.85)
+		var fire: = _cloud_burst(Color(1.0, 0.8, 0.35, 0.9), Color(1.0, 0.35, 0.05, 0.7), Color(0.2, 0.18, 0.16, 0.0), 14, 1.6, r * 0.18, r * 0.16, -0.3, true)
+		fire.one_shot = false
+		fire.explosiveness = 0.0
+		fire.emitting = false
+		fire.position = spot + Vector3.UP * 0.05
+		root.add_child(fire)
+		fires.append(fire)
+	nuke_jobs.append({"node": root, "light": light, "fireball": fireball, "fire_cloud": fire_cloud, "cap": cap, "cap_glow": cap_glow, "stem": stem,
+		"halo": halo, "shock": shock, "scorch": scorch, "fires": fires, "radius": r, "age": 0.0})
+	_screen_flash(Color(1, 0.98, 0.9, 1.0))
+	shake = maxf(shake, 1.0)
+	if fallout_seconds > 0.0: _fallout_zone(position, r * 1.5, fallout_seconds)
 
+const USE_CLOUD_FOR_SMOKE: = false
 var nuke_jobs: Array = []
+var shake: = 0.0
 var _flash: ColorRect
-func _screen_flash() -> void:
-	if _flash == null:
-		var layer: = CanvasLayer.new()
-		layer.layer = 20
-		add_child(layer)
-		_flash = ColorRect.new()
-		_flash.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		_flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		layer.add_child(_flash)
-	_flash.color = Color(1, 0.98, 0.9, 1.0)
+var _warning: Label
+var warning_time: = 0.0
+func _overlay() -> void:
+	if _flash != null: return
+	var layer: = CanvasLayer.new()
+	layer.layer = 20
+	add_child(layer)
+	_flash = ColorRect.new()
+	_flash.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_flash.visible = false
+	layer.add_child(_flash)
+	_warning = Label.new()
+	_warning.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	_warning.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	_warning.grow_vertical = Control.GROW_DIRECTION_BOTH
+	_warning.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_warning.text = "☢ NUCLEAR MISSILE INBOUND ☢"
+	_warning.add_theme_font_size_override("font_size", 52)
+	var banner: = StyleBoxFlat.new()
+	banner.bg_color = Color(0.25, 0.0, 0.0, 0.85)
+	banner.set_content_margin_all(18)
+	banner.border_color = Color("ffcc00")
+	banner.set_border_width_all(4)
+	_warning.add_theme_stylebox_override("normal", banner)
+	_warning.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_warning.custom_minimum_size = Vector2(620, 0)
+	_warning.add_theme_color_override("font_color", Color("fff2e0"))
+	_warning.add_theme_color_override("font_outline_color", Color("3a0000"))
+	_warning.add_theme_constant_override("outline_size", 10)
+	_warning.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_warning.visible = false
+	layer.add_child(_warning)
+func _screen_flash(colour: Color) -> void:
+	_overlay()
+	_flash.color = colour
 	_flash.visible = true
+	flash_age = 0.0
+
+## Owner 2026-10-13: "make their whole screen flash red when a nuke's coming in ... go berserk".
+func nuke_warning(seconds: float) -> void:
+	_overlay()
+	warning_time = seconds
+	_warning.visible = true
+	if audio != null:
+		audio.play("war_declared")
+		audio.play("nuclear_alarm")
+var flash_age: = 0.0
+
+## A radioactive fallout zone: a glowing yellow-green haze and drifting particles that stay on
+## the map until the fallout ends (game time).
+func _fallout_zone(position: Vector3, radius: float, seconds: float) -> void:
+	var root: = Node3D.new()
+	add_child(root)
+	root.position = position
+	var haze: = MeshInstance3D.new()
+	var disc: = CylinderMesh.new()
+	disc.top_radius = radius
+	disc.bottom_radius = radius
+	disc.height = 0.01
+	disc.radial_segments = 64
+	haze.mesh = disc
+	var glow: = StandardMaterial3D.new()
+	glow.albedo_texture = _fallout_texture()
+	glow.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	glow.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	glow.albedo_color = Color(1, 1, 1, 0.75)
+	haze.material_override = glow
+	haze.position.y = 0.04
+	root.add_child(haze)
+	var motes: = _cloud_burst(Color(0.75, 1.0, 0.3, 0.0), Color(0.7, 0.95, 0.25, 0.45), Color(0.55, 0.8, 0.2, 0.0), 60, 6.0, 0.05, radius * 0.35, -0.02, true)
+	motes.one_shot = false
+	motes.explosiveness = 0.0
+	motes.emission_shape = CPUParticles3D.EMISSION_SHAPE_SPHERE
+	motes.emission_sphere_radius = radius * 0.8
+	motes.position.y = 0.2
+	root.add_child(motes)
+	var end: float = (clock.elapsed if clock != null else 0.0) + seconds
+	fallout_zones.append({"node": root, "end": end, "haze": haze})
+var fallout_zones: Array = []
+
+static var _cloud_tex: ImageTexture
+## Soft, lumpy cloud sprite (fractal noise inside a round falloff) for smoke and fire.
+static func cloud_texture() -> ImageTexture:
+	if _cloud_tex != null: return _cloud_tex
+	var noise: = FastNoiseLite.new()
+	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	noise.fractal_octaves = 4
+	noise.frequency = 0.045
+	var size: = 128
+	var image: = Image.create(size, size, false, Image.FORMAT_RGBA8)
+	for y in size:
+		for x in size:
+			var d: = Vector2(x - size * 0.5, y - size * 0.5).length() / (size * 0.5)
+			var n: = noise.get_noise_2d(x, y) * 0.5 + 0.5
+			var a: = clampf((1.0 - d * d) * (0.35 + 0.9 * n) - 0.08, 0.0, 1.0)
+			var shade: = 0.75 + 0.25 * n
+			image.set_pixel(x, y, Color(shade, shade, shade, a))
+	_cloud_tex = ImageTexture.create_from_image(image)
+	return _cloud_tex
+
+static var _scorch_tex: ImageTexture
+static func _scorch_texture() -> ImageTexture:
+	if _scorch_tex != null: return _scorch_tex
+	var noise: = FastNoiseLite.new()
+	noise.frequency = 0.06
+	var size: = 128
+	var image: = Image.create(size, size, false, Image.FORMAT_RGBA8)
+	for y in size:
+		for x in size:
+			var d: = Vector2(x - size * 0.5, y - size * 0.5).length() / (size * 0.5)
+			var n: = noise.get_noise_2d(x, y) * 0.5 + 0.5
+			var a: = clampf((1.0 - d) * 1.6 * (0.6 + 0.6 * n), 0.0, 0.92)
+			image.set_pixel(x, y, Color(0.08 + 0.06 * n, 0.07 + 0.04 * n, 0.06, a))
+	_scorch_tex = ImageTexture.create_from_image(image)
+	return _scorch_tex
+
+static var _fallout_tex: ImageTexture
+static func _fallout_texture() -> ImageTexture:
+	if _fallout_tex != null: return _fallout_tex
+	var size: = 128
+	var image: = Image.create(size, size, false, Image.FORMAT_RGBA8)
+	for y in size:
+		for x in size:
+			var d: = Vector2(x - size * 0.5, y - size * 0.5).length() / (size * 0.5)
+			var edge: = clampf(1.0 - absf(d - 0.94) * 30.0, 0.0, 1.0)
+			var a: = clampf(0.28 * (1.0 - d * d), 0.0, 1.0) + 0.6 * edge
+			var stripe: = 0.5 + 0.5 * sin((x + y) * 0.35)
+			image.set_pixel(x, y, Color(0.75 + 0.2 * edge, 0.95, 0.15 + 0.1 * stripe, a if d <= 1.0 else 0.0))
+	_fallout_tex = ImageTexture.create_from_image(image)
+	return _fallout_tex
+
+## A particle burst that uses the cloud sprite (and additive glow for fire).
+func _cloud_burst(start: Color, middle: Color, finish: Color, amount: int, life: float, speed: float, particle_size: float, gravity: float, glow: bool) -> CPUParticles3D:
+	var particles: = _burst(start, middle, finish, amount, life, speed, particle_size, gravity, 0.0)
+	var quad: = particles.mesh as QuadMesh
+	var material: = (quad.material as StandardMaterial3D).duplicate() as StandardMaterial3D
+	material.albedo_texture = cloud_texture() if glow or USE_CLOUD_FOR_SMOKE else material.albedo_texture
+	if glow: material.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+	quad = quad.duplicate() as QuadMesh
+	quad.material = material
+	particles.mesh = quad
+	particles.angle_min = 0.0
+	particles.angle_max = 360.0
+	return particles
 
 func on_destroyed(unit: Dictionary) -> void :
 	if not armies.visible_to_player(unit): return
@@ -415,25 +601,65 @@ func advance_visual(seconds: float) -> void :
 		job.age += seconds
 		var age: float = job.age
 		var r: float = job.radius
-		job.light.light_energy = 40.0 * maxf(0.0, 1.0 - age / 2.5)
-		var rise: = minf(age / 6.0, 1.0)
-		job.fireball.position.y = r * (0.3 + 1.3 * rise)
-		job.fireball.scale = Vector3.ONE * (1.0 + 1.6 * minf(age / 1.5, 1.0))
-		job.fireball.material_override.albedo_color = Color(1.0, 0.85 - 0.35 * rise, 0.55 - 0.35 * rise, maxf(0.0, 1.0 - maxf(0.0, age - 2.0) / 2.5))
-		job.fireball.visible = age < 4.5
-		job.cap.position.y = r * (0.4 + 1.4 * rise)
-		job.cap.emitting = age < 7.0
-		job.stem.emitting = age < 6.0
-		job.shock.scale = Vector3.ONE * r * (0.2 + age * 1.8)
-		job.shock.material_override.albedo_color.a = maxf(0.0, 0.7 * (1.0 - age / 3.0))
-		job.dust.scale = Vector3(1, 0.25, 1) * r * (0.3 + 1.6 * minf(age / 4.0, 1.0))
-		job.dust.material_override.albedo_color.a = 0.6 * maxf(0.0, 1.0 - maxf(0, age - 5.0) / 6.0)
-		if _flash != null and _flash.visible:
-			_flash.color.a = maxf(0.0, 1.0 - age / 1.4)
-			_flash.visible = _flash.color.a > 0.0
-		if age >= 14.0:
+		var rise: = 1.0 - pow(1.0 - minf(age / 7.0, 1.0), 2.0)
+		job.light.light_energy = 60.0 * maxf(0.0, 1.0 - age / 3.0)
+		job.fireball.position.y = r * (0.25 + 1.5 * rise)
+		job.fireball.scale = Vector3.ONE * (1.0 + 1.4 * minf(age / 1.2, 1.0))
+		job.fireball.material_override.albedo_color = Color(1.0, 0.92 - 0.4 * minf(age / 3.0, 1.0), 0.7 - 0.55 * minf(age / 3.0, 1.0), maxf(0.0, 1.0 - maxf(0.0, age - 1.5) / 2.0))
+		job.fireball.visible = age < 3.6
+		job.fire_cloud.position.y = job.fireball.position.y
+		job.fire_cloud.emitting = age < 3.5
+		job.cap.position.y = r * (0.35 + 1.55 * rise)
+		job.cap_glow.position.y = job.cap.position.y
+		job.cap.emitting = age > 0.8 and age < 9.0
+		job.cap_glow.emitting = age > 0.8 and age < 5.0
+		job.stem.emitting = age > 0.6 and age < 7.5
+		job.halo.visible = age > 1.0 and age < 4.0
+		job.halo.position.y = r * (0.6 + 0.8 * rise)
+		job.halo.scale = Vector3(1, 0.25, 1) * r * (0.5 + 0.9 * clampf((age - 1.0) / 3.0, 0.0, 1.0))
+		job.halo.material_override.albedo_color.a = 0.55 * (1.0 - clampf((age - 1.0) / 3.0, 0.0, 1.0))
+		job.shock.scale = Vector3(1, 0.4, 1) * r * (0.15 + age * 1.6)
+		job.shock.material_override.albedo_color.a = maxf(0.0, 0.8 * (1.0 - age / 3.2))
+		job.scorch.material_override.albedo_color.a = minf(1.0, age / 1.5)
+		for fire in job.fires: fire.emitting = age > 1.2 and age < 40.0
+		if age >= 45.0:
 			job.node.queue_free()
 			nuke_jobs.remove_at(i)
+	# Screen flash fades; the incoming-nuke warning strobes red ("go berserk").
+	if _flash != null:
+		flash_age += seconds
+		if warning_time > 0.0:
+			warning_time -= seconds
+			var pulse: = 0.5 + 0.5 * sin(Time.get_ticks_msec() / 1000.0 * TAU * 3.0)
+			_flash.color = Color(0.85, 0.0, 0.0, 0.15 + 0.4 * pulse)
+			_flash.visible = true
+			_warning.visible = true
+			_warning.modulate.a = 0.4 + 0.6 * pulse
+			_warning.scale = Vector2.ONE * (1.0 + 0.06 * pulse)
+			shake = maxf(shake, 0.25)
+			if warning_time <= 0.0:
+				_warning.visible = false
+				_flash.visible = false
+		elif _flash.visible:
+			_flash.color.a = maxf(0.0, 1.0 - flash_age / 1.6)
+			_flash.visible = _flash.color.a > 0.0
+	# Camera shake.
+	var camera: = get_viewport().get_camera_3d() if is_inside_tree() else null
+	if camera != null:
+		if shake > 0.0:
+			shake = maxf(0.0, shake - seconds * 0.5)
+			camera.h_offset = randf_range(-1.0, 1.0) * shake * 0.35
+			camera.v_offset = randf_range(-1.0, 1.0) * shake * 0.35
+		elif camera.h_offset != 0.0 or camera.v_offset != 0.0:
+			camera.h_offset = 0.0
+			camera.v_offset = 0.0
+	# Fallout zones last until the fallout ends (game time).
+	for i in range(fallout_zones.size() - 1, -1, -1):
+		var zone: Dictionary = fallout_zones[i]
+		zone.haze.material_override.albedo_color.a = 0.55 + 0.2 * sin(Time.get_ticks_msec() / 700.0)
+		if clock != null and clock.elapsed >= zone.end:
+			zone.node.queue_free()
+			fallout_zones.remove_at(i)
 	for i in range(muzzles.size() - 1, -1, -1):
 		var job: Dictionary = muzzles[i]
 		job.age += seconds
@@ -475,8 +701,9 @@ func advance_visual(seconds: float) -> void :
 func clear() -> void :
 	for job in muzzles:
 		if is_instance_valid(job.model): job.model.position = job.offset
-	for job in projectiles + impacts + smoke_jobs + muzzles + wrecks + nuke_jobs: job.node.queue_free()
+	for job in projectiles + impacts + smoke_jobs + muzzles + wrecks + nuke_jobs + fallout_zones: job.node.queue_free()
 	nuke_jobs.clear()
+	fallout_zones.clear()
 	projectiles.clear()
 	impacts.clear()
 	smoke_jobs.clear()

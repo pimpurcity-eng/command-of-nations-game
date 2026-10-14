@@ -329,6 +329,7 @@ func command(country: String, message: Dictionary) -> String:
 			if not rules.at_war: return "Strategic weapons can only be used at war"
 			var result: = rules.strategic.launch(country, kind, point, units, game.map.territories)
 			if result.ok: rules.report.emit("%s launched a %s · %s" % [country.capitalize(), StrategicWeapons.WEAPONS[kind].name.to_lower(), result.message])
+			if result.ok and kind == "nuclear" and not result.get("intercepted", false): rules.nuclear_aftermath(point, StrategicWeapons.WEAPONS[kind].radius)
 			return "" if result.ok else result.message
 	return "Unknown order"
 

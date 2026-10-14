@@ -584,3 +584,21 @@ class FlagSwatch extends Control:
 		for i in colours.size():
 			draw_rect(Rect2(Vector2(0, size.y * i / colours.size()), Vector2(size.x, size.y / colours.size())), colours[i])
 		draw_rect(Rect2(Vector2.ZERO, size), Color.BLACK, false, 1.0)
+
+
+## Owner 2026-10-13: a nuked city is left a burned-out ruin - buildings collapse to a fraction
+## of their height and are scorched black.
+static var _burnt: StandardMaterial3D
+func devastate(city_id: String) -> void:
+	if not districts.has(city_id): return
+	var district: Node3D = districts[city_id]
+	if district.get_meta("devastated", false): return
+	district.set_meta("devastated", true)
+	if _burnt == null:
+		_burnt = StandardMaterial3D.new()
+		_burnt.albedo_color = Color(0.13, 0.12, 0.11)
+		_burnt.roughness = 1.0
+	for node in district.find_children("*", "MeshInstance3D", true, false):
+		var mesh: = node as MeshInstance3D
+		mesh.material_override = _burnt
+		mesh.scale.y *= 0.35

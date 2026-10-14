@@ -30,7 +30,7 @@ const VOLUME: = {
 	"kamikaze_drone": -6.0, "ship_missile": -2.0, "torpedo_launch": -3.0, "sonar_ping": -8.0,
 	"depth_explosion": -2.0, "carrier_launch": -3.0,
 	"jet_flyby": -4.0, "bomb_whistle": -2.0, "nuclear_blast": 0.0,
-	"tracks_moving": -5.0, "wheels_moving": -6.0, "march": -6.0,
+	"tracks_moving": -5.0, "wheels_moving": -6.0, "march": -6.0, "nuclear_alarm": -3.0,
 }
 ## Every weapon sounds like what it is (owner: "make sound for all weapons"). The first entry
 ## whose keyword appears in the unit's equipment id, family, name, role or kind wins; "ship" and
