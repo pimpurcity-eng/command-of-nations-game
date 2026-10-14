@@ -57,7 +57,8 @@ func run() -> void:
 	check(game.units.units.size() == 10 and game.units.units[0].node.get_child(0).get_meta("asset_path").ends_with("russia_tor_m2.glb"), "save restore retains correct tier models")
 	var source: Dictionary = game.units.units[0]
 	var point: Vector2 = Vector2(source.node.position.x, source.node.position.z) + Vector2(0.35, 0.0)
-	game.units._spawn({"id": "interception_target", "name": "Aircraft", "country": "ukraine", "equipment_id": "f18a_ukraine", "visual_kind": "fighter", "flight_mode": "patrol"}, point, Color.WHITE)
+	# Layered air defence (2026-10-14): the Tor is short range, so the jet dives in on an attack run.
+	game.units._spawn({"id": "interception_target", "name": "Aircraft", "country": "ukraine", "equipment_id": "f18a_ukraine", "visual_kind": "fighter", "flight_mode": "attack"}, point, Color.WHITE)
 	game.units.at_war = true
 	var pending: Dictionary = {}
 	game.match_rules.air_combat.advance(0.0, game.units, pending, true)
