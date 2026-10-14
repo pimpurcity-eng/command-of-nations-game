@@ -50,6 +50,10 @@ func _land_owner(unit: Dictionary) -> String:
 	var owner: = navigation.controller_at(point) if navigation.terrain != null else ""
 	unit._land_memo = [point, owner, terrain_revision]
 	return owner
+## Phones and tablets, including the browser version opened on one (Godot's "mobile" feature is
+## only set for the Android/iOS apps).
+static func mobile_device() -> bool:
+	return OS.has_feature("mobile") or OS.has_feature("web_android") or OS.has_feature("web_ios")
 ## Tests: run the phone model-budget path on desktop.
 static var force_mobile: = false
 ## Bumped when provinces change hands so the cached land owners refresh.
@@ -256,7 +260,7 @@ func _spawn(data: Dictionary, point: Vector2, color: Color) -> void :
 	var equipment_id: = EquipmentIdentity.resolve(data)
 	if visual_kind == "air_defense": spec[0] = EquipmentIdentity.research_title(equipment_id, int(data.get("level", 1)))
 	var model: Node3D
-	if OS.has_feature("mobile"):
+	if UnitSystem.mobile_device():
 		model = UnitVisual.lightweight(visual_kind, color, equipment_id, int(data.get("level", 1)))
 	else:
 		model = UnitVisual.create(visual_kind, color, equipment_id, int(data.get("level", 1)))
@@ -657,7 +661,7 @@ static func garrison_scale(unit: Dictionary) -> float:
 	return CITY_GARRISON_SCALE * (SMALL_GARRISON_READABILITY if small else 1.0)
 func _process(delta: float) -> void :
 	# Do not load 3D vehicles behind the campaign's start menu on phones.
-	if OS.has_feature("mobile") and get_parent() is Node3D and not (get_parent() as Node3D).visible:
+	if UnitSystem.mobile_device() and get_parent() is Node3D and not (get_parent() as Node3D).visible:
 		return
 	if air_range != null:
 		air_range.visible = selected >= 0 and air.is_air(units[selected])
@@ -679,7 +683,7 @@ func _process(delta: float) -> void :
 	for group in stacks.groups(): leader_ids[stacks.leader(group).id] = true
 	var camera: = get_viewport().get_camera_3d()
 	var view: = get_viewport().get_visible_rect().grow(160)
-	var mobile: bool = OS.has_feature("mobile") or force_mobile
+	var mobile: bool = UnitSystem.mobile_device() or force_mobile
 	var detailed: int = 0
 	var upgrades_left: int = _mobile_visual_refresh_budget
 	for unit in units:

@@ -70,12 +70,12 @@ const SAVE_PATH: = "user://regional_save.json"
 func _ready() -> void :
 	# Prevent costly detail loading/rendering before the portrait start screen is ready.
 	# The start-screen CanvasLayer remains visible independently of the 3D scene.
-	if OS.has_feature("mobile"): visible = false
+	if UnitSystem.mobile_device(): visible = false
 	var menu_scroll: = MenuTouchScroll.new()
 	add_child(menu_scroll)
-	if OS.has_feature("web"):
-		var ratio = JavaScriptBridge.eval("window.devicePixelRatio || 1")
-		if ratio != null: get_window().content_scale_factor = clampf(float(ratio), 1.0, 2.0)
+	# Owner 2026-10-14 (browser on the phone: "It's no good for phone"): the stretch mode already
+	# scales the 720x1440 layout to the screen; multiplying by the device pixel ratio as well made
+	# everything twice too big and pushed the top bar and side buttons off the screen.
 	var environment: = WorldEnvironment.new()
 	var settings: = Environment.new()
 	settings.background_mode = Environment.BG_COLOR
