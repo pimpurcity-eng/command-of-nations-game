@@ -163,6 +163,7 @@ func _ready() -> void :
 	hud.pause_requested.connect( func():
 		if match_rules == null or match_rules.winner.is_empty(): clock.toggle_pause())
 	hud.new_match_requested.connect(new_match)
+	hud.home_screen_requested.connect(return_to_home)
 	hud.declare_war_requested.connect( func(): match_rules.declare_war())
 	hud.merge_requested.connect( func():
 		if friendly_selected(): units.stacks.merge_near_selected())
@@ -510,6 +511,14 @@ func _ready() -> void :
 		# frame (owner 2026-10-14: start screen lagging; it was only switched off after a game).
 		get_viewport().disable_3d = mobile_start.visible
 		mobile_start.continue_requested.connect( func():
+			if paused_to_home:
+				# Back from the home screen: the match is still loaded, just carry on.
+				paused_to_home = false
+				mobile_start.hide()
+				audio.play_music("battle_theme")
+				clock.paused = false
+				refresh_hud()
+				return
 			load_game()
 			start_campaign_play()
 			mobile_start.hide())
@@ -1313,6 +1322,17 @@ func show_stack_info() -> void :
 ## [online] server_url (default below, set up per docs/MULTIPLAYER_SERVER.md) and match.
 const ONLINE_SERVER: = "wss://play.warfrontmandate.com"
 var online: MatchClient
+var paused_to_home: = false
+## Owner 2026-10-15: in-match button back to the home screen (the match is saved and paused).
+func return_to_home() -> void:
+	if mobile_start == null: return
+	if MatchClient.active == null and not GameSession.weapons_test: save_game()
+	clock.paused = true
+	refresh_hud()
+	paused_to_home = MatchClient.active == null and not GameSession.weapons_test
+	audio.play_music("menu_theme")
+	mobile_start.show_paused_match()
+
 func open_home_account() -> void:
 	if account_panel == null:
 		account_panel = AccountPanel.new()

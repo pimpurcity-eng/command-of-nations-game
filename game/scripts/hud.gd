@@ -51,6 +51,7 @@ signal move_requested
 signal patrol_requested
 signal unit_requested(index: int)
 signal home_requested
+signal home_screen_requested
 signal zoom_requested(amount: float)
 signal rotate_requested(amount: float)
 signal city_requested(index: int)
@@ -223,11 +224,17 @@ func _build_toolbar(root: Control) -> void:
 	# The full command list lives in this menu (opened from the "More" tab).
 	navigation_menu = MenuButton.new()
 	navigation_menu.visible = false
+	# Owner 2026-10-15: the home screen and the commander profile first.
+	navigation_menu.get_popup().add_item("⌂  Home screen", 100)
+	navigation_menu.get_popup().add_item("★  Commander profile", 101)
+	navigation_menu.get_popup().add_separator()
 	for title in ["Reset north", "Rotate left", "Rotate right", "Terrain / borders", "Speed 1x", "Speed 2x", "Speed 4x", "Save game", "Load game", "Equipment & production", "Army roster", "New match", "Add destination to selected army", "Merge nearby friendly armies", "Split selected units", "Army composition / battle info", "Declare war on Ukraine", "Technology / day unlocks", "Capital / construction", "Supply exchange", "All weapon models", "Select several armies", "Fire control", "Attack enemy army", "Victory progress", "Diplomacy", "Delay / synchronize arrival", "Forced march", "Upgrade selected army", "Rebase aircraft", "Player account", "Sound: ON", "Music: ON", "War newspaper", "Battle reports", "Retreat selected army", "Annex selected province", "Doctrine & strategic weapons", "Espionage"]:
-		navigation_menu.get_popup().add_item(title)
+		navigation_menu.get_popup().add_item(title, navigation_menu.get_popup().item_count - 3)
 	navigation_menu.get_popup().about_to_popup.connect(_show_audio_items)
 	navigation_menu.get_popup().id_pressed.connect(func(index: int):
 		match index:
+			100: home_screen_requested.emit()
+			101: account_requested.emit()
 			0: home_requested.emit()
 			1: rotate_requested.emit(-0.18)
 			2: rotate_requested.emit(0.18)
@@ -738,8 +745,8 @@ class Glyph extends Control:
 
 func _show_audio_items() -> void:
 	var popup: = navigation_menu.get_popup()
-	popup.set_item_text(31, "Sound: " + ("ON" if GameAudio.sound_enabled else "OFF"))
-	popup.set_item_text(32, "Music: " + ("ON" if GameAudio.music_enabled else "OFF"))
+	popup.set_item_text(popup.get_item_index(31), "Sound: " + ("ON" if GameAudio.sound_enabled else "OFF"))
+	popup.set_item_text(popup.get_item_index(32), "Music: " + ("ON" if GameAudio.music_enabled else "OFF"))
 
 func set_guard(on: bool) -> void:
 	if guard_button == null: return

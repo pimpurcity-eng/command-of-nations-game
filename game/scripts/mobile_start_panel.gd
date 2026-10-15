@@ -523,6 +523,16 @@ func request_start(mode: String) -> void:
 		"fresh": fresh_requested.emit()
 		"test": test_requested.emit("all")
 		"online": online_requested.emit()
+## Owner 2026-10-15 ("a button to go back to the home screen"): the match is saved and paused;
+## Resume Campaign carries straight on.
+func show_paused_match() -> void:
+	has_save = true
+	panel.visible = true
+	continue_button.visible = true
+	fresh_button.text = "NEW CAMPAIGN  →"
+	cancel_loading("Match paused · tap Resume Campaign to carry on")
+	show()
+	scroll.scroll_vertical = 0
 func cancel_loading(message: String) -> void:
 	loading = false
 	for button in [online_button, fresh_button, test_button, profile_button]: button.disabled = false
