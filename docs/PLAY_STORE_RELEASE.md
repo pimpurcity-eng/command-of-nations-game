@@ -5,7 +5,7 @@ Written by Claude, 2026-10-14. No keys or passwords are in this file - never put
 ## App identity (never change these)
 - Package: `com.warfrontmandate.game` - app name "Warfront Mandate: WW3".
 - First Play bundle: version code 32, version name 0.32 (builds repo: `warfront-mandate-0.32.aab`).
-- Latest: version code 44, version name 0.44 (`warfront-mandate-0.44.aab`). Version code = version name without the dot, so the next is 45 for 0.45.
+- Latest: version code 45, version name 0.45 (`warfront-mandate-0.45.aab`). Version code = version name without the dot, so the next is 46 for 0.46.
 - Every new upload needs a HIGHER version code (33, 34, ...).
 
 ## One-time: your own upload key
