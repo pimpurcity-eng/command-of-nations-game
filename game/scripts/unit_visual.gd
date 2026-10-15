@@ -86,6 +86,11 @@ static func create(kind: String, _faction: Color, equipment_id: String = "", lev
 	assembly.set_meta("visual_level", level)
 	var tier: Dictionary = EquipmentIdentity.research_tier(equipment_id, level)
 	var path: String = tier.get("model", asset_path(equipment_id))
+	if not path.is_empty() and not WebExtras.has(path) and UnitSystem.mobile_device():
+		# Phone browser: the real model is downloading; keep the light placeholder until it
+		# arrives instead of loading a second, wrong model (which was then never replaced).
+		assembly.set_meta("missing_original_model", true)
+		return assembly
 	if path.is_empty() or not WebExtras.has(path):
 		var spec_kind: String = EquipmentIdentity.spec(equipment_id).get("visual_kind", kind)
 		path = stand_in_path(equipment_id, spec_kind)

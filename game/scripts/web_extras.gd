@@ -48,10 +48,26 @@ func start() -> void:
 		for pack in packs: all[pack] = true
 	for pack in all.keys(): _want(pack)
 
-func _want(pack: int) -> void:
-	if _requested.has(pack) or _loaded.has(pack): return
+## Fetch everything under a folder in the background (owner 2026-10-15: "where's the art?" -
+## the unit pictures only arrived when a menu first asked, so menus showed the old pictures).
+func prefetch(prefix: String) -> void:
+	if available: return
+	_read_index()
+	for path in _needs:
+		if str(path).begins_with(prefix):
+			for pack in _needs[path]: _want(pack)
+
+## urgent: something on screen needs it now, so it goes ahead of background downloads.
+func _want(pack: int, urgent: bool = false) -> void:
+	if _loaded.has(pack): return
+	if _requested.has(pack):
+		if urgent and _queue.has(pack):
+			_queue.erase(pack)
+			_queue.push_front(pack)
+		return
 	_requested[pack] = true
-	_queue.append(pack)
+	if urgent: _queue.push_front(pack)
+	else: _queue.append(pack)
 	_next()
 
 func _next() -> void:
@@ -76,5 +92,5 @@ func _finished(result: int, code: int, _headers: PackedStringArray, _body: Packe
 	else:
 		push_warning("Weapon pack %d failed (%d / HTTP %d); retrying" % [pack, result, code])
 		_requested.erase(pack)
-		get_tree().create_timer(5.0).timeout.connect(func(): _want(pack))
+		get_tree().create_timer(5.0).timeout.connect(func(): _want(pack, true))
 	_next()

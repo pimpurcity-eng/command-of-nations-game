@@ -187,11 +187,11 @@ static func sound_for(source: Dictionary, effect: String) -> String:
 
 ## "menu_theme" or "battle_theme"; loops until changed. Crossfades between tracks.
 func play_music(name: String) -> void:
-	print("MUSIC asked ", name, " (was ", _music_name, ", playing ", _music.playing, ")")
 	if name == _music_name and _music.playing: return
 	_music_name = name
 	if music_enabled: _start_music(name)
 
+var _fade: Tween
 func _start_music(name: String) -> void:
 	var path: = MUSIC_DIR + name + ".ogg"
 	if name == "menu_theme":
@@ -200,15 +200,17 @@ func _start_music(name: String) -> void:
 	if not ResourceLoader.exists(path): return
 	var stream: AudioStream = load(path)
 	if stream is AudioStreamOggVorbis or stream is AudioStreamMP3: stream.loop = true
-	var fade: = create_tween()
-	if _music.playing:
-		fade.tween_property(_music, "volume_db", -40.0, 0.8)
-	fade.tween_callback(func():
-		_music.stream = stream
-		_music.volume_db = -40.0
-		_music.play()
-		print("MUSIC now ", name))
-	fade.tween_property(_music, "volume_db", MUSIC_DB, 1.2)
+	# Owner 2026-10-15: the home song kept playing through the match on the website. Two song
+	# changes close together (start screen, then the match) each had their own fade, and the
+	# older one could finish last and put the home song back. Only the newest change counts:
+	# the old fade is stopped and the new song starts at once, fading in.
+	if _fade != null and _fade.is_valid(): _fade.kill()
+	_music.stream = stream
+	_music.volume_db = -30.0
+	_music.play()
+	print("MUSIC now ", name)
+	_fade = create_tween()
+	_fade.tween_property(_music, "volume_db", MUSIC_DB, 1.5)
 
 ## Browsers only allow sound after the first tap (owner 2026-10-14: "no music" on the website).
 ## Music asked for before that tap was blocked, so start it again on the first tap.

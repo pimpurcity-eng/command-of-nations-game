@@ -553,6 +553,7 @@ func _ready() -> void :
 		# Computers fetch the weapons pack at once; phones only when something first needs it
 		# (owner 2026-10-14: "WebGL context lost" - the phone browser ran out of memory).
 		if not UnitSystem.mobile_device(): web_extras.start()
+		else: web_extras.prefetch("res://assets/interface/unit_art/")
 	if OS.has_feature("web"):
 		browser_callback = JavaScriptBridge.create_callback(_browser_hidden)
 		browser_resume_callback = JavaScriptBridge.create_callback(_browser_visible)
@@ -564,7 +565,11 @@ var web_extras: WebExtras
 func _web_extras_loaded() -> void:
 	for unit in units.units:
 		var model: Node3D = unit.node.get_child(0) if unit.node.get_child_count() > 0 else null
-		if model != null and (model.get_meta("stand_in_model", false) or model.get_meta("missing_original_model", false)): model.set_meta("visual_level", -1)
+		if model != null and (model.get_meta("stand_in_model", false) or model.get_meta("missing_original_model", false)):
+			model.set_meta("visual_level", -1)
+			# Owner 2026-10-15 (website: "can't see troops"): phones marked a model that was still
+			# downloading as missing and never asked for it again. It may have just arrived.
+			model.set_meta("missing_original_model", false)
 	if cities != null: cities.sync_buildings()
 func _process(delta: float) -> void :
 	if map != null and rig != null:
