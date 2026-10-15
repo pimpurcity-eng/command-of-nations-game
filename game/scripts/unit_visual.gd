@@ -128,6 +128,8 @@ static func create(kind: String, _faction: Color, equipment_id: String = "", lev
 	pivot.name = "ModelFit"
 	pivot.add_child(vehicle)
 	_fit(pivot, vehicle, role, path)
+	# Owner 2026-10-15: research levels that reuse one model can grow it (cargo ships, oil tankers).
+	if tier.has("model_scale"): pivot.transform = Transform3D(Basis.from_scale(Vector3.ONE * float(tier.model_scale)), Vector3.ZERO) * pivot.transform
 	assembly.add_child(pivot)
 	_rig_erector(assembly, vehicle)
 	if kind == "missile_launcher":

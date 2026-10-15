@@ -357,7 +357,9 @@ func _convoy_visual(mode: String, cargo: String, country: String = "", level: in
 	if mode == "sea":
 		var fallback: String = "res://assets/library/transport/civil_tanker_t1_coastal.glb" if cargo == "fuel" else "res://assets/library/transport/civil_container_t1_feeder.glb"
 		var family: String = ("tankers_" if cargo == "fuel" else "cargo_") + country
-		var ship: = _model(EquipmentIdentity.research_tier(family,clampi(level,1,5)).get("model",fallback), 0.55)
+		var tier: Dictionary = EquipmentIdentity.research_tier(family,clampi(level,1,5))
+		# Owner 2026-10-15: the same ship at every level, bigger as its capacity grows.
+		var ship: = _model(tier.get("model",fallback), 0.55 * float(tier.get("model_scale", 1.0)))
 		if ship != null: root.add_child(ship)
 		return root
 	var cars: = ["res://assets/library/transport/train_diesel_locomotive.glb",

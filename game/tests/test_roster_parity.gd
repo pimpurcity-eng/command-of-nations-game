@@ -19,6 +19,7 @@ func _initialize() -> void:
 		if family.country != "ukraine": continue
 		for tier in family.get("research_tiers", []):
 			var file: String = str(tier.model).get_file()
+			if family.get("role", "") == "freight": continue
 			if not (file.begins_with("euro_") or file.begins_with("nato_") or file.begins_with("ukraine_") or file.ends_with("_european.glb")) or file.contains("abrams") or str(tier.name).contains("NASAMS"):
 				foreign.append(family.id + ": " + str(tier.name))
 	check(foreign.is_empty(), "Ukraine has European weapons only " + str(foreign))
