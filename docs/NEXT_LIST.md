@@ -1,4 +1,4 @@
-# Warfront Mandate — what's left (after 0.52, 15 Oct 2026)
+# Warfront Mandate — what's left (after 0.53, 15 Oct 2026)
 
 ## Needs Matthew (one-time)
 0. **Account emails (5 minutes, Supabase dashboard).** Sign-up works now with the link email
@@ -12,7 +12,7 @@
    the top-commander tabs fall back to XP, and Alliance says "being switched on".
 2. **City look.** Approve or change ChatGPT's two city concepts in `docs/concepts/cities-2026-10-15/`.
 3. **Google sign-in** (website): follow `docs/GOOGLE_SIGN_IN_2026_10_15.md` (ChatGPT's guide).
-4. **Play upload:** `warfront-mandate-0.52.aab` in the builds repo → Play Console → Internal testing.
+4. **Play upload:** `warfront-mandate-0.53.aab` in the builds repo → Play Console → Internal testing.
 
 ## Claude next
 5. Lag with about 20 armies on screen (phones).
