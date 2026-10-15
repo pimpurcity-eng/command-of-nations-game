@@ -21,12 +21,15 @@ func run() -> void:
 	game.rig.distance = float(args[3]) if args.size() > 3 else 14.0
 	game.rig._snap(1.0)
 	# Phones build the map a piece per frame; wait for it, then let models load.
+	var started: = Time.get_ticks_msec()
 	while game.map != null and not game.map.build_finished: await process_frame
+	print("map built after ", (Time.get_ticks_msec() - started) / 1000, " s")
 	# CON_PHONE=1: after the (slow, per-frame) phone map build, switch to the phone unit path and
 	# the phone renderer settings so the picture is what a phone shows.
 	if OS.get_environment("CON_PHONE") == "1":
 		UnitSystem.force_mobile = true
 		root.msaa_3d = Viewport.MSAA_2X
 	for i in (120 if UnitSystem.force_mobile else 20): await process_frame
+	print("frames done after ", (Time.get_ticks_msec() - started) / 1000, " s")
 	root.get_texture().get_image().save_png(args[0])
 	quit()

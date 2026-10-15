@@ -124,6 +124,14 @@ static func create(kind: String, _faction: Color, equipment_id: String = "", lev
 	pivot.add_child(vehicle)
 	_fit(pivot, vehicle, role, path)
 	assembly.add_child(pivot)
+	if role == "infantry" and not path.get_file().contains("mortar"):
+		# Call of War shows infantry as a small squad of three soldiers, not one tiny figure
+		# (owner 2026-10-15: "I can't even see the infantry anymore").
+		for spot in [Vector3(-0.26, 0.0, 0.20), Vector3(0.24, 0.0, 0.24)]:
+			var mate: = pivot.duplicate() as Node3D
+			mate.name = "SquadMate"
+			mate.transform = Transform3D(Basis(Vector3.UP, spot.x * 0.6) * pivot.transform.basis, pivot.transform.origin + spot)
+			assembly.add_child(mate)
 	if kind == "missile_launcher":
 		var launch_point: = Marker3D.new()
 		launch_point.name = "MissileLaunchPoint"
@@ -137,7 +145,7 @@ static func create(kind: String, _faction: Color, equipment_id: String = "", lev
 		assembly.set_meta("helicopter_animator", helicopter)
 	var fitted_bounds: AABB = model_bounds(pivot, 0.0)
 	assembly.set_meta("ground_shadow_size", Vector2(fitted_bounds.size.x, fitted_bounds.size.z) * 0.65)
-	_enable_shadows(vehicle)
+	_enable_shadows(assembly)  # includes infantry squad mates
 	if path.contains("/airdefense/"):
 		var animator: = AirDefenseAnimator.new()
 		assembly.add_child(animator)
