@@ -88,7 +88,7 @@ func run() -> void:
 	check(r.ok and calls[-1][0].begins_with("/rest/v1/player_profiles?") and calls[-1][2]==HTTPClient.METHOD_GET and calls[-1][3]=="test_access" and auth.profile.xp==450,"Profile loads own row with the player token")
 	reply={"ok":true,"data":{"rows":[{"xp":575,"level":3,"games_played":4,"wins":3,"losses":1}]}}
 	r=await auth.record_result(true,25)
-	check(r.ok and calls[-1][0]=="/rest/v1/rpc/record_match_result" and calls[-1][1].won and calls[-1][1].minutes==25 and auth.profile.xp==575 and auth.profile.commander_name=="Tester","Results go through the server function, which returns the new XP")
+	check(r.ok and calls[-1][0]=="/rest/v1/rpc/record_match_stats" and calls[-1][1].won and calls[-1][1].minutes==25 and auth.profile.xp==575 and auth.profile.commander_name=="Tester","Results go through the server function, which returns the new XP")
 	var panel:=AccountPanel.new();root.add_child(panel);panel.auth.queue_free();panel.auth=auth
 	panel.build("profile")
 	check(panel.fields.get_children().any(func(n): return n is ProgressBar) and panel.fields.get_children().any(func(n): return n is Label and n.text=="LEVEL 3 · SERGEANT"),"Profile shows level, rank and XP bar")

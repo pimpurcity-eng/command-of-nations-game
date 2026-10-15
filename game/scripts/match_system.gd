@@ -79,6 +79,12 @@ const ENTRENCH_TIME: = VictoryRules.DAY / 12.0
 const ENTRENCH_BONUS: = 1.25
 var at_war: = false
 var last_day: = 1
+## Battle tally per country for the commander profile (owner 2026-10-15: "kill and death ... go a
+## little deeper on the stats"): enemy units destroyed, own units lost, provinces captured.
+var tally: Dictionary = {}
+func _count(country: String, key: String) -> void:
+	if not tally.has(country): tally[country] = {"destroyed": 0, "lost": 0, "provinces": 0}
+	tally[country][key] = int(tally[country].get(key, 0)) + 1
 func daily_provinces() -> void:
 	var today: = 1 + int(clock.elapsed/ProductionSystem.DAY_SECONDS)
 	while last_day < today:
@@ -261,6 +267,13 @@ func advance(seconds: float) -> void :
 		if armies.units[index].health > 0: continue
 		casualties = true
 		unit_destroyed.emit(armies.units[index])
+		var fallen: Dictionary = armies.units[index]
+		_count(fallen.country, "lost")
+		var victor: = str(fallen.get("last_attacker_country", ""))
+		if victor.is_empty() or victor == fallen.country:
+			for country in (production.stockpiles.keys() if production != null else ["russia", "ukraine"]):
+				if country != fallen.country: victor = country; break
+		if not victor.is_empty(): _count(victor, "destroyed")
 		for guarded_country in guards:
 			if armies.units[index].country == guarded_country: guards[guarded_country].lost += 1
 			else: guards[guarded_country].kills += 1
@@ -313,6 +326,7 @@ func advance(seconds: float) -> void :
 			if territory.controller == guarded_country: guards[guarded_country].lost_places.append(territory.title)
 			elif occupant == guarded_country: guards[guarded_country].retaken.append(territory.title)
 		change_control(territory,occupant)
+		_count(occupant, "provinces")
 		terrain.update_relations(at_war)
 		capture_progress.erase(territory.id)
 		report.emit(territory.title + " captured by " + occupant.capitalize())
@@ -436,8 +450,9 @@ func _ai_spies(world: Dictionary) -> void:
 		"bank": report.emit("Enemy hackers raided your bank: money and metal stolen")
 		"blocked": report.emit("Your firewall stopped an enemy hack")
 func snapshot() -> Dictionary:
-	return {"last_day": last_day, "air_cooldowns": air_combat.snapshot(), "combat_cooldowns": combat.snapshot(), "at_war": at_war, "winner": winner, "decision_timer": decision_timer, "recruitment_timer": ai.recruitment_timer, "capture_progress": capture_progress.duplicate(true), "victory_type": victory_type, "victory": victory.snapshot(), "chronicle": chronicle.snapshot(), "annexation": annexation.snapshot(), "strategic": strategic.snapshot(), "trade": trade.snapshot() if trade != null else {}, "doctrines": Doctrine.snapshot(), "diplomacy": diplomacy.snapshot(), "espionage": espionage.snapshot(), "spy_ai_timer": spy_ai_timer, "guards": guards.keys(), "guard_logs": guard_logs()}
+	return {"last_day": last_day, "air_cooldowns": air_combat.snapshot(), "combat_cooldowns": combat.snapshot(), "at_war": at_war, "winner": winner, "decision_timer": decision_timer, "recruitment_timer": ai.recruitment_timer, "capture_progress": capture_progress.duplicate(true), "victory_type": victory_type, "victory": victory.snapshot(), "chronicle": chronicle.snapshot(), "annexation": annexation.snapshot(), "strategic": strategic.snapshot(), "trade": trade.snapshot() if trade != null else {}, "doctrines": Doctrine.snapshot(), "diplomacy": diplomacy.snapshot(), "espionage": espionage.snapshot(), "spy_ai_timer": spy_ai_timer, "guards": guards.keys(), "guard_logs": guard_logs(), "tally": tally.duplicate(true)}
 func restore(state: Dictionary) -> void :
+	tally = state.get("tally", {}).duplicate(true) if state.get("tally", {}) is Dictionary else {}
 	last_day = int(state.get("last_day",1+int(clock.elapsed/ProductionSystem.DAY_SECONDS)))
 	combat.restore(state.get("combat_cooldowns", {}))
 	air_combat.restore(state.get("air_cooldowns", {}))

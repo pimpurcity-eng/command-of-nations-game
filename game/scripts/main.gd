@@ -157,6 +157,7 @@ func _ready() -> void :
 	hud.account_requested.connect(func():
 		if account_panel==null:
 			account_panel=AccountPanel.new();add_child(account_panel)
+			account_panel.operation_requested.connect(join_operation)
 		rig.reset_gestures()
 		account_panel.open())
 	clock.state_changed.connect(refresh_hud)
@@ -1337,6 +1338,7 @@ func open_home_account() -> void:
 	if account_panel == null:
 		account_panel = AccountPanel.new()
 		add_child(account_panel)
+	if not account_panel.operation_requested.is_connected(join_operation): account_panel.operation_requested.connect(join_operation)
 	if not account_panel.auth.session_changed.is_connected(refresh_home_commander):
 		account_panel.auth.session_changed.connect(refresh_home_commander)
 	account_panel.open()
@@ -1347,10 +1349,18 @@ func refresh_home_commander() -> void:
 	var name_text: String = str(account_panel.auth.user.get("user_metadata", {}).get("commander_name", "Commander"))
 	mobile_start.set_commander(name_text, account_panel.auth.signed_in())
 
-func join_online() -> void:
+## Alliance operations (owner 2026-10-15): one tap joins the posted match on the posted side.
+func join_operation(code: String, side: String) -> void:
+	mobile_start.country_picker.select(0 if side == "ukraine" else 1)
+	mobile_start.show()
+	mobile_start.begin_loading()
+	await join_online(code)
+
+func join_online(match_code: String = "") -> void:
 	if account_panel == null:
 		account_panel = AccountPanel.new()
 		add_child(account_panel)
+		account_panel.operation_requested.connect(join_operation)
 		await get_tree().process_frame
 	if not account_panel.auth.signed_in():
 		hud.show_status("Sign in to your account to play online")
@@ -1371,7 +1381,7 @@ func join_online() -> void:
 		var text: = "Disconnected from the match" + (": " + reason if not reason.is_empty() else "") + " · tap Online Match to rejoin"
 		hud.show_status(text)
 		if mobile_start.visible: mobile_start.cancel_loading(text))
-	var error: = online.connect_to(str(settings.get_value("online", "server_url", ONLINE_SERVER)), account_panel.auth.access_token, str(settings.get_value("online", "match", "main")), mobile_start.selected_country())
+	var error: = online.connect_to(str(settings.get_value("online", "server_url", ONLINE_SERVER)), account_panel.auth.access_token, match_code if not match_code.is_empty() else str(settings.get_value("online", "match", "main")), mobile_start.selected_country())
 	hud.show_status("Connecting to the match server…" if error == OK else "Could not reach the match server")
 	if error == OK: mobile_start.set_progress(50, "Connecting to the match server…")
 	else: mobile_start.cancel_loading("Could not reach the match server")
@@ -1508,7 +1518,8 @@ func refresh_rally_markers() -> void :
 func _report_result(country: String) -> void:
 	if account_panel == null or not account_panel.auth.signed_in(): return
 	var minutes := int((Time.get_ticks_msec() - match_started_msec) / 60000) if match_started_msec > 0 else 0
-	await account_panel.auth.record_result(country == GameSession.player_country, minutes)
+	var mine: Dictionary = match_rules.tally.get(GameSession.player_country, {})
+	await account_panel.auth.record_result(country == GameSession.player_country, minutes, int(mine.get("destroyed", 0)), int(mine.get("lost", 0)), int(mine.get("provinces", 0)))
 
 ## Guard mode (sleep defence, owner 2026-10-13): the AI defends your land while you sleep.
 func _toggle_guard() -> void:

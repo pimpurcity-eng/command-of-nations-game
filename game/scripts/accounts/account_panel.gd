@@ -52,7 +52,7 @@ func build(page: String) -> void:
 	mode=page;inputs.clear()
 	for item in fields.get_children():fields.remove_child(item);item.queue_free()
 	label_text("WARFRONT MANDATE: WW3",24).modulate=Color("c9ad73")
-	var titles: Dictionary={"login":"Welcome back, Commander","signup":"Create your commander account","verify":"Confirm your email","recover":"Reset your password","recovery_code":"Check your email","new_password":"Choose a new password","profile":"Commander account","delete":"Delete account","leaderboard":"Leaderboard","achievements":"Achievements"}
+	var titles: Dictionary={"login":"Welcome back, Commander","signup":"Create your commander account","verify":"Confirm your email","recover":"Reset your password","recovery_code":"Check your email","new_password":"Choose a new password","profile":"Commander account","delete":"Delete account","leaderboard":"Top commanders","achievements":"Achievements","alliance":"Alliance","alliance_browse":"Find an alliance","alliance_create":"Found an alliance"}
 	label_text(titles[page],40)
 	if page=="profile":
 		label_text(str(auth.user.get("user_metadata",{}).get("commander_name","Commander")),34)
@@ -63,23 +63,66 @@ func build(page: String) -> void:
 			label_text("LEVEL %d · %s" % [level,Achievements.rank(level).to_upper()],40).modulate=Color("e9c46a")
 			var bar:=ProgressBar.new();bar.min_value=low;bar.max_value=high;bar.value=xp;bar.show_percentage=false;bar.custom_minimum_size.y=22;fields.add_child(bar)
 			label_text("%d / %d XP to level %d" % [xp,high,level+1],24)
-			label_text("Games %d · Wins %d · Losses %d" % [int(auth.profile.get("games_played",0)),int(auth.profile.get("wins",0)),int(auth.profile.get("losses",0))],26)
+			# Owner 2026-10-15: "the stats have their KD, kill and death ... go a little deeper".
+			var stats: Dictionary=auth.profile
+			label_text("SERVICE RECORD",30).modulate=Color("c9ad73")
+			label_text("Games %d · Wins %d · Losses %d · Win rate %d%%" % [int(stats.get("games_played",0)),int(stats.get("wins",0)),int(stats.get("losses",0)),roundi(PlayerAuth.win_rate(stats)*100.0)],26)
+			if stats.has("units_destroyed"):
+				label_text("K/D %.2f · Enemy units destroyed %d · Units lost %d" % [PlayerAuth.kd_ratio(stats),int(stats.get("units_destroyed",0)),int(stats.get("units_lost",0))],26)
+				label_text("Provinces captured %d · Win streak %d (best %d)" % [int(stats.get("cities_captured",0)),int(stats.get("current_streak",0)),int(stats.get("best_streak",0))],26)
+				var hours:=int(stats.get("play_minutes",0))/60
+				label_text("Time in command %dh %02dm" % [hours,int(stats.get("play_minutes",0))%60],26)
 		else:
 			label_text("Loading your level and stats…",24)
 			load_profile.call_deferred()
 		label_text("Win a campaign for 100 XP, finish one for 25 XP, plus up to 50 XP for its length.",22)
-		button("Leaderboard",func():build("leaderboard"))
+		button("Top commanders",func():build("leaderboard"))
+		button("Alliance",func():alliance=null;build("alliance"))
 		button("Achievements and medals",func():build("achievements"))
 		button("Sign out",func():
 			working=true;await auth.logout();working=false;build("login"))
 		button("Delete account",func():build("delete"))
 	elif page=="leaderboard":
+		var tabs:=HBoxContainer.new();tabs.add_theme_constant_override("separation",8);fields.add_child(tabs)
+		for entry in [["xp","XP"],["wins","Wins"],["destroyed","Kills"],["cities","Provinces"],["streak","Streak"]]:
+			var tab:=Button.new();tab.text=entry[1];tab.toggle_mode=true;tab.button_pressed=board_metric==entry[0];tab.size_flags_horizontal=Control.SIZE_EXPAND_FILL;tab.add_theme_font_size_override("font_size",22)
+			tab.pressed.connect(func():board_metric=entry[0];leaderboard_rows=[];build("leaderboard"))
+			tabs.add_child(tab)
 		if leaderboard_rows.is_empty():
 			label_text("Loading the top commanders…",24)
 			load_leaderboard.call_deferred()
 		for row in leaderboard_rows:
-			label_text("%d. %s · level %d %s · %d XP · %d wins" % [int(row.place),str(row.commander_name),int(row.level),Achievements.rank(int(row.level)),int(row.xp),int(row.wins)],26)
+			var tag:=(" ["+str(row.alliance_tag)+"]") if row.get("alliance_tag")!=null and str(row.get("alliance_tag",""))!="" else ""
+			var extra: String={"wins":"%d wins" % int(row.get("wins",0)),"destroyed":"%d kills" % int(row.get("units_destroyed",0)),"cities":"%d provinces" % int(row.get("cities_captured",0)),"streak":"best streak %d" % int(row.get("best_streak",0))}.get(board_metric,"%d XP · %d wins" % [int(row.get("xp",0)),int(row.get("wins",0))])
+			label_text("%d. %s%s · level %d %s · %s" % [int(row.place),str(row.commander_name),tag,int(row.level),Achievements.rank(int(row.level)),extra],26)
 		button("Back",func():leaderboard_rows=[];build("profile"))
+	elif page=="alliance":
+		_alliance_page()
+	elif page=="alliance_browse":
+		input("search","Search by name or tag")
+		button("Search",func():directory=[];load_directory(value("search")))
+		if directory.is_empty():
+			label_text("Loading alliances…",24)
+			load_directory.call_deferred("")
+		for entry in directory:
+			label_text("%d. [%s] %s · %d members · %d XP · %d wins%s" % [int(entry.place),str(entry.tag),str(entry.name),int(entry.members),int(entry.xp),int(entry.wins)," · open" if entry.open else " · by request"],26)
+			if str(entry.motto)!="":label_text("    \"%s\"" % str(entry.motto),22).modulate=Color("a9b4bb")
+			var id:=str(entry.alliance_id)
+			button(("Join " if entry.open else "Request to join ")+str(entry.tag),func():
+				working=true;var result:=await auth.join_alliance(id);working=false
+				if result.ok:status.text="Joined!" if str(result.data.get("value",""))=="joined" else "Request sent - an officer will answer.";alliance=null;build("alliance")
+				else:status.text=result.message)
+		button("Back",func():build("alliance"))
+	elif page=="alliance_create":
+		input("alliance_name","Alliance name (3-28 letters)")
+		input("alliance_tag","Tag (2-4 letters, e.g. WFM)")
+		input("alliance_motto","Motto (optional)")
+		var open_switch:=CheckButton.new();open_switch.text="Anyone can join (off: by request)";open_switch.button_pressed=true;fields.add_child(open_switch)
+		button("Found the alliance",func():
+			working=true;var result:=await auth.create_alliance(value("alliance_name").strip_edges(),value("alliance_tag").strip_edges().to_upper(),value("alliance_motto").strip_edges(),open_switch.button_pressed);working=false
+			if result.ok:alliance=null;build("alliance")
+			else:status.text=result.message)
+		button("Back",func():build("alliance"))
 	elif page=="achievements":
 		var progress:=Achievements.new();progress.load_saved()
 		label_text("%d of %d achievements" % [progress.unlocked.size(),Achievements.LIST.size()],30)
@@ -119,9 +162,100 @@ func build(page: String) -> void:
 	if not auth.configured():status.text="Online accounts are being connected. Offline play is available."
 	button("Back to game",func():overlay.hide())
 var leaderboard_rows: Array = []
+var board_metric:="xp"
+# ---------------------------------------------------------------- alliances
+## Owner 2026-10-15: "create an alliance outside of the matches like Call of War but make it much
+## better - their system is hard to play alliance matches". One screen: members, chat, and
+## Operations - an officer posts an online match and every member joins it with one tap.
+var alliance: Variant = null
+var directory: Array = []
+func _alliance_page() -> void:
+	if alliance==null:
+		label_text("Loading your alliance…",24)
+		load_alliance.call_deferred()
+		return
+	if alliance is Dictionary and alliance.is_empty():
+		label_text("You are not in an alliance yet. Join one to share a chat, plan operations together and climb the alliance ranking.",26)
+		button("Find an alliance",func():directory=[];build("alliance_browse"))
+		button("Found your own alliance",func():build("alliance_create"))
+		button("Back",func():build("profile"))
+		return
+	var info: Dictionary=alliance.get("alliance",{})
+	var role:=str(alliance.get("role","member"))
+	label_text("[%s] %s" % [str(info.get("tag","")),str(info.get("name",""))],36).modulate=Color(str(info.get("colour","#d9a441")))
+	if str(info.get("motto",""))!="":label_text("\"%s\"" % str(info.get("motto","")),24)
+	label_text("Your rank: %s · %d members · operations won %d" % [role.capitalize(),alliance.get("members",[]).size(),int(info.get("operations_won",0))],24)
+	# Operations first: the whole point is getting into a match together quickly.
+	label_text("OPERATIONS",30).modulate=Color("c9ad73")
+	var operations: Array=alliance.get("operations",[])
+	if operations.is_empty():label_text("No operation posted. Officers can post one below.",22)
+	for op in operations:
+		label_text("%s · play %s · posted by %s%s" % [str(op.match_code),str(op.side).capitalize(),str(op.posted_by),(" · "+str(op.note)) if str(op.note)!="" else ""],24)
+		var code:=str(op.match_code);var side:=str(op.side)
+		button("Join operation "+code,func():
+			overlay.hide()
+			operation_requested.emit(code,side))
+	if role in ["leader","officer"]:
+		input("op_code","Online match code (e.g. the one you host)")
+		var side_pick:=OptionButton.new();side_pick.add_item("Russia");side_pick.add_item("Ukraine");side_pick.custom_minimum_size.y=64;fields.add_child(side_pick)
+		input("op_note","Note (optional, e.g. 'Day 3 push on Kharkiv')")
+		button("Post operation for all members",func():
+			working=true;var result:=await auth.post_alliance_operation(value("op_code").strip_edges(),"russia" if side_pick.selected==0 else "ukraine",value("op_note").strip_edges());working=false
+			if result.ok:alliance=null;build("alliance")
+			else:status.text=result.message)
+	label_text("CHAT",30).modulate=Color("c9ad73")
+	for message in alliance.get("messages",[]):
+		label_text("%s: %s" % [str(message.commander),str(message.body)],22)
+	input("chat","Write to your alliance")
+	button("Send",func():
+		var text:=value("chat").strip_edges()
+		if text.is_empty():return
+		working=true;var result:=await auth.post_alliance_message(text);working=false
+		if result.ok:alliance=null;build("alliance")
+		else:status.text=result.message)
+	label_text("MEMBERS",30).modulate=Color("c9ad73")
+	for member in alliance.get("members",[]):
+		label_text("%s · %s · level %d · %d XP · %d wins%s" % [str(member.commander),str(member.role).capitalize(),int(member.level),int(member.xp),int(member.wins)," (you)" if member.get("me",false) else ""],24)
+		if member.get("me",false):continue
+		var id:=int(member.member_id);var their_role:=str(member.role)
+		if role=="leader":
+			if their_role=="member":button("Promote "+str(member.commander)+" to officer",func():_alliance_action(auth.set_alliance_role.bind(id,"officer")))
+			elif their_role=="officer":button("Make "+str(member.commander)+" a member",func():_alliance_action(auth.set_alliance_role.bind(id,"member")))
+		if role=="leader" or (role=="officer" and their_role=="member"):
+			button("Remove "+str(member.commander),func():_alliance_action(auth.remove_alliance_member.bind(id)))
+	if role in ["leader","officer"] and not alliance.get("requests",[]).is_empty():
+		label_text("REQUESTS TO JOIN",30).modulate=Color("c9ad73")
+		for request in alliance.get("requests",[]):
+			var request_id:=int(request.request_id)
+			label_text("%s · level %d" % [str(request.commander),int(request.level)],24)
+			button("Accept "+str(request.commander),func():_alliance_action(auth.answer_alliance_request.bind(request_id,true)))
+			button("Decline "+str(request.commander),func():_alliance_action(auth.answer_alliance_request.bind(request_id,false)))
+	button("Alliance ranking",func():directory=[];build("alliance_browse"))
+	button("Leave alliance",func():_alliance_action(auth.leave_alliance))
+	button("Back",func():build("profile"))
+signal operation_requested(code: String, side: String)
+func _alliance_action(call: Callable) -> void:
+	working=true;var result: Dictionary=await call.call();working=false
+	if result.ok:alliance=null;build("alliance")
+	else:status.text=result.message
+func load_alliance() -> void:
+	if working or mode!="alliance":return
+	working=true;var result:=await auth.my_alliance();working=false
+	if not result.ok:status.text=result.message;return
+	var data: Dictionary=result.data
+	alliance=data if data.has("alliance") else {}
+	if mode=="alliance":build("alliance")
+func load_directory(search: String) -> void:
+	if working:return
+	working=true;var result:=await auth.alliance_directory(search);working=false
+	if result.ok:
+		directory=result.data.get("rows",[])
+		if directory.is_empty():status.text="No alliances yet - found the first one."
+		elif mode=="alliance_browse":build("alliance_browse")
+	else:status.text=result.message
 func load_leaderboard() -> void:
 	if working or mode!="leaderboard":return
-	working=true;var result:=await auth.leaderboard(50);working=false
+	working=true;var result:=await auth.leaderboard(50,board_metric);working=false
 	if result.ok:
 		leaderboard_rows=result.data.rows
 		if leaderboard_rows.is_empty():status.text="No commanders yet."

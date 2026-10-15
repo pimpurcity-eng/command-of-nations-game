@@ -144,12 +144,36 @@ func clear_session() -> void:
 	access_token="";refresh_token="";user={};profile={};expires_at=0;recovery_pending=false;session_changed.emit()
 ## Commander level from XP: level n needs 100*(n-1)^2 XP. Same formula as the server
 ## (backend/migrations/002_profiles_levels_deletion.sql, commander_level).
+const PROFILE_COLUMNS: = "commander_name,xp,games_played,wins,losses,units_destroyed,units_lost,cities_captured,play_minutes,best_streak,current_streak"
+## Kills per loss, as shown on the profile (a commander with no losses shows their kills).
+static func kd_ratio(stats: Dictionary) -> float:
+	return float(stats.get("units_destroyed",0))/maxf(float(stats.get("units_lost",0)),1.0)
+static func win_rate(stats: Dictionary) -> float:
+	return float(stats.get("wins",0))/maxf(float(stats.get("games_played",0)),1.0)
+# ---------------------------------------------------------------- alliances (migration 004)
+func alliance_call(function: String,payload: Dictionary={}) -> Dictionary:
+	if not signed_in():return failure("Sign in to use alliances.")
+	var result:=await request("/rest/v1/rpc/"+function,payload,HTTPClient.METHOD_POST,access_token)
+	if not result.ok and int(result.get("status",0)) == 404:return failure("Alliances are being switched on - try again soon.",404)
+	return result
+func my_alliance() -> Dictionary:return await alliance_call("my_alliance")
+func alliance_directory(search: String="") -> Dictionary:return await alliance_call("alliance_directory",{"search":search,"how_many":30})
+func create_alliance(name: String,tag: String,motto: String,open: bool) -> Dictionary:return await alliance_call("create_alliance",{"alliance_name":name,"alliance_tag":tag,"alliance_motto":motto,"is_open":open})
+func join_alliance(id: String) -> Dictionary:return await alliance_call("join_alliance",{"target":id})
+func leave_alliance() -> Dictionary:return await alliance_call("leave_alliance")
+func answer_alliance_request(id: int,accept: bool) -> Dictionary:return await alliance_call("answer_alliance_request",{"request_id":id,"accept":accept})
+func set_alliance_role(member: int,role: String) -> Dictionary:return await alliance_call("set_alliance_role",{"member_id":member,"new_role":role})
+func remove_alliance_member(member: int) -> Dictionary:return await alliance_call("remove_alliance_member",{"member_id":member})
+func post_alliance_message(text: String) -> Dictionary:return await alliance_call("post_alliance_message",{"message":text})
+func post_alliance_operation(code: String,side: String,note: String) -> Dictionary:return await alliance_call("post_alliance_operation",{"code":code,"play_side":side,"operation_note":note})
 static func level_for(xp: int) -> int:return int(floor(sqrt(maxf(xp,0)/100.0)))+1
 static func xp_for_level(level: int) -> int:return 100*(level-1)*(level-1)
 func load_profile() -> Dictionary:
 	if not signed_in():return failure("Sign in first.")
 	var profile_user := str(user.get("id",""))
-	var result:=await request("/rest/v1/player_profiles?select=commander_name,xp,games_played,wins,losses&id=eq."+str(user.id).uri_encode(),{},HTTPClient.METHOD_GET,access_token)
+	# Full statistics (migration 004); older databases only have the first five columns.
+	var result:=await request("/rest/v1/player_profiles?select="+PROFILE_COLUMNS+"&id=eq."+str(user.id).uri_encode(),{},HTTPClient.METHOD_GET,access_token)
+	if not result.ok:result=await request("/rest/v1/player_profiles?select=commander_name,xp,games_played,wins,losses&id=eq."+str(user.id).uri_encode(),{},HTTPClient.METHOD_GET,access_token)
 	if not result.ok:return result
 	var rows: Variant=result.data.get("rows",[])
 	if not (rows is Array) or rows.is_empty():return failure("Profile not found yet. Try again in a moment.")
@@ -157,9 +181,12 @@ func load_profile() -> Dictionary:
 	profile=rows[0];return {"ok":true,"data":profile}
 ## Single-player result against the AI. The server rate-limits and caps the XP; when online
 ## matches arrive, the match server records results instead.
-func record_result(won: bool,minutes: int) -> Dictionary:
+func record_result(won: bool,minutes: int,destroyed: int=0,lost: int=0,provinces: int=0) -> Dictionary:
 	if not signed_in():return failure("Sign in to earn XP.")
-	var result:=await request("/rest/v1/rpc/record_match_result",{"won":won,"minutes":maxi(minutes,0)},HTTPClient.METHOD_POST,access_token)
+	# Battle numbers go with the result (migration 004); without it the plain result is kept.
+	var result:=await request("/rest/v1/rpc/record_match_stats",{"won":won,"minutes":maxi(minutes,0),"destroyed":maxi(destroyed,0),"lost":maxi(lost,0),"cities":maxi(provinces,0)},HTTPClient.METHOD_POST,access_token)
+	if not result.ok and int(result.get("status",0)) == 404:
+		result=await request("/rest/v1/rpc/record_match_result",{"won":won,"minutes":maxi(minutes,0)},HTTPClient.METHOD_POST,access_token)
 	if not result.ok:return result
 	var rows: Variant=result.data.get("rows",[])
 	if rows is Array and not rows.is_empty():profile.merge(rows[0],true)
@@ -169,9 +196,12 @@ func unlock_achievement(code: String) -> Dictionary:
 	if not signed_in():return failure("Sign in first.")
 	return await request("/rest/v1/rpc/unlock_achievement",{"code":code},HTTPClient.METHOD_POST,access_token)
 ## The public leaderboard: [{place, commander_name, level, xp, wins}].
-func leaderboard(how_many: int=50) -> Dictionary:
+## metric: xp, wins, destroyed, cities, streak (migration 004); falls back to the XP board.
+func leaderboard(how_many: int=50,metric: String="xp") -> Dictionary:
 	if not signed_in():return failure("Sign in to see the leaderboard.")
-	var result:=await request("/rest/v1/rpc/top_commanders",{"how_many":how_many},HTTPClient.METHOD_POST,access_token)
+	var result:=await request("/rest/v1/rpc/top_commanders_by",{"metric":metric,"how_many":how_many},HTTPClient.METHOD_POST,access_token)
+	if not result.ok and int(result.get("status",0)) == 404:
+		result=await request("/rest/v1/rpc/top_commanders",{"how_many":how_many},HTTPClient.METHOD_POST,access_token)
 	if not result.ok:return result
 	return {"ok":true,"data":{"rows":result.data.get("rows",[])}}
 ## Permanently deletes the account and everything stored with it (Google Play requirement).
@@ -204,6 +234,7 @@ func endpoint(path: String) -> String:
 static func response_data(decoded: Variant) -> Dictionary:
 	if decoded is Dictionary:return decoded
 	if decoded is Array:return {"rows":decoded}
+	if decoded is String or decoded is float or decoded is bool:return {"value":decoded}
 	return {}
 func http(path: String,payload: Dictionary,method: int,bearer: String) -> Dictionary:
 	var client:=HTTPRequest.new();client.timeout=20;add_child(client)
