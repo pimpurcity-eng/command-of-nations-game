@@ -124,6 +124,7 @@ var route: MeshInstance3D
 var destination_marker: MeshInstance3D
 var route_signature: = ""
 var air_range: MeshInstance3D
+var range_rings: RangeRings
 var order_markers: Dictionary = {}
 
 func _new_order_marker(kind: String) -> Node3D:
@@ -248,6 +249,8 @@ func setup(map: StrategicMap, scenario: Dictionary) -> void :
 	air_range.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	air_range.visible = false
 	add_child(air_range)
+	range_rings = RangeRings.new()
+	add_child(range_rings)
 func _spawn(data: Dictionary, point: Vector2, color: Color) -> void :
 	if data.get("visual_kind", "") == "naval" and not sea_navigation.on_sea(point):
 		point = sea_navigation.coastal_destination(point)
@@ -710,12 +713,7 @@ func _process(delta: float) -> void :
 			air_range.scale = Vector3(radius, 1, radius)
 			air_range.position = terrain.position_at(place.point) + Vector3.UP * 0.1
 
-	if selected >= 0 and selected < units.size() and units[selected].visual_kind == "air_defense":
-		air_range.visible = true
-		var aa_unit: Dictionary = units[selected]
-		var aa_radius: float = EquipmentIdentity.air_defense_range(aa_unit)
-		air_range.scale = Vector3(aa_radius, 1, aa_radius)
-		air_range.position = terrain.position_at(Vector2(aa_unit.node.position.x, aa_unit.node.position.z)) + Vector3.UP * 0.12
+	if range_rings != null and terrain != null: range_rings.update(self, view_distance)
 	var chosen_stacks: Dictionary = {}
 	for leader in command_groups(): chosen_stacks[leader.stack_id] = true
 	var leader_ids: Dictionary = {}

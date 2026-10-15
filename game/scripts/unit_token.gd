@@ -4,8 +4,10 @@ extends Control
 ## symbol of the army's unit type (UnitClasses), the number of units, and five health bars
 ## beside it. White for your armies, red for enemies you are at war with, grey for others;
 ## gold edge when selected. "token" (zoomed out) is a slightly smaller plate than "tag".
-const TOKEN_SIZE: = Vector2(58, 21)  # owner 2026-10-15: tags were bigger than the tanks
-const TAG_SIZE: = Vector2(62, 22)
+const TOKEN_SIZE: = Vector2(54, 27)  # owner 2026-10-15: tags were bigger than the tanks
+const TAG_SIZE: = Vector2(58, 28)
+## Owner 2026-10-15 ("can't see health bar"): a full-width bar under the plate.
+const BAR_HEIGHT: = 6.0
 var mode: = "token"
 ## Map class (UnitClasses.ALL) or menu kind; picks the symbol.
 var kind: = "heavy"
@@ -30,8 +32,7 @@ func _fill() -> Color:
 func _draw() -> void:
 	var font: = get_theme_default_font()
 	var ink: = Color.WHITE if hostile else Color("161614")
-	var bars: = 8.0
-	var plate: = Rect2(Vector2(1, 1), Vector2(size.x - bars - 4, size.y - 2))
+	var plate: = Rect2(Vector2(1, 1), Vector2(size.x - 2, size.y - BAR_HEIGHT - 3))
 	var face: = StyleBoxFlat.new()
 	face.bg_color = _fill()
 	face.set_corner_radius_all(6)
@@ -52,12 +53,9 @@ func _draw() -> void:
 	draw_line(Vector2(split, plate.position.y + 5), Vector2(split, plate.end.y - 5), Color(1, 1, 1, 0.6) if hostile else Color(0.55, 0.53, 0.5), 1.0)
 	var font_size: = 13
 	draw_string(font, Vector2(split, plate.get_center().y + font_size * 0.36), str(count), HORIZONTAL_ALIGNMENT_CENTER, plate.end.x - split, font_size, ink)
-	# Five health bars, bottom up.
-	var filled: = clampi(ceili(health / 20.0), 0, 5)
+	# Health bar under the plate: green, yellow below 60%, red below 30%.
+	var bar: = Rect2(Vector2(3, size.y - BAR_HEIGHT - 1), Vector2(size.x - 6, BAR_HEIGHT))
+	draw_rect(bar.grow(1.0), Color(0.04, 0.05, 0.04, 0.95))
+	draw_rect(bar, Color(0.25, 0.26, 0.24))
 	var colour: = Color("62c848") if health >= 60 else (Color("e0b84a") if health >= 30 else Color("d65448"))
-	var x: = size.x - bars
-	var step: = (size.y - 2) / 5.0
-	for i in 5:
-		var segment: = Rect2(Vector2(x, size.y - 1 - (i + 1) * step + 0.8), Vector2(bars - 2, step - 1.6))
-		draw_rect(segment, colour if i < filled else Color(0.27, 0.28, 0.25))
-		draw_rect(segment, Color(0.05, 0.12, 0.04), false, 1.0)
+	draw_rect(Rect2(bar.position, Vector2(bar.size.x * clampf(health / 100.0, 0.0, 1.0), bar.size.y)), colour)
