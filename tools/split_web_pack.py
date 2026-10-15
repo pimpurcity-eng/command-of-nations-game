@@ -137,12 +137,74 @@ import hashlib
 core_entries.append({"name": "web_extras_index.txt", "size": len(listing), "data": listing,
                      "md5": hashlib.md5(listing).digest(), "flags": 0})
 extra_entries = [e for e in entries if e["name"] in extra]
+# One small pack per model or picture (owner 2026-10-15: the single 186 MB weapons pack made the
+# phone browser run out of memory - "WebGL context lost" in the weapons range). The game fetches
+# only the packs for what is on screen; web_extras_index.txt says which pack holds each file.
+def group_of(source):
+    source = source.rsplit(".", 1)[0]
+    for folder in ("assets/library/arsenal/", "assets/library/airdefense/", "assets/library/buildings_oct12/", "assets/library/transport/", "assets/interface/unit_art/", "assets/vehicles/"):
+        if source.startswith(folder):
+            return (folder.split("/")[-2] + "_" + source[len(folder):].split("/")[0]).split(".")[0]
+    rest = source[len("assets/library/"):] if source.startswith("assets/library/") else source
+    return rest.split("/")[0]
+# Model base names: textures named after a model (t90m_russian_russian_ground_color) travel with it.
+groups = {}
+owner_of = {}
+for e in extra_entries:
+    name = e["name"]
+    if name.endswith((".import", ".remap")):
+        source = name[: -len(name.split(".")[-1]) - 1]
+        owner_of[name] = group_of(source)
+        for t in targets(name): owner_of.setdefault(t, group_of(source))
+bases = sorted({g for g in owner_of.values()}, key=len, reverse=True)
+def group_for(name):
+    if name in owner_of: return owner_of[name]
+    stem = name.split("/")[-1]
+    for b in bases:
+        if stem.startswith(b.split("_", 1)[-1]) or stem.startswith(b): return b
+    return "misc"
+for e in extra_entries: groups.setdefault(group_for(e["name"]), []).append(e)
+# Textures shared by several models (e.g. one camouflage sheet) go with the first model that names
+# them; the index below records the real pack for every file.
+os.makedirs(os.path.join(web, "extras"), exist_ok=True)
+for old in os.listdir(os.path.join(web, "extras")): os.remove(os.path.join(web, "extras", old))
+index_lines = []
+for number, (group, members) in enumerate(sorted(groups.items())):
+    write_pack(os.path.join(web, "extras", "%d.pck" % number), header, members)
+    for e in members:
+        if e["name"].endswith((".import", ".remap")):
+            index_lines.append("res://" + e["name"].rsplit(".", 1)[0] + "\t%d" % number)
+# Every resource also needs the packs of the files its import points at (textures of a model).
+pack_of_file = {e["name"]: n for n, (g, members) in enumerate(sorted(groups.items())) for e in members}
+needs = {}
+for e in extra_entries:
+    if e["name"].endswith((".import", ".remap")):
+        packs = {pack_of_file[e["name"]]}
+        data = by_name[e["name"]]["data"].decode("utf-8", "ignore")
+        for t in targets(e["name"]):
+            if t in pack_of_file: packs.add(pack_of_file[t])
+        # A model scene names its textures inside the .scn.
+        for t in targets(e["name"]):
+            if t in by_name and t.endswith(".scn"):
+                for ref in re.findall(rb"res://([A-Za-z0-9_./-]+)", by_name[t]["data"]):
+                    ref = ref.decode()
+                    for candidate in (ref + ".import", ref):
+                        if candidate in pack_of_file: packs.add(pack_of_file[candidate])
+                        if candidate in by_name and candidate.endswith(".import"):
+                            for tt in targets(candidate):
+                                if tt in pack_of_file: packs.add(pack_of_file[tt])
+        needs["res://" + e["name"].rsplit(".", 1)[0]] = sorted(packs)
+listing = "\n".join(k + "\t" + ",".join(str(p) for p in v) for k, v in sorted(needs.items())).encode()
+core_entries = [e for e in core_entries if e["name"] != "web_extras_index.txt"]
+core_entries.append({"name": "web_extras_index.txt", "size": len(listing), "data": listing,
+                     "md5": hashlib.md5(listing).digest(), "flags": 0})
 write_pack(os.path.join(web, "index.pck"), header, core_entries)
-write_pack(os.path.join(web, "index.extras.pck"), header, extra_entries)
+if os.path.exists(os.path.join(web, "index.extras.pck")): os.remove(os.path.join(web, "index.extras.pck"))
 
 html = os.path.join(web, "index.html")
 text = open(html).read()
 text = re.sub(r'"index\.pck":\s*\d+', '"index.pck":%d' % os.path.getsize(os.path.join(web, "index.pck")), text)
 open(html, "w").write(text)
 mb = lambda p: os.path.getsize(os.path.join(web, p)) // 1048576
-print(f"start pack {mb('index.pck')} MB ({len(core_entries)} files), weapons pack {mb('index.extras.pck')} MB ({len(extra_entries)} files)")
+sizes = [os.path.getsize(os.path.join(web, "extras", f)) for f in os.listdir(os.path.join(web, "extras"))]
+print(f"start pack {mb('index.pck')} MB ({len(core_entries)} files), {len(sizes)} weapon packs, largest {max(sizes)//1048576} MB, total {sum(sizes)//1048576} MB")

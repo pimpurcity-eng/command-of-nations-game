@@ -511,11 +511,8 @@ func _ready() -> void :
 		mobile_start.online_requested.connect(join_online)
 		mobile_start.test_requested.connect(func(scenario: String):
 			GameSession.player_country = mobile_start.selected_country()
-			# The weapons range shows every model; in the browser wait for the weapons download.
-			if web_extras != null: web_extras.start()
-			while web_extras != null and not WebExtras.available:
-				mobile_start.set_progress(100.0 * web_extras.fraction(), "Downloading weapons")
-				await get_tree().process_frame
+			# Browser: each weapon's model is fetched when it appears (owner 2026-10-15: waiting for
+			# every model at once ran the phone out of memory).
 			GameSession.weapons_test = true
 			await populate_weapons_test(true, scenario)
 			apply_player_country()

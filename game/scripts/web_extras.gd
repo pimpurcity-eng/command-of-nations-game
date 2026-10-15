@@ -1,66 +1,80 @@
 class_name WebExtras
 extends Node
-## Browser version only (owner 2026-10-14: the 180 MB download was "unacceptable"). The page
-## downloads a small start pack (map, cities, interface, sounds, starting armies) and the game
-## fetches every other weapon model and picture here, in the background, while you play.
-## Until it arrives a unit shows a stand-in and a building its level-1 model; both switch to the
-## real models as soon as the pack is loaded. The browser keeps the file, so later visits are quick.
+## Browser version only. The page downloads a small start pack (map, cities, interface, sounds,
+## starting armies); every other weapon model and picture is in its own small pack under extras/
+## (tools/split_web_pack.py) and is fetched the first time something needs it.
+## Owner 2026-10-15: one 186 MB weapons pack made phone browsers run out of memory ("WebGL context
+## lost" in the weapons range), so only what is on screen is downloaded and kept in memory.
+## Until a model arrives its unit shows a stand-in; `loaded` tells the game to swap the real one in.
 signal loaded
-signal progress(fraction: float)
-const FILE: = "index.extras.pck"
-const LOCAL: = "/tmp/warfront_extras.pck"
+const FOLDER: = "extras/"
+const PARALLEL: = 3
 static var available: bool = not OS.has_feature("web")
-## True when the resource can be loaded now. In the browser version the files listed in
-## res://web_extras_index.txt (written by tools/split_web_pack.py) arrive with the weapons pack.
-static var _later: Dictionary = {}
+## res:// path -> packs it needs (written by tools/split_web_pack.py as web_extras_index.txt).
+static var _needs: Dictionary = {}
+static var _loaded: Dictionary = {}
+static var _instance: WebExtras
+var _queue: Array[int] = []
+var _requested: Dictionary = {}
+var _active: int = 0
+
+## True when the resource can be loaded now; otherwise starts fetching it and returns false.
 static func has(path: String) -> bool:
 	if path.is_empty(): return false
-	if not OS.has_feature("web") or available: return ResourceLoader.exists(path)
-	if _later.is_empty() and FileAccess.file_exists("res://web_extras_index.txt"):
-		for line in FileAccess.get_file_as_string("res://web_extras_index.txt").split("\n"): _later[line] = true
-	if not _later.has(path): return ResourceLoader.exists(path)
-	# On phones the pack is fetched only when something first needs it (memory is tight there).
-	if _instance != null and _instance._http == null:
-		print("Weapons pack: first needed for ", path)
-		_instance.start()
-	return false
-static var _instance: WebExtras
-var _http: HTTPRequest
+	if available: return ResourceLoader.exists(path)
+	_read_index()
+	if not _needs.has(path): return ResourceLoader.exists(path)
+	var ready: = true
+	for pack in _needs[path]:
+		if not _loaded.has(pack):
+			ready = false
+			if _instance != null: _instance._want(pack)
+	return ready
+
+static func _read_index() -> void:
+	if not _needs.is_empty() or not FileAccess.file_exists("res://web_extras_index.txt"): return
+	for line in FileAccess.get_file_as_string("res://web_extras_index.txt").split("\n"):
+		var parts: = line.split("\t")
+		if parts.size() == 2: _needs[parts[0]] = Array(parts[1].split(",")).map(func(n): return int(n))
+
 func _enter_tree() -> void: _instance = self
-var _size: = 0
 
+## Computers have the memory: fetch everything in the background, a few packs at a time.
 func start() -> void:
-	if available or _http != null: return
-	_http = HTTPRequest.new()
-	_http.download_file = LOCAL
-	_http.use_threads = false
-	# The default 64 KB per frame would take minutes for this file.
-	_http.download_chunk_size = 16 * 1024 * 1024
-	add_child(_http)
-	_http.request_completed.connect(_finished)
-	_request()
+	if available: return
+	_read_index()
+	var all: Dictionary = {}
+	for packs in _needs.values():
+		for pack in packs: all[pack] = true
+	for pack in all.keys(): _want(pack)
 
-func _request() -> void:
-	var url: String = str(JavaScriptBridge.eval("new URL('%s', location.href).href" % FILE))
-	var error: = _http.request(url)
-	print("Weapons pack: downloading %s (%s)" % [url, error_string(error)])
-	if error != OK: get_tree().create_timer(10.0).timeout.connect(_request)
+func _want(pack: int) -> void:
+	if _requested.has(pack) or _loaded.has(pack): return
+	_requested[pack] = true
+	_queue.append(pack)
+	_next()
 
-func fraction() -> float:
-	if available: return 1.0
-	if _http == null: return 0.0
-	var total: = _http.get_body_size()
-	return clampf(float(_http.get_downloaded_bytes()) / float(total), 0.0, 1.0) if total > 0 else 0.0
+func _next() -> void:
+	while _active < PARALLEL and not _queue.is_empty():
+		var pack: int = _queue.pop_front()
+		_active += 1
+		var http: = HTTPRequest.new()
+		http.download_file = "/tmp/warfront_extra_%d.pck" % pack
+		http.use_threads = false
+		http.download_chunk_size = 4 * 1024 * 1024
+		add_child(http)
+		http.request_completed.connect(_finished.bind(pack, http))
+		var url: String = str(JavaScriptBridge.eval("new URL('%s%d.pck', location.href).href" % [FOLDER, pack]))
+		if http.request(url) != OK: _finished(HTTPRequest.RESULT_CANT_CONNECT, 0, PackedStringArray(), PackedByteArray(), pack, http)
 
-func _process(_delta: float) -> void:
-	if _http != null and not available: progress.emit(fraction())
-
-func _finished(result: int, code: int, _headers: PackedStringArray, _body: PackedByteArray) -> void:
-	if result == HTTPRequest.RESULT_SUCCESS and code == 200 and ProjectSettings.load_resource_pack(LOCAL, true):
-		available = true
-		set_process(false)
-		print("Weapons pack: loaded")
+func _finished(result: int, code: int, _headers: PackedStringArray, _body: PackedByteArray, pack: int, http: HTTPRequest) -> void:
+	_active -= 1
+	http.queue_free()
+	if result == HTTPRequest.RESULT_SUCCESS and code == 200 and ProjectSettings.load_resource_pack("/tmp/warfront_extra_%d.pck" % pack, true):
+		_loaded[pack] = true
 		loaded.emit()
-		return
-	push_warning("Weapons pack download failed (%d / HTTP %d); retrying" % [result, code])
-	get_tree().create_timer(10.0).timeout.connect(_request)
+	else:
+		push_warning("Weapon pack %d failed (%d / HTTP %d); retrying" % [pack, result, code])
+		_requested.erase(pack)
+		get_tree().create_timer(5.0).timeout.connect(func(): _want(pack))
+	_next()
