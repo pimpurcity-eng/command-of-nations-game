@@ -4,7 +4,7 @@ Claude builds and publishes the app and the website. The Play Store listing is d
 Your job is game work that Claude is not doing right now. Each item says what is done and how to prove it.
 
 ## Setup
-- Repo `pimpurcity-eng/command-of-nations-game`. Start from branch `claude/v0.26-fixes` (latest is 0.48).
+- Repo `pimpurcity-eng/command-of-nations-game`. Start from branch `claude/v0.26-fixes` (latest is 0.50).
   Work on your own branch `chatgpt/<topic>`, one per item below. Don't push to Claude's branch or `main`.
 - Godot **4.6.3** (4.4.1 breaks the scripts). Run tests with
   `godot --headless --path game --script tests/<name>.gd` (look for `RESULT ... failures=0`).
@@ -56,7 +56,9 @@ These tests still expect the old start, so they fail:
 
 ## 4. Balance check against Conflict of Nations
 Claude set the damage tables from Call of War, in `CombatSystem.ATTACK`/`DEFENCE`, by unit type
-against infantry, light and heavy targets. Country traits are in `game/scripts/country_traits.gd`.
+against infantry, light and heavy targets. National bonuses are the four doctrines in `game/scripts/doctrine.gd`
+(Russian, European, American, Chinese; Ukraine is European). Owner's rule: Russian air defence and rockets beat
+Europe's; Europe has the better tanks, aircraft and research. There are no other country bonuses; don't add any.
 - Write `docs/BALANCE_REVIEW.md`: for each unit type, our numbers next to Conflict of Nations' (hit points,
   attack and defence against soft, hard and air, speed, range), with sources linked.
 - Propose changes as a table, and keep Russia and Ukraine/Europe even overall. Don't apply them;
