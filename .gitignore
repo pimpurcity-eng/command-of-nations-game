@@ -11,3 +11,6 @@ game/assets/audio/start_theme.*
 
 # Godot Android build template (installed locally for Play Store .aab exports)
 game/android/
+
+# Private external-AI/server credentials
+/server/.env

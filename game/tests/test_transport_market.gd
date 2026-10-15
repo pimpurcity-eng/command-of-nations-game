@@ -88,7 +88,7 @@ func run() -> void:
 	var tank_spec: Dictionary = EquipmentIdentity.catalog.filter(func(e): return e.visual_kind == "armor")[0]
 	var tank: = {"id":"sale-tank","name":"Sale tank","equipment_id":tank_spec.id,"visual_kind":"armor","country":"russia","health":63.0,"level":2,"node":Node3D.new(),"moving":false,"engaged":false}
 	network.armies.units.append(tank)
-	check(market.list_unit("russia","a","sale-tank",TransportMarket.minimum_price(tank)).is_empty(), "an actual tank is listed at its minimum price")
+	check(market.list_unit("russia","a","sale-tank",market.unit_floor(tank)).is_empty(), "an actual tank is listed at its minimum price")
 	check(network.armies.units.is_empty(), "listed equipment cannot still fight or be sold twice")
 	var tank_id: int = market.offers[0].id
 	check(market.buy("ukraine",tank_id,"b","air").is_empty(), "upgraded airports can ship one tank")
@@ -137,6 +137,37 @@ func run() -> void:
 	check(victory.economic_target("russia") == 20,"economic target depends on own starting economy, not map-wide monopoly")
 	var restored: = VictoryRules.new(); restored.restore(victory.snapshot())
 	check(restored.economic_target("russia") == 20,"economic target survives reconnect/save")
+	# Shared world minimums react to real net demand, without cancel/list or trade-circle pumping.
+	var world: = WorldMarketPrices.new()
+	var base_fuel: = world.resource("fuel")
+	world.record("russia","ukraine","fuel",1000,{})
+	check(world.resource("fuel") > base_fuel,"completed net resource demand raises the world minimum")
+	world.record("ukraine","russia","fuel",1000,{})
+	check(is_equal_approx(world.resource("fuel"),base_fuel),"buying cargo back cannot pump the world price")
+	var sample: = {"equipment_id":tank_spec.id,"level":2}
+	var weapon_base: = world.equipment(sample)
+	world.record("russia","ukraine","equipment",1,sample)
+	check(world.equipment(sample) > weapon_base,"each weapon family and level has its own demand-based floor")
+	var loaded: = WorldMarketPrices.new(); loaded.restore(world.snapshot())
+	check(loaded.equipment(sample) == world.equipment(sample),"world prices survive save/load and server snapshots")
+	var high: = world.factor(WorldMarketPrices.item(sample))
+	world.advance(VictoryRules.DAY)
+	check(world.factor(WorldMarketPrices.item(sample)) < high,"demand cools back toward the basic minimum over time")
+	var own_before: float = network.production.stockpiles.russia.food
+	check(market.post_request("ukraine","b","food",1,10,1,"air") != "","Wanted listings must meet the world minimum")
+	check(market.post_request("ukraine","b","food",1,10,100,"air").is_empty(),"buyers can post a premium-priced Wanted request")
+	var request_id: int = market.requests[-1].id
+	check(market.cancel_request("russia",request_id) != "","only the buyer can withdraw their Wanted request")
+	check(market.fulfil_request("russia",request_id,"a").is_empty(),"a seller fills a Wanted request using their actual cargo")
+	check(not market.requests.any(func(r):return r.id == request_id) and network.production.stockpiles.russia.food == own_before-10,"filling a request reserves cargo once and removes the request")
+	market.advance(100)
+	check(network.production.stockpiles.ukraine.food == 1010,"Wanted cargo uses the same physical delivery path")
+	var demand_before: = network.world_prices.factor("food")
+	market.list_resource("russia","a","food",1,1000)
+	var premium_id: int = market.offers[-1].id
+	check(market.offers[-1].price == 1000,"sellers can ask more than the world minimum")
+	market.cancel("russia",premium_id)
+	check(network.world_prices.factor("food") == demand_before,"listing and cancelling cannot raise world demand")
 	# A small peaceful economy can win even while another nation's economy is much bigger.
 	for territory in network.map.territories:
 		territory.playable = true

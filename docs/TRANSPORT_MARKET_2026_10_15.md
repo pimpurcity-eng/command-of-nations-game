@@ -29,7 +29,17 @@ Five research levels use the existing three models at levels 1/2, 3/4 and 5. Ori
 
 ## Validation and remaining work
 
-- `tests/test_transport_market.gd`: 61 focused checks pass, no runtime script errors. Tests cover escrow, loss/refund, actual tank ownership/health/tier transfer, reloads, terminal capacity, rail access, sea routing, interdiction damage, enemy information filtering, economic victory, both naval trees and market/research controls.
+- `tests/test_transport_market.gd`: 74 focused checks pass, no runtime script errors. Tests cover escrow, loss/refund, actual tank ownership/health/tier transfer, reloads, terminal capacity, rail access, sea routing, interdiction damage, enemy information filtering, economic victory, both naval trees and market/research controls.
 - Godot 4.5.1 parsed the main scene script, both network scripts, research panel, trade panel and tutorial successfully. The project normally targets Godot 4.6, so release validation must use the normal engine/build pipeline.
 - The browser playtest was blocked by this environment's unavailable WebGL2. No completed human-style game round, phone visual/performance test, Android build, full scene regression or live deployment is claimed.
 - Run the existing full game regression and a real two-player reconnect/Guard/trade session with the private original asset set before shipping. Balance the provisional load-slot numbers and economic target with playtests.
+
+## Follow-up: world minimum prices and Wanted listings
+
+One shared in-game price book covers every resource and weapon family/research level in the catalogue, including foreign equipment when traded. Minimums start from a basic replacement/resource value, rise with delivered net demand and cool over time. Sellers may ask above the minimum. Repricing checks ownership; quotes enforce the current minimum. Listing/cancelling does not increase demand, and circular cargo transfers cancel their net demand rather than pump prices. The price book persists in saves and authoritative client snapshots.
+
+Wanted listings let buyers specify an item, weapon tier, quantity, destination, delivery mode and budget at or above the world minimum. Sellers can fulfil a request only with actual owned cargo or matching equipment. Buyer funds are checked at fulfilment; the same escrow, capacity, physical-delivery and loss rules apply. Requests persist and can be withdrawn only by their buyer.
+
+Optional external AI and the below-medium fallback preset are described in `EXTERNAL_COUNTRY_AI.md`. No API has been activated or live deployment claimed.
+
+The inactivity handoff now defaults to **172,800 real seconds (48 hours)**. Sign-in/valid orders refresh activity; keepalive pings do not. Activity timestamps persist across restart and downtime. Focused source validation now passes 74 market/transport checks plus 21 external-AI/inactivity checks (95 total), without runtime errors.

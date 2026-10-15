@@ -41,7 +41,7 @@ func run() -> void:
 	while not game.boot_finished: await process_frame
 	var server: = MatchServer.new()
 	server.allow_dev_tokens = true
-	server.inactive_seconds = 1.5
+	server.inactive_seconds = MatchServer.INACTIVE_REAL_SECONDS
 	root.add_child(server)
 	check(server.start(game, PORT, "test", SAVE) == OK, "the match server listens")
 	check(server.ai_seats == ["russia", "ukraine"] and game.match_rules.ai_enabled, "the AI plays every seat until players join")
@@ -136,8 +136,9 @@ func run() -> void:
 	alice.send("chat", {"to": "coalition:nobody", "text": "spy"})
 	check(await wait_for(func(): return alice.results.any(func(r: Array): return r[0] == "chat" and not r[1])), "players cannot write to a coalition they are not in")
 
-	# AI takeover and return.
+	# AI takeover after two real days, simulated with the persisted wall-clock activity time.
 	bob.leave()
+	server.seats.ukraine.last_seen = Time.get_unix_time_from_system() - MatchServer.INACTIVE_REAL_SECONDS - 1.0
 	check(await wait_for(func(): return "ukraine" in server.ai_seats, 900), "the AI takes over a player who has been away")
 	check(game.match_rules.seat_ai.has("ukraine") and game.match_rules.seat_ai.ukraine.country == "ukraine" and not game.match_rules.seat_ai.has("russia"), "only the absent player's country is played by the AI")
 	var bob_again: = client("dev:bob")

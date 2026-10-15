@@ -1,6 +1,12 @@
 class_name CountryAI
 extends RefCounted
 var country: = "ukraine"
+var strategy: = "balanced" # optional external advisor chooses high-level policy
+const CASUAL_REACTION: = 30.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
+const CASUAL_MAX_ARMIES: = 10
+const CASUAL_ORDERS: = 2
+var difficulty: = "casual" # owner: a little below medium, same rules for API and fallback
+var reaction_timer: = 0.0
 var recruitment_timer: = 0.0
 func decide(armies: UnitSystem, terrain: StrategicMap, cities: Array, production: ProductionSystem, seconds: float) -> void :
 	recruitment_timer += seconds
@@ -9,7 +15,7 @@ func decide(armies: UnitSystem, terrain: StrategicMap, cities: Array, production
 		var count: = 0
 		for unit in armies.units:
 			if unit.country == country: count += 1
-		if count < 16:
+		if count < (8 if strategy == "economy" else CASUAL_MAX_ARMIES if difficulty == "casual" else 16):
 			for city in cities:
 				if not production.controlled(city, country): continue
 				var queued: = false
@@ -18,7 +24,16 @@ func decide(armies: UnitSystem, terrain: StrategicMap, cities: Array, production
 				if queued: continue
 				# Build something researched; rotate through the options instead of always the first.
 				var options: Array = production.catalog.filter(func(e: Dictionary): return e.country == country and production.research_lock(e).is_empty() and not e.get("requires_port", false))
-				if options.is_empty(): break
+				if options.is_empty():
+					# Backup AI must still develop a legal army when every technology starts locked.
+					if production.research != null:
+						for family in production.catalog:
+							if family.country != country or family.get("retired",false) or family.get("research_only",false): continue
+							var next_level: int = production.research.level(family.id) + 1
+							if next_level <= 5 and production.research.reason(family.id,next_level,country).is_empty():
+								production.research.start(family.id,next_level,country)
+								break
+					break
 				var choice: Dictionary = options[(count + city.name.length()) % options.size()]
 				# Cities start with only a train station: build the factory first, then the unit.
 				var system: BuildingSystem = production.buildings
@@ -31,15 +46,29 @@ func decide(armies: UnitSystem, terrain: StrategicMap, cities: Array, production
 							break
 				if not choice.is_empty(): production.enqueue(choice.id, city.name)
 				break
+	reaction_timer += seconds
+	if difficulty == "casual" and reaction_timer < CASUAL_REACTION: return
+	reaction_timer = 0.0
+	var issued: = 0
 	for group in armies.stacks.groups():
+		if difficulty == "casual" and issued >= CASUAL_ORDERS: break
 		var unit: = armies.stacks.leader(group)
 		if unit.country != country or unit.moving or unit.engaged: continue
 		var point: = Vector2(unit.node.position.x, unit.node.position.z)
+		# Keep the capital's final army at home; no perfectly timed mass evacuation.
+		if difficulty == "casual" and production != null:
+			var capital: Dictionary = production.buildings.capital(country) if production.buildings != null else {}
+			if not capital.is_empty() and production.controlled(capital,country) and point.distance_to(capital.point) < 1.0:
+				var garrison: int = armies.stacks.groups().filter(func(g): return g[0].country == country and g.any(func(u): return u.health > 0 and Vector2(u.node.position.x,u.node.position.z).distance_to(capital.point) < 1.0)).size()
+				if garrison <= 1: continue
 		var targets: Array = []
 
 		for enemy in armies.units:
 			var enemy_point: = Vector2(enemy.node.position.x, enemy.node.position.z)
 			if enemy.health > 0 and enemy.country != country and armies.unit_visible(enemy, country) and ( not armies.is_naval(unit) or armies.is_naval(enemy)) and point.distance_to(enemy_point) < 6: targets.append(enemy_point)
+		if strategy in ["economy","defensive"]:
+			targets = targets.filter(func(p): return armies.navigation.controller_at(p) == country)
+			if targets.is_empty(): continue
 		if targets.is_empty():
 			for city in cities:
 				for territory in terrain.territories:
@@ -50,7 +79,7 @@ func decide(armies: UnitSystem, terrain: StrategicMap, cities: Array, production
 		targets.sort_custom( func(a: Vector2, b: Vector2): return point.distance_squared_to(a) < point.distance_squared_to(b))
 		for target in targets:
 			if unit.visual_kind == "fighter":
-				if armies.air.order(unit, target, "patrol").is_empty(): break
+				if armies.air.order(unit, target, "patrol").is_empty(): issued += 1; break
 				continue
 			var path: Array = armies.path_for(unit, point, target)
 			if path.is_empty(): continue
@@ -62,4 +91,5 @@ func decide(armies: UnitSystem, terrain: StrategicMap, cities: Array, production
 				member.waypoints = path.duplicate()
 				member.moving = true
 			armies._update_heading(unit)
+			issued += 1
 			break

@@ -32,6 +32,7 @@ const PARTNERS: = {
 
 static var active: TradeNetwork
 
+var world_prices: = WorldMarketPrices.new()
 var market: TransportMarket
 
 var map: StrategicMap
@@ -203,6 +204,7 @@ static func value_of(cargo: String, amount: float) -> float:
 
 func advance(seconds: float) -> void:
 	if seconds <= 0: return
+	world_prices.advance(seconds)
 	market.advance(seconds)
 	# Routes stop when their city is lost, the station is gone or the deal ends (war, embargo).
 	for i in range(routes.size() - 1, -1, -1):
@@ -244,7 +246,7 @@ func advance(seconds: float) -> void:
 func _depart(route: Dictionary) -> void:
 	# Neutral supply contracts are paid imports, never free resources.
 	var amount: = delivery_amount(route)
-	var bill: float = amount * float(SupplyExchange.PRICES[route.cargo].buy)
+	var bill: float = amount * maxf(float(SupplyExchange.PRICES[route.cargo].buy), world_prices.resource(route.cargo))
 	if amount <= 0 or production.stockpiles[route.country].funds < bill: return
 	production.stockpiles[route.country].funds -= bill
 	production.changed.emit()

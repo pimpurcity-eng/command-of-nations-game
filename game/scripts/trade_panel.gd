@@ -158,6 +158,28 @@ func _market() -> void:
 	var me: = GameSession.player_country
 	var cities: Array = trade._cities_of(me)
 	if cities.is_empty(): return
+	list.add_child(CowUI.label("WORLD PRICES · shared by every nation",18))
+	var world_pick: = OptionButton.new()
+	var world_items: Array = []
+	for cargo in TradeNetwork.CARGO:
+		world_pick.add_item(cargo.capitalize()); world_items.append({"cargo":cargo})
+	for spec in EquipmentIdentity.catalog:
+		if spec.get("retired",false) or spec.get("research_only",false) or UnitClasses.of(spec) == "infantry": continue
+		world_pick.add_item(spec.country.capitalize() + " · " + spec.name)
+		world_items.append({"equipment_id":spec.id,"level":1})
+	list.add_child(world_pick)
+	var world_level: = SpinBox.new(); world_level.min_value = 1; world_level.max_value = 5
+	list.add_child(CowUI.label("Weapon research level",14)); list.add_child(world_level)
+	var world_label: = CowUI.label("",14); world_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART; list.add_child(world_label)
+	var show_world: = func():
+		var item: Dictionary = world_items[world_pick.selected].duplicate()
+		item.level = int(world_level.value)
+		var floor_price: float = trade.world_prices.resource(item.cargo) if item.has("cargo") else market.unit_floor(item)
+		var item_name: String = item.cargo.capitalize() if item.has("cargo") else EquipmentIdentity.research_title(item.equipment_id,item.level)
+		world_label.text = "%s · world minimum %.2f per %s · completed net purchases drive demand; prices cool over time" % [item_name,floor_price,"resource unit" if item.has("cargo") else "weapon unit"]
+	world_pick.item_selected.connect(func(_i): show_world.call())
+	world_level.value_changed.connect(func(_v): show_world.call())
+	show_world.call()
 	var refresh: = Button.new()
 	refresh.text = "Refresh offers and shipments"
 	refresh.custom_minimum_size.y = 44
@@ -174,8 +196,8 @@ func _market() -> void:
 		cargo_pick.add_item(cargo.capitalize())
 	for unit in trade.armies.units:
 		if unit.country != me or not TransportMarket.sale_allowed(unit): continue
-		choices.append({"unit": unit.id, "minimum": TransportMarket.minimum_price(unit)})
-		cargo_pick.add_item("%s · minimum %d" % [unit.name, TransportMarket.minimum_price(unit)])
+		choices.append({"unit": unit.id, "minimum": market.unit_floor(unit)})
+		cargo_pick.add_item("%s · minimum %d" % [unit.name, market.unit_floor(unit)])
 	list.add_child(CowUI.label("Cargo or equipment to sell",16))
 	list.add_child(cargo_pick)
 	var amount: = SpinBox.new()
@@ -184,13 +206,13 @@ func _market() -> void:
 	list.add_child(amount)
 	var price: = SpinBox.new()
 	price.min_value = 1; price.max_value = 100000000; price.value = 100
-	list.add_child(CowUI.label("Total asking price",16))
+	list.add_child(CowUI.label("Total asking price / Wanted budget",16))
 	list.add_child(price)
 	var minimum: = CowUI.label("",14)
 	list.add_child(minimum)
 	var update_minimum: = func():
 		var choice: Dictionary = choices[cargo_pick.selected]
-		var floor_price: int = int(choice.minimum) if choice.has("unit") else ceili(TradeNetwork.value_of(choice.cargo, amount.value))
+		var floor_price: int = int(choice.minimum) if choice.has("unit") else ceili(trade.world_prices.resource(choice.cargo) * amount.value)
 		minimum.text = "Minimum total price: %d" % floor_price
 		price.min_value = floor_price
 	cargo_pick.item_selected.connect(func(_i): update_minimum.call())
@@ -207,14 +229,43 @@ func _market() -> void:
 		message.text = "Offer submitted" if error.is_empty() else error
 		_market())
 	list.add_child(sell)
+	var request_mode: = OptionButton.new()
+	for transport in TransportMarket.MODES: request_mode.add_item({"rail":"Train", "sea":"Ship", "air":"Cargo plane"}[transport])
+	list.add_child(CowUI.label("Wanted delivery method",14)); list.add_child(request_mode)
+	var wanted: = Button.new(); wanted.text = "Post Wanted: selected world item"; wanted.custom_minimum_size.y = 44
+	wanted.pressed.connect(func():
+		var item: Dictionary = world_items[world_pick.selected]
+		var error: = market.post_request(me,cities[city_pick.selected].id,item.get("cargo",item.get("equipment_id","")),int(world_level.value),int(amount.value) if item.has("cargo") else 1,int(price.value),TransportMarket.MODES[request_mode.selected])
+		message.text = "Wanted request submitted; funds checked when a seller fills it" if error.is_empty() else error
+		_market())
+	list.add_child(wanted)
+	list.add_child(CowUI.label("WANTED",20))
+	for request in market.requests:
+		var name: String = request.cargo.capitalize() if request.cargo != "equipment" else EquipmentIdentity.research_title(request.equipment_id,int(request.level))
+		var text: = CowUI.label("%s wants %d %s · budget %d · world minimum %d · %s" % [request.buyer.capitalize(),request.amount,name,request.budget,market.request_floor(request),request.mode],14)
+		text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART; list.add_child(text)
+		var action: = Button.new(); action.custom_minimum_size.y = 44
+		action.text = "Withdraw Wanted request" if request.buyer == me else "Fill request from selected city for %d" % request.budget
+		action.pressed.connect(func():
+			var error: String = market.cancel_request(me,int(request.id)) if request.buyer == me else market.fulfil_request(me,int(request.id),cities[city_pick.selected].id)
+			message.text = "Wanted action submitted" if error.is_empty() else error
+			_market())
+		list.add_child(action)
 	list.add_child(CowUI.label("OFFERS",20))
 	if market.offers.is_empty(): list.add_child(CowUI.label("No player offers yet. List cargo or ask a trade partner to sell.",14))
 	for offer in market.offers:
 		var name: String = offer.unit.get("name", offer.cargo.capitalize())
-		var text: = CowUI.label("%s · %s · %d · total %d" % [offer.seller.capitalize(),name,offer.amount,offer.price],16)
+		var text: = CowUI.label("%s · %s · %d · asking %d · world minimum %d" % [offer.seller.capitalize(),name,offer.amount,offer.price,market.offer_floor(offer)],16)
 		text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		list.add_child(text)
 		if offer.seller == me:
+			if int(offer.price) < market.offer_floor(offer):
+				var update: = Button.new(); update.text = "Update to world minimum"; update.custom_minimum_size.y = 44
+				update.pressed.connect(func():
+					var error: = market.reprice(me,int(offer.id),market.offer_floor(offer))
+					message.text = "Price update submitted" if error.is_empty() else error
+					_market())
+				list.add_child(update)
 			var cancel: = Button.new(); cancel.text = "Withdraw offer"; cancel.custom_minimum_size.y = 44
 			cancel.pressed.connect(func():
 				var error: = market.cancel(me,int(offer.id))

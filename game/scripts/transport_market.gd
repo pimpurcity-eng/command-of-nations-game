@@ -5,6 +5,7 @@ extends RefCounted
 signal changed
 var network: TradeNetwork
 var offers: Array = []
+var requests: Array = []
 var shipments: Array = []
 var history: Array = []
 var next_id: = 1
@@ -50,7 +51,7 @@ func list_resource(country: String, city_id: String, cargo: String, amount: int,
 	var city: = network.buildings.city(city_id)
 	if city.is_empty() or not network.production.controlled(city, country): return "Choose one of your cities"
 	if not TradeNetwork.CARGO.has(cargo) or amount <= 0 or amount > 100000: return "Choose 1–100,000 cargo units"
-	if price < ceili(TradeNetwork.value_of(cargo, amount)) or price > 100000000: return "Price must meet the resource minimum"
+	if price < ceili(network.world_prices.resource(cargo) * amount) or price > 100000000: return "Price must meet the resource minimum"
 	var stock: Dictionary = network.production.stockpiles.get(country, {})
 	if float(stock.get(cargo, 0.0)) < amount: return "Insufficient cargo"
 	stock[cargo] -= amount
@@ -69,7 +70,7 @@ func list_unit(country: String, city_id: String, unit_id: String, price: int) ->
 	if not sale_allowed(unit): return "Infantry and strategic weapons cannot be sold"
 	if unit.get("moving", false) or unit.get("engaged", false) or float(unit.get("upgrade_remaining", 0.0)) > 0 or str(unit.get("flight_mode", "grounded")) != "grounded" or float(unit.get("refuel_remaining", 0.0)) > 0: return "Stop the unit and finish combat or upgrades first"
 	if Vector2(unit.node.position.x, unit.node.position.z).distance_to(city.point) > 1.5: return "Move the equipment to the selling city first"
-	if price < minimum_price(unit) or price > 100000000: return "Minimum equipment price: %d" % minimum_price(unit)
+	if price < unit_floor(unit) or price > 100000000: return "World minimum equipment price: %d" % unit_floor(unit)
 	var saved: Dictionary = {}
 	for entry in network.armies.snapshot():
 		if entry.id == unit_id: saved = {"id": entry.id, "name": entry.name, "equipment_id": entry.equipment_id, "visual_kind": entry.visual_kind, "country": entry.country, "health": entry.health, "level": entry.level}
@@ -99,7 +100,23 @@ func cancel(country: String, id: int) -> String:
 	changed.emit()
 	return ""
 
+func unit_floor(unit: Dictionary) -> int:
+	return network.world_prices.equipment(unit)
+
+func offer_floor(offer: Dictionary) -> int:
+	return ceili(network.world_prices.resource(offer.cargo) * float(offer.amount)) if offer.unit.is_empty() else unit_floor(offer.unit)
+
+func reprice(country: String, id: int, price: int) -> String:
+	if MatchClient.active != null: return MatchClient.active.send("market_reprice", {"id":id,"price":price})
+	var offer: = _offer(id)
+	if offer.is_empty() or offer.seller != country: return "Choose your own unsold offer"
+	if price < offer_floor(offer) or price > 100000000: return "Current world minimum: %d" % offer_floor(offer)
+	offer.price = price
+	changed.emit()
+	return ""
+
 func quote(offer: Dictionary, buyer: String, destination: String, mode: String) -> Dictionary:
+	if float(offer.get("price",0.0)) < offer_floor(offer): return {"error": "World minimum changed to %d; the seller must update this offer" % offer_floor(offer)}
 	if not mode in MODES: return {"error": "Choose rail, ship or cargo plane"}
 	var origin: = network.buildings.city(str(offer.get("city", "")))
 	var target: = network.buildings.city(destination)
@@ -259,6 +276,7 @@ func _finish(shipment: Dictionary, success: bool) -> void:
 		# Net funds flows count toward economic progress. A circular sale cancels its own income.
 		network.production._earn(shipment.seller,"funds",float(shipment.price))
 		network.production._earn(shipment.buyer,"funds",-float(shipment.price))
+		network.world_prices.record(shipment.seller,shipment.buyer,shipment.cargo,float(shipment.amount),shipment.unit)
 		shipment.status = "Delivered"
 	else:
 		network.production.stockpiles[shipment.buyer].funds += shipment.price
@@ -300,10 +318,12 @@ func snapshot(country: String = "") -> Dictionary:
 			# Hide departure point, destination and carried weapon details from enemy scouts.
 			saved.erase("city")
 		records.append(saved)
-	return {"offers": offers.duplicate(true), "shipments": records, "history": history.filter(func(h): return country.is_empty() or country in [h.seller,h.buyer]), "next_id": next_id}
+	return {"requests": requests.duplicate(true), "world_prices": network.world_prices.snapshot(), "offers": offers.duplicate(true), "shipments": records, "history": history.filter(func(h): return country.is_empty() or country in [h.seller,h.buyer]), "next_id": next_id}
 
 func restore(state: Dictionary) -> void:
+	network.world_prices.restore(state.get("world_prices",{}))
 	for shipment in shipments: shipment.node.queue_free()
+	requests = state.get("requests",[]).duplicate(true)
 	offers = state.get("offers",[]).duplicate(true)
 	shipments.clear()
 	history = state.get("history",[]).duplicate(true)
@@ -319,6 +339,8 @@ func restore(state: Dictionary) -> void:
 
 ## Reuse visual nodes between server ticks rather than recreating every convoy twice a second.
 func apply_remote(state: Dictionary) -> void:
+	network.world_prices.restore(state.get("world_prices",{}))
+	requests = state.get("requests",[]).duplicate(true)
 	offers = state.get("offers", []).duplicate(true)
 	history = state.get("history", []).duplicate(true)
 	var previous: Dictionary = {}
@@ -373,3 +395,61 @@ func rail_access(path: Array, seller: String, buyer: String) -> bool:
 			if owner in [seller,buyer]: continue
 			if network.diplomacy == null or network.diplomacy.at_war(seller,owner) or not network.diplomacy.right_of_way(seller,owner): return false
 	return true
+
+func request_floor(request: Dictionary) -> int:
+	return ceili(network.world_prices.resource(request.cargo) * float(request.amount)) if request.cargo != "equipment" else unit_floor({"equipment_id":request.equipment_id,"level":request.level})
+
+func post_request(country: String, city_id: String, item_id: String, level: int, amount: int, budget: int, mode: String) -> String:
+	if MatchClient.active != null: return MatchClient.active.send("market_wanted", {"city":city_id,"item":item_id,"level":level,"amount":amount,"budget":budget,"mode":mode})
+	var city: = network.buildings.city(city_id)
+	if city.is_empty() or not network.production.controlled(city,country): return "Choose your receiving city"
+	if mode not in MODES: return "Choose a transport method"
+	if amount <= 0 or amount > 100000 or level < 1 or level > 5: return "Choose a valid quantity and level"
+	var resource: bool = TradeNetwork.CARGO.has(item_id)
+	if not resource and (not sale_allowed({"equipment_id":item_id}) or EquipmentIdentity.spec(item_id).get("research_only",false)): return "Choose tradable equipment; infantry cannot be bought or sold"
+	if not resource and amount != 1: return "Equipment requests are for one unit"
+	var request: = {"id":next_id,"buyer":country,"city":city_id,"cargo":item_id if resource else "equipment","equipment_id":"" if resource else item_id,"level":level,"amount":amount,"budget":budget,"mode":mode}
+	if budget < request_floor(request) or budget > 100000000: return "World minimum for this request: %d" % request_floor(request)
+	requests.append(request)
+	next_id += 1
+	changed.emit()
+	return ""
+
+func cancel_request(country: String, id: int) -> String:
+	if MatchClient.active != null: return MatchClient.active.send("market_wanted_cancel", {"id":id})
+	for request in requests:
+		if int(request.id) == id and request.buyer == country:
+			requests.erase(request)
+			changed.emit()
+			return ""
+	return "Choose your own Wanted request"
+
+func fulfil_request(country: String, id: int, city_id: String) -> String:
+	if MatchClient.active != null: return MatchClient.active.send("market_fulfil", {"id":id,"city":city_id})
+	var request: Dictionary = {}
+	for entry in requests:
+		if int(entry.id) == id: request = entry
+	if request.is_empty() or request.buyer == country: return "Choose another country's Wanted request"
+	if int(request.budget) < request_floor(request): return "World minimum has risen; the buyer must update the request"
+	if float(network.production.stockpiles.get(request.buyer,{}).get("funds",0)) < float(request.budget): return "The buyer no longer has enough funds"
+	var unit: Dictionary = {}
+	if request.cargo == "equipment":
+		var city: = network.buildings.city(city_id)
+		if city.is_empty(): return "Choose your selling city"
+		for candidate in network.armies.units:
+			if candidate.country == country and candidate.equipment_id == request.equipment_id and int(candidate.level) == int(request.level) and candidate.health > 0 and not candidate.get("moving",false) and not candidate.get("engaged",false) and Vector2(candidate.node.position.x,candidate.node.position.z).distance_to(city.point) <= 1.5:
+				unit = candidate; break
+		if unit.is_empty(): return "Move matching equipment of the requested level to your selling city"
+	var offer: = {"seller":country,"city":city_id,"cargo":request.cargo,"amount":request.amount,"price":request.budget,"unit":{} if unit.is_empty() else {"equipment_id":unit.equipment_id,"level":unit.level}}
+	var plan: = quote(offer,request.buyer,request.city,request.mode)
+	if plan.has("error"): return plan.error
+	var sale_id: = next_id
+	var error: String = list_resource(country,city_id,request.cargo,int(request.amount),int(request.budget)) if unit.is_empty() else list_unit(country,city_id,unit.id,int(request.budget))
+	if not error.is_empty(): return error
+	error = buy(request.buyer,sale_id,request.city,request.mode)
+	if not error.is_empty():
+		cancel(country,sale_id)
+		return error
+	requests.erase(request)
+	changed.emit()
+	return ""

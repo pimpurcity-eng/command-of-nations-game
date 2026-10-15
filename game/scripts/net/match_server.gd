@@ -27,6 +27,7 @@ const UNIT_OPS: = ["move", "stop", "attack", "retreat"]
 ## Private fields of enemy armies that are never sent (their orders are secret).
 const HIDDEN_FIELDS: = ["route", "attack_target", "fire_mode", "forced_march", "delay_remaining", "upgrade_remaining", "upgrade_target", "patrol_center", "patrol_phase", "flight_used", "refuel_remaining"]
 
+var external_ai: ExternalCountryAI
 var guard_reports: Dictionary = {}  # country -> pending "while you were away" report
 var game: Node
 var tcp: = TCPServer.new()
@@ -35,7 +36,8 @@ var seats: Dictionary = {}     # country -> {"user", "name", "last_seen"}
 var ai_seats: Array = []
 var match_id: = "default"
 var save_path: = ""
-var inactive_seconds: = 600.0
+const INACTIVE_REAL_SECONDS: = 48.0 * 60.0 * 60.0
+var inactive_seconds: = INACTIVE_REAL_SECONDS
 var allow_dev_tokens: = false
 var supabase_url: = ""
 var supabase_key: = ""
@@ -58,9 +60,13 @@ func start(main: Node, port: int, id: String, path: String, bind: String = "*") 
 	game.match_rules.online = true
 	game.match_rules.report.connect(func(text: String): _broadcast({"t": "event", "text": text}))
 	_update_seats()
+	external_ai = ExternalCountryAI.new()
+	add_child(external_ai)
+	external_ai.configure(self)
 	return tcp.listen(port, bind)
 
 func stop() -> void:
+	if external_ai != null: external_ai.enabled = false
 	save()
 	for peer in peers: peer.ws.close(1001, "Server stopping")
 	peers.clear()
@@ -86,7 +92,6 @@ func _process(delta: float) -> void:
 				while peer.ws.get_available_packet_count() > 0:
 					_receive(peer, peer.ws.get_packet().get_string_from_utf8())
 				if peer.state != "play" and now - peer.since > HELLO_TIMEOUT: _reject(peer, "Sign-in timed out")
-				if peer.state == "play": seats[peer.country].last_seen = now
 			WebSocketPeer.STATE_CLOSED:
 				peers.erase(peer)
 	_tick += delta
@@ -115,6 +120,7 @@ func _receive(peer: Dictionary, text: String) -> void:
 				return
 			peer.budget -= 1.0
 			var answer: = command(peer.country, message)
+			if answer.is_empty(): mark_active(peer.country)
 			_send(peer, {"t": "result", "op": str(message.get("op", "")), "ok": answer.is_empty(), "message": answer})
 			# The "while you were away" report goes only to the player who switched guard off.
 			if guard_reports.has(peer.country): _send(peer, {"t": "guard_report", "text": guard_reports[peer.country]}); guard_reports.erase(peer.country)
@@ -175,7 +181,7 @@ func admit(peer: Dictionary, user: String, name: String, wanted: String) -> void
 	for other in peers:
 		if other != peer and other.user == user and other.state == "play": _reject(other, "Signed in on another device")
 	var returning: bool = seats[country].user == user
-	seats[country] = {"user": user, "name": name, "last_seen": now}
+	seats[country] = {"user": user, "name": name, "last_seen": Time.get_unix_time_from_system()}
 	peer.merge({"state": "play", "user": user, "name": name, "country": country}, true)
 	_update_seats()
 	var welcome: = _state(country, "welcome", true)
@@ -195,11 +201,12 @@ func connected(country: String) -> bool:
 	return false
 
 ## The AI plays empty seats and players away longer than inactive_seconds.
-func _update_seats() -> void:
+func _update_seats(wall_time: float = -1.0) -> void:
+	if wall_time < 0: wall_time = Time.get_unix_time_from_system()
 	var ai: Array = []
 	for country in countries:
 		var seat: Dictionary = seats[country]
-		if seat.user.is_empty() or (not connected(country) and now - float(seat.last_seen) > inactive_seconds): ai.append(country)
+		if seat.user.is_empty() or wall_time - float(seat.last_seen) >= inactive_seconds: ai.append(country)
 	if ai == ai_seats: return
 	for country in countries:
 		if country in ai and not country in ai_seats and not seats[country].user.is_empty():
@@ -273,6 +280,12 @@ func command(country: String, message: Dictionary) -> String:
 				var destination: = rules.retreat(units.stacks.members(unit), Vector2(unit.node.position.x, unit.node.position.z))
 				if destination != Vector2.INF: moved += units.command(country, [unit.id], "move", destination)
 			return "" if moved > 0 else "No friendly province to retreat to"
+		"market_wanted":
+			return game.trade.market.post_request(country,str(message.get("city","")),str(message.get("item","")),int(message.get("level",1)),int(message.get("amount",0)),int(message.get("budget",0)),str(message.get("mode","")))
+		"market_wanted_cancel":
+			return game.trade.market.cancel_request(country,int(message.get("id",-1)))
+		"market_fulfil":
+			return game.trade.market.fulfil_request(country,int(message.get("id",-1)),str(message.get("city","")))
 		"market_resource":
 			return game.trade.market.list_resource(country, str(message.get("city", "")), str(message.get("cargo", "")), int(message.get("amount", 0)), int(message.get("price", 0)))
 		"market_unit":
@@ -281,6 +294,8 @@ func command(country: String, message: Dictionary) -> String:
 			return game.trade.market.interdict(country,int(message.get("id",-1)),ids)
 		"market_buy":
 			return game.trade.market.buy(country, int(message.get("id", -1)), str(message.get("city", "")), str(message.get("mode", "")))
+		"market_reprice":
+			return game.trade.market.reprice(country,int(message.get("id",-1)),int(message.get("price",0)))
 		"market_cancel":
 			return game.trade.market.cancel(country, int(message.get("id", -1)))
 		"trade_open":
@@ -355,11 +370,31 @@ func command(country: String, message: Dictionary) -> String:
 func save() -> void:
 	if game == null or save_path.is_empty(): return
 	game.autosave(save_path)
+	_save_seats()
+
+func mark_active(country: String) -> void:
+	if not seats.has(country) or seats[country].user.is_empty(): return
+	seats[country].last_seen = Time.get_unix_time_from_system()
+	_update_seats()
+	_save_seats()
+
+func _seat_snapshot() -> Dictionary:
+	var stored: Dictionary = {}
+	for country in seats:
+		stored[country] = {"user":seats[country].user,"name":seats[country].name,"last_seen":seats[country].last_seen if not seats[country].user.is_empty() else 0.0}
+	return {"match":match_id,"seats":stored}
+
+func _save_seats() -> void:
+	if save_path.is_empty(): return
 	var file: = FileAccess.open(save_path.get_basename() + "_seats.json", FileAccess.WRITE)
-	if file == null: return
-	var stored: = {}
-	for country in seats: stored[country] = {"user": seats[country].user, "name": seats[country].name}
-	file.store_string(JSON.stringify({"match": match_id, "seats": stored}))
+	if file != null: file.store_string(JSON.stringify(_seat_snapshot()))
+
+func _restore_seats(stored: Dictionary) -> void:
+	if stored.get("match","") != match_id: return
+	for country in countries:
+		var seat: Dictionary = stored.get("seats",{}).get(country,{})
+		# Older saves lacked activity times: grant 48 hours rather than immediately taking over.
+		seats[country] = {"user":str(seat.get("user","")),"name":str(seat.get("name","")),"last_seen":float(seat.get("last_seen",Time.get_unix_time_from_system()))}
 
 func _load() -> void:
 	if save_path.is_empty() or not FileAccess.file_exists(save_path): return
@@ -369,10 +404,7 @@ func _load() -> void:
 		return
 	game.session.restore(result.state, game.clock, game.map, game.units, game.rig)
 	var stored: Variant = JSON.parse_string(FileAccess.get_file_as_string(save_path.get_basename() + "_seats.json"))
-	if stored is Dictionary and stored.get("match", "") == match_id:
-		for country in countries:
-			var seat: Dictionary = stored.seats.get(country, {})
-			seats[country] = {"user": str(seat.get("user", "")), "name": str(seat.get("name", "")), "last_seen": -INF}
+	if stored is Dictionary: _restore_seats(stored)
 
 func _send(peer: Dictionary, message: Dictionary) -> void:
 	if peer.ws.get_ready_state() == WebSocketPeer.STATE_OPEN: peer.ws.send_text(JSON.stringify(message))

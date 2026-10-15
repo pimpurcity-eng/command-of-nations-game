@@ -6,7 +6,10 @@ services:
     ports: ["127.0.0.1:8910:8910"]
     environment:
       WM_MATCH: main
-      WM_INACTIVE: "600"
+      WM_INACTIVE: "172800"
+      WM_EXTERNAL_AI: ${WM_EXTERNAL_AI:-0}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      WM_AI_MODEL: ${WM_AI_MODEL:-openai/gpt-oss-20b}
       SUPABASE_URL: ${SUPABASE_URL}
       SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
     volumes: ["match-main:/home/warfront/.local/share/godot"]
