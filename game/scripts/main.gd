@@ -69,7 +69,10 @@ var clock: SimulationClock
 var match_rules: MatchSystem
 var session: GameSession
 const SAVE_PATH: = "user://regional_save.json"
+## Start-up timing in the browser console (speed work, owner 2026-10-15).
+func _boot_mark(step: String) -> void: print("BOOT ", step, " at ", Time.get_ticks_msec(), " ms")
 func _ready() -> void :
+	_boot_mark("main start")
 	# Prevent costly detail loading/rendering before the portrait start screen is ready.
 	# The start-screen CanvasLayer remains visible independently of the 3D scene.
 	if UnitSystem.mobile_device(): visible = false
@@ -128,6 +131,7 @@ func _ready() -> void :
 	add_child(map)
 	if not map.build_finished:
 		await map.map_ready
+		_boot_mark("map")
 	rig = StrategyCamera.new()
 	add_child(rig)
 	audio = get_tree().root.get_node_or_null("GameAudio") as GameAudio
@@ -140,6 +144,7 @@ func _ready() -> void :
 	add_child(units)
 	session = GameSession.new()
 	units.setup(map, session.scenario)
+	_boot_mark("units")
 	fog = FogOfWar.new()
 	add_child(fog)
 	fog.setup(units, map)
@@ -264,6 +269,7 @@ func _ready() -> void :
 	cities = CitySystem.new()
 	add_child(cities)
 	await cities.setup(map, rig)
+	_boot_mark("cities")
 	cities.armies = units
 	badges = UnitBadges.new()
 	add_child(badges)
@@ -468,6 +474,7 @@ func _ready() -> void :
 	trade = TradeNetwork.new()
 	add_child(trade)
 	trade.setup(map, units, production, buildings, match_rules.diplomacy)
+	_boot_mark("systems")
 	trade.ai_countries = [GameSession.opponent_country()]
 	match_rules.trade = trade
 	clock.advanced.connect(trade.advance)
@@ -481,6 +488,7 @@ func _ready() -> void :
 		# Keep Android's event loop responsive while creating the large starting force.
 		# Desktop/headless tests retain synchronous initialization.
 		await populate_campaign_forces(not OS.has_feature("headless"))
+		_boot_mark("armies")
 		apply_player_country()
 	if true:
 		mobile_start = MobileStartPanel.new()
@@ -1132,9 +1140,10 @@ func populate_campaign_forces(staged: bool = false) -> void:
 			if kind != "fighter": data.stack_id = ("start_ad_" if family.get("stationary", false) or kind == "air_defense" else "start_") + base.id
 			units._spawn(data, point, Color("ef827c") if country == "russia" else Color("73bcff"))
 			spawned += 1
-			if staged and spawned % 4 == 0:
+			if staged and FrameBudget.spent():
 				boot_progress.emit(spawned, count_total)
 				await get_tree().process_frame
+				FrameBudget.restart()
 	boot_progress.emit(count_total, count_total)
 	# The start plane's province airport (set above) must be drawn under it.
 	if cities != null: cities.sync_buildings()

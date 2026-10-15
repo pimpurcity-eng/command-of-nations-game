@@ -51,6 +51,7 @@ func _ready() -> void:
 	if not game.boot_finished:
 		await game.boot_ready
 	panel.set_progress(100, "Ready")
+	print("BOOT ready after ", Time.get_ticks_msec(), " ms")
 	if "--startup-smoke" in OS.get_cmdline_user_args():
 		panel.hide()
 		print("WF_SMOKE READY")

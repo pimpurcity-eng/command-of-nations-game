@@ -16,7 +16,7 @@ var _city_points: = PackedVector2Array()
 ## The drawn ground is made of province triangles that can lie well above or below the smooth
 ## height formula between their corners, which buried roads, sank tanks and split cities.
 ## After the ground is built, heights come from the drawn triangles (bucketed in a grid).
-const GROUND_CELL: = 0.5
+const GROUND_CELL: = 0.15  # owner 2026-10-15 (start too slow): fewer triangles per height lookup, same heights
 ## Radius of a city's built-up area (district outline ~0.72 * 0.86-1.0); roads end here.
 const CITY_EDGE: = 0.62
 var _ground_cells: Dictionary = {}
@@ -32,8 +32,9 @@ func _ready() -> void :
 	for city in GeographicProjection.load_cities(): _city_points.append(city.point)
 	for territory in territories:
 		_build_sector(territory)
-		if UnitSystem.mobile_device():
+		if UnitSystem.mobile_device() and FrameBudget.spent():
 			await get_tree().process_frame
+			FrameBudget.restart()
 	_ground_ready = true
 	var province_lines: = MapBorder.build_segments(MapBorder.unique_segments(_border_rings), self, 0.9, Color(0.21, 0.23, 0.2, 0.75))
 	province_lines.name = "ProvinceBorders"

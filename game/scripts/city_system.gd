@@ -168,8 +168,9 @@ func setup(map: StrategicMap, camera_rig: StrategyCamera) -> void :
 		leader.default_color = ink.albedo_color
 		label_layer.add_child(leader)
 		leaders.append(leader)
-		if UnitSystem.mobile_device():
+		if UnitSystem.mobile_device() and FrameBudget.spent():
 			await get_tree().process_frame
+			FrameBudget.restart()
 	for spec in [["UKRAINE", [[25.5, 49.3], [29.7, 49.6], [34.2, 50.0]]], ["RUSSIA", [[36.0, 53.0], [39.5, 54.0], [44.0, 54.6]]]]:
 		var points: = PackedVector2Array()
 		for coordinate in spec[1]: points.append(GeographicProjection.project(coordinate[0], coordinate[1]))
@@ -418,6 +419,11 @@ func _facade(color: String, glass: String, roof: String, floor_height: float, ba
 	material.set_shader_parameter("window_height", window_h)
 	material.set_shader_parameter("shine", shine)
 	return material
+## Box faces: outward normal and the two in-face axes.
+const _BOX_FACES: = [
+	[Vector3(1, 0, 0), Vector3(0, 0, -1), Vector3(0, 1, 0)], [Vector3(-1, 0, 0), Vector3(0, 0, 1), Vector3(0, 1, 0)],
+	[Vector3(0, 1, 0), Vector3(1, 0, 0), Vector3(0, 0, -1)], [Vector3(0, -1, 0), Vector3(1, 0, 0), Vector3(0, 0, 1)],
+	[Vector3(0, 0, 1), Vector3(1, 0, 0), Vector3(0, 1, 0)], [Vector3(0, 0, -1), Vector3(-1, 0, 0), Vector3(0, 1, 0)]]
 func _city_block(parent: Node3D, size: Vector3, center: Vector3, angle: float, material: Material) -> void :
 	var batches: Dictionary = parent.get_meta("building_batches", {})
 	var key: = material.get_instance_id()
@@ -426,9 +432,19 @@ func _city_block(parent: Node3D, size: Vector3, center: Vector3, angle: float, m
 		tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 		tool.set_material(material)
 		batches[key] = tool
-	var mesh: = BoxMesh.new()
-	mesh.size = size
-	batches[key].append_from(mesh, 0, Transform3D(Basis(Vector3.UP, angle), center))
+	# Owner 2026-10-15 (start too slow): write the box directly. Generating a BoxMesh for each
+	# of ~3,000 blocks took about 1 ms each; the shape and normals are identical.
+	var tool: SurfaceTool = batches[key]
+	var turn: = Basis(Vector3.UP, angle)
+	var half: = size * 0.5
+	for face in _BOX_FACES:
+		var normal: Vector3 = turn * face[0]
+		var u: Vector3 = face[1]
+		var v: Vector3 = face[2]
+		var corners: = [face[0] - u - v, face[0] + u - v, face[0] + u + v, face[0] - u + v]
+		for index in [0, 2, 1, 0, 3, 2]:  # same winding as Godot's BoxMesh
+			tool.set_normal(normal)
+			tool.add_vertex(center + turn * (corners[index] * half))
 	parent.set_meta("building_batches", batches)
 ## Modern city: glass skyscrapers downtown, Soviet-era apartment blocks around them,
 ## low-rise houses on the outskirts, radial avenues and a ring road.
@@ -623,9 +639,14 @@ func _finish_city_batches(parent: Node3D, district: Node3D) -> void:
 		var original: ArrayMesh = tool.commit()
 		var arrays := original.surface_get_arrays(0)
 		var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+		# Owner 2026-10-15 (start too slow): one height lookup per ground position; a box's 24
+		# corners share 4 of them. Same heights, about six times fewer lookups.
+		var heights: Dictionary = {}
 		for i in vertices.size():
 			var world := district.position + vertices[i] * district.scale
-			vertices[i].y += (terrain.elevation(Vector2(world.x,world.z))-district.position.y)/district.scale.y
+			var ground := Vector2(world.x,world.z)
+			if not heights.has(ground): heights[ground] = terrain.elevation(ground)
+			vertices[i].y += (float(heights[ground])-district.position.y)/district.scale.y
 		arrays[Mesh.ARRAY_VERTEX] = vertices
 		var fitted := ArrayMesh.new()
 		fitted.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,arrays)
