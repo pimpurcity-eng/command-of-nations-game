@@ -4949,29 +4949,29 @@
     },
     "research_tiers": [
       {
-        "name": "PL-01 light tank",
+        "name": "T-64 light tank",
         "improvement": "",
-        "model": "res://assets/library/pl01_russian.glb"
+        "model": "res://assets/library/arsenal/russia_t64.glb"
       },
       {
-        "name": "PL-01 light tank · upgrade",
+        "name": "T-64 light tank · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "model": "res://assets/library/pl01_russian.glb"
+        "model": "res://assets/library/arsenal/russia_t64.glb"
       },
       {
-        "name": "PL-01 light tank · thermal sights",
+        "name": "T-64 light tank · thermal sights",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "model": "res://assets/library/pl01_russian.glb"
+        "model": "res://assets/library/arsenal/russia_t64.glb"
       },
       {
-        "name": "PL-01 light tank · upgrade",
+        "name": "T-64 light tank · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "model": "res://assets/library/pl01_russian.glb"
+        "model": "res://assets/library/arsenal/russia_t64.glb"
       },
       {
-        "name": "PL-01 light tank · advanced",
+        "name": "T-64 light tank · advanced",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "model": "res://assets/library/pl01_russian.glb"
+        "model": "res://assets/library/arsenal/russia_t64.glb"
       }
     ],
     "building_requirements": {
@@ -5890,29 +5890,29 @@
     },
     "research_tiers": [
       {
-        "name": "PL-01 light tank",
+        "name": "AMX-30 light tank",
         "improvement": "",
-        "model": "res://assets/library/pl01_european.glb"
+        "model": "res://assets/library/arsenal/euro_amx30.glb"
       },
       {
-        "name": "PL-01 light tank · upgrade",
+        "name": "AMX-30 light tank · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "model": "res://assets/library/pl01_european.glb"
+        "model": "res://assets/library/arsenal/euro_amx30.glb"
       },
       {
-        "name": "PL-01 light tank · thermal sights",
+        "name": "AMX-30 light tank · thermal sights",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "model": "res://assets/library/pl01_european.glb"
+        "model": "res://assets/library/arsenal/euro_amx30.glb"
       },
       {
-        "name": "PL-01 light tank · upgrade",
+        "name": "AMX-30 light tank · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "model": "res://assets/library/pl01_european.glb"
+        "model": "res://assets/library/arsenal/euro_amx30.glb"
       },
       {
-        "name": "PL-01 light tank · advanced",
+        "name": "AMX-30 light tank · advanced",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "model": "res://assets/library/pl01_european.glb"
+        "model": "res://assets/library/arsenal/euro_amx30.glb"
       }
     ],
     "building_requirements": {

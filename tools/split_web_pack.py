@@ -62,9 +62,9 @@ by_name = {e["name"]: e for e in entries}
 # shown until the rest arrives. Everything under assets/library outside these stays for later,
 # except buildings, transport (trains) and the city art, which the map needs at once.
 CORE_MODELS = [
-    "arsenal/russia_motor_rifleman", "pl01_russian", "airdefense/russia_strela10", "skyguard_russian",
+    "arsenal/russia_motor_rifleman", "arsenal/russia_t64", "airdefense/russia_strela10", "skyguard_russian",
     "arsenal/russia_yak130", "arsenal/euro_hawk_t2", "arsenal/euro_fr_foreign_legion",
-    "arsenal/euro_uk_royal_marine", "pl01_european", "airdefense/nato_roland", "skyguard_european",
+    "arsenal/euro_uk_royal_marine", "arsenal/euro_amx30", "airdefense/nato_roland", "skyguard_european",
     # Buildings standing at the start (capital recruitment centre and train station, the
     # province airport of the starting plane) and the rail and road pieces drawn on the map.
     "buildings_oct12/recruitment_center", "buildings_oct12/train_station", "buildings_oct12/road_straight",

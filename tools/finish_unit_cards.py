@@ -7,7 +7,9 @@ from PIL import Image, ImageEnhance, ImageFilter, ImageDraw
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = Path(sys.argv[1] if len(sys.argv) > 1 else "/tmp/unit_cards")
 ART = ROOT / "game/assets/interface/unit_art"
-MODELS = {"euro_warmate": "arsenal", "euro_globaleye": "arsenal", "euro_lynx_kf41": "arsenal"}
+MODELS = {"euro_warmate": "arsenal", "euro_globaleye": "arsenal", "euro_lynx_kf41": "arsenal", "euro_amx30": "arsenal", "russia_t64": "arsenal"}
+import os
+if os.environ.get("ONLY"): MODELS = {k: v for k, v in MODELS.items() if k in os.environ["ONLY"].split(",")}
 for name, folder in MODELS.items():
     image = Image.open(SOURCE / (name + ".png")).convert("RGB")
     image = image.filter(ImageFilter.SMOOTH_MORE).filter(ImageFilter.UnsharpMask(radius=2, percent=60, threshold=2))

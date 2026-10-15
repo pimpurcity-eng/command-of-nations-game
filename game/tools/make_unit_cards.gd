@@ -9,12 +9,17 @@ const CARDS: = [
 	["res://assets/library/arsenal/euro_warmate.glb", "euro_warmate", true, -28.0],
 	["res://assets/library/arsenal/euro_globaleye.glb", "euro_globaleye", true, -32.0],
 	["res://assets/library/arsenal/euro_lynx_kf41.glb", "euro_lynx_kf41", false, -38.0],
+	# Owner 2026-10-15: "Ukrainian light tanks look like boxes" - the PL-01 is replaced.
+	["res://assets/library/arsenal/euro_amx30.glb", "euro_amx30", false, -36.0],
+	["res://assets/library/arsenal/russia_t64.glb", "russia_t64", false, -36.0],
 ]
 func _initialize() -> void: call_deferred("run")
 
 func run() -> void:
 	DirAccess.make_dir_recursive_absolute(OUT)
-	for card in CARDS: await render(card[0], card[1], card[2], card[3])
+	var only: = OS.get_environment("ONLY")
+	for card in CARDS:
+		if only.is_empty() or card[1] in only.split(","): await render(card[0], card[1], card[2], card[3])
 	quit()
 
 func render(path: String, name: String, flying: bool, yaw: float) -> void:

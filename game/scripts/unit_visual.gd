@@ -44,7 +44,7 @@ static func download_stand_in(equipment_id: String, kind: String) -> String:
 		"fighter": return "res://assets/library/arsenal/" + ("russia_yak130.glb" if russian else "euro_hawk_t2.glb")
 		"air_defense": return "res://assets/library/airdefense/" + ("russia_strela10.glb" if russian else "nato_roland.glb")
 		"naval": return ""
-	return "res://assets/library/" + ("pl01_russian.glb" if russian else "pl01_european.glb")
+	return "res://assets/library/arsenal/" + ("russia_t64.glb" if russian else "euro_amx30.glb")
 
 static func stand_in_path(equipment_id: String, kind: String) -> String:
 	var country: String = EquipmentIdentity.spec(equipment_id).get("country", GameSession.player_country)

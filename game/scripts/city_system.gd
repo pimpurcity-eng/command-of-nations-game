@@ -248,6 +248,11 @@ func sync_buildings() -> void :
 				# see them"): they stand in a ring just outside the houses instead of among them.
 				var around: = TAU * (index + 0.5) / maxf(system.catalog.size(), 1.0) + float(city.name.hash() % 100) * 0.01
 				var ring: float = (CAPITAL_EDGE if city.get("capital", false) else 1.22) + 0.3
+				# Coastal towns (Odesa, Rostov): turn the spot round the town until it is on land.
+				for turn in 24:
+					var spot: = district.position + Vector3(cos(around) * ring, 0, sin(around) * ring) * district.scale
+					if terrain == null or terrain.on_land(Vector2(spot.x, spot.z)): break
+					around += TAU / 24.0
 				visual.position = Vector3(cos(around) * ring, 0.09, sin(around) * ring)
 				visual.rotation.y = -around
 				if not visual.get_meta("original_colors", false): _paint_infrastructure(visual)
