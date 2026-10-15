@@ -89,11 +89,10 @@ func _ready() -> void :
 	settings.ambient_light_color = Color("b8c8d5")
 	environment.environment = settings
 	add_child(environment)
-	# Phones (owner 2026-10-14: "WebGL context lost" in the browser, "lagging really bad" in the
-	# app): no MSAA, 3D at 75% resolution (menus stay sharp) and a smaller shadow map.
+	# Owner 2026-10-15: "why are you taking away the quality? I told you not to." Phones get the
+	# same full-resolution, smoothed picture as computers; only the shadow map is smaller.
 	if UnitSystem.mobile_device():
-		get_viewport().msaa_3d = Viewport.MSAA_DISABLED
-		get_viewport().scaling_3d_scale = 0.75
+		get_viewport().msaa_3d = Viewport.MSAA_2X
 		RenderingServer.directional_shadow_atlas_set_size(2048, true)
 	var sun: = DirectionalLight3D.new()
 	sun.rotation_degrees = Vector3(-42, -35, 0)
@@ -107,9 +106,6 @@ func _ready() -> void :
 	# 0.02 / 0.5 caused shadow acne (thin stripes across vehicles on phones).
 	sun.shadow_bias = 0.08
 	sun.shadow_normal_bias = 1.2
-	# Phones (owner 2026-10-14: "really slow and lagging"): map shadows drew the whole map
-	# (450k triangles, 300-600 draws) twice more every frame. Units keep their own ground shadows.
-	if UnitSystem.mobile_device(): sun.shadow_enabled = false
 	add_child(sun)
 	var sea: = MeshInstance3D.new()
 	var plane: = PlaneMesh.new()

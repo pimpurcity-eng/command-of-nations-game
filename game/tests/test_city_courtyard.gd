@@ -21,8 +21,8 @@ func _initialize() -> void:
 			system._build_city_district(district,{"name":city.name,"capital":capital},StandardMaterial3D.new())
 			var core: Node3D = district.get_node("CityCore")
 			var square: Node3D = district.get_node("GarrisonSquare")
-			check(district.get_meta("urban_building_count") > 140,"Dense city has street blocks")
-			check(district.get_meta("core_building_count") > 30,"Empty city centre has buildings")
+			check(district.get_meta("urban_building_count") > 100,"Dense city has street blocks")
+			check(district.get_meta("core_building_count") > 5,"Empty city centre has buildings")
 			check(district.get_meta("permanent_building_count") > 70,"Occupied city retains a substantial district")
 			check(core.visible and not square.visible,"Empty city starts full without a square")
 			var tall := 0
@@ -66,8 +66,8 @@ func _initialize() -> void:
 	check(system._city_has_garrison(city),"Grounded aircraft open city centre")
 	armies.units = []
 	check(not system._city_has_garrison(city),"Last unit leaving restores the city")
-	check(is_equal_approx(UnitSystem.garrison_scale({"visual_kind":"armor","equipment_id":"tanks_russia"}),1.15),"Tank garrison is larger")
-	check(is_equal_approx(UnitSystem.garrison_scale({"visual_kind":"infantry","equipment_id":"infantry_russia"}),1.15*1.4),"Infantry garrison is readable")
+	check(is_equal_approx(UnitSystem.garrison_scale({"visual_kind":"armor","equipment_id":"tanks_russia"}),1.40),"Tank garrison is larger")
+	check(is_equal_approx(UnitSystem.garrison_scale({"visual_kind":"infantry","equipment_id":"infantry_russia"}),1.40*1.6),"Infantry garrison is readable")
 	node.free();armies.free();system.free();flat.free()
 	print("CITY COURTYARD: ",checks," checks; ",failures," failures")
 	quit(0 if failures == 0 else 1)

@@ -14,7 +14,7 @@ var fog_enabled: = true
 const SEA_WATERLINE: = -0.06
 # Only a small number of original high-detail vehicles are resident on Android.
 # All armies retain their gameplay data and low-cost selection markers.
-const MOBILE_MAX_DETAILED_UNITS := 12
+const MOBILE_MAX_DETAILED_UNITS := 80  # owner 2026-10-15: real 3D models, never blocks
 ## Zoom levels (owner request 2026-10-13): beyond FAR_ZOOM armies are map symbols only (no 3D
 ## models); closer, the 3D models show; within CLOSE_ZOOM the health bar and level appear.
 ## An army whose model is not loaded (phone cap) shows its symbol instead of a placeholder box.
@@ -55,7 +55,7 @@ func _land_owner(unit: Dictionary) -> String:
 ## Phones and tablets, including the browser version opened on one (Godot's "mobile" feature is
 ## only set for the Android/iOS apps).
 static func mobile_device() -> bool:
-	return OS.has_feature("mobile") or OS.has_feature("web_android") or OS.has_feature("web_ios")
+	return OS.has_feature("mobile") or OS.has_feature("web_android") or OS.has_feature("web_ios") or force_mobile
 ## Tests: run the phone model-budget path on desktop.
 static var force_mobile: = false
 ## Bumped when provinces change hands so the cached land owners refresh.
@@ -682,8 +682,8 @@ func _replace_visual(unit: Dictionary, replacement: Node3D) -> void:
 	unit.node.add_child(replacement)
 	unit.node.move_child(replacement, 0)
 
-const CITY_GARRISON_SCALE: = 1.15
-const SMALL_GARRISON_READABILITY: = 1.40
+const CITY_GARRISON_SCALE: = 1.40  # owner 2026-10-15: "I don't even know what the unit is"
+const SMALL_GARRISON_READABILITY: = 1.60
 # Owner 2026-10-14: ground armies out in the provinces were too small; cities a little too big.
 const FIELD_GROUND_SCALE: = 1.45
 

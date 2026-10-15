@@ -11,7 +11,7 @@ const FOOTPRINT := {
 	"artillery": 0.77, "air_defense": 0.77, "missile_launcher": 0.83,
 	"silo": 0.88, "fighter": 0.89, "drone": 0.65, "naval": 1.3,
 	"submarine": 1.1, "carrier": 2.3, "support": 0.77, "transport": 1.35,
-	"radar_aircraft": 1.35, "infantry": 0.25,
+	"radar_aircraft": 1.35, "infantry": 0.40,
 	"supply": 0.77, "medic": 0.77, "engineer": 0.77,
 	"bridge": 0.83, "recovery": 0.77,
 }
@@ -20,7 +20,7 @@ const HEIGHT := {
 	"artillery": 0.38, "air_defense": 0.55, "missile_launcher": 0.48,
 	"silo": 0.7, "fighter": 0.3, "drone": 0.25, "naval": 0.4,
 	"submarine": 0.28, "carrier": 0.45, "support": 0.38,
-	"transport": 0.45, "radar_aircraft": 0.45, "infantry": 0.3,
+	"transport": 0.45, "radar_aircraft": 0.45, "infantry": 0.50,
 }
 
 static func limits(role: String, path: String = "") -> Vector2:

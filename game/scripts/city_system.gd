@@ -8,7 +8,7 @@ static var GARRISON_SQUARE := Rect2(-0.30, -0.28, 0.60, 0.56)
 ## Where a city's army stands (owner review 2026-10-14): "centre", or at the city's edge -
 ## "front" (facing the camera), "side" (east edge) or "outside" (just past the last houses).
 ## The spot is filled with buildings while no army is there.
-static var garrison_layout: = "side"  # owner chose B (side edge) 2026-10-14
+static var garrison_layout: = "centre"  # owner 2026-10-15: armies stand in the middle of a round town (Call of War)
 const GARRISON_LAYOUTS: = {"centre": Rect2(-0.30, -0.28, 0.60, 0.56), "front": Rect2(-0.30, 0.62, 0.60, 0.50), "side": Rect2(0.50, -0.26, 0.50, 0.52), "outside": Rect2(-0.30, 1.16, 0.60, 0.46)}
 ## World offset of each city's army spot from the city point, keyed by city_key(point).
 static var plaza_offsets: Dictionary = {}
@@ -19,7 +19,7 @@ static func near_city(point: Vector2, city_point: Vector2) -> bool:
 	return point.distance_to(city_point) < UnitSystem.CITY_RADIUS or point.distance_to(plaza_point(city_point)) < 0.45
 const SHOW_COURTYARD_DISK: = false
 ## City look being reviewed with the owner (2026-10-14): classic, downtown, grid or green.
-static var city_style: = "grid"  # owner chose B (grid) 2026-10-14
+static var city_style: = "town"  # owner 2026-10-15: round, warm Call of War town; the grid looked like a parking lot
 const RESOURCE_WORDS: = {"materials": "METAL", "electronics": "RARE EARTHS", "fuel": "OIL", "food": "FOOD"}
 const RESOURCE_COLOURS: = {"materials": Color("d4dade"), "electronics": Color("d7a8ff"), "fuel": Color("ff9a7a"), "food": Color("9ee07e")}
 var cities: Array = GeographicProjection.load_cities()
@@ -461,8 +461,22 @@ func _build_city_district(district: Node3D, city: Dictionary, _ink: StandardMate
 		_facade("b9bab4", "3f4850", "555c63", 0.016, 0.016, 0.38, 0.42, 0.0),
 		_facade("aeb0ab", "3f4850", "555c63", 0.016, 0.016, 0.38, 0.42, 0.0),
 		_facade("989ea1", "3f4850", "555c63", 0.016, 0.016, 0.38, 0.42, 0.0)]
+	if city_style == "town":
+		# Call of War towns: warm plaster walls and terracotta roofs, a few glass towers.
+		blocks = [
+			_facade("d8cbb0", "4a5560", "8a5a44", 0.022, 0.018, 0.42, 0.5, 0.0),
+			_facade("c9b48f", "45505a", "7d4f3a", 0.022, 0.018, 0.42, 0.5, 0.0),
+			_facade("e2d9c6", "4a5560", "8f6248", 0.022, 0.019, 0.40, 0.48, 0.0),
+			_facade("c79e7e", "45505a", "754836", 0.022, 0.018, 0.40, 0.5, 0.0),
+			_facade("b9b2a3", "4a5560", "6e6258", 0.022, 0.018, 0.42, 0.5, 0.0)]
+		houses = [
+			_facade("e6dcc4", "4f4a44", "8a5a44", 0.016, 0.016, 0.38, 0.42, 0.0),
+			_facade("d9c39a", "4f4a44", "8a5a44", 0.016, 0.016, 0.38, 0.42, 0.0),
+			_facade("cfa98a", "4f4a44", "8a5a44", 0.016, 0.016, 0.38, 0.42, 0.0),
+			_facade("ece6d8", "4f4a44", "8a5a44", 0.016, 0.016, 0.38, 0.42, 0.0),
+			_facade("c4b49a", "4f4a44", "8a5a44", 0.016, 0.016, 0.38, 0.42, 0.0)]
 	var roof_tiles: Array[StandardMaterial3D] = []
-	for color in ["4f565e", "626568", "555e62", "474e56"]:
+	for color in (["a4553a", "8e4a33", "b5653f", "7a4a3a", "9c5b45"] if city_style == "town" else ["4f565e", "626568", "555e62", "474e56"]):
 		var tile: = StandardMaterial3D.new()
 		tile.albedo_color = Color(color)
 		tile.roughness = 0.9
@@ -546,6 +560,11 @@ func _build_city_district(district: Node3D, city: Dictionary, _ink: StandardMate
 					# Straight avenues every fourth row and column.
 					if (row % 4 == 0 or column % 4 == 0) and not GARRISON_SQUARE.has_point(point): continue
 				"green": if point.length() > 1.22: continue
+				"town":
+					# Irregular round edge, like a real town seen from above.
+					var bearing: = point.angle()
+					var edge: = 1.22 * (1.0 + 0.10 * sin(3.0 * bearing + float(city.name.hash() % 7)) + 0.06 * sin(5.0 * bearing))
+					if point.length() > edge: continue
 				_: if point.length() > 1.34: continue
 			if point.y < -0.66 and absf(point.x) < 0.57: continue # permanent skyline
 			# Two small avenues run between rows of blocks, rather than cutting a circular void.
@@ -555,7 +574,8 @@ func _build_city_district(district: Node3D, city: Dictionary, _ink: StandardMate
 			var radius := width * 0.8
 			var inside := GARRISON_SQUARE.grow(radius).has_point(point)
 			var target: Node3D = core if inside else district
-			if city_style == "green" and point.length() > 0.62 and rng.randf() < 0.42:
+			if city_style == "town": point += Vector2(rng.randf_range(-0.03,0.03),rng.randf_range(-0.03,0.03))
+			if (city_style == "green" and point.length() > 0.62 and rng.randf() < 0.42) or (city_style == "town" and not inside and point.length() > 0.85 and rng.randf() < 0.30):
 				# Garden city: trees between the apartment blocks.
 				var crown_size: = rng.randf_range(0.045, 0.065)
 				var crown: = SphereMesh.new(); crown.radius = crown_size; crown.height = crown_size * 2.0; crown.radial_segments = 8; crown.rings = 4
@@ -565,6 +585,7 @@ func _build_city_district(district: Node3D, city: Dictionary, _ink: StandardMate
 			if city_style == "grid": central = absf(point.x) < 0.5 and absf(point.y) < 0.5
 			if central:
 				var height := rng.randf_range(0.30,0.65) * (1.25 if capital else 1.0)
+				if city_style == "town": height *= 0.8
 				if city_style == "downtown": height *= 1.0 + 0.6 * (1.0 - point.length() / 0.78)
 				_dense_tower(target, point, width, height, towers[rng.randi_range(0,towers.size()-1)])
 			elif point.length() < 1.01:

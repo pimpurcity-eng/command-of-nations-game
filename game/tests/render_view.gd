@@ -4,6 +4,8 @@ extends SceneTree
 func _initialize() -> void: call_deferred("run")
 func run() -> void:
 	if OS.get_environment("ARSENAL") == "archive": ArsenalFixture.use_archive()
+	# CON_PHONE=1: render with the phone settings.
+	if OS.get_environment("CON_PHONE") == "1": UnitSystem.force_mobile = true
 	var args: = OS.get_cmdline_user_args()
 	root.size = Vector2i(540, 1200)
 	GameSession.player_country = args[4] if args.size() > 4 else "russia"
@@ -20,6 +22,8 @@ func run() -> void:
 	game.rig.target = Vector3(focus.x, 0, focus.z)
 	game.rig.distance = float(args[3]) if args.size() > 3 else 14.0
 	game.rig._snap(1.0)
-	for i in 20: await process_frame
+	# Phones build the map a piece per frame; wait for it, then let models load.
+	while game.map != null and not game.map.build_finished: await process_frame
+	for i in (120 if UnitSystem.force_mobile else 20): await process_frame
 	root.get_texture().get_image().save_png(args[0])
 	quit()
