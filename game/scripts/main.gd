@@ -553,7 +553,6 @@ func _ready() -> void :
 		# Computers fetch the weapons pack at once; phones only when something first needs it
 		# (owner 2026-10-14: "WebGL context lost" - the phone browser ran out of memory).
 		if not UnitSystem.mobile_device(): web_extras.start()
-		else: web_extras.prefetch("res://assets/interface/unit_art/")
 	if OS.has_feature("web"):
 		browser_callback = JavaScriptBridge.create_callback(_browser_hidden)
 		browser_resume_callback = JavaScriptBridge.create_callback(_browser_visible)

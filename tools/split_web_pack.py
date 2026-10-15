@@ -92,8 +92,8 @@ def is_extra(source):
     # stand-ins, other buildings and levels, trade ships and trains (all loaded on demand with
     # existence checks; WebExtras swaps them in when the pack arrives).
     if source.startswith("assets/vehicles/"): return True
-    # Weapon illustrations (MenuArt) are only shown in menus.
-    if source.startswith("assets/interface/unit_art/"): return True
+    # Unit pictures (ChatGPT's art) come with the start: menus showed old pictures while they
+    # downloaded (owner 2026-10-15). They are imported small (384 px, lossy), about 5 MB.
     if not source.startswith("assets/library/"): return False
     return not any(source.startswith(p) for p in core_prefixes)
 

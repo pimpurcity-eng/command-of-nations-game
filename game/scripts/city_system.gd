@@ -62,7 +62,8 @@ func setup(map: StrategicMap, camera_rig: StrategyCamera) -> void :
 		var neighbour: = INF
 		for other in cities:
 			if other != city: neighbour = minf(neighbour, city.point.distance_to(other.point))
-		district.scale = Vector3.ONE * clampf((neighbour * 0.5 - 0.08) / 1.42, 0.40, 0.72)
+		# Round towns reach ~1.55 units (uneven edge, houses), so leave a clear gap between the two.
+		district.scale = Vector3.ONE * clampf((neighbour * 0.5 - 0.18) / 1.55, 0.34, 0.72)
 		plaza_offsets[city_key(city.point)] = GARRISON_SQUARE.get_center() * district.scale.x
 		add_child(district)
 		districts[city.id] = district

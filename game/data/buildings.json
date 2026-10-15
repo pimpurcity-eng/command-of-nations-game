@@ -231,7 +231,7 @@
     ],
     "preview": "res://assets/library/buildings_oct12/recruitment_center_menu.png",
     "original_colors": true,
-    "capital_starting_level": 1
+    "capital_starting_level": 0
   },
   {
     "id": "barracks",
@@ -399,7 +399,7 @@
     },
     "description": "Train station. The capital starts with one; build a second station and a railway joins them over your own land (armies move twice as fast along it) and improves construction speed by 15% per level. Rural provinces build roads and logistics instead.",
     "starting_level": 0,
-    "capital_starting_level": 1,
+    "capital_starting_level": 0,
     "save_default": true,
     "model_tiers": [
       "res://assets/library/buildings_oct12/train_station.glb",

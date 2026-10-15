@@ -28,7 +28,10 @@ static func initial_level(spec: Dictionary) -> int:
 	# Catalogues from before this rule (archived test arsenals, older data) have no "starter"
 	# flags: everything in them stays known, as before.
 	if not spec.has("starter"): return 1
-	return 1 if spec.starter else 0
+	# Owner 2026-10-15: "Nothing's supposed to be researched. There's light tanks on the map,
+	# but it doesn't mean it's researched." The starting armies are on the map; every level,
+	# starter units included, is researched first.
+	return 0
 
 func day() -> int:
 	return 1 + int(clock.elapsed * SimulationClock.REAL_SECONDS_PER_SIM_SECOND / 86400.0)
