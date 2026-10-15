@@ -114,7 +114,7 @@ func run() -> void:
 	hud.show_clock(0, clock.speed, false)
 	hud.speed_button.pressed.emit()
 	check(clock.speed == 1.0, "HUD speed control returns from 10x to 1x")
-	hud.navigation_menu.get_popup().id_pressed.emit(102)
+	(hud.settings_menu.get_node("Game_speed") as PopupMenu).id_pressed.emit(102)
 	check(clock.speed == 10.0, "More menu reaches 10x without changing existing command IDs")
 	hud.queue_free()
 	# Real save validator accepts 10x and still rejects unsupported speeds.

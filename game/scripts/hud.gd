@@ -72,6 +72,10 @@ var nav_row: HBoxContainer
 var toolbar: VBoxContainer
 var mode_button: Button
 var navigation_menu: MenuButton
+var settings_menu: PopupMenu
+var nation_menu: PopupMenu
+var army_orders: PopupMenu
+var _orders_aircraft: Variant = null
 var pause_button: Button
 var speed_button: Button
 var guard_button: Button
@@ -225,60 +229,81 @@ func _build_toolbar(root: Control) -> void:
 	# The full command list lives in this menu (opened from the "More" tab).
 	navigation_menu = MenuButton.new()
 	navigation_menu.visible = false
-	# Owner 2026-10-15: the home screen and the commander profile first.
-	navigation_menu.get_popup().add_item("⌂  Home screen", 100)
-	navigation_menu.get_popup().add_item("★  Commander profile", 101)
-	navigation_menu.get_popup().add_separator()
-	for title in ["Reset north", "Rotate left", "Rotate right", "Terrain / borders", "Speed 1x", "Speed 2x", "Speed 4x", "Save game", "Load game", "Equipment & production", "Army roster", "New match", "Add destination to selected army", "Merge nearby friendly armies", "Split selected units", "Army composition / battle info", "Declare war on Ukraine", "Technology / day unlocks", "Capital / construction", "Supply exchange", "All weapon models", "Select several armies", "Fire control", "Attack enemy army", "Victory progress", "Diplomacy", "Delay / synchronize arrival", "Forced march", "Upgrade selected army", "Rebase aircraft", "Player account", "Sound: ON", "Music: ON", "War newspaper", "Battle reports", "Retreat selected army", "Annex selected province", "Doctrine & strategic weapons", "Espionage"]:
-		navigation_menu.get_popup().add_item(title, navigation_menu.get_popup().item_count - 3)
-	navigation_menu.get_popup().about_to_popup.connect(_show_audio_items)
-	navigation_menu.get_popup().add_item("Speed 10x", 102)
-	navigation_menu.get_popup().id_pressed.connect(func(index: int):
-		match index:
-			100: home_screen_requested.emit()
-			101: account_requested.emit()
-			102: speed_requested.emit(10.0)
-			0: home_requested.emit()
-			1: rotate_requested.emit(-0.18)
-			2: rotate_requested.emit(0.18)
-			3: mode_button.button_pressed = not mode_button.button_pressed
-			4: speed_requested.emit(1.0)
-			5: speed_requested.emit(2.0)
-			6: speed_requested.emit(4.0)
-			7: save_requested.emit()
-			8: load_requested.emit()
-			9: production_requested.emit()
-			10: army_roster_requested.emit()
-			11: new_match_requested.emit()
-			12: add_destination_requested.emit()
-			13: merge_requested.emit()
-			14: split_requested.emit()
-			15: stack_info_requested.emit()
-			16: declare_war_requested.emit()
-			17: research_requested.emit()
-			18: capital_requested.emit()
-			19: exchange_requested.emit()
-			20: weapon_showcase_requested.emit()
-			21: select_armies_requested.emit()
-			22: fire_control_requested.emit()
-			23: attack_requested.emit()
-			24: campaign_requested.emit("victory")
-			25: campaign_requested.emit("diplomacy")
-			26: delay_requested.emit()
-			27: forced_march_requested.emit()
-			28: upgrade_requested.emit()
-			29: rebase_requested.emit()
-			30: account_requested.emit()
-			31: if audio != null: audio.set_sound(not GameAudio.sound_enabled)
-			32: if audio != null: audio.set_music(not GameAudio.music_enabled)
-			33: campaign_requested.emit("news")
-			34: campaign_requested.emit("battles")
-			35: retreat_requested.emit()
-			36: annex_requested.emit()
-			37: campaign_requested.emit("strategic")
-			38: espionage_requested.emit()
-	)
+	# Eight destinations; unit and province actions stay with their selection.
+	var popup: = navigation_menu.get_popup()
+	popup.add_theme_font_size_override("font_size",20)
+	popup.add_theme_constant_override("v_separation",10)
+	popup.add_item("Home screen", 100)
+	popup.add_item("Commander profile", 101)
+	popup.add_item("Army roster", 10)
+	popup.add_item("Espionage", 38)
+	_nav_submenu(popup, "Reports", [[33,"War newspaper"],[34,"Battle reports"]])
+	nation_menu = _nav_submenu(popup, "Nation", [[24,"Victory progress"],[37,"Doctrine & strategic weapons"],[36,"Annex selected province"]])
+	settings_menu = _nav_submenu(popup, "Settings", [[31,"Sound: ON"],[32,"Music: ON"]])
+	_nav_submenu(settings_menu, "Game speed", [[4,"1×"],[5,"2×"],[6,"4×"],[102,"10×"]])
+	_nav_submenu(settings_menu, "Map & camera", [[3,"Terrain / borders"],[0,"Reset north"],[1,"Rotate left"],[2,"Rotate right"]])
+	_nav_submenu(popup, "Game", [[7,"Save game"],[8,"Load game"],[11,"New match"]])
+	popup.about_to_popup.connect(_show_audio_items)
+	settings_menu.about_to_popup.connect(_show_audio_items)
+	popup.id_pressed.connect(_navigation_action)
 	root.add_child(navigation_menu)
+
+func _nav_submenu(parent: PopupMenu, title: String, entries: Array) -> PopupMenu:
+	var menu: = PopupMenu.new()
+	menu.name = title.replace(" ", "_").replace("&", "and")
+	parent.add_child(menu)
+	parent.add_submenu_item(title, str(menu.name), 200 + parent.item_count)
+	menu.add_theme_font_size_override("font_size",20)
+	menu.add_theme_constant_override("v_separation",10)
+	menu.id_pressed.connect(_navigation_action)
+	for entry in entries: menu.add_item(str(entry[1]), int(entry[0]))
+	return menu
+
+func _navigation_action(index: int) -> void:
+	match index:
+		100: home_screen_requested.emit()
+		101: account_requested.emit()
+		102: speed_requested.emit(10.0)
+		0: home_requested.emit()
+		1: rotate_requested.emit(-0.18)
+		2: rotate_requested.emit(0.18)
+		3: mode_button.button_pressed = not mode_button.button_pressed
+		4: speed_requested.emit(1.0)
+		5: speed_requested.emit(2.0)
+		6: speed_requested.emit(4.0)
+		7: save_requested.emit()
+		8: load_requested.emit()
+		9: production_requested.emit()
+		10: army_roster_requested.emit()
+		11: new_match_requested.emit()
+		12: add_destination_requested.emit()
+		13: merge_requested.emit()
+		14: split_requested.emit()
+		15: stack_info_requested.emit()
+		16: declare_war_requested.emit()
+		17: research_requested.emit()
+		18: capital_requested.emit()
+		19: exchange_requested.emit()
+		20: weapon_showcase_requested.emit()
+		21: select_armies_requested.emit()
+		22: fire_control_requested.emit()
+		23: attack_requested.emit()
+		24: campaign_requested.emit("victory")
+		25: campaign_requested.emit("diplomacy")
+		26: delay_requested.emit()
+		27: forced_march_requested.emit()
+		28: upgrade_requested.emit()
+		29: rebase_requested.emit()
+		30: account_requested.emit()
+		31: if audio != null: audio.set_sound(not GameAudio.sound_enabled)
+		32: if audio != null: audio.set_music(not GameAudio.music_enabled)
+		33: campaign_requested.emit("news")
+		34: campaign_requested.emit("battles")
+		35: retreat_requested.emit()
+		36: annex_requested.emit()
+		37: campaign_requested.emit("strategic")
+		38: espionage_requested.emit()
+
 
 # ---------------------------------------------------------------- bottom sheet
 func _build_bottom(root: Control) -> void:
@@ -336,22 +361,25 @@ func _build_bottom(root: Control) -> void:
 	action_row.add_child(cancel_button)
 	orders_menu = MenuButton.new()
 	_style_order(orders_menu, "more", "More", Color("3a3f42"))
-	for title in ["Army details", "Attack enemy", "Fire control", "Add destination", "Merge nearby", "Split units", "Select armies", "Delay / sync arrival", "Forced march", "Upgrade army", "Rebase aircraft", "Retreat"]: orders_menu.get_popup().add_item(title)
-	orders_menu.get_popup().id_pressed.connect(func(index: int):
-		match index:
-			0: stack_info_requested.emit()
-			1: attack_requested.emit()
-			2: fire_control_requested.emit()
-			3: add_destination_requested.emit()
-			4: merge_requested.emit()
-			5: split_requested.emit()
-			6: select_armies_requested.emit()
-			7: delay_requested.emit()
-			8: forced_march_requested.emit()
-			9: upgrade_requested.emit()
-			10: rebase_requested.emit()
-			11: retreat_requested.emit()
-	)
+	var army_menu: = orders_menu.get_popup()
+	for entry in [[0,"Army details"],[2,"Fire control"],[9,"Upgrade army"],[10,"Rebase aircraft"]]: army_menu.add_item(entry[1],entry[0])
+	var organize: = PopupMenu.new()
+	organize.name = "Organize"
+	army_menu.add_child(organize)
+	army_menu.add_submenu_item("Organize", "Organize",19)
+	organize.add_item("Merge nearby",4)
+	organize.add_item("Select armies",6)
+	army_orders = PopupMenu.new()
+	army_orders.name = "Orders"
+	army_menu.add_child(army_orders)
+	army_menu.add_submenu_item("Orders", "Orders",20)
+	army_orders.add_item("Add destination",3)
+	army_orders.add_item("Delay / sync arrival",7)
+	army_orders.add_item("Retreat",11)
+	army_menu.id_pressed.connect(_army_action)
+	organize.id_pressed.connect(_army_action)
+	army_orders.id_pressed.connect(_army_action)
+
 	action_row.add_child(orders_menu)
 
 	# Selection card: thumbnail, name/status, close.
@@ -420,8 +448,23 @@ func _build_bottom(root: Control) -> void:
 			"more": tab.pressed.connect(func():
 				var popup: = navigation_menu.get_popup()
 				var size: = get_viewport().get_visible_rect().size
-				popup.popup(Rect2i(Vector2i(int(size.x) - 300, int(size.y) - 520), Vector2i(290, 420))))
+				popup.popup(Rect2i(Vector2i(int(size.x) - 300, int(size.y) - 520), Vector2i(300, 0))))
 	_refresh_sheet()
+
+func _army_action(index: int) -> void:
+	match index:
+		0: stack_info_requested.emit()
+		1: attack_requested.emit()
+		2: fire_control_requested.emit()
+		3: add_destination_requested.emit()
+		4: merge_requested.emit()
+		5: split_requested.emit()
+		6: select_armies_requested.emit()
+		7: delay_requested.emit()
+		8: forced_march_requested.emit()
+		9: upgrade_requested.emit()
+		10: rebase_requested.emit()
+		11: retreat_requested.emit()
 
 # ---------------------------------------------------------------- widgets
 func _flat(color: Color, radius: int = 6, margin: Vector4 = Vector4(6, 4, 6, 4), border: Color = Color.TRANSPARENT, left: int = 0, top: int = 0, bottom: int = 0) -> StyleBoxFlat:
@@ -594,6 +637,14 @@ func show_unit(unit: Dictionary) -> void :
 	stop_button.disabled = not own_unit
 	show_air_commands(unit.visual_kind == "fighter")
 func show_air_commands(aircraft: bool) -> void :
+	if orders_menu != null and _orders_aircraft != aircraft:
+		_orders_aircraft = aircraft
+		var popup: = orders_menu.get_popup()
+		popup.clear()
+		for entry in [[0,"Army details"],[2,"Fire control"],[9,"Upgrade army"]]: popup.add_item(entry[1],entry[0])
+		if aircraft: popup.add_item("Rebase aircraft",10)
+		popup.add_submenu_item("Organize","Organize",19)
+		if not aircraft: popup.add_submenu_item("Orders","Orders",20)
 	patrol_button.visible = aircraft and not choosing_destination
 	armies_button.visible = not aircraft and not choosing_destination and own_unit
 	waypoint_button.visible = not choosing_destination and own_unit and not aircraft
@@ -755,7 +806,10 @@ class Glyph extends Control:
 				draw_colored_polygon(PackedVector2Array([c + Vector2(-3, -11) * u, c + Vector2(3, -11) * u, c + Vector2(3, -3) * u, c + Vector2(10, 10) * u, c + Vector2(-10, 10) * u, c + Vector2(-3, -3) * u]), tint)
 
 func _show_audio_items() -> void:
-	var popup: = navigation_menu.get_popup()
+	if nation_menu != null:
+		var occupied: bool = selected_territory.get("controller", "") == GameSession.player_country and selected_territory.get("owner", GameSession.player_country) != GameSession.player_country
+		nation_menu.set_item_disabled(nation_menu.get_item_index(36),not occupied)
+	var popup: = settings_menu
 	popup.set_item_text(popup.get_item_index(31), "Sound: " + ("ON" if GameAudio.sound_enabled else "OFF"))
 	popup.set_item_text(popup.get_item_index(32), "Music: " + ("ON" if GameAudio.music_enabled else "OFF"))
 

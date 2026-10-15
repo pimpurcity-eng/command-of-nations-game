@@ -454,8 +454,11 @@ func _refresh() -> void:
 		if jobs.size() > 1: construction.text.text += "  (+" + str(jobs.size() - 1) + ")"
 		construction.bar.max_value = total
 		construction.bar.value = job.progress
-	CowUI.gold_button(construction.gold, buildings.speedup_price(city_id) if own and not jobs.is_empty() else 0, func():
-		message_gold(buildings.finish_now(city_id, GameSession.player_country), "Construction finished with gold"))
+	var building_price: = buildings.speedup_price(city_id) if own and not jobs.is_empty() else 0
+	var building_job: int = int(jobs[0].id) if not jobs.is_empty() else -1
+	CowUI.gold_button(construction.gold, building_price, func():
+		message_gold(buildings.finish_now(city_id, GameSession.player_country, building_price, building_job), "Construction finished with gold"))
+	construction.gold.tooltip_text = GoldWallet.explanation(buildings.gold_quote(city_id))
 	# Production status.
 	production.text.text = "No production" if own else "Hidden"
 	production.bar.visible = false
@@ -476,8 +479,11 @@ func _refresh() -> void:
 			production.bar.max_value = buildings.economy.job_duration(job)
 			production.bar.value = job.progress
 			var city_name: String = place.name
-			CowUI.gold_button(production.gold, buildings.economy.unit_speedup_price(job), func():
-				message_gold(buildings.economy.finish_unit_now(city_name, GameSession.player_country), "Unit finished with gold"))
+			var gold_quote: = buildings.economy.unit_gold_quote(job)
+			var job_id: = int(job.id)
+			CowUI.gold_button(production.gold, int(gold_quote.total), func():
+				message_gold(buildings.economy.finish_unit_now(city_name, GameSession.player_country, int(gold_quote.total), job_id), "Unit finished with gold"))
+			production.gold.tooltip_text = GoldWallet.explanation(gold_quote)
 			break
 	if not own: return
 	if tab_index >= 0:

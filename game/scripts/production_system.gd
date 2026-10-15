@@ -316,6 +316,7 @@ func restore(state: Dictionary) -> void :
 	changed.emit()
 
 func schedule(equipment_id: String, city_name: String) -> String:
+	if MatchClient.active != null: return MatchClient.active.send("produce_queue", {"equipment":equipment_id, "city":city_name})
 	var spec: = equipment(equipment_id)
 	if spec.is_empty(): return "Choose equipment"
 	var locked: = research_lock(spec)
@@ -367,10 +368,14 @@ func clear_rally(city_id: String, country: String = "") -> void :
 # ---------------------------------------------------------------- gold (GoldWallet)
 
 func spend_gold(country: String, amount: int) -> String:
+	if country not in stockpiles or amount < 0: return "Invalid gold payment"
 	if int(gold.get(country, 0)) < amount: return "Not enough gold (%d needed)" % amount
 	gold[country] = int(gold[country]) - amount
 	changed.emit()
 	return ""
+func pay_gold_quote(country: String, price: Dictionary, max_gold: int = -1) -> String:
+	if max_gold >= 0 and int(price.total) > max_gold: return "Price changed; review the new gold total"
+	return spend_gold(country, int(price.total))
 
 ## The unit being built in `city_name` now (the first in its queue), or {}.
 func active_job(city_name: String) -> Dictionary:
@@ -378,19 +383,26 @@ func active_job(city_name: String) -> Dictionary:
 		if job.city == city_name: return job
 	return {}
 
-func unit_speedup_price(job: Dictionary) -> int:
-	if not job.has("equipment"): return 0
+func unit_gold_quote(job: Dictionary) -> Dictionary:
+	if not job.has("equipment"): return GoldWallet.quote(0)
 	var spec: = equipment(job.equipment)
 	var city: Dictionary = {}
 	for place in cities:
 		if place.name == job.city: city = place
 	var rate: = buildings.production_rate(city.get("id", ""), spec) if buildings != null else 1.0
-	return GoldWallet.speedup((job_duration(job) - float(job.progress)) / maxf(rate, 0.001))
+	var bill: = cost(str(job.equipment), job_level(job)) if not job.get("paid", true) else {}
+	return GoldWallet.quote((job_duration(job) - float(job.progress)) / maxf(rate, 0.001), bill, stockpiles.get(spec.country, {}))
+func unit_speedup_price(job: Dictionary) -> int:
+	return int(unit_gold_quote(job).total)
 
 ## Finishes the unit being built in a city now, for gold.
-func finish_unit_now(city_name: String, country: String) -> String:
+func finish_unit_now(city_name: String, country: String, max_gold: int = -1, expected_job: int = -1) -> String:
+	if MatchClient.active != null:
+		var price: = unit_speedup_price(active_job(city_name)) if max_gold < 0 else max_gold
+		return MatchClient.active.send("gold_unit", {"city":city_name,"max_gold":price,"job":expected_job if expected_job >= 0 else int(active_job(city_name).get("id",-1))})
 	var job: = active_job(city_name)
 	if job.is_empty(): return "Nothing is being built here"
+	if expected_job >= 0 and int(job.id) != expected_job: return "The order changed; review it again"
 	var spec: = equipment(job.equipment)
 	if spec.country != country: return "Not your production"
 	var producing_city: Dictionary = {}
@@ -398,21 +410,22 @@ func finish_unit_now(city_name: String, country: String) -> String:
 		if city.name == city_name: producing_city = city
 	if producing_city.is_empty() or not controlled(producing_city, country): return "Recover control of this city first"
 	if not job.get("paid", true):
-		var bill: = cost(str(job.equipment), job_level(job))
-		for resource in RESOURCES:
-			if stockpiles[country][resource] < float(bill[resource]): return "Not enough " + resource + " to start it"
 		for building_id in spec.get("building_requirements", {}):
 			if buildings == null or buildings.level(str(producing_city.id), building_id) < spec.building_requirements[building_id]: return "Requires " + building_id
-	var error: = spend_gold(country, unit_speedup_price(job))
+	var error: = pay_gold_quote(country, unit_gold_quote(job), max_gold)
 	if not error.is_empty(): return error
 	if not job.get("paid", true):
-		_pay_job(job)
+		job.level = job_level(job)
+		job.paid_cost = cost(str(job.equipment), int(job.level))
+		GoldWallet.consume_available(stockpiles[country], job.paid_cost)
+		job.paid = true
 	job.progress = job_duration(job)
 	advance(0.000001)
 	return ""
 
 ## Buys `quantity` of a resource with gold.
 func buy_with_gold(country: String, resource: String, quantity: int) -> String:
+	if MatchClient.active != null: return MatchClient.active.send("gold_resource", {"resource":resource,"quantity":quantity})
 	if resource not in RESOURCES or quantity <= 0 or quantity > 1000000: return "Choose a resource and amount"
 	var error: = spend_gold(country, GoldWallet.resource_price(resource, quantity))
 	if not error.is_empty(): return error

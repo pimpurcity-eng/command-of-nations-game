@@ -227,6 +227,7 @@ func restore(state: Dictionary) -> void :
 	changed.emit()
 
 func schedule(city_id: String, building_id: String, country: String = "") -> String:
+	if MatchClient.active != null: return MatchClient.active.send("build_queue", {"city":city_id,"building":building_id})
 	if city_id.begins_with("province:"): return provinces.schedule(city_id,building_id,country)
 	if country.is_empty(): country = GameSession.player_country
 	var error: = reason(city_id, building_id, country, false)
@@ -286,24 +287,28 @@ func incoming_damage_factor(unit: Dictionary) -> float:
 
 ## Gold to finish the construction running in a city now (its first job), or 0 if none.
 func speedup_price(city_id: String) -> int:
-	for job in jobs:
-		if job.city == city_id: return GoldWallet.speedup((duration(job.building, job.level) - float(job.progress)) / maxf(construction_rate(city_id), 0.001))
-	return 0
-
-## Finishes the construction running in a city now, for gold.
-func finish_now(city_id: String, country: String) -> String:
+	return int(gold_quote(city_id).total)
+func gold_quote(city_id: String) -> Dictionary:
 	for job in jobs:
 		if job.city != city_id: continue
+		var country: String = job.get("country", economy.controller(city(city_id)))
+		var bill: = cost(job.building, job.level) if not job.get("paid", true) else {}
+		return GoldWallet.quote((duration(job.building, job.level) - float(job.progress)) / maxf(construction_rate(city_id), 0.001), bill, economy.stockpiles.get(country, {}))
+	return GoldWallet.quote(0)
+
+## Finishes the construction running in a city now, for gold.
+func finish_now(city_id: String, country: String, max_gold: int = -1, expected_job: int = -1) -> String:
+	if MatchClient.active != null: return MatchClient.active.send("gold_building", {"city":city_id,"max_gold":speedup_price(city_id) if max_gold < 0 else max_gold,"job":expected_job})
+	for job in jobs:
+		if job.city != city_id: continue
+		if expected_job >= 0 and int(job.id) != expected_job: return "The order changed; review it again"
 		if job.get("country", country) != country: return "Not your construction"
 		if not economy.controlled(city(city_id), country): return "Recover control of this city first"
 		var bill: = cost(job.building, job.level)
-		if not job.get("paid", true):
-			for resource in ProductionSystem.RESOURCES:
-				if economy.stockpiles[country][resource] < bill[resource]: return "Not enough " + resource + " to start it"
-		var error: = economy.spend_gold(country, speedup_price(city_id))
+		var error: = economy.pay_gold_quote(country, gold_quote(city_id), max_gold)
 		if not error.is_empty(): return error
 		if not job.get("paid", true):
-			for resource in ProductionSystem.RESOURCES: economy.stockpiles[country][resource] -= bill[resource]
+			GoldWallet.consume_available(economy.stockpiles[country], bill)
 			job.paid_cost = bill
 			job.paid = true
 		job.progress = duration(job.building, job.level)

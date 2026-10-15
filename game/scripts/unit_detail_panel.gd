@@ -10,6 +10,9 @@ var level: = 1
 var action: Button
 var status: Label
 var bill: Label
+var gold_action: Button
+var gold_breakdown: Label
+var gold_result: = ""
 var refresh_time: = 0.0
 
 func setup(theme: Theme) -> void:
@@ -57,6 +60,15 @@ func setup(theme: Theme) -> void:
 		status.text = "Research started" if error.is_empty() else error
 		_refresh())
 	footer.add_child(action)
+	gold_breakdown = CowUI.label("", 14, CowUI.GOLD)
+	gold_breakdown.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	footer.add_child(gold_breakdown)
+	gold_action = CowUI.action("FINISH NOW WITH GOLD", "", CowUI.GREEN)
+	gold_action.pressed.connect(func():
+		var purchase: Dictionary = gold_action.get_meta("purchase")
+		gold_result = research.buy_now(purchase.id, purchase.level, GameSession.player_country, false, purchase.max_gold)
+		_refresh())
+	footer.add_child(gold_action)
 	get_viewport().size_changed.connect(_layout)
 	hide()
 
@@ -104,6 +116,7 @@ func open(id: String, selected_level: int, system: ResearchSystem) -> void:
 	equipment_id = id
 	level = clampi(selected_level, 1, 5)
 	research = system
+	gold_result = ""
 	_build()
 	_refresh()
 	_layout()
@@ -194,6 +207,16 @@ func _refresh() -> void:
 	for resource in ProductionSystem.RESOURCES:
 		if float(cost.get(resource, 0)) > 0: parts.append(str(resource).capitalize() + " " + CowUI.short(float(cost[resource])))
 	bill.text = "Research cost · " + "  ·  ".join(parts)
+	var gold_reason: = research.gold_reason(equipment_id, level)
+	gold_action.visible = gold_reason.is_empty()
+	gold_breakdown.visible = gold_action.visible
+	if gold_action.visible:
+		var price: = research.gold_quote(equipment_id, level)
+		gold_breakdown.text = GoldWallet.explanation(price)
+		gold_action.get_meta("caption").text = "FINISH NOW · %s GOLD" % StrategyHUD._thousands(int(price.total))
+		gold_action.disabled = int(research.economy.gold.get(GameSession.player_country,0)) < int(price.total)
+		gold_action.set_meta("purchase", {"id":equipment_id,"level":level,"max_gold":int(price.total)})
+	if not gold_result.is_empty(): status.text += "\n" + gold_result
 
 func _process(delta: float) -> void:
 	if not visible: return

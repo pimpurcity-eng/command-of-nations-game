@@ -9,6 +9,7 @@ var panel: PanelContainer
 var balance: Label
 var message: Label
 var list: VBoxContainer
+var purchases: Array = []
 
 func setup(system: ProductionSystem, theme: Theme) -> void:
 	economy = system
@@ -20,6 +21,7 @@ func setup(system: ProductionSystem, theme: Theme) -> void:
 	panel = PanelContainer.new()
 	panel.add_theme_stylebox_override("panel", CowUI.skin("panel_dark", 8))
 	root.add_child(panel)
+	panel.minimum_size_changed.connect(_layout.call_deferred)
 	var column: = VBoxContainer.new()
 	column.add_theme_constant_override("separation", 8)
 	panel.add_child(column)
@@ -29,7 +31,7 @@ func setup(system: ProductionSystem, theme: Theme) -> void:
 	balance = CowUI.label("", 26, CowUI.GOLD)
 	balance.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	column.add_child(balance)
-	var note: = CowUI.label("Every match starts with %s free gold, good for this match only. Use the gold buttons in cities and research to finish now." % StrategyHUD._thousands(GoldWallet.START), 17)
+	var note: = CowUI.label("Every match starts with %s free gold, good for this match only. Finish now costs the remaining time plus any missing resources. Prices fall as work finishes." % StrategyHUD._thousands(GoldWallet.START), 17)
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	column.add_child(note)
 	var scroll: = ScrollContainer.new()
@@ -57,6 +59,7 @@ func setup(system: ProductionSystem, theme: Theme) -> void:
 			row.add_child(picture)
 			var item: = CowUI.label("%s %s" % [StrategyHUD._thousands(amount), NAMES.get(resource, resource.capitalize())], 22, CowUI.INK)
 			item.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			item.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			row.add_child(item)
 			var buy: = CowUI.action("%s GOLD" % StrategyHUD._thousands(GoldWallet.resource_price(resource, amount)), "", CowUI.GREEN)
 			buy.custom_minimum_size.x = 190
@@ -65,9 +68,13 @@ func setup(system: ProductionSystem, theme: Theme) -> void:
 				message.text = error if not error.is_empty() else "Bought %s %s" % [StrategyHUD._thousands(amount), resource]
 				refresh())
 			row.add_child(buy)
+			purchases.append({"button":buy,"resource":resource,"amount":amount})
 	list.add_child(_heading("More gold"))
-	var store: = CowUI.action("BUY MORE GOLD", "", CowUI.GREEN)
-	store.pressed.connect(func(): message.text = "The gold store opens when Google Play purchases are connected.")
+	var pack: = CowUI.label("Planned pack: %s gold · %s\nCanadian dollars" % [StrategyHUD._thousands(GoldWallet.PURCHASE_GOLD), GoldWallet.cad_label(GoldWallet.PURCHASE_GOLD)], 20)
+	pack.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	list.add_child(pack)
+	var store: = CowUI.action("PURCHASES UNAVAILABLE", "", CowUI.GREEN)
+	store.disabled = true
 	list.add_child(store)
 	message = CowUI.label("", 18, CowUI.GOLD)
 	message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -99,3 +106,4 @@ func open() -> void:
 
 func refresh() -> void:
 	balance.text = StrategyHUD._thousands(int(economy.gold.get(GameSession.player_country, 0))) + " gold"
+	for purchase in purchases: purchase.button.disabled = int(economy.gold.get(GameSession.player_country, 0)) < GoldWallet.resource_price(purchase.resource, purchase.amount)

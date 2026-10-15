@@ -199,9 +199,10 @@ trade demand, decay, escrow, safe delivery and the seller’s ability to ask mor
 floors remain food 1, materials 2, electronics 5 and fuel 2 funds per unit; the supply exchange keeps its
 positive buy/sell spread. Worn-equipment price floors keep their existing full-model policy.
 Strategic warheads were reviewed and retained: chemical 60,000 funds plus resources / 12 h, nuclear 250,000
-plus resources / 48 h, with day-12/day-25 gates. Annexation, espionage and premium resource-exchange prices
-were also reviewed and retained; the copied unit bills and underpriced advanced facilities were the material
-problems. No real-money shop package was changed.
+plus resources / 48 h, with day-12/day-25 gates. Annexation prices are retained. The owner's later gold/menu
+follow-up supersedes this pass's original premium-price decision: see [gold and menu review](GOLD_AND_MENUS_REVIEW.md)
+for higher resource/time/hack prices, missing-resource purchases and the proposed CA$10 / 10,000 gold basis.
+Live payment checkout remains unconnected.
 
 Paid production fixes its model, work and paid bill when it starts; research cannot retroactively give a
 finished order a free higher model. Unpaid orders buy the latest researched model when they start. New paid

@@ -37,15 +37,16 @@ const MISSIONS: = {
 ## Hackers (owner 2026-10-14): paid with gold, they work at once or for a few hours. Owner: "never
 ## the whole map, maybe a small area, but prices must be way higher".
 const HACKS: = {
-	"blackout": {"name": "Power blackout", "text": "Cuts the power in an enemy city: building and production almost stop for 3 hours.", "gold": 3000, "hours": 3.0, "target": "city", "icon": "hammer"},
-	"satellite": {"name": "Satellite hack", "text": "Shows the enemy armies in a small area around an enemy city for 1 hour.", "gold": 3500, "hours": 1.0, "target": "city", "icon": "research"},
-	"bank": {"name": "Bank hack", "text": "Takes 5% of the enemy's money and metal at once (up to 10,000 each).", "gold": 2500, "hours": 0.0, "target": "none", "icon": "market"},
-	"firewall": {"name": "Firewall", "text": "Blocks every enemy hack against you for 6 hours.", "gold": 2000, "hours": 6.0, "target": "none", "icon": "stop"},
+	"blackout": {"name": "Power blackout", "text": "Cuts the power in an enemy city: building and production almost stop for 3 hours.", "gold": GoldWallet.HACK_PRICE.blackout, "hours": 3.0, "target": "city", "icon": "hammer"},
+	"satellite": {"name": "Satellite hack", "text": "Shows the enemy armies in a small area around an enemy city for 1 hour.", "gold": GoldWallet.HACK_PRICE.satellite, "hours": 1.0, "target": "city", "icon": "research"},
+	"bank": {"name": "Bank hack", "text": "Takes 5% of the enemy's money and metal at once (up to 2,000 each).", "gold": GoldWallet.HACK_PRICE.bank, "hours": 0.0, "target": "none", "icon": "market"},
+	"firewall": {"name": "Firewall", "text": "Blocks every enemy hack against you for 6 hours.", "gold": GoldWallet.HACK_PRICE.firewall, "hours": 6.0, "target": "none", "icon": "stop"},
 }
 const SATELLITE_RADIUS: = 3.0
 const BLACKOUT_FACTOR: = 0.1
 const BANK_SHARE: = 0.05
-const BANK_CAP: = 10000.0
+## At most 6,000 gold of resources for a 7,500-gold tactical action. No cheap resource bypass.
+const BANK_CAP: = 2000.0
 var hacks: Array = []   # active {country, kind, city, remaining}
 static var satellite_zones: Array = []  # [country, Vector2] while a satellite hack runs
 static var blacked_out: Dictionary = {}          # city id -> true
@@ -85,27 +86,41 @@ func send(country: String, city: Dictionary, mission: String, city_owner: String
 func firewall(country: String) -> bool:
 	return hacks.any(func(active: Dictionary): return active.country == country and active.kind == "firewall")
 
-func hack_reason(country: String, kind: String, city: Dictionary, city_owner: String, gold: int) -> String:
+static func bank_haul(stockpile: Dictionary) -> Dictionary:
+	var haul: Dictionary = {}
+	for resource in ["funds", "materials"]: haul[resource] = minf(maxf(0.0,float(stockpile.get(resource,0.0))) * BANK_SHARE, BANK_CAP)
+	return haul
+
+func hack_price(kind: String, _enemy: String, _world: Dictionary) -> int:
+	if not HACKS.has(kind): return 0
+	return int(HACKS[kind].gold)
+
+func hack_reason(country: String, kind: String, city: Dictionary, city_owner: String, gold: int, price: int = -1) -> String:
 	if not HACKS.has(kind): return "Choose a hack"
 	if HACKS[kind].target == "city" and (city.is_empty() or city_owner == country): return "Choose an enemy city"
 	for active in hacks:
 		if active.country == country and active.kind == kind and (HACKS[kind].target != "city" or active.city == city.get("id", "")): return "That hack is already running"
-	if gold < int(HACKS[kind].gold): return "Needs %d gold" % int(HACKS[kind].gold)
+	var required: int = int(HACKS[kind].gold) if price < 0 else price
+	if gold < required: return "Needs %d gold" % required
 	return ""
 
 ## Starts a hack. `spend_gold` takes (country, amount) and returns "" when paid. Returns "" on
 ## success, or why it failed. A hack blocked by the enemy's firewall still costs its gold.
-func hack(country: String, kind: String, city: Dictionary, city_owner: String, enemy: String, gold: int, spend_gold: Callable, world: Dictionary) -> String:
-	var why: = hack_reason(country, kind, city, city_owner, gold)
+func hack(country: String, kind: String, city: Dictionary, city_owner: String, enemy: String, gold: int, spend_gold: Callable, world: Dictionary, max_gold: int = -1) -> String:
+	var price: = hack_price(kind,enemy,world)
+	if MatchClient.active != null: return MatchClient.active.send("gold_hack", {"kind":kind,"city":city.get("id",""),"enemy":enemy,"max_gold":price if max_gold < 0 else max_gold})
+	var why: = hack_reason(country, kind, city, city_owner, gold, price)
 	if not why.is_empty(): return why
-	var paid: String = spend_gold.call(country, int(HACKS[kind].gold))
+	if max_gold >= 0 and price > max_gold: return "Price changed; review the new gold total"
+	var paid: String = spend_gold.call(country, price)
 	if not paid.is_empty(): return paid
 	if kind != "firewall" and firewall(enemy): return "BLOCKED: the enemy's firewall stopped the hack"
 	if kind == "bank":
 		var theirs: Dictionary = world.stockpile.call(enemy)
 		var ours: Dictionary = world.stockpile.call(country)
-		for resource in ["funds", "materials"]:
-			var amount: = minf(maxf(0.0, float(theirs.get(resource, 0.0))) * BANK_SHARE, BANK_CAP)
+		var haul: = bank_haul(theirs)
+		for resource in haul:
+			var amount: float = haul[resource]
 			theirs[resource] = float(theirs.get(resource, 0.0)) - amount
 			ours[resource] = float(ours.get(resource, 0.0)) + amount
 	else:
@@ -252,8 +267,10 @@ func ai_hack(country: String, enemy: String, targets: Array, gold: int, spend_go
 	if not firewall(country) and gold >= int(HACKS.firewall.gold) * 3:
 		return "firewall" if hack(country, "firewall", {}, "", enemy, gold, spend_gold, world).is_empty() else ""
 	var kinds: = ["blackout", "satellite", "bank"]
-	var kind: String = kinds[rng.randi_range(0, kinds.size() - 1)]
 	var target: Dictionary = targets[0] if not targets.is_empty() else {}
+	kinds = kinds.filter(func(kind): return hack_reason(country,kind,target,enemy,gold,hack_price(kind,enemy,world)).is_empty())
+	if kinds.is_empty(): return ""
+	var kind: String = kinds[rng.randi_range(0, kinds.size() - 1)]
 	var result: = hack(country, kind, target, enemy, enemy, gold, spend_gold, world)
 	return kind if result.is_empty() else ("blocked" if result.begins_with("BLOCKED") else "")
 

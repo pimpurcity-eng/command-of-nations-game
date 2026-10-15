@@ -1,0 +1,141 @@
+=== test_gold_prices-final.log ===
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+RESULT GOLD_PRICES checks=2876 families=94 levels=5 failures=0
+
+=== gold-menus-final.log ===
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+RESULT GOLD_MENUS checks=21 failures=0
+
+=== render-gold-menus.log ===
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:364)
+OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.2 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+
+RESULT GOLD_MENUS checks=21 failures=0
+
+=== test_economy_balance-final.log ===
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+RESULT ECONOMY_BALANCE checks=9030 families=94 speeds=1,2,4,10 failures=0
+
+=== test_unit_details-final.log ===
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+RESULT UNIT_DETAILS checks=30 failures=0
+
+=== test_espionage-final.log ===
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+BOOT main start at 1046 ms
+BOOT map ground at 2009 ms (rebuilt 0 of 145 provinces)
+BOOT map borders at 2259 ms
+BOOT map _landscape at 2440 ms
+BOOT map _country_outlines at 2558 ms
+BOOT map _connections at 2916 ms
+MUSIC now menu_theme
+BOOT units at 2922 ms
+BOOT cities at 3457 ms
+BOOT systems at 3722 ms
+BOOT armies at 3991 ms
+PASS Kharkiv is Ukrainian, Belgorod Russian
+PASS Enemy missions cannot target your own city
+PASS Counter-spies only guard your own cities
+PASS A spy can be sent to steal in Kharkiv
+PASS Sending a spy costs money
+PASS Only one spy per mission and city
+PASS Six spies sent
+PASS No more than six spies
+PASS Kharkiv has a Ukrainian garrison
+PASS Nothing revealed while the spies travel
+PASS Intelligence spy reveals the area around the city
+PASS Sabotage halves the city's building speed
+PASS Spies wait for the end of the day
+PASS At the day's end stealing moves money from the enemy to us
+PASS The day's theft is reported
+PASS Morale spy lowers the province's morale
+PASS Counter-spy and garrison raise the catch chance
+PASS Enemy-city spies are caught in the end
+PASS Caught spies are reported
+PASS Spies are saved and loaded
+PASS Invalid saved spies are dropped
+PASS AI sends a counter-spy, then a mission spy
+PASS Bank hack works
+PASS Bank hack debits the quoted amount and takes enemy money
+PASS No blackout on your own city
+PASS Blackout almost stops Kharkiv's production
+PASS Satellite hack needs an enemy city
+PASS Satellite hack shows the area around the city
+PASS Satellite hack never shows the whole map
+PASS The same hack cannot run twice
+PASS Satellite hack ends after an hour
+PASS Blackout ends after three hours
+PASS Firewall goes up
+PASS Firewall blocks the hack (gold is still spent)
+PASS Not enough gold
+PASS AI puts up a firewall, then hacks
+PASS Hacks are saved and loaded
+PASS Espionage screen opens with enemy cities and hackers
+ESPIONAGE CHECKS 38 failures=0
+
+=== test_game_audio-final.log ===
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PASS every sound and music track exists ([])
+BOOT main start at 1016 ms
+BOOT map ground at 1952 ms (rebuilt 0 of 145 provinces)
+BOOT map borders at 2203 ms
+BOOT map _landscape at 2384 ms
+BOOT map _country_outlines at 2503 ms
+BOOT map _connections at 2846 ms
+MUSIC now menu_theme
+BOOT units at 2859 ms
+BOOT cities at 3391 ms
+BOOT systems at 3557 ms
+PASS the menu theme plays on the start screen
+PASS the start screen shows Music and Sound switches
+MUSIC now battle_theme
+PASS the battle theme plays once the campaign starts
+PASS tank, machine gun, missile, artillery, air defence, bomber and drone sounds play near the camera (["tanks_russia", "apcs_russia", "iskander_m", "msta_s", "patriot_ukraine", "bombers_russia", "shahed_136"])
+PASS every weapon type gets its own sound ([])
+PASS all 44 sounds are in the game
+PASS ships fire with the naval gun sound
+PASS battles far off-screen are silent
+PASS explosions are heard
+PASS declaring war sounds the siren
+PASS Sound OFF silences everything at once
+PASS Music OFF stops the music
+PASS the switches are remembered
+PASS Settings shows Sound and Music switches
+MUSIC now battle_theme
+RESULT failures=0
+WARNING: ObjectDB instances leaked at exit (run with --verbose for details).
+   at: cleanup (core/object/object.cpp:2663)
+ERROR: 2 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:810)
+
+=== test_home_button-final.log ===
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+BOOT main start at 963 ms
+BOOT map ground at 1841 ms (rebuilt 0 of 145 provinces)
+BOOT map borders at 2096 ms
+BOOT map _landscape at 2283 ms
+BOOT map _country_outlines at 2391 ms
+BOOT map _connections at 2694 ms
+MUSIC now menu_theme
+BOOT units at 2700 ms
+BOOT cities at 3257 ms
+BOOT systems at 3497 ms
+BOOT armies at 3747 ms
+MUSIC now battle_theme
+PASS campaign running
+PASS More menu starts with Home screen and Commander profile
+MUSIC now menu_theme
+PASS Home screen shows, match paused, Resume offered
+MUSIC now battle_theme
+PASS Resume carries on with the same match
+PASS Commander profile opens
+RESULT failures=0

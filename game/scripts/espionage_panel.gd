@@ -174,7 +174,8 @@ func _hack(kind: String) -> void:
 	if Espionage.HACKS[kind].target == "city" and hack_city_picker.selected >= 0 and hack_city_picker.selected < hack_city_ids.size():
 		city = economy.buildings.city(hack_city_ids[hack_city_picker.selected])
 	var enemy: = GameSession.opponent_country()
-	var result: = match_rules.espionage.hack(player, kind, city, economy.controller(city) if not city.is_empty() else "", enemy, int(economy.gold.get(player, 0)), economy.spend_gold, match_rules.spy_world())
+	var quote: int = int(hack_buttons[kind].get_meta("gold_quote",0))
+	var result: = match_rules.espionage.hack(player, kind, city, economy.controller(city) if not city.is_empty() else "", enemy, int(economy.gold.get(player, 0)), economy.spend_gold, match_rules.spy_world(), quote)
 	message.text = (Espionage.HACKS[kind].name + " started" + (" in " + city.name if not city.is_empty() else "")) if result.is_empty() else result
 	if result.is_empty() or result.begins_with("BLOCKED"): economy.changed.emit()
 	refresh()
@@ -202,6 +203,11 @@ func refresh() -> void:
 		mission_buttons[id].modulate = Color.WHITE if id == mission else Color(1, 1, 1, 0.55)
 	mission_text.text = Espionage.MISSIONS[mission].name + ": " + Espionage.MISSIONS[mission].text
 	gold_label.text = "Your gold: " + StrategyHUD._thousands(int(economy.gold.get(player, 0)))
+	for kind in hack_buttons:
+		var price: = match_rules.espionage.hack_price(kind,GameSession.opponent_country(),match_rules.spy_world())
+		hack_buttons[kind].get_meta("caption").text = "%s GOLD" % StrategyHUD._thousands(price)
+		hack_buttons[kind].set_meta("gold_quote",price)
+		hack_buttons[kind].disabled = int(economy.gold.get(player,0)) < price
 	var running: Array = []
 	for active in match_rules.espionage.hacks:
 		if active.country == player:
