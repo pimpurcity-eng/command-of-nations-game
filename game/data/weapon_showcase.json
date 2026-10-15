@@ -408,12 +408,6 @@
     "model": "res://assets/library/arsenal/euro_tornado_ids.glb"
   },
   {
-    "name": "Euro Trojan Breacher",
-    "kind": "Equipment",
-    "theme": "Europe",
-    "model": "res://assets/library/arsenal/euro_trojan_breacher.glb"
-  },
-  {
     "name": "Euro Type23",
     "kind": "Equipment",
     "theme": "Europe",
@@ -1000,12 +994,6 @@
     "kind": "Equipment",
     "theme": "Russia",
     "model": "res://assets/library/arsenal/russia_tu95ms.glb"
-  },
-  {
-    "name": "Russia Ur77 Mineclearing",
-    "kind": "Equipment",
-    "theme": "Russia",
-    "model": "res://assets/library/arsenal/russia_ur77_mineclearing.glb"
   },
   {
     "name": "Russia Vdv Paratrooper",
