@@ -36,9 +36,11 @@ func input(key: String,placeholder: String,secret: bool=false) -> void:
 	if key=="email":field.text=email
 	inputs[key]=field;fields.add_child(field)
 	# Owner 2026-10-14: "can you have a show password on there?"
-	if secret and key!="confirm":
-		var reveal:=CheckButton.new();reveal.text="Show password";reveal.custom_minimum_size.y=48
+	if secret and (key=="confirm" or mode=="login"):  # under the last password box
+		# Owner 2026-10-15: the small switch was not visible; a full-size button like the others.
+		var reveal:=Button.new();reveal.text="Show password";reveal.toggle_mode=true;reveal.custom_minimum_size.y=64
 		reveal.toggled.connect(func(shown: bool):
+			reveal.text="Hide password" if shown else "Show password"
 			for name in ["password","confirm"]:
 				if inputs.has(name):inputs[name].secret=not shown)
 		fields.add_child(reveal)
