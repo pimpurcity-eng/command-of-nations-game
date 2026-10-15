@@ -1,44 +1,60 @@
 class_name Doctrine
 extends RefCounted
-## Military doctrines (owner request 2026-10-12, Conflict of Nations style). Each country follows
-## one, set by the country (owner: "Doctrines are determined by country picked"): picking a
-## country on the start screen picks its doctrine. There is no separate doctrine choice.
-## - WESTERN: air power, navy and air defence +15%; fighters and bombers are stealthy; ground
-##   forces -5%.
-## - EUROPEAN: every army defends +10%; research is 15% faster.
-## - EASTERN: tanks, artillery and missiles attack +15% and defend +5%; aircraft -5%.
+## Military doctrines (Conflict of Nations style). Owner 2026-10-15: "There's going to be four
+## doctrines: American, Russian, Chinese and European. Quit making double things" - the doctrine
+## is the only national bonus (the old country traits are folded in; CountryTraits reads this).
+## The country picks it: Russia is Russian, Ukraine is European.
+## Owner: Russia's air defence and rockets are better than Europe's; Europe has the better tanks,
+## aircraft and research. Every doctrine has strengths and weaknesses so matches stay even.
 const DOCTRINES: = {
-	"western": {"name": "Western", "summary": "Air power, navy and air defence +15%. Stealth fighters and bombers. Ground forces -5%."},
-	"european": {"name": "European", "summary": "All armies defend +10%. Research 15% faster."},
-	"eastern": {"name": "Eastern", "summary": "Tanks, artillery and missiles attack +15%, defend +5%. Aircraft -5%."},
+	"russian": {"name": "Russian", "plus": "Air defence, rockets, artillery and missiles +15%. Units 10% cheaper.", "minus": "Aircraft -10%. Research 10% slower.",
+		"early": "Air defence and missiles 1 day early", "cost": 0.9, "research": 0.9, "early_kinds": ["air_defense", "missile_launcher"], "early_days": 1},
+	"european": {"name": "European", "plus": "Tanks and aircraft +10%. All armies defend +10%. Research 15% faster. Drones 15% cheaper.", "minus": "Air defence and missiles -5%. Production 10% slower. 10% less manpower.",
+		"early": "Drones 2 days early", "research": 1.15, "build": 0.9, "manpower": 0.9, "drone_cost": 0.85, "early_roles": ["drone"], "early_days": 2},
+	"american": {"name": "American", "plus": "Air power and navy +15%. Stealth fighters and bombers.", "minus": "Units 20% more expensive. Ground forces -5%.",
+		"early": "Aircraft 2 days early", "cost": 1.2, "early_kinds": ["fighter"], "early_days": 2},
+	"chinese": {"name": "Chinese", "plus": "Builds 25% faster. Units 10% cheaper.", "minus": "Units 10% weaker.",
+		"early": "", "build": 1.25, "cost": 0.9},
 }
-const DEFAULTS: = {"russia": "eastern", "ukraine": "european", "united_states": "western", "united_kingdom": "western", "france": "european", "germany": "european", "china": "eastern"}
+const DEFAULTS: = {"russia": "russian", "ukraine": "european", "united_states": "american", "united_kingdom": "european", "france": "european", "germany": "european", "poland": "european", "europe": "european", "china": "chinese"}
 const AIR: = ["fighter", "bomber", "drone", "helicopter"]
-const HEAVY: = ["armor", "artillery", "missile_launcher"]
+const ROCKETS: = ["air_defense", "artillery", "missile_launcher"]
 
 static func of(country: String) -> String:
 	return DEFAULTS.get(country, "european")
+
+static func info(country: String) -> Dictionary:
+	return DOCTRINES[of(country)]
+
+static func summary(country: String) -> String:
+	var d: = info(country)
+	return d.name + " doctrine: + " + str(d.plus) + "  − " + str(d.minus)
 
 ## Combat strength factor for a unit attacking ("attack") or defending ("defense").
 static func combat_factor(unit: Dictionary, effect: String) -> float:
 	var kind: String = unit.get("visual_kind", "")
 	match of(str(unit.get("country", ""))):
-		"western":
-			if kind in AIR or kind in ["naval", "air_defense"]: return 1.15
-			return 0.95
-		"eastern":
-			if kind in HEAVY: return 1.15 if effect == "attack" else 1.05
-			if kind in AIR: return 0.95
+		"russian":
+			if kind in ROCKETS: return 1.15
+			if kind in AIR: return 0.9
 		"european":
-			if effect == "defense": return 1.10
+			var factor: = 1.10 if effect == "defense" else 1.0
+			if kind == "armor" or kind in AIR: factor *= 1.10
+			elif kind in ["air_defense", "missile_launcher"]: factor *= 0.95
+			return factor
+		"american":
+			if kind in AIR or kind == "naval": return 1.15
+			return 0.95
+		"chinese":
+			return 0.9
 	return 1.0
 
 static func research_factor(country: String) -> float:
-	return 1.15 if of(country) == "european" else 1.0
+	return float(info(country).get("research", 1.0))
 
 ## Western aircraft are stealthy (seen only by radar or up close, UnitSystem.unit_visible).
 static func stealth(unit: Dictionary) -> bool:
-	return of(str(unit.get("country", ""))) == "western" and unit.get("visual_kind", "") in AIR
+	return of(str(unit.get("country", ""))) == "american" and unit.get("visual_kind", "") in AIR
 
 ## Saves no longer carry doctrines (older saves with a picked doctrine load with the country's own).
 static func snapshot() -> Dictionary:

@@ -86,7 +86,30 @@ func on_shot(source: Dictionary, target_unit: Dictionary, effect: String) -> voi
 	if effect == "nuke":
 		raise_and_fire(source, start, finish)
 		return
+	if effect == "missile" and source_visible and source.visual_kind == "missile_launcher" and source.node.get_child(0).has_meta("erector_hinge"):
+		erect_and_launch(source, finish, tier.get("projectile_model", ""))
+		return
 	launch(start, finish, effect, source.country, tier.get("projectile_model", ""))
+## How far each launcher family raises its arm before firing (degrees).
+const ERECT_ANGLE: = {"rockets": 45.0, "coastal_missiles": 40.0, "missiles": 72.0}
+## Owner 2026-10-15 ("do this for all missile launchers"): the arm rises, the missile leaves from
+## the tube mouth, and the arm folds back down once the salvo is away.
+func erect_and_launch(source: Dictionary, finish: Vector3, projectile_model: String) -> void:
+	var pace: = 1.0 / maxf(1.0, clock.speed if clock != null else 1.0)
+	var model: Node3D = source.node.get_child(0)
+	var hinge: Node3D = model.get_meta("erector_hinge")
+	var family: String = str(source.equipment_id).rsplit("_", true, 1)[0]
+	var angle: = deg_to_rad(float(ERECT_ANGLE.get(family, 60.0)))
+	var rise: = 1.2 * pace
+	var raised: = create_tween()
+	raised.tween_property(hinge, "rotation:z", angle, rise).set_trans(Tween.TRANS_SINE)
+	raised.tween_callback(func():
+		if not is_instance_valid(hinge): return
+		var mouth: Vector3 = hinge.global_transform * (model.get_meta("erector_mouth") as Vector3)
+		launch(mouth, finish, "missile", source.country, projectile_model)
+		smoke_puff(mouth, true, 0.12))
+	raised.tween_interval(1.5 * pace)
+	raised.tween_property(hinge, "rotation:z", 0.0, rise * 1.5).set_trans(Tween.TRANS_SINE)
 ## Owner 2026-10-15: before a nuclear launch the launcher's arm rises to vertical, the cap opens
 ## and the missile leaves the tube; it then flies to the target and the blast follows. The whole
 ## sequence lasts CombatSystem.NUKE_FLIGHT, shortened at higher game speeds.
@@ -107,7 +130,7 @@ func raise_and_fire(source: Dictionary, start: Vector3, finish: Vector3) -> void
 			tween.tween_property(missile, "position:x", missile.position.x + out, 1.0 * pace).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 			tween.tween_callback(func():
 				if is_instance_valid(missile):
-					exit.at = missile.global_position
+					exit.at = hinge.global_transform * (model.get_meta("erector_mouth") as Vector3)
 					missile.visible = false)
 		if audio != null: audio.play("nuclear_alarm", exit.at)
 	else: rise = 0.5 * pace

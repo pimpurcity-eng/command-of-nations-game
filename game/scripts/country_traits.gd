@@ -1,49 +1,20 @@
 class_name CountryTraits
 extends RefCounted
-## National traits (owner 2026-10-14, Call of War style): every country has one strength and one
-## weakness, and some get certain weapons before the others. They stack with the doctrines.
-##   Russia   + units 10% cheaper            - research 15% slower        tanks & missiles 1 day early
-##   China    + builds 25% faster            - units 10% weaker
-##   America  + weapons 15% stronger         - units 20% more expensive   aircraft & missiles 2 days early
-##   Europe   + research 20% faster          - production 15% slower      air defence 2 days early
-##   Ukraine  + drones 20% cheaper           - 10% less manpower          drones 2 days early
-## Owner 2026-10-15 ("make it competitive"): Russia has more unit types (Lancet, MiG-31, A-50,
-## airborne IFV), so Russia's discount is 10% and Ukraine's drones 20% (its European doctrine already researches 15% faster).
-const TRAITS: = {
-	"russia": {"name": "Russia", "plus": "Units 10% cheaper", "minus": "Research 15% slower", "early": "Tanks and missiles 1 day early",
-		"cost": 0.9, "research": 0.85, "early_kinds": ["armor", "missile_launcher"], "early_days": 1},
-	"china": {"name": "China", "plus": "Builds 25% faster", "minus": "Units 10% weaker", "early": "",
-		"build": 1.25, "combat": 0.9},
-	"united_states": {"name": "America", "plus": "Weapons 15% stronger", "minus": "Units 20% more expensive", "early": "Aircraft and missiles 2 days early",
-		"combat": 1.15, "cost": 1.2, "early_kinds": ["fighter", "missile_launcher"], "early_days": 2},
-	"europe": {"name": "Europe", "plus": "Research 20% faster", "minus": "Production 15% slower", "early": "Air defence 2 days early",
-		"research": 1.2, "build": 0.85, "early_kinds": ["air_defense"], "early_days": 2},
-	"ukraine": {"name": "Ukraine", "plus": "Drones 20% cheaper", "minus": "10% less manpower", "early": "Drones 2 days early",
-		"drone_cost": 0.8, "manpower": 0.9, "early_roles": ["drone"], "early_days": 2},
-}
-## Countries that count as Europe for traits.
-const EUROPE: = ["united_kingdom", "france", "germany", "poland", "europe"]
-
+## Owner 2026-10-15 ("quit making double things"): there are no separate country traits any more.
+## Prices, build speed, manpower and early weapons come from the country's doctrine (Doctrine).
 static func of(country: String) -> Dictionary:
-	if country in EUROPE: return TRAITS.europe
-	return TRAITS.get(country, {})
+	return Doctrine.info(country)
 
 static func summary(country: String) -> String:
-	var traits: = of(country)
-	if traits.is_empty(): return ""
-	var text: String = "+ " + str(traits.plus) + "  ·  − " + str(traits.minus)
-	if not str(traits.get("early", "")).is_empty(): text += "  ·  " + str(traits.early)
-	return text
+	return Doctrine.summary(country)
 
 static func build_factor(country: String) -> float: return float(of(country).get("build", 1.0))
-static func research_factor(country: String) -> float: return float(of(country).get("research", 1.0))
-static func combat_factor(country: String) -> float: return float(of(country).get("combat", 1.0))
 static func manpower_factor(country: String) -> float: return float(of(country).get("manpower", 1.0))
 
 ## Applied once to the weapons catalogue when it loads: prices and research days per country.
 static func apply(catalog: Array) -> Array:
 	for family in catalog:
-		if not family is Dictionary: continue
+		if not family is Dictionary or str(family.get("country", "")).is_empty(): continue
 		var traits: = of(str(family.get("country", "")))
 		if traits.is_empty() or family.get("_traits_applied", false): continue
 		family["_traits_applied"] = true

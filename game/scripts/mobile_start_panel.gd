@@ -256,7 +256,7 @@ func _build_home() -> void:
 	var nations := HBoxContainer.new()
 	nations.add_theme_constant_override("separation", 14)
 	play.add_child(nations)
-	for spec in [["russia", "RUSSIA", [Color.WHITE, Color("1c3f94"), Color("d52b1e")], "Eastern"], ["ukraine", "UKRAINE", [Color("0057b7"), Color("ffd700")], "European"]]:
+	for spec in [["russia", "RUSSIA", [Color.WHITE, Color("1c3f94"), Color("d52b1e")], "Russian"], ["ukraine", "UKRAINE", [Color("0057b7"), Color("ffd700")], "European"]]:
 		nations.add_child(_nation_card(spec[0], spec[1], spec[2], spec[3]))
 	_show_nation()
 	fresh_button = _button("NEW CAMPAIGN  →" if has_save else "START CAMPAIGN  →", not has_save)
@@ -354,7 +354,7 @@ func _nation_card(id: String, title: String, stripes: Array, doctrine: String) -
 	title_label.add_theme_font_override("font", _font(600, 1))
 	body.add_child(title_label)
 	body.add_child(_label(doctrine + " doctrine", 17, MUTED))
-	var traits: Dictionary = CountryTraits.TRAITS[id]
+	var traits: Dictionary = CountryTraits.of(id)
 	body.add_child(_label("+ " + str(traits.plus) + "\n− " + str(traits.minus), 16, MUTED))
 	card.pressed.connect(func():
 		if loading: return

@@ -156,18 +156,24 @@ static func create(kind: String, _faction: Color, equipment_id: String = "", lev
 	assembly.set_meta("missing_original_model", false)
 	return assembly
 
-## Owner 2026-10-15 ("animate the arm coming up before a nuclear launch"): launchers whose model
-## has a Launcher_Pivot (Topol-M, Yars) are hinged there at the back of the canister, so turning
-## it raises the cap end to vertical; the cap then opens and the missile slides out of the tube
-## (CombatEffects.raise_and_fire).
+## Owner 2026-10-15 ("animate the arm coming up before a nuclear launch ... do this for all missile
+## launchers"): every launcher model has a Launcher_Pivot hinged at the back of its tubes, so turning
+## it raises the tube ends; CombatEffects raises it before each shot and fires from the tube mouth.
+## The Yars / Topol-M also open the cap and slide the missile out (CombatEffects.raise_and_fire).
 static func _rig_erector(assembly: Node3D, vehicle: Node3D) -> void:
 	var arm: Node3D = vehicle.find_child("Launcher_Pivot", true, false)
 	if arm == null: return
 	var tube: MeshInstance3D = arm.find_child("Tube", true, false)
+	var reach: = AABB()
+	var parts: = _meshes(arm, Transform3D.IDENTITY)
+	for i in parts.size():
+		var box: AABB = (parts[i][1] as Transform3D) * (parts[i][0] as MeshInstance3D).mesh.get_aabb()
+		reach = box if i == 0 else reach.merge(box)
 	assembly.set_meta("erector_hinge", arm)
+	assembly.set_meta("erector_mouth", Vector3(reach.end.x, reach.get_center().y, reach.get_center().z))
 	assembly.set_meta("erector_missile", arm.find_child("Missile", true, false))
 	assembly.set_meta("erector_cap", arm.find_child("CanisterCap", true, false))
-	assembly.set_meta("erector_length", tube.get_aabb().size.x if tube != null else 19.5)
+	assembly.set_meta("erector_length", tube.get_aabb().size.x if tube != null else reach.size.x)
 
 ## Orient the model's long axis along the game's forward axis, scale it to the unit type's
 ## footprint and stand it on the ground at the marker's origin.
