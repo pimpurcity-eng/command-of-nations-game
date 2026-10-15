@@ -166,7 +166,10 @@
     "res://assets/library/transport/civil_container_t3_ulcv.glb": "res://assets/interface/unit_art/civil_cargo_ship.webp",
     "res://assets/library/transport/civil_tanker_t1_coastal.glb": "res://assets/interface/unit_art/civil_oil_tanker.webp",
     "res://assets/library/transport/civil_tanker_t2_aframax.glb": "res://assets/interface/unit_art/civil_oil_tanker.webp",
-    "res://assets/library/transport/civil_tanker_t3_vlcc.glb": "res://assets/interface/unit_art/civil_oil_tanker.webp"
+    "res://assets/library/transport/civil_tanker_t3_vlcc.glb": "res://assets/interface/unit_art/civil_oil_tanker.webp",
+    "res://assets/library/arsenal/euro_warmate.glb": "res://assets/interface/unit_art/euro_warmate.webp",
+    "res://assets/library/arsenal/euro_globaleye.glb": "res://assets/interface/unit_art/euro_globaleye.webp",
+    "res://assets/library/arsenal/euro_lynx_kf41.glb": "res://assets/interface/unit_art/euro_lynx_kf41.webp"
   },
   "buildings": {
     "factory": "res://assets/interface/buildings/factory.webp",
