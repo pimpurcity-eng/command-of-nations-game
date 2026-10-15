@@ -364,6 +364,7 @@ func _ready() -> void :
 		hud.show_status("Tap a rally point on land or sea. Each new unit checks its own route."))
 	city_panel.production_requested.connect( func(city_name: String): production_panel.open(city_name))
 	city_panel.research_requested.connect( func(): research_panel.open())
+	city_panel.unit_info_requested.connect(func(id: String, level: int): research_panel.open_unit(id, level))
 	hud.research_requested.connect( func():
 		city_panel.hide()
 		production_panel.hide()

@@ -164,7 +164,7 @@ static func status_box(kind: String) -> Dictionary:
 	row.add_child(column)
 	var text: = label("", 17, Color("ece6d6"))
 	text.add_theme_font_override("font", StrategyTheme.font("RobotoCondensed", 500))
-	text.clip_text = true
+	text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	column.add_child(text)
 	var bar: = ProgressBar.new()
 	bar.show_percentage = false
@@ -177,13 +177,13 @@ static func status_box(kind: String) -> Dictionary:
 	var gold: = Button.new()
 	gold.icon = ResourceSites.icon("gold")
 	gold.add_theme_constant_override("icon_max_width", 22)
-	gold.custom_minimum_size = Vector2(80, 56)
+	gold.custom_minimum_size = Vector2(0, 32)
 	gold.add_theme_font_size_override("font_size", 16)
 	gold.add_theme_color_override("font_color", Color("2b2410"))
 	for state in ["normal", "hover", "pressed", "disabled"]: gold.add_theme_stylebox_override(state, box(Color("e9c46a") if state != "disabled" else Color("8a8270"), 6))
 	gold.tooltip_text = "Finish now with gold"
 	gold.visible = false
-	row.add_child(gold)
+	column.add_child(gold)
 	return {"panel": panel, "picture": picture, "icon": icon, "text": text, "bar": bar, "gold": gold}
 
 ## Tab row button (icon above caption); `selected` gets the gold underline.
@@ -313,6 +313,6 @@ class Icon extends Control:
 ## Points a status-box gold button at `action` with `price` (hidden when price <= 0).
 static func gold_button(button: Button, price: int, action: Callable) -> void:
 	button.visible = price > 0
-	button.text = StrategyHUD._thousands(price)
+	button.text = "Finish now · " + StrategyHUD._thousands(price)
 	for connection in button.pressed.get_connections(): button.pressed.disconnect(connection.callable)
 	if price > 0: button.pressed.connect(action)

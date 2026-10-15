@@ -30,6 +30,9 @@ var selected_id: = ""
 var selected_level: = 2
 var selected_upgrade: = false
 var ui_timer: = 0.0
+var unit_card: AcceptDialog
+var card_action: Button
+var card_status: Label
 
 func setup(system: ResearchSystem, theme: Theme) -> void:
 	research = system
@@ -130,10 +133,14 @@ func setup(system: ResearchSystem, theme: Theme) -> void:
 	bar_row.add_theme_constant_override("separation", 10)
 	bar.add_child(bar_row)
 	var picture: = TextureRect.new()
-	picture.custom_minimum_size = Vector2(70, 60)
+	picture.custom_minimum_size = Vector2(100, 90)
 	picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	bar_row.add_child(picture)
+	picture.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	picture.gui_input.connect(func(event: InputEvent):
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			_show_unit_card())
 	var level_badge := CityPanel.Chevrons.new()
 	level_badge.anchor_left = 1.0
 	level_badge.anchor_right = 1.0
@@ -373,7 +380,8 @@ func _build_tree() -> void:
 				selected_level = chosen_level
 				selected_upgrade = false
 				message.text = ""
-				_refresh())
+				_refresh()
+				_show_unit_card())
 			cell.add_child(card)
 			var caption: = CowUI.label("Level " + EquipmentIdentity.roman_level(level), 15, Color("f4ecd8"))
 			caption.add_theme_font_override("font", CowUI.title_font())
@@ -414,7 +422,7 @@ func _append_upgrades(families: Array, level: int, cell_size: Vector2) -> void:
 		caption.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;caption.mouse_filter=Control.MOUSE_FILTER_IGNORE
 		card.add_child(caption)
 		card.pressed.connect(func():
-			selected_id=spec.id;selected_level=level;selected_upgrade=true;message.text="";_refresh())
+			selected_id=spec.id;selected_level=level;selected_upgrade=true;message.text="";_refresh();_show_unit_card())
 		cell.add_child(card);grid.add_child(cell)
 		cells.append({"card":card,"id":spec.id,"level":level,"refinement":true})
 
@@ -444,6 +452,7 @@ func open_unit(id: String, level: int) -> void:
 	selected_upgrade = false
 	message.text = ""
 	_refresh()
+	_show_unit_card()
 func _layout() -> void:
 	var size: = get_viewport().get_visible_rect().size
 	var width: = minf(760.0, size.x)
@@ -548,6 +557,7 @@ func _process(delta: float) -> void:
 	if ui_timer >= 0.5:
 		ui_timer = 0
 		_refresh()
+		_sync_unit_card()
 
 ## Tech-tree cell: draws the connector line from the level above to the level below.
 class TechCell extends Control:
@@ -575,3 +585,75 @@ class TreeCell extends Control:
 		elif above and below:
 			draw_line(Vector2(x, 0), Vector2(x, size.y), line, 3)
 			draw_colored_polygon(PackedVector2Array([Vector2(x - 6, size.y * 0.5 - 4), Vector2(x + 6, size.y * 0.5 - 4), Vector2(x, size.y * 0.5 + 5)]), Color("8d897b"))
+
+## Inspect the selected technology at readable size before committing resources.
+func _show_unit_card() -> void:
+	if selected_id.is_empty(): return
+	if is_instance_valid(unit_card):
+		unit_card.queue_free()
+	unit_card = AcceptDialog.new()
+	unit_card.title = EquipmentIdentity.research_title(selected_id, selected_level)
+	unit_card.dialog_text = ""
+	unit_card.get_ok_button().text = "Back to research"
+	unit_card.theme = panel.get_parent().theme
+	add_child(unit_card)
+	var scroll := ScrollContainer.new()
+	scroll.custom_minimum_size = Vector2(minf(300, get_viewport().get_visible_rect().size.x * 0.8), minf(400, get_viewport().get_visible_rect().size.y * 0.6))
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	unit_card.add_child(scroll)
+	var body := VBoxContainer.new()
+	body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	body.add_theme_constant_override("separation", 12)
+	scroll.add_child(body)
+	var image := TextureRect.new()
+	image.texture = CowUI.research_picture(selected_id, selected_level)
+	image.custom_minimum_size = Vector2(280, 230)
+	image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	body.add_child(image)
+	var spec := EquipmentIdentity.spec(selected_id)
+	var tier := EquipmentIdentity.research_tier(selected_id, selected_level)
+	var text := EquipmentIdentity.research_title(selected_id, selected_level) + " · Level " + EquipmentIdentity.roman_level(selected_level)
+	text += "\n" + str(spec.get("research_branch", spec.get("category", "")))
+	if not str(tier.get("improvement", "")).is_empty(): text += "\n" + str(tier.improvement)
+	var unit := {"equipment_id": selected_id, "visual_kind": spec.get("visual_kind", "support"), "health": 100.0, "level": selected_level}
+	if spec.get("research_only", false):
+		text += "\nCargo capacity: " + str(selected_level * 30) + " load slots"
+	else:
+		text += "\nHit points: 100\nBase ground/sea damage (attack / defence):"
+		var combat := CombatSystem.new()
+		for target in ArmyDetailsPanel.TARGETS:
+			text += "\n%s: %.1f / %.1f" % [target[1], combat.damage_value(unit, target[0]), combat.damage_value(unit, target[0], true)]
+		for key in ["air_damage", "air_range", "sea_range", "strike_damage", "strike_range"]:
+			if spec.has(key): text += "\n" + key.replace("_", " ").capitalize() + ": " + str(spec[key])
+		if tier.has("damage"): text += "\nAir defence damage: " + str(tier.damage)
+		if tier.has("range"): text += "\nAir defence range: " + str(tier.range)
+	var description := CowUI.label(text, 18)
+	description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	body.add_child(description)
+	var costs := HBoxContainer.new()
+	body.add_child(costs)
+	var bill := _system().upgrade_cost(selected_id, selected_level) if selected_upgrade else _system().cost(selected_id, selected_level)
+	var stock: Dictionary = _system().economy.stockpiles[GameSession.player_country]
+	for resource in ProductionSystem.RESOURCES:
+		if bill.get(resource, 0) > 0: costs.add_child(CowUI.cost(resource, bill[resource], stock.get(resource, 0) >= bill[resource]))
+	card_status = CowUI.label("", 16)
+	card_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	body.add_child(card_status)
+	card_action = CowUI.action("RESEARCH", "flask")
+	card_action.pressed.connect(func():
+		var error := _system().start_upgrade(selected_id, selected_level) if selected_upgrade else _system().start(selected_id, selected_level)
+		message.text = "Research started" if error.is_empty() else error
+		_refresh()
+		_sync_unit_card())
+	body.add_child(card_action)
+	_sync_unit_card()
+	var viewport_size := get_viewport().get_visible_rect().size
+	unit_card.popup_centered(Vector2i(mini(620, int(viewport_size.x * 0.92)), mini(780, int(viewport_size.y * 0.85))))
+
+func _sync_unit_card() -> void:
+	if not is_instance_valid(unit_card) or not is_instance_valid(card_action): return
+	var reason := _system().upgrade_reason(selected_id, selected_level) if selected_upgrade else _system().reason(selected_id, selected_level)
+	card_action.disabled = not reason.is_empty()
+	var duration := _system().upgrade_duration(selected_level) if selected_upgrade else _system().duration(selected_level)
+	card_status.text = "Research time: " + SimulationClock.duration(duration) + ("\n" + reason if not reason.is_empty() else "")

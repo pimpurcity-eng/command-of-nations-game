@@ -9,6 +9,7 @@ extends CanvasLayer
 ## only the next research level under it ("only what's next in line").
 signal rally_requested(city_id: String)
 signal production_requested(city_name: String)
+signal unit_info_requested(equipment_id: String, level: int)
 signal research_requested  # kept for compatibility; research is opened from the HUD tab
 const SECONDS_PER_HOUR: = 3600.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
 const HIDDEN_BUILDINGS: = ["research_center", "finance", "material_works", "electronics_plant", "fuel_depot"]  # research is national, not a city building
@@ -254,10 +255,15 @@ func _add_unit_row(spec: Dictionary) -> void:
 	frame.add_theme_stylebox_override("panel", CowUI.box(Color("e8e4d6"), 0, Color("2f2f2a"), 2, 2))
 	row.add_child(frame)
 	var image: = TextureRect.new()
-	image.custom_minimum_size = Vector2(96, 80)
+	image.custom_minimum_size = Vector2(112, 96)
 	image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	frame.add_child(image)
+	image.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	image.tooltip_text = "View unit card"
+	image.gui_input.connect(func(event: InputEvent):
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			unit_info_requested.emit(spec.id, maxi(1, research.level(spec.id))))
 	var rank: = Chevrons.new()
 	rank.custom_minimum_size = Vector2(26, 30)
 	rank.size_flags_horizontal = Control.SIZE_SHRINK_END
@@ -339,7 +345,7 @@ func _refresh_units(place: Dictionary) -> void:
 		var level: = research.level(id)
 		var shown: = maxi(1, level)  # level 0 = not researched yet: show what level 1 would be
 		row.picture.texture = CowUI.research_picture(id, shown)
-		row.picture.modulate = Color.WHITE if level > 0 else Color(0.55, 0.55, 0.55)
+		row.picture.modulate = Color.WHITE  # Locked units keep readable artwork; status text shows the lock.
 		row.rank.level = shown
 		row.rank.visible = level > 0
 		row.rank.queue_redraw()
