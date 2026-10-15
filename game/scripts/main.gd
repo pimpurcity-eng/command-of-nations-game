@@ -58,11 +58,11 @@ var order_mode: = false
 ## Last map tap, so tapping the same spot again steps to the next army or the city under it.
 var _tap_cycle: Dictionary = {}
 var gold_panel: GoldPanel
-## Owner 2026-10-14 start (Call of War style): 4 light tanks, 4 air defence, 1 plane and 22
-## infantry a side. The capital holds 3 infantry, 2 light tanks and 2 air defence; the two cities
-## nearest the enemy (the front) 2 infantry, 1 light tank and 1 air defence each; every other city
-## 1 infantry; 11 infantry are spread along the border; the plane waits at a province airport.
-const STARTING_ARMY: = {"capital": {"infantry": 3, "light_tank": 2, "skyguard": 2}, "front": {"infantry": 2, "light_tank": 1, "skyguard": 1}, "city": {"infantry": 1}, "front_cities": 2, "border_infantry": 11, "plane": 1}
+## Owner 2026-10-15: 3 light tanks, 3 air defence, 1 plane and 23 infantry a side.
+## Each of the seven cities holds three ground units. The capital and two front cities
+## hold an infantry, tank and air defence; the other four hold three infantry each.
+## The remaining eight infantry occupy separate provinces; the plane keeps its province airport.
+const STARTING_ARMY: = {"capital": {"infantry": 1, "light_tank": 1, "skyguard": 1}, "front": {"infantry": 1, "light_tank": 1, "skyguard": 1}, "city": {"infantry": 3}, "front_cities": 2, "border_infantry": 8, "plane": 1}
 ## Each side's starter light attack jet.
 const STARTING_PLANE: = {"russia": "yak130_russia", "ukraine": "hawk_t2_ukraine"}
 var selecting_armies: = false
@@ -1126,7 +1126,7 @@ func restore_campaign_forces() -> void:
 
 func populate_campaign_forces(staged: bool = false) -> void:
 	units.restore([])
-	var count_total: int = 80
+	var count_total: int = 60
 	var spawned: int = 0
 	var counts: Dictionary = {}
 	var occupied_sea: Array[Vector2] = []
@@ -1184,6 +1184,7 @@ func populate_campaign_forces(staged: bool = false) -> void:
 					best_gap = gap
 					best = post
 			if best.is_empty(): break
+			posts.erase(best)  # one starting infantry per province post
 			taken.append(best.point)
 			plan.append(["infantry_" + country, best])
 		for entry in plan:

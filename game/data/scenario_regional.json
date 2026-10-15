@@ -8,7 +8,7 @@
       "color": "376bba",
       "statistics": {},
       "relations": {},
-      "starting_force_count": 93,
+      "starting_force_count": 30,
       "capital_city": "kyiv"
     },
     {
@@ -17,7 +17,7 @@
       "color": "ad4741",
       "statistics": {},
       "relations": {},
-      "starting_force_count": 96,
+      "starting_force_count": 30,
       "capital_city": "moscow"
     }
   ],
@@ -670,5 +670,5 @@
   "starting_tiers": [
     1
   ],
-  "starting_force_note": "Owner 2026-10-13 (Call of War style start): one level-1 unit of every equipment family, spread over the country's cities. Applies to new campaigns only."
+  "starting_force_note": "Owner 2026-10-15: per country, 3 light tanks, 3 air defence, 1 aircraft and 23 infantry (30 level-1 units). Each of seven cities has 3 ground units; the remaining 8 infantry occupy separate provinces and the aircraft starts at its province airport. Applies to new campaigns only."
 }

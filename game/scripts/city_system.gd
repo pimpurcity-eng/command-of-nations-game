@@ -412,6 +412,7 @@ func controller_of(city: Dictionary) -> String:
 		if province.id == city.sector: return province.controller
 	return city.country.to_lower()
 func _city_box(parent: Node3D, size: Vector3, position: Vector3, material: Material) -> void :
+	if not _city_footprint_on_land(parent, size, position): return
 	var batches: Dictionary = parent.get_meta("building_batches", {})
 	var key: = material.get_instance_id()
 	if not batches.has(key):
@@ -424,6 +425,8 @@ func _city_box(parent: Node3D, size: Vector3, position: Vector3, material: Mater
 	batches[key].append_from(mesh, 0, Transform3D(Basis.IDENTITY, position))
 	parent.set_meta("building_batches", batches)
 func _city_mesh(parent: Node3D, mesh: Mesh, position: Vector3, material: Material) -> void :
+	var bounds: = mesh.get_aabb()
+	if not _city_footprint_on_land(parent, bounds.size, position + bounds.get_center()): return
 	var batches: Dictionary = parent.get_meta("building_batches", {})
 	var key: = material.get_instance_id()
 	if not batches.has(key):
@@ -433,6 +436,19 @@ func _city_mesh(parent: Node3D, mesh: Mesh, position: Vector3, material: Materia
 		batches[key] = tool
 	batches[key].append_from(mesh, 0, Transform3D(Basis.IDENTITY, position))
 	parent.set_meta("building_batches", batches)
+## Keep complete houses, roofs and park pieces on the drawn land. Odesa's city centre is
+## beside the coast; checking the centre alone lets the rest of a building hang over water.
+## Only the visual footprint changes: city coordinates, garrisons and naval spawns stay put.
+func _city_footprint_on_land(parent: Node3D, size: Vector3, center: Vector3, angle: float = 0.0) -> bool:
+	var district: Node3D = parent if parent.has_meta("clip_city_to_land") else parent.get_parent() as Node3D
+	if district == null or not district.get_meta("clip_city_to_land", false): return true
+	var turn: = Basis(Vector3.UP, angle)
+	for x in [-0.5, 0.0, 0.5]:
+		for z in [-0.5, 0.0, 0.5]:
+			var local: Vector3 = center + turn * Vector3(size.x * x, 0, size.z * z)
+			var world: Vector3 = district.position + local * district.scale
+			if not terrain.on_land(Vector2(world.x, world.z)): return false
+	return true
 ## Owner review: the factory/warehouse models were bare white. Their pale surfaces get
 ## painted concrete walls and green-grey roofs; darker details keep their colour. Painted
 ## materials are shared (cached) so destroyed or replaced buildings never free them in use.
@@ -472,6 +488,7 @@ const _BOX_FACES: = [
 	[Vector3(0, 1, 0), Vector3(1, 0, 0), Vector3(0, 0, -1)], [Vector3(0, -1, 0), Vector3(1, 0, 0), Vector3(0, 0, 1)],
 	[Vector3(0, 0, 1), Vector3(1, 0, 0), Vector3(0, 1, 0)], [Vector3(0, 0, -1), Vector3(-1, 0, 0), Vector3(0, 1, 0)]]
 func _city_block(parent: Node3D, size: Vector3, center: Vector3, angle: float, material: Material) -> void :
+	if not _city_footprint_on_land(parent, size, center, angle): return
 	var batches: Dictionary = parent.get_meta("building_batches", {})
 	var key: = material.get_instance_id()
 	if not batches.has(key):
@@ -496,6 +513,7 @@ func _city_block(parent: Node3D, size: Vector3, center: Vector3, angle: float, m
 ## Modern city: glass skyscrapers downtown, Soviet-era apartment blocks around them,
 ## low-rise houses on the outskirts, radial avenues and a ring road.
 func _build_city_district(district: Node3D, city: Dictionary, _ink: StandardMaterial3D) -> void :
+	district.set_meta("clip_city_to_land", terrain != null and terrain._ground_ready)
 	var rng: = RandomNumberGenerator.new()
 	rng.seed = city.name.hash()
 	var capital: bool = city.get("capital", false)
@@ -598,6 +616,7 @@ func _build_city_district(district: Node3D, city: Dictionary, _ink: StandardMate
 			point += Vector2(rng.randf_range(-0.025,0.025),rng.randf_range(-0.015,0.015))
 			var height := (1.15 if capital else 0.82) * (0.70 + 0.30 * (1.0 - absf(point.x))) * rng.randf_range(0.70,1.0)
 			var width := rng.randf_range(0.13,0.18)
+			if not _city_footprint_on_land(district, Vector3(width, 0, width * 0.85), Vector3(point.x, 0, point.y)): continue
 			_dense_tower(district, point, width, height, towers[(row+column)%towers.size()])
 			built += 1
 			permanent += 1
@@ -641,6 +660,8 @@ func _build_city_district(district: Node3D, city: Dictionary, _ink: StandardMate
 			var inside := GARRISON_SQUARE.grow(radius).has_point(point) or point.distance_to(GARRISON_SQUARE.get_center()) < GARRISON_CLEAR_RADIUS + radius
 			var target: Node3D = core if inside else district
 			if city_style == "town": point += Vector2(rng.randf_range(-0.03,0.03),rng.randf_range(-0.03,0.03))
+			# Cull the whole building before adding its base and roof, so no roof is left floating.
+			if not _city_footprint_on_land(target, Vector3(width + 0.008, 0, width * 0.85 + 0.008), Vector3(point.x, 0, point.y)): continue
 			if (city_style == "green" and point.length() > 0.62 and rng.randf() < 0.42) or (city_style == "town" and not inside and point.length() > (1.15 if capital else 0.85) and rng.randf() < 0.30):
 				# Garden city: trees between the apartment blocks.
 				var crown_size: = rng.randf_range(0.045, 0.065)
@@ -678,11 +699,13 @@ func _build_city_district(district: Node3D, city: Dictionary, _ink: StandardMate
 	set_garrison_visible(district,false)
 
 func _dense_tower(parent: Node3D, point: Vector2, width: float, height: float, material: Material) -> void:
+	if not _city_footprint_on_land(parent, Vector3(width, 0, width * 0.85), Vector3(point.x, 0, point.y)): return
 	_city_block(parent,Vector3(width,height,width*0.85),Vector3(point.x,0.02+height*0.5,point.y),0,material)
 	var crown := height*0.16
 	_city_block(parent,Vector3(width*0.70,crown,width*0.60),Vector3(point.x,0.02+height+crown*0.5,point.y),0,material)
 
 func _finish_city_batches(parent: Node3D, district: Node3D) -> void:
+	if not parent.has_meta("building_batches"): return
 	for tool in parent.get_meta("building_batches",{}).values():
 		var visual := MeshInstance3D.new()
 		tool.index()
