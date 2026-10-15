@@ -41,7 +41,12 @@ func setup(country_name: String, points: PackedVector2Array, terrain: StrategicM
 		glyph.pixel_size = pixel_size
 		glyph.shaded = false
 		glyph.billboard = BaseMaterial3D.BILLBOARD_DISABLED
-		glyph.alpha_cut = Label3D.ALPHA_CUT_OPAQUE_PREPASS
+		# Owner 2026-10-15 ("the words are flashing like crazy"): drawn after the map's coloured
+		# overlays and without depth testing, so they never fight with the ground for the pixel.
+		glyph.alpha_cut = Label3D.ALPHA_CUT_DISABLED
+		glyph.no_depth_test = true
+		glyph.render_priority = 20
+		glyph.outline_render_priority = 19
 		glyph.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		glyph.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		glyph.transform = Transform3D(Basis(local_x, local_y, local_z), pos)
@@ -50,4 +55,19 @@ func setup(country_name: String, points: PackedVector2Array, terrain: StrategicM
 		offset += advance
 
 func update_zoom(distance: float) -> void :
-	visible = distance >= 38.0
+	# A little hysteresis so the name does not blink while the camera settles at the threshold.
+	if visible and distance < 36.0: visible = false
+	elif not visible and distance >= 38.0: visible = true
+
+## Centre of the provinces a country holds, weighted by area (for moving its name with the front).
+static func held_centre(country: String, territories: Array) -> Vector2:
+	var total: = 0.0
+	var sum: = Vector2.ZERO
+	for t in territories:
+		if not t.playable or t.controller != country: continue
+		var area: = 0.0
+		for i in t.polygon.size(): area += (t.polygon[i] as Vector2).cross(t.polygon[(i + 1) % t.polygon.size()])
+		area = absf(area) * 0.5
+		sum += (t.center as Vector2) * area
+		total += area
+	return sum / total if total > 0.0 else Vector2.ZERO

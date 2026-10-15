@@ -384,6 +384,7 @@ func order(position: Vector3, append: bool = false) -> bool:
 	_draw_route()
 	return true
 var _route_drawn_at: = -1000
+const BATTLE_JOIN_REACH: = 0.6
 func advance(delta: float) -> void :
 	if delta <= 0 or not is_finite(delta): return
 	var army_groups: = stacks.groups()
@@ -409,7 +410,7 @@ func advance(delta: float) -> void :
 			else: air.advance(unit, delta)
 			for member in group:
 				member.node.position = unit.node.position
-				for property in ["base_city", "flight_mode", "flight_used", "refuel_remaining", "patrol_center", "patrol_phase", "target", "moving", "heading", "attack_target"]: member[property] = unit[property]
+				for property in ["base_city", "flight_mode", "flight_used", "refuel_remaining", "patrol_center", "patrol_phase", "target", "moving", "heading", "attack_target", "repeat_target"]: member[property] = unit.get(property, "")
 				member.waypoints = unit.waypoints.duplicate()
 			continue
 		unit.engaged = false
@@ -423,6 +424,8 @@ func advance(delta: float) -> void :
 		for enemy in neighbours:
 			if at_war and not air.is_air(enemy) and is_naval(enemy) == is_naval(unit) and enemy.country != unit.country and current.distance_squared_to(Vector2(enemy.node.position.x, enemy.node.position.z)) <= reach * reach and visible_to_country(enemy,unit.country):
 				unit.engaged = true
+				unit["foe_point"] = Vector2(enemy.node.position.x, enemy.node.position.z)
+				unit["foe_id"] = enemy.id
 				break
 		for member in group: member.engaged = unit.engaged
 		var upgrading: = false
@@ -498,16 +501,20 @@ func advance(delta: float) -> void :
 	var leaders: Array = groups.map(func(group: Array): return stacks.leader(group))
 	var cells: Dictionary = {}
 	for leader in leaders:
-		var cell: = Vector2i(floori(leader.node.position.x / 0.3), floori(leader.node.position.z / 0.3))
+		var cell: = Vector2i(floori(leader.node.position.x / BATTLE_JOIN_REACH), floori(leader.node.position.z / BATTLE_JOIN_REACH))
 		if not cells.has(cell): cells[cell] = []
 		cells[cell].append(leader)
 	for i in leaders.size():
 		var a: Dictionary = leaders[i]
-		var cell: = Vector2i(floori(a.node.position.x / 0.3), floori(a.node.position.z / 0.3))
+		var cell: = Vector2i(floori(a.node.position.x / BATTLE_JOIN_REACH), floori(a.node.position.z / BATTLE_JOIN_REACH))
 		for dx in range(-1, 2):
 			for dy in range(-1, 2):
 				for b in cells.get(cell + Vector2i(dx, dy), []):
-					if leaders.find(b) > i and a.node.position.distance_to(b.node.position) <= 0.3: stacks.join(a, b)
+					if leaders.find(b) <= i: continue
+					var apart: float = a.node.position.distance_to(b.node.position)
+					if apart <= 0.3: stacks.join(a, b)
+					# Armies fighting side by side (both in the battle, stopped) become one stack.
+					elif apart <= BATTLE_JOIN_REACH and a.engaged and b.engaged: stacks.join(a, b, true)
 	if selected >= 0:
 		selected = units.find(stacks.leader(stacks.members(units[selected])))
 	# Route lines are redrawn 5 times a second at most (they cost 12 ms with the bigger army).
@@ -755,12 +762,14 @@ func _process(delta: float) -> void :
 			elif upgrades_left > 0 and detailed < MOBILE_MAX_DETAILED_UNITS and not (visual.get_meta("missing_original_model", false) and Time.get_ticks_msec() - int(visual.get_meta("missing_at", 0)) < 5000):
 				# One expensive model import per frame; missing originals are not retried forever.
 				var replacement: Node3D = UnitVisual.create(unit.visual_kind, unit.faction_color, unit.equipment_id, unit.level)
-				if replacement.get_meta("missing_original_model", false):
+				if replacement.get_meta("missing_original_model", false) and not replacement.get_meta("simple_model", false):
 					# Retried every 5 s (owner 2026-10-15: units stayed blank for good).
 					visual.set_meta("missing_original_model", true)
 					visual.set_meta("missing_at", Time.get_ticks_msec())
 					replacement.free()
 				else:
+					# A simple model of the kind stands in until the real one loads (retried below).
+					if replacement.get_meta("missing_original_model", false): replacement.set_meta("missing_at", Time.get_ticks_msec())
 					_replace_visual(unit, replacement)
 					detailed += 1
 				upgrades_left -= 1
@@ -781,8 +790,9 @@ func _process(delta: float) -> void :
 		# Call of War: only the selected army gets a ring; the map tag shows ownership.
 		unit.ring.visible = chosen
 		var model: Node3D = unit.node.get_child(0)
-		if model.get_meta("missing_original_model", false) and not mobile and Time.get_ticks_msec() - int(model.get_meta("missing_at", 0)) > 5000:
+		if model.get_meta("missing_original_model", false) and Time.get_ticks_msec() - int(model.get_meta("missing_at", 0)) > 5000 and (not mobile or upgrades_left > 0):
 			model.set_meta("visual_level", -1)
+			upgrades_left -= 1
 		if int(model.get_meta("visual_level", -1)) != int(unit.level):
 			var replacement: = UnitVisual.create(unit.visual_kind, unit.faction_color, unit.equipment_id, unit.level)
 			if replacement.get_meta("missing_original_model", false) and model.get_child_count() > 0:
@@ -807,9 +817,33 @@ func _process(delta: float) -> void :
 				var animator: AirDefenseAnimator = model.get_meta("air_defense_animator")
 				animator.moving = unit.moving
 				animator.animate(delta)
+		if air.is_air(unit): _refuel_crew(unit)
 		if model.has_meta("helicopter_animator"):
 			var rotor_animator: HelicopterAnimator = model.get_meta("helicopter_animator")
 			rotor_animator.animate(delta, unit.get("flight_mode", "grounded") != "grounded" and unit.health > 0)
+		# Owner 2026-10-15 ("the units aren't actually touching when they're fighting ... look at
+		# Call of War, they kneel down and fire"): armies in a close battle step up to the enemy,
+		# face it and crouch while CombatEffects keeps their weapons firing between rounds.
+		var fighting: bool = unit.engaged and unit.has("foe_point") and not is_naval(unit) and not air.is_air(unit)
+		var lunge: = Vector3.ZERO
+		var crouch: = 0.0
+		if fighting:
+			var here: = Vector2(unit.node.position.x, unit.node.position.z)
+			var towards: Vector2 = unit.foe_point - here
+			if towards.length() > 0.01:
+				unit.heading = atan2(-towards.x, -towards.y)
+				# Step up until the two models meet, never into each other: the gap left between
+				# the armies is closed by half from each side, minus how far each model reaches.
+				var reach_here: = _model_reach(unit)
+				var foe_reach: = reach_here
+				var foe: = find_id(str(unit.get("foe_id", "")))
+				if not foe.is_empty(): foe_reach = _model_reach(foe)
+				var step: = clampf((towards.length() - reach_here - foe_reach) * 0.5 - 0.02, 0.0, 0.22)
+				lunge = unit.node.global_transform.basis.inverse() * (Vector3(towards.x, 0, towards.y).normalized() * step)
+			crouch = 1.0
+		model.position = model.position.lerp(lunge, 1.0 - exp(-delta * 3.0))
+		var small: bool = unit.visual_kind == "infantry"
+		model.rotation.x = lerpf(model.rotation.x, -0.16 * crouch if small else 0.0, 1.0 - exp(-delta * 4.0))
 		model.rotation.y = lerp_angle(model.rotation.y, unit.heading, 1.0 - exp( - delta * 8.0))
 		if not is_naval(unit) and not air.is_air(unit):
 			var slope: = Quaternion(Vector3.UP, ground_normal(Vector2(unit.node.position.x, unit.node.position.z)))
@@ -825,10 +859,77 @@ func _process(delta: float) -> void :
 			var relative: = wrapf(unit.heading - camera.rotation.y, - PI, PI)
 			sprite.frame = [1, 2, 3, 0][int(floor((relative + PI) / (PI * 0.5))) % 4]
 
+## Owner 2026-10-15 ("the airplanes, they should show them refuelling - it takes 30 minutes on a
+## 1x map"): a landed aircraft that is refuelling has a fuel truck parked at its wing with the hose
+## connected and the time left above it.
+## How far an army's model reaches out from its centre on the map (half its longest side).
+func _model_reach(unit: Dictionary) -> float:
+	if unit.node.get_child_count() == 0: return 0.15
+	var model: Node3D = unit.node.get_child(0)
+	var box: AABB = model.get_meta("pick_bounds", AABB(Vector3.ZERO, Vector3(0.3, 0.3, 0.3)))
+	return maxf(box.size.x, box.size.z) * 0.5 * model.scale.x
+static var _crew_mesh: ArrayMesh
+func _refuel_crew(unit: Dictionary) -> void:
+	var crew: Node3D = unit.node.get_node_or_null("RefuelCrew")
+	var refuelling: bool = unit.get("flight_mode", "") == "grounded" and float(unit.get("refuel_remaining", 0.0)) > 0.0
+	if not refuelling:
+		if crew != null: crew.visible = false
+		return
+	if crew == null:
+		crew = Node3D.new()
+		crew.name = "RefuelCrew"
+		if _crew_mesh == null: _crew_mesh = _fuel_truck_mesh()
+		var truck: = MeshInstance3D.new()
+		truck.mesh = _crew_mesh
+		truck.position = Vector3(0.45, 0.0, 0.12)
+		truck.rotation.y = -0.5
+		truck.scale = Vector3.ONE * 0.75
+		crew.add_child(truck)
+		var timer: = Label3D.new()
+		timer.name = "Timer"
+		timer.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+		timer.no_depth_test = true
+		timer.render_priority = 12
+		timer.fixed_size = true
+		timer.pixel_size = 0.0009
+		timer.font_size = 30
+		timer.outline_size = 10
+		timer.modulate = Color("ffd36b")
+		timer.outline_modulate = Color("1d2126")
+		timer.position = Vector3(0.0, 0.55, 0.0)
+		crew.add_child(timer)
+		unit.node.add_child(crew)
+	crew.visible = true
+	var label: Label3D = crew.get_node("Timer")
+	label.text = "REFUELING " + SimulationClock.duration(float(unit.refuel_remaining))
+func _fuel_truck_mesh() -> ArrayMesh:
+	var olive: = StandardMaterial3D.new()
+	olive.albedo_color = Color("4d5a3a")
+	var tank: = StandardMaterial3D.new()
+	tank.albedo_color = Color("8f9688")
+	var hose: = StandardMaterial3D.new()
+	hose.albedo_color = Color("1e1e1e")
+	var tool: = SurfaceTool.new()
+	var mesh: = ArrayMesh.new()
+	var add: = func(shape: Mesh, at: Transform3D, ink: Material) -> void:
+		tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+		tool.set_material(ink)
+		tool.append_from(shape, 0, at)
+		tool.commit(mesh)
+	var cab: = BoxMesh.new(); cab.size = Vector3(0.16, 0.13, 0.13)
+	add.call(cab, Transform3D(Basis.IDENTITY, Vector3(0, 0.1, 0.2)), olive)
+	var bed: = BoxMesh.new(); bed.size = Vector3(0.16, 0.05, 0.34)
+	add.call(bed, Transform3D(Basis.IDENTITY, Vector3(0, 0.055, -0.06)), olive)
+	var drum: = CylinderMesh.new(); drum.top_radius = 0.075; drum.bottom_radius = 0.075; drum.height = 0.3; drum.radial_segments = 12
+	add.call(drum, Transform3D(Basis(Vector3.RIGHT, PI * 0.5), Vector3(0, 0.15, -0.06)), tank)
+	var pipe: = CylinderMesh.new(); pipe.top_radius = 0.012; pipe.bottom_radius = 0.012; pipe.height = 0.3; pipe.radial_segments = 6
+	add.call(pipe, Transform3D(Basis(Vector3.FORWARD, PI * 0.5).rotated(Vector3.UP, 0.35), Vector3(-0.18, 0.04, -0.08)), hose)
+	return mesh
 func stop_selected() -> void :
 	if selected < 0: return
 	var unit: Dictionary = units[selected]
 	if air.is_air(unit):
+		for member in stacks.members(unit): member.repeat_target = ""
 		if unit.flight_mode != "grounded": air.return_home(unit)
 		status_changed.emit("Returning to home airbase" if unit.flight_mode != "grounded" else "Aircraft is already at its airbase")
 		_draw_route()

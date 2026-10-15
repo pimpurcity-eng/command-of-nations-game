@@ -490,6 +490,8 @@ func _style_order(button: Button, kind: String, text: String, color: Color) -> v
 	button.add_theme_font_override("font", CowUI.title_font())
 	button.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.6))
 	button.add_theme_constant_override("shadow_offset_y", 1)
+	for old in button.get_children():
+		if old is Glyph: old.queue_free()
 	var glyph: = Glyph.new(kind, Color.WHITE, Vector2(36, 36))
 	glyph.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	glyph.anchor_left = 0.5
@@ -591,7 +593,7 @@ func show_unit(unit: Dictionary) -> void :
 func show_air_commands(aircraft: bool) -> void :
 	patrol_button.visible = aircraft and not choosing_destination
 	armies_button.visible = not aircraft and not choosing_destination and own_unit
-	waypoint_button.visible = not choosing_destination and own_unit and unit_moving
+	waypoint_button.visible = not choosing_destination and own_unit and not aircraft
 	# Owner 2026-10-13: Split only when the army is a stack of more than one unit.
 	split_button.visible = not aircraft and not choosing_destination and own_unit and stack_count > 1
 	attack_button.visible = not choosing_destination
@@ -601,6 +603,10 @@ func show_air_commands(aircraft: bool) -> void :
 	move_button.text = "Fly" if aircraft else "Move"
 	stop_button.text = "Return" if aircraft else "Stop"
 	_refresh_sheet()
+## Waypoint path mode: the cancel button reads Done (the waypoints already given stay).
+func set_waypoint_mode(enabled: bool) -> void:
+	if cancel_button == null: return
+	_style_order(cancel_button, "check" if enabled else "close", "Done" if enabled else "Cancel", Color("3f6b34") if enabled else Color("6b2f2a"))
 func set_order_mode(enabled: bool) -> void :
 	choosing_destination = enabled
 	cancel_button.visible = enabled
@@ -702,6 +708,8 @@ class Glyph extends Control:
 				draw_colored_polygon(PackedVector2Array([c + Vector2(-11, 8) * u, c + Vector2(-3, -7) * u, c + Vector2(2, 1) * u, c + Vector2(5, -3) * u, c + Vector2(11, 8) * u]), tint)
 			"north":
 				draw_colored_polygon(PackedVector2Array([c + Vector2(0, -11) * u, c + Vector2(7, 9) * u, c + Vector2(0, 5) * u, c + Vector2(-7, 9) * u]), tint)
+			"check":
+				draw_polyline(PackedVector2Array([c + Vector2(-8, 0) * u, c + Vector2(-2, 7) * u, c + Vector2(9, -7) * u]), tint, line * 1.2)
 			"close":
 				draw_line(c - Vector2(7, 7) * u, c + Vector2(7, 7) * u, tint, line)
 				draw_line(c + Vector2(-7, 7) * u, c + Vector2(7, -7) * u, tint, line)

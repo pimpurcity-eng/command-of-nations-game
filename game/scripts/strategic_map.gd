@@ -402,7 +402,7 @@ static func road_graph(territory_list: Array) -> Dictionary:
 		var area: = _polygon_area(t.polygon)
 		if area > largest.get(t.title, -1.0):
 			largest[t.title] = area
-			main_part[t.title] = t.center
+			main_part[t.title] = clear_of_towns(t, t.center)
 	var centers: Array[Vector2] = []
 	var node_of: Dictionary = {}
 	var cells: Dictionary = {}  # 0.04 grid cell -> province nodes with a border vertex there
@@ -474,6 +474,37 @@ static func road_graph(territory_list: Array) -> Dictionary:
 			if j != i and centers[j].distance_to(centers[i]) < 6.0 and (nearest < 0 or centers[j].distance_to(centers[i]) < centers[nearest].distance_to(centers[i])): nearest = j
 		if nearest >= 0: edges.append([centers[i], centers[nearest], 0.0])
 	return {"edges": edges, "hubs": main_part}
+
+## Owner 2026-10-15 ("my units attack Kiev ... it still took the city and there's still units in
+## the city"): the Kyiv region's centre fell among Kyiv's houses, so taking the region looked like
+## taking the city. A province's centre (where its roads meet and where it is captured) is moved
+## out of any other province's town, to the nearest point of the province clear of the houses.
+const TOWN_CLEARANCE: = 1.3
+const CAPITAL_CLEARANCE: = 1.9
+static var _towns: Array = []
+static func clear_of_towns(territory: Dictionary, point: Vector2) -> Vector2:
+	if _towns.is_empty(): _towns = GeographicProjection.load_cities()
+	var foreign: Array = []
+	for city in _towns:
+		if RegionData.contains(territory, city.point): continue
+		var clearance: float = CAPITAL_CLEARANCE if city.get("capital", false) else TOWN_CLEARANCE
+		if city.point.distance_to(point) < clearance + 2.0: foreign.append([city.point, clearance])
+	var clear: = func(candidate: Vector2) -> bool:
+		for town in foreign:
+			if candidate.distance_to(town[0]) < town[1]: return false
+		return true
+	if foreign.is_empty() or clear.call(point): return point
+	var best: = point
+	var best_distance: = INF
+	for ring in range(1, 60):
+		var radius: = ring * 0.08
+		if radius > best_distance: break
+		for step in 24:
+			var candidate: = point + Vector2.from_angle(TAU * step / 24.0) * radius
+			if radius < best_distance and clear.call(candidate) and RegionData.contains(territory, candidate):
+				best = candidate
+				best_distance = radius
+	return best
 
 static func _polygon_area(polygon: PackedVector2Array) -> float:
 	var area: = 0.0
@@ -576,5 +607,7 @@ func update_relations(at_war: bool) -> void :
 		if not territory.playable: continue
 		var material: ShaderMaterial = materials[territory.id]
 		material.set_shader_parameter("hostile", at_war and territory.controller != GameSession.player_country)
-		material.set_shader_parameter("occupied", _occupied(territory))
+		# Owner 2026-10-15: "when taking over other people's territory, it should go the same colour
+		# as the other land" - captured provinces take the holder's colour, without stripes.
+		material.set_shader_parameter("occupied", false)
 		material.set_shader_parameter("country_tint", Color("c5b77e") if territory.controller == GameSession.player_country else Color("8a9872"))

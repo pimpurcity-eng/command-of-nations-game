@@ -264,7 +264,7 @@ func launch(start: Vector3, finish: Vector3, effect: String, country: String = "
 	trail.visible = false
 	var duration: = clampf(start.distance_to(finish) * 0.15 + 0.65, 0.8, 2.0)
 	if effect in ["missile","interceptor"]: duration = clampf(start.distance_to(finish)*0.25+2.0,2.4,4.0)
-	if effect in ["cannon", "tracer"]: duration = clampf(start.distance_to(finish) * 0.08, 0.12, 0.4)
+	if effect in ["cannon", "tracer", "skirmish"]: duration = clampf(start.distance_to(finish) * 0.08, 0.12, 0.4)
 	if effect == "bomb": duration = 1.3
 	if flight_time > 0.0: duration = flight_time
 	projectiles.append({"node": root, "start": start, "finish": finish, "effect": effect, "age": 0.0, "trail_age": 0.0, "duration": duration})
@@ -674,6 +674,39 @@ func on_destroyed(unit: Dictionary) -> void :
 func _process(delta: float) -> void :
 	if clock == null or (clock.paused and match_rules.winner.is_empty()): return
 	advance_visual(minf(delta, 0.1))
+	_skirmish(minf(delta, 0.1))
+
+## Owner 2026-10-15 ("the armies, when they meet up to fight, you can't even tell they're fighting.
+## Animate them somehow"): between the half-hour damage rounds, armies locked in a close battle keep
+## shooting - muzzle flashes, tracers flying both ways and dust where they land - with the
+## machine-gun and rifle sounds, so a battle reads at a glance like Call of War's.
+const SKIRMISH_LIMIT: = 10
+var _skirmish_timers: Dictionary = {}
+func _skirmish(seconds: float) -> void:
+	if armies == null or not armies.at_war: return
+	var shown: = 0
+	for unit in armies.units:
+		if shown >= SKIRMISH_LIMIT: break
+		if not unit.get("engaged", false) or not unit.has("foe_point") or not unit.node.visible: continue
+		if armies.air.is_air(unit) or armies.is_naval(unit) or unit.health <= 0: continue
+		shown += 1
+		var left: float = _skirmish_timers.get(unit.id, randf_range(0.0, 0.6)) - seconds
+		if left > 0.0:
+			_skirmish_timers[unit.id] = left
+			continue
+		_skirmish_timers[unit.id] = randf_range(0.35, 1.1)
+		var model: Node3D = unit.node.get_child(0)
+		var foe: Vector2 = unit.foe_point
+		var start: Vector3 = model.global_position + Vector3.UP * (0.22 if unit.visual_kind == "infantry" else 0.3)
+		var finish: = Vector3(foe.x, terrain.elevation(foe) + 0.15, foe.y) + Vector3(randf_range(-0.12, 0.12), 0, randf_range(-0.12, 0.12))
+		var direction: = (finish - start).normalized()
+		start += direction * 0.18
+		if muzzles.size() < MAX_MUZZLES: muzzle_flash(unit, start, direction, "tracer")
+		if projectiles.size() < MAX_PROJECTILES:
+			launch(start, finish, "skirmish", unit.country)
+		if audio != null and randf() < 0.45:
+			audio.play("heavy_machine_gun" if unit.visual_kind != "infantry" or randf() < 0.3 else "rifle_fire", start)
+	if _skirmish_timers.size() > 200: _skirmish_timers.clear()
 func advance_visual(seconds: float) -> void :
 	if seconds <= 0: return
 	for i in range(projectiles.size() - 1, -1, -1):
@@ -689,6 +722,11 @@ func advance_visual(seconds: float) -> void :
 		if heading.length_squared() > 1e-06:
 			var up: = Vector3.RIGHT if absf(heading.normalized().dot(Vector3.UP)) > 0.98 else Vector3.UP
 			job.node.look_at(job.node.position + heading, up)
+		if progress >= 1 and job.effect == "skirmish":
+			smoke_puff(job.finish, randf() < 0.3, 0.05)
+			job.node.queue_free()
+			projectiles.remove_at(i)
+			continue
 		if progress >= 1:
 			explode(job.finish, job.effect in ["missile", "bomb"])
 			job.node.queue_free()

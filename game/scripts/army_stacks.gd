@@ -48,14 +48,16 @@ func leader(group: Array) -> Dictionary:
 			best = value
 			result = unit
 	return result
-func join(a: Dictionary, b: Dictionary) -> bool:
+## in_battle: owner 2026-10-15 ("when they're fighting and more units come, they should join") -
+## an army that reaches a friendly army already fighting there joins its stack mid-battle.
+func join(a: Dictionary, b: Dictionary, in_battle: bool = false) -> bool:
 	if a.country != b.country or a.stack_id == b.stack_id: return false
 	if armies.air.is_air(a) != armies.air.is_air(b) or armies.is_naval(a) != armies.is_naval(b): return false
 	if armies.air.is_air(a) and (a.base_city != b.base_city or a.flight_mode != "grounded" or b.flight_mode != "grounded"): return false
 	var first: = members(a)
 	var second: = members(b)
 	for unit in first + second:
-		if unit.engaged or unit.moving or unit.get("upgrade_remaining", 0.0) > 0 or unit.get("refuel_remaining", 0.0) > 0: return false
+		if (unit.engaged and not in_battle) or (unit.moving and not (in_battle and unit.engaged)) or unit.get("upgrade_remaining", 0.0) > 0 or unit.get("refuel_remaining", 0.0) > 0: return false
 	var anchor: = Vector2(a.node.position.x, a.node.position.z)
 	var source: = Vector2(b.node.position.x, b.node.position.z)
 	if anchor.distance_to(source) > 2.0 or not armies.routes_for(a).clear_segment(anchor, source): return false
@@ -63,10 +65,13 @@ func join(a: Dictionary, b: Dictionary) -> bool:
 		unit.fire_mode = a.get("fire_mode", "at_will")
 		unit.forced_march = false
 		unit.delay_remaining = 0.0
-		unit.attack_target = ""
+		unit.attack_target = str(a.get("attack_target", "")) if in_battle else ""
+		if in_battle:
+			unit.moving = a.moving
+			unit.waypoints = a.waypoints.duplicate()
 		unit.stack_id = a.stack_id
 		unit.node.position = a.node.position
-		unit.target = anchor
+		unit.target = a.target if in_battle else anchor
 	invalidate()
 	return true
 func merge_near_selected() -> void :

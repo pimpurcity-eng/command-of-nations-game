@@ -9,7 +9,10 @@ const MOVEMENT_PACE: = 1.0
 signal advanced(seconds: float)
 signal state_changed
 var elapsed: = 0.0
-var speed: = 1.0
+var speed: = 1.0:
+	set(value):
+		speed = value
+		game_speed = value
 var paused: = true
 var hud_elapsed: = 0.0
 var frame_accumulator: = 0.0
@@ -36,6 +39,7 @@ func advance(real_seconds: float) -> void :
 func set_speed(value: float) -> void :
 	if value not in [1.0, 2.0, 4.0]: return
 	speed = value
+	game_speed = value
 	state_changed.emit()
 func toggle_pause() -> void :
 	paused = not paused
@@ -45,10 +49,15 @@ func snapshot() -> Dictionary:
 func restore(state: Dictionary) -> void :
 	elapsed = state.elapsed
 	speed = state.speed
+	game_speed = speed
 	paused = state.paused
 	state_changed.emit()
 
-static func duration(sim_seconds: float, speed_factor: float = 1.0) -> String:
+## Owner 2026-10-15 ("the values should change if it's one times speed, two times speed"): every
+## time shown in the game is real time at the speed the match runs at now.
+static var game_speed: = 1.0
+static func duration(sim_seconds: float, speed_factor: float = 0.0) -> String:
+	if speed_factor <= 0.0: speed_factor = game_speed
 	var seconds: = maxi(0, ceili(sim_seconds * REAL_SECONDS_PER_SIM_SECOND / speed_factor))
 	if seconds >= 3600: return "%dh %02dm" % [seconds / 3600, (seconds % 3600) / 60]
 	if seconds >= 60: return "%dm %02ds" % [seconds / 60, seconds % 60]

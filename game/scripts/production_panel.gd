@@ -187,7 +187,7 @@ func _show_details() -> void :
 	if production.buildings != null and city_picker.selected >= 0:
 		for place in production.cities:
 			if place.name == city_names[city_picker.selected]: multiplier = production.buildings.production_rate(place.id, spec)
-	details.text = spec.name + " · " + SimulationClock.duration(spec.seconds / multiplier) + " at 1x · Level " + EquipmentIdentity.roman_level(production.research.level(spec.id) if production.research != null else 1) + "\n"
+	details.text = spec.name + " · " + SimulationClock.duration(spec.seconds / multiplier) + " · Level " + EquipmentIdentity.roman_level(production.research.level(spec.id) if production.research != null else 1) + "\n"
 	for resource in ProductionSystem.RESOURCES:
 		details.text += resource.capitalize() + " " + str(int(float(spec.cost.get(resource, 0.0)))) + "  "
 	for id in spec.get("building_requirements", {}): details.text += "\nRequires " + production.buildings.spec(id).name + " L" + str(int(spec.building_requirements[id]))
@@ -217,7 +217,7 @@ func _refresh() -> void :
 			if place.name != job.city: continue
 			held = not production.controlled(place, spec.country)
 			if production.buildings != null: multiplier = production.buildings.production_rate(place.id, spec)
-		queue_list.add_item(job.city + " · " + spec.name + " · " + ("PAUSED · city lost" if held else (("Waiting for resources / buildings" if not job.get("paid", true) else SimulationClock.duration((spec.seconds - job.progress) / multiplier) + " left at 1x") if active else "Waiting")))
+		queue_list.add_item(job.city + " · " + spec.name + " · " + ("PAUSED · city lost" if held else (("Waiting for resources / buildings" if not job.get("paid", true) else SimulationClock.duration((spec.seconds - job.progress) / multiplier) + " left") if active else "Waiting")))
 		if int(job.id) == selected_id: queue_list.select(queue_ids.size() - 1)
 	if queue_ids.is_empty(): queue_list.add_item("No queued production")
 func _layout() -> void :

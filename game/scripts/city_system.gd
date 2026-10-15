@@ -5,7 +5,9 @@ signal city_selected(city: Dictionary)
 const GARRISON_PLAZA_RADIUS := 0.30
 # Owner 2026-10-14: "make the square in the middle a lot smaller".
 ## District units around the army spot kept free of buildings while an army stands there.
-const GARRISON_CLEAR_RADIUS: = 0.55
+## Owner 2026-10-15: "The garden in the middle of the city went smaller, but the square didn't" -
+## the bare ground around the garden now follows the garden instead of a tank-sized circle.
+const GARRISON_CLEAR_RADIUS: = 0.34
 ## How far a capital's houses reach (other towns ~1.55), before the district scale.
 const CAPITAL_REACH: = 1.97
 const CAPITAL_EDGE: = 1.55
@@ -14,7 +16,7 @@ static var GARRISON_SQUARE := Rect2(-0.30, -0.28, 0.60, 0.56)
 ## "front" (facing the camera), "side" (east edge) or "outside" (just past the last houses).
 ## The spot is filled with buildings while no army is there.
 static var garrison_layout: = "centre"  # owner 2026-10-15: armies stand in the middle of a round town (Call of War)
-const GARRISON_LAYOUTS: = {"centre": Rect2(-0.21, -0.20, 0.42, 0.40),  # owner 2026-10-15: square way too big
+const GARRISON_LAYOUTS: = {"centre": Rect2(-0.25, -0.24, 0.50, 0.48),  # owner 2026-10-15: square way too big
 	 "front": Rect2(-0.30, 0.62, 0.60, 0.50), "side": Rect2(0.50, -0.26, 0.50, 0.52), "outside": Rect2(-0.30, 1.16, 0.60, 0.46)}
 ## World offset of each city's army spot from the city point, keyed by city_key(point).
 static var plaza_offsets: Dictionary = {}
@@ -181,19 +183,43 @@ func setup(map: StrategicMap, camera_rig: StrategyCamera) -> void :
 		if UnitSystem.mobile_device() and FrameBudget.spent():
 			await get_tree().process_frame
 			FrameBudget.restart()
-	for spec in [["UKRAINE", [[25.5, 49.3], [29.7, 49.6], [34.2, 50.0]]], ["RUSSIA", [[36.0, 53.0], [39.5, 54.0], [44.0, 54.6]]]]:
-		var points: = PackedVector2Array()
-		for coordinate in spec[1]: points.append(GeographicProjection.project(coordinate[0], coordinate[1]))
-		var label: = CountryMapLabel.new()
-		terrain.add_child(label)
-		label.setup(spec[0], points, terrain)
-		national_labels.append(label)
+	_place_national_labels()
 	var named: Dictionary = {}
 	for province in terrain.territories:
 		if not province.playable or named.has(province.title): continue
 		named[province.title] = true
 		var label: = _map_label(province.province.to_upper(), 11, Color("e3dcc6"))
 		province_labels.append({"label": label, "point": province.center, "territory": province, "base_text": province.province.to_upper()})
+## Owner 2026-10-15 ("when you take the Ukrainian property, the Russia symbol should go over a
+## little bit more"): each country's name moves with the land it holds - its path is shifted by how
+## far the centre of its provinces has moved since the start - and is rebuilt when land changes hands.
+const NATIONAL_NAMES: = [["UKRAINE", "ukraine", [[25.5, 49.3], [29.7, 49.6], [34.2, 50.0]]], ["RUSSIA", "russia", [[36.0, 53.0], [39.5, 54.0], [44.0, 54.6]]]]
+var _home_centres: Dictionary = {}
+var _labels_revision: = -1
+func _place_national_labels() -> void:
+	for label in national_labels: label.queue_free()
+	national_labels.clear()
+	for spec in NATIONAL_NAMES:
+		var held: = CountryMapLabel.held_centre(spec[1], terrain.territories)
+		if not _home_centres.has(spec[1]):
+			var home: = 0.0
+			var sum: = Vector2.ZERO
+			for t in terrain.territories:
+				if t.playable and t.owner == spec[1]:
+					var area: = 0.0
+					for i in t.polygon.size(): area += (t.polygon[i] as Vector2).cross(t.polygon[(i + 1) % t.polygon.size()])
+					sum += (t.center as Vector2) * absf(area)
+					home += absf(area)
+			_home_centres[spec[1]] = sum / home if home > 0.0 else held
+		var shift: Vector2 = held - _home_centres[spec[1]] if held != Vector2.ZERO else Vector2.ZERO
+		var points: = PackedVector2Array()
+		for coordinate in spec[2]: points.append(GeographicProjection.project(coordinate[0], coordinate[1]) + shift)
+		var label: = CountryMapLabel.new()
+		terrain.add_child(label)
+		label.setup(spec[0], points, terrain)
+		if rig != null: label.update_zoom(rig.rendered_distance)
+		national_labels.append(label)
+	_labels_revision = armies.terrain_revision if armies != null else 0
 func setup_buildings(system: BuildingSystem) -> void :
 	_building_ref = weakref(system)
 	system.changed.connect(sync_buildings)
@@ -218,15 +244,18 @@ func sync_buildings() -> void :
 				visual = FacilityVisual.create(definition, city.country.to_lower(), current)
 				visual.name = name
 				# Spread around the city edge instead of a straight row south of it.
+				# Owner 2026-10-15 ("the buildings that are completed in a city, you should be able to
+				# see them"): they stand in a ring just outside the houses instead of among them.
 				var around: = TAU * (index + 0.5) / maxf(system.catalog.size(), 1.0) + float(city.name.hash() % 100) * 0.01
-				visual.position = Vector3(cos(around) * 1.08, 0.09, sin(around) * 1.08)
+				var ring: float = (CAPITAL_EDGE if city.get("capital", false) else 1.22) + 0.3
+				visual.position = Vector3(cos(around) * ring, 0.09, sin(around) * ring)
 				visual.rotation.y = -around
 				if not visual.get_meta("original_colors", false): _paint_infrastructure(visual)
 				district.add_child(visual)
 			var infrastructure_world: = district.position + visual.position * district.scale
 			visual.position.y = 0.09 + (terrain.elevation(Vector2(infrastructure_world.x, infrastructure_world.z)) - district.position.y) / district.scale.y
 			visual.show()
-			visual.scale = Vector3.ONE * (0.11 + 0.015 * (current - 1))
+			visual.scale = Vector3.ONE * (0.16 + 0.02 * (current - 1))
 			visual.set_meta("building_level", current)
 	sync_province_buildings(system)
 func sync_province_buildings(system: BuildingSystem) -> void:
@@ -343,6 +372,7 @@ func _process(delta: float) -> void :
 			leaders[i].points = PackedVector2Array([point, end])
 			leaders[i].visible = offset != offsets[0]
 			break
+	if armies != null and armies.terrain_revision != _labels_revision: _place_national_labels()
 	for label in national_labels: label.update_zoom(rig.rendered_distance)
 	for entry in province_labels:
 		var controller: String = entry.territory.controller

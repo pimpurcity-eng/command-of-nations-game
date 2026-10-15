@@ -103,8 +103,7 @@ static func create(kind: String, _faction: Color, equipment_id: String = "", lev
 		# download meanwhile instead of nothing; main._web_extras_loaded swaps the real one in.
 		var interim: = download_stand_in(equipment_id, EquipmentIdentity.spec(equipment_id).get("visual_kind", kind))
 		if interim.is_empty() or not WebExtras.has(interim):
-			assembly.set_meta("missing_original_model", true)
-			return assembly
+			return _fallback(assembly, kind, equipment_id)
 		path = interim
 		assembly.set_meta("stand_in_model", true)
 	if path.is_empty() or not WebExtras.has(path):
@@ -114,13 +113,12 @@ static func create(kind: String, _faction: Color, equipment_id: String = "", lev
 	assembly.set_meta("asset_path", path)
 	assembly.set_meta("original_vehicle_asset", true)
 	if path.is_empty() or not WebExtras.has(path):
-		assembly.set_meta("missing_original_model", true)
-		return assembly
+		return _fallback(assembly, kind, equipment_id)
 	var scene: = load(path) as PackedScene
 	if scene == null:
 		# A model that fails to load (low memory on a phone) is retried later, never left blank.
-		assembly.set_meta("missing_original_model", true)
-		return assembly
+		push_warning("Unit model failed to load: " + path)
+		return _fallback(assembly, kind, equipment_id)
 	var vehicle: = scene.instantiate() as Node3D
 	var launch_tip: Vector3 = Vector3.ZERO
 	var has_launch_tip: bool = false
@@ -178,6 +176,111 @@ static func create(kind: String, _faction: Color, equipment_id: String = "", lev
 		for item in _meshes(assembly,Transform3D.IDENTITY): item[0].cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	assembly.set_meta("missing_original_model", false)
 	return assembly
+
+## Owner 2026-10-15 ("look at the tanks ... you can't see them again, and when they move, they
+## don't appear"): when a unit's model cannot be loaded yet (downloading, or a phone short of
+## memory) it is drawn as a simple model of its kind, built from a few shapes, instead of nothing.
+## It stays marked missing so the real model is tried again every few seconds.
+static var _fallback_meshes: Dictionary = {}
+static func _fallback(assembly: Node3D, kind: String, equipment_id: String) -> Node3D:
+	assembly.set_meta("missing_original_model", true)
+	var spec: = EquipmentIdentity.spec(equipment_id)
+	var role: String = spec.get("role", "")
+	if role.is_empty(): role = spec.get("visual_kind", kind)
+	var shape_kind: String = spec.get("visual_kind", kind)
+	var russian: bool = spec.get("country", GameSession.player_country) == "russia"
+	var key: = shape_kind + ":" + role + (":r" if russian else ":u")
+	if not _fallback_meshes.has(key): _fallback_meshes[key] = _simple_mesh(shape_kind, role, russian)
+	var vehicle: = Node3D.new()
+	var body: = MeshInstance3D.new()
+	body.mesh = _fallback_meshes[key]
+	vehicle.add_child(body)
+	var pivot: = Node3D.new()
+	pivot.name = "ModelFit"
+	pivot.add_child(vehicle)
+	_fit(pivot, vehicle, role, "")
+	assembly.add_child(pivot)
+	var fitted: AABB = model_bounds(pivot, 0.0)
+	assembly.set_meta("ground_shadow_size", Vector2(fitted.size.x, fitted.size.z) * 0.65)
+	assembly.set_meta("pick_bounds", model_bounds(assembly, 0.0))
+	assembly.set_meta("simple_model", true)
+	return assembly
+
+## One mesh per kind: hull, turret and gun for tanks, wings for aircraft and so on. Front is +Z.
+static func _simple_mesh(kind: String, role: String, russian: bool) -> ArrayMesh:
+	var paint: = StandardMaterial3D.new()
+	paint.albedo_color = Color("5d6b4a") if russian else Color("55633f")
+	paint.roughness = 0.8
+	var dark: = StandardMaterial3D.new()
+	dark.albedo_color = Color("2b2f27")
+	dark.roughness = 0.9
+	var light: = StandardMaterial3D.new()
+	light.albedo_color = Color("9aa3a8")
+	light.roughness = 0.6
+	var parts: Array = []  # [mesh, transform, material]
+	var box: = func(size: Vector3, at: Vector3, ink: Material) -> void:
+		var m: = BoxMesh.new()
+		m.size = size
+		parts.append([m, Transform3D(Basis.IDENTITY, at), ink])
+	var tube: = func(radius: float, length: float, at: Vector3, tilt: float, ink: Material) -> void:
+		var m: = CylinderMesh.new()
+		m.top_radius = radius
+		m.bottom_radius = radius
+		m.height = length
+		m.radial_segments = 10
+		parts.append([m, Transform3D(Basis(Vector3.RIGHT, PI * 0.5 - tilt), at), ink])
+	if kind == "fighter" or role in ["helicopter", "drone", "bomber", "transport", "radar_aircraft"]:
+		var hull: = light if not role in ["drone"] else paint
+		tube.call(0.09, 1.3, Vector3(0, 0.12, 0), 0.0, hull)
+		box.call(Vector3(1.2, 0.03, 0.32), Vector3(0, 0.12, -0.05), hull)
+		box.call(Vector3(0.45, 0.03, 0.14), Vector3(0, 0.13, -0.55), hull)
+		box.call(Vector3(0.03, 0.22, 0.16), Vector3(0, 0.25, -0.55), hull)
+		box.call(Vector3(0.1, 0.06, 0.18), Vector3(0, 0.2, 0.35), dark)
+	elif kind == "naval":
+		box.call(Vector3(0.36, 0.16, 1.6), Vector3(0, 0.08, 0), light)
+		box.call(Vector3(0.24, 0.18, 0.4), Vector3(0, 0.25, -0.1), light)
+		box.call(Vector3(0.1, 0.22, 0.1), Vector3(0, 0.45, -0.1), dark)
+		tube.call(0.025, 0.35, Vector3(0, 0.22, 0.5), 0.0, dark)
+	elif kind == "infantry":
+		box.call(Vector3(0.18, 0.28, 0.12), Vector3(0, 0.42, 0), paint)
+		box.call(Vector3(0.07, 0.28, 0.08), Vector3(-0.05, 0.14, 0), paint)
+		box.call(Vector3(0.07, 0.28, 0.08), Vector3(0.05, 0.14, 0), paint)
+		box.call(Vector3(0.11, 0.11, 0.11), Vector3(0, 0.62, 0), dark)
+		box.call(Vector3(0.03, 0.03, 0.34), Vector3(0.08, 0.44, 0.12), dark)
+	else:
+		# Tracked or wheeled vehicle: hull, running gear, then what sits on top.
+		box.call(Vector3(0.5, 0.16, 0.95), Vector3(0, 0.17, 0), paint)
+		box.call(Vector3(0.12, 0.14, 1.0), Vector3(-0.26, 0.07, 0), dark)
+		box.call(Vector3(0.12, 0.14, 1.0), Vector3(0.26, 0.07, 0), dark)
+		match kind:
+			"armor", "ifv":
+				box.call(Vector3(0.34, 0.13, 0.4), Vector3(0, 0.31, -0.05), paint)
+				tube.call(0.025 if kind == "armor" else 0.018, 0.6 if kind == "armor" else 0.35, Vector3(0, 0.32, 0.38 if kind == "armor" else 0.25), 0.0, dark)
+			"artillery":
+				box.call(Vector3(0.36, 0.16, 0.45), Vector3(0, 0.33, -0.15), paint)
+				tube.call(0.03, 0.8, Vector3(0, 0.45, 0.3), 0.35, dark)
+			"air_defense":
+				box.call(Vector3(0.3, 0.12, 0.3), Vector3(0, 0.31, -0.1), paint)
+				box.call(Vector3(0.28, 0.2, 0.36), Vector3(0, 0.45, -0.1), paint)
+				box.call(Vector3(0.22, 0.03, 0.18), Vector3(0, 0.58, -0.25), light)
+			"missile_launcher":
+				box.call(Vector3(0.36, 0.14, 0.62), Vector3(0, 0.32, -0.12), paint)
+				tube.call(0.06, 0.7, Vector3(-0.09, 0.42, -0.05), 0.0, light)
+				tube.call(0.06, 0.7, Vector3(0.09, 0.42, -0.05), 0.0, light)
+			_:
+				box.call(Vector3(0.44, 0.22, 0.5), Vector3(0, 0.36, -0.15), paint)
+	var tools: Dictionary = {}
+	var mesh: = ArrayMesh.new()
+	for part in parts:
+		var ink: Material = part[2] if part[2] is Material else dark
+		if not tools.has(ink):
+			var tool: = SurfaceTool.new()
+			tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+			tool.set_material(ink)
+			tools[ink] = tool
+		tools[ink].append_from(part[0], 0, part[1])
+	for ink in tools: tools[ink].commit(mesh)
+	return mesh
 
 ## Owner 2026-10-15 ("animate the arm coming up before a nuclear launch ... do this for all missile
 ## launchers"): every launcher model has a Launcher_Pivot hinged at the back of its tubes, so turning

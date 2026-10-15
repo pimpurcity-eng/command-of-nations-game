@@ -17,6 +17,7 @@ func configure(unit: Dictionary, data: Dictionary) -> void :
 	unit.flight_mode = data.get("flight_mode", "grounded")
 	unit.flight_used = data.get("flight_used", 0.0)
 	unit.refuel_remaining = data.get("refuel_remaining", 0.0)
+	unit.repeat_target = data.get("repeat_target", "")
 	unit.patrol_phase = data.get("patrol_phase", 0.0)
 	var saved = data.get("patrol_center", [unit.target.x, unit.target.y])
 	unit.patrol_center = Vector2(saved[0], saved[1])
@@ -55,6 +56,7 @@ func order(unit: Dictionary, destination: Vector2, mode: String = "fly") -> Stri
 	if unit.flight_used + point.distance_to(destination) + destination.distance_to(place.point) + 1.0 > budget(unit): return "Insufficient flight endurance; return and refuel"
 	if mode not in ["fly", "patrol"]: return "Unknown flight order"
 	unit.attack_target = ""
+	for member in armies.stacks.members(unit): member.repeat_target = ""
 	unit.flight_mode = mode
 	unit.patrol_center = destination
 	unit.patrol_phase = 0.0
@@ -105,6 +107,7 @@ func advance(unit: Dictionary, seconds: float) -> void :
 			unit.health = 0
 			return
 		unit.refuel_remaining = maxf(0, unit.refuel_remaining - seconds)
+		if unit.refuel_remaining <= 0.0 and not str(unit.get("repeat_target", "")).is_empty(): _strike_again(unit)
 		return
 	if unit.flight_mode == "attack":
 		var target: = armies.find_id(unit.get("attack_target", ""))
@@ -158,5 +161,20 @@ func advance(unit: Dictionary, seconds: float) -> void :
 	position(unit, point)
 	if unit.flight_mode == "grounded": unit.refuel_remaining = maxf(0, unit.refuel_remaining - remaining / flight_speed(unit))
 	armies._update_heading(unit)
+## Refuelled after an attack: fly back at the same target while it is alive, seen and in range.
+func _strike_again(unit: Dictionary) -> void:
+	var target: = armies.find_id(str(unit.repeat_target))
+	if target.is_empty() or target.health <= 0:
+		for member in armies.stacks.members(unit): member.repeat_target = ""
+		return
+	if not armies.at_war or not armies.unit_visible(target, unit.country): return
+	var destination: = Vector2(target.node.position.x, target.node.position.z)
+	var id: String = target.id
+	if not order(unit, destination).is_empty(): return
+	for member in armies.stacks.members(unit):
+		member.attack_target = id
+		member.flight_mode = "attack"
+		member.repeat_target = id
+	armies.status_changed.emit(unit.name + " refueled · attacking again")
 func snapshot(unit: Dictionary) -> Dictionary:
-	return {"base_city": unit.base_city, "flight_mode": unit.flight_mode, "flight_used": unit.flight_used, "refuel_remaining": unit.refuel_remaining, "patrol_center": [unit.patrol_center.x, unit.patrol_center.y], "patrol_phase": unit.patrol_phase}
+	return {"repeat_target": unit.get("repeat_target", ""), "base_city": unit.base_city, "flight_mode": unit.flight_mode, "flight_used": unit.flight_used, "refuel_remaining": unit.refuel_remaining, "patrol_center": [unit.patrol_center.x, unit.patrol_center.y], "patrol_phase": unit.patrol_phase}

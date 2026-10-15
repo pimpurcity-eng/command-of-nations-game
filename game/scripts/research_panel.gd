@@ -482,7 +482,7 @@ func _refresh() -> void:
 			continue
 		var total: = system.job_duration(job)
 		slot.picture.texture = CowUI.research_picture(job.equipment, job.level)
-		slot.text.text = ("Upgrade " if job.get("refinement",false) else "Level ") + EquipmentIdentity.roman_level(job.level) + " · " + SimulationClock.duration(total - job.progress, system.clock.speed)
+		slot.text.text = ("Upgrade " if job.get("refinement",false) else "Level ") + EquipmentIdentity.roman_level(job.level) + " · " + SimulationClock.duration((total - job.progress) / maxf(system.rate(GameSession.player_country), 0.01))
 		slot.bar.max_value = total
 		slot.bar.value = job.progress
 		for connection in slot.cancel.pressed.get_connections(): slot.cancel.pressed.disconnect(connection.callable)
@@ -535,7 +535,7 @@ func _refresh() -> void:
 	var stock: Dictionary = system.economy.stockpiles[GameSession.player_country]
 	for resource in ProductionSystem.RESOURCES:
 		if bill[resource] > 0: detail.costs.add_child(CowUI.cost(resource, bill[resource], stock[resource] >= bill[resource]))
-	detail.time.text = " " + SimulationClock.duration(system.upgrade_duration(selected_level) if selected_upgrade else system.duration(selected_level))
+	detail.time.text = " " + SimulationClock.duration((system.upgrade_duration(selected_level) if selected_upgrade else system.duration(selected_level)) / maxf(system.rate(GameSession.player_country), 0.01))
 	var reason: = system.upgrade_reason(selected_id,selected_level) if selected_upgrade else system.reason(selected_id, selected_level)
 	detail.start.disabled = not reason.is_empty()
 	detail.start.tooltip_text = reason

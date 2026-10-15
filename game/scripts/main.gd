@@ -52,6 +52,8 @@ var attack_order: = false
 var stack_dialog: ArmyDetailsPanel
 var result_dialog: AcceptDialog
 var append_order: = false
+## True until the first point of a waypoint path is tapped (that tap replaces the old route).
+var waypoint_first: = false
 var order_mode: = false
 ## Last map tap, so tapping the same spot again steps to the next army or the city under it.
 var _tap_cycle: Dictionary = {}
@@ -191,13 +193,22 @@ func _ready() -> void :
 			add_child(trade_panel)
 			trade_panel.setup(trade, hud.get_child(0).theme)
 		trade_panel.open())
+	# Owner 2026-10-15: "when you click on a waypoint, you should move, and there should be another
+	# waypoint button there, so you can keep making a path". Waypoint mode stays on after each tap:
+	# the first tap starts a fresh route from where the army stands (so a city halfway along the old
+	# route can be chosen), every further tap adds the next leg, and Done ends it.
 	hud.add_destination_requested.connect( func():
-		if units.selected < 0 or units.units[units.selected].country != GameSession.player_country or not units.units[units.selected].moving:
-			hud.show_status("Select your army with a movement order first")
+		if units.selected < 0 or units.units[units.selected].country != GameSession.player_country or units.air.is_air(units.units[units.selected]):
+			hud.show_status("Select your army first")
 			return
 		append_order = true
+		waypoint_first = true
+		patrol_order = false
+		attack_order = false
+		rally_city = ""
 		_set_order_mode(true)
-		hud.show_status("Tap the next destination to append it to this army's route"))
+		hud.set_waypoint_mode(true)
+		hud.show_status("Tap the first waypoint · keep tapping to add more · Done when finished"))
 	hud.speed_requested.connect(clock.set_speed)
 	hud.save_requested.connect(save_game)
 	hud.load_requested.connect(load_game)
@@ -234,12 +245,14 @@ func _ready() -> void :
 		_set_order_mode(false)
 		if units.selected >= 0 and units.units[units.selected].country == GameSession.player_country: units.stop_many())
 	hud.cancel_order_requested.connect( func():
+		var path_done: bool = append_order and not waypoint_first
 		_set_order_mode(false)
 		append_order = false
 		patrol_order = false
 		attack_order = false
 		rally_city = ""
-		hud.show_status("Order cancelled · existing route unchanged"))
+		if path_done: clear_army_selection()
+		hud.show_status("Route set" if path_done else "Order cancelled · existing route unchanged"))
 	hud.unit_requested.connect( func(index: int):
 		_set_order_mode(false)
 		units.select_unit(index)
@@ -785,10 +798,16 @@ func _touch_over_ui(screen: Vector2) -> bool:
 		if label.visible and label.get_global_rect().has_point(cities.label_layer.get_final_transform().affine_inverse() * screen): return true
 	return false
 
+func _draw_waypoints_now() -> void:
+	units._route_drawn_at = -1000
+	units._draw_route()
 func _set_order_mode(enabled: bool) -> void :
 	if not enabled:
 		rally_city = ""
 		selecting_armies = false
+		append_order = false
+		waypoint_first = false
+		if hud != null: hud.set_waypoint_mode(false)
 	order_mode = enabled
 	if hud != null: hud.set_order_mode(enabled)
 func clear_army_selection() -> void:
@@ -812,7 +831,15 @@ func player_order(destination: Vector3) -> void :
 	if units.selected < 0 or units.units[units.selected].country != GameSession.player_country:
 		hud.show_status("Select an army belonging to your country.")
 		return
-	var accepted: = units.patrol(destination) if patrol_order and units.air.is_air(units.units[units.selected]) else units.order_many(destination, append_order) > 0
+	var accepted: = units.patrol(destination) if patrol_order and units.air.is_air(units.units[units.selected]) else units.order_many(destination, append_order and not waypoint_first) > 0
+	if accepted and append_order:
+		# Waypoint path: the army sets off at once and stays selected for the next waypoint.
+		waypoint_first = false
+		hud.unit_moving = true
+		if clock.paused: hud.show_status("Waypoint added · PAUSED · tap Play to begin movement")
+		else: hud.show_status("Waypoint added · tap the next one, or Done")
+		_draw_waypoints_now()
+		return
 	if accepted:
 		hud.unit_moving = true
 		# Movement sound by unit type (owner 2026-10-13): tracks, wheels, boots or jet engines.
@@ -886,7 +913,7 @@ func refresh_hud() -> void :
 			for territory in map.territories:
 				if match_rules.capture_progress.has(territory.id) and RegionData.contains(territory, point):
 					hud.detail.text += " · CAPTURE " + str(int(match_rules.capture_progress[territory.id].seconds / 6.0 * 100)) + "%"
-		if unit.node.get_child(0).get_meta("missing_original_model", false): hud.detail.text = EquipmentIdentity.research_title(unit.equipment_id, unit.get("level", 1)).to_upper() + " · MODEL LOADING"
+		if unit.node.get_child(0).get_meta("missing_original_model", false) and not unit.node.get_child(0).get_meta("simple_model", false): hud.detail.text = EquipmentIdentity.research_title(unit.equipment_id, unit.get("level", 1)).to_upper() + " · MODEL LOADING"
 		hud.move_button.disabled = unit.country != GameSession.player_country or unit.get("upgrade_remaining", 0.0) > 0 or (match_rules != null and not match_rules.winner.is_empty())
 		hud.stop_button.disabled = hud.move_button.disabled
 	else:

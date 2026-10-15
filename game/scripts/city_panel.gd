@@ -367,7 +367,7 @@ func _refresh_units(place: Dictionary) -> void:
 			var total: = research.job_duration(job)
 			row.bar.max_value = total
 			row.bar.value = job.progress
-			row.next.text = ("Unlock I" if target == 1 else "Level " + EquipmentIdentity.roman_level(target)) + "   " + SimulationClock.duration(total - job.progress, research.clock.speed if research.clock != null else 1.0)
+			row.next.text = ("Unlock I" if target == 1 else "Level " + EquipmentIdentity.roman_level(target)) + "   " + SimulationClock.duration((total - job.progress) / maxf(research.rate(GameSession.player_country), 0.01))
 			caption.text = "RESEARCHING"
 			row.research.disabled = true
 			continue
@@ -375,7 +375,7 @@ func _refresh_units(place: Dictionary) -> void:
 		row.bar.value = 0.0
 		var reason: = research.reason(id, target)
 		var day: = research.unlock_day(id, target)
-		row.next.text = ("Unlock I" if target == 1 else "Level " + EquipmentIdentity.roman_level(target)) + "   " + (("Day " + str(day)) if research.day() < day else SimulationClock.duration(research.duration(target)))
+		row.next.text = ("Unlock I" if target == 1 else "Level " + EquipmentIdentity.roman_level(target)) + "   " + (("Day " + str(day)) if research.day() < day else SimulationClock.duration(research.duration(target) / maxf(research.rate(GameSession.player_country), 0.01)))
 		caption.text = "UNLOCK" if target == 1 else "RESEARCH"
 		row.research.disabled = not reason.is_empty()
 		row.research.tooltip_text = reason
@@ -449,7 +449,7 @@ func _refresh() -> void:
 	else:
 		var job: Dictionary = jobs[0]
 		var total: = buildings.duration(job.building, job.level)
-		construction.text.text = buildings.spec(job.building).name + " " + str(int(job.level)) + ("  ·  " + ("waiting" if not job.get("paid", true) else ("paused" if paused else SimulationClock.duration(total - job.progress))))
+		construction.text.text = buildings.spec(job.building).name + " " + str(int(job.level)) + ("  ·  " + ("waiting" if not job.get("paid", true) else ("paused" if paused else SimulationClock.duration((total - job.progress) / maxf(buildings.construction_rate(city_id), 0.01)))))
 		if jobs.size() > 1: construction.text.text += "  (+" + str(jobs.size() - 1) + ")"
 		construction.bar.max_value = total
 		construction.bar.value = job.progress
@@ -503,7 +503,7 @@ func _refresh() -> void:
 		var bill: = buildings.cost(id, target)
 		for resource in ProductionSystem.RESOURCES:
 			if bill[resource] > 0: row.costs.add_child(CowUI.cost(resource, bill[resource], stock[resource] >= bill[resource]))
-		row.time.text = " " + SimulationClock.duration(buildings.duration(id, target))
+		row.time.text = " " + SimulationClock.duration(buildings.construction_time(city_id, id, target))
 		var reason: = buildings.reason(city_id, id, GameSession.player_country, false)
 		# One building at a time, up to five more queued (owner 2026-10-15).
 		var queued: Array = jobs.filter(func(job): return job.building == id)

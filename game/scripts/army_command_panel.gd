@@ -121,7 +121,7 @@ func open_upgrade(units: UnitSystem, research: ResearchSystem) -> void :
 		var spec: = research.economy.equipment(unit.equipment_id)
 		for resource in ProductionSystem.RESOURCES: bill[resource] += ceil(float(spec.cost.get(resource, 0.0)) * 0.5)
 		duration = maxf(duration, spec.seconds * 0.5)
-	var text: = str(count) + " units · " + SimulationClock.duration(duration) + " at 1x"
+	var text: = str(count) + " units · " + SimulationClock.duration(duration)
 	for resource in bill: text += "\n" + resource.capitalize() + ": " + str(int(bill[resource]))
 	_label(text)
 	confirm.disabled = count == 0 or group.any( func(unit: Dictionary): return unit.moving or unit.engaged or unit.get("upgrade_remaining", 0.0) > 0 or unit.get("refuel_remaining", 0.0) > 0)

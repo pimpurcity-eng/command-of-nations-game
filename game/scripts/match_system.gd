@@ -173,6 +173,14 @@ func _player_reached_enemy_centre() -> bool:
 				report.emit(unit.name + " reached " + str(territory.title) + " · war declared")
 				return true
 	return false
+## True when an army of the province's holder stands in a city of the province.
+func _city_defended(territory: Dictionary) -> bool:
+	for city in cities:
+		if not RegionData.contains(territory, city.point): continue
+		for unit in armies.units:
+			if unit.country != territory.controller or unit.health <= 0 or unit.visual_kind in ["fighter", "naval"]: continue
+			if CitySystem.near_city(Vector2(unit.node.position.x, unit.node.position.z), city.point): return true
+	return false
 var capture_progress: Dictionary = {}
 var _capture_points: Dictionary = {}
 func capture_point(territory: Dictionary) -> Vector2:
@@ -180,6 +188,7 @@ func capture_point(territory: Dictionary) -> Vector2:
 	var point: Vector2 = territory.center
 	var hub: Variant = terrain.province_hubs.get(territory.get("title", ""))
 	if hub is Vector2 and RegionData.contains(territory, hub): point = hub
+	else: point = StrategicMap.clear_of_towns(territory, point)
 	_capture_points[territory.id] = point
 	return point
 func setup(map: StrategicMap, units: UnitSystem, city_data: Array, time: SimulationClock) -> void :
@@ -303,6 +312,10 @@ func advance(seconds: float) -> void :
 		# Owner 2026-10-13 ("Russia took my land and it never changed"): armies stop at the
 		# province hub (road network), which can be far from the sector's centre in big
 		# provinces, so the hub is the capture point when it lies inside this sector.
+		# Detached pieces of a province (Moskva region around Moscow) change hands with the
+		# province itself, so they are only taken at its main centre.
+		var main_hub: Variant = terrain.province_hubs.get(territory.get("title", ""))
+		if main_hub is Vector2 and not RegionData.contains(territory, main_hub) and terrain.territories.any(func(t): return t.playable and t.title == territory.title and RegionData.contains(t, main_hub)): continue
 		var anchor: = capture_point(territory)
 		var cell: = Vector2i(floori(anchor.x / CAPTURE_RADIUS), floori(anchor.y / CAPTURE_RADIUS))
 		var candidates: Array = []
@@ -314,6 +327,8 @@ func advance(seconds: float) -> void :
 			if not RegionData.contains(territory, point): continue
 			if occupant.is_empty(): occupant = unit.country
 			elif occupant != unit.country: contested = true
+		# Owner 2026-10-15: a city is not taken while its defenders still stand in it.
+		if not contested and not occupant.is_empty() and occupant != territory.controller and _city_defended(territory): contested = true
 		if contested or occupant.is_empty() or occupant == territory.controller:
 			capture_progress.erase(territory.id)
 			continue
