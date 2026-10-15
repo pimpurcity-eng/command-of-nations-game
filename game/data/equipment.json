@@ -265,25 +265,25 @@
         "model": "res://assets/library/airdefense/nato_roland.glb"
       },
       {
-        "name": "NASAMS",
+        "name": "IRIS-T SLS",
         "range": 2.5,
         "damage": 8.5,
         "improvement": "Wider coverage",
-        "model": "res://assets/library/airdefense/nato_nasams.glb"
+        "model": "res://assets/library/airdefense/nato_iris_t_slm.glb"
       },
       {
-        "name": "NASAMS · upgrade",
+        "name": "IRIS-T SLS · upgrade",
         "range": 2.8,
         "damage": 10,
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "model": "res://assets/library/airdefense/nato_nasams.glb"
+        "model": "res://assets/library/airdefense/nato_iris_t_slm.glb"
       },
       {
-        "name": "NASAMS · interception",
+        "name": "IRIS-T SLS · interception",
         "range": 3.1,
         "damage": 11.5,
         "improvement": "Advanced interception",
-        "model": "res://assets/library/airdefense/nato_nasams.glb"
+        "model": "res://assets/library/airdefense/nato_iris_t_slm.glb"
       }
     ],
     "model_status": "Original supplied air-defense model",
@@ -3374,14 +3374,14 @@
         "model": "res://assets/library/arsenal/euro_leclerc.glb"
       },
       {
-        "name": "M1A2 Abrams",
+        "name": "Leclerc XLR",
         "improvement": "",
-        "model": "res://assets/library/abrams_european.glb"
+        "model": "res://assets/library/arsenal/euro_leclerc.glb"
       },
       {
-        "name": "M1A2 Abrams · upgrade",
+        "name": "Leclerc XLR · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
-        "model": "res://assets/library/abrams_european.glb"
+        "model": "res://assets/library/arsenal/euro_leclerc.glb"
       },
       {
         "name": "KF51 Panther",
@@ -5823,12 +5823,12 @@
     "model_status": "Original supplied model",
     "research_tiers": [
       {
-        "name": "Hermes 450",
+        "name": "Watchkeeper WK450",
         "improvement": "",
         "model": "res://assets/library/arsenal/euro_hermes450.glb"
       },
       {
-        "name": "Hermes 450 · upgrade",
+        "name": "Watchkeeper WK450 · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_hermes450.glb"
       },

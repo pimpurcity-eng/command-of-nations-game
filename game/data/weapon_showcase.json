@@ -156,7 +156,7 @@
     "model": "res://assets/library/arsenal/euro_hawk_t2.glb"
   },
   {
-    "name": "Euro Hermes450",
+    "name": "Euro Watchkeeper WK450",
     "kind": "Equipment",
     "theme": "Europe",
     "model": "res://assets/library/arsenal/euro_hermes450.glb"
@@ -460,12 +460,6 @@
     "kind": "Equipment",
     "theme": "Europe",
     "model": "res://assets/library/arsenal/nato_iris_t_slm.glb"
-  },
-  {
-    "name": "Nato Nasams",
-    "kind": "Equipment",
-    "theme": "Europe",
-    "model": "res://assets/library/arsenal/nato_nasams.glb"
   },
   {
     "name": "Nato Roland",

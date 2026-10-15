@@ -31,6 +31,14 @@ func run() -> void:
 	check(is_equal_approx(doctrine_ad_ru, 1.15) and doctrine_ad_ru > doctrine_ad_eu and Doctrine.combat_factor({"country": "russia", "visual_kind": "missile_launcher"}, "attack") > Doctrine.combat_factor({"country": "ukraine", "visual_kind": "missile_launcher"}, "attack"), "Russian air defence and rockets beat European ones")
 	check(Doctrine.combat_factor({"country": "ukraine", "visual_kind": "armor"}, "attack") > Doctrine.combat_factor({"country": "russia", "visual_kind": "armor"}, "attack") and is_equal_approx(Doctrine.combat_factor({"country": "ukraine", "visual_kind": "infantry"}, "defense"), 1.10), "European tanks are better; European armies defend +10%")
 	check(Doctrine.DOCTRINES.keys() == ["russian", "european", "american", "chinese"], "four doctrines: Russian, European, American, Chinese")
+	# Owner 2026-10-15: "Ukraine only gets European weapons."
+	var foreign: Array = []
+	for family in EquipmentIdentity.catalog:
+		if family.get("country", "") != "ukraine" or family.get("retired", false): continue
+		for tier in family.get("research_tiers", []):
+			var file: String = str(tier.model).get_file()
+			if not (file.begins_with("euro_") or file.begins_with("nato_") or file.begins_with("ukraine_") or file.ends_with("_european.glb")) or str(tier.model).contains("abrams") or str(tier.name).contains("NASAMS"): foreign.append(family.id + ": " + str(tier.name))
+	check(foreign.is_empty(), "Ukraine has European weapons only " + str(foreign))
 	check(is_equal_approx(game.research.rate("ukraine"), 1.15) and is_equal_approx(game.research.rate("russia"), 0.9), "European research is 15% faster; Russian research 10% slower (doctrine)")
 	check(is_equal_approx(Doctrine.combat_factor({"country": "united_states", "visual_kind": "fighter"}, "attack"), 1.15) and Doctrine.stealth({"country": "united_states", "visual_kind": "fighter"}) and not Doctrine.stealth({"country": "ukraine", "visual_kind": "fighter"}), "Western aircraft are stronger and stealthy")
 	# Stealth and radar.

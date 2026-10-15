@@ -31,11 +31,12 @@ Russia has four unit types Ukraine has nothing to match:
 - `a50u_russia` (radar plane)
 - `airborne_ifv_russia`
 
-Add Ukrainian equivalents to `game/data/equipment.json`. Use the same stats, cost and research days, with a different name and model:
-- Switchblade 600 or Warmate (for the Lancet)
-- an F-16 interceptor branch (for the MiG-31)
-- Saab 340 AEW / GlobalEye (for the radar plane)
-- a Western airborne IFV
+Add Ukrainian equivalents to `game/data/equipment.json`. Use the same stats, cost and research days, with a different name and model.
+**Ukraine gets European weapons only - nothing American, Israeli or other non-European.**
+- Warmate (Polish) for the Lancet
+- an interceptor branch from Eurofighter / Gripen E (euro_gripen_e.glb exists) for the MiG-31
+- Saab GlobalEye (Swedish) for the radar plane
+- Wiesel (German) for the airborne IFV
 
 Keep the JSON layout (2 spaces, same key order) so the diff only shows your additions. Models go in the
 owner's Drive and the install tools, not Git. Add unit pictures in `game/assets/interface/unit_art/`, the same style as yours.
@@ -57,7 +58,7 @@ These tests still expect the old start, so they fail:
 ## 4. Balance check against Conflict of Nations
 Claude set the damage tables from Call of War, in `CombatSystem.ATTACK`/`DEFENCE`, by unit type
 against infantry, light and heavy targets. National bonuses are the four doctrines in `game/scripts/doctrine.gd`
-(Russian, European, American, Chinese; Ukraine is European). Owner's rule: Russian air defence and rockets beat
+(Russian, European, American, Chinese; Ukraine is European and uses European weapons only). Owner's rule: Russian air defence and rockets beat
 Europe's; Europe has the better tanks, aircraft and research. There are no other country bonuses; don't add any.
 - Write `docs/BALANCE_REVIEW.md`: for each unit type, our numbers next to Conflict of Nations' (hit points,
   attack and defence against soft, hard and air, speed, range), with sources linked.
