@@ -86,10 +86,44 @@ func on_shot(source: Dictionary, target_unit: Dictionary, effect: String) -> voi
 	if effect == "nuke":
 		raise_and_fire(source, start, finish)
 		return
+	if effect == "missile" and source_visible and source.visual_kind == "missile_launcher" and source.node.get_child(0).has_meta("silo_missile"):
+		silo_launch(source, finish, tier.get("projectile_model", ""))
+		return
 	if effect == "missile" and source_visible and source.visual_kind == "missile_launcher" and source.node.get_child(0).has_meta("erector_hinge"):
 		erect_and_launch(source, finish, tier.get("projectile_model", ""))
 		return
 	launch(start, finish, effect, source.country, tier.get("projectile_model", ""))
+## Owner 2026-10-15 ("make the missile come out of the silo as well, then disappear"): the lid
+## slides open, the missile rises out of the shaft and flies off (the silo model's missile is hidden
+## and the flying one takes over); the shaft is reloaded and the lid closes again.
+func silo_launch(source: Dictionary, finish: Vector3, projectile_model: String) -> void:
+	var pace: = 1.0 / maxf(1.0, clock.speed if clock != null else 1.0)
+	var model: Node3D = source.node.get_child(0)
+	var lid: Node3D = model.get_meta("silo_lid")
+	var missile: Node3D = model.get_meta("silo_missile")
+	var lid_rest: Vector3 = model.get_meta("silo_lid_rest")
+	var missile_rest: Vector3 = model.get_meta("silo_missile_rest")
+	var length: float = model.get_meta("silo_missile_length")
+	var sequence: = create_tween()
+	sequence.tween_property(lid, "position:x", lid_rest.x + float(model.get_meta("silo_lid_slide")), 0.8 * pace).set_trans(Tween.TRANS_SINE)
+	sequence.tween_callback(func():
+		if is_instance_valid(missile):
+			missile.position = missile_rest
+			missile.visible = true
+			smoke_puff(model.global_position + Vector3.UP * 0.05, false, 0.2))
+	sequence.tween_property(missile, "position:y", missile_rest.y + float(model.get_meta("silo_rise")), 1.4 * pace).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	sequence.tween_callback(func():
+		if not is_instance_valid(missile): return
+		var nose: Vector3 = missile.global_transform * Vector3(length, 0, 0)
+		missile.visible = false
+		launch(nose, finish, "missile", source.country, projectile_model)
+		smoke_puff(model.global_position + Vector3.UP * 0.1, true, 0.25))
+	sequence.tween_interval(2.0 * pace)
+	sequence.tween_callback(func():
+		if is_instance_valid(missile):
+			missile.position = missile_rest
+			missile.visible = true)
+	sequence.tween_property(lid, "position:x", lid_rest.x, 1.0 * pace).set_trans(Tween.TRANS_SINE)
 ## How far each launcher family raises its arm before firing (degrees).
 const ERECT_ANGLE: = {"rockets": 45.0, "coastal_missiles": 40.0, "missiles": 72.0}
 ## Owner 2026-10-15 ("do this for all missile launchers"): the arm rises, the missile leaves from

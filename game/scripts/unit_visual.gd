@@ -116,7 +116,7 @@ static func create(kind: String, _faction: Color, equipment_id: String = "", lev
 	if EquipmentIdentity.spec(equipment_id).get("role", "") in ["helicopter", "drone"]:
 		helicopter = HelicopterAnimator.new()
 		vehicle = helicopter.prepare(vehicle)
-	elif path.contains("/arsenal/") and vehicle.find_child("Launcher_Pivot", true, false) == null: vehicle = merged(vehicle)
+	elif path.contains("/arsenal/") and vehicle.find_child("Launcher_Pivot", true, false) == null and vehicle.find_child("SiloLid", true, false) == null: vehicle = merged(vehicle)
 	var spec: = EquipmentIdentity.spec(equipment_id)
 	var role: String = spec.get("role", "")
 	if role.is_empty(): role = spec.get("visual_kind", kind)
@@ -162,7 +162,9 @@ static func create(kind: String, _faction: Color, equipment_id: String = "", lev
 ## The Yars / Topol-M also open the cap and slide the missile out (CombatEffects.raise_and_fire).
 static func _rig_erector(assembly: Node3D, vehicle: Node3D) -> void:
 	var arm: Node3D = vehicle.find_child("Launcher_Pivot", true, false)
-	if arm == null: return
+	if arm == null:
+		_rig_silo(assembly, vehicle)
+		return
 	var tube: MeshInstance3D = arm.find_child("Tube", true, false)
 	var reach: = AABB()
 	var parts: = _meshes(arm, Transform3D.IDENTITY)
@@ -174,6 +176,30 @@ static func _rig_erector(assembly: Node3D, vehicle: Node3D) -> void:
 	assembly.set_meta("erector_missile", arm.find_child("Missile", true, false))
 	assembly.set_meta("erector_cap", arm.find_child("CanisterCap", true, false))
 	assembly.set_meta("erector_length", tube.get_aabb().size.x if tube != null else reach.size.x)
+
+## Owner 2026-10-15 ("make the missile come out of the silo as well, then disappear"): silos keep
+## their lid and missile as separate parts so CombatEffects.silo_launch can open the lid and raise
+## the missile out of the shaft.
+static func _rig_silo(assembly: Node3D, vehicle: Node3D) -> void:
+	var lid: Node3D = vehicle.find_child("SiloLid", true, false)
+	var missile: Node3D = vehicle.find_child("Missile", true, false)
+	if lid == null or missile == null: return
+	var length: = 0.0
+	for part in _meshes(missile, Transform3D.IDENTITY):
+		length = maxf(length, ((part[1] as Transform3D) * (part[0] as MeshInstance3D).mesh.get_aabb()).end.x)
+	var cover: = AABB()
+	var parts: = _meshes(lid, Transform3D.IDENTITY)
+	for i in parts.size():
+		var box: AABB = (parts[i][1] as Transform3D) * (parts[i][0] as MeshInstance3D).mesh.get_aabb()
+		cover = box if i == 0 else cover.merge(box)
+	assembly.set_meta("silo_lid", lid)
+	assembly.set_meta("silo_missile", missile)
+	assembly.set_meta("silo_lid_rest", lid.position)
+	assembly.set_meta("silo_lid_slide", cover.size.x * 1.05)
+	assembly.set_meta("silo_missile_rest", missile.position)
+	# The missile rises until about two thirds of it stands above the ground.
+	assembly.set_meta("silo_rise", -missile.position.y + length * 0.65)
+	assembly.set_meta("silo_missile_length", length)
 
 ## Orient the model's long axis along the game's forward axis, scale it to the unit type's
 ## footprint and stand it on the ground at the marker's origin.
