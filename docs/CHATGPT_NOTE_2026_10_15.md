@@ -24,23 +24,17 @@ The owner wants the cities redesigned like Call of War and has handed this to yo
 - Done when: `tests/test_city_courtyard.gd` passes and you send renders of Moscow, Kharkiv/Belgorod and Kursk
   at close and far zoom.
 
-## 2. Ukraine equivalents for Russia-only units
-Russia has four unit types Ukraine has nothing to match:
-- `loitering_russia` (Lancet)
-- `interceptor_russia` (MiG-31)
-- `a50u_russia` (radar plane)
-- `airborne_ifv_russia`
-
-Add Ukrainian equivalents to `game/data/equipment.json`. Use the same stats, cost and research days, with a different name and model.
+## 2. Same units on both sides (owner: "the same amount of weapons for each side")
+Claude already added `interceptor_ukraine` (Gripen E) and `airborne_ifv_ukraine` (Lynx KF41) using existing models.
+Two Russian units still have no Ukrainian match, because no European model exists yet:
+- `loitering_russia` (Lancet) -> **Warmate** loitering drone (Poland): needs a 3D model + unit picture.
+- `a50u_russia` (A-50 radar plane) -> **Saab GlobalEye** (Sweden): needs a 3D model + unit picture.
+Also needed: a unit picture for the **Lynx KF41** (`unit_art/euro_lynx_kf41.webp`, same style as the others,
+then map it in `game/data/menu_art.json`).
 **Ukraine gets European weapons only - nothing American, Israeli or other non-European.**
-- Warmate (Polish) for the Lancet
-- an interceptor branch from Eurofighter / Gripen E (euro_gripen_e.glb exists) for the MiG-31
-- Saab GlobalEye (Swedish) for the radar plane
-- Wiesel (German) for the airborne IFV
-
-Keep the JSON layout (2 spaces, same key order) so the diff only shows your additions. Models go in the
-owner's Drive and the install tools, not Git. Add unit pictures in `game/assets/interface/unit_art/`, the same style as yours.
-- Done when: `tests/test_weapon_batch.gd` and `tests/test_owner_night.gd` pass.
+Add each new family by copying the Russian one in `game/data/equipment.json` (same stats, cost and research days;
+id ending `_ukraine`), keeping the JSON layout. Models go in the owner's Drive, not Git.
+- Done when: both sides have the same number of units and `tests/test_doctrine_stealth_wmd.gd` passes.
 
 ## 3. Bring the old tests up to date
 The owner changed the starting rules: no buildings at the start except the airport, and nothing researched.

@@ -4717,6 +4717,70 @@
     "asset_roster_id": "airborne_ifv_russia"
   },
   {
+    "id": "airborne_ifv_ukraine",
+    "country": "ukraine",
+    "name": "Airborne fighting vehicles",
+    "category": "Mechanized",
+    "visual_kind": "ifv",
+    "research_branch": "Airborne fighting vehicle",
+    "seconds": 28,
+    "cost": {
+      "funds": 1920,
+      "materials": 720,
+      "electronics": 240,
+      "fuel": 300,
+      "manpower": 240,
+      "food": 204
+    },
+    "research_tiers": [
+      {
+        "name": "Lynx KF41",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_lynx_kf41.glb"
+      },
+      {
+        "name": "Lynx KF41 \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_lynx_kf41.glb"
+      },
+      {
+        "name": "Lynx KF41 \u00b7 Skyranger",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_lynx_kf41.glb"
+      },
+      {
+        "name": "Lynx KF41 \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_lynx_kf41.glb"
+      },
+      {
+        "name": "Lynx KF41 \u00b7 advanced",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_lynx_kf41.glb"
+      }
+    ],
+    "building_requirements": {
+      "barracks": 1
+    },
+    "model_status": "Original supplied model (owner 2026-10-15: same units on both sides)",
+    "research_days": [
+      5,
+      8,
+      11,
+      14,
+      17
+    ],
+    "upkeep": {
+      "funds": 160.0,
+      "fuel": 20.0,
+      "manpower": 4.0,
+      "food": 8.0
+    },
+    "production_building": "barracks",
+    "starter": false,
+    "asset_roster_id": "airborne_ifv_ukraine"
+  },
+  {
     "id": "light_tank_russia",
     "country": "russia",
     "name": "Light tanks",
@@ -4975,6 +5039,76 @@
       }
     ],
     "model_status": "Original supplied model",
+    "air_speed": 4.0,
+    "air_range": 14.0,
+    "air_damage": 13.0,
+    "ground_damage": 2.0,
+    "requires_airbase": true,
+    "upkeep": {
+      "funds": 250.0,
+      "fuel": 24.0,
+      "manpower": 6.0,
+      "food": 12.0
+    },
+    "production_building": "airbase",
+    "research_branch": "Interceptor",
+    "starter": false
+  },
+  {
+    "id": "interceptor_ukraine",
+    "country": "ukraine",
+    "name": "Interceptors",
+    "category": "Fighters",
+    "visual_kind": "fighter",
+    "role": "fighter",
+    "asset_roster_id": "interceptor_ukraine",
+    "seconds": 60,
+    "cost": {
+      "funds": 3000,
+      "materials": 960,
+      "electronics": 480,
+      "fuel": 360,
+      "manpower": 360,
+      "food": 276
+    },
+    "building_requirements": {
+      "airbase": 1
+    },
+    "research_days": [
+      9,
+      12,
+      15,
+      18,
+      21
+    ],
+    "research_tiers": [
+      {
+        "name": "Gripen E",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_gripen_e.glb"
+      },
+      {
+        "name": "Gripen E \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_gripen_e.glb"
+      },
+      {
+        "name": "Gripen E \u00b7 Meteor",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_gripen_e.glb"
+      },
+      {
+        "name": "Gripen E \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_gripen_e.glb"
+      },
+      {
+        "name": "Gripen E \u00b7 advanced",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_gripen_e.glb"
+      }
+    ],
+    "model_status": "Original supplied model (owner 2026-10-15: same units on both sides)",
     "air_speed": 4.0,
     "air_range": 14.0,
     "air_damage": 13.0,
