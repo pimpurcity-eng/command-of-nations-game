@@ -63,13 +63,16 @@ func signup(email: String,password: String,commander: String) -> Dictionary:
 	var problem:=signup_problem(email,password,commander)
 	if not problem.is_empty():return failure(problem)
 	commander=commander_name(commander)
-	var result:=await request("/signup",{"email":email.strip_edges(),"password":password,"data":{"commander_name":commander}})
+	# Owner 2026-10-15 ("no code is sent, the link doesn't work"): if the account service sends a
+	# link instead of a code, the link confirms the email and opens the game's website.
+	var result:=await request("/signup?redirect_to="+GAME_ADDRESS.uri_encode(),{"email":email.strip_edges(),"password":password,"data":{"commander_name":commander}})
 	# Even if the server is misconfigured to auto-confirm, this UI never silently logs in after signup.
 	return result
 ## Sign in with Google (owner 2026-10-14). The website sends the player to Google through the
 ## account service and comes back with the session in the address (#access_token=...), which
 ## finish_google_from_url() reads once and wipes from the address bar. The app keeps email
 ## sign-in until it has a return link of its own.
+const GAME_ADDRESS:="https://play.warfrontmandate.com"
 static func google_available() -> bool:return OS.has_feature("web")
 ## True once the owner has switched Google on in the account service (checked, never assumed).
 var google_enabled:=false
@@ -120,7 +123,7 @@ func verify(email: String,code: String,recovery: bool=false) -> Dictionary:
 	return result
 func resend(email: String,recovery: bool=false) -> Dictionary:
 	if not email_valid(email):return failure("Enter a valid email address.")
-	return await request("/recover" if recovery else "/resend",{"email":email.strip_edges()} if recovery else {"email":email.strip_edges(),"type":"signup"})
+	return await request(("/recover" if recovery else "/resend")+"?redirect_to="+GAME_ADDRESS.uri_encode(),{"email":email.strip_edges()} if recovery else {"email":email.strip_edges(),"type":"signup"})
 func reset_password(password: String) -> Dictionary:
 	if not recovery_pending or access_token.is_empty():return failure("Verify the password-reset code first.")
 	if not password_valid(password):return failure("Use a password with 8–128 characters.")

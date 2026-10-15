@@ -35,7 +35,7 @@ func run() -> void:
 	check(not r.ok and calls.is_empty(),"Invalid registration cannot reach backend")
 	reply={"ok":true,"data":{}}
 	r=await auth.signup("tester@example.org","A8passw!","Tester")
-	check(r.ok and calls[-1][0]=="/signup" and calls[-1][1].data.commander_name=="Tester","Registration sends commander metadata")
+	check(r.ok and str(calls[-1][0]).begins_with("/signup?redirect_to=https%3A%2F%2Fplay.warfrontmandate.com") and calls[-1][1].data.commander_name=="Tester","Registration sends commander metadata")
 	r=await auth.signup("tester@example.org","A8passw!","Sir  Matthew ")
 	check(r.ok and calls[-1][1].data.commander_name=="Sir_Matthew","A name with spaces is accepted as underscores")
 	check(PlayerAuth.signup_problem("tester@example.org","short","Tester").contains("8 characters"),"Short password names the password")

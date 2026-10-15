@@ -157,10 +157,21 @@ func build(page: String) -> void:
 			button("Achievements and medals",func():build("achievements"))
 			button("Forgot password?",func():remember_email();build("recover"))
 		elif page in ["verify","recovery_code"]:button("Send another code",resend_code)
+		if page=="verify":
+			# Owner 2026-10-15: the email may carry a link instead of a code. Tapping the link
+			# confirms the email; then sign in with the details just entered.
+			label_text("Got a link instead of a code? Tap \"Confirm email address\" in the email, then come back here.",22)
+			button("I tapped the link - sign me in",func():
+				working=true;status.text="Signing in…"
+				var result:=await auth.login(email,signup_password);working=false
+				if result.ok:signup_password="";build("profile")
+				else:status.text="Not confirmed yet - tap the link in the email first, then try again." if "Confirm your email" in str(result.message) else str(result.message))
 		if page!="login":button("Back to sign in",func():auth.clear_session();build("login"))
 	status=label_text("",24)
 	if not auth.configured():status.text="Online accounts are being connected. Offline play is available."
 	button("Back to game",func():overlay.hide())
+## Kept in memory only (never saved) so "I tapped the link" can sign in after signup.
+var signup_password:=""
 var leaderboard_rows: Array = []
 var board_metric:="xp"
 # ---------------------------------------------------------------- alliances
@@ -281,7 +292,9 @@ func submit() -> void:
 	var result: Dictionary
 	match mode:
 		"login":result=await auth.login(email,value("password"))
-		"signup":result=await auth.signup(email,value("password"),value("commander"))
+		"signup":
+			signup_password=value("password")
+			result=await auth.signup(email,signup_password,value("commander"))
 		"verify":result=await auth.verify(email,value("code"))
 		"recover":result=await auth.resend(email,true)
 		"recovery_code":result=await auth.verify(email,value("code"),true)
