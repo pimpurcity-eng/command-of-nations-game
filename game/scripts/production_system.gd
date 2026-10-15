@@ -161,6 +161,7 @@ func enqueue(equipment_id: String, city_name: String) -> String:
 	return ""
 ## Weapons must be researched (level 1+) before they can be built; retired ones never.
 func research_lock(spec: Dictionary) -> String:
+	if spec.get("research_only",false): return "Freight research upgrades shipments in Transport market"
 	if spec.get("retired", false): return "No longer in service"
 	if research != null and not str(spec.get("id", "")).begins_with("economy_") and research.level(spec.id) < 1: return "Research " + str(spec.get("research_branch", spec.name)) + " first"
 	return ""

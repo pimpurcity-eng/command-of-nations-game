@@ -36,7 +36,7 @@ func run() -> void:
 		trade.advance(5.0)
 		if game.production.stockpiles.russia.fuel > fuel_before: delivered = true; break
 	check(delivered, "the train delivers fuel when it reaches the partner")
-	check(game.production.earned.get("russia", {}).get("funds", 0.0) > earned_before, "trade deliveries count as income (economic victory)")
+	check(game.production.earned.get("russia", {}).get("funds", 0.0) == earned_before, "paid imports cannot create victory income")
 	check(is_equal_approx(trade.delivery_amount(route), TradeNetwork.CARGO.fuel * game.buildings.level(route.city, "train_station")), "cargo grows with the station level")
 	# Rail transport for armies.
 	var station_city: Dictionary = game.buildings.city(route.city)
@@ -62,7 +62,7 @@ func run() -> void:
 	var answer: = talks.propose("russia", "ukraine", "trade", {})
 	check(answer.accepted and talks.relation("russia", "ukraine").trade, "the AI accepts a trade deal after a day of peace")
 	check(not trade.plan("russia", "ukraine").has("error"), "a trade deal opens a rail route to the other country")
-	check(trade.open_route("russia", "ukraine", "electronics").is_empty(), "route to Ukraine opens")
+	check(not trade.open_route("russia", "ukraine", "electronics").is_empty(), "player trade uses paid market shipments instead of automatic free deliveries")
 	talks.set_war("russia", "ukraine", true)
 	trade.advance(1.0)
 	check(not trade.routes_of("russia").any(func(r): return r.partner == "ukraine") and not talks.relation("russia", "ukraine").trade, "war ends the trade deal and the route")

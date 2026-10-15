@@ -22,7 +22,7 @@ const SAVE_EVERY: = 60.0
 const HELLO_TIMEOUT: = 15.0
 const MAX_COMMANDS_PER_SECOND: = 20
 const MAX_MESSAGE_BYTES: = 8192
-const COUNTRIES: = ["russia", "ukraine"]
+var countries: Array = ["russia", "ukraine"]
 const UNIT_OPS: = ["move", "stop", "attack", "retreat"]
 ## Private fields of enemy armies that are never sent (their orders are secret).
 const HIDDEN_FIELDS: = ["route", "attack_target", "fire_mode", "forced_march", "delay_remaining", "upgrade_remaining", "upgrade_target", "patrol_center", "patrol_phase", "flight_used", "refuel_remaining"]
@@ -47,9 +47,10 @@ var _save: = 0.0
 ## Starts serving `main` (a running main.tscn) on `port`. Resumes `path` when it exists.
 func start(main: Node, port: int, id: String, path: String, bind: String = "*") -> Error:
 	game = main
+	countries = game.production.stockpiles.keys()
 	match_id = id
 	save_path = path
-	for country in COUNTRIES: seats[country] = {"user": "", "name": "", "last_seen": -INF}
+	for country in countries: seats[country] = {"user": "", "name": "", "last_seen": -INF}
 	_load()
 	game.set_process(false)  # the phone autosave is replaced by the match save
 	game.mobile_start.hide()
@@ -161,12 +162,12 @@ func _hello(peer: Dictionary, message: Dictionary) -> void:
 ## else any free seat (join in progress).
 func admit(peer: Dictionary, user: String, name: String, wanted: String) -> void:
 	var country: = ""
-	for c in COUNTRIES:
+	for c in countries:
 		if seats[c].user == user: country = c
 	if country.is_empty():
-		if wanted in COUNTRIES and seats[wanted].user.is_empty(): country = wanted
+		if wanted in countries and seats[wanted].user.is_empty(): country = wanted
 		else:
-			for c in COUNTRIES:
+			for c in countries:
 				if seats[c].user.is_empty() and country.is_empty(): country = c
 	if country.is_empty():
 		_reject(peer, "This match is full")
@@ -196,11 +197,11 @@ func connected(country: String) -> bool:
 ## The AI plays empty seats and players away longer than inactive_seconds.
 func _update_seats() -> void:
 	var ai: Array = []
-	for country in COUNTRIES:
+	for country in countries:
 		var seat: Dictionary = seats[country]
 		if seat.user.is_empty() or (not connected(country) and now - float(seat.last_seen) > inactive_seconds): ai.append(country)
 	if ai == ai_seats: return
-	for country in COUNTRIES:
+	for country in countries:
 		if country in ai and not country in ai_seats and not seats[country].user.is_empty():
 			_broadcast({"t": "event", "text": "%s is away · the AI commands %s until they return" % [seats[country].name, country.capitalize()]})
 	ai_seats = ai
@@ -208,7 +209,7 @@ func _update_seats() -> void:
 
 func public_seats() -> Dictionary:
 	var result: = {}
-	for country in COUNTRIES:
+	for country in countries:
 		result[country] = {"name": seats[country].name, "online": connected(country), "ai": country in ai_seats}
 	return result
 
@@ -230,7 +231,7 @@ func _state(country: String, kind: String, full: bool) -> Dictionary:
 		if t.playable: borders.append([t.id, t.controller])
 	var own_jobs: Array = game.production.jobs.filter(func(job: Dictionary): return game.production.equipment(job.equipment).country == country)
 	var state: = {"t": kind, "time": game.clock.elapsed, "units": visible, "territories": borders, "at_war": rules.at_war, "winner": rules.winner, "victory_type": rules.victory_type,
-		"stockpile": game.production.stockpiles.get(country, {}), "jobs": own_jobs, "seats": public_seats()}
+		"market": game.trade.market.snapshot(country), "stockpile": game.production.stockpiles.get(country, {}), "jobs": own_jobs, "seats": public_seats()}
 	if full:
 		var talks: = rules.diplomacy.snapshot()
 		talks.messages = rules.diplomacy.inbox(country)
@@ -239,7 +240,7 @@ func _state(country: String, kind: String, full: bool) -> Dictionary:
 			if key.contains(">" + country + ":") or key.begins_with(country + ">"): mine[key] = rules.diplomacy.pending[key]
 		talks.pending = mine
 		var strategic: = {"stock": {country: rules.strategic.stock.get(country, {})}, "jobs": rules.strategic.jobs.filter(func(job: Dictionary): return job.country == country), "fallout": rules.strategic.fallout}
-		state.merge({"diplomacy": talks, "ai_countries": ai_seats, "guards": rules.guards.keys(), "research": game.research.snapshot(), "buildings": game.buildings.snapshot(), "victory": rules.victory.snapshot(), "annexation": rules.annexation.snapshot(), "strategic": strategic, "chronicle": rules.chronicle.snapshot()})
+		state.merge({"diplomacy": talks, "ai_countries": ai_seats, "guards": rules.guards.keys(), "research": game.research.snapshot(), "buildings": game.buildings.snapshot(), "victory": rules.victory.snapshot(), "annexation": rules.annexation.snapshot(), "strategic": strategic, "chronicle": rules.chronicle.snapshot(), "trade_convoys": game.trade.snapshot().convoys.filter(func(c): return c.country == country), "trade_routes": game.trade.routes_of(country).map(func(r): return {"id": r.id, "country": r.country, "partner": r.partner, "city": r.city, "mode": r.mode, "cargo": r.cargo, "timer": r.timer})})
 	return state
 
 ## Carries out one order for `country`. Returns "" or the reason it was refused.
@@ -272,6 +273,24 @@ func command(country: String, message: Dictionary) -> String:
 				var destination: = rules.retreat(units.stacks.members(unit), Vector2(unit.node.position.x, unit.node.position.z))
 				if destination != Vector2.INF: moved += units.command(country, [unit.id], "move", destination)
 			return "" if moved > 0 else "No friendly province to retreat to"
+		"market_resource":
+			return game.trade.market.list_resource(country, str(message.get("city", "")), str(message.get("cargo", "")), int(message.get("amount", 0)), int(message.get("price", 0)))
+		"market_unit":
+			return game.trade.market.list_unit(country, str(message.get("city", "")), str(message.get("unit", "")), int(message.get("price", 0)))
+		"market_interdict":
+			return game.trade.market.interdict(country,int(message.get("id",-1)),ids)
+		"market_buy":
+			return game.trade.market.buy(country, int(message.get("id", -1)), str(message.get("city", "")), str(message.get("mode", "")))
+		"market_cancel":
+			return game.trade.market.cancel(country, int(message.get("id", -1)))
+		"trade_open":
+			return game.trade.open_route(country, str(message.get("partner", "")), str(message.get("cargo", "")), str(message.get("city", "")))
+		"trade_close":
+			for route in game.trade.routes:
+				if int(route.id) == int(message.get("id", -1)) and route.country == country:
+					game.trade.close_route(route.id)
+					return ""
+			return "Choose your own trade route"
 		"guard":
 			# Sleep defence: the server's DefenceAI holds this player's land while they are away.
 			var on: = bool(message.get("on", false))
@@ -285,20 +304,20 @@ func command(country: String, message: Dictionary) -> String:
 			return ""
 		"propose":
 			var to: = str(message.get("to", ""))
-			if not to in COUNTRIES or to == country: return "Choose another country"
+			if not to in countries or to == country: return "Choose another country"
 			if not str(message.get("kind", "")) in ["peace", "right_of_way", "shared_vision", "trade", "coalition"]: return "Unknown proposal"
-			return talks.propose(country, to, message.kind, VictoryRules.standings(game.map.territories, rules.cities, COUNTRIES)).message.replace("Proposal sent", "")
+			return talks.propose(country, to, message.kind, VictoryRules.standings(game.map.territories, rules.cities, countries)).message.replace("Proposal sent", "")
 		"answer":
 			return talks.answer(country, str(message.get("from", "")), str(message.get("kind", "")), bool(message.get("accept", false)))
 		"embargo":
 			var to: = str(message.get("to", ""))
-			if not to in COUNTRIES or to == country: return "Choose another country"
+			if not to in countries or to == country: return "Choose another country"
 			talks.set_embargo(country, to, bool(message.get("on", true)))
 			return ""
 		"chat":
 			var to: = str(message.get("to", "all"))
 			var coalition: = talks.coalition_of(country)
-			if not (to == "all" or (to in COUNTRIES and to != country) or (not coalition.is_empty() and to == "coalition:" + coalition)): return "Choose who to write to"
+			if not (to == "all" or (to in countries and to != country) or (not coalition.is_empty() and to == "coalition:" + coalition)): return "Choose who to write to"
 			talks.post(country, to, str(message.get("text", "")))
 			return ""
 		"coalition_create": return talks.create_coalition(str(message.get("name", "")), country)
@@ -351,7 +370,7 @@ func _load() -> void:
 	game.session.restore(result.state, game.clock, game.map, game.units, game.rig)
 	var stored: Variant = JSON.parse_string(FileAccess.get_file_as_string(save_path.get_basename() + "_seats.json"))
 	if stored is Dictionary and stored.get("match", "") == match_id:
-		for country in COUNTRIES:
+		for country in countries:
 			var seat: Dictionary = stored.seats.get(country, {})
 			seats[country] = {"user": str(seat.get("user", "")), "name": str(seat.get("name", "")), "last_seen": -INF}
 

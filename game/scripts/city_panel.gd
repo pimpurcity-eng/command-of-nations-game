@@ -234,7 +234,7 @@ func show_tab(index: int) -> void:
 	for child in unit_list.get_children(): unit_list.remove_child(child); child.queue_free()
 	unit_rows.clear()
 	if index >= 0 and research != null:
-		var families: Array = buildings.economy.catalog.filter(func(spec: Dictionary): return spec.country == GameSession.player_country and ProductionGroups.index(spec) == index and ProductionGroups.offered(spec))
+		var families: Array = buildings.economy.catalog.filter(func(spec: Dictionary): return spec.country == GameSession.player_country and ProductionGroups.index(spec) == index and ProductionGroups.offered(spec) and not spec.get("research_only",false))
 		families.sort_custom(ProductionGroups.before)
 		for spec in families: _add_unit_row(spec)
 	if scroll != null: scroll.scroll_vertical = 0

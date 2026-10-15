@@ -1,13 +1,12 @@
 class_name TradeNetwork
 extends Node3D
-## Trade instead of a market (owner request 2026-10-13).
+## Neutral paid supply routes plus the player transport market (owner 2026-10-15).
 ## - A trade route runs from one of your cities to a trade partner:
 ##     by rail  - the city needs a train station, the line runs over your own land to the border;
 ##     by sea   - the city needs a naval base (coastal), tankers carry fuel, container ships the rest.
-## - Partners: neutral neighbours (always willing while you are not at war with them) and the
-##   other player when both have agreed a "trade" deal in Diplomacy and are at peace.
-## - Trains and ships really travel the route; each arrival delivers cargo, counted as income
-##   (so trade helps towards the economic victory). Bigger stations / naval bases carry more.
+## - Neutral partners sell imports; player-to-player sales use TransportMarket with escrow.
+## - Trains and ships carry paid cargo and can be attacked; bigger terminals carry more.
+##   Imported goods do not create victory income; net player exports do.
 ## - Rail transport: ground armies move twice as fast through friendly provinces that have a
 ##   train station (own provinces, coalition members and right-of-way partners).
 signal changed
@@ -33,6 +32,8 @@ const PARTNERS: = {
 
 static var active: TradeNetwork
 
+var market: TransportMarket
+
 var map: StrategicMap
 var armies: UnitSystem
 var production: ProductionSystem
@@ -54,11 +55,17 @@ func setup(terrain: StrategicMap, units: UnitSystem, economy: ProductionSystem, 
 	buildings = building_system
 	diplomacy = talks
 	active = self
+	market = TransportMarket.new()
+	market.network = self
+	market.changed.connect(func(): changed.emit())
 	buildings.changed.connect(_refresh_stations)
 	_refresh_stations()
 
 func _exit_tree() -> void:
 	if active == self: active = null
+	for cached in _models.values():
+		if is_instance_valid(cached[0]): cached[0].free()
+	_models.clear()
 
 # ---------------------------------------------------------------- partners and routes
 
@@ -67,7 +74,7 @@ func partners_for(country: String) -> Array:
 	var result: Array = []
 	for id in PARTNERS:
 		if country in PARTNERS[id]["for"]: result.append(id)
-	for other in ["russia", "ukraine"]:
+	for other in production.stockpiles:
 		if other != country: result.append(other)
 	return result
 
@@ -157,6 +164,8 @@ func routes_of(country: String) -> Array:
 	return routes.filter(func(r: Dictionary): return r.country == country)
 
 func open_route(country: String, partner: String, cargo: String, city_id: String = "") -> String:
+	if MatchClient.active != null: return MatchClient.active.send("trade_open", {"partner": partner, "cargo": cargo, "city": city_id})
+	if production.stockpiles.has(partner): return "Use Transport market for player-to-player cargo and equipment sales"
 	if not CARGO.has(cargo): return "Choose food, fuel, materials or electronics"
 	if routes_of(country).size() >= MAX_ROUTES_PER_COUNTRY: return "At most %d trade routes" % MAX_ROUTES_PER_COUNTRY
 	for r in routes_of(country):
@@ -169,6 +178,9 @@ func open_route(country: String, partner: String, cargo: String, city_id: String
 	return ""
 
 func close_route(id: int) -> void:
+	if MatchClient.active != null:
+		MatchClient.active.send("trade_close", {"id": id})
+		return
 	for i in range(routes.size() - 1, -1, -1):
 		if routes[i].id == id: routes.remove_at(i)
 	changed.emit()
@@ -180,7 +192,8 @@ func set_cargo(id: int, cargo: String) -> void:
 
 func delivery_amount(route: Dictionary) -> float:
 	var level: = buildings.level(route.city, "train_station" if route.mode == "rail" else "naval_base")
-	return CARGO[route.cargo] * maxi(1, level) * (SEA_BONUS if route.mode == "sea" else 1.0)
+	if route.mode == "sea" and market != null: level = market.capacity(route.city,"sea",route.cargo) / int(TransportMarket.CAPACITY.sea)
+	return CARGO[route.cargo] * clampi(level, 0, 5) * (SEA_BONUS if route.mode == "sea" else 1.0)
 
 ## Funds-equivalent value of a delivery (for income share / economic victory).
 static func value_of(cargo: String, amount: float) -> float:
@@ -190,12 +203,13 @@ static func value_of(cargo: String, amount: float) -> float:
 
 func advance(seconds: float) -> void:
 	if seconds <= 0: return
+	market.advance(seconds)
 	# Routes stop when their city is lost, the station is gone or the deal ends (war, embargo).
 	for i in range(routes.size() - 1, -1, -1):
 		var r: Dictionary = routes[i]
 		var city: = buildings.city(r.city)
 		var level: = buildings.level(r.city, "train_station" if r.mode == "rail" else "naval_base")
-		if city.is_empty() or not production.controlled(city, r.country) or level <= 0 or not agreement(r.country, r.partner):
+		if not PARTNERS.has(r.partner) or city.is_empty() or not production.controlled(city, r.country) or level <= 0 or not agreement(r.country, r.partner):
 			routes.remove_at(i)
 			changed.emit()
 			continue
@@ -206,6 +220,15 @@ func advance(seconds: float) -> void:
 	for i in range(convoys.size() - 1, -1, -1):
 		var c: Dictionary = convoys[i]
 		var speed: float = (RAIL_SPEED if c.mode == "rail" else SEA_SPEED) * 10.0 / DAY
+		_place(c)
+		c.attack_timer = float(c.get("attack_timer", 0.0)) + seconds
+		if c.attack_timer >= TransportMarket.ATTACK_PERIOD:
+			c.attack_timer = fmod(c.attack_timer, TransportMarket.ATTACK_PERIOD)
+			market._raid(c)
+		if c.health <= 0:
+			if is_instance_valid(c.node): c.node.queue_free()
+			convoys.remove_at(i)
+			continue
 		c.progress += speed * seconds
 		if c.progress >= c.length:
 			_arrive(c)
@@ -219,9 +242,16 @@ func advance(seconds: float) -> void:
 		for country in ai_countries: _ai_trade(country)
 
 func _depart(route: Dictionary) -> void:
-	var node: = _convoy_visual(route.mode, route.cargo)
+	# Neutral supply contracts are paid imports, never free resources.
+	var amount: = delivery_amount(route)
+	var bill: float = amount * float(SupplyExchange.PRICES[route.cargo].buy)
+	if amount <= 0 or production.stockpiles[route.country].funds < bill: return
+	production.stockpiles[route.country].funds -= bill
+	production.changed.emit()
+	var level: int = production.research.level(("tankers_" if route.cargo == "fuel" else "cargo_") + route.country) if production.research != null else 1
+	var node: = _convoy_visual(route.mode, route.cargo,route.country,level)
 	add_child(node)
-	var c: = {"route": route.id, "country": route.country, "partner": route.partner, "mode": route.mode, "cargo": route.cargo, "amount": delivery_amount(route), "node": node, "path": route.path, "progress": 0.0, "length": _length(route.path)}
+	var c: = {"route": route.id, "country": route.country, "partner": route.partner, "mode": route.mode, "cargo": route.cargo, "amount": amount, "vessel_level": level, "seller": route.country, "buyer": route.country, "health": 100.0, "attack_timer": 0.0, "node": node, "path": route.path, "progress": 0.0, "length": _length(route.path)}
 	convoys.append(c)
 	_place(c)
 
@@ -229,11 +259,7 @@ func _arrive(c: Dictionary) -> void:
 	var stock: Dictionary = production.stockpiles.get(c.country, {})
 	if stock.is_empty(): return
 	stock[c.cargo] = float(stock.get(c.cargo, 0.0)) + c.amount
-	production._earn(c.country, "funds", value_of(c.cargo, c.amount))
-	if not PARTNERS.has(c.partner) and production.stockpiles.has(c.partner):
-		var share: = value_of(c.cargo, c.amount) * PARTNER_SHARE
-		production.stockpiles[c.partner].funds += share
-		production._earn(c.partner, "funds", share)
+	# Imported goods were paid for at departure; they are not newly produced income.
 	production.changed.emit()
 	delivered.emit(c.country, c.partner, c.cargo, c.amount)
 
@@ -320,10 +346,16 @@ func _model(path: String, length: float) -> Node3D:
 	holder.add_child(copy)
 	return holder
 
-func _convoy_visual(mode: String, cargo: String) -> Node3D:
+func _convoy_visual(mode: String, cargo: String, country: String = "", level: int = 1) -> Node3D:
 	var root: = Node3D.new()
+	if mode == "air":
+		var plane: = _model("res://assets/library/arsenal/russia_il76md.glb", 0.55)
+		if plane != null: root.add_child(plane)
+		return root
 	if mode == "sea":
-		var ship: = _model("res://assets/library/transport/civil_tanker_t1_coastal.glb" if cargo == "fuel" else "res://assets/library/transport/civil_container_t1_feeder.glb", 0.55)
+		var fallback: String = "res://assets/library/transport/civil_tanker_t1_coastal.glb" if cargo == "fuel" else "res://assets/library/transport/civil_container_t1_feeder.glb"
+		var family: String = ("tankers_" if cargo == "fuel" else "cargo_") + country
+		var ship: = _model(EquipmentIdentity.research_tier(family,clampi(level,1,5)).get("model",fallback), 0.55)
 		if ship != null: root.add_child(ship)
 		return root
 	var cars: = ["res://assets/library/transport/train_diesel_locomotive.glb",
@@ -344,9 +376,16 @@ func snapshot() -> Dictionary:
 		var copy: Dictionary = r.duplicate()
 		copy.erase("path")
 		saved.append(copy)
-	return {"routes": saved, "next_id": next_id}
+	var cargo: Array = []
+	for convoy in convoys:
+		var record: Dictionary = convoy.duplicate(true)
+		record.erase("node")
+		record.path = convoy.path.map(func(p: Vector2): return [p.x,p.y])
+		cargo.append(record)
+	return {"routes": saved, "convoys": cargo, "next_id": next_id, "market": market.snapshot() if market != null else {}}
 
-func restore(state: Dictionary) -> void:
+func restore(state: Dictionary, restore_market: bool = true) -> void:
+	if restore_market and market != null: market.restore(state.get("market", {}))
 	for c in convoys:
 		if is_instance_valid(c.node): c.node.queue_free()
 	convoys.clear()
@@ -360,4 +399,11 @@ func restore(state: Dictionary) -> void:
 		route.id = int(r.id)
 		route.timer = float(r.get("timer", 0.0))
 		routes.append(route)
+	for saved in state.get("convoys", []):
+		var convoy: Dictionary = saved.duplicate(true)
+		convoy.path = saved.path.map(func(p): return Vector2(p[0],p[1]))
+		convoy.node = _convoy_visual(convoy.mode,convoy.cargo,convoy.country,int(convoy.get("vessel_level",1)))
+		add_child(convoy.node)
+		convoys.append(convoy)
+		_place(convoy)
 	changed.emit()

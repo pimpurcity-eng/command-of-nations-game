@@ -42,10 +42,11 @@ func run() -> void:
 	check(rules.victory.evaluate(rules, 1.0).is_empty(), "domination needs the land held for a game hour, not a moment")
 	var result: = rules.victory.evaluate(rules, VictoryRules.DOMINATION_HOLD)
 	check(result == ["russia", "domination"], "holding 60%% of foreign points for an hour wins by domination (%s)" % [result])
-	# Economic: very hard — 80% of income, 250k funds, capital, 7 days unbroken.
+	# Economic: double starting productive income, 250k funds, capital, 7 days unbroken.
 	game = await fresh_game()
 	rules = game.match_rules
 	var economy: ProductionSystem = rules.production
+	rules.victory.economic_baseline = {"russia": 1.0, "ukraine": 1.0}
 	var step: = day / 24.0
 	var elapsed: = 0.0
 	var won: Array = []
@@ -63,15 +64,16 @@ func run() -> void:
 	for hour in int(7 * 24 + 2):
 		won = earn.call(9.0, 1.0)
 		if not won.is_empty(): break
-	check(won == ["russia", "economic"], "80%% of income, 250k funds and the capital for 7 days wins an economic victory (%s)" % [won])
+	check(won == ["russia", "economic"], "double starting income, 250k funds and the capital for 7 days wins an economic victory (%s)" % [won])
 	game = await fresh_game()
 	rules = game.match_rules
 	rules.production.stockpiles.russia.funds = 300000.0
+	rules.victory.economic_baseline = {"russia": 100.0, "ukraine": 1.0}
 	for hour in 10:
 		rules.production.earned["russia"] = {"funds": 1000.0 * (hour + 1)}
 		rules.production.earned["ukraine"] = {"funds": 600.0 * (hour + 1)}
 		rules.victory.evaluate(rules, step)
-	check(not rules.victory.economic_held.has("russia"), "being merely richer (62% of income) does not count")
+	check(not rules.victory.economic_held.has("russia"), "income below twice the starting economy does not count")
 	# Points at the time limit.
 	rules.clock.elapsed = VictoryRules.TIME_LIMIT_DAYS * day
 	result = rules.victory.evaluate(rules, 1.0)

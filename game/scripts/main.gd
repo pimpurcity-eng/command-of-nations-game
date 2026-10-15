@@ -474,6 +474,7 @@ func _ready() -> void :
 	trade = TradeNetwork.new()
 	add_child(trade)
 	trade.setup(map, units, production, buildings, match_rules.diplomacy)
+	match_rules.diplomacy.changed.connect(railway.refresh)
 	_boot_mark("systems")
 	trade.ai_countries = [GameSession.opponent_country()]
 	match_rules.trade = trade
@@ -640,6 +641,13 @@ func _map_click(screen: Vector2, order: bool) -> void :
 		if destination != null: player_order(destination)
 		return
 	if attack_order:
+		var shipment_hit: = trade.market.pick_screen(rig.camera,screen) if trade != null else {}
+		if not shipment_hit.is_empty():
+			var error: = trade.market.interdict(GameSession.player_country,int(shipment_hit.id),units.command_ids)
+			hud.show_status("Intercept shipping lane ordered" if error.is_empty() else error)
+			attack_order = false
+			_set_order_mode(false)
+			return
 		var enemy_hit: = units.pick_screen(rig.camera, screen, true)
 		if not enemy_hit.is_empty() and units.units[enemy_hit.index].country != GameSession.player_country:
 			if units.attack_many(units.units[enemy_hit.index]) > 0:
@@ -652,6 +660,10 @@ func _map_click(screen: Vector2, order: bool) -> void :
 		var target: = map.pick(rig.camera, screen)
 		if target.is_empty(): hud.show_status("Choose an enemy army or province");return
 		player_order(target.position)
+		return
+	var convoy_hit: = trade.market.pick_screen(rig.camera,screen) if trade != null else {}
+	if not convoy_hit.is_empty() and not order and not order_mode:
+		hud.show_status("SHIPMENT #%d · %s · %d%% health · select an army, then Attack to intercept" % [convoy_hit.id,convoy_hit.mode,roundi(convoy_hit.health)])
 		return
 	var city_hit: = cities.pick_screen(screen)
 	if not order and not order_mode:

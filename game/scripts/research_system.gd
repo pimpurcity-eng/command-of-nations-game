@@ -101,6 +101,7 @@ func upgrade_reason(id: String, tier: int, country: String = "") -> String:
 	if country.is_empty(): country = GameSession.player_country
 	var spec: = economy.equipment(id)
 	if spec.is_empty() or spec.country != country: return "Choose your country's equipment"
+	if spec.get("research_only",false): return "Cargo capacity increases through the five research levels"
 	if tier < 1 or tier > 4: return "Choose an intermediate upgrade"
 	if level(id) < tier: return "Research this model first"
 	if refined(id,tier): return "Already upgraded"

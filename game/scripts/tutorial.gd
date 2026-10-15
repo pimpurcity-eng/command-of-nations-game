@@ -5,6 +5,7 @@ extends CanvasLayer
 ## once (remembered in user://settings.cfg); "Skip" ends it.
 const SETTINGS_PATH: = "user://settings.cfg"
 const STEPS: = [
+	["choose", "Choose your opening: build a peaceful economy or prepare a military campaign. Both can win."],
 	["select", "Tap one of your armies to select it."],
 	["move", "Now tap the map (or a city) to move it there. Ground armies travel along the roads."],
 	["play", "Tap Play (top right) to let time run. Orders happen in real time."],
@@ -13,6 +14,8 @@ const STEPS: = [
 	["war", "Ready? Select an army, tap Attack and then an enemy army. Attacking declares war."],
 	["victory", "Tap the ★ score (or More → Victory progress) to see how to win: domination, economy, elimination or points."],
 ]
+var chosen: = false
+var peaceful: = true
 var game: Node
 var step: = 0
 var panel: PanelContainer
@@ -45,9 +48,11 @@ func setup(main: Node, theme: Theme) -> void:
 	panel.offset_right = -12
 	panel.offset_top = 132
 	root.add_child(panel)
+	var column: = VBoxContainer.new()
+	panel.add_child(column)
 	var row: = HBoxContainer.new()
 	row.add_theme_constant_override("separation", 10)
-	panel.add_child(row)
+	column.add_child(row)
 	text = CowUI.label("", 18)
 	text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -57,6 +62,18 @@ func setup(main: Node, theme: Theme) -> void:
 	skip.custom_minimum_size = Vector2(80, 44)
 	skip.pressed.connect(finish)
 	row.add_child(skip)
+	var paths: = HBoxContainer.new()
+	column.add_child(paths)
+	for style in ["Economy", "Military"]:
+		var button: = Button.new()
+		button.text = style
+		button.custom_minimum_size.y = 44
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		button.pressed.connect(func():
+			peaceful = style == "Economy"
+			chosen = true
+			paths.hide())
+		paths.add_child(button)
 	_show()
 
 func _show() -> void:
@@ -67,12 +84,13 @@ func step_done(id: String) -> bool:
 	var units: UnitSystem = game.units
 	var mine: bool = units.selected >= 0 and units.units[units.selected].country == GameSession.player_country
 	match id:
+		"choose": return chosen
 		"select": return mine
 		"move": return mine and units.units[units.selected].get("moving", false)
 		"play": return not game.clock.paused
 		"city": return game.city_panel != null and game.city_panel.visible
 		"research": return game.research_panel != null and game.research_panel.visible
-		"war": return game.match_rules.at_war
+		"war": return peaceful or game.match_rules.at_war
 		"victory": return game.campaign_panel != null and game.campaign_panel.visible
 	return true
 

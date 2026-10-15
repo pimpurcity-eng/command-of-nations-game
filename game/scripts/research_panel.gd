@@ -396,6 +396,11 @@ func _append_upgrades(families: Array, level: int, cell_size: Vector2) -> void:
 	label_cell.custom_minimum_size = Vector2(56,104)
 	grid.add_child(label_cell)
 	for spec in families:
+		if spec.get("research_only",false):
+			var empty: = Control.new()
+			empty.custom_minimum_size = Vector2(cell_size.x,104)
+			grid.add_child(empty)
+			continue
 		var cell: = TechCell.new(true,true)
 		cell.custom_minimum_size = Vector2(cell_size.x,104)
 		var card: = Button.new()

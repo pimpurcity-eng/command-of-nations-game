@@ -33,18 +33,17 @@ func stations() -> Array:
 	for place in cities.cities:
 		if buildings.level(place.id,"train_station") > 0:
 			result.append({"id":place.id,"point":place.point,"country":navigation.controller_at(place.point)})
-	if buildings.provinces != null:
-		for id in buildings.provinces.levels:
-			if buildings.provinces.level(id,"train_station") <= 0: continue
-			var place: Dictionary = buildings.provinces.place(id)
-			if place.is_empty(): continue
-			result.append({"id":id,"point":place.point,"country":navigation.controller_at(place.point)})
 	return result
 
 func refresh() -> void:
 	var list: = stations()
 	var signature: String = ""
 	for s in list: signature += s.id + s.country + ";"
+	var talks: Diplomacy = cities.armies.diplomacy
+	if talks != null:
+		for i in list.size():
+			for j in range(i+1,list.size()):
+				if list[i].country != list[j].country and bool(talks.relation(list[i].country,list[j].country).get("trade",false)): signature += list[i].country + ">" + list[j].country
 	if signature == _signature: return
 	_signature = signature
 	for child in get_children(): remove_child(child);child.queue_free()
@@ -56,6 +55,7 @@ func refresh() -> void:
 		if not by_country.has(s.country): by_country[s.country] = []
 		by_country[s.country].append(s)
 	for country in by_country: _connect(country,by_country[country])
+	_connect_trade(list)
 	if links.is_empty(): return
 	_mark_served()
 	_draw()
@@ -181,3 +181,34 @@ static func _along(route: Array,lengths: Array,distance: float) -> Vector2:
 			var span: float = lengths[i+1]-lengths[i]
 			return route[i].lerp(route[i+1],clampf((distance-lengths[i])/maxf(span,0.000001),0.0,1.0))
 	return route[-1]
+
+## International rails join the closest accessible stations after a bilateral trade deal.
+## Both terminals must exist; sampled paths cannot cross water or hostile/closed borders.
+func _connect_trade(list: Array) -> void:
+	var talks: Diplomacy = cities.armies.diplomacy
+	if talks == null: return
+	var joined: Dictionary = {}
+	var candidates: Array = []
+	for i in list.size():
+		for j in range(i+1,list.size()):
+			if list[i].country == list[j].country: continue
+			candidates.append([list[i].point.distance_squared_to(list[j].point),list[i],list[j]])
+	candidates.sort_custom(func(a,b): return a[0] < b[0])
+	for pair in candidates:
+		var a: Dictionary = pair[1]; var b: Dictionary = pair[2]
+		var countries: Array = [a.country,b.country]; countries.sort()
+		var key: String = countries[0] + ":" + countries[1]
+		if joined.has(key) or talks.at_war(a.country,b.country) or not bool(talks.relation(a.country,b.country).get("trade",false)): continue
+		var route: Array = [a.point] + cities.armies.navigation.find_path(a.point,b.point)
+		if route.size() < 2 or route[-1].distance_to(b.point) > 0.3: continue
+		route[-1] = b.point
+		var valid: = true
+		for i in route.size()-1:
+			var steps: = maxi(1,ceili(route[i].distance_to(route[i+1])/0.15))
+			for j in steps+1:
+				var owner: String = cities.armies.navigation.controller_at(route[i].lerp(route[i+1],float(j)/steps))
+				if owner not in countries: valid = false; break
+			if not valid: break
+		if not valid: continue
+		links.append({"a":a.id,"b":b.id,"country":a.country,"route":route,"international":true})
+		joined[key] = true

@@ -316,8 +316,10 @@ func advance(seconds: float) -> void :
 		terrain.update_relations(at_war)
 		capture_progress.erase(territory.id)
 		report.emit(territory.title + " captured by " + occupant.capitalize())
-	for country in ["ukraine", "russia"]:
+	for country in production.stockpiles.keys() if production != null else ["ukraine", "russia"]:
 		var living: = false
+		if trade != null and trade.market != null:
+			living = trade.market.offers.any(func(o): return o.seller == country and not o.unit.is_empty()) or trade.market.shipments.any(func(c): return c.buyer == country and not c.unit.is_empty())
 		for unit in armies.units:
 			if unit.country == country:
 				living = true
@@ -331,7 +333,9 @@ func advance(seconds: float) -> void :
 				for city in cities:
 					if city.name == job.city and production.controlled(city, country): living = true
 		if not living:
-			end_match("russia" if country == "ukraine" else "ukraine", "elimination")
+			var survivors: Array = production.stockpiles.keys().filter(func(c): return c != country and _has_forces(c))
+			if survivors.size() != 1: continue
+			end_match(survivors[0], "elimination")
 			return
 	if clock.elapsed >= 2.5 and MatchClient.active == null:  # online, the server runs guard mode
 		for country in guards:
@@ -441,7 +445,7 @@ func restore(state: Dictionary) -> void :
 	for country in guards.keys(): guard_changed.emit(country, false)
 	guards.clear()
 	for country in state.get("guards", []):
-		if country is String and country in ["russia", "ukraine"]: set_guard(country, true)
+		if country is String and production != null and production.stockpiles.has(country): set_guard(country, true)
 	restore_guard_logs(state.get("guard_logs", {}))
 	armies.at_war = at_war
 	winner = state.winner
@@ -459,3 +463,15 @@ func restore(state: Dictionary) -> void :
 	espionage.restore(state.get("espionage", {}))
 	spy_ai_timer = clampf(float(state.get("spy_ai_timer", Espionage.HOUR * 6.0)), 0.0, Espionage.HOUR * 12.0)
 	diplomacy.relation(GameSession.player_country, GameSession.opponent_country()).war = at_war
+
+func _has_forces(country: String) -> bool:
+	if armies.units.any(func(u): return u.country == country and u.health > 0): return true
+	if trade != null and trade.market != null:
+		if trade.market.offers.any(func(o): return o.seller == country and not o.unit.is_empty()): return true
+		if trade.market.shipments.any(func(c): return c.buyer == country and not c.unit.is_empty()): return true
+	if production != null:
+		for job in production.jobs:
+			if str(job.get("country",production.equipment(job.equipment).get("country",""))) != country: continue
+			for city in cities:
+				if str(job.city) in [str(city.id),str(city.name)] and production.controlled(city,country): return true
+	return false

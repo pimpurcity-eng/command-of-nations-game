@@ -291,3 +291,8 @@ with open(PATH, "w") as f:
     f.write("\n")
 live = [e for e in catalog if not e.get("retired")]
 print(f"{len(live)} families ({len(catalog) - len(live)} retired); starters:", starters)
+
+# Preserve the owner’s five-level civilian naval research.
+from add_freight_research import apply as add_freight_research
+with open(PATH) as freight_file: freight_catalog = json.load(freight_file)
+with open(PATH, "w") as freight_file: json.dump(add_freight_research(freight_catalog), freight_file, indent=2, ensure_ascii=False); freight_file.write("\n")
