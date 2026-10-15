@@ -1,6 +1,12 @@
 # Warfront Mandate — what's left (after 0.52, 15 Oct 2026)
 
 ## Needs Matthew (one-time)
+0. **Account emails (5 minutes, Supabase dashboard).** Sign-up works now with the link email
+   (tap the link, then "I tapped the link - sign me in" in the game), but to send a 6-digit code instead:
+   - Authentication → URL Configuration → Site URL: `https://play.warfrontmandate.com`, and add the same address
+     under Redirect URLs.
+   - Authentication → Email Templates → "Confirm signup": paste `backend/email/confirm_signup.html`.
+     "Reset password": paste `backend/email/reset_password.html`. Save.
 1. **Switch on stats and alliances.** Supabase dashboard → SQL Editor → paste
    `backend/migrations/004_stats_alliances.sql` → Run. Until then the profile shows the old stats,
    the top-commander tabs fall back to XP, and Alliance says "being switched on".
