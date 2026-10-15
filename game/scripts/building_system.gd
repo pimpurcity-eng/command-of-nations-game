@@ -54,21 +54,27 @@ func cost(building_id: String, target: int) -> Dictionary:
 	var bill: Dictionary = {}
 	var definition: = spec(building_id)
 	if definition.is_empty(): return bill
-	for resource in ProductionSystem.RESOURCES: bill[resource] = ceili(float(definition.cost.get(resource, 0.0)) * (1.0 + 0.5 * maxi(0, target - 2)))
+	for resource in ProductionSystem.RESOURCES: bill[resource] = ceili(float(definition.cost.get(resource, 0.0)) * (1.0 + 0.5 * maxi(0, target - 1)))
 	return bill
-## Build times (owner 2026-10-14): level 1 takes about 15 real minutes, never more than 30 (barracks,
-## research centre, naval base, capitol), and every level after that takes 1.5 times longer.
-## A building can set "minutes" in buildings.json; otherwise its old "hours" maps to 15 / 20 / 30 minutes.
-const LEVEL_ONE_MINUTES: = {2: 15.0, 3: 20.0, 4: 30.0}
-const SLOWEST_LEVEL_ONE: = ["barracks"]
+## Owner 2026-10-15: construction times were too short. Honour actual data hours,
+## and grow each level by 1.5; the city/province's live construction rate applies once.
 const LEVEL_GROWTH: = 1.5
 static func level_one_minutes(building: Dictionary) -> float:
-	if building.has("minutes"): return minf(30.0, float(building.minutes))
-	if str(building.get("id", "")) in SLOWEST_LEVEL_ONE: return 30.0
-	return float(LEVEL_ONE_MINUTES.get(int(building.get("hours", 2)), 30.0))
+	return float(building.minutes) if building.has("minutes") else float(building.get("hours", 2.0)) * 60.0
 func duration(building_id: String, target: int) -> float:
 	var minutes: float = level_one_minutes(spec(building_id)) * pow(LEVEL_GROWTH, maxi(0, target - 1))
 	return minutes * 60.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
+func previous_cost(building_id: String, target: int) -> Dictionary:
+	var definition: = spec(building_id)
+	var source: Dictionary = definition.get("previous_cost", definition.get("cost", {}))
+	var bill: Dictionary = {}
+	for resource in ProductionSystem.RESOURCES: bill[resource] = ceili(float(source.get(resource, 0.0)) * (1.0 + 0.5 * maxi(0, target - 2)))
+	return bill
+func paid_cost(job: Dictionary) -> Dictionary:
+	var source: Dictionary = job.get("paid_cost", previous_cost(str(job.building), int(job.level)))
+	var bill: Dictionary = {}
+	for resource in ProductionSystem.RESOURCES: bill[resource] = source.get(resource, 0.0)
+	return bill
 func reason(city_id: String, building_id: String, country: String = "", check_resources: bool = true) -> String:
 	if city_id.begins_with("province:"): return provinces.reason(city_id,building_id,country,check_resources)
 	if country.is_empty(): country = GameSession.player_country
@@ -100,7 +106,7 @@ func enqueue(city_id: String, building_id: String, country: String = "") -> Stri
 	var target: = level(city_id, building_id) + 1
 	var bill: = cost(building_id, target)
 	for resource in ProductionSystem.RESOURCES: economy.stockpiles[country][resource] -= bill[resource]
-	jobs.append({"id": next_id, "city": city_id, "building": building_id, "level": target, "progress": 0.0, "country": country})
+	jobs.append({"id": next_id, "city": city_id, "building": building_id, "level": target, "progress": 0.0, "country": country, "paid_cost": bill})
 	next_id += 1
 	economy.changed.emit()
 	changed.emit()
@@ -112,7 +118,7 @@ func cancel(id: int, country: String = "") -> String:
 		if job.id != id: continue
 		if job.get("country", city(job.city).country.to_lower()) != country: return "This order belongs to another country"
 		var remaining: float = 1.0 - job.progress / duration(job.building, job.level)
-		var bill: = cost(job.building, job.level)
+		var bill: = paid_cost(job)
 		if job.get("paid", true):
 			for resource in ProductionSystem.RESOURCES: economy.stockpiles[country][resource] += floor(bill[resource] * remaining)
 		jobs.remove_at(i)
@@ -141,6 +147,7 @@ func advance(seconds: float) -> void :
 					if economy.stockpiles[country][resource] < bill[resource]: ready = false
 				if not ready: break
 				for resource in ProductionSystem.RESOURCES: economy.stockpiles[country][resource] -= bill[resource]
+				job.paid_cost = bill
 				job.paid = true
 			var total: = duration(job.building, job.level)
 			var speed: = construction_rate(place.id)
@@ -197,6 +204,7 @@ func validate(state: Variant) -> bool:
 		counts[job.city] = counts.get(job.city, 0) + 1
 		if counts[job.city] > 8: return false  # older saves queued up to eight
 		if not job.get("paid", true) is bool or ( not job.get("paid", true) and job.get("progress") != 0): return false
+		if job.has("paid_cost") and not EquipmentEconomy.valid_paid_cost(job.paid_cost): return false
 		var progress = job.get("progress")
 		if not (progress is float or progress is int) or not is_finite(float(progress)) or progress < 0 or progress >= duration(job.building, int(job.level)): return false
 	return true
@@ -213,10 +221,13 @@ func restore(state: Dictionary) -> void :
 		for place in economy.cities:
 			for id in state.levels[place.id]: levels[place.id][id] = int(state.levels[place.id][id])
 		jobs = state.jobs.duplicate(true)
+		for job in jobs:
+			if job.get("paid", true) and not job.has("paid_cost"): job.paid_cost = previous_cost(str(job.building), int(job.level))
 		next_id = int(state.next_id)
 	changed.emit()
 
 func schedule(city_id: String, building_id: String, country: String = "") -> String:
+	if MatchClient.active != null: return MatchClient.active.send("build_queue", {"city":city_id,"building":building_id})
 	if city_id.begins_with("province:"): return provinces.schedule(city_id,building_id,country)
 	if country.is_empty(): country = GameSession.player_country
 	var error: = reason(city_id, building_id, country, false)
@@ -276,23 +287,29 @@ func incoming_damage_factor(unit: Dictionary) -> float:
 
 ## Gold to finish the construction running in a city now (its first job), or 0 if none.
 func speedup_price(city_id: String) -> int:
-	for job in jobs:
-		if job.city == city_id: return GoldWallet.speedup((duration(job.building, job.level) - float(job.progress)) / maxf(construction_rate(city_id), 0.001))
-	return 0
-
-## Finishes the construction running in a city now, for gold.
-func finish_now(city_id: String, country: String) -> String:
+	return int(gold_quote(city_id).total)
+func gold_quote(city_id: String) -> Dictionary:
 	for job in jobs:
 		if job.city != city_id: continue
+		var country: String = job.get("country", economy.controller(city(city_id)))
+		var bill: = cost(job.building, job.level) if not job.get("paid", true) else {}
+		return GoldWallet.quote((duration(job.building, job.level) - float(job.progress)) / maxf(construction_rate(city_id), 0.001), bill, economy.stockpiles.get(country, {}))
+	return GoldWallet.quote(0)
+
+## Finishes the construction running in a city now, for gold.
+func finish_now(city_id: String, country: String, max_gold: int = -1, expected_job: int = -1) -> String:
+	if MatchClient.active != null: return MatchClient.active.send("gold_building", {"city":city_id,"max_gold":speedup_price(city_id) if max_gold < 0 else max_gold,"job":expected_job})
+	for job in jobs:
+		if job.city != city_id: continue
+		if expected_job >= 0 and int(job.id) != expected_job: return "The order changed; review it again"
 		if job.get("country", country) != country: return "Not your construction"
+		if not economy.controlled(city(city_id), country): return "Recover control of this city first"
 		var bill: = cost(job.building, job.level)
-		if not job.get("paid", true):
-			for resource in ProductionSystem.RESOURCES:
-				if economy.stockpiles[country][resource] < bill[resource]: return "Not enough " + resource + " to start it"
-		var error: = economy.spend_gold(country, speedup_price(city_id))
+		var error: = economy.pay_gold_quote(country, gold_quote(city_id), max_gold)
 		if not error.is_empty(): return error
 		if not job.get("paid", true):
-			for resource in ProductionSystem.RESOURCES: economy.stockpiles[country][resource] -= bill[resource]
+			GoldWallet.consume_available(economy.stockpiles[country], bill)
+			job.paid_cost = bill
 			job.paid = true
 		job.progress = duration(job.building, job.level)
 		advance(0.000001)

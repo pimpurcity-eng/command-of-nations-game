@@ -10,6 +10,7 @@ const CELL: = Vector2(150, 150)
 const TREE_CELL: = Vector2(162, 188)
 const CARD: = 128.0
 const DAY_COLUMN: = 56.0
+var unit_card: UnitDetailPanel
 var research: ResearchSystem
 var panel: PanelContainer
 var title: Label
@@ -33,6 +34,10 @@ var ui_timer: = 0.0
 
 func setup(system: ResearchSystem, theme: Theme) -> void:
 	research = system
+	unit_card = UnitDetailPanel.new()
+	add_child(unit_card)
+	unit_card.setup(theme)
+	visibility_changed.connect(func(): if not visible: unit_card.hide())
 	layer = 11
 	var root: = Control.new()
 	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -169,7 +174,17 @@ func setup(system: ResearchSystem, theme: Theme) -> void:
 		message.text = (EquipmentIdentity.title(selected_id) + " level " + EquipmentIdentity.roman_level(selected_level) + (" upgrade" if selected_upgrade else "") + " research started") if error.is_empty() else error
 		_refresh())
 	side.add_child(start)
-	detail = {"picture": picture, "rank": level_badge, "name": name_label, "costs": costs, "time": time, "start": start}
+	var gold: = CowUI.action("FINISH NOW", "")
+	gold.pressed.connect(func():
+		var purchase: Dictionary = gold.get_meta("purchase")
+		message.text = _system().buy_now(purchase.id,purchase.level,GameSession.player_country,purchase.refinement,purchase.max_gold)
+		_refresh())
+	side.add_child(gold)
+	detail = {"picture": picture, "rank": level_badge, "name": name_label, "costs": costs, "time": time, "start": start, "gold":gold}
+	picture.mouse_filter = Control.MOUSE_FILTER_STOP
+	picture.gui_input.connect(func(event: InputEvent):
+		if (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT) or (event is InputEventScreenTouch and event.pressed):
+			unit_card.open(selected_id, selected_level, _system()))
 	var footer: = HBoxContainer.new()
 	tree_view.add_child(footer)
 	message = CowUI.label("", 13, CowUI.GOLD)
@@ -373,7 +388,8 @@ func _build_tree() -> void:
 				selected_level = chosen_level
 				selected_upgrade = false
 				message.text = ""
-				_refresh())
+				_refresh()
+				unit_card.open(chosen_id, chosen_level, _system()))
 			cell.add_child(card)
 			var caption: = CowUI.label("Level " + EquipmentIdentity.roman_level(level), 15, Color("f4ecd8"))
 			caption.add_theme_font_override("font", CowUI.title_font())
@@ -444,6 +460,7 @@ func open_unit(id: String, level: int) -> void:
 	selected_upgrade = false
 	message.text = ""
 	_refresh()
+	unit_card.open(id, selected_level, _system())
 func _layout() -> void:
 	var size: = get_viewport().get_visible_rect().size
 	var width: = minf(760.0, size.x)
@@ -491,8 +508,11 @@ func _refresh() -> void:
 			system.cancel(id)
 			message.text = "Research cancelled · unused resources refunded"
 			_refresh())
-		CowUI.gold_button(slot.gold, system.speedup_price(job), func():
-			var error: String = system.finish_now(id, GameSession.player_country)
+		var gold_price: = system.speedup_price(job)
+		var target: = int(job.level)
+		var refinement: bool = job.get("refinement",false)
+		CowUI.gold_button(slot.gold, gold_price, func():
+			var error: String = system.buy_now(id, target, GameSession.player_country, refinement, gold_price)
 			message.text = error if not error.is_empty() else "Research finished with gold"
 			_refresh())
 	if not tree_view.visible or selected_id.is_empty(): return
@@ -526,6 +546,13 @@ func _refresh() -> void:
 	for child in detail.costs.get_children(): detail.costs.remove_child(child);child.queue_free()
 	var caption: Label = detail.start.get_meta("caption")
 	var state: = _state(selected_id, selected_level,selected_upgrade)
+	detail.gold.visible = system.gold_reason(selected_id,selected_level,GameSession.player_country,selected_upgrade).is_empty()
+	if detail.gold.visible:
+		var price: = system.gold_quote(selected_id,selected_level,selected_upgrade)
+		detail.gold.get_meta("caption").text = "%s GOLD" % StrategyHUD._thousands(int(price.total))
+		detail.gold.tooltip_text = GoldWallet.explanation(price)
+		detail.gold.disabled = int(system.economy.gold.get(GameSession.player_country,0)) < int(price.total)
+		detail.gold.set_meta("purchase",{"id":selected_id,"level":selected_level,"refinement":selected_upgrade,"max_gold":int(price.total)})
 	if state == "done":
 		detail.time.text = ""
 		caption.text = "RESEARCHED"
@@ -535,7 +562,10 @@ func _refresh() -> void:
 	var stock: Dictionary = system.economy.stockpiles[GameSession.player_country]
 	for resource in ProductionSystem.RESOURCES:
 		if bill[resource] > 0: detail.costs.add_child(CowUI.cost(resource, bill[resource], stock[resource] >= bill[resource]))
-	detail.time.text = " " + SimulationClock.duration((system.upgrade_duration(selected_level) if selected_upgrade else system.duration(selected_level)) / maxf(system.rate(GameSession.player_country), 0.01))
+	detail.time.text = " " + SimulationClock.duration((system.upgrade_duration(selected_level, selected_id) if selected_upgrade else system.duration(selected_level, selected_id)) / maxf(system.rate(GameSession.player_country), 0.01))
+	var selected_job: = system.active(selected_id)
+	if state == "active" and not selected_job.is_empty():
+		detail.time.text = " " + SimulationClock.duration((system.job_duration(selected_job) - float(selected_job.progress)) / maxf(system.rate(GameSession.player_country), 0.01))
 	var reason: = system.upgrade_reason(selected_id,selected_level) if selected_upgrade else system.reason(selected_id, selected_level)
 	detail.start.disabled = not reason.is_empty()
 	detail.start.tooltip_text = reason

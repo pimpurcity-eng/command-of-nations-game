@@ -21,8 +21,7 @@ static func sale_allowed(unit: Dictionary) -> bool:
 	return UnitClasses.of(unit) != "infantry" and not CombatSystem.nuclear(unit) and not EquipmentIdentity.spec(str(unit.get("equipment_id", ""))).is_empty()
 
 static func minimum_price(unit: Dictionary) -> int:
-	var spec: = EquipmentIdentity.spec(str(unit.get("equipment_id", "")))
-	return maxi(1, ceili(VictoryRules.value(spec.get("cost", {})) * (1.0 + 0.12 * (int(unit.get("level", 1)) - 1))))
+	return WorldMarketPrices.new().equipment(unit)
 
 static func load_size(unit: Dictionary) -> int:
 	return 4 if UnitClasses.of(unit) == "heavy" else 2 if UnitClasses.of(unit) == "air" else 1

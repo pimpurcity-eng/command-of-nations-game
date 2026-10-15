@@ -21,11 +21,12 @@ func resource(cargo: String) -> float:
 
 func equipment(unit: Dictionary) -> int:
 	var spec: = EquipmentIdentity.spec(str(unit.get("equipment_id","")))
+	var bill: = EquipmentEconomy.cost(spec, int(unit.get("level", 1)))
 	var total: = 0.0
-	for cargo in spec.get("cost",{}):
+	for cargo in bill:
 		var value: float = 1.0 if cargo == "funds" else 3.0 if cargo == "manpower" else resource(cargo)
-		total += float(spec.cost[cargo]) * value
-	return maxi(1,ceili(total * (1.0 + 0.12 * (int(unit.get("level",1))-1)) * factor(item(unit))))
+		total += float(bill[cargo]) * value
+	return maxi(1,ceili(total * factor(item(unit))))
 
 func record(seller: String, buyer: String, cargo: String, amount: float, unit: Dictionary) -> void:
 	if seller == buyer: return

@@ -6,9 +6,9 @@ extends RefCounted
 ## FALLOUT_OUTPUT for the fallout time. Damage hits every army in the radius, your own too.
 const DAY: = VictoryRules.DAY
 const WEAPONS: = {
-	"chemical": {"name": "Chemical missile", "unlock_day": 12, "build": DAY * 0.5, "radius": 1.0, "damage": 45.0, "armor_factor": 0.3, "fallout": 0.0,
+	"chemical": {"name": "Chemical missile", "unlock_day": 12, "build": DAY * 0.5, "radius": 1.0, "damage": 12.0, "armor_factor": 0.3, "fallout": 0.0,
 		"cost": {"funds": 60000.0, "materials": 15000.0, "electronics": 8000.0, "fuel": 6000.0, "manpower": 0.0}},
-	"nuclear": {"name": "Nuclear missile", "unlock_day": 25, "build": DAY * 2.0, "radius": 1.6, "damage": 90.0, "stack_pool": 1000.0, "armor_factor": 0.85, "fallout": DAY * 3.0,
+	"nuclear": {"name": "Nuclear missile", "unlock_day": 25, "build": DAY * 2.0, "radius": 1.6, "damage": 90.0, "stack_pool": 250.0, "armor_factor": 0.85, "fallout": DAY * 3.0,
 		"cost": {"funds": 250000.0, "materials": 50000.0, "electronics": 40000.0, "fuel": 25000.0, "manpower": 5000.0}},
 }
 const ABM_RANGE: = 3.5
@@ -93,7 +93,7 @@ func launch(country: String, kind: String, target: Vector2, armies: UnitSystem, 
 			if t.playable and t.center.distance_to(target) <= weapon.radius * 1.5: fallout[t.id] = weapon.fallout
 	return {"ok": true, "intercepted": false, "hits": hits, "kind": kind, "message": "%s struck · %d armies hit" % [weapon.name, hits]}
 
-## Damage (unit id -> health lost) from a nuclear or chemical blast at `target`.
+## Damage (unit id -> saved condition percentage lost; pool is actual HP) from a nuclear or chemical blast at `target`.
 static func blast(kind: String, target: Vector2, units: Array) -> Dictionary:
 	var weapon: Dictionary = WEAPONS[kind]
 	var result: = {}
@@ -115,7 +115,7 @@ static func blast(kind: String, target: Vector2, units: Array) -> Dictionary:
 		var falloff: float = 1.0 - 0.5 * float(stacks[key].distance) / float(weapon.radius)
 		var share: float = float(weapon.get("stack_pool", weapon.damage)) * falloff / members.size() if weapon.has("stack_pool") else weapon.damage * falloff
 		for unit in members:
-			result[unit.id] = share * (weapon.armor_factor if unit.visual_kind in ["armor", "naval"] else 1.0)
+			result[unit.id] = UnitStats.condition_damage(unit, share * (weapon.armor_factor if unit.visual_kind in ["armor", "naval"] else 1.0))
 	return result
 
 func snapshot() -> Dictionary:

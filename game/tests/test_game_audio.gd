@@ -85,7 +85,7 @@ func run() -> void:
 	GameAudio.load_settings()
 	check(not GameAudio.sound_enabled and not GameAudio.music_enabled, "the switches are remembered")
 	game.hud._show_audio_items()
-	check(game.hud.navigation_menu.get_popup().get_item_text(31) == "Sound: OFF" and game.hud.navigation_menu.get_popup().get_item_text(32) == "Music: OFF", "the More menu shows Sound and Music switches")
+	check(game.hud.settings_menu.get_item_text(game.hud.settings_menu.get_item_index(31)) == "Sound: OFF" and game.hud.settings_menu.get_item_text(game.hud.settings_menu.get_item_index(32)) == "Music: OFF", "Settings shows Sound and Music switches")
 	audio.set_sound(true)
 	audio.set_music(true)
 	print("RESULT failures=", failures.size())

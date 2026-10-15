@@ -31,7 +31,7 @@ func run() -> void:
 	check(is_equal_approx(doctrine_ad_ru, 1.15) and doctrine_ad_ru > doctrine_ad_eu and Doctrine.combat_factor({"country": "russia", "visual_kind": "missile_launcher"}, "attack") > Doctrine.combat_factor({"country": "ukraine", "visual_kind": "missile_launcher"}, "attack"), "Russian air defence and rockets beat European ones")
 	check(Doctrine.combat_factor({"country": "ukraine", "visual_kind": "armor"}, "attack") > Doctrine.combat_factor({"country": "russia", "visual_kind": "armor"}, "attack") and is_equal_approx(Doctrine.combat_factor({"country": "ukraine", "visual_kind": "infantry"}, "defense"), 1.10), "European tanks are better; European armies defend +10%")
 	check(Doctrine.DOCTRINES.keys() == ["russian", "european", "american", "chinese"], "four doctrines: Russian, European, American, Chinese")
-	check(is_equal_approx(game.research.rate("ukraine"), 1.15) and is_equal_approx(game.research.rate("russia"), 0.9), "European research is 15% faster; Russian research 10% slower (doctrine)")
+	check(is_equal_approx(game.research.rate("ukraine"), 1.0 / 0.85) and is_equal_approx(game.research.rate("russia"), 0.9), "European research takes 15% less time; Russian research rate is 10% slower (doctrine)")
 	check(is_equal_approx(Doctrine.combat_factor({"country": "united_states", "visual_kind": "fighter"}, "attack"), 1.15) and Doctrine.stealth({"country": "united_states", "visual_kind": "fighter"}) and not Doctrine.stealth({"country": "ukraine", "visual_kind": "fighter"}), "Western aircraft are stronger and stealthy")
 	# Stealth and radar.
 	units.fog_enabled = true

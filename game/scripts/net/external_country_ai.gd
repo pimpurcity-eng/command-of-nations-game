@@ -100,8 +100,9 @@ func candidates(country: String) -> Array:
 			var ready: bool = not game.production.jobs.any(func(j): return j.city == city.name)
 			for building in spec.get("building_requirements",{}):
 				if game.buildings.level(city.id,building) < int(spec.building_requirements[building]): ready = false
-			for cargo in spec.cost:
-				if float(game.production.stockpiles[country].get(cargo,0)) < float(spec.cost[cargo]): ready = false
+			var bill: Dictionary = game.production.cost(spec.id)
+			for cargo in bill:
+				if float(game.production.stockpiles[country].get(cargo,0)) < float(bill[cargo]): ready = false
 			if ready:
 				result.append({"label":"Produce %s at %s" % [spec.name,city.name],"cmd":{"op":"produce","equipment":spec.id,"city":city.name}})
 				added += 1

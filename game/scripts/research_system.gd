@@ -3,7 +3,9 @@ extends RefCounted
 signal changed
 signal completed(equipment_id: String, country: String)
 const DAYS: = [1, 1, 2, 4, 6]
-const HOURS: = [1, 2, 4, 6, 8]  # level 1 must now be researched too (owner 2026-10-13)
+const HOURS: = [2, 4, 8, 12, 18]
+const REFINEMENT_HOURS: = [2, 3, 5, 8]
+const COST_FACTORS: = [0.4, 0.65, 0.95, 1.3, 1.7]
 const SLOTS: = 2
 var economy: ProductionSystem
 var clock: SimulationClock
@@ -40,14 +42,15 @@ func unlock_day(id: String, target: int) -> int:
 	return int(days[clampi(target - 1, 0, days.size() - 1)])
 func level(id: String) -> int:
 	return int(levels.get(id, initial_level(economy.equipment(id)) if economy != null else 1))
-func duration(target: int) -> float:
-	return HOURS[target - 1] * 3600.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
+func duration(target: int, id: String = "") -> float:
+	var complexity: = float(economy.equipment(id).get("research_factor", 1.0)) if economy != null and not id.is_empty() else 1.0
+	return HOURS[clampi(target - 1, 0, 4)] * complexity * 3600.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
 func cost(id: String, target: int) -> Dictionary:
 	var result: Dictionary = {}
 	var spec: = economy.equipment(id)
 	if spec.is_empty(): return result
 	for resource in ProductionSystem.RESOURCES:
-		result[resource] = ceili(float(spec.cost.get(resource, 0.0)) * maxf(0.3, 0.5 + 0.3 * (target - 2)))
+		result[resource] = ceili(float(spec.cost.get(resource, 0.0)) * COST_FACTORS[clampi(target - 1, 0, 4)])
 	return result
 func active(id: String) -> Dictionary:
 	for job in jobs:
@@ -59,7 +62,7 @@ func rate(country: String) -> float:
 	return Doctrine.research_factor(country)
 func capital_status(_country: String = "") -> String:
 	return "National research · " + str(SLOTS) + " research slots"
-func reason(id: String, target: int, country: String = "") -> String:
+func reason(id: String, target: int, country: String = "", check_resources: bool = true) -> String:
 	if country.is_empty(): country = GameSession.player_country
 	var spec: = economy.equipment(id)
 	if spec.is_empty() or spec.country != country: return "Choose your country's equipment"
@@ -74,8 +77,9 @@ func reason(id: String, target: int, country: String = "") -> String:
 	for job in jobs:
 		if economy.equipment(job.equipment).country == country: count += 1
 	if count >= SLOTS: return "Both research slots are occupied"
-	for resource in ProductionSystem.RESOURCES:
-		if economy.stockpiles[country][resource] < cost(id, target)[resource]: return "Insufficient " + resource
+	if check_resources:
+		for resource in ProductionSystem.RESOURCES:
+			if economy.stockpiles[country][resource] < cost(id, target)[resource]: return "Insufficient " + resource
 	return ""
 func start(id: String, target: int, country: String = "") -> String:
 	if MatchClient.active != null: return MatchClient.active.send("research", {"id": id, "target": target})
@@ -83,7 +87,7 @@ func start(id: String, target: int, country: String = "") -> String:
 	var error: = reason(id, target, country)
 	if not error.is_empty(): return error
 	for resource in ProductionSystem.RESOURCES: economy.stockpiles[country][resource] -= cost(id, target)[resource]
-	jobs.append({"equipment": id, "level": target, "progress": 0.0})
+	jobs.append({"equipment": id, "level": target, "progress": 0.0, "paid_cost": cost(id, target)})
 	economy.changed.emit()
 	changed.emit()
 	return ""
@@ -91,13 +95,14 @@ func refined(id: String, tier: int) -> bool:
 	return refinements.get(id,{}).get(str(tier),false)
 func upgrade_day(id: String, tier: int) -> int:
 	return ceili((unlock_day(id,tier)+unlock_day(id,mini(5,tier+1)))/2.0)
-func upgrade_duration(tier: int) -> float:
-	return tier * 3600.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
+func upgrade_duration(tier: int, id: String = "") -> float:
+	var complexity: = float(economy.equipment(id).get("research_factor", 1.0)) if economy != null and not id.is_empty() else 1.0
+	return REFINEMENT_HOURS[clampi(tier - 1, 0, 3)] * complexity * 3600.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
 func upgrade_cost(id: String, tier: int) -> Dictionary:
 	var result: Dictionary = {}
 	for resource in ProductionSystem.RESOURCES: result[resource] = ceili(float(economy.equipment(id).cost.get(resource, 0.0)) * (0.2+0.1*(tier-1)))
 	return result
-func upgrade_reason(id: String, tier: int, country: String = "") -> String:
+func upgrade_reason(id: String, tier: int, country: String = "", check_resources: bool = true) -> String:
 	if country.is_empty(): country = GameSession.player_country
 	var spec: = economy.equipment(id)
 	if spec.is_empty() or spec.country != country: return "Choose your country's equipment"
@@ -109,20 +114,22 @@ func upgrade_reason(id: String, tier: int, country: String = "") -> String:
 	if not active(id).is_empty(): return "This family is already being researched"
 	if jobs.filter(func(j):return economy.equipment(j.equipment).country == country).size() >= SLOTS: return "Both research slots are occupied"
 	var bill: = upgrade_cost(id,tier)
-	for resource in bill:
-		if economy.stockpiles[country][resource] < bill[resource]: return "Insufficient "+resource
+	if check_resources:
+		for resource in bill:
+			if economy.stockpiles[country][resource] < bill[resource]: return "Insufficient "+resource
 	return ""
 func start_upgrade(id: String, tier: int, country: String = "") -> String:
+	if MatchClient.active != null: return MatchClient.active.send("research_upgrade", {"id":id,"target":tier})
 	if country.is_empty(): country = GameSession.player_country
 	var error: = upgrade_reason(id,tier,country)
 	if not error.is_empty(): return error
 	var bill: = upgrade_cost(id,tier)
 	for resource in bill: economy.stockpiles[country][resource] -= bill[resource]
-	jobs.append({"equipment":id,"level":tier,"refinement":true,"progress":0.0})
+	jobs.append({"equipment":id,"level":tier,"refinement":true,"progress":0.0,"paid_cost":bill})
 	economy.changed.emit();changed.emit()
 	return ""
 func job_duration(job: Dictionary) -> float:
-	return upgrade_duration(int(job.level)) if job.get("refinement",false) else duration(int(job.level))
+	return upgrade_duration(int(job.level), str(job.equipment)) if job.get("refinement",false) else duration(int(job.level), str(job.equipment))
 func job_cost(job: Dictionary) -> Dictionary:
 	return upgrade_cost(job.equipment,int(job.level)) if job.get("refinement",false) else cost(job.equipment,int(job.level))
 func cancel(id: String, country: String = "") -> void :
@@ -132,7 +139,8 @@ func cancel(id: String, country: String = "") -> void :
 	for i in jobs.size():
 		if jobs[i].equipment != id: continue
 		var remaining: float = 1.0 - jobs[i].progress / job_duration(jobs[i])
-		for resource in ProductionSystem.RESOURCES: economy.stockpiles[country][resource] += floor(job_cost(jobs[i])[resource] * remaining)
+		var bill: Dictionary = jobs[i].get("paid_cost", _previous_job_cost(jobs[i]))
+		for resource in ProductionSystem.RESOURCES: economy.stockpiles[country][resource] += floor(float(bill.get(resource, 0.0)) * remaining)
 		jobs.remove_at(i)
 		economy.changed.emit()
 		changed.emit()
@@ -171,9 +179,10 @@ func upgrade(unit: Dictionary) -> String:
 		if member.moving or member.engaged or member.get("upgrade_remaining", 0.0) > 0 or member.get("refuel_remaining", 0.0) > 0: return "Stop this army and leave combat before upgrading"
 		if member.get("level", 1) >= level(member.equipment_id): continue
 		eligible.append(member)
-		var spec: = economy.equipment(member.equipment_id)
-		for resource in ProductionSystem.RESOURCES: bill[resource] += ceil(float(spec.cost.get(resource, 0.0)) * 0.5)
-		duration_seconds = maxf(duration_seconds, spec.seconds * 0.5)
+		var target: = level(member.equipment_id)
+		var unit_cost: = economy.cost(member.equipment_id, target)
+		for resource in ProductionSystem.RESOURCES: bill[resource] += ceil(float(unit_cost[resource]) * 0.5)
+		duration_seconds = maxf(duration_seconds, economy.duration(member.equipment_id, target) * 0.5)
 	if eligible.is_empty(): return "This army already has the highest researched levels"
 	for resource in ProductionSystem.RESOURCES:
 		if economy.stockpiles[GameSession.player_country][resource] < bill[resource]: return "Insufficient " + resource
@@ -208,6 +217,7 @@ func validate(state: Variant) -> bool:
 		var target = job.get("level")
 		if not (target is int or target is float) or not is_finite(float(target)) or target != floor(target): return false
 		if job.has("refinement") and not job.refinement is bool: return false
+		if job.has("paid_cost") and not EquipmentEconomy.valid_paid_cost(job.paid_cost): return false
 		if job.get("refinement",false):
 			if target < 1 or target > 4 or target > int(state.levels.get(job.equipment,1)) or saved_refinements.get(job.equipment,{}).get(str(int(target)),false): return false
 		elif target < 1 or target > 5 or target != int(state.levels.get(job.equipment, initial_level(spec)))+1: return false
@@ -220,7 +230,16 @@ func restore(state: Dictionary) -> void :
 	# Families added after a save was made start at their normal opening level.
 	for id in levels: levels[id] = int(state.get("levels", {}).get(id, initial_level(economy.equipment(id))))
 	jobs = state.get("jobs", []).duplicate(true)
+	for job in jobs:
+		if not job.has("paid_cost"): job.paid_cost = _previous_job_cost(job)
 	changed.emit()
+
+func _previous_job_cost(job: Dictionary) -> Dictionary:
+	var bill: = EquipmentEconomy.previous_cost(economy.equipment(str(job.equipment)))
+	var target: = int(job.level)
+	var factor: = (0.2 + 0.1 * (target - 1)) if job.get("refinement", false) else maxf(0.3, 0.5 + 0.3 * (target - 2))
+	for resource in bill: bill[resource] = ceili(float(bill[resource]) * factor)
+	return bill
 
 ## Gold to finish a running research now.
 func speedup_price(job: Dictionary) -> int:
@@ -228,13 +247,51 @@ func speedup_price(job: Dictionary) -> int:
 	return GoldWallet.speedup((job_duration(job) - float(job.progress)) / maxf(rate(country), 0.001))
 
 ## Finishes the research of `id` now, for gold.
-func finish_now(id: String, country: String) -> String:
+func finish_now(id: String, country: String, max_gold: int = -1) -> String:
+	if MatchClient.active != null:
+		var job: = active(id)
+		if job.is_empty(): return "Nothing is being researched"
+		return MatchClient.active.send("gold_research", {"id":id,"target":int(job.level),"refinement":job.get("refinement",false),"max_gold":speedup_price(job) if max_gold < 0 else max_gold})
 	for job in jobs:
 		if job.equipment != id: continue
 		if economy.equipment(id).country != country: return "Not your research"
-		var error: = economy.spend_gold(country, speedup_price(job))
+		var error: = economy.pay_gold_quote(country, GoldWallet.quote((job_duration(job) - float(job.progress)) / maxf(rate(country), 0.001)), max_gold)
 		if not error.is_empty(): return error
 		job.progress = job_duration(job)
 		advance(0.000001)
 		return ""
 	return "Nothing is being researched"
+
+func gold_reason(id: String, target: int, country: String = "", refinement: bool = false) -> String:
+	if country.is_empty(): country = GameSession.player_country
+	var job: = active(id)
+	if not job.is_empty() and int(job.level) == target and bool(job.get("refinement",false)) == refinement:
+		return "" if economy.equipment(id).country == country else "Choose your country's equipment"
+	return upgrade_reason(id,target,country,false) if refinement else reason(id,target,country,false)
+
+func gold_quote(id: String, target: int, refinement: bool = false) -> Dictionary:
+	var country: String = economy.equipment(id).get("country", "")
+	var job: = active(id)
+	if not job.is_empty() and int(job.level) == target and bool(job.get("refinement",false)) == refinement:
+		return GoldWallet.quote((job_duration(job) - float(job.progress)) / maxf(rate(country), 0.001))
+	var work: = upgrade_duration(target,id) if refinement else duration(target,id)
+	var bill: = upgrade_cost(id,target) if refinement else cost(id,target)
+	return GoldWallet.quote(work / maxf(rate(country), 0.001), bill, economy.stockpiles.get(country, {}))
+
+## Buy only missing resources, consume the available remainder, and finish eligible research.
+func buy_now(id: String, target: int, country: String = "", refinement: bool = false, max_gold: int = -1) -> String:
+	if country.is_empty(): country = GameSession.player_country
+	if MatchClient.active != null: return MatchClient.active.send("gold_research", {"id":id,"target":target,"refinement":refinement,"max_gold":int(gold_quote(id,target,refinement).total) if max_gold < 0 else max_gold})
+	var why: = gold_reason(id,target,country,refinement)
+	if not why.is_empty(): return why
+	if not active(id).is_empty(): return finish_now(id,country,max_gold)
+	var error: = economy.pay_gold_quote(country, gold_quote(id,target,refinement), max_gold)
+	if not error.is_empty(): return error
+	GoldWallet.consume_available(economy.stockpiles[country], upgrade_cost(id,target) if refinement else cost(id,target))
+	if refinement:
+		if not refinements.has(id): refinements[id] = {}
+		refinements[id][str(target)] = true
+	else: levels[id] = target
+	completed.emit(id,country)
+	economy.changed.emit(); changed.emit()
+	return ""

@@ -238,7 +238,7 @@ func _state(country: String, kind: String, full: bool) -> Dictionary:
 		if t.playable: borders.append([t.id, t.controller])
 	var own_jobs: Array = game.production.jobs.filter(func(job: Dictionary): return game.production.equipment(job.equipment).country == country)
 	var state: = {"t": kind, "time": game.clock.elapsed, "units": visible, "territories": borders, "at_war": rules.at_war, "winner": rules.winner, "victory_type": rules.victory_type,
-		"market": game.trade.market.snapshot(country), "stockpile": game.production.stockpiles.get(country, {}), "jobs": own_jobs, "seats": public_seats()}
+		"market": game.trade.market.snapshot(country), "stockpile": game.production.stockpiles.get(country, {}), "gold":int(game.production.gold.get(country,0)), "jobs": own_jobs, "seats": public_seats()}
 	if full:
 		var talks: = rules.diplomacy.snapshot()
 		talks.messages = rules.diplomacy.inbox(country)
@@ -344,6 +344,30 @@ func command(country: String, message: Dictionary) -> String:
 			var equipment_id: = str(message.get("equipment", ""))
 			if game.production.equipment(equipment_id).get("country", "") != country: return "Choose your country's equipment"
 			return game.production.enqueue(equipment_id, str(message.get("city", "")))
+		"produce_queue":
+			var equipment_id: = str(message.get("equipment", ""))
+			if game.production.equipment(equipment_id).get("country", "") != country: return "Choose your country's equipment"
+			return game.production.schedule(equipment_id, str(message.get("city", "")))
+		"build_queue":
+			return game.buildings.schedule(str(message.get("city", "")), str(message.get("building", "")), country)
+		"gold_resource":
+			return game.production.buy_with_gold(country, str(message.get("resource", "")), int(message.get("quantity", 0)))
+		"gold_unit":
+			if int(message.get("max_gold",-1)) < 0 or int(message.get("job",-1)) < 0: return "Review the gold price first"
+			return game.production.finish_unit_now(str(message.get("city","")),country,int(message.max_gold),int(message.job))
+		"gold_building":
+			if int(message.get("max_gold",-1)) < 0 or int(message.get("job",-1)) < 0: return "Review the gold price first"
+			return game.buildings.finish_now(str(message.get("city","")),country,int(message.max_gold),int(message.job))
+		"gold_research":
+			if int(message.get("max_gold",-1)) < 0: return "Review the gold price first"
+			return game.research.buy_now(str(message.get("id","")),int(message.get("target",0)),country,bool(message.get("refinement",false)),int(message.max_gold))
+		"gold_hack":
+			var enemy: = str(message.get("enemy",""))
+			if enemy not in countries or enemy == country or int(message.get("max_gold",-1)) < 0: return "Choose an enemy and review the gold price"
+			var city: Dictionary = game.buildings.city(str(message.get("city","")))
+			return rules.espionage.hack(country,str(message.get("kind","")),city,game.production.controller(city) if not city.is_empty() else "",enemy,int(game.production.gold.get(country,0)),game.production.spend_gold,rules.spy_world(),int(message.max_gold))
+		"research_upgrade":
+			return game.research.start_upgrade(str(message.get("id","")),int(message.get("target",0)),country)
 		"research":
 			return game.research.start(str(message.get("id", "")), int(message.get("target", 0)), country)
 		"build":

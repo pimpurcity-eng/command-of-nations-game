@@ -88,11 +88,12 @@ func run() -> void:
 	# Hackers (paid with gold).
 	var net: = Espionage.new()
 	var spend: = economy.spend_gold
-	economy.gold.russia = 20000
+	economy.gold.russia = 100000
 	var gold_before: = int(economy.gold.russia)
+	var bank_price: = net.hack_price("bank","ukraine",world)
 	var their_cash: = float(theirs.funds)
 	check(net.hack("russia", "bank", {}, "", "ukraine", int(economy.gold.russia), spend, world).is_empty(), "Bank hack works")
-	check(int(economy.gold.russia) == gold_before - Espionage.HACKS.bank.gold and float(theirs.funds) < their_cash, "Bank hack costs gold and takes enemy money")
+	check(int(economy.gold.russia) == gold_before - bank_price and float(theirs.funds) < their_cash, "Bank hack debits the quoted amount and takes enemy money")
 	check(not net.hack("russia", "blackout", belgorod, "russia", "ukraine", int(economy.gold.russia), spend, world).is_empty(), "No blackout on your own city")
 	check(net.hack("russia", "blackout", kharkiv, "ukraine", "ukraine", int(economy.gold.russia), spend, world).is_empty() and is_equal_approx(Espionage.sabotage_factor("kharkiv"), Espionage.BLACKOUT_FACTOR), "Blackout almost stops Kharkiv's production")
 	economy.gold.russia = 20000

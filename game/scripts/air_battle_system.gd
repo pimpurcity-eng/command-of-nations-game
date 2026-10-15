@@ -37,14 +37,21 @@ static func aa_factor(aircraft: Dictionary) -> float:
 	return 1.0 if aircraft.get("flight_mode", "") in ["attack", "patrol"] else AA_PASSING_FACTOR
 var cooldowns: Dictionary = {}
 func value(unit: Dictionary, name: String, defending: bool = false) -> float:
-	var base: float = EquipmentIdentity.spec(unit.equipment_id).get(name, 0.0)
-	var scaling: float = 1.0 + 0.12 * (unit.get("level", 1) - 1)
-	var tier: Dictionary = EquipmentIdentity.research_tier(unit.equipment_id, unit.get("level", 1))
-	base = float(tier.get(name, base))
-	if name == "aa_damage" and tier.has("damage"):
-		base = tier.damage
-		scaling = 1.0
-	return TerrainRules.unit_factor(unit, "defense" if defending else "attack") * base * (0.2 + 0.8 * clampf(unit.health / 100.0, 0, 1)) * scaling * EquipmentIdentity.upgrade_factor(unit)
+	var target: = "air" if name in ["air_damage", "aa_damage"] else "infantry"
+	return UnitStats.damage(unit, target, defending) * TerrainRules.unit_factor(unit, "defense" if defending else "attack")
+func strike_value(unit: Dictionary, target: Dictionary, defending: bool = false) -> float:
+	return UnitStats.damage(unit, UnitClasses.of(target), defending) * TerrainRules.unit_factor(unit, "defense" if defending else "attack")
+func can_defend_air(defender: Dictionary, aircraft: Dictionary) -> bool:
+	return (defender.visual_kind in ["air_defense", "naval"] and can_engage(defender, aircraft)) or (defender.visual_kind == "fighter" and defender.get("flight_mode", "grounded") != "grounded")
+func contributes(unit: Dictionary, target: Dictionary, armies: UnitSystem) -> bool:
+	var group: Array = armies.stacks.members(unit).filter(func(member: Dictionary):
+		return member.health > 0 and member.get("upgrade_remaining", 0.0) <= 0 and strike_value(member, target) > 0 and ((member.visual_kind in ["air_defense", "naval"] and can_engage(member, target)) or (member.visual_kind == "fighter" and member.get("flight_mode", "grounded") != "grounded")))
+	if group.size() <= CombatSystem.STACK_DAMAGE_LIMIT: return true
+	group.sort_custom(func(a: Dictionary, b: Dictionary):
+		var first: = strike_value(a, target)
+		var second: = strike_value(b, target)
+		return str(a.id) < str(b.id) if is_equal_approx(first, second) else first > second)
+	return unit in group.slice(0, CombatSystem.STACK_DAMAGE_LIMIT)
 func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resolve_now: bool = false) -> void :
 	if not is_finite(seconds) or seconds < 0 or (seconds == 0 and not resolve_now) or not armies.at_war: return
 	var remaining: = seconds
@@ -76,9 +83,12 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 				if origin.distance_squared_to(point) > reach * reach: continue
 				if not armies.unit_visible(enemy, unit.country): continue
 				if unit.get("flight_mode", "") == "attack" and enemy.id != unit.get("attack_target", ""): continue
-				if fighter and value(unit, "air_damage" if enemy.visual_kind == "fighter" else "ground_damage") <= 0: continue
+				if fighter and strike_value(unit, enemy) <= 0: continue
+				if not contributes(unit, enemy, armies): continue
 				var distance: = origin.distance_to(point)
-				if patrol and distance <= reach and Vector2(unit.node.position.x, unit.node.position.z).distance_to(unit.patrol_center) <= AirOperations.PATROL_RADIUS + 0.05: patrol_targets.append(enemy)
+				if patrol and distance <= reach and Vector2(unit.node.position.x, unit.node.position.z).distance_to(unit.patrol_center) <= AirOperations.PATROL_RADIUS + 0.05:
+					# One strike per army, with its HP damage shared by the stack, not multiplied by unit count.
+					if not patrol_targets.any(func(other: Dictionary): return other.country == enemy.country and other.stack_id == enemy.stack_id): patrol_targets.append(enemy)
 				if distance <= reach and distance < nearest:
 					nearest = distance
 					target = enemy
@@ -99,22 +109,35 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 		for strike in strikes:
 			if cooldowns.get(strike[0].id, 0.0) <= 1e-06: ready[strike[0].id] = true
 		var damage: Dictionary = {}
+		var answered: Dictionary = {}
 		for strike in strikes:
 			var unit: Dictionary = strike[0]
 			var enemy: Dictionary = strike[1]
 			if not ready.has(unit.id): continue
-			var stat: = "aa_damage" if strike[2] else ("air_damage" if enemy.visual_kind == "fighter" else "ground_damage")
-			damage[enemy.id] = damage.get(enemy.id, 0.0) + value(unit, stat) * (aa_factor(enemy) if strike[2] else (PATROL_DAMAGE if unit.get("flight_mode", "") == "patrol" else 1.0))
+			var victims: Array = [enemy] if strike[2] else armies.stacks.members(enemy).filter(func(v: Dictionary): return v.health > 0)
+			var mission: float = aa_factor(enemy) if strike[2] else (PATROL_DAMAGE if unit.get("flight_mode", "") == "patrol" else 1.0)
+			for victim in victims:
+				var hit: = strike_value(unit, victim) * mission / maxf(1.0, victims.size())
+				damage[victim.id] = damage.get(victim.id, 0.0) + UnitStats.condition_damage(victim, hit)
 			var missile_loadout: bool = EquipmentIdentity.research_tier(unit.equipment_id, unit.get("level", 1)).has("projectile_model")
 			weapon_fired.emit(unit, enemy, "interceptor" if strike[2] else "missile" if missile_loadout else "drone_strike" if EquipmentIdentity.spec(unit.equipment_id).get("role", "") == "drone" else "air_strike")
 			if not strike[2] and EquipmentIdentity.spec(unit.equipment_id).get("single_use", false): damage[unit.id] = damage.get(unit.id, 0.0) + unit.health
 			if not strike[2]:
+				# One defensive volley per squadron/target-stack event. Split it across the
+				# attacking aircraft instead of returning the entire stack's fire to each plane.
+				var reply_key: String = unit.country + ":" + unit.stack_id + ":" + enemy.country + ":" + enemy.stack_id
+				if not answered.has(reply_key):
+					answered[reply_key] = true
+					var incoming: Dictionary = {}
+					for other in strikes:
+						if ready.has(other[0].id) and other[0].country == unit.country and other[0].stack_id == unit.stack_id and other[1].country == enemy.country and other[1].stack_id == enemy.stack_id: incoming[other[0].id] = other[0]
+					var defenders: Array = armies.stacks.members(enemy).filter(func(d: Dictionary): return d.health > 0 and value(d, "aa_damage", true) > 0 and incoming.values().any(func(a: Dictionary): return can_defend_air(d, a)))
+					defenders.sort_custom(func(a: Dictionary, b: Dictionary): return value(a, "aa_damage", true) > value(b, "aa_damage", true))
+					for defender in defenders.slice(0, CombatSystem.STACK_DAMAGE_LIMIT):
+						var targets: Array = incoming.values().filter(func(a: Dictionary): return can_defend_air(defender, a))
+						for aircraft in targets: damage[aircraft.id] = damage.get(aircraft.id, 0.0) + UnitStats.condition_damage(aircraft, value(defender, "aa_damage", true) / maxf(1.0, targets.size()))
+						weapon_fired.emit(defender, targets[0], "interceptor")
 
-
-				for defender in armies.stacks.members(enemy):
-					if defender.visual_kind in ["air_defense","naval"] and defender.health > 0 and value(defender,"aa_damage")>0 and can_engage(defender, unit):
-						damage[unit.id] = damage.get(unit.id, 0.0) + value(defender, "aa_damage", true)
-						weapon_fired.emit(defender, unit, "interceptor")
 			# Owner 2026-10-13: patrolling aircraft also strike every 7 minutes (PATROL_DAMAGE, above);
 			# an attack order hits at full damage and then the aircraft returns to land.
 			cooldowns[unit.id] = AA_INTERVAL if strike[2] or unit.get("flight_mode", "") == "patrol" else ROUND_SECONDS
