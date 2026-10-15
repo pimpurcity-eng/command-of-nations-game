@@ -163,6 +163,8 @@ static func _fit(pivot: Node3D, vehicle: Node3D, role: String, path: String) -> 
 	if raw.size.x > raw.size.z * 1.1: yaw += PI * 0.5  # source model lies sideways
 	yaw += deg_to_rad(YAW_FIX.get(path.get_file().get_basename().get_slice("_", 0), 0.0))
 	if owner_model(path): yaw = PI * 0.5  # Source +X cab faces game -Z.
+	# Owner 2026-10-15 ("the drone is flying the wrong way"): the Geran-2 model points along +Z.
+	if path.get_file().begins_with("russia_geran2"): yaw = PI
 	var bounds: = model_bounds(vehicle, yaw)
 	var factor := UnitMapSize.fit_factor(bounds.size, role, path)
 	var center: = bounds.get_center()

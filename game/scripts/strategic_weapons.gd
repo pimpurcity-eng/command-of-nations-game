@@ -84,13 +84,25 @@ func launch(country: String, kind: String, target: Vector2, armies: UnitSystem, 
 	var weapon: Dictionary = WEAPONS[kind]
 	if rng.randf() < interception_chance(country, target, armies, kind):
 		return {"ok": true, "intercepted": true, "hits": 0, "kind": kind, "message": weapon.name + " shot down by missile defence"}
-	var hits: = 0
+	var damage: = blast(kind, target, armies.units)
+	for unit in armies.units:
+		if damage.has(unit.id): unit.health = maxf(0.0, unit.health - float(damage[unit.id]))
+	var hits: = damage.size()
+	if weapon.fallout > 0:
+		for t in territories:
+			if t.playable and t.center.distance_to(target) <= weapon.radius * 1.5: fallout[t.id] = weapon.fallout
+	return {"ok": true, "intercepted": false, "hits": hits, "kind": kind, "message": "%s struck · %d armies hit" % [weapon.name, hits]}
+
+## Damage (unit id -> health lost) from a nuclear or chemical blast at `target`.
+static func blast(kind: String, target: Vector2, units: Array) -> Dictionary:
+	var weapon: Dictionary = WEAPONS[kind]
+	var result: = {}
 	# Owner 2026-10-14 ("do calculations ... if it's a big stack they might survive"): each army
 	# in the blast takes a damage pool shared by its units (STACK_POOL at ground zero, half at
 	# the edge); tanks and ships shrug off part of it. A small army is wiped out, a big stack
 	# keeps some units.
 	var stacks: Dictionary = {}
-	for unit in armies.units:
+	for unit in units:
 		if unit.health <= 0 or not unit.has("node"): continue
 		var distance: = Vector2(unit.node.position.x, unit.node.position.z).distance_to(target)
 		if distance > weapon.radius: continue
@@ -103,13 +115,8 @@ func launch(country: String, kind: String, target: Vector2, armies: UnitSystem, 
 		var falloff: float = 1.0 - 0.5 * float(stacks[key].distance) / float(weapon.radius)
 		var share: float = float(weapon.get("stack_pool", weapon.damage)) * falloff / members.size() if weapon.has("stack_pool") else weapon.damage * falloff
 		for unit in members:
-			var damage: float = share * (weapon.armor_factor if unit.visual_kind in ["armor", "naval"] else 1.0)
-			unit.health = maxf(0.0, unit.health - damage)
-			hits += 1
-	if weapon.fallout > 0:
-		for t in territories:
-			if t.playable and t.center.distance_to(target) <= weapon.radius * 1.5: fallout[t.id] = weapon.fallout
-	return {"ok": true, "intercepted": false, "hits": hits, "kind": kind, "message": "%s struck · %d armies hit" % [weapon.name, hits]}
+			result[unit.id] = share * (weapon.armor_factor if unit.visual_kind in ["armor", "naval"] else 1.0)
+	return result
 
 func snapshot() -> Dictionary:
 	return {"stock": stock.duplicate(true), "jobs": jobs.duplicate(true), "fallout": fallout.duplicate()}

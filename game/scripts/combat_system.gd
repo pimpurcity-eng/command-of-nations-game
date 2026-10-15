@@ -14,6 +14,8 @@ func target_class(unit: Dictionary) -> String:
 func shot_effect(unit: Dictionary) -> String:
 	if EquipmentIdentity.research_tier(unit.equipment_id, unit.get("level", 1)).has("projectile_model"): return "missile"
 	return "missile" if unit.visual_kind == "missile_launcher" else "artillery" if unit.visual_kind in ["artillery", "naval"] else "cannon" if unit.visual_kind == "armor" else "tracer"
+static func nuclear(unit: Dictionary) -> bool:
+	return str(unit.get("equipment_id", "")).begins_with("strategic_")
 func key(group: Array) -> String:
 	return group[0].country + ":" + group[0].stack_id
 func alive(group: Array) -> Array:
@@ -191,6 +193,14 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 					for defender in answering: weapon_fired.emit(defender, attackers[0], shot_effect(defender))
 			var rounds: = 1.0
 			for attacker in contributors:
+				# Owner 2026-10-15: a nuclear missile is fired once - the launcher and its missile
+				# are used up - and the blast hurts every army around the target.
+				if nuclear(attacker):
+					var blast: = StrategicWeapons.blast("nuclear", b, armies.units)
+					for id in blast: damage[id] = damage.get(id, 0.0) + float(blast[id])
+					weapon_fired.emit(attacker, defenders[0], "nuke")
+					damage[attacker.id] = damage.get(attacker.id, 0.0) + 1000000.0
+					continue
 				if potential([attacker], target_class(defenders[0]), ranged) > 0:
 					weapon_fired.emit(attacker, defenders[0], shot_effect(attacker))
 				if attacker.visual_kind == "missile_launcher": rounds = maxf(rounds, EquipmentIdentity.spec(attacker.equipment_id).get("reload_rounds", 4.0))

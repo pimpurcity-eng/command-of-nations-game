@@ -60,7 +60,7 @@ func on_shot(source: Dictionary, target_unit: Dictionary, effect: String) -> voi
 			start = animator.muzzle_position()
 	if source_visible:
 		var direction: = (finish - start).normalized()
-		if effect == "missile":
+		if effect in ["missile", "nuke"]:
 			source.heading = UnitVisual.firing_heading(source.equipment_id, direction)
 			source.node.get_child(0).rotation.y = source.heading
 			var launcher_model: Node3D = source.node.get_child(0)
@@ -83,6 +83,11 @@ func on_shot(source: Dictionary, target_unit: Dictionary, effect: String) -> voi
 			get_tree().create_timer(0.18 * i).timeout.connect(func(): launch(drop, finish + spread, "bomb", source.country))
 		return
 	var tier: Dictionary = EquipmentIdentity.research_tier(source.equipment_id, source.get("level", 1))
+	if effect == "nuke":
+		# The missile flies, then the full nuclear blast at the target.
+		launch(start, finish, "missile", source.country, tier.get("projectile_model", ""), 2.5)
+		get_tree().create_timer(2.5).timeout.connect(func(): nuke(finish, StrategicWeapons.WEAPONS.nuclear.radius))
+		return
 	launch(start, finish, effect, source.country, tier.get("projectile_model", ""))
 func smoke_puff(position: Vector3, dark: bool = false, size: float = 0.08) -> void:
 	if smoke_jobs.size() >= MAX_SMOKE: return
