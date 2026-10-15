@@ -697,6 +697,7 @@
     "name": "Strike fighters",
     "category": "Fighters",
     "visual_kind": "fighter",
+    "role": "fighter",
     "research_branch": "Strike fighter",
     "seconds": 60,
     "cost": {
@@ -1652,6 +1653,81 @@
         "name": "Lancet · advanced",
         "improvement": "Modernization level 5; combat effectiveness +48%",
         "model": "res://assets/library/arsenal/russia_lancet3_drone_only.glb",
+        "preview": "res://assets/library/arsenal/russia_lancet3_drone_only.png"
+      }
+    ],
+    "air_range": 8.0,
+    "air_speed": 2.0,
+    "air_damage": 0.0,
+    "ground_damage": 7.0,
+    "single_use": true,
+    "upkeep": {
+      "funds": 400.0,
+      "fuel": 48.0,
+      "manpower": 5.0,
+      "food": 10.0
+    },
+    "production_building": "drone_factory",
+    "research_branch": "Loitering munition",
+    "starter": false
+  },
+  {
+    "id": "loitering_ukraine",
+    "country": "ukraine",
+    "name": "Loitering munitions",
+    "category": "Drones",
+    "visual_kind": "fighter",
+    "role": "drone",
+    "asset_roster_id": "loitering_ukraine",
+    "seconds": 80,
+    "cost": {
+      "funds": 4800,
+      "materials": 1440,
+      "electronics": 1200,
+      "fuel": 720,
+      "manpower": 300,
+      "food": 240
+    },
+    "building_requirements": {
+      "drone_factory": 1
+    },
+    "research_days": [
+      4,
+      7,
+      10,
+      13,
+      16
+    ],
+    "model_status": "Built by Claude 2026-10-15 (owner: same units on both sides)",
+    "research_tiers": [
+      {
+        "name": "Warmate",
+        "improvement": "Baseline equipment",
+        "model": "res://assets/library/arsenal/euro_warmate.glb",
+        "preview": "res://assets/library/arsenal/russia_lancet3_drone_only.png"
+      },
+      {
+        "name": "Warmate \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_warmate.glb",
+        "preview": "res://assets/library/arsenal/russia_lancet3_drone_only.png"
+      },
+      {
+        "name": "Warmate \u00b7 optics",
+        "improvement": "Modernization level 3; combat effectiveness +24%",
+        "model": "res://assets/library/arsenal/euro_warmate.glb",
+        "preview": "res://assets/library/arsenal/russia_lancet3_drone_only.png"
+      },
+      {
+        "name": "Warmate \u00b7 upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_warmate.glb",
+        "preview": "res://assets/library/arsenal/russia_lancet3_drone_only.png"
+      },
+      {
+        "name": "Warmate \u00b7 advanced",
+        "improvement": "Modernization level 5; combat effectiveness +48%",
+        "model": "res://assets/library/arsenal/euro_warmate.glb",
         "preview": "res://assets/library/arsenal/russia_lancet3_drone_only.png"
       }
     ],
@@ -3040,6 +3116,81 @@
       }
     ],
     "model_status": "Original supplied model",
+    "air_speed": 2.5,
+    "air_range": 16.0,
+    "requires_airbase": true,
+    "air_damage": 0.0,
+    "ground_damage": 0.0,
+    "upkeep": {
+      "funds": 250.0,
+      "fuel": 24.0,
+      "manpower": 6.0,
+      "food": 12.0
+    },
+    "production_building": "airbase",
+    "research_branch": "Airborne early warning",
+    "starter": false
+  },
+  {
+    "id": "a50u_ukraine",
+    "country": "ukraine",
+    "name": "Airborne early warning",
+    "category": "Support",
+    "visual_kind": "fighter",
+    "role": "radar_aircraft",
+    "asset_roster_id": "a50u_ukraine",
+    "seconds": 60,
+    "cost": {
+      "funds": 3000,
+      "materials": 960,
+      "electronics": 480,
+      "fuel": 360,
+      "manpower": 360,
+      "food": 276
+    },
+    "building_requirements": {
+      "airbase": 1
+    },
+    "research_days": [
+      15,
+      18,
+      21,
+      24,
+      27
+    ],
+    "research_tiers": [
+      {
+        "name": "Saab GlobalEye",
+        "model": "res://assets/library/arsenal/euro_globaleye.glb",
+        "improvement": "Supplied equipment",
+        "preview": "res://assets/library/arsenal/russia_a50u.png"
+      },
+      {
+        "name": "Saab GlobalEye \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/euro_globaleye.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/russia_a50u.png"
+      },
+      {
+        "name": "Saab GlobalEye \u00b7 L3",
+        "model": "res://assets/library/arsenal/euro_globaleye.glb",
+        "improvement": "Supplied equipment",
+        "preview": "res://assets/library/arsenal/russia_a50u.png"
+      },
+      {
+        "name": "Saab GlobalEye \u00b7 upgrade",
+        "model": "res://assets/library/arsenal/euro_globaleye.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/russia_a50u.png"
+      },
+      {
+        "name": "Saab GlobalEye \u00b7 L5",
+        "model": "res://assets/library/arsenal/euro_globaleye.glb",
+        "improvement": "Supplied equipment",
+        "preview": "res://assets/library/arsenal/russia_a50u.png"
+      }
+    ],
+    "model_status": "Built by Claude 2026-10-15 (owner: same units on both sides)",
     "air_speed": 2.5,
     "air_range": 16.0,
     "requires_airbase": true,

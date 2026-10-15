@@ -3,6 +3,9 @@ extends SceneTree
 ##  * Geran-2 one-way attack drone (Russia) and FP-1/Liutyi long-range drone (Ukraine);
 ##  * BMM-80 armoured ambulance (BTR-80 medical variant) and Boxer ambulance (field medics);
 ##  * hospital building (city and province).
+##  * Owner 2026-10-15 ("same units on both sides"): Warmate loitering munition and Saab GlobalEye
+##    radar plane for Ukraine. These two are built nose-forward along +X like the owner's models.
+## Set ONLY=name,name to rebuild just some models.
 ## The models are written into assets/library (kept out of the public repository, like the
 ## owner's models) together with a preview picture in the same style as the arsenal renders.
 ##   xvfb-run -a godot --path . --script tools/make_new_models.gd
@@ -90,6 +93,83 @@ func liutyi() -> Node3D:
 	part(root, cylinder(0.1, 0.12, 0.22, 12), dark, Vector3(0, 0, -1.9), Vector3(90, 0, 0))
 	for blade in 2:
 		part(root, box(Vector3(1.0, 0.03, 0.08)), dark, Vector3(0, 0, -2.04), Vector3(0, 0, blade * 90))
+	return root
+
+
+## Plate from an outline in the XY plane (x = forward, y = up), extruded along Z: fins and tails.
+func fin(outline: PackedVector2Array, thickness: float) -> ArrayMesh:
+	var flat: = plate(outline, thickness)
+	var turned: = ArrayMesh.new()
+	var st: = SurfaceTool.new()
+	st.create_from(flat, 0)
+	var arrays: = st.commit_to_arrays()
+	var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+	var normals: PackedVector3Array = arrays[Mesh.ARRAY_NORMAL]
+	for i in vertices.size():
+		vertices[i] = Vector3(vertices[i].x, vertices[i].z, vertices[i].y)
+		normals[i] = Vector3(normals[i].x, normals[i].z, normals[i].y)
+	arrays[Mesh.ARRAY_VERTEX] = vertices
+	arrays[Mesh.ARRAY_NORMAL] = normals
+	turned.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	return turned
+
+func warmate() -> Node3D:
+	# WB Electronics Warmate (Poland): ~1.1 m tube-launched loitering munition, 1.4 m straight high
+	# wing, cruciform tail, rear pusher propeller, warhead/camera nose. +X is forward.
+	var root: = Node3D.new(); root.name = "Warmate"
+	var skin: = mat(Color("4b5442"), 0.6, 0.15)
+	var dark: = mat(Color("1d1f1c"), 0.5, 0.3)
+	var glass: = mat(Color("101418"), 0.15, 0.6)
+	part(root, cylinder(0.055, 0.055, 0.82, 16), skin, Vector3(0, 0, 0), Vector3(0, 0, 90), Vector3.ONE, "Fuselage")
+	part(root, cylinder(0.0, 0.055, 0.2, 16), skin, Vector3(0.51, 0, 0), Vector3(0, 0, -90), Vector3.ONE, "Warhead")
+	part(root, cylinder(0.035, 0.035, 0.05, 12), glass, Vector3(0.38, -0.05, 0), Vector3.ZERO, Vector3.ONE, "Camera")
+	var wing: = PackedVector2Array([Vector2(-0.7, 0.07), Vector2(0.7, 0.07), Vector2(0.7, -0.05), Vector2(-0.7, -0.05)])
+	var w: = part(root, plate(PackedVector2Array([Vector2(0.07, -0.7), Vector2(0.07, 0.7), Vector2(-0.05, 0.7), Vector2(-0.05, -0.7)]), 0.012), skin, Vector3(0.05, 0.065, 0), Vector3.ZERO, Vector3.ONE, "Wing")
+	w.rotation_degrees = Vector3(0, 0, 0)
+	for k in 4:
+		var tail: = part(root, fin(PackedVector2Array([Vector2(-0.38, 0.0), Vector2(-0.26, 0.0), Vector2(-0.33, 0.16), Vector2(-0.4, 0.16)]), 0.01), skin, Vector3.ZERO, Vector3(k * 90.0 + 45.0, 0, 0), Vector3.ONE, "Tail_%d" % k)
+	part(root, cylinder(0.03, 0.045, 0.06, 12), dark, Vector3(-0.44, 0, 0), Vector3(0, 0, 90), Vector3.ONE, "Motor")
+	for blade in 2:
+		part(root, box(Vector3(0.012, 0.34, 0.03)), dark, Vector3(-0.48, 0, 0), Vector3(blade * 90.0, 0, 0), Vector3.ONE, "Prop_%d" % blade)
+	return root
+
+func globaleye() -> Node3D:
+	# Saab GlobalEye (Sweden): Global 6000/6500 business-jet airframe, 30 m long, 31.7 m span,
+	# swept low wing with winglets, T-tail, two rear engines, Erieye radar beam on top. +X is forward.
+	var root: = Node3D.new(); root.name = "GlobalEye"
+	var skin: = mat(Color("6f777e"), 0.5, 0.25)
+	var light: = mat(Color("7c848b"), 0.5, 0.2)
+	var dark: = mat(Color("2b2f33"), 0.4, 0.4)
+	var glass: = mat(Color("12181e"), 0.1, 0.7)
+	part(root, cylinder(1.25, 1.25, 20.0, 24), skin, Vector3(0.5, 0, 0), Vector3(0, 0, 90), Vector3.ONE, "Fuselage")
+	part(root, cylinder(0.25, 1.25, 4.5, 24), skin, Vector3(12.75, -0.15, 0), Vector3(0, 0, -90), Vector3(1, 1, 0.95), "Nose")
+	part(root, cylinder(0.35, 1.25, 6.0, 24), skin, Vector3(-12.5, 0.35, 0), Vector3(0, 0, 90), Vector3.ONE, "Tailcone")
+	part(root, box(Vector3(1.4, 0.35, 1.9)), glass, Vector3(12.2, 0.75, 0), Vector3(0, 0, -18), Vector3.ONE, "Cockpit")
+	# Swept wing with winglets.
+	for side in [-1.0, 1.0]:
+		var outline: = PackedVector2Array([Vector2(1.6, 0.0), Vector2(-1.2, 0.0), Vector2(-6.2, side * 15.2), Vector2(-4.6, side * 15.2)])
+		if side < 0: outline.reverse()
+		var wing: = part(root, plate(outline, 0.35), light, Vector3(0, -0.85, 0), Vector3.ZERO, Vector3.ONE, "Wing_%s" % ("R" if side > 0 else "L"))
+		part(root, fin(PackedVector2Array([Vector2(-4.6, 0), Vector2(-6.2, 0), Vector2(-7.0, 2.0), Vector2(-6.0, 2.0)]), 0.15), light, Vector3(0, -0.85, side * 15.2), Vector3.ZERO, Vector3.ONE, "Winglet_%s" % ("R" if side > 0 else "L"))
+		# Rear-mounted engines on pylons.
+		part(root, cylinder(0.75, 0.65, 4.2, 18), dark, Vector3(-8.0, 0.9, side * 2.4), Vector3(0, 0, 90), Vector3.ONE, "Engine_%s" % ("R" if side > 0 else "L"))
+		part(root, box(Vector3(1.6, 0.25, 1.1)), skin, Vector3(-8.0, 0.75, side * 1.5), Vector3.ZERO, Vector3.ONE)
+		# Horizontal tail on top of the fin (T-tail).
+		var tail: = PackedVector2Array([Vector2(-14.6, 0.0), Vector2(-16.6, 0.0), Vector2(-17.6, side * 5.0), Vector2(-16.4, side * 5.0)])
+		if side < 0: tail.reverse()
+		part(root, plate(tail, 0.2), light, Vector3(0, 5.7, 0), Vector3.ZERO, Vector3.ONE, "Stabiliser_%s" % ("R" if side > 0 else "L"))
+	part(root, fin(PackedVector2Array([Vector2(-11.5, 0.5), Vector2(-14.2, 0.5), Vector2(-16.6, 5.7), Vector2(-14.6, 5.7)]), 0.3), light, Vector3.ZERO, Vector3.ZERO, Vector3.ONE, "Fin")
+	# Erieye ER radar: long flat beam on two struts above the fuselage, and ventral strakes.
+	part(root, box(Vector3(8.6, 0.85, 0.75)), light, Vector3(-1.2, 2.35, 0), Vector3.ZERO, Vector3.ONE, "Erieye")
+	part(root, box(Vector3(8.0, 0.08, 0.8)), dark, Vector3(-1.2, 2.8, 0), Vector3.ZERO, Vector3.ONE, "ErieyeTop")
+	for x in [1.2, -3.6]:
+		part(root, box(Vector3(1.2, 1.1, 0.35)), skin, Vector3(x, 1.5, 0), Vector3.ZERO, Vector3.ONE, "Strut")
+	for side in [-1.0, 1.0]:
+		part(root, box(Vector3(3.5, 0.9, 0.12)), skin, Vector3(-9.5, -1.0, side * 0.6), Vector3(side * 15.0, 0, 0), Vector3.ONE, "Strake")
+	# Window line.
+	for i in 10:
+		for side in [-1.0, 1.0]:
+			part(root, box(Vector3(0.45, 0.4, 0.05)), glass, Vector3(8.0 - i * 1.3, 0.35, side * 1.24), Vector3.ZERO, Vector3.ONE)
 	return root
 
 # ---------------------------------------------------------------- medical vehicles
@@ -282,6 +362,8 @@ func preview(scene: Node3D, path: String, size: Vector2i, flying: bool) -> void:
 
 func run() -> void:
 	var made: = [
+		[warmate(), ARSENAL + "euro_warmate.glb", true],
+		[globaleye(), ARSENAL + "euro_globaleye.glb", true],
 		[geran2(), ARSENAL + "russia_geran2.glb", true],
 		[liutyi(), ARSENAL + "ukraine_liutyi.glb", true],
 		[ambulance(ARSENAL + "russia_btr80.glb", "BMM80"), ARSENAL + "russia_bmm80_medical.glb", false],
@@ -290,9 +372,11 @@ func run() -> void:
 		[drone_factory(), BUILDINGS + "drone_factory.glb", false],
 		[support_depot(), BUILDINGS + "support_depot.glb", false],
 	]
+	var only: = OS.get_environment("ONLY")
 	for entry in made:
 		var scene: Node3D = entry[0]
 		var path: String = entry[1]
+		if not only.is_empty() and not path.get_file().get_basename() in only.split(","): continue
 		var building: bool = path.begins_with(BUILDINGS)
 		await preview(scene, path.trim_suffix(".glb") + ("_menu.png" if building else ".png"), Vector2i(512, 512) if building else Vector2i(1600, 1000), entry[2])
 		export_glb(scene, path)
