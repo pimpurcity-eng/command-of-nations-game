@@ -84,11 +84,41 @@ func on_shot(source: Dictionary, target_unit: Dictionary, effect: String) -> voi
 		return
 	var tier: Dictionary = EquipmentIdentity.research_tier(source.equipment_id, source.get("level", 1))
 	if effect == "nuke":
-		# The missile flies, then the full nuclear blast at the target.
-		launch(start, finish, "missile", source.country, tier.get("projectile_model", ""), 2.5)
-		get_tree().create_timer(2.5).timeout.connect(func(): nuke(finish, StrategicWeapons.WEAPONS.nuclear.radius))
+		raise_and_fire(source, start, finish)
 		return
 	launch(start, finish, effect, source.country, tier.get("projectile_model", ""))
+## Owner 2026-10-15: before a nuclear launch the launcher's arm rises to vertical, the cap opens
+## and the missile leaves the tube; it then flies to the target and the blast follows. The whole
+## sequence lasts CombatSystem.NUKE_FLIGHT, shortened at higher game speeds.
+func raise_and_fire(source: Dictionary, start: Vector3, finish: Vector3) -> void:
+	var pace: = 1.0 / maxf(1.0, clock.speed if clock != null else 1.0)
+	var exit: = {"at": start}  # where the missile leaves the tube (set when it does)
+	var model: Node3D = source.node.get_child(0) if source.node.get_child_count() > 0 else null
+	var hinge: Node3D = model.get_meta("erector_hinge", null) if model != null else null
+	var rise: = 3.0 * pace
+	if hinge != null and is_instance_valid(hinge):
+		var tween: = create_tween()
+		tween.tween_property(hinge, "rotation:z", deg_to_rad(88.0), rise).set_trans(Tween.TRANS_SINE)
+		var cap: Node3D = model.get_meta("erector_cap", null)
+		if cap != null: tween.tween_callback(func(): if is_instance_valid(cap): cap.visible = false)
+		var missile: Node3D = model.get_meta("erector_missile", null)
+		if missile != null:
+			var out: = float(model.get_meta("erector_length", 10.0))
+			tween.tween_property(missile, "position:x", missile.position.x + out, 1.0 * pace).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+			tween.tween_callback(func():
+				if is_instance_valid(missile):
+					exit.at = missile.global_position
+					missile.visible = false)
+		if audio != null: audio.play("nuclear_alarm", exit.at)
+	else: rise = 0.5 * pace
+	var flight: = 4.0 * pace
+	get_tree().create_timer(rise + 1.0 * pace).timeout.connect(func():
+		var tier: Dictionary = EquipmentIdentity.research_tier(source.equipment_id, source.get("level", 1))
+		var from: Vector3 = exit.at
+		launch(from + Vector3.UP * 0.3, finish, "missile", source.country, tier.get("projectile_model", ""), flight)
+		smoke_puff(from, true, 0.25)
+		get_tree().create_timer(flight).timeout.connect(func(): nuke(finish, StrategicWeapons.WEAPONS.nuclear.radius)))
+
 func smoke_puff(position: Vector3, dark: bool = false, size: float = 0.08) -> void:
 	if smoke_jobs.size() >= MAX_SMOKE: return
 	if armies != null and not armies.point_visible(Vector2(position.x, position.z)): return

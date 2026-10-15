@@ -116,7 +116,7 @@ static func create(kind: String, _faction: Color, equipment_id: String = "", lev
 	if EquipmentIdentity.spec(equipment_id).get("role", "") in ["helicopter", "drone"]:
 		helicopter = HelicopterAnimator.new()
 		vehicle = helicopter.prepare(vehicle)
-	elif path.contains("/arsenal/"): vehicle = merged(vehicle)
+	elif path.contains("/arsenal/") and vehicle.find_child("Launcher_Pivot", true, false) == null: vehicle = merged(vehicle)
 	var spec: = EquipmentIdentity.spec(equipment_id)
 	var role: String = spec.get("role", "")
 	if role.is_empty(): role = spec.get("visual_kind", kind)
@@ -129,6 +129,7 @@ static func create(kind: String, _faction: Color, equipment_id: String = "", lev
 	pivot.add_child(vehicle)
 	_fit(pivot, vehicle, role, path)
 	assembly.add_child(pivot)
+	_rig_erector(assembly, vehicle)
 	if kind == "missile_launcher":
 		var launch_point: = Marker3D.new()
 		launch_point.name = "MissileLaunchPoint"
@@ -154,6 +155,19 @@ static func create(kind: String, _faction: Color, equipment_id: String = "", lev
 		for item in _meshes(assembly,Transform3D.IDENTITY): item[0].cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	assembly.set_meta("missing_original_model", false)
 	return assembly
+
+## Owner 2026-10-15 ("animate the arm coming up before a nuclear launch"): launchers whose model
+## has a Launcher_Pivot (Topol-M, Yars) are hinged there at the back of the canister, so turning
+## it raises the cap end to vertical; the cap then opens and the missile slides out of the tube
+## (CombatEffects.raise_and_fire).
+static func _rig_erector(assembly: Node3D, vehicle: Node3D) -> void:
+	var arm: Node3D = vehicle.find_child("Launcher_Pivot", true, false)
+	if arm == null: return
+	var tube: MeshInstance3D = arm.find_child("Tube", true, false)
+	assembly.set_meta("erector_hinge", arm)
+	assembly.set_meta("erector_missile", arm.find_child("Missile", true, false))
+	assembly.set_meta("erector_cap", arm.find_child("CanisterCap", true, false))
+	assembly.set_meta("erector_length", tube.get_aabb().size.x if tube != null else 19.5)
 
 ## Orient the model's long axis along the game's forward axis, scale it to the unit type's
 ## footprint and stand it on the ground at the marker's origin.

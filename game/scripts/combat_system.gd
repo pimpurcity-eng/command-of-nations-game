@@ -14,6 +14,24 @@ func target_class(unit: Dictionary) -> String:
 func shot_effect(unit: Dictionary) -> String:
 	if EquipmentIdentity.research_tier(unit.equipment_id, unit.get("level", 1)).has("projectile_model"): return "missile"
 	return "missile" if unit.visual_kind == "missile_launcher" else "artillery" if unit.visual_kind in ["artillery", "naval"] else "cannon" if unit.visual_kind == "armor" else "tracer"
+## Sim seconds from the order to the blast: about 9 real seconds at 1x for the arm to rise, the
+## missile to leave the tube and fly (CombatEffects.raise_and_fire uses the same time).
+const NUKE_FLIGHT: = 9.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
+## Nuclear missiles on their way: the blast lands when the flight time is over and the launcher,
+## whose missile is used up, is gone.
+func _nuclear_flights(seconds: float, armies: UnitSystem, damage: Dictionary, resolve_now: bool) -> void:
+	for unit in armies.units:
+		if not unit.has("nuke_launch") or unit.health <= 0: continue
+		unit.nuke_launch.left = float(unit.nuke_launch.left) - seconds
+		if float(unit.nuke_launch.left) > 0.0: continue
+		var blast: = StrategicWeapons.blast("nuclear", unit.nuke_launch.target, armies.units)
+		blast[unit.id] = 1000000.0
+		for id in blast:
+			if resolve_now: damage[id] = damage.get(id, 0.0) + float(blast[id])
+			else:
+				for other in armies.units:
+					if other.id == id: other.health = maxf(0.0, other.health - float(blast[id]))
+		unit.erase("nuke_launch")
 static func nuclear(unit: Dictionary) -> bool:
 	return str(unit.get("equipment_id", "")).begins_with("strategic_")
 func key(group: Array) -> String:
@@ -118,6 +136,7 @@ func target(group: Array, groups: Array, armies: UnitSystem = null) -> Array:
 	return result
 func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resolve_now: bool = false) -> void :
 	if not is_finite(seconds) or seconds < 0 or (seconds == 0 and not resolve_now) or not armies.at_war: return
+	_nuclear_flights(seconds, armies, pending, resolve_now)
 	var groups: = armies.stacks.groups()
 	var spatial: Dictionary = {}
 	for group in groups:
@@ -196,10 +215,9 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 				# Owner 2026-10-15: a nuclear missile is fired once - the launcher and its missile
 				# are used up - and the blast hurts every army around the target.
 				if nuclear(attacker):
-					var blast: = StrategicWeapons.blast("nuclear", b, armies.units)
-					for id in blast: damage[id] = damage.get(id, 0.0) + float(blast[id])
-					weapon_fired.emit(attacker, defenders[0], "nuke")
-					damage[attacker.id] = damage.get(attacker.id, 0.0) + 1000000.0
+					if not attacker.has("nuke_launch"):
+						attacker["nuke_launch"] = {"target": b, "left": NUKE_FLIGHT}
+						weapon_fired.emit(attacker, defenders[0], "nuke")
 					continue
 				if potential([attacker], target_class(defenders[0]), ranged) > 0:
 					weapon_fired.emit(attacker, defenders[0], shot_effect(attacker))
