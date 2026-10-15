@@ -10,6 +10,9 @@ func run() -> void:
 	var count: = 0
 	for t in map.territories:
 		var mesh: = map.build_sector_mesh(t)
+		# The ground height index ships with the mesh, so the game does not rebuild it.
+		mesh.set_meta("ground_cells", StrategicMap.ground_chunks(mesh))
+		mesh.set_meta("ground_cell_size", StrategicMap.GROUND_CELL)
 		var error: = ResourceSaver.save(mesh, StrategicMap.mesh_cache_path(t), ResourceSaver.FLAG_COMPRESS)
 		if error != OK: printerr("Could not save ", t.id, ": ", error)
 		else: count += 1

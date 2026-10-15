@@ -36,31 +36,45 @@ func _ready() -> void :
 			await get_tree().process_frame
 			FrameBudget.restart()
 	_ground_ready = true
+	print("BOOT map ground at ", Time.get_ticks_msec(), " ms")
 	var province_lines: = MapBorder.build_segments(MapBorder.unique_segments(_border_rings), self, 0.9, Color(0.21, 0.23, 0.2, 0.75))
 	province_lines.name = "ProvinceBorders"
+	print("BOOT map borders at ", Time.get_ticks_msec(), " ms")
 	add_child(province_lines)
 	_add_landscape()
+	print("BOOT map _landscape at ", Time.get_ticks_msec(), " ms")
 	_add_country_outlines()
+	print("BOOT map _country_outlines at ", Time.get_ticks_msec(), " ms")
 	_add_connections()
+	print("BOOT map _connections at ", Time.get_ticks_msec(), " ms")
 	build_finished = true
 	map_ready.emit()
+## Ground index: grid cell -> list of [vertices, corner indices] chunks; every three indices are
+## one triangle, in mesh order. Cached province meshes carry their indices ready made (owner
+## 2026-10-15: rebuilding this index took 13 s of the browser start).
 func on_land(point: Vector2) -> bool:
-	for tri in _ground_cells.get(Vector2i(floori(point.x / GROUND_CELL), floori(point.y / GROUND_CELL)), []):
-		var a: Vector3 = tri[0]
-		var b: Vector3 = tri[1]
-		var c: Vector3 = tri[2]
-		var weights := _barycentric(point, Vector2(a.x,a.z), Vector2(b.x,b.z), Vector2(c.x,c.z))
-		if weights.x >= -0.00001 and weights.y >= -0.00001 and weights.z >= -0.00001: return true
+	for chunk in _ground_cells.get(Vector2i(floori(point.x / GROUND_CELL), floori(point.y / GROUND_CELL)), []):
+		var corners: PackedVector3Array = chunk[0]
+		var ids: PackedInt32Array = chunk[1]
+		for i in range(0, ids.size(), 3):
+			var a: Vector3 = corners[ids[i]]
+			var b: Vector3 = corners[ids[i + 1]]
+			var c: Vector3 = corners[ids[i + 2]]
+			var weights := _barycentric(point, Vector2(a.x,a.z), Vector2(b.x,b.z), Vector2(c.x,c.z))
+			if weights.x >= -0.00001 and weights.y >= -0.00001 and weights.z >= -0.00001: return true
 	return false
 func elevation(point: Vector2) -> float:
 	if _ground_ready:
-		for tri in _ground_cells.get(Vector2i(floori(point.x / GROUND_CELL), floori(point.y / GROUND_CELL)), []):
-			var a: Vector3 = tri[0]
-			var b: Vector3 = tri[1]
-			var c: Vector3 = tri[2]
-			var weights: = _barycentric(point, Vector2(a.x, a.z), Vector2(b.x, b.z), Vector2(c.x, c.z))
-			if weights.x >= -0.0001 and weights.y >= -0.0001 and weights.z >= -0.0001:
-				return a.y * weights.x + b.y * weights.y + c.y * weights.z
+		for chunk in _ground_cells.get(Vector2i(floori(point.x / GROUND_CELL), floori(point.y / GROUND_CELL)), []):
+			var corners: PackedVector3Array = chunk[0]
+			var ids: PackedInt32Array = chunk[1]
+			for i in range(0, ids.size(), 3):
+				var a: Vector3 = corners[ids[i]]
+				var b: Vector3 = corners[ids[i + 1]]
+				var c: Vector3 = corners[ids[i + 2]]
+				var weights: = _barycentric(point, Vector2(a.x, a.z), Vector2(b.x, b.z), Vector2(c.x, c.z))
+				if weights.x >= -0.0001 and weights.y >= -0.0001 and weights.z >= -0.0001:
+					return a.y * weights.x + b.y * weights.y + c.y * weights.z
 	return TerrainProfile.height(point)
 static func _barycentric(p: Vector2, a: Vector2, b: Vector2, c: Vector2) -> Vector3:
 	var v0: = b - a
@@ -78,7 +92,7 @@ func _register_ground(a: Vector3, b: Vector3, c: Vector3) -> void :
 		for y in range(low.y, high.y + 1):
 			var key: = Vector2i(x, y)
 			if not _ground_cells.has(key): _ground_cells[key] = []
-			_ground_cells[key].append([a, b, c])
+			_ground_cells[key].append([PackedVector3Array([a, b, c]), PackedInt32Array([0, 1, 2])])
 func terrain_at(point: Vector2) -> String:
 	return TerrainProfile.sample(point)
 func position_at(point: Vector2) -> Vector3:
@@ -91,6 +105,31 @@ const MESH_CACHE_VERSION: = 1
 static func mesh_cache_key(t: Dictionary) -> String:
 	var depth: int = 3 if t.playable and t.get("terrain", "") in ["hills", "mountains"] else 2
 	return str(MESH_CACHE_VERSION) + ":" + str(hash(var_to_str(t.get("mesh_polygons", [t.polygon])))) + ":" + str(depth)
+## The ground index (cell -> corner indices into the mesh's vertices) for a mesh (stored with the cached mesh by tools/bake_map_cache.gd):
+## the same cells and triangle order _register_ground produces.
+static func ground_chunks(mesh: ArrayMesh) -> Dictionary:
+	var arrays: = mesh.surface_get_arrays(0)
+	var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+	var indices: PackedInt32Array = arrays[Mesh.ARRAY_INDEX]
+	var order: = PackedInt32Array()
+	if indices.is_empty():
+		for i in vertices.size(): order.append(i)
+	else: order = indices
+	var cells: Dictionary = {}
+	for i in range(0, order.size(), 3):
+		var a: = vertices[order[i]]
+		var b: = vertices[order[i + 1]]
+		var c: = vertices[order[i + 2]]
+		var low: = Vector2i(floori(minf(a.x, minf(b.x, c.x)) / GROUND_CELL), floori(minf(a.z, minf(b.z, c.z)) / GROUND_CELL))
+		var high: = Vector2i(floori(maxf(a.x, maxf(b.x, c.x)) / GROUND_CELL), floori(maxf(a.z, maxf(b.z, c.z)) / GROUND_CELL))
+		for x in range(low.x, high.x + 1):
+			for y in range(low.y, high.y + 1):
+				var key: = Vector2i(x, y)
+				if not cells.has(key): cells[key] = PackedInt32Array()
+				var chunk: PackedInt32Array = cells[key]
+				chunk.append(order[i]); chunk.append(order[i + 1]); chunk.append(order[i + 2])
+				cells[key] = chunk
+	return cells
 static func mesh_cache_path(t: Dictionary) -> String:
 	return MESH_CACHE_DIR + str(t.id).validate_filename() + ".res"
 func build_sector_mesh(t: Dictionary) -> ArrayMesh:
@@ -111,6 +150,13 @@ func _cached_sector_mesh(t: Dictionary) -> ArrayMesh:
 	if not ResourceLoader.exists(path): return null
 	var cached: = load(path) as ArrayMesh
 	if cached == null or str(cached.get_meta("cache_key", "")) != mesh_cache_key(t): return null
+	var baked: Dictionary = cached.get_meta("ground_cells", {})
+	if not baked.is_empty() and is_equal_approx(float(cached.get_meta("ground_cell_size", 0.0)), GROUND_CELL):
+		var corners: PackedVector3Array = cached.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+		for key in baked:
+			if not _ground_cells.has(key): _ground_cells[key] = []
+			_ground_cells[key].append([corners, baked[key]])
+		return cached
 	# Rebuild the ground lookup (on_land / heights) from the cached triangles.
 	var arrays: = cached.surface_get_arrays(0)
 	var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
