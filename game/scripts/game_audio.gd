@@ -187,6 +187,7 @@ static func sound_for(source: Dictionary, effect: String) -> String:
 
 ## "menu_theme" or "battle_theme"; loops until changed. Crossfades between tracks.
 func play_music(name: String) -> void:
+	print("MUSIC asked ", name, " (was ", _music_name, ", playing ", _music.playing, ")")
 	if name == _music_name and _music.playing: return
 	_music_name = name
 	if music_enabled: _start_music(name)
@@ -205,7 +206,8 @@ func _start_music(name: String) -> void:
 	fade.tween_callback(func():
 		_music.stream = stream
 		_music.volume_db = -40.0
-		_music.play())
+		_music.play()
+		print("MUSIC now ", name))
 	fade.tween_property(_music, "volume_db", MUSIC_DB, 1.2)
 
 ## Browsers only allow sound after the first tap (owner 2026-10-14: "no music" on the website).

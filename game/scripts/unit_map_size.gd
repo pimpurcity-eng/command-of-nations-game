@@ -7,7 +7,7 @@ const DISPLAY_SCALE := 1.20
 ## Extra readability for tanks after the owner reviewed the city concept.
 const ARMOR_READABILITY := 1.10
 const FOOTPRINT := {
-	"helicopter": 0.95, "bomber": 1.35, "armor": 0.8, "ifv": 0.74,
+	"helicopter": 0.95, "bomber": 1.35, "armor": 0.8, "ifv": 0.78,
 	"artillery": 0.77, "air_defense": 0.77, "missile_launcher": 0.83,
 	"silo": 0.88, "fighter": 0.89, "drone": 0.65, "naval": 1.3,
 	"submarine": 1.1, "carrier": 2.3, "support": 0.77, "transport": 1.35,
@@ -16,7 +16,7 @@ const FOOTPRINT := {
 	"bridge": 0.83, "recovery": 0.77,
 }
 const HEIGHT := {
-	"helicopter": 0.35, "bomber": 0.4, "armor": 0.32, "ifv": 0.32,
+	"helicopter": 0.35, "bomber": 0.4, "armor": 0.32, "ifv": 0.42,
 	"artillery": 0.38, "air_defense": 0.55, "missile_launcher": 0.48,
 	"silo": 0.7, "fighter": 0.3, "drone": 0.25, "naval": 0.4,
 	"submarine": 0.28, "carrier": 0.45, "support": 0.38,
@@ -33,7 +33,8 @@ static func limits(role: String, path: String = "") -> Vector2:
 		return Vector2(0.34, 0.3) * DISPLAY_SCALE
 	# Effects keep their existing visual scale; this change is for units only.
 	if role == "projectile": return Vector2(0.62, INF)
-	var scale := DISPLAY_SCALE * (ARMOR_READABILITY if role == "armor" else 1.0)
+	# Owner 2026-10-15: light tanks and APCs as big as the air defence next to them.
+	var scale := DISPLAY_SCALE * (ARMOR_READABILITY if role in ["armor", "ifv"] else 1.0)
 	return Vector2(FOOTPRINT.get(role, 0.37), HEIGHT.get(role, 0.38)) * scale
 
 static func fit_factor(size: Vector3, role: String, path: String = "") -> float:

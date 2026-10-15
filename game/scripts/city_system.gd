@@ -9,7 +9,8 @@ static var GARRISON_SQUARE := Rect2(-0.30, -0.28, 0.60, 0.56)
 ## "front" (facing the camera), "side" (east edge) or "outside" (just past the last houses).
 ## The spot is filled with buildings while no army is there.
 static var garrison_layout: = "centre"  # owner 2026-10-15: armies stand in the middle of a round town (Call of War)
-const GARRISON_LAYOUTS: = {"centre": Rect2(-0.30, -0.28, 0.60, 0.56), "front": Rect2(-0.30, 0.62, 0.60, 0.50), "side": Rect2(0.50, -0.26, 0.50, 0.52), "outside": Rect2(-0.30, 1.16, 0.60, 0.46)}
+const GARRISON_LAYOUTS: = {"centre": Rect2(-0.21, -0.20, 0.42, 0.40),  # owner 2026-10-15: square way too big
+	 "front": Rect2(-0.30, 0.62, 0.60, 0.50), "side": Rect2(0.50, -0.26, 0.50, 0.52), "outside": Rect2(-0.30, 1.16, 0.60, 0.46)}
 ## World offset of each city's army spot from the city point, keyed by city_key(point).
 static var plaza_offsets: Dictionary = {}
 static func city_key(point: Vector2) -> String: return "%.3f,%.3f" % [point.x, point.y]

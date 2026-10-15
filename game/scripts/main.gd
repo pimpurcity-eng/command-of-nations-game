@@ -684,7 +684,12 @@ func _map_click(screen: Vector2, order: bool) -> void :
 		if destination != null: player_order(destination)
 		return
 	if not city_hit.is_empty():
-		if order: _set_order_mode(true)
+		# Owner 2026-10-15: tapping a city as the destination opened the city and left move mode
+		# on, so the next tap anywhere sent the army there. A chosen city is the destination and
+		# the order ends there.
+		if (order or order_mode) and units.selected >= 0:
+			player_order(map.position_at(city_hit.city.point))
+			return
 		cities.select_city(city_hit.city)
 		return
 	var hit: = map.pick(rig.camera, screen)
