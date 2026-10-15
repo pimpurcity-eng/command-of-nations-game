@@ -139,7 +139,9 @@ func _apply(message: Dictionary, full: bool) -> void:
 	rules.victory_type = str(message.get("victory_type", ""))
 	if message.has("stockpile"): game.production.stockpiles[country] = message.stockpile
 	if message.has("jobs"): game.production.jobs = message.jobs
+	if message.has("market"): game.trade.market.apply_remote(message.market)
 	if full:
+		if message.has("trade_routes"): game.trade.restore({"routes": message.trade_routes, "convoys": message.get("trade_convoys", [])}, false)
 		if message.has("research"): game.research.restore(message.research)
 		if message.has("buildings"): game.buildings.restore(message.buildings)
 		if message.has("victory"): rules.victory.restore(message.victory)
@@ -149,7 +151,7 @@ func _apply(message: Dictionary, full: bool) -> void:
 		if message.has("diplomacy"): rules.diplomacy.restore(message.diplomacy)
 		rules.diplomacy.ai_countries = message.get("ai_countries", [])
 		var guarded: Array = message.get("guards", [])
-		for country in ["russia", "ukraine"]: rules.set_guard(country, country in guarded)
+		for guard_country in game.production.stockpiles: rules.set_guard(guard_country, guard_country in guarded)
 	game.refresh_hud()
 	if not rules.winner.is_empty() and not _shown_winner:
 		_shown_winner = true

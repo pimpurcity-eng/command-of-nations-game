@@ -28,7 +28,7 @@ static func offered(spec: Dictionary) -> bool: return not spec.get("retired", fa
 static func before(a: Dictionary, b: Dictionary) -> bool:
 	if index(a) != index(b): return index(a) < index(b)
 	if index(a) == 4:
-		var order := {"corvettes": 0, "fleet": 1, "destroyers": 2, "submarines": 3, "carriers": 4}
+		var order := {"corvettes": 0, "fleet": 1, "destroyers": 2, "submarines": 3, "cargo": 4, "tankers": 5, "carriers": 6}
 		var left: int = order.get(str(a.id).get_slice("_", 0), 3)
 		var right: int = order.get(str(b.id).get_slice("_", 0), 3)
 		if left != right: return left < right

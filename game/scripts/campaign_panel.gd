@@ -82,7 +82,7 @@ func _refresh() -> void :
 	if tab == "victory":
 		_label("VICTORY PROGRESS", true)
 		if not rules.winner.is_empty(): _label(MatchSystem.VICTORY_NAMES.get(rules.victory_type, "VICTORY") + " · " + rules.winner.capitalize() + " has won this campaign.", true)
-		_label("Four ways to win:\n• DOMINATION: capture %d%% of all victory points outside your homeland and hold them for a game hour (province 1, city %d, capital %d points).\n• ECONOMIC (very hard): earn %d%% of all income on the map, keep %s funds and hold your capital, without a break for %d days.\n• ELIMINATION: destroy every enemy army and production.\n• POINTS: after day %d the most victory points wins." % [roundi(VictoryRules.DOMINATION_SHARE * 100), VictoryRules.CITY_POINTS, VictoryRules.CAPITAL_POINTS, roundi(VictoryRules.ECONOMIC_SHARE * 100), _short(VictoryRules.ECONOMIC_FUNDS), int(VictoryRules.ECONOMIC_DAYS), int(VictoryRules.TIME_LIMIT_DAYS)])
+		_label("Four ways to win:\n• DOMINATION: capture %d%% of all victory points outside your homeland and hold them for a game hour (province 1, city %d, capital %d points).\n• ECONOMIC: grow productive income to %d%% of your starting economy, keep %s funds and hold your capital, without a break for %d days.\n• ELIMINATION: destroy every enemy army and production.\n• POINTS: after day %d the most victory points wins." % [roundi(VictoryRules.DOMINATION_SHARE * 100), VictoryRules.CITY_POINTS, VictoryRules.CAPITAL_POINTS, roundi(VictoryRules.ECONOMIC_GROWTH * 100), _short(VictoryRules.ECONOMIC_FUNDS), int(VictoryRules.ECONOMIC_DAYS), int(VictoryRules.TIME_LIMIT_DAYS)])
 		var countries: Array = buildings.economy.stockpiles.keys()
 		var table: = VictoryRules.standings(rules.terrain.territories, rules.cities, countries)
 		for country in countries:
@@ -91,7 +91,7 @@ func _refresh() -> void :
 			_bar("Domination %d / %d foreign points" % [row.foreign_held, ceili(row.foreign_total * VictoryRules.DOMINATION_SHARE)], row.domination / VictoryRules.DOMINATION_SHARE)
 			var economic: = rules.victory.economic_conditions(rules, country)
 			var held: float = rules.victory.economic_held.get(country, 0.0) / VictoryRules.DAY
-			_bar("Economy · income share %d%% (need %d%%) · funds %s / %s · capital %s · %.1f / %d days" % [roundi(100 * rules.victory.income_share(country)), roundi(VictoryRules.ECONOMIC_SHARE * 100), _short(buildings.economy.stockpiles[country].get("funds", 0.0)), _short(VictoryRules.ECONOMIC_FUNDS), "held" if economic[2] else "LOST", held, int(VictoryRules.ECONOMIC_DAYS)], held / VictoryRules.ECONOMIC_DAYS)
+			_bar("Economy · productive income %.1f / %.1f · funds %s / %s · capital %s · %.1f / %d days" % [rules.victory.income_rate.get(country, 0.0), rules.victory.economic_target(country), _short(buildings.economy.stockpiles[country].get("funds", 0.0)), _short(VictoryRules.ECONOMIC_FUNDS), "held" if economic[2] else "LOST", held, int(VictoryRules.ECONOMIC_DAYS)], held / VictoryRules.ECONOMIC_DAYS)
 		var days_left: = VictoryRules.TIME_LIMIT_DAYS - rules.clock.elapsed / VictoryRules.DAY if rules.clock != null else VictoryRules.TIME_LIMIT_DAYS
 		_label("Points decision in %.1f days." % maxf(days_left, 0.0))
 		for city in buildings.economy.cities:

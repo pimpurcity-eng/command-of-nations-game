@@ -169,7 +169,7 @@ func _populate_equipment() -> void :
 	ordered.sort_custom(ProductionGroups.before)
 	for spec in ordered:
 		if spec.country != _country(): continue
-		if not ProductionGroups.offered(spec) or (category_picker.selected != 0 and ProductionGroups.index(spec) != category_picker.selected-1): continue
+		if spec.get("research_only",false) or not ProductionGroups.offered(spec) or (category_picker.selected != 0 and ProductionGroups.index(spec) != category_picker.selected-1): continue
 		if spec.visual_kind == "naval" and (city_picker.selected < 0 or not production.cities.filter(func(c):return c.name == city_names[city_picker.selected])[0].has("naval_spawn")): continue
 		filtered.append(spec)
 		equipment_list.add_item(spec.name + " · " + ProductionGroups.title(spec), CowUI.research_picture(spec.id, maxi(1, production.research.level(spec.id)) if production.research != null else 1))

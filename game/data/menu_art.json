@@ -160,7 +160,13 @@
     "res://assets/library/arsenal/euro_eurodrone.glb": "res://assets/interface/unit_art/euro_eurodrone.webp",
     "res://assets/library/arsenal/euro_neuron.glb": "res://assets/interface/unit_art/euro_neuron.webp",
     "res://assets/library/arsenal/ukraine_liutyi.glb": "res://assets/interface/unit_art/ukraine_liutyi.webp",
-    "res://assets/library/arsenal/euro_boxer_ambulance.glb": "res://assets/interface/unit_art/euro_boxer_ambulance.webp"
+    "res://assets/library/arsenal/euro_boxer_ambulance.glb": "res://assets/interface/unit_art/euro_boxer_ambulance.webp",
+    "res://assets/library/transport/civil_container_t1_feeder.glb": "res://assets/interface/unit_art/civil_cargo_ship.webp",
+    "res://assets/library/transport/civil_container_t2_panamax.glb": "res://assets/interface/unit_art/civil_cargo_ship.webp",
+    "res://assets/library/transport/civil_container_t3_ulcv.glb": "res://assets/interface/unit_art/civil_cargo_ship.webp",
+    "res://assets/library/transport/civil_tanker_t1_coastal.glb": "res://assets/interface/unit_art/civil_oil_tanker.webp",
+    "res://assets/library/transport/civil_tanker_t2_aframax.glb": "res://assets/interface/unit_art/civil_oil_tanker.webp",
+    "res://assets/library/transport/civil_tanker_t3_vlcc.glb": "res://assets/interface/unit_art/civil_oil_tanker.webp"
   },
   "buildings": {
     "factory": "res://assets/interface/buildings/factory.webp",

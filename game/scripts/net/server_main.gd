@@ -5,7 +5,7 @@ extends SceneTree
 ##   --port / WM_PORT                 TCP port for WebSocket connections (default 8910)
 ##   --match / WM_MATCH               match id phones must ask for (default "main")
 ##   --save / WM_SAVE                 save file (default user://matches/<match>.json)
-##   --inactive / WM_INACTIVE         seconds away before the AI takes over (default 600)
+##   --inactive / WM_INACTIVE         seconds away before the AI takes over (default 172800 = 48 real hours)
 ##   SUPABASE_URL, SUPABASE_ANON_KEY  account sign-in check (required in production)
 ##   WM_ALLOW_DEV_TOKENS=1            accept "dev:<name>" sign-ins (local testing only)
 var server: MatchServer
@@ -27,7 +27,7 @@ func run() -> void:
 	current_scene = game
 	while not game.boot_finished: await process_frame
 	server = MatchServer.new()
-	server.inactive_seconds = float(option("inactive", "WM_INACTIVE", "600"))
+	server.inactive_seconds = float(option("inactive", "WM_INACTIVE", "172800"))
 	server.allow_dev_tokens = OS.get_environment("WM_ALLOW_DEV_TOKENS") == "1"
 	server.supabase_url = OS.get_environment("SUPABASE_URL")
 	server.supabase_key = OS.get_environment("SUPABASE_ANON_KEY")

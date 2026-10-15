@@ -4890,22 +4890,22 @@
         "model": "res://assets/library/arsenal/euro_lynx_kf41.glb"
       },
       {
-        "name": "Lynx KF41 \u00b7 upgrade",
+        "name": "Lynx KF41 · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_lynx_kf41.glb"
       },
       {
-        "name": "Lynx KF41 \u00b7 Skyranger",
+        "name": "Lynx KF41 · Skyranger",
         "improvement": "",
         "model": "res://assets/library/arsenal/euro_lynx_kf41.glb"
       },
       {
-        "name": "Lynx KF41 \u00b7 upgrade",
+        "name": "Lynx KF41 · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_lynx_kf41.glb"
       },
       {
-        "name": "Lynx KF41 \u00b7 advanced",
+        "name": "Lynx KF41 · advanced",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_lynx_kf41.glb"
       }
@@ -5239,22 +5239,22 @@
         "model": "res://assets/library/arsenal/euro_gripen_e.glb"
       },
       {
-        "name": "Gripen E \u00b7 upgrade",
+        "name": "Gripen E · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_gripen_e.glb"
       },
       {
-        "name": "Gripen E \u00b7 Meteor",
+        "name": "Gripen E · Meteor",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_gripen_e.glb"
       },
       {
-        "name": "Gripen E \u00b7 upgrade",
+        "name": "Gripen E · upgrade",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_gripen_e.glb"
       },
       {
-        "name": "Gripen E \u00b7 advanced",
+        "name": "Gripen E · advanced",
         "improvement": "Improved targeting, reliability and combat effectiveness",
         "model": "res://assets/library/arsenal/euro_gripen_e.glb"
       }
@@ -6281,5 +6281,309 @@
     "production_building": "support_depot",
     "research_branch": "Field medics",
     "starter": false
+  },
+  {
+    "id": "cargo_russia",
+    "country": "russia",
+    "name": "Cargo ships",
+    "category": "Navy",
+    "visual_kind": "naval",
+    "role": "freight",
+    "research_branch": "Cargo ships",
+    "research_only": true,
+    "starter": false,
+    "seconds": 60,
+    "research_days": [
+      1,
+      4,
+      8,
+      12,
+      16
+    ],
+    "cost": {
+      "funds": 3000,
+      "materials": 900,
+      "electronics": 240,
+      "fuel": 300,
+      "manpower": 0,
+      "food": 0
+    },
+    "upkeep": {
+      "funds": 0,
+      "fuel": 0,
+      "food": 0,
+      "manpower": 0
+    },
+    "building_requirements": {
+      "naval_base": 1
+    },
+    "requires_port": true,
+    "production_building": "naval_base",
+    "research_tiers": [
+      {
+        "name": "Cargo ships 1",
+        "model": "res://assets/library/transport/civil_container_t1_feeder.glb",
+        "preview": "res://assets/interface/unit_art/civil_cargo_ship.webp",
+        "cargo_slots": 30,
+        "improvement": "Capacity: 30 cargo slots (3,000 resource units). Same research artwork at every level."
+      },
+      {
+        "name": "Cargo ships 2",
+        "model": "res://assets/library/transport/civil_container_t1_feeder.glb",
+        "preview": "res://assets/interface/unit_art/civil_cargo_ship.webp",
+        "cargo_slots": 60,
+        "improvement": "Capacity: 60 cargo slots (6,000 resource units). Same research artwork at every level."
+      },
+      {
+        "name": "Cargo ships 3",
+        "model": "res://assets/library/transport/civil_container_t2_panamax.glb",
+        "preview": "res://assets/interface/unit_art/civil_cargo_ship.webp",
+        "cargo_slots": 90,
+        "improvement": "Capacity: 90 cargo slots (9,000 resource units). Same research artwork at every level."
+      },
+      {
+        "name": "Cargo ships 4",
+        "model": "res://assets/library/transport/civil_container_t2_panamax.glb",
+        "preview": "res://assets/interface/unit_art/civil_cargo_ship.webp",
+        "cargo_slots": 120,
+        "improvement": "Capacity: 120 cargo slots (12,000 resource units). Same research artwork at every level."
+      },
+      {
+        "name": "Cargo ships 5",
+        "model": "res://assets/library/transport/civil_container_t3_ulcv.glb",
+        "preview": "res://assets/interface/unit_art/civil_cargo_ship.webp",
+        "cargo_slots": 150,
+        "improvement": "Capacity: 150 cargo slots (15,000 resource units). Same research artwork at every level."
+      }
+    ],
+    "model_status": "Original civilian_ships_train.zip from the owner’s Drive; research changes cargo capacity, not combat strength."
+  },
+  {
+    "id": "tankers_russia",
+    "country": "russia",
+    "name": "Oil tankers",
+    "category": "Navy",
+    "visual_kind": "naval",
+    "role": "freight",
+    "research_branch": "Oil tankers",
+    "research_only": true,
+    "starter": false,
+    "seconds": 60,
+    "research_days": [
+      1,
+      4,
+      8,
+      12,
+      16
+    ],
+    "cost": {
+      "funds": 3000,
+      "materials": 900,
+      "electronics": 240,
+      "fuel": 300,
+      "manpower": 0,
+      "food": 0
+    },
+    "upkeep": {
+      "funds": 0,
+      "fuel": 0,
+      "food": 0,
+      "manpower": 0
+    },
+    "building_requirements": {
+      "naval_base": 1
+    },
+    "requires_port": true,
+    "production_building": "naval_base",
+    "research_tiers": [
+      {
+        "name": "Oil tankers 1",
+        "model": "res://assets/library/transport/civil_tanker_t1_coastal.glb",
+        "preview": "res://assets/interface/unit_art/civil_oil_tanker.webp",
+        "cargo_slots": 30,
+        "improvement": "Capacity: 30 cargo slots (3,000 resource units). Same research artwork at every level."
+      },
+      {
+        "name": "Oil tankers 2",
+        "model": "res://assets/library/transport/civil_tanker_t1_coastal.glb",
+        "preview": "res://assets/interface/unit_art/civil_oil_tanker.webp",
+        "cargo_slots": 60,
+        "improvement": "Capacity: 60 cargo slots (6,000 resource units). Same research artwork at every level."
+      },
+      {
+        "name": "Oil tankers 3",
+        "model": "res://assets/library/transport/civil_tanker_t2_aframax.glb",
+        "preview": "res://assets/interface/unit_art/civil_oil_tanker.webp",
+        "cargo_slots": 90,
+        "improvement": "Capacity: 90 cargo slots (9,000 resource units). Same research artwork at every level."
+      },
+      {
+        "name": "Oil tankers 4",
+        "model": "res://assets/library/transport/civil_tanker_t2_aframax.glb",
+        "preview": "res://assets/interface/unit_art/civil_oil_tanker.webp",
+        "cargo_slots": 120,
+        "improvement": "Capacity: 120 cargo slots (12,000 resource units). Same research artwork at every level."
+      },
+      {
+        "name": "Oil tankers 5",
+        "model": "res://assets/library/transport/civil_tanker_t3_vlcc.glb",
+        "preview": "res://assets/interface/unit_art/civil_oil_tanker.webp",
+        "cargo_slots": 150,
+        "improvement": "Capacity: 150 cargo slots (15,000 resource units). Same research artwork at every level."
+      }
+    ],
+    "model_status": "Original civilian_ships_train.zip from the owner’s Drive; research changes cargo capacity, not combat strength."
+  },
+  {
+    "id": "cargo_ukraine",
+    "country": "ukraine",
+    "name": "Cargo ships",
+    "category": "Navy",
+    "visual_kind": "naval",
+    "role": "freight",
+    "research_branch": "Cargo ships",
+    "research_only": true,
+    "starter": false,
+    "seconds": 60,
+    "research_days": [
+      1,
+      4,
+      8,
+      12,
+      16
+    ],
+    "cost": {
+      "funds": 3000,
+      "materials": 900,
+      "electronics": 240,
+      "fuel": 300,
+      "manpower": 0,
+      "food": 0
+    },
+    "upkeep": {
+      "funds": 0,
+      "fuel": 0,
+      "food": 0,
+      "manpower": 0
+    },
+    "building_requirements": {
+      "naval_base": 1
+    },
+    "requires_port": true,
+    "production_building": "naval_base",
+    "research_tiers": [
+      {
+        "name": "Cargo ships 1",
+        "model": "res://assets/library/transport/civil_container_t1_feeder.glb",
+        "preview": "res://assets/interface/unit_art/civil_cargo_ship.webp",
+        "cargo_slots": 30,
+        "improvement": "Capacity: 30 cargo slots (3,000 resource units). Same research artwork at every level."
+      },
+      {
+        "name": "Cargo ships 2",
+        "model": "res://assets/library/transport/civil_container_t1_feeder.glb",
+        "preview": "res://assets/interface/unit_art/civil_cargo_ship.webp",
+        "cargo_slots": 60,
+        "improvement": "Capacity: 60 cargo slots (6,000 resource units). Same research artwork at every level."
+      },
+      {
+        "name": "Cargo ships 3",
+        "model": "res://assets/library/transport/civil_container_t2_panamax.glb",
+        "preview": "res://assets/interface/unit_art/civil_cargo_ship.webp",
+        "cargo_slots": 90,
+        "improvement": "Capacity: 90 cargo slots (9,000 resource units). Same research artwork at every level."
+      },
+      {
+        "name": "Cargo ships 4",
+        "model": "res://assets/library/transport/civil_container_t2_panamax.glb",
+        "preview": "res://assets/interface/unit_art/civil_cargo_ship.webp",
+        "cargo_slots": 120,
+        "improvement": "Capacity: 120 cargo slots (12,000 resource units). Same research artwork at every level."
+      },
+      {
+        "name": "Cargo ships 5",
+        "model": "res://assets/library/transport/civil_container_t3_ulcv.glb",
+        "preview": "res://assets/interface/unit_art/civil_cargo_ship.webp",
+        "cargo_slots": 150,
+        "improvement": "Capacity: 150 cargo slots (15,000 resource units). Same research artwork at every level."
+      }
+    ],
+    "model_status": "Original civilian_ships_train.zip from the owner’s Drive; research changes cargo capacity, not combat strength."
+  },
+  {
+    "id": "tankers_ukraine",
+    "country": "ukraine",
+    "name": "Oil tankers",
+    "category": "Navy",
+    "visual_kind": "naval",
+    "role": "freight",
+    "research_branch": "Oil tankers",
+    "research_only": true,
+    "starter": false,
+    "seconds": 60,
+    "research_days": [
+      1,
+      4,
+      8,
+      12,
+      16
+    ],
+    "cost": {
+      "funds": 3000,
+      "materials": 900,
+      "electronics": 240,
+      "fuel": 300,
+      "manpower": 0,
+      "food": 0
+    },
+    "upkeep": {
+      "funds": 0,
+      "fuel": 0,
+      "food": 0,
+      "manpower": 0
+    },
+    "building_requirements": {
+      "naval_base": 1
+    },
+    "requires_port": true,
+    "production_building": "naval_base",
+    "research_tiers": [
+      {
+        "name": "Oil tankers 1",
+        "model": "res://assets/library/transport/civil_tanker_t1_coastal.glb",
+        "preview": "res://assets/interface/unit_art/civil_oil_tanker.webp",
+        "cargo_slots": 30,
+        "improvement": "Capacity: 30 cargo slots (3,000 resource units). Same research artwork at every level."
+      },
+      {
+        "name": "Oil tankers 2",
+        "model": "res://assets/library/transport/civil_tanker_t1_coastal.glb",
+        "preview": "res://assets/interface/unit_art/civil_oil_tanker.webp",
+        "cargo_slots": 60,
+        "improvement": "Capacity: 60 cargo slots (6,000 resource units). Same research artwork at every level."
+      },
+      {
+        "name": "Oil tankers 3",
+        "model": "res://assets/library/transport/civil_tanker_t2_aframax.glb",
+        "preview": "res://assets/interface/unit_art/civil_oil_tanker.webp",
+        "cargo_slots": 90,
+        "improvement": "Capacity: 90 cargo slots (9,000 resource units). Same research artwork at every level."
+      },
+      {
+        "name": "Oil tankers 4",
+        "model": "res://assets/library/transport/civil_tanker_t2_aframax.glb",
+        "preview": "res://assets/interface/unit_art/civil_oil_tanker.webp",
+        "cargo_slots": 120,
+        "improvement": "Capacity: 120 cargo slots (12,000 resource units). Same research artwork at every level."
+      },
+      {
+        "name": "Oil tankers 5",
+        "model": "res://assets/library/transport/civil_tanker_t3_vlcc.glb",
+        "preview": "res://assets/interface/unit_art/civil_oil_tanker.webp",
+        "cargo_slots": 150,
+        "improvement": "Capacity: 150 cargo slots (15,000 resource units). Same research artwork at every level."
+      }
+    ],
+    "model_status": "Original civilian_ships_train.zip from the owner’s Drive; research changes cargo capacity, not combat strength."
   }
 ]

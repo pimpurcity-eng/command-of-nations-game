@@ -4,7 +4,7 @@ extends RefCounted
 ## - DOMINATION: capture DOMINATION_SHARE of all victory points outside your homeland and hold
 ##   them for a game hour. Provinces are worth 1 point, cities 5, capitals 10, so the target is
 ##   fair for big and small countries alike.
-## - ECONOMIC (very hard): earn ECONOMIC_SHARE of all income on the map, keep a treasury of
+## - ECONOMIC: double the country’s starting productive income, keep a treasury of
 ##   ECONOMIC_FUNDS and hold your capital, every moment for ECONOMIC_DAYS days in a row.
 ##   Losing any condition resets the count.
 ## - ELIMINATION: every rival has lost all armies and production (MatchSystem keeps this one).
@@ -13,7 +13,8 @@ extends RefCounted
 const DAY: = 86400.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
 const DOMINATION_SHARE: = 0.6
 const DOMINATION_HOLD: = DAY / 24.0
-const ECONOMIC_SHARE: = 0.8
+const ECONOMIC_GROWTH: = 2.0
+const ECONOMIC_SHARE: = 0.8 # legacy saves/tests only; no longer a victory requirement
 const ECONOMIC_FUNDS: = 250000.0
 const ECONOMIC_DAYS: = 7.0
 const TIME_LIMIT_DAYS: = 45.0
@@ -21,6 +22,7 @@ const PROVINCE_POINTS: = 1
 const CITY_POINTS: = 5
 const CAPITAL_POINTS: = 10
 
+var economic_baseline: Dictionary = {} # starting productive capacity, persisted across saves
 var domination_held: Dictionary = {}   # country -> sim seconds above the share
 var economic_held: Dictionary = {}     # country -> sim seconds meeting every economic condition
 var income_window: Dictionary = {}     # country -> income value earned in the current hour
@@ -68,13 +70,16 @@ static func value(resources: Dictionary) -> float:
 func evaluate(rules: MatchSystem, seconds: float) -> Array:
 	var countries: Array = rules.production.stockpiles.keys() if rules.production != null else ["russia", "ukraine"]
 	var table: = standings(rules.terrain.territories, rules.cities, countries)
+	if rules.production != null and economic_baseline.is_empty():
+		var gross: Dictionary = rules.production.gross_income()
+		for country in countries: economic_baseline[country] = maxf(1.0, value(gross.get(country, {})))
 	# Domination.
 	for country in countries:
 		if table[country].domination >= DOMINATION_SHARE:
 			domination_held[country] = domination_held.get(country, 0.0) + seconds
 			if domination_held[country] >= DOMINATION_HOLD: return [country, "domination"]
 		else: domination_held.erase(country)
-	# Economic: income share measured over the last full game hour.
+	# Economic: productive income plus net exports over the last full game hour.
 	if rules.production != null:
 		_window_age += seconds
 		for country in countries:
@@ -105,9 +110,8 @@ func economic_conditions(rules: MatchSystem, country: String, all_income: float 
 	if all_income < 0:
 		all_income = 0.0
 		for other in income_rate: all_income += income_rate[other]
-	var share: float = float(income_rate.get(country, 0.0)) / maxf(all_income, 1e-6)
 	var funds: float = rules.production.stockpiles.get(country, {}).get("funds", 0.0) if rules.production != null else 0.0
-	return [share >= ECONOMIC_SHARE, funds >= ECONOMIC_FUNDS, holds_capital(rules, country)]
+	return [float(income_rate.get(country, 0.0)) >= economic_target(country), funds >= ECONOMIC_FUNDS, holds_capital(rules, country)]
 
 static func holds_capital(rules: MatchSystem, country: String) -> bool:
 	for city in rules.cities:
@@ -116,15 +120,22 @@ static func holds_capital(rules: MatchSystem, country: String) -> bool:
 				if t.id == city.get("sector", "") and t.controller == country: return true
 	return false
 
+func economic_target(country: String) -> float:
+	return maxf(1.0, float(economic_baseline.get(country, INF))) * ECONOMIC_GROWTH
+
 func income_share(country: String) -> float:
 	var total: = 0.0
 	for other in income_rate: total += income_rate[other]
 	return income_rate.get(country, 0.0) / maxf(total, 1e-6)
 
 func snapshot() -> Dictionary:
-	return {"domination_held": domination_held.duplicate(), "economic_held": economic_held.duplicate(), "income_rate": income_rate.duplicate()}
+	return {"economic_baseline": economic_baseline.duplicate(), "income_window": income_window.duplicate(), "last_earned": _last_earned.duplicate(), "window_age": _window_age, "domination_held": domination_held.duplicate(), "economic_held": economic_held.duplicate(), "income_rate": income_rate.duplicate()}
 
 func restore(state: Dictionary) -> void:
+	economic_baseline = state.get("economic_baseline", {}).duplicate()
+	income_window = state.get("income_window", {}).duplicate()
+	_last_earned = state.get("last_earned", {}).duplicate()
+	_window_age = float(state.get("window_age", 0.0))
 	domination_held = state.get("domination_held", {}).duplicate()
 	economic_held = state.get("economic_held", {}).duplicate()
 	income_rate = state.get("income_rate", {}).duplicate()
