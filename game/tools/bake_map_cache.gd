@@ -13,6 +13,7 @@ func run() -> void:
 		# The ground height index ships with the mesh, so the game does not rebuild it.
 		mesh.set_meta("ground_cells", StrategicMap.ground_chunks(mesh))
 		mesh.set_meta("ground_cell_size", StrategicMap.GROUND_CELL)
+		mesh.set_meta("ground_vertices", mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX])
 		var error: = ResourceSaver.save(mesh, StrategicMap.mesh_cache_path(t), ResourceSaver.FLAG_COMPRESS)
 		if error != OK: printerr("Could not save ", t.id, ": ", error)
 		else: count += 1

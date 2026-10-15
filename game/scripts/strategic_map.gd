@@ -36,7 +36,7 @@ func _ready() -> void :
 			await get_tree().process_frame
 			FrameBudget.restart()
 	_ground_ready = true
-	print("BOOT map ground at ", Time.get_ticks_msec(), " ms")
+	print("BOOT map ground at ", Time.get_ticks_msec(), " ms (rebuilt ", _cache_misses, " of ", territories.size(), " provinces)")
 	var province_lines: = MapBorder.build_segments(MapBorder.unique_segments(_border_rings), self, 0.9, Color(0.21, 0.23, 0.2, 0.75))
 	province_lines.name = "ProvinceBorders"
 	print("BOOT map borders at ", Time.get_ticks_msec(), " ms")
@@ -152,7 +152,10 @@ func _cached_sector_mesh(t: Dictionary) -> ArrayMesh:
 	if cached == null or str(cached.get_meta("cache_key", "")) != mesh_cache_key(t): return null
 	var baked: Dictionary = cached.get_meta("ground_cells", {})
 	if not baked.is_empty() and is_equal_approx(float(cached.get_meta("ground_cell_size", 0.0)), GROUND_CELL):
-		var corners: PackedVector3Array = cached.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+		# The points come with the cache: reading them back from the mesh (surface_get_arrays)
+		# is very slow in the browser, where the mesh lives only in graphics memory.
+		var corners: PackedVector3Array = cached.get_meta("ground_vertices", PackedVector3Array())
+		if corners.is_empty(): corners = cached.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
 		for key in baked:
 			if not _ground_cells.has(key): _ground_cells[key] = []
 			_ground_cells[key].append([corners, baked[key]])
@@ -166,10 +169,13 @@ func _cached_sector_mesh(t: Dictionary) -> ArrayMesh:
 	else:
 		for i in range(0, indices.size(), 3): _register_ground(vertices[indices[i]], vertices[indices[i + 1]], vertices[indices[i + 2]])
 	return cached
+var _cache_misses: = 0
 func _build_sector(t: Dictionary) -> void :
 	var poly: PackedVector2Array = t.polygon
 	var mesh: ArrayMesh = _cached_sector_mesh(t)
-	if mesh == null: mesh = build_sector_mesh(t)
+	if mesh == null:
+		mesh = build_sector_mesh(t)
+		_cache_misses += 1
 	var material: = ShaderMaterial.new()
 	material.shader = load("res://assets/terrain.gdshader")
 	material.set_shader_parameter("terrain_types", TerrainVisualMap.get_texture())
