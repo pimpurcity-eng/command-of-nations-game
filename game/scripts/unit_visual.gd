@@ -35,6 +35,17 @@ static func preview_path(equipment_id: String) -> String:
 ## Equipment whose own original model has not been recovered yet (Leopard 2, Challenger 2,
 ## Oplot, ...) is shown with an original model of the same role instead of being invisible.
 ## Replace by adding the real model to assets/library and data/asset_roster.json.
+## Models that ship in the website's start download, one per kind and side, shown while a unit's
+## own model downloads on a phone.
+static func download_stand_in(equipment_id: String, kind: String) -> String:
+	var russian: bool = EquipmentIdentity.spec(equipment_id).get("country", GameSession.player_country) == "russia"
+	match kind:
+		"infantry": return "res://assets/library/arsenal/" + ("russia_motor_rifleman.glb" if russian else "euro_fr_foreign_legion.glb")
+		"fighter": return "res://assets/library/arsenal/" + ("russia_yak130.glb" if russian else "euro_hawk_t2.glb")
+		"air_defense": return "res://assets/library/airdefense/" + ("russia_strela10.glb" if russian else "nato_roland.glb")
+		"naval": return ""
+	return "res://assets/library/" + ("pl01_russian.glb" if russian else "pl01_european.glb")
+
 static func stand_in_path(equipment_id: String, kind: String) -> String:
 	var country: String = EquipmentIdentity.spec(equipment_id).get("country", GameSession.player_country)
 	var russian: = country == "russia"
@@ -87,10 +98,15 @@ static func create(kind: String, _faction: Color, equipment_id: String = "", lev
 	var tier: Dictionary = EquipmentIdentity.research_tier(equipment_id, level)
 	var path: String = tier.get("model", asset_path(equipment_id))
 	if not path.is_empty() and not WebExtras.has(path) and UnitSystem.mobile_device():
-		# Phone browser: the real model is downloading; keep the light placeholder until it
-		# arrives instead of loading a second, wrong model (which was then never replaced).
-		assembly.set_meta("missing_original_model", true)
-		return assembly
+		# Phone browser: the real model is still downloading (WebExtras.has asked for it).
+		# Owner 2026-10-15 ("the tanks are registering nothing"): show a vehicle from the start
+		# download meanwhile instead of nothing; main._web_extras_loaded swaps the real one in.
+		var interim: = download_stand_in(equipment_id, EquipmentIdentity.spec(equipment_id).get("visual_kind", kind))
+		if interim.is_empty() or not WebExtras.has(interim):
+			assembly.set_meta("missing_original_model", true)
+			return assembly
+		path = interim
+		assembly.set_meta("stand_in_model", true)
 	if path.is_empty() or not WebExtras.has(path):
 		var spec_kind: String = EquipmentIdentity.spec(equipment_id).get("visual_kind", kind)
 		path = stand_in_path(equipment_id, spec_kind)
@@ -100,7 +116,12 @@ static func create(kind: String, _faction: Color, equipment_id: String = "", lev
 	if path.is_empty() or not WebExtras.has(path):
 		assembly.set_meta("missing_original_model", true)
 		return assembly
-	var vehicle: = (load(path) as PackedScene).instantiate() as Node3D
+	var scene: = load(path) as PackedScene
+	if scene == null:
+		# A model that fails to load (low memory on a phone) is retried later, never left blank.
+		assembly.set_meta("missing_original_model", true)
+		return assembly
+	var vehicle: = scene.instantiate() as Node3D
 	var launch_tip: Vector3 = Vector3.ZERO
 	var has_launch_tip: bool = false
 	if kind == "missile_launcher":

@@ -23,6 +23,13 @@ const HEIGHT := {
 	"transport": 0.45, "radar_aircraft": 0.45, "infantry": 0.50,
 }
 
+## Owner 2026-10-15 ("units are all different sizes"): every ground vehicle gets the same
+## footprint and a tall enough height limit that its length decides, so a towed gun, a rocket
+## truck and a tank read as the same size on the map.
+const GROUND_ROLES: = ["armor", "ifv", "artillery", "air_defense", "missile_launcher", "support", "supply", "medic", "engineer", "bridge", "recovery"]
+const GROUND_FOOTPRINT: = 0.8
+const GROUND_HEIGHT: = 0.62
+
 static func limits(role: String, path: String = "") -> Vector2:
 	# A portable mortar cannot occupy a self-propelled howitzer's footprint.
 	# Use the tier's actual model, since an 81/82 mm family upgrades to 120 mm.
@@ -34,8 +41,8 @@ static func limits(role: String, path: String = "") -> Vector2:
 	# Effects keep their existing visual scale; this change is for units only.
 	if role == "projectile": return Vector2(0.62, INF)
 	# Owner 2026-10-15: light tanks and APCs as big as the air defence next to them.
-	var scale := DISPLAY_SCALE * (ARMOR_READABILITY if role in ["armor", "ifv"] else 1.0)
-	return Vector2(FOOTPRINT.get(role, 0.37), HEIGHT.get(role, 0.38)) * scale
+	if role in GROUND_ROLES: return Vector2(GROUND_FOOTPRINT, GROUND_HEIGHT) * DISPLAY_SCALE * ARMOR_READABILITY
+	return Vector2(FOOTPRINT.get(role, 0.37), HEIGHT.get(role, 0.38)) * DISPLAY_SCALE
 
 static func fit_factor(size: Vector3, role: String, path: String = "") -> float:
 	var envelope := limits(role, path)

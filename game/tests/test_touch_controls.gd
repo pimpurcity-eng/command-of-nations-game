@@ -85,9 +85,13 @@ func run() -> void:
 	# 2. Move order: Move button, then tap a destination; the path is drawn.
 	game.hud.move_requested.emit()
 	check(game.order_mode, "Move enters destination mode")
-	await tap(army_point + Vector2(-120, 160))
 	var unit: Dictionary = game.units.units[game.units.selected]
+	var mover_index: int = game.units.selected
+	await tap(army_point + Vector2(-120, 160))
 	check(unit.moving, "tapping a destination issues the move")
+	# Owner 2026-10-15 ("One click, destination"): the order panel closes after the destination.
+	check(not game.order_mode and game.units.selected < 0, "the order panel closes after the destination")
+	game.units.select_unit(mover_index)
 	check(game.units.route.visible and game.units.route.mesh != null, "movement path is drawn")
 	await snap("touch_3_path")
 	var start: Vector3 = unit.node.position

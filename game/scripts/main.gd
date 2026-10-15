@@ -222,8 +222,8 @@ func _ready() -> void :
 		if match_rules.winner.is_empty(): match_rules.declare_war())
 	hud.attack_requested.connect( func():
 		if not friendly_selected(): hud.show_status("Select your army first");return
-		# Call of War: ordering an attack declares war.
-		if not match_rules.at_war and match_rules.winner.is_empty(): match_rules.declare_war()
+		# Owner 2026-10-15 ("I fired on myself by accident, it declared war"): the Attack button
+		# only picks a target; war is declared when an enemy is chosen and the player confirms.
 		rally_city = ""
 		attack_order = true
 		_set_order_mode(true)
@@ -280,10 +280,8 @@ func _ready() -> void :
 	badges.badge_clicked.connect(func(index: int):
 		if index < 0 or index >= units.units.size(): return
 		var tapped: Dictionary = units.units[index]
-		if attack_order and tapped.country != GameSession.player_country:
-			if units.attack_many(tapped) > 0:
-				attack_order = false
-				_set_order_mode(false)
+		if attack_order:
+			_attack_army(tapped)
 			return
 		if order_mode and not selecting_armies and units.selected >= 0 and tapped.id != units.units[units.selected].id:
 			player_order(tapped.node.position)
@@ -649,17 +647,18 @@ func _map_click(screen: Vector2, order: bool) -> void :
 			_set_order_mode(false)
 			return
 		var enemy_hit: = units.pick_screen(rig.camera, screen, true)
-		if not enemy_hit.is_empty() and units.units[enemy_hit.index].country != GameSession.player_country:
-			if units.attack_many(units.units[enemy_hit.index]) > 0:
-				if GameSession.weapons_test: clock.paused = false
-				attack_order = false
-				_set_order_mode(false)
+		if not enemy_hit.is_empty():
+			_attack_army(units.units[enemy_hit.index])
 			return
 		# No army under the tap: advance on that province to take it.
-		attack_order = false
 		var target: = map.pick(rig.camera, screen)
 		if target.is_empty(): hud.show_status("Choose an enemy army or province");return
-		player_order(target.position)
+		var land_owner: String = str(target.territory.get("controller", ""))
+		if land_owner.is_empty() or land_owner == GameSession.player_country:
+			hud.show_status("That is your own land · choose an enemy army or province")
+			return
+		attack_order = false
+		_with_war(land_owner, func(): player_order(target.position))
 		return
 	var convoy_hit: = trade.market.pick_screen(rig.camera,screen) if trade != null else {}
 	if not convoy_hit.is_empty() and not order and not order_mode:
@@ -817,6 +816,11 @@ func player_order(destination: Vector3) -> void :
 		_set_order_mode(false)
 		append_order = false
 		patrol_order = false
+		# Owner 2026-10-15: "One click, destination" - once the destination is tapped the order
+		# panel goes away, so the next tap (a city, another spot) cannot re-route the army.
+		var status: String = hud.status_message
+		clear_army_selection()
+		hud.show_status(status)
 	else:
 		# Owner 2026-10-13: never leave the player stuck in "choose a destination" needing X;
 		# the reason stays on the status line and the army stays selected.
@@ -872,7 +876,7 @@ func refresh_hud() -> void :
 			for territory in map.territories:
 				if match_rules.capture_progress.has(territory.id) and RegionData.contains(territory, point):
 					hud.detail.text += " · CAPTURE " + str(int(match_rules.capture_progress[territory.id].seconds / 6.0 * 100)) + "%"
-		if unit.node.get_child(0).get_meta("missing_original_model", false): hud.detail.text = EquipmentIdentity.research_title(unit.equipment_id, unit.get("level", 1)).to_upper() + " · ORIGINAL MODEL NOT RECOVERED"
+		if unit.node.get_child(0).get_meta("missing_original_model", false): hud.detail.text = EquipmentIdentity.research_title(unit.equipment_id, unit.get("level", 1)).to_upper() + " · MODEL LOADING"
 		hud.move_button.disabled = unit.country != GameSession.player_country or unit.get("upgrade_remaining", 0.0) > 0 or (match_rules != null and not match_rules.winner.is_empty())
 		hud.stop_button.disabled = hud.move_button.disabled
 	else:
@@ -1363,6 +1367,40 @@ func start_campaign_play() -> void :
 	clock.paused = false
 	refresh_hud()
 	hud.show_status("Campaign running at " + str(int(clock.speed)) + "x · select a your army, then Move or Fly. Pause stops movement and builds.")
+
+## Attack orders (owner 2026-10-15): never against your own armies, and at peace the player is
+## asked before war is declared.
+func _attack_army(target: Dictionary) -> void:
+	if target.country == GameSession.player_country:
+		hud.show_status("That is your own army · choose an enemy army to attack")
+		return
+	_with_war(target.country, func():
+		if units.attack_many(target) > 0:
+			if GameSession.weapons_test: clock.paused = false
+			attack_order = false
+			_set_order_mode(false))
+
+func _with_war(enemy: String, then: Callable) -> void:
+	if match_rules.at_war or not match_rules.winner.is_empty() or GameSession.weapons_test:
+		then.call()
+		return
+	var dialog: = ConfirmationDialog.new()
+	dialog.title = "Declare war?"
+	dialog.dialog_text = "You are at peace with %s.\nAttacking declares war. Declare war and attack?" % enemy.capitalize()
+	dialog.ok_button_text = "Declare war"
+	dialog.cancel_button_text = "Cancel"
+	dialog.add_theme_font_size_override("font_size", 26)
+	add_child(dialog)
+	dialog.confirmed.connect(func():
+		match_rules.declare_war()
+		then.call()
+		dialog.queue_free())
+	dialog.canceled.connect(func():
+		attack_order = false
+		_set_order_mode(false)
+		hud.show_status("Attack cancelled · still at peace")
+		dialog.queue_free())
+	dialog.popup_centered()
 
 func open_army_selection() -> void :
 	if not friendly_selected(): hud.show_status("Select your army first");return

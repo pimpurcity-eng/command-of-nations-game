@@ -336,6 +336,8 @@ func _nation_card(id: String, title: String, stripes: Array, doctrine: String) -
 	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	for side in ["left", "right", "top", "bottom"]: margin.add_theme_constant_override("margin_" + side, 16)
 	card.add_child(margin)
+	# Owner 2026-10-15 ("Ukraine words spilling over"): the card grows with its text.
+	margin.minimum_size_changed.connect(func(): card.custom_minimum_size.y = maxf(194.0, margin.get_combined_minimum_size().y))
 	var body := _box(margin, 7)
 	body.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var flag := VBoxContainer.new()

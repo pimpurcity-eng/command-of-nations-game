@@ -67,7 +67,7 @@ func _initialize() -> void:
 	armies.units = []
 	check(not system._city_has_garrison(city),"Last unit leaving restores the city")
 	check(is_equal_approx(UnitSystem.garrison_scale({"visual_kind":"armor","equipment_id":"tanks_russia"}),1.40),"Tank garrison is larger")
-	check(is_equal_approx(UnitSystem.garrison_scale({"visual_kind":"infantry","equipment_id":"infantry_russia"}),1.40*1.6),"Infantry garrison is readable")
+	check(is_equal_approx(UnitSystem.garrison_scale({"visual_kind":"infantry","equipment_id":"infantry_russia"}),1.40*UnitSystem.SMALL_GARRISON_READABILITY) and UnitSystem.SMALL_GARRISON_READABILITY < 1.3,"Infantry garrison is readable but not oversized (owner 2026-10-15)")
 	node.free();armies.free();system.free();flat.free()
 	print("CITY COURTYARD: ",checks," checks; ",failures," failures")
 	quit(0 if failures == 0 else 1)

@@ -683,7 +683,7 @@ func _replace_visual(unit: Dictionary, replacement: Node3D) -> void:
 	unit.node.move_child(replacement, 0)
 
 const CITY_GARRISON_SCALE: = 1.40  # owner 2026-10-15: "I don't even know what the unit is"
-const SMALL_GARRISON_READABILITY: = 1.60
+const SMALL_GARRISON_READABILITY: = 1.15  # owner 2026-10-15: infantry "a little bit too big" at 1.6
 # Owner 2026-10-14: ground armies out in the provinces were too small; cities a little too big.
 const FIELD_GROUND_SCALE: = 1.45
 
@@ -754,11 +754,13 @@ func _process(delta: float) -> void :
 					unit.node.visible = false
 					unit.icon_only = true
 					continue
-			elif upgrades_left > 0 and detailed < MOBILE_MAX_DETAILED_UNITS and not visual.get_meta("missing_original_model", false):
+			elif upgrades_left > 0 and detailed < MOBILE_MAX_DETAILED_UNITS and not (visual.get_meta("missing_original_model", false) and Time.get_ticks_msec() - int(visual.get_meta("missing_at", 0)) < 5000):
 				# One expensive model import per frame; missing originals are not retried forever.
 				var replacement: Node3D = UnitVisual.create(unit.visual_kind, unit.faction_color, unit.equipment_id, unit.level)
 				if replacement.get_meta("missing_original_model", false):
+					# Retried every 5 s (owner 2026-10-15: units stayed blank for good).
 					visual.set_meta("missing_original_model", true)
+					visual.set_meta("missing_at", Time.get_ticks_msec())
 					replacement.free()
 				else:
 					_replace_visual(unit, replacement)
@@ -781,15 +783,26 @@ func _process(delta: float) -> void :
 		# Call of War: only the selected army gets a ring; the map tag shows ownership.
 		unit.ring.visible = chosen
 		var model: Node3D = unit.node.get_child(0)
+		if model.get_meta("missing_original_model", false) and not mobile and Time.get_ticks_msec() - int(model.get_meta("missing_at", 0)) > 5000:
+			model.set_meta("visual_level", -1)
 		if int(model.get_meta("visual_level", -1)) != int(unit.level):
 			var replacement: = UnitVisual.create(unit.visual_kind, unit.faction_color, unit.equipment_id, unit.level)
-			replacement.rotation = model.rotation
-			replacement.scale = model.scale
-			unit.node.remove_child(model)
-			model.queue_free()
-			unit.node.add_child(replacement)
-			unit.node.move_child(replacement, 0)
-			model = replacement
+			if replacement.get_meta("missing_original_model", false) and model.get_child_count() > 0:
+				# Not loadable yet (owner 2026-10-15: "the tanks are registering nothing"): keep
+				# what is shown and try again in a few seconds instead of showing nothing.
+				replacement.free()
+				model.set_meta("visual_level", unit.level)
+				model.set_meta("missing_original_model", true)
+				model.set_meta("missing_at", Time.get_ticks_msec())
+			else:
+				replacement.rotation = model.rotation
+				replacement.scale = model.scale
+				unit.node.remove_child(model)
+				model.queue_free()
+				unit.node.add_child(replacement)
+				unit.node.move_child(replacement, 0)
+				model = replacement
+				if replacement.get_meta("missing_original_model", false): replacement.set_meta("missing_at", Time.get_ticks_msec())
 			unit.name = EquipmentIdentity.research_title(unit.equipment_id, unit.level)
 		if unit.visual_kind == "air_defense":
 			if model.has_meta("air_defense_animator"):
