@@ -4,8 +4,6 @@ extends SceneTree
 func _initialize() -> void: call_deferred("run")
 func run() -> void:
 	if OS.get_environment("ARSENAL") == "archive": ArsenalFixture.use_archive()
-	# CON_PHONE=1: render with the phone settings.
-	if OS.get_environment("CON_PHONE") == "1": UnitSystem.force_mobile = true
 	var args: = OS.get_cmdline_user_args()
 	root.size = Vector2i(540, 1200)
 	GameSession.player_country = args[4] if args.size() > 4 else "russia"
@@ -24,6 +22,11 @@ func run() -> void:
 	game.rig._snap(1.0)
 	# Phones build the map a piece per frame; wait for it, then let models load.
 	while game.map != null and not game.map.build_finished: await process_frame
+	# CON_PHONE=1: after the (slow, per-frame) phone map build, switch to the phone unit path and
+	# the phone renderer settings so the picture is what a phone shows.
+	if OS.get_environment("CON_PHONE") == "1":
+		UnitSystem.force_mobile = true
+		root.msaa_3d = Viewport.MSAA_2X
 	for i in (120 if UnitSystem.force_mobile else 20): await process_frame
 	root.get_texture().get_image().save_png(args[0])
 	quit()
