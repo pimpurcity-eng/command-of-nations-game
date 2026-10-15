@@ -4,8 +4,8 @@ extends Control
 ## symbol of the army's unit type (UnitClasses), the number of units, and five health bars
 ## beside it. White for your armies, red for enemies you are at war with, grey for others;
 ## gold edge when selected. "token" (zoomed out) is a slightly smaller plate than "tag".
-const TOKEN_SIZE: = Vector2(74, 26)
-const TAG_SIZE: = Vector2(88, 30)
+const TOKEN_SIZE: = Vector2(58, 21)  # owner 2026-10-15: tags were bigger than the tanks
+const TAG_SIZE: = Vector2(62, 22)
 var mode: = "token"
 ## Map class (UnitClasses.ALL) or menu kind; picks the symbol.
 var kind: = "heavy"
@@ -30,7 +30,7 @@ func _fill() -> Color:
 func _draw() -> void:
 	var font: = get_theme_default_font()
 	var ink: = Color.WHITE if hostile else Color("161614")
-	var bars: = 12.0
+	var bars: = 8.0
 	var plate: = Rect2(Vector2(1, 1), Vector2(size.x - bars - 4, size.y - 2))
 	var face: = StyleBoxFlat.new()
 	face.bg_color = _fill()
@@ -50,7 +50,7 @@ func _draw() -> void:
 		var drawn: = Vector2(picture.get_width(), picture.get_height()) * scale
 		draw_texture_rect(picture, Rect2(area.get_center() - drawn * 0.5, drawn), false)
 	draw_line(Vector2(split, plate.position.y + 5), Vector2(split, plate.end.y - 5), Color(1, 1, 1, 0.6) if hostile else Color(0.55, 0.53, 0.5), 1.0)
-	var font_size: = 15 if mode == "token" else 17
+	var font_size: = 13
 	draw_string(font, Vector2(split, plate.get_center().y + font_size * 0.36), str(count), HORIZONTAL_ALIGNMENT_CENTER, plate.end.x - split, font_size, ink)
 	# Five health bars, bottom up.
 	var filled: = clampi(ceili(health / 20.0), 0, 5)
