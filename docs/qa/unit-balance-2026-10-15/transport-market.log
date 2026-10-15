@@ -1,0 +1,77 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PASS infantry cannot be sold
+PASS air capacity is smaller than rail and sea
+PASS level five station carries five times level one
+PASS capacity stops at facility level five
+PASS cannot list cargo from another country’s city
+PASS minimum sale price is enforced
+PASS owned cargo can be listed
+PASS listing reserves actual cargo
+PASS other players cannot withdraw offers
+PASS small shipments fit a cargo plane
+PASS buyer must own receiving city
+PASS withdrawal returns reserved cargo exactly once
+PASS withdrawn cargo cannot be duplicated
+PASS oversized air cargo is rejected
+PASS departure airport level controls capacity even when the receiving airport is level one
+PASS reserved cargo and identifiers survive reload
+PASS a paid cargo shipment starts
+PASS payment is escrowed, not paid to seller at departure
+PASS the same offer cannot be purchased twice
+PASS in-flight cargo survives save/load
+PASS captured destination holds the shipment
+PASS cargo arrives once at the receiving city
+PASS seller is paid only after delivery
+PASS net trade income conserves value so circular sales cannot mint victory income
+PASS destroyed cargo is lost and buyer payment is refunded
+PASS an actual tank is listed at its minimum price
+PASS listed equipment cannot still fight or be sold twice
+PASS upgraded airports can ship one tank
+PASS delivered tank keeps its health and level under its new owner
+PASS rail shipment follows an accessible built railway
+PASS hostile occupation cuts the railway
+PASS without a railway, cargo cannot travel by train
+PASS landlocked cities cannot ship overseas by boat
+PASS coastal ports can ship using a connected sea route
+PASS hostile weapons can damage rail cargo
+PASS hostile weapons can damage sea cargo
+PASS visible enemy convoy does not reveal its destination or origin
+PASS server ticks reuse convoy visuals
+PASS economic target depends on own starting economy, not map-wide monopoly
+PASS economic target survives reconnect/save
+PASS completed net resource demand raises the world minimum
+PASS buying cargo back cannot pump the world price
+PASS each weapon family and level has its own demand-based floor
+PASS world prices survive save/load and server snapshots
+PASS demand cools back toward the basic minimum over time
+PASS Wanted listings must meet the world minimum
+PASS buyers can post a premium-priced Wanted request
+PASS only the buyer can withdraw their Wanted request
+PASS a seller fills a Wanted request using their actual cargo
+PASS filling a request reserves cargo once and removes the request
+PASS Wanted cargo uses the same physical delivery path
+PASS sellers can ask more than the world minimum
+PASS listing and cancelling cannot raise world demand
+PASS seven days of home economic growth wins without world income dominance or conquest
+PASS losing treasury requirement resets economic victory countdown
+PASS cargo ships must first be researched
+PASS cargo ship research level one carries 30 slots
+PASS cargo ship level five carries five times level one
+PASS cargo ship research does not silently unlock oil tankers
+PASS oil tanker research has its own capacity levels
+PASS five naval research levels exist for cargo_russia
+PASS all five levels keep the same artwork for cargo_russia
+PASS five naval research levels exist for tankers_russia
+PASS all five levels keep the same artwork for tankers_russia
+PASS five naval research levels exist for cargo_ukraine
+PASS all five levels keep the same artwork for cargo_ukraine
+PASS five naval research levels exist for tankers_ukraine
+PASS all five levels keep the same artwork for tankers_ukraine
+PASS departure level-five station carries more than a level-one receiving station
+PASS a different departure city at station level one sends a smaller train
+PASS one city station creates no track
+PASS two completed city stations create a connected railway
+PASS naval research screen shows the actual artwork and level-five cargo capacity
+PASS market screen opens with sell, buy and shipment controls
+TRANSPORT MARKET FAILURES: 0

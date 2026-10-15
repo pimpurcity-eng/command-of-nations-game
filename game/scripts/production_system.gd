@@ -102,7 +102,8 @@ func upkeep() -> Dictionary:
 		if unit.health <= 0 or not result.has(unit.country): continue
 		var spec: = equipment(unit.equipment_id)
 		if spec.is_empty(): continue
-		for resource in RESOURCES: result[unit.country][resource] += float(spec.get("upkeep",{}).get(resource,0.0))/DAY_SECONDS
+		var maintenance: = EquipmentEconomy.upkeep(spec, int(unit.get("level", 1)))
+		for resource in RESOURCES: result[unit.country][resource] += float(maintenance[resource])/DAY_SECONDS
 	return result
 func net_income(gross: Dictionary = {}) -> Dictionary:
 	var result: = gross.duplicate(true) if not gross.is_empty() else gross_income()
@@ -131,6 +132,22 @@ func equipment(id: String) -> Dictionary:
 	for spec in catalog:
 		if spec.id == id: return spec
 	return {}
+func production_level(id: String) -> int:
+	return clampi(research.level(id), 1, 5) if research != null else 1
+func cost(id: String, target: int = 0) -> Dictionary:
+	return EquipmentEconomy.cost(equipment(id), production_level(id) if target == 0 else target)
+func duration(id: String, target: int = 0) -> float:
+	return EquipmentEconomy.duration(equipment(id), production_level(id) if target == 0 else target)
+func job_level(job: Dictionary) -> int:
+	return int(job.get("level", production_level(str(job.equipment))))
+func job_duration(job: Dictionary) -> float:
+	return duration(str(job.equipment), job_level(job))
+func _pay_job(job: Dictionary) -> void:
+	job.level = job_level(job)
+	job.paid_cost = cost(str(job.equipment), int(job.level))
+	var country: String = equipment(str(job.equipment)).country
+	for resource in RESOURCES: stockpiles[country][resource] -= float(job.paid_cost.get(resource, 0.0))
+	job.paid = true
 func controller(city: Dictionary) -> String:
 	return str(_territory(str(city.get("sector", ""))).get("controller", ""))
 func controlled(city: Dictionary, country: String = "") -> bool:
@@ -152,10 +169,12 @@ func enqueue(equipment_id: String, city_name: String) -> String:
 	for job in jobs:
 		if job.city == city_name: count += 1
 	if count >= PLAN_LIMIT: return "The production queue is full (5)"
+	var bill: = cost(equipment_id)
 	for resource in RESOURCES:
-		if stockpiles[spec.country][resource] < float(spec.cost.get(resource, 0.0)): return "Insufficient " + resource
-	for resource in RESOURCES: stockpiles[spec.country][resource] -= float(spec.cost.get(resource, 0.0))
-	jobs.append({"id": next_id, "equipment": equipment_id, "city": city_name, "progress": 0.0})
+		if stockpiles[spec.country][resource] < float(bill[resource]): return "Insufficient " + resource
+	var job: = {"id": next_id, "equipment": equipment_id, "city": city_name, "progress": 0.0}
+	_pay_job(job)
+	jobs.append(job)
 	next_id += 1
 	changed.emit()
 	return ""
@@ -170,7 +189,8 @@ func cancel(id: int) -> void :
 		if jobs[i].id != id: continue
 		var spec: = equipment(jobs[i].equipment)
 		if jobs[i].get("paid", true):
-			for resource in RESOURCES: stockpiles[spec.country][resource] += float(spec.cost.get(resource, 0.0))
+			var bill: = jobs[i].get("paid_cost", EquipmentEconomy.previous_cost(spec)) as Dictionary
+			for resource in RESOURCES: stockpiles[spec.country][resource] += float(bill.get(resource, 0.0))
 		jobs.remove_at(i)
 		changed.emit()
 		return
@@ -201,21 +221,25 @@ func advance(seconds: float) -> void :
 			var spec: = equipment(job.equipment)
 			if not job.get("paid", true):
 				var ready: = true
+				var bill: = cost(str(job.equipment), job_level(job))
 				for resource in RESOURCES:
-					if stockpiles[spec.country][resource] < float(spec.cost.get(resource, 0.0)): ready = false
+					if stockpiles[spec.country][resource] < float(bill[resource]): ready = false
 				for building_id in spec.get("building_requirements", {}):
 					if buildings == null or buildings.level(city.id, building_id) < spec.building_requirements[building_id]: ready = false
 				if not ready: break
-				for resource in RESOURCES: stockpiles[spec.country][resource] -= float(spec.cost.get(resource, 0.0))
-				job.paid = true
+				_pay_job(job)
+			# A paid order keeps the level bought when it started, even if research finishes.
+			if not job.has("level"): job.level = production_level(str(job.equipment))
+			if not job.has("paid_cost"): job.paid_cost = EquipmentEconomy.previous_cost(spec)
+			var total: = job_duration(job)
 			var multiplier: = buildings.production_rate(city.id, spec) if buildings != null else 1.0
-			var step: = minf(remaining, (spec.seconds - job.progress) / multiplier)
+			var step: = minf(remaining, maxf(0.0, total - job.progress) / multiplier)
 			job.progress += step * multiplier
 			remaining -= step
-			if job.progress < spec.seconds - 1e-06: break
+			if job.progress < total - 1e-06: break
 			jobs.remove_at(active)
 			var spawn: Vector2 = GeographicProjection.project(city.naval_spawn.longitude, city.naval_spawn.latitude) if spec.visual_kind == "naval" else city.point + Vector2(0.8 + (int(job.id) % 3) * 0.3, 0.8)
-			var completed_unit: = {"base_city": city.id, "level": research.level(spec.id) if research != null else 1, "equipment_id": spec.id, "id": "produced_" + str(int(job.id)), "name": spec.name, "country": spec.country, "visual_kind": spec.visual_kind, "point": spawn}
+			var completed_unit: = {"base_city": city.id, "level": job_level(job), "equipment_id": spec.id, "id": "produced_" + str(int(job.id)), "name": spec.name, "country": spec.country, "visual_kind": spec.visual_kind, "point": spawn}
 			if rally_points.has(city.id) and rally_points[city.id].country == spec.country: completed_unit.rally_point = rally_points[city.id].point.duplicate()
 			unit_ready.emit(completed_unit)
 	changed.emit()
@@ -268,8 +292,12 @@ func validate(state: Variant) -> bool:
 		counts[job.city] = counts.get(job.city, 0) + 1
 		if counts[job.city] > SAVED_PLAN_LIMIT: return false
 		if not job.get("paid", true) is bool or ( not job.get("paid", true) and job.get("progress") != 0): return false
+		if job.has("level"):
+			var target = job.level
+			if not (target is int or target is float) or not is_finite(float(target)) or target != floor(target) or target < 1 or target > 5: return false
+		if job.has("paid_cost") and not EquipmentEconomy.valid_paid_cost(job.paid_cost): return false
 		var progress = job.get("progress")
-		if not (progress is float or progress is int) or not is_finite(float(progress)) or progress < 0 or progress >= spec.seconds: return false
+		if not (progress is float or progress is int) or not is_finite(float(progress)) or progress < 0 or progress >= job_duration(job): return false
 	return true
 func restore(state: Dictionary) -> void :
 	rally_points = state.get("rally_points", {}).duplicate(true)
@@ -281,6 +309,10 @@ func restore(state: Dictionary) -> void :
 	for country in stockpiles: gold[country] = int(state.get("gold", {}).get(country, GoldWallet.START))
 	if buildings != null: buildings.restore(state.get("buildings", {}))
 	if research != null: research.restore(state.get("research", {}))
+	for job in jobs:
+		if job.get("paid", true):
+			if not job.has("level"): job.level = production_level(str(job.equipment))
+			if not job.has("paid_cost"): job.paid_cost = EquipmentEconomy.previous_cost(equipment(str(job.equipment)))
 	changed.emit()
 
 func schedule(equipment_id: String, city_name: String) -> String:
@@ -353,7 +385,7 @@ func unit_speedup_price(job: Dictionary) -> int:
 	for place in cities:
 		if place.name == job.city: city = place
 	var rate: = buildings.production_rate(city.get("id", ""), spec) if buildings != null else 1.0
-	return GoldWallet.speedup((float(spec.seconds) - float(job.progress)) / maxf(rate, 0.001))
+	return GoldWallet.speedup((job_duration(job) - float(job.progress)) / maxf(rate, 0.001))
 
 ## Finishes the unit being built in a city now, for gold.
 func finish_unit_now(city_name: String, country: String) -> String:
@@ -361,15 +393,21 @@ func finish_unit_now(city_name: String, country: String) -> String:
 	if job.is_empty(): return "Nothing is being built here"
 	var spec: = equipment(job.equipment)
 	if spec.country != country: return "Not your production"
+	var producing_city: Dictionary = {}
+	for city in cities:
+		if city.name == city_name: producing_city = city
+	if producing_city.is_empty() or not controlled(producing_city, country): return "Recover control of this city first"
 	if not job.get("paid", true):
+		var bill: = cost(str(job.equipment), job_level(job))
 		for resource in RESOURCES:
-			if stockpiles[country][resource] < float(spec.cost.get(resource, 0.0)): return "Not enough " + resource + " to start it"
+			if stockpiles[country][resource] < float(bill[resource]): return "Not enough " + resource + " to start it"
+		for building_id in spec.get("building_requirements", {}):
+			if buildings == null or buildings.level(str(producing_city.id), building_id) < spec.building_requirements[building_id]: return "Requires " + building_id
 	var error: = spend_gold(country, unit_speedup_price(job))
 	if not error.is_empty(): return error
 	if not job.get("paid", true):
-		for resource in RESOURCES: stockpiles[country][resource] -= float(spec.cost.get(resource, 0.0))
-		job.paid = true
-	job.progress = float(spec.seconds)
+		_pay_job(job)
+	job.progress = job_duration(job)
 	advance(0.000001)
 	return ""
 

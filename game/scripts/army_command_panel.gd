@@ -78,7 +78,7 @@ func open_split(units: UnitSystem) -> void :
 	var group: = units.stacks.members(units.units[units.selected])
 	for unit in group:
 		var check: = CheckBox.new()
-		check.text = EquipmentIdentity.research_title(unit.equipment_id, unit.get("level", 1)) + " · " + EquipmentIdentity.roman_level(unit.level) + " · " + str(int(unit.health)) + " HP"
+		check.text = EquipmentIdentity.research_title(unit.equipment_id, unit.get("level", 1)) + " · " + EquipmentIdentity.roman_level(unit.level) + " · " + UnitStats.hp_label(unit) + " HP"
 		check.custom_minimum_size.y = 48
 		check.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		check.icon = CowUI.research_picture(unit.equipment_id, unit.get("level", 1))
@@ -118,15 +118,16 @@ func open_upgrade(units: UnitSystem, research: ResearchSystem) -> void :
 	for unit in group:
 		if unit.level >= research.level(unit.equipment_id): continue
 		count += 1
-		var spec: = research.economy.equipment(unit.equipment_id)
-		for resource in ProductionSystem.RESOURCES: bill[resource] += ceil(float(spec.cost.get(resource, 0.0)) * 0.5)
-		duration = maxf(duration, spec.seconds * 0.5)
+		var target: = research.level(unit.equipment_id)
+		var unit_cost: = research.economy.cost(unit.equipment_id, target)
+		for resource in ProductionSystem.RESOURCES: bill[resource] += ceil(float(unit_cost[resource]) * 0.5)
+		duration = maxf(duration, research.economy.duration(unit.equipment_id, target) * 0.5)
 	var text: = str(count) + " units · " + SimulationClock.duration(duration)
 	for resource in bill: text += "\n" + resource.capitalize() + ": " + str(int(bill[resource]))
 	_label(text)
 	confirm.disabled = count == 0 or group.any( func(unit: Dictionary): return unit.moving or unit.engaged or unit.get("upgrade_remaining", 0.0) > 0 or unit.get("refuel_remaining", 0.0) > 0)
 	for resource in bill:
-		if research.economy.stockpiles.russia[resource] < bill[resource]: confirm.disabled = true
+		if research.economy.stockpiles[GameSession.player_country][resource] < bill[resource]: confirm.disabled = true
 	if confirm.disabled: _label("Stop the army, leave combat, finish refueling and make sure research and resources are available.")
 func open_rebase(units: UnitSystem) -> void :
 	_begin("rebase", "REBASE AIRCRAFT")

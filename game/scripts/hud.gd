@@ -183,7 +183,8 @@ func _build_top_bar(root: Control) -> void:
 	second.add_child(guard_button)
 	speed_button = _small_button("» 1x")
 	speed_button.pressed.connect(func():
-		_speed = {1.0: 2.0, 2.0: 4.0}.get(_speed, 1.0)
+		var speeds: Array = SimulationClock.SPEEDS
+		_speed = speeds[(speeds.find(_speed) + 1) % speeds.size()]
 		speed_requested.emit(_speed))
 	second.add_child(speed_button)
 	pause_button = _small_button("Play")
@@ -231,10 +232,12 @@ func _build_toolbar(root: Control) -> void:
 	for title in ["Reset north", "Rotate left", "Rotate right", "Terrain / borders", "Speed 1x", "Speed 2x", "Speed 4x", "Save game", "Load game", "Equipment & production", "Army roster", "New match", "Add destination to selected army", "Merge nearby friendly armies", "Split selected units", "Army composition / battle info", "Declare war on Ukraine", "Technology / day unlocks", "Capital / construction", "Supply exchange", "All weapon models", "Select several armies", "Fire control", "Attack enemy army", "Victory progress", "Diplomacy", "Delay / synchronize arrival", "Forced march", "Upgrade selected army", "Rebase aircraft", "Player account", "Sound: ON", "Music: ON", "War newspaper", "Battle reports", "Retreat selected army", "Annex selected province", "Doctrine & strategic weapons", "Espionage"]:
 		navigation_menu.get_popup().add_item(title, navigation_menu.get_popup().item_count - 3)
 	navigation_menu.get_popup().about_to_popup.connect(_show_audio_items)
+	navigation_menu.get_popup().add_item("Speed 10x", 102)
 	navigation_menu.get_popup().id_pressed.connect(func(index: int):
 		match index:
 			100: home_screen_requested.emit()
 			101: account_requested.emit()
+			102: speed_requested.emit(10.0)
 			0: home_requested.emit()
 			1: rotate_requested.emit(-0.18)
 			2: rotate_requested.emit(0.18)
@@ -585,7 +588,7 @@ func show_unit(unit: Dictionary) -> void :
 	own_unit = unit.country == GameSession.player_country
 	selection_title.text = EquipmentIdentity.research_title(unit.equipment_id, unit.get("level", 1)).to_upper() + " · " + EquipmentIdentity.roman_level(int(unit.get("level", 1)))
 	show_health(unit.health)
-	detail.text = unit.country.to_upper() + " · " + str(int(unit.health)) + "% HEALTH"
+	detail.text = unit.country.to_upper() + " · " + UnitStats.hp_label(unit) + " HP"
 	unit_portrait.texture = CowUI.research_picture(unit.equipment_id, unit.get("level", 1))
 	move_button.disabled = not own_unit
 	stop_button.disabled = not own_unit

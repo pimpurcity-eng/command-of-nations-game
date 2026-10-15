@@ -5,13 +5,14 @@
     "asset_roster_id": "facility_factory",
     "capital_only": false,
     "max_level": 3,
-    "hours": 2,
+    "hours": 4,
     "cost": {
-      "funds": 2000,
-      "materials": 1000,
-      "electronics": 300,
-      "fuel": 200,
-      "manpower": 200
+      "funds": 2400,
+      "manpower": 250,
+      "food": 0,
+      "materials": 1200,
+      "fuel": 250,
+      "electronics": 350
     },
     "description": "Produces artillery, air defence and support units.",
     "starting_level": 0,
@@ -25,7 +26,14 @@
     ],
     "preview": "res://assets/library/buildings_oct12/ordnance_factory_menu.png",
     "original_colors": true,
-    "capital_starting_level": 0
+    "capital_starting_level": 0,
+    "previous_cost": {
+      "funds": 2000,
+      "materials": 1000,
+      "electronics": 300,
+      "fuel": 200,
+      "manpower": 200
+    }
   },
   {
     "id": "industry",
@@ -33,13 +41,14 @@
     "asset_roster_id": "facility_industry",
     "capital_only": false,
     "max_level": 3,
-    "hours": 3,
+    "hours": 4,
     "cost": {
-      "funds": 2400,
-      "materials": 1200,
-      "electronics": 200,
-      "fuel": 300,
-      "manpower": 250
+      "funds": 3000,
+      "manpower": 250,
+      "food": 0,
+      "materials": 1500,
+      "fuel": 350,
+      "electronics": 300
     },
     "description": "Each level above 1 increases this city’s currency, manpower and main commodity income by 25%.",
     "starting_level": 0,
@@ -53,7 +62,14 @@
     ],
     "preview": "res://assets/library/buildings_oct12/industry_menu.png",
     "original_colors": true,
-    "capital_starting_level": 0
+    "capital_starting_level": 0,
+    "previous_cost": {
+      "funds": 2400,
+      "materials": 1200,
+      "electronics": 200,
+      "fuel": 300,
+      "manpower": 250
+    }
   },
   {
     "id": "research_center",
@@ -83,13 +99,14 @@
     "starting_level": 0,
     "capital_starting_level": 0,
     "max_level": 5,
-    "hours": 3,
+    "hours": 4,
     "cost": {
-      "funds": 2200,
-      "materials": 1100,
-      "electronics": 450,
-      "fuel": 300,
-      "manpower": 200
+      "funds": 2800,
+      "manpower": 250,
+      "food": 0,
+      "materials": 1400,
+      "fuel": 400,
+      "electronics": 600
     },
     "description": "Enables fighter production and provides a home base. Each extra level reduces refueling time by 25%.",
     "colour": "819aaa",
@@ -108,7 +125,14 @@
       "res://assets/library/buildings_oct12/province_airport_l3.glb",
       "res://assets/library/buildings_oct12/province_airport_l4.glb",
       "res://assets/library/buildings_oct12/province_airport_l5.glb"
-    ]
+    ],
+    "previous_cost": {
+      "funds": 2200,
+      "materials": 1100,
+      "electronics": 450,
+      "fuel": 300,
+      "manpower": 200
+    }
   },
   {
     "id": "finance",
@@ -231,7 +255,14 @@
     ],
     "preview": "res://assets/library/buildings_oct12/recruitment_center_menu.png",
     "original_colors": true,
-    "capital_starting_level": 0
+    "capital_starting_level": 0,
+    "previous_cost": {
+      "funds": 1800,
+      "materials": 900,
+      "electronics": 200,
+      "fuel": 150,
+      "manpower": 150
+    }
   },
   {
     "id": "barracks",
@@ -260,7 +291,14 @@
     ],
     "preview": "res://assets/library/buildings_oct12/barracks_menu.png",
     "original_colors": true,
-    "capital_starting_level": 0
+    "capital_starting_level": 0,
+    "previous_cost": {
+      "funds": 1800,
+      "materials": 1000,
+      "electronics": 150,
+      "fuel": 150,
+      "manpower": 400
+    }
   },
   {
     "id": "tank_plant",
@@ -269,7 +307,7 @@
     "colour": "9b6551",
     "capital_only": false,
     "max_level": 3,
-    "hours": 3,
+    "hours": 4,
     "cost": {
       "funds": 2800,
       "materials": 1700,
@@ -289,7 +327,14 @@
     ],
     "preview": "res://assets/library/buildings_oct12/tank_plant_menu.png",
     "original_colors": true,
-    "capital_starting_level": 0
+    "capital_starting_level": 0,
+    "previous_cost": {
+      "funds": 2800,
+      "materials": 1700,
+      "electronics": 450,
+      "fuel": 450,
+      "manpower": 300
+    }
   },
   {
     "id": "naval_base",
@@ -298,13 +343,14 @@
     "colour": "5c90aa",
     "capital_only": false,
     "max_level": 3,
-    "hours": 4,
+    "hours": 6,
     "cost": {
-      "funds": 3200,
-      "materials": 1800,
-      "electronics": 550,
-      "fuel": 600,
-      "manpower": 350
+      "funds": 4000,
+      "manpower": 400,
+      "food": 0,
+      "materials": 2200,
+      "fuel": 650,
+      "electronics": 800
     },
     "description": "Coastal cities only. Each level increases ship production speed by 25%.",
     "starting_level": 0,
@@ -319,7 +365,14 @@
     ],
     "preview": "res://assets/library/buildings_oct12/naval_base_menu.png",
     "original_colors": true,
-    "capital_starting_level": 0
+    "capital_starting_level": 0,
+    "previous_cost": {
+      "funds": 3200,
+      "materials": 1800,
+      "electronics": 550,
+      "fuel": 600,
+      "manpower": 350
+    }
   },
   {
     "id": "bunker",
@@ -348,7 +401,14 @@
     ],
     "preview": "res://assets/library/buildings_oct12/city_walls_l1_menu.png",
     "original_colors": true,
-    "capital_starting_level": 0
+    "capital_starting_level": 0,
+    "previous_cost": {
+      "funds": 2200,
+      "materials": 1800,
+      "electronics": 200,
+      "fuel": 200,
+      "manpower": 250
+    }
   },
   {
     "id": "infrastructure",
@@ -380,7 +440,14 @@
       "res://assets/library/buildings_oct12/road_straight.glb",
       "res://assets/library/buildings_oct12/road_straight.glb"
     ],
-    "capital_starting_level": 0
+    "capital_starting_level": 0,
+    "previous_cost": {
+      "funds": 2000,
+      "materials": 1400,
+      "electronics": 250,
+      "fuel": 200,
+      "manpower": 300
+    }
   },
   {
     "id": "train_station",
@@ -389,7 +456,7 @@
     "colour": "bd9763",
     "capital_only": false,
     "max_level": 3,
-    "hours": 2,
+    "hours": 3,
     "cost": {
       "funds": 2000,
       "materials": 1400,
@@ -415,7 +482,14 @@
       "res://assets/library/buildings_oct12/road_straight.glb",
       "res://assets/library/buildings_oct12/road_straight.glb"
     ],
-    "starting_note": "Owner 2026-10-13 (Call of War start): every city starts with a train station and nothing else."
+    "starting_note": "Owner 2026-10-13 (Call of War start): every city starts with a train station and nothing else.",
+    "previous_cost": {
+      "funds": 2000,
+      "materials": 1400,
+      "electronics": 250,
+      "fuel": 200,
+      "manpower": 300
+    }
   },
   {
     "id": "capitol",
@@ -423,13 +497,14 @@
     "asset_roster_id": "facility_research_center",
     "capital_only": false,
     "max_level": 1,
-    "hours": 4,
+    "hours": 6,
     "cost": {
-      "funds": 3000,
-      "materials": 1000,
-      "electronics": 700,
-      "fuel": 150,
-      "manpower": 200
+      "funds": 4000,
+      "manpower": 250,
+      "food": 0,
+      "materials": 1600,
+      "fuel": 200,
+      "electronics": 900
     },
     "description": "Moves your national capital to this city when construction completes.",
     "starting_level": 0,
@@ -438,7 +513,14 @@
     "save_default": true,
     "model_tiers": [
       "res://assets/library/buildings_oct12/capital.glb"
-    ]
+    ],
+    "previous_cost": {
+      "funds": 3000,
+      "materials": 1000,
+      "electronics": 700,
+      "fuel": 150,
+      "manpower": 200
+    }
   },
   {
     "id": "missile_factory",
@@ -446,13 +528,14 @@
     "asset_roster_id": "facility_factory",
     "capital_only": false,
     "max_level": 3,
-    "hours": 2,
+    "hours": 6,
     "cost": {
-      "funds": 2000,
-      "materials": 1000,
-      "electronics": 300,
-      "fuel": 200,
-      "manpower": 200
+      "funds": 3800,
+      "manpower": 250,
+      "food": 0,
+      "materials": 1800,
+      "fuel": 450,
+      "electronics": 1100
     },
     "description": "Produces ballistic and cruise missile launchers. Uses the ordnance building model until the supplied missile-factory model arrives.",
     "starting_level": 0,
@@ -467,7 +550,14 @@
     "preview": "res://assets/library/buildings_oct12/ordnance_factory_menu.png",
     "original_colors": true,
     "capital_starting_level": 0,
-    "save_default": true
+    "save_default": true,
+    "previous_cost": {
+      "funds": 2000,
+      "materials": 1000,
+      "electronics": 300,
+      "fuel": 200,
+      "manpower": 200
+    }
   },
   {
     "id": "drone_factory",
@@ -477,13 +567,14 @@
     "starting_level": 0,
     "capital_starting_level": 0,
     "max_level": 5,
-    "hours": 3,
+    "hours": 4,
     "cost": {
-      "funds": 2000,
-      "materials": 900,
-      "electronics": 600,
-      "fuel": 150,
-      "manpower": 150
+      "funds": 2400,
+      "manpower": 180,
+      "food": 0,
+      "materials": 960,
+      "fuel": 180,
+      "electronics": 780
     },
     "description": "Builds drones: reconnaissance, strike, loitering and one-way attack drones. Each level above 1 speeds drone production by 25%.",
     "colour": "6d7f8c",
@@ -496,7 +587,14 @@
     ],
     "preview": "res://assets/library/buildings_oct12/drone_factory_menu.png",
     "original_colors": true,
-    "save_default": true
+    "save_default": true,
+    "previous_cost": {
+      "funds": 2000,
+      "materials": 900,
+      "electronics": 600,
+      "fuel": 150,
+      "manpower": 150
+    }
   },
   {
     "id": "support_depot",
@@ -506,13 +604,14 @@
     "starting_level": 0,
     "capital_starting_level": 0,
     "max_level": 5,
-    "hours": 2,
+    "hours": 3,
     "cost": {
       "funds": 1800,
+      "manpower": 250,
+      "food": 0,
       "materials": 1000,
-      "electronics": 250,
       "fuel": 200,
-      "manpower": 250
+      "electronics": 250
     },
     "description": "Builds support units: combat engineers, bridge layers, recovery vehicles, supply trucks and field medics.",
     "colour": "8a7d5c",
@@ -525,7 +624,14 @@
     ],
     "preview": "res://assets/library/buildings_oct12/support_depot_menu.png",
     "original_colors": true,
-    "save_default": true
+    "save_default": true,
+    "previous_cost": {
+      "funds": 1800,
+      "materials": 1000,
+      "electronics": 250,
+      "fuel": 200,
+      "manpower": 250
+    }
   },
   {
     "id": "hospital",
@@ -535,13 +641,14 @@
     "starting_level": 0,
     "capital_starting_level": 0,
     "max_level": 5,
-    "hours": 2,
+    "hours": 3,
     "cost": {
-      "funds": 1600,
-      "materials": 800,
-      "electronics": 300,
-      "fuel": 100,
-      "manpower": 200
+      "funds": 1800,
+      "manpower": 240,
+      "food": 0,
+      "materials": 840,
+      "fuel": 120,
+      "electronics": 360
     },
     "description": "Heals your armies in this city or province: +2 health per hour per level.",
     "colour": "d8d4c8",
@@ -561,6 +668,13 @@
     ],
     "preview": "res://assets/library/buildings_oct12/hospital_menu.png",
     "original_colors": true,
-    "save_default": true
+    "save_default": true,
+    "previous_cost": {
+      "funds": 1600,
+      "materials": 800,
+      "electronics": 300,
+      "fuel": 100,
+      "manpower": 200
+    }
   }
 ]

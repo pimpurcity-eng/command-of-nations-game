@@ -122,6 +122,7 @@ func run() -> void:
 		shipment.mode = transport
 		# Use a weapon that can actually hit the transport's target class.
 		raider.visual_kind = "naval" if transport == "sea" else "armor"
+		raider.equipment_id = "fleet_russia" if transport == "sea" else tank_spec.id
 		var before: float = shipment.health
 		market._raid(shipment)
 		check(shipment.health < before,"hostile weapons can damage " + transport + " cargo")

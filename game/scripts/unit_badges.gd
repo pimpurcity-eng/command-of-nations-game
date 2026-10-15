@@ -64,9 +64,8 @@ func _process(_delta: float) -> void :
 		# Call of War style (owner 2026-10-13): far = plate on the army; zoomed in = plate beside the model.
 		var selected: bool = armies.selected >= 0 and armies.units[armies.selected].stack_id == unit.stack_id and armies.units[armies.selected].country == unit.country
 		var hostile: bool = armies.at_war and unit.country != GameSession.player_country
-		var hp: = 0.0
-		for member in group: hp += member.health
-		hp /= maxf(1.0, group.size())
+		var total_hp: = UnitStats.group_hp(group)
+		var hp: = 100.0 * total_hp.x / maxf(1.0, total_hp.y)
 		var token: UnitToken = button.get_node("Token")
 		token.mode = "token" if icon_mode else "tag"
 		# The strongest unit leads the stack, so its type is the stack's symbol.

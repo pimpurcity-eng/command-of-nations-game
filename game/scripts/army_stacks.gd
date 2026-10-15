@@ -27,16 +27,14 @@ static var _rating: Dictionary = {}
 ## Its own attack plus defence against every target type at full health, without terrain,
 ## so urban defence bonuses do not put infantry above tanks.
 static func rating(unit: Dictionary) -> float:
-	var key: String = str(unit.get("equipment_id", "")) + ":" + str(int(unit.get("level", 1)))
+	var key: String = str(unit.get("equipment_id", "")) + ":" + str(int(unit.get("level", 1))) + ":" + str(unit.get("country", "")) + ":" + str(EquipmentIdentity.upgrade_factor(unit))
 	if not _rating.has(key):
 		var fresh: Dictionary = unit.duplicate()
 		fresh.health = 100.0
 		var combat: = CombatSystem.new()
 		var total: = 0.0
-		for target in ArmyDetailsPanel.TARGETS:
-			total += combat.damage_value(fresh, target[0], false) + combat.damage_value(fresh, target[0], true)
-		if fresh.visual_kind == "fighter": total += 2.0 * float(EquipmentIdentity.spec(fresh.equipment_id).get("air_damage", 0.0))
-		if fresh.visual_kind == "air_defense": total += 2.0 * float(EquipmentIdentity.research_tier(fresh.equipment_id, int(fresh.get("level", 1))).get("damage", 0.0))
+		for target in UnitClasses.ALL:
+			total += combat.damage_value(fresh, target, false) + combat.damage_value(fresh, target, true)
 		_rating[key] = total
 	return _rating[key]
 func leader(group: Array) -> Dictionary:
@@ -122,23 +120,21 @@ func has_stack(id: String, except_unit: Dictionary) -> bool:
 	return false
 func summary(unit: Dictionary) -> String:
 	var counts: Dictionary = {}
-	var health: = 0.0
 	var group: = members(unit)
 	for member in group:
 		var title: = EquipmentIdentity.title(member.equipment_id)
 		counts[title] = counts.get(title, 0) + 1
-		health += member.health
 	var descriptions: PackedStringArray = []
 	for title in counts: descriptions.append(str(counts[title]) + "× " + title)
-	return str(group.size()) + " units · " + str(int(health)) + "/" + str(group.size() * 100) + " HP · " + ", ".join(descriptions)
+	var hp: = UnitStats.group_hp(group)
+	return str(group.size()) + " units · " + UnitStats.number(hp.x) + "/" + str(roundi(hp.y)) + " HP · " + ", ".join(descriptions)
 
 func movement_speed(group: Array, point: Variant = null) -> float:
 	var speed: = INF
 	for unit in group:
-		var member_speed: = 1.0 if unit.visual_kind in ["artillery", "missile_launcher"] else (1.6 if unit.visual_kind == "ifv" else (0.9 if unit.visual_kind == "air_defense" else 1.4))
-		if unit.visual_kind == "naval": member_speed = EquipmentIdentity.spec(unit.equipment_id).get("sea_speed", 1.2)
+		var member_speed: = UnitStats.speed(unit)
 		if unit.health < 50: member_speed *= 0.7
-		if point != null and unit.visual_kind not in ["fighter", "naval"]: member_speed *= TerrainRules.multiplier(unit.visual_kind, TerrainProfile.sample(point), "speed")
+		if point != null and unit.visual_kind not in ["fighter", "naval"]: member_speed *= TerrainRules.for_unit(unit, TerrainProfile.sample(point), "speed")
 		if unit.get("forced_march", false): member_speed *= 1.5
 		speed = minf(speed, member_speed)
 	if point != null and armies.air.economy != null and armies.air.economy.buildings != null and not group.is_empty():

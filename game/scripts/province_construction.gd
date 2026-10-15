@@ -68,6 +68,7 @@ func enqueue(id: String, building: String, country: String = "") -> String:
  var job: Dictionary = jobs[-1]
  var bill: = buildings.cost(building,job.level)
  for resource in bill: buildings.economy.stockpiles[country][resource] -= bill[resource]
+ job.paid_cost = bill
  job.paid = true
  buildings.economy.changed.emit()
  return ""
@@ -77,7 +78,7 @@ func cancel(id: int) -> String:
   if job.id != id: continue
   if job.country != GameSession.player_country: return "This order belongs to another country"
   if job.paid:
-   var bill: = buildings.cost(job.building,job.level)
+   var bill: = buildings.paid_cost(job)
    var remaining: = clampf(1.0-job.progress/buildings.duration(job.building,job.level),0,1)
    for resource in bill: buildings.economy.stockpiles[job.country][resource] += floor(bill[resource]*remaining)
   jobs.remove_at(i)
@@ -101,6 +102,7 @@ func advance(seconds: float) -> void:
     var bill: = buildings.cost(job.building,job.level)
     if bill.keys().any(func(r):return buildings.economy.stockpiles[job.country][r] < bill[r]): break
     for resource in bill: buildings.economy.stockpiles[job.country][resource] -= bill[resource]
+    job.paid_cost = bill
     job.paid = true
    var speed: = construction_rate(id)
    var total: = buildings.duration(job.building,job.level)
@@ -112,7 +114,7 @@ func advance(seconds: float) -> void:
    jobs.remove_at(index)
    buildings.completed.emit(id,job.building);buildings.changed.emit()
 func construction_rate(id: String) -> float:
- return (1.0+0.15*level(id,"infrastructure"))*clampf(float(place(id).region.get("morale",100.0))/80.0,0.25,1.0)
+ return buildings.construction_rate(id)
 func income_factor(_title: String) -> float: return 1.0  # provinces produce nothing
 func movement_factor(point: Vector2,country: String) -> float:
  for id in _roads:
@@ -152,6 +154,7 @@ func validate(state: Variant) -> bool:
   counts[job.city] = counts.get(job.city,0)+1
   if counts[job.city]>8: return false  # older saves queued up to eight
   if not job.get("paid") is bool: return false
+  if job.has("paid_cost") and not EquipmentEconomy.valid_paid_cost(job.paid_cost): return false
   var progress = job.get("progress")
   if not (progress is int or progress is float) or not is_finite(float(progress)) or progress<0 or progress>=buildings.duration(job.building,job.level) or (not job.paid and progress!=0): return false
  return true
@@ -161,6 +164,8 @@ func restore(state: Dictionary) -> void:
  levels=state.levels.duplicate(true);jobs=state.jobs.duplicate(true);next_id=int(state.next_id)
  # Older saves: province industry no longer exists (no refund needed; it produced income).
  jobs=jobs.filter(func(job):return job.building in ALLOWED)
+ for job in jobs:
+  if job.paid and not job.has("paid_cost"): job.paid_cost = buildings.previous_cost(str(job.building),int(job.level))
  for id in levels:
   for kind in LEGACY: levels[id].erase(kind)
  for id in levels:

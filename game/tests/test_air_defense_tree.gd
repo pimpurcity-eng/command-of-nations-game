@@ -3,16 +3,22 @@ func _initialize() -> void:
 	var failures: int = 0
 	for id in ["skyguard_russia", "patriot_russia", "skyguard_ukraine", "patriot_ukraine"]:
 		var previous: float = 0
+		var previous_damage: = 0.0
 		for level in range(1, 6):
 			var tier: Dictionary = EquipmentIdentity.research_tier(id, level)
-			var unit: Dictionary = {"equipment_id": id, "level": level, "health": 100.0, "visual_kind": "air_defense"}
+			var unit: Dictionary = UnitStats.specimen(id, level)
 			if tier.is_empty() or EquipmentIdentity.air_defense_range(unit) <= previous:
 				failures += 1
 				push_error("FAIL " + "tier.is_empty() or EquipmentIdentity.air_defense_range(unit) <= previous")
 			previous = EquipmentIdentity.air_defense_range(unit)
-			if not is_equal_approx(AirBattleSystem.new().value(unit, "aa_damage"), float(tier.damage)):
+			var actual: = AirBattleSystem.new().value(unit, "aa_damage")
+			var first: = EquipmentIdentity.research_tier(id, 1)
+			var initial: = AirBattleSystem.new().value(UnitStats.specimen(id), "aa_damage")
+			if actual <= previous_damage or not is_equal_approx(actual / initial, float(tier.damage) / float(first.damage)):
 				failures += 1
-				push_error("FAIL " + "not is_equal_approx(AirBattleSystem.new().value(unit, \"aa_damage\"), float(tier.damage))")
+				push_error("FAIL AA HP damage must increase with its tier, without double level scaling")
+			previous_damage = actual
+
 	if EquipmentIdentity.research_title("patriot_russia", 5) != "S-500 Prometey":
 		failures += 1
 		push_error("FAIL " + "EquipmentIdentity.research_title(\"patriot_russia\", 5) != \"S-500 Prometey\"")

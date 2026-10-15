@@ -1,0 +1,2304 @@
+{
+  "version": 2,
+  "units": "Damage is actual HP per combat event. Runtime health remains saved condition percentage. All values are original Warfront balance values, not verified opponent-game statistics.",
+  "level_damage": [
+    1,
+    1.12,
+    1.24,
+    1.36,
+    1.48
+  ],
+  "profiles": {
+    "motorized": {
+      "name": "Motorized infantry",
+      "hp": [
+        25,
+        28,
+        32,
+        36,
+        40
+      ],
+      "attack": {
+        "infantry": 4,
+        "light": 2,
+        "heavy": 1,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 6,
+        "light": 3,
+        "heavy": 1.5,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Affordable city defence; needs armour and artillery support.",
+      "economy": {
+        "production_hours": 2,
+        "research_factor": 0.75,
+        "cost": {
+          "funds": 1200,
+          "manpower": 600,
+          "food": 300,
+          "materials": 240,
+          "fuel": 60,
+          "electronics": 60
+        },
+        "upkeep": {
+          "funds": 100,
+          "manpower": 10,
+          "food": 20,
+          "fuel": 4
+        }
+      }
+    },
+    "airborne": {
+      "name": "Airborne infantry",
+      "hp": [
+        22,
+        25,
+        28,
+        32,
+        35
+      ],
+      "attack": {
+        "infantry": 4.5,
+        "light": 2,
+        "heavy": 1,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 4,
+        "light": 2,
+        "heavy": 1,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Light assault troops; less durable than motorized infantry.",
+      "economy": {
+        "production_hours": 3,
+        "research_factor": 1,
+        "cost": {
+          "funds": 1800,
+          "manpower": 650,
+          "food": 340,
+          "materials": 300,
+          "fuel": 120,
+          "electronics": 150
+        },
+        "upkeep": {
+          "funds": 140,
+          "manpower": 11,
+          "food": 22,
+          "fuel": 6
+        }
+      }
+    },
+    "special": {
+      "name": "Special forces",
+      "hp": [
+        28,
+        31,
+        36,
+        40,
+        45
+      ],
+      "attack": {
+        "infantry": 6,
+        "light": 3,
+        "heavy": 2,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 5,
+        "light": 3,
+        "heavy": 2,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Strong in forests, hills and mountains; vulnerable in open ground.",
+      "terrain": {
+        "forest": {
+          "attack": 1.4,
+          "defense": 1.35,
+          "speed": 0.85
+        },
+        "hills": {
+          "attack": 1.3,
+          "defense": 1.3,
+          "speed": 0.85
+        },
+        "mountains": {
+          "attack": 1.35,
+          "defense": 1.35,
+          "speed": 0.9
+        },
+        "plains": {
+          "attack": 0.9,
+          "defense": 0.9,
+          "speed": 0.8
+        }
+      },
+      "economy": {
+        "production_hours": 4,
+        "research_factor": 1.25,
+        "cost": {
+          "funds": 2400,
+          "manpower": 500,
+          "food": 300,
+          "materials": 360,
+          "fuel": 120,
+          "electronics": 300
+        },
+        "upkeep": {
+          "funds": 180,
+          "manpower": 9,
+          "food": 18,
+          "fuel": 6
+        }
+      }
+    },
+    "marines": {
+      "name": "Naval infantry",
+      "hp": [
+        28,
+        31,
+        36,
+        40,
+        45
+      ],
+      "attack": {
+        "infantry": 5.5,
+        "light": 2.5,
+        "heavy": 1.5,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 5,
+        "light": 2.5,
+        "heavy": 1.5,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Urban assault troops; loses effectiveness in mountains.",
+      "terrain": {
+        "urban": {
+          "attack": 1.4,
+          "defense": 1.3,
+          "speed": 0.8
+        },
+        "mountains": {
+          "attack": 0.8,
+          "defense": 0.9,
+          "speed": 0.65
+        }
+      },
+      "economy": {
+        "production_hours": 3,
+        "research_factor": 1,
+        "cost": {
+          "funds": 2000,
+          "manpower": 700,
+          "food": 360,
+          "materials": 420,
+          "fuel": 150,
+          "electronics": 180
+        },
+        "upkeep": {
+          "funds": 160,
+          "manpower": 12,
+          "food": 24,
+          "fuel": 8
+        }
+      }
+    },
+    "snipers": {
+      "name": "Snipers",
+      "hp": [
+        18,
+        20,
+        23,
+        26,
+        29
+      ],
+      "attack": {
+        "infantry": 5,
+        "light": 0.5,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 7,
+        "light": 0.5,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Anti-infantry specialist in cover; ineffective against heavy armour.",
+      "terrain": {
+        "forest": {
+          "attack": 1.35,
+          "defense": 1.4,
+          "speed": 0.75
+        },
+        "urban": {
+          "attack": 1.3,
+          "defense": 1.45,
+          "speed": 0.8
+        },
+        "plains": {
+          "attack": 0.85,
+          "defense": 0.8,
+          "speed": 0.8
+        }
+      },
+      "economy": {
+        "production_hours": 3,
+        "research_factor": 1,
+        "cost": {
+          "funds": 1500,
+          "manpower": 350,
+          "food": 220,
+          "materials": 180,
+          "fuel": 60,
+          "electronics": 240
+        },
+        "upkeep": {
+          "funds": 120,
+          "manpower": 6,
+          "food": 12,
+          "fuel": 3
+        }
+      }
+    },
+    "mbt": {
+      "name": "Main battle tank",
+      "hp": [
+        55,
+        62,
+        70,
+        79,
+        88
+      ],
+      "attack": {
+        "infantry": 8,
+        "light": 12,
+        "heavy": 10,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 7,
+        "light": 10,
+        "heavy": 9,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Heavy direct fire in open country; vulnerable in cities and mountains.",
+      "economy": {
+        "production_hours": 6,
+        "research_factor": 1.25,
+        "cost": {
+          "funds": 3600,
+          "manpower": 180,
+          "food": 180,
+          "materials": 1200,
+          "fuel": 480,
+          "electronics": 480
+        },
+        "upkeep": {
+          "funds": 280,
+          "manpower": 3,
+          "food": 6,
+          "fuel": 32
+        }
+      }
+    },
+    "advanced_mbt": {
+      "name": "Next-generation tank",
+      "hp": [
+        65,
+        73,
+        83,
+        94,
+        104
+      ],
+      "attack": {
+        "infantry": 9,
+        "light": 13,
+        "heavy": 12,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 8,
+        "light": 11,
+        "heavy": 11,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "More protection and anti-armour firepower; expensive to field.",
+      "economy": {
+        "production_hours": 8,
+        "research_factor": 1.5,
+        "cost": {
+          "funds": 5400,
+          "manpower": 180,
+          "food": 200,
+          "materials": 1560,
+          "fuel": 600,
+          "electronics": 960
+        },
+        "upkeep": {
+          "funds": 380,
+          "manpower": 3,
+          "food": 6,
+          "fuel": 40
+        }
+      }
+    },
+    "light_tank": {
+      "name": "Light tank",
+      "hp": [
+        35,
+        39,
+        45,
+        50,
+        56
+      ],
+      "attack": {
+        "infantry": 6,
+        "light": 5,
+        "heavy": 2.5,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 4,
+        "light": 4,
+        "heavy": 2,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Mobile infantry support; cannot trade evenly with main battle tanks.",
+      "terrain": {
+        "urban": {
+          "attack": 0.85,
+          "defense": 0.9,
+          "speed": 0.75
+        },
+        "forest": {
+          "attack": 0.85,
+          "defense": 1.0,
+          "speed": 0.8
+        },
+        "mountains": {
+          "attack": 0.7,
+          "defense": 0.85,
+          "speed": 0.65
+        }
+      },
+      "economy": {
+        "production_hours": 4,
+        "research_factor": 1,
+        "cost": {
+          "funds": 2400,
+          "manpower": 150,
+          "food": 150,
+          "materials": 780,
+          "fuel": 300,
+          "electronics": 300
+        },
+        "upkeep": {
+          "funds": 190,
+          "manpower": 3,
+          "food": 6,
+          "fuel": 20
+        }
+      }
+    },
+    "apc": {
+      "name": "Armoured personnel carrier",
+      "hp": [
+        32,
+        36,
+        41,
+        46,
+        51
+      ],
+      "attack": {
+        "infantry": 4,
+        "light": 3,
+        "heavy": 1,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 4,
+        "light": 3,
+        "heavy": 1,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Protected infantry transport; limited anti-tank capability.",
+      "economy": {
+        "production_hours": 3,
+        "research_factor": 0.85,
+        "cost": {
+          "funds": 1800,
+          "manpower": 240,
+          "food": 200,
+          "materials": 600,
+          "fuel": 240,
+          "electronics": 180
+        },
+        "upkeep": {
+          "funds": 140,
+          "manpower": 4,
+          "food": 8,
+          "fuel": 16
+        }
+      }
+    },
+    "ifv": {
+      "name": "Infantry fighting vehicle",
+      "hp": [
+        40,
+        45,
+        51,
+        58,
+        64
+      ],
+      "attack": {
+        "infantry": 6,
+        "light": 5,
+        "heavy": 2.5,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 5,
+        "light": 4,
+        "heavy": 3,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Infantry support and light-armour combat; weaker than tanks against heavy armour.",
+      "economy": {
+        "production_hours": 4,
+        "research_factor": 1,
+        "cost": {
+          "funds": 2400,
+          "manpower": 240,
+          "food": 220,
+          "materials": 780,
+          "fuel": 300,
+          "electronics": 360
+        },
+        "upkeep": {
+          "funds": 180,
+          "manpower": 4,
+          "food": 8,
+          "fuel": 20
+        }
+      }
+    },
+    "airborne_ifv": {
+      "name": "Airborne fighting vehicle",
+      "hp": [
+        28,
+        31,
+        36,
+        40,
+        45
+      ],
+      "attack": {
+        "infantry": 5,
+        "light": 4,
+        "heavy": 2,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 4,
+        "light": 3,
+        "heavy": 2,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Lighter fighting vehicle; trades protection for deployability.",
+      "economy": {
+        "production_hours": 4.5,
+        "research_factor": 1.1,
+        "cost": {
+          "funds": 2700,
+          "manpower": 220,
+          "food": 200,
+          "materials": 720,
+          "fuel": 300,
+          "electronics": 480
+        },
+        "upkeep": {
+          "funds": 190,
+          "manpower": 4,
+          "food": 8,
+          "fuel": 20
+        }
+      }
+    },
+    "sp_artillery": {
+      "name": "Self-propelled artillery",
+      "hp": [
+        24,
+        27,
+        31,
+        35,
+        38
+      ],
+      "attack": {
+        "infantry": 4.5,
+        "light": 6,
+        "heavy": 6.5,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 1,
+        "light": 0.6,
+        "heavy": 0.4,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Ranged anti-armour support; weak if caught in close combat.",
+      "economy": {
+        "production_hours": 5,
+        "research_factor": 1.1,
+        "cost": {
+          "funds": 3000,
+          "manpower": 240,
+          "food": 200,
+          "materials": 960,
+          "fuel": 360,
+          "electronics": 480
+        },
+        "upkeep": {
+          "funds": 240,
+          "manpower": 4,
+          "food": 8,
+          "fuel": 24
+        }
+      }
+    },
+    "rocket_artillery": {
+      "name": "Rocket artillery",
+      "hp": [
+        22,
+        25,
+        28,
+        32,
+        35
+      ],
+      "attack": {
+        "infantry": 7,
+        "light": 6,
+        "heavy": 4.5,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0.7,
+        "light": 0.4,
+        "heavy": 0.2,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Long-range area fire; vulnerable while reloading.",
+      "economy": {
+        "production_hours": 6,
+        "research_factor": 1.25,
+        "cost": {
+          "funds": 3800,
+          "manpower": 240,
+          "food": 220,
+          "materials": 1080,
+          "fuel": 420,
+          "electronics": 780
+        },
+        "upkeep": {
+          "funds": 300,
+          "manpower": 4,
+          "food": 8,
+          "fuel": 28
+        }
+      }
+    },
+    "light_mortar": {
+      "name": "Light mortar",
+      "hp": [
+        14,
+        16,
+        18,
+        20,
+        22
+      ],
+      "attack": {
+        "infantry": 3.5,
+        "light": 1.5,
+        "heavy": 0.4,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0.6,
+        "light": 0.2,
+        "heavy": 0.1,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Light anti-infantry support; low protection and little anti-tank effect.",
+      "terrain": {
+        "forest": {
+          "attack": 1.15,
+          "defense": 1.1,
+          "speed": 0.8
+        },
+        "urban": {
+          "attack": 1.1,
+          "defense": 1.15,
+          "speed": 0.8
+        }
+      },
+      "economy": {
+        "production_hours": 2,
+        "research_factor": 0.75,
+        "cost": {
+          "funds": 1100,
+          "manpower": 360,
+          "food": 220,
+          "materials": 240,
+          "fuel": 40,
+          "electronics": 60
+        },
+        "upkeep": {
+          "funds": 90,
+          "manpower": 6,
+          "food": 12,
+          "fuel": 2
+        }
+      }
+    },
+    "heavy_mortar": {
+      "name": "Heavy mortar",
+      "hp": [
+        18,
+        20,
+        23,
+        26,
+        29
+      ],
+      "attack": {
+        "infantry": 4.5,
+        "light": 2,
+        "heavy": 0.8,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0.7,
+        "light": 0.3,
+        "heavy": 0.1,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Heavier indirect infantry support; weaker against armoured targets.",
+      "economy": {
+        "production_hours": 2.5,
+        "research_factor": 0.85,
+        "cost": {
+          "funds": 1600,
+          "manpower": 400,
+          "food": 240,
+          "materials": 420,
+          "fuel": 60,
+          "electronics": 120
+        },
+        "upkeep": {
+          "funds": 120,
+          "manpower": 7,
+          "food": 14,
+          "fuel": 4
+        }
+      }
+    },
+    "towed_artillery": {
+      "name": "Towed artillery",
+      "hp": [
+        18,
+        20,
+        23,
+        26,
+        29
+      ],
+      "attack": {
+        "infantry": 5.5,
+        "light": 3.5,
+        "heavy": 3,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0.8,
+        "light": 0.4,
+        "heavy": 0.2,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Economical indirect fire; very vulnerable at close range.",
+      "economy": {
+        "production_hours": 3,
+        "research_factor": 0.9,
+        "cost": {
+          "funds": 2100,
+          "manpower": 420,
+          "food": 260,
+          "materials": 600,
+          "fuel": 100,
+          "electronics": 180
+        },
+        "upkeep": {
+          "funds": 150,
+          "manpower": 7,
+          "food": 14,
+          "fuel": 6
+        }
+      }
+    },
+    "short_aa": {
+      "name": "Short-range air defence",
+      "hp": [
+        24,
+        27,
+        31,
+        35,
+        38
+      ],
+      "attack": {
+        "infantry": 1.5,
+        "light": 0.6,
+        "heavy": 0.2,
+        "air": 3.5,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 2,
+        "light": 0.8,
+        "heavy": 0.3,
+        "air": 4,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Protects against drones and low attack runs; cannot engage high bombers.",
+      "economy": {
+        "production_hours": 4,
+        "research_factor": 1,
+        "cost": {
+          "funds": 2400,
+          "manpower": 180,
+          "food": 160,
+          "materials": 720,
+          "fuel": 240,
+          "electronics": 660
+        },
+        "upkeep": {
+          "funds": 180,
+          "manpower": 3,
+          "food": 6,
+          "fuel": 16
+        }
+      }
+    },
+    "long_aa": {
+      "name": "Long-range air defence",
+      "hp": [
+        22,
+        25,
+        28,
+        32,
+        35
+      ],
+      "attack": {
+        "infantry": 0.5,
+        "light": 0.3,
+        "heavy": 0.1,
+        "air": 5,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0.8,
+        "light": 0.4,
+        "heavy": 0.2,
+        "air": 5.5,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Area air defence against larger aircraft; short-range cover counters drones.",
+      "economy": {
+        "production_hours": 6,
+        "research_factor": 1.4,
+        "cost": {
+          "funds": 4200,
+          "manpower": 180,
+          "food": 180,
+          "materials": 1080,
+          "fuel": 300,
+          "electronics": 1500
+        },
+        "upkeep": {
+          "funds": 300,
+          "manpower": 3,
+          "food": 6,
+          "fuel": 20
+        }
+      }
+    },
+    "tactical_missile": {
+      "name": "Tactical ballistic missile",
+      "hp": [
+        20,
+        22,
+        26,
+        29,
+        32
+      ],
+      "attack": {
+        "infantry": 6,
+        "light": 10,
+        "heavy": 12,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0.5,
+        "light": 0.3,
+        "heavy": 0.2,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Powerful strike followed by a long reload; needs protection.",
+      "economy": {
+        "production_hours": 8,
+        "research_factor": 1.5,
+        "cost": {
+          "funds": 4800,
+          "manpower": 200,
+          "food": 180,
+          "materials": 1200,
+          "fuel": 600,
+          "electronics": 1200
+        },
+        "upkeep": {
+          "funds": 320,
+          "manpower": 3,
+          "food": 6,
+          "fuel": 32
+        }
+      }
+    },
+    "silo": {
+      "name": "Missile silo",
+      "hp": [
+        70,
+        78,
+        90,
+        101,
+        112
+      ],
+      "attack": {
+        "infantry": 8,
+        "light": 12,
+        "heavy": 16,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0.3,
+        "light": 0.2,
+        "heavy": 0.1,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Hardened long-range strike site; little direct defensive fire.",
+      "economy": {
+        "production_hours": 12,
+        "research_factor": 1.75,
+        "cost": {
+          "funds": 6600,
+          "manpower": 300,
+          "food": 240,
+          "materials": 2400,
+          "fuel": 480,
+          "electronics": 1560
+        },
+        "upkeep": {
+          "funds": 400,
+          "manpower": 5,
+          "food": 10,
+          "fuel": 24
+        }
+      }
+    },
+    "coastal_missile": {
+      "name": "Coastal anti-ship missile",
+      "hp": [
+        24,
+        27,
+        31,
+        35,
+        38
+      ],
+      "attack": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 14,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 1,
+        "submarine": 0
+      },
+      "purpose": "Anti-surface-ship specialist; cannot engage submerged submarines or land armies.",
+      "economy": {
+        "production_hours": 6,
+        "research_factor": 1.25,
+        "cost": {
+          "funds": 3600,
+          "manpower": 200,
+          "food": 180,
+          "materials": 960,
+          "fuel": 360,
+          "electronics": 960
+        },
+        "upkeep": {
+          "funds": 260,
+          "manpower": 3,
+          "food": 6,
+          "fuel": 24
+        }
+      }
+    },
+    "strategic_missile": {
+      "name": "Strategic missile launcher",
+      "hp": [
+        22,
+        25,
+        28,
+        32,
+        35
+      ],
+      "attack": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Single nuclear launch uses the separate area-blast damage pool and consumes the launcher.",
+      "economy": {
+        "production_hours": 18,
+        "research_factor": 2,
+        "cost": {
+          "funds": 10800,
+          "manpower": 300,
+          "food": 240,
+          "materials": 2400,
+          "fuel": 1800,
+          "electronics": 2400
+        },
+        "upkeep": {
+          "funds": 600,
+          "manpower": 5,
+          "food": 10,
+          "fuel": 60
+        }
+      }
+    },
+    "fighter": {
+      "name": "Air superiority fighter",
+      "hp": [
+        28,
+        31,
+        36,
+        40,
+        45
+      ],
+      "attack": {
+        "infantry": 1.5,
+        "light": 1,
+        "heavy": 0.5,
+        "air": 9,
+        "naval": 0.5,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0.5,
+        "light": 0.5,
+        "heavy": 0.2,
+        "air": 8,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Air-to-air specialist; limited ground attack.",
+      "economy": {
+        "production_hours": 8,
+        "research_factor": 1.4,
+        "cost": {
+          "funds": 4200,
+          "manpower": 120,
+          "food": 140,
+          "materials": 960,
+          "fuel": 720,
+          "electronics": 1080
+        },
+        "upkeep": {
+          "funds": 300,
+          "manpower": 2,
+          "food": 4,
+          "fuel": 48
+        }
+      }
+    },
+    "strike_fighter": {
+      "name": "Strike fighter",
+      "hp": [
+        30,
+        34,
+        38,
+        43,
+        48
+      ],
+      "attack": {
+        "infantry": 7,
+        "light": 6,
+        "heavy": 5,
+        "air": 4,
+        "naval": 3,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 1,
+        "light": 1,
+        "heavy": 0.5,
+        "air": 3.5,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Multirole ground attack; loses air duels to dedicated fighters.",
+      "economy": {
+        "production_hours": 9,
+        "research_factor": 1.5,
+        "cost": {
+          "funds": 4800,
+          "manpower": 120,
+          "food": 140,
+          "materials": 1080,
+          "fuel": 840,
+          "electronics": 1200
+        },
+        "upkeep": {
+          "funds": 340,
+          "manpower": 2,
+          "food": 4,
+          "fuel": 56
+        }
+      }
+    },
+    "interceptor": {
+      "name": "Interceptor",
+      "hp": [
+        24,
+        27,
+        31,
+        35,
+        38
+      ],
+      "attack": {
+        "infantry": 0.8,
+        "light": 0.5,
+        "heavy": 0.2,
+        "air": 11,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0.3,
+        "light": 0.2,
+        "heavy": 0.1,
+        "air": 9,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Fast air interception; almost no ground-strike capability.",
+      "economy": {
+        "production_hours": 8,
+        "research_factor": 1.4,
+        "cost": {
+          "funds": 4500,
+          "manpower": 120,
+          "food": 140,
+          "materials": 1020,
+          "fuel": 840,
+          "electronics": 1140
+        },
+        "upkeep": {
+          "funds": 320,
+          "manpower": 2,
+          "food": 4,
+          "fuel": 56
+        }
+      }
+    },
+    "bomber": {
+      "name": "Strategic bomber",
+      "hp": [
+        38,
+        43,
+        49,
+        55,
+        61
+      ],
+      "attack": {
+        "infantry": 9,
+        "light": 5,
+        "heavy": 3.5,
+        "air": 1,
+        "naval": 4,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 1,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Long-range ground strike; vulnerable without fighter and air-defence support.",
+      "economy": {
+        "production_hours": 12,
+        "research_factor": 1.75,
+        "cost": {
+          "funds": 7200,
+          "manpower": 180,
+          "food": 180,
+          "materials": 1560,
+          "fuel": 1440,
+          "electronics": 1560
+        },
+        "upkeep": {
+          "funds": 500,
+          "manpower": 3,
+          "food": 6,
+          "fuel": 96
+        }
+      }
+    },
+    "attack_heli": {
+      "name": "Attack helicopter",
+      "hp": [
+        22,
+        25,
+        28,
+        32,
+        35
+      ],
+      "attack": {
+        "infantry": 6,
+        "light": 8,
+        "heavy": 9,
+        "air": 1,
+        "naval": 1.5,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0.5,
+        "light": 0.5,
+        "heavy": 0.3,
+        "air": 1,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Strong against armour; vulnerable to fighters and short-range air defence.",
+      "economy": {
+        "production_hours": 6,
+        "research_factor": 1.2,
+        "cost": {
+          "funds": 3300,
+          "manpower": 180,
+          "food": 180,
+          "materials": 720,
+          "fuel": 480,
+          "electronics": 780
+        },
+        "upkeep": {
+          "funds": 250,
+          "manpower": 3,
+          "food": 6,
+          "fuel": 32
+        }
+      }
+    },
+    "transport_heli": {
+      "name": "Transport helicopter",
+      "hp": [
+        26,
+        29,
+        33,
+        37,
+        42
+      ],
+      "attack": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Transport, not a gunship; requires an escort.",
+      "economy": {
+        "production_hours": 5,
+        "research_factor": 1,
+        "cost": {
+          "funds": 2400,
+          "manpower": 180,
+          "food": 180,
+          "materials": 600,
+          "fuel": 360,
+          "electronics": 420
+        },
+        "upkeep": {
+          "funds": 180,
+          "manpower": 3,
+          "food": 6,
+          "fuel": 24
+        }
+      }
+    },
+    "light_attack": {
+      "name": "Light attack aircraft",
+      "hp": [
+        20,
+        22,
+        26,
+        29,
+        32
+      ],
+      "attack": {
+        "infantry": 4,
+        "light": 2,
+        "heavy": 1,
+        "air": 1.5,
+        "naval": 0.5,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0.2,
+        "light": 0.1,
+        "heavy": 0,
+        "air": 1,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Economical infantry attack; vulnerable to fighters and SAMs.",
+      "economy": {
+        "production_hours": 5,
+        "research_factor": 1.05,
+        "cost": {
+          "funds": 2700,
+          "manpower": 120,
+          "food": 140,
+          "materials": 660,
+          "fuel": 420,
+          "electronics": 540
+        },
+        "upkeep": {
+          "funds": 190,
+          "manpower": 2,
+          "food": 4,
+          "fuel": 28
+        }
+      }
+    },
+    "recon_drone": {
+      "name": "Reconnaissance drone",
+      "hp": [
+        10,
+        12,
+        14,
+        16,
+        18
+      ],
+      "attack": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Reconnaissance platform; no offensive weapon loadout.",
+      "economy": {
+        "production_hours": 3,
+        "research_factor": 0.85,
+        "cost": {
+          "funds": 1500,
+          "manpower": 60,
+          "food": 60,
+          "materials": 240,
+          "fuel": 120,
+          "electronics": 540
+        },
+        "upkeep": {
+          "funds": 90,
+          "manpower": 1,
+          "food": 2,
+          "fuel": 8
+        }
+      }
+    },
+    "strike_drone": {
+      "name": "Strike drone",
+      "hp": [
+        14,
+        16,
+        18,
+        20,
+        22
+      ],
+      "attack": {
+        "infantry": 4,
+        "light": 4.5,
+        "heavy": 3.5,
+        "air": 0,
+        "naval": 0.5,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Precision ground support; fragile and needs short-range-AA suppression.",
+      "economy": {
+        "production_hours": 5,
+        "research_factor": 1.1,
+        "cost": {
+          "funds": 2600,
+          "manpower": 60,
+          "food": 80,
+          "materials": 420,
+          "fuel": 180,
+          "electronics": 840
+        },
+        "upkeep": {
+          "funds": 150,
+          "manpower": 1,
+          "food": 2,
+          "fuel": 12
+        }
+      }
+    },
+    "loitering": {
+      "name": "Loitering munition",
+      "hp": [
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "attack": {
+        "infantry": 4,
+        "light": 7,
+        "heavy": 8,
+        "air": 0,
+        "naval": 1,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Single-use anti-armour strike; consumed even when the target survives.",
+      "economy": {
+        "production_hours": 2,
+        "research_factor": 0.8,
+        "cost": {
+          "funds": 900,
+          "manpower": 40,
+          "food": 40,
+          "materials": 180,
+          "fuel": 60,
+          "electronics": 300
+        },
+        "upkeep": {
+          "funds": 50,
+          "manpower": 1,
+          "food": 1,
+          "fuel": 4
+        }
+      }
+    },
+    "one_way_drone": {
+      "name": "One-way attack drone",
+      "hp": [
+        8,
+        9,
+        10,
+        12,
+        13
+      ],
+      "attack": {
+        "infantry": 6,
+        "light": 3,
+        "heavy": 1.5,
+        "air": 0,
+        "naval": 2,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Single-use long-range attack on soft targets; weaker against heavy armour.",
+      "economy": {
+        "production_hours": 2.5,
+        "research_factor": 0.9,
+        "cost": {
+          "funds": 1200,
+          "manpower": 40,
+          "food": 40,
+          "materials": 240,
+          "fuel": 120,
+          "electronics": 360
+        },
+        "upkeep": {
+          "funds": 60,
+          "manpower": 1,
+          "food": 1,
+          "fuel": 6
+        }
+      }
+    },
+    "transport_aircraft": {
+      "name": "Transport aircraft",
+      "hp": [
+        30,
+        34,
+        38,
+        43,
+        48
+      ],
+      "attack": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Cargo and logistics aircraft; unarmed.",
+      "economy": {
+        "production_hours": 7,
+        "research_factor": 1.15,
+        "cost": {
+          "funds": 3600,
+          "manpower": 180,
+          "food": 180,
+          "materials": 1080,
+          "fuel": 720,
+          "electronics": 600
+        },
+        "upkeep": {
+          "funds": 260,
+          "manpower": 3,
+          "food": 6,
+          "fuel": 48
+        }
+      }
+    },
+    "awacs": {
+      "name": "Airborne early warning",
+      "hp": [
+        32,
+        36,
+        41,
+        46,
+        51
+      ],
+      "attack": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Radar and surveillance aircraft; unarmed and needs fighter cover.",
+      "economy": {
+        "production_hours": 10,
+        "research_factor": 1.6,
+        "cost": {
+          "funds": 6000,
+          "manpower": 180,
+          "food": 180,
+          "materials": 1200,
+          "fuel": 840,
+          "electronics": 1800
+        },
+        "upkeep": {
+          "funds": 400,
+          "manpower": 3,
+          "food": 6,
+          "fuel": 56
+        }
+      }
+    },
+    "frigate": {
+      "name": "Frigate",
+      "hp": [
+        80,
+        90,
+        102,
+        115,
+        128
+      ],
+      "attack": {
+        "infantry": 2,
+        "light": 1.5,
+        "heavy": 1,
+        "air": 5,
+        "naval": 6,
+        "submarine": 12
+      },
+      "defense": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 6,
+        "naval": 6,
+        "submarine": 12
+      },
+      "purpose": "Fleet air-defence and anti-submarine escort; moderate surface firepower.",
+      "economy": {
+        "production_hours": 12,
+        "research_factor": 1.4,
+        "cost": {
+          "funds": 6600,
+          "manpower": 360,
+          "food": 300,
+          "materials": 2400,
+          "fuel": 900,
+          "electronics": 1500
+        },
+        "upkeep": {
+          "funds": 440,
+          "manpower": 6,
+          "food": 12,
+          "fuel": 60
+        }
+      }
+    },
+    "destroyer": {
+      "name": "Destroyer",
+      "hp": [
+        100,
+        112,
+        128,
+        144,
+        160
+      ],
+      "attack": {
+        "infantry": 4,
+        "light": 3,
+        "heavy": 2,
+        "air": 4,
+        "naval": 11,
+        "submarine": 11
+      },
+      "defense": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 5,
+        "naval": 10,
+        "submarine": 8
+      },
+      "purpose": "Strong surface combatant and anti-submarine escort; expensive.",
+      "economy": {
+        "production_hours": 16,
+        "research_factor": 1.6,
+        "cost": {
+          "funds": 9600,
+          "manpower": 480,
+          "food": 380,
+          "materials": 3600,
+          "fuel": 1320,
+          "electronics": 2100
+        },
+        "upkeep": {
+          "funds": 620,
+          "manpower": 8,
+          "food": 16,
+          "fuel": 88
+        }
+      }
+    },
+    "corvette": {
+      "name": "Corvette",
+      "hp": [
+        60,
+        67,
+        77,
+        86,
+        96
+      ],
+      "attack": {
+        "infantry": 1.5,
+        "light": 1,
+        "heavy": 0.5,
+        "air": 1.5,
+        "naval": 5,
+        "submarine": 3
+      },
+      "defense": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 2,
+        "naval": 4,
+        "submarine": 3
+      },
+      "purpose": "Light coastal escort; weaker protection than ocean-going warships.",
+      "economy": {
+        "production_hours": 8,
+        "research_factor": 1.1,
+        "cost": {
+          "funds": 4200,
+          "manpower": 240,
+          "food": 220,
+          "materials": 1440,
+          "fuel": 600,
+          "electronics": 840
+        },
+        "upkeep": {
+          "funds": 280,
+          "manpower": 4,
+          "food": 8,
+          "fuel": 40
+        }
+      }
+    },
+    "submarine": {
+      "name": "Submarine",
+      "hp": [
+        65,
+        73,
+        83,
+        94,
+        104
+      ],
+      "attack": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 14,
+        "submarine": 6
+      },
+      "defense": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 11,
+        "submarine": 6
+      },
+      "purpose": "Surface-ship ambush specialist; threatened by sonar escorts and other submarines.",
+      "economy": {
+        "production_hours": 16,
+        "research_factor": 1.6,
+        "cost": {
+          "funds": 8400,
+          "manpower": 240,
+          "food": 240,
+          "materials": 3000,
+          "fuel": 1080,
+          "electronics": 1800
+        },
+        "upkeep": {
+          "funds": 520,
+          "manpower": 4,
+          "food": 8,
+          "fuel": 72
+        }
+      }
+    },
+    "carrier": {
+      "name": "Aircraft carrier",
+      "hp": [
+        150,
+        168,
+        192,
+        216,
+        240
+      ],
+      "attack": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 4,
+        "naval": 1,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 5,
+        "naval": 2,
+        "submarine": 0
+      },
+      "purpose": "Durable aircraft platform; relies on escorts for surface and submarine defence.",
+      "economy": {
+        "production_hours": 24,
+        "research_factor": 1.9,
+        "cost": {
+          "funds": 16800,
+          "manpower": 800,
+          "food": 600,
+          "materials": 6000,
+          "fuel": 1800,
+          "electronics": 3000
+        },
+        "upkeep": {
+          "funds": 1000,
+          "manpower": 14,
+          "food": 28,
+          "fuel": 120
+        }
+      }
+    },
+    "cargo_ship": {
+      "name": "Cargo ship",
+      "hp": [
+        90,
+        101,
+        115,
+        130,
+        144
+      ],
+      "attack": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Unarmed freight ship; escort it through hostile waters.",
+      "economy": {
+        "production_hours": 8,
+        "research_factor": 1.1,
+        "cost": {
+          "funds": 3600,
+          "manpower": 0,
+          "food": 0,
+          "materials": 1440,
+          "fuel": 480,
+          "electronics": 240
+        },
+        "upkeep": {
+          "funds": 0,
+          "manpower": 0,
+          "food": 0,
+          "fuel": 0
+        }
+      }
+    },
+    "oil_tanker": {
+      "name": "Oil tanker",
+      "hp": [
+        120,
+        134,
+        154,
+        173,
+        192
+      ],
+      "attack": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Unarmed fuel transport; high capacity does not provide defensive firepower.",
+      "economy": {
+        "production_hours": 10,
+        "research_factor": 1.2,
+        "cost": {
+          "funds": 4200,
+          "manpower": 0,
+          "food": 0,
+          "materials": 1680,
+          "fuel": 600,
+          "electronics": 300
+        },
+        "upkeep": {
+          "funds": 0,
+          "manpower": 0,
+          "food": 0,
+          "fuel": 0
+        }
+      }
+    },
+    "supply": {
+      "name": "Supply truck",
+      "hp": [
+        18,
+        20,
+        23,
+        26,
+        29
+      ],
+      "attack": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Army support, not a combat unit; must be protected.",
+      "economy": {
+        "production_hours": 2.5,
+        "research_factor": 0.8,
+        "cost": {
+          "funds": 1200,
+          "manpower": 180,
+          "food": 160,
+          "materials": 480,
+          "fuel": 240,
+          "electronics": 120
+        },
+        "upkeep": {
+          "funds": 90,
+          "manpower": 3,
+          "food": 6,
+          "fuel": 16
+        }
+      }
+    },
+    "recovery": {
+      "name": "Recovery vehicle",
+      "hp": [
+        34,
+        38,
+        44,
+        49,
+        54
+      ],
+      "attack": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Army support, not a combat unit; must be protected.",
+      "economy": {
+        "production_hours": 4,
+        "research_factor": 1,
+        "cost": {
+          "funds": 2100,
+          "manpower": 180,
+          "food": 180,
+          "materials": 780,
+          "fuel": 300,
+          "electronics": 240
+        },
+        "upkeep": {
+          "funds": 150,
+          "manpower": 3,
+          "food": 6,
+          "fuel": 20
+        }
+      }
+    },
+    "engineer": {
+      "name": "Combat engineers",
+      "hp": [
+        32,
+        36,
+        41,
+        46,
+        51
+      ],
+      "attack": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Army support, not a combat unit; must be protected.",
+      "economy": {
+        "production_hours": 3,
+        "research_factor": 0.9,
+        "cost": {
+          "funds": 1800,
+          "manpower": 360,
+          "food": 240,
+          "materials": 600,
+          "fuel": 180,
+          "electronics": 240
+        },
+        "upkeep": {
+          "funds": 140,
+          "manpower": 6,
+          "food": 12,
+          "fuel": 12
+        }
+      }
+    },
+    "bridge": {
+      "name": "Bridge layer",
+      "hp": [
+        36,
+        40,
+        46,
+        52,
+        58
+      ],
+      "attack": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Army support, not a combat unit; must be protected.",
+      "economy": {
+        "production_hours": 4,
+        "research_factor": 1,
+        "cost": {
+          "funds": 2400,
+          "manpower": 180,
+          "food": 180,
+          "materials": 1080,
+          "fuel": 360,
+          "electronics": 180
+        },
+        "upkeep": {
+          "funds": 170,
+          "manpower": 3,
+          "food": 6,
+          "fuel": 24
+        }
+      }
+    },
+    "medic": {
+      "name": "Field medics",
+      "hp": [
+        16,
+        18,
+        20,
+        23,
+        26
+      ],
+      "attack": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "defense": {
+        "infantry": 0,
+        "light": 0,
+        "heavy": 0,
+        "air": 0,
+        "naval": 0,
+        "submarine": 0
+      },
+      "purpose": "Army support, not a combat unit; must be protected.",
+      "economy": {
+        "production_hours": 2.5,
+        "research_factor": 0.85,
+        "cost": {
+          "funds": 1500,
+          "manpower": 300,
+          "food": 240,
+          "materials": 300,
+          "fuel": 120,
+          "electronics": 300
+        },
+        "upkeep": {
+          "funds": 120,
+          "manpower": 5,
+          "food": 10,
+          "fuel": 8
+        }
+      }
+    }
+  },
+  "families": {
+    "patriot_russia": "long_aa",
+    "skyguard_russia": "short_aa",
+    "patriot_ukraine": "long_aa",
+    "skyguard_ukraine": "short_aa",
+    "tanks_russia": "mbt",
+    "apcs_russia": "apc",
+    "bombers_russia": "bomber",
+    "tanks_ukraine": "mbt",
+    "apcs_ukraine": "apc",
+    "bombers_ukraine": "bomber",
+    "strike_ukraine": "strike_fighter",
+    "artillery_russia": "sp_artillery",
+    "artillery_ukraine": "sp_artillery",
+    "rockets_russia": "rocket_artillery",
+    "rockets_ukraine": "rocket_artillery",
+    "helicopters_russia": "attack_heli",
+    "helicopters_ukraine": "attack_heli",
+    "missiles_russia": "tactical_missile",
+    "missiles_ukraine": "tactical_missile",
+    "silos_russia": "silo",
+    "silos_ukraine": "silo",
+    "drones_russia": "recon_drone",
+    "drones_ukraine": "recon_drone",
+    "loitering_russia": "loitering",
+    "loitering_ukraine": "loitering",
+    "fighters_russia": "fighter",
+    "fighters_ukraine": "fighter",
+    "infantry_russia": "motorized",
+    "infantry_ukraine": "motorized",
+    "kamaz5350_supply_russia": "supply",
+    "brem1m_recovery_russia": "recovery",
+    "imr3m_engineer_russia": "engineer",
+    "mtu72_bridgelayer_russia": "bridge",
+    "man_hx77_supply_ukraine": "supply",
+    "buffel_recovery_ukraine": "recovery",
+    "kodiak_engineer_ukraine": "engineer",
+    "leguan_bridgelayer_ukraine": "bridge",
+    "2b14_mortar_82_russia": "light_mortar",
+    "2b11_mortar_120_russia": "heavy_mortar",
+    "d30_howitzer_russia": "towed_artillery",
+    "l16_mortar_81_ukraine": "light_mortar",
+    "mo120rt_mortar_ukraine": "heavy_mortar",
+    "l118_lightgun_ukraine": "towed_artillery",
+    "il76md_russia": "transport_aircraft",
+    "a50u_russia": "awacs",
+    "a50u_ukraine": "awacs",
+    "yak130_russia": "light_attack",
+    "a400m_atlas_ukraine": "transport_aircraft",
+    "hawk_t2_ukraine": "light_attack",
+    "advanced_tanks_russia": "advanced_mbt",
+    "advanced_tanks_ukraine": "advanced_mbt",
+    "coastal_missiles_russia": "coastal_missile",
+    "coastal_missiles_ukraine": "coastal_missile",
+    "fleet_russia": "frigate",
+    "fleet_ukraine": "frigate",
+    "destroyers_russia": "destroyer",
+    "destroyers_ukraine": "destroyer",
+    "corvettes_russia": "corvette",
+    "corvettes_ukraine": "corvette",
+    "submarines_russia": "submarine",
+    "submarines_ukraine": "submarine",
+    "carriers_russia": "carrier",
+    "carriers_ukraine": "carrier",
+    "airborne_russia": "airborne",
+    "special_forces_russia": "special",
+    "naval_infantry_russia": "marines",
+    "snipers_russia": "snipers",
+    "ifv_russia": "ifv",
+    "airborne_ifv_russia": "airborne_ifv",
+    "airborne_ifv_ukraine": "airborne_ifv",
+    "light_tank_russia": "light_tank",
+    "strategic_russia": "strategic_missile",
+    "strike_russia": "strike_fighter",
+    "interceptor_russia": "interceptor",
+    "interceptor_ukraine": "interceptor",
+    "transport_heli_russia": "transport_heli",
+    "strike_drone_russia": "strike_drone",
+    "geran_russia": "one_way_drone",
+    "medic_russia": "medic",
+    "airborne_ukraine": "airborne",
+    "special_forces_ukraine": "special",
+    "naval_infantry_ukraine": "marines",
+    "snipers_ukraine": "snipers",
+    "ifv_ukraine": "ifv",
+    "light_tank_ukraine": "light_tank",
+    "strategic_ukraine": "strategic_missile",
+    "transport_heli_ukraine": "transport_heli",
+    "strike_drone_ukraine": "strike_drone",
+    "liutyi_ukraine": "one_way_drone",
+    "medic_ukraine": "medic",
+    "cargo_russia": "cargo_ship",
+    "tankers_russia": "oil_tanker",
+    "cargo_ukraine": "cargo_ship",
+    "tankers_ukraine": "oil_tanker"
+  }
+}

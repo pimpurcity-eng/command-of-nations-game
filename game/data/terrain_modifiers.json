@@ -50,7 +50,7 @@
     "armor": {
       "speed": 0.65,
       "attack": 0.75,
-      "defense": 0.95
+      "defense": 0.9
     },
     "ifv": {
       "speed": 0.85,
@@ -238,7 +238,7 @@
     "armor": {
       "speed": 0.65,
       "attack": 0.75,
-      "defense": 1
+      "defense": 0.85
     },
     "ifv": {
       "speed": 0.8,

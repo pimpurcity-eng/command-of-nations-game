@@ -37,7 +37,7 @@ static func entrench_factor(group: Array) -> float:
 static func prevents_march_wear(group: Array) -> bool:
 	return level_in(group, "supply") > 0
 
-## Healing from medics, recovery vehicles, supply trucks and hospitals.
+## Healing in actual HP from medics, recovery vehicles, supply trucks and hospitals.
 static func heal(armies: UnitSystem, buildings: BuildingSystem, seconds: float) -> void:
 	if seconds <= 0 or armies == null: return
 	var hours: float = seconds / HOUR
@@ -68,4 +68,4 @@ static func heal(armies: UnitSystem, buildings: BuildingSystem, seconds: float) 
 				for h in hospitals:
 					if h[2] == unit.country and at.distance_to(h[0]) <= HOSPITAL_RADIUS: best = maxi(best, h[1])
 				rate += HOSPITAL_PER_LEVEL * best
-			if rate > 0: unit.health = minf(100.0, unit.health + rate * hours)
+			if rate > 0: unit.health = minf(100.0, unit.health + UnitStats.condition_damage(unit, rate * hours))

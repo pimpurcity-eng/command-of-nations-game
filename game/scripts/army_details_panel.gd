@@ -5,7 +5,7 @@ extends CanvasLayer
 ## (attack and defence against every unit type), the full unit list with the strongest unit on
 ## top, terrain influences and class distribution. Works for enemy armies too (inspection).
 ## Combat statistics against the six unit types (owner 2026-10-13); aircraft are listed below.
-const TARGETS: = [["infantry", "Infantry"], ["light", "Light armour"], ["heavy", "Heavy armour"], ["naval", "Ships"], ["submarine", "Submarines"]]
+const TARGETS: = [["infantry", "Infantry"], ["light", "Light armour"], ["heavy", "Heavy armour"], ["air", "Planes"], ["naval", "Ships"], ["submarine", "Submarines"]]
 const CLASS_NAMES: = {"infantry": "Infantry", "ifv": "Light armour", "armor": "Heavy armour", "artillery": "Artillery", "missile_launcher": "Missiles",
 	"air_defense": "Air defence", "support": "Support", "fighter": "Aircraft", "naval": "Ships"}
 ## Tapping a unit picture opens that unit's research card (owner 2026-10-14).
@@ -96,20 +96,18 @@ func _row(body: VBoxContainer, cells: Array, header: bool = false, icon_kind: St
 			label.clip_text = true
 			label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		else:
-			label.custom_minimum_size.x = 110
+			label.custom_minimum_size.x = 78 if cells.size() > 3 else 110
 			label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			if not header: label.add_theme_font_override("font", CowUI.title_font())
 		row.add_child(label)
 	return row
 
 static func strength(unit: Dictionary) -> float:
-	# Call of War shows one "strength" per unit: its best defensive fire at current health.
+	# Potential already includes condition, doctrine and terrain: never multiply health twice.
 	var combat: = CombatSystem.new()
 	var best: = 0.0
-	for target in TARGETS: best = maxf(best, combat.potential([unit], target[0], false, true))
-	if unit.visual_kind == "fighter": best = maxf(best, float(EquipmentIdentity.spec(unit.equipment_id).get("air_damage", 0.0)))
-	if unit.visual_kind == "air_defense": best = maxf(best, float(EquipmentIdentity.research_tier(unit.equipment_id, unit.get("level", 1)).get("damage", 0.0)))
-	return best * unit.health / 100.0 if best > 0 else 0.0
+	for target in UnitClasses.ALL: best = maxf(best, combat.potential([unit], target, false, true))
+	return best
 
 # ---------------------------------------------------------------- open
 
@@ -140,7 +138,7 @@ func open(armies: UnitSystem, terrain: StrategicMap) -> void :
 	var picture: = TextureRect.new()
 	picture.texture = CowUI.research_picture(top.equipment_id, top.get("level", 1))
 	picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	picture.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_link_picture(picture, top)
 	hero.add_child(picture)
@@ -179,19 +177,17 @@ func open(armies: UnitSystem, terrain: StrategicMap) -> void :
 	band_row.add_child(CowUI.label(biome.capitalize(), 16, Color("c9c3ae")))
 	# Strength / speed / hit points.
 	var total_strength: = 0.0
-	var hp: = 0.0
-	for member in group:
-		total_strength += strength(member)
-		hp += member.health
+	var hp: = UnitStats.group_hp(group)
+	for member in group: total_strength += strength(member)
 	var stats: = _section("Army")
 	_row(stats, ["Strength", "%.1f" % total_strength])
 	_row(stats, ["Speed", "%.1f" % armies.stacks.movement_speed(group, point)])
-	_row(stats, ["Hit points", "%d / %d" % [roundi(hp), group.size() * 100]])
+	_row(stats, ["Hit points", "%s / %d" % [UnitStats.number(hp.x), roundi(hp.y)]])
 	var bar: = ProgressBar.new()
 	bar.custom_minimum_size.y = 22
 	bar.show_percentage = false
-	bar.max_value = group.size() * 100
-	bar.value = hp
+	bar.max_value = hp.y
+	bar.value = hp.x
 	bar.add_theme_stylebox_override("background", CowUI.box(Color("15181b"), 2))
 	bar.add_theme_stylebox_override("fill", CowUI.box(Color("5aa83a"), 2))
 	stats.add_child(bar)
@@ -200,17 +196,12 @@ func open(armies: UnitSystem, terrain: StrategicMap) -> void :
 	_row(status, ["Army size", str(group.size())])
 	_row(status, ["State", "In battle" if lead.get("engaged", false) else ("Moving" if lead.get("moving", false) else "Ready")])
 	if own and not armies.air.is_air(lead): _row(status, ["Fire control", FireControlPanel.MODES.get(lead.get("fire_mode", "at_will"), FireControlPanel.MODES.at_will).title])
-	# Combat statistics against every unit type.
-	if not armies.air.is_air(lead):
-		var combat: = CombatSystem.new()
-		var table: = _section("Combat statistics")
-		_row(table, ["Damage against type", "Attack", "Defence"], true)
-		for target in TARGETS:
-			_row(table, ["vs. " + target[1], "%.1f" % combat.potential(group, target[0]), "%.1f" % combat.potential(group, target[0], false, true)], false, target[0])
-		var aa: = 0.0
-		for member in group:
-			if member.visual_kind == "air_defense": aa += float(EquipmentIdentity.research_tier(member.equipment_id, member.get("level", 1)).get("damage", 0.0)) * member.health / 100.0
-		_row(table, ["vs. Planes", "%.1f" % aa, "%.1f" % aa], false, "air")
+	# The same HP damage used by land, air and naval combat, including both doctrine and terrain.
+	var combat: = CombatSystem.new()
+	var table: = _section("Combat statistics")
+	_row(table, ["Damage against type", "Attack", "Defence"], true)
+	for target in TARGETS:
+		_row(table, ["vs. " + target[1], "%.1f" % combat.potential(group, target[0]), "%.1f" % combat.potential(group, target[0], false, true)], false, target[0])
 	# Units, strongest first.
 	var list: = _section("Units")
 	_row(list, ["Unit", "HP", "Strength"], true)
@@ -230,7 +221,7 @@ func open(armies: UnitSystem, terrain: StrategicMap) -> void :
 		var pic: = TextureRect.new()
 		pic.texture = CowUI.research_picture(member.equipment_id, member.get("level", 1))
 		pic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		pic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		pic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 		pic.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		pic.offset_bottom = -18
 		_link_picture(pic, member)
@@ -256,22 +247,25 @@ func open(armies: UnitSystem, terrain: StrategicMap) -> void :
 		unit_name.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		name_box.add_child(unit_name)
 		name_box.add_child(CowUI.label("Level " + EquipmentIdentity.roman_level(int(member.get("level", 1))) + " · " + str(EquipmentIdentity.spec(member.equipment_id).get("research_branch", "")), 14, Color("bfb8a6")))
-		for value in ["%.0f / 100" % member.health, "%.1f" % strength(member)]:
+		for value in [UnitStats.hp_label(member), "%.1f" % strength(member)]:
 			var cell: = CowUI.label(value, 17, Color("efe6cf"))
 			cell.custom_minimum_size.x = 110
 			cell.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			cell.add_theme_font_override("font", CowUI.title_font())
 			row.add_child(cell)
-	# Terrain influences.
+	# Attack and defence terrain effects are different and must be shown separately.
 	var terrain_body: = _section("Terrain influences")
-	_row(terrain_body, ["Current terrain: " + biome.capitalize(), "Speed", "Strength"], true)
+	_row(terrain_body, ["Terrain: " + biome.capitalize(), "Speed", "Attack", "Defence"], true)
 	var seen: = {}
 	for member in group:
-		if armies.air.is_air(member) or armies.is_naval(member) or seen.has(member.visual_kind): continue
-		seen[member.visual_kind] = true
-		var speed: = roundi((TerrainRules.multiplier(member.visual_kind, biome, "speed") - 1.0) * 100)
-		var power: = roundi((TerrainRules.multiplier(member.visual_kind, biome, "attack") - 1.0) * 100)
-		_row(terrain_body, [CLASS_NAMES.get(member.visual_kind, member.visual_kind.capitalize()), ("%+d%%" % speed) if speed != 0 else "-", ("%+d%%" % power) if power != 0 else "-"], false, member.visual_kind)
+		var role: = UnitStats.profile_id(member)
+		if armies.air.is_air(member) or armies.is_naval(member) or seen.has(role): continue
+		seen[role] = true
+		var values: Array = [str(UnitStats.profile(member).name)]
+		for effect in ["speed", "attack", "defense"]:
+			var percent: = roundi((TerrainRules.for_unit(member, biome, effect) - 1.0) * 100)
+			values.append(("%+d%%" % percent) if percent != 0 else "—")
+		_row(terrain_body, values, false, member.visual_kind)
 	# Class distribution.
 	var classes: = {}
 	for member in group:

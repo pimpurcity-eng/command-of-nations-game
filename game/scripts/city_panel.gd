@@ -346,9 +346,10 @@ func _refresh_units(place: Dictionary) -> void:
 		row.name.text = EquipmentIdentity.research_title(id, shown).trim_suffix(" · upgrade").replace(" · technology", "")
 		row.kind.text = (str(spec.get("research_branch", "")) if not str(spec.get("research_branch", "")).is_empty() else str(spec.get("category", ""))) + (" · Level " + EquipmentIdentity.roman_level(level) if level > 0 else " · not researched")
 		for child in row.costs.get_children(): row.costs.remove_child(child); child.queue_free()
+		var bill: = buildings.economy.cost(id, shown)
 		for resource in ProductionSystem.RESOURCES:
-			if float(spec.cost.get(resource, 0.0)) > 0: row.costs.add_child(CowUI.cost(resource, float(spec.cost.get(resource, 0.0)), stock[resource] >= float(spec.cost.get(resource, 0.0))))
-		row.time.text = " " + SimulationClock.duration(spec.seconds / maxf(buildings.production_rate(city_id, spec), 0.01))
+			if float(bill[resource]) > 0: row.costs.add_child(CowUI.cost(resource, float(bill[resource]), stock[resource] >= float(bill[resource])))
+		row.time.text = " " + SimulationClock.duration(buildings.economy.duration(id, shown) / maxf(buildings.production_rate(city_id, spec), 0.01))
 		var blocked: = "" if level > 0 else "RESEARCH FIRST"
 		if blocked.is_empty() and spec.get("requires_port", false) and not place.has("naval_spawn"): blocked = "COASTAL ONLY"
 		for building_id in spec.get("building_requirements", {}):
@@ -375,7 +376,7 @@ func _refresh_units(place: Dictionary) -> void:
 		row.bar.value = 0.0
 		var reason: = research.reason(id, target)
 		var day: = research.unlock_day(id, target)
-		row.next.text = ("Unlock I" if target == 1 else "Level " + EquipmentIdentity.roman_level(target)) + "   " + (("Day " + str(day)) if research.day() < day else SimulationClock.duration(research.duration(target) / maxf(research.rate(GameSession.player_country), 0.01)))
+		row.next.text = ("Unlock I" if target == 1 else "Level " + EquipmentIdentity.roman_level(target)) + "   " + (("Day " + str(day)) if research.day() < day else SimulationClock.duration(research.duration(target, id) / maxf(research.rate(GameSession.player_country), 0.01)))
 		caption.text = "UNLOCK" if target == 1 else "RESEARCH"
 		row.research.disabled = not reason.is_empty()
 		row.research.tooltip_text = reason
@@ -465,14 +466,14 @@ func _refresh() -> void:
 		for job in buildings.economy.jobs:
 			if job.city != place.name or buildings.economy.equipment(job.equipment).country != GameSession.player_country: continue
 			var spec: Dictionary = buildings.economy.equipment(job.equipment)
-			var seconds: float = (spec.seconds - job.progress) / buildings.production_rate(city_id, spec)
+			var seconds: float = (buildings.economy.job_duration(job) - job.progress) / buildings.production_rate(city_id, spec)
 			production.text.text = EquipmentIdentity.title(job.equipment) + "  ·  " + ("paused" if paused else SimulationClock.duration(seconds))
 			# Same picture as in research (owner 2026-10-14).
-			production.picture.texture = CowUI.research_picture(job.equipment, maxi(1, research.level(job.equipment)) if research != null else 1)
+			production.picture.texture = CowUI.research_picture(job.equipment, buildings.economy.job_level(job))
 			production.picture.visible = true
 			production.icon.visible = false
 			production.bar.visible = true
-			production.bar.max_value = spec.seconds
+			production.bar.max_value = buildings.economy.job_duration(job)
 			production.bar.value = job.progress
 			var city_name: String = place.name
 			CowUI.gold_button(production.gold, buildings.economy.unit_speedup_price(job), func():

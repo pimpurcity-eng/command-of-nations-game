@@ -22,6 +22,8 @@ static func apply(catalog: Array) -> Array:
 		if str(family.get("role", "")) == "drone": factor *= float(traits.get("drone_cost", 1.0))
 		if factor != 1.0 and family.get("cost") is Dictionary:
 			for resource in family.cost: family.cost[resource] = roundi(float(family.cost[resource]) * factor)
+		if factor != 1.0 and family.get("_previous_cost") is Dictionary:
+			for resource in family._previous_cost: family._previous_cost[resource] = roundi(float(family._previous_cost[resource]) * factor)
 		var early: bool = str(family.get("visual_kind", "")) in traits.get("early_kinds", []) or str(family.get("role", "")) in traits.get("early_roles", [])
 		if early and family.get("research_days") is Array and not family.get("starter", false):
 			var days: Array = family.research_days

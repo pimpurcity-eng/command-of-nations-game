@@ -1,0 +1,104 @@
+test_doctrine_stealth_wmd
+CHANGED
+ERROR: Resource file not found: res://assets/library/arsenal/russia_p800_oniks.glb (expected type: unknown)
+SCRIPT ERROR: Attempt to call function 'instantiate' in base 'null instance' on a null instance.
+RESULT failures=0
+BASELINE
+ERROR: Resource file not found: res://assets/library/arsenal/russia_p800_oniks.glb (expected type: unknown)
+SCRIPT ERROR: Attempt to call function 'instantiate' in base 'null instance' on a null instance.
+RESULT failures=0
+
+test_battle_effects
+CHANGED
+FAIL missile_launcher_russia original model available
+FAIL missile_launcher_russia has a fitted launch point
+FAIL missile_launcher_ukraine original model available
+FAIL missile_launcher_ukraine has a fitted launch point
+ERROR: Resource file not found: res://assets/library/arsenal/russia_p800_oniks.glb (expected type: unknown)
+SCRIPT ERROR: Attempt to call function 'instantiate' in base 'null instance' on a null instance.
+SCRIPT ERROR: Attempt to call function 'instantiate' in base 'null instance' on a null instance.
+FAIL missile leaves smoke puffs
+RESULT failures=5
+BASELINE
+FAIL missile_launcher_russia original model available
+FAIL missile_launcher_russia has a fitted launch point
+FAIL missile_launcher_ukraine original model available
+FAIL missile_launcher_ukraine has a fitted launch point
+ERROR: Resource file not found: res://assets/library/arsenal/russia_p800_oniks.glb (expected type: unknown)
+SCRIPT ERROR: Attempt to call function 'instantiate' in base 'null instance' on a null instance.
+SCRIPT ERROR: Attempt to call function 'instantiate' in base 'null instance' on a null instance.
+FAIL missile leaves smoke puffs
+RESULT failures=5
+
+test_building_expansion
+CHANGED
+ERROR: Resource file not found: res://assets/library/warehouse11_shared.glb (expected type: PackedScene)
+FAIL infrastructure accelerates actual construction
+FAIL Ordnance factory uses existing model and preview
+FAIL Industrial complex uses existing model and preview
+FAIL Research center uses existing model and preview
+FAIL Airbase uses existing model and preview
+FAIL Financial office uses existing model and preview
+FAIL Materials works uses existing model and preview
+FAIL Electronics factory uses existing model and preview
+FAIL Fuel depot uses existing model and preview
+FAIL Recruitment centre uses existing model and preview
+FAIL Barracks uses existing model and preview
+FAIL Tank plant uses existing model and preview
+FAIL Naval base uses existing model and preview
+FAIL Bunkers uses existing model and preview
+FAIL Road infrastructure uses existing model and preview
+FAIL Train station uses existing model and preview
+FAIL Capitol uses existing model and preview
+FAIL Missile factory uses existing model and preview
+FAIL Drone factory uses existing model and preview
+FAIL Support depot uses existing model and preview
+FAIL Hospital uses existing model and preview
+RESULT failures=21
+BASELINE
+ERROR: Resource file not found: res://assets/library/warehouse11_shared.glb (expected type: PackedScene)
+FAIL infrastructure accelerates actual construction
+FAIL Ordnance factory uses existing model and preview
+FAIL Industrial complex uses existing model and preview
+FAIL Research center uses existing model and preview
+FAIL Airbase uses existing model and preview
+FAIL Financial office uses existing model and preview
+FAIL Materials works uses existing model and preview
+FAIL Electronics factory uses existing model and preview
+FAIL Fuel depot uses existing model and preview
+FAIL Recruitment centre uses existing model and preview
+FAIL Barracks uses existing model and preview
+FAIL Tank plant uses existing model and preview
+FAIL Naval base uses existing model and preview
+FAIL Bunkers uses existing model and preview
+FAIL Road infrastructure uses existing model and preview
+FAIL Train station uses existing model and preview
+FAIL Capitol uses existing model and preview
+FAIL Missile factory uses existing model and preview
+FAIL Drone factory uses existing model and preview
+FAIL Support depot uses existing model and preview
+FAIL Hospital uses existing model and preview
+RESULT failures=21
+
+test_map_features
+CHANGED
+RESULT failures=9
+BASELINE
+RESULT failures=9
+
+test_campaign
+CHANGED
+SCRIPT ERROR: Invalid access of index '0' on a base object of type: 'Array'.
+BASELINE
+SCRIPT ERROR: Invalid access of index '0' on a base object of type: 'Array'.
+
+test_air_defense_models
+CHANGED
+FAIL correct original Strela-10
+FAIL no stand-in for Strela-10
+SCRIPT ERROR: Invalid access to property or key 'launchers' on a base object of type 'Nil'.
+BASELINE
+FAIL correct original Strela-10
+FAIL no stand-in for Strela-10
+SCRIPT ERROR: Invalid access to property or key 'launchers' on a base object of type 'Nil'.
+
