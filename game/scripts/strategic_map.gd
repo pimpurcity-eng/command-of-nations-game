@@ -318,14 +318,9 @@ func _add_connections() -> void :
 	var land: Array = []
 	for country in RegionData.countries():
 		if country.country in ["Russia", "Ukraine"]: land.append(country.polygon)
-	# Highways between the major cities.
-	var highways: = SurfaceTool.new()
-	highways.begin(Mesh.PRIMITIVE_TRIANGLES)
-	var connections: = [["Lviv", "Kyiv"], ["Kyiv", "Kharkiv"], ["Kyiv", "Dnipro"], ["Dnipro", "Odesa"], ["Kharkiv", "Dnipro"], ["Moscow", "Kursk"], ["Moscow", "Voronezh"], ["Kursk", "Belgorod"], ["Voronezh", "Rostov-on-Don"]]
-	for pair in connections:
-		_road(highways, locations[pair[0]], locations[pair[1]], 0.010, 0.4, land)
-		roads.append([locations[pair[0]], locations[pair[1]], 0.4])
-	_add_road_mesh(highways, Color("5e5b52"))
+	# Owner 2026-10-15 ("three of them going to the same province in the same direction"): no
+	# separate highways on top of the province roads - one line per pair of neighbours, like
+	# Call of War.
 	var local: = SurfaceTool.new()
 	local.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var graph: = road_graph(territories)
@@ -388,9 +383,36 @@ static func road_graph(territory_list: Array) -> Dictionary:
 	for i in centers.size():
 		for j in neighbours[i]:
 			if j <= i: continue
-			edges.append([centers[i], centers[j], 0.12 * sin(float(i * 31 + j))])
+			# Straight, like Call of War's lines between province centres.
+			edges.append([centers[i], centers[j], 0.0])
 			connected[i] = true
 			connected[j] = true
+	# Drop a road that runs almost on top of a shorter one from the same centre when the far
+	# province is reached through the near one anyway (no near-parallel duplicate lines).
+	var linked: Dictionary = {}
+	for edge in edges:
+		linked[str(edge[0]) + str(edge[1])] = true
+		linked[str(edge[1]) + str(edge[0])] = true
+	var kept: Array = []
+	for edge in edges:
+		var redundant: = false
+		for end in [0, 1]:
+			var from: Vector2 = edge[end]
+			var to: Vector2 = edge[1 - end]
+			for other in edges:
+				if other == edge: continue
+				var via: Vector2
+				if other[0] == from: via = other[1]
+				elif other[1] == from: via = other[0]
+				else: continue
+				if from.distance_to(via) >= from.distance_to(to): continue
+				if absf((to - from).angle_to(via - from)) > deg_to_rad(14.0): continue
+				if linked.has(str(via) + str(to)):
+					redundant = true
+					break
+			if redundant: break
+		if not redundant: kept.append(edge)
+	edges = kept
 	# Enclaves (Kyiv City inside Kyiv region) share no outer border vertex: join the nearest.
 	for i in centers.size():
 		if connected.has(i): continue
@@ -437,6 +459,8 @@ func _update_posts() -> void :
 		post.visible = true
 
 ## Points along the road from start to end (both included), bowed sideways by `bend`.
+const ROAD_DASH: = 0.11
+const ROAD_GAP: = 0.07
 static func road_curve(start: Vector2, end: Vector2, bend: float) -> PackedVector2Array:
 	var normal: = Vector2( - (end - start).y, (end - start).x).normalized()
 	var count: = maxi(8, ceili(start.distance_to(end) / 0.2))
@@ -463,8 +487,16 @@ func _road(surface: SurfaceTool, start: Vector2, end: Vector2, half_width: float
 		var middle: = (a + b) * 0.5
 		if _city_points.size() > 0 and Array(_city_points).any(func(city: Vector2): return city.distance_to(middle) < CITY_EDGE): continue
 		var side: = (b - a).orthogonal().normalized() * half_width
-		for point in [a - side, a + side, b + side, a - side, b + side, b - side]:
-			surface.add_vertex(position_at(point) + Vector3.UP * 0.04)
+		# Dashed, like Call of War's province links (owner 2026-10-15: "look how they build
+		# their tracks").
+		var length: = a.distance_to(b)
+		var at: = 0.0
+		while at < length:
+			var from: = a.lerp(b, at / length)
+			var to: = a.lerp(b, minf(at + ROAD_DASH, length) / length)
+			for point in [from - side, from + side, to + side, from - side, to + side, to - side]:
+				surface.add_vertex(position_at(point) + Vector3.UP * 0.04)
+			at += ROAD_DASH + ROAD_GAP
 
 func _add_road_mesh(surface: SurfaceTool, color: Color) -> void :
 	var roads: = MeshInstance3D.new()

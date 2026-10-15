@@ -175,6 +175,7 @@ for number, (group, members) in enumerate(sorted(groups.items())):
         if e["name"].endswith((".import", ".remap")):
             index_lines.append("res://" + e["name"].rsplit(".", 1)[0] + "\t%d" % number)
 # Every resource also needs the packs of the files its import points at (textures of a model).
+group_names = sorted(groups)
 pack_of_file = {e["name"]: n for n, (g, members) in enumerate(sorted(groups.items())) for e in members}
 needs = {}
 for e in extra_entries:
@@ -193,6 +194,12 @@ for e in extra_entries:
                         if candidate in by_name and candidate.endswith(".import"):
                             for tt in targets(candidate):
                                 if tt in pack_of_file: packs.add(pack_of_file[tt])
+        # Exported scenes are compressed (RSCC), so their texture names cannot be read here.
+        # Textures are named after their model (russia_t90a.glb -> russia_t90a_Camo.png,
+        # t90m_russian.glb -> t90m_russian_russian_ground_color.png): they travel together.
+        own = group_of(e["name"][: -len(e["name"].split(".")[-1]) - 1])
+        for n, g in enumerate(group_names):
+            if g.startswith(own + "_"): packs.add(n)
         needs["res://" + e["name"].rsplit(".", 1)[0]] = sorted(packs)
 listing = "\n".join(k + "\t" + ",".join(str(p) for p in v) for k, v in sorted(needs.items())).encode()
 core_entries = [e for e in core_entries if e["name"] != "web_extras_index.txt"]
