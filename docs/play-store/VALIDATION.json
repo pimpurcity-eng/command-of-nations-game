@@ -1,0 +1,51 @@
+{
+  "date": "2026-10-15",
+  "source": "6e32091",
+  "branch": "chatgpt/release-support-20261015",
+  "listing_character_counts": {
+    "title.txt": {
+      "count": 21,
+      "limit": 30
+    },
+    "short-description.txt": {
+      "count": 78,
+      "limit": 80
+    },
+    "full-description.txt": {
+      "count": 2215,
+      "limit": 4000
+    }
+  },
+  "assets": [
+    {
+      "file": "warfront-icon-512.png",
+      "width": 512,
+      "height": 512,
+      "mode": "RGBA",
+      "bytes": 27262
+    },
+    {
+      "file": "warfront-feature-1024x500.png",
+      "width": 1024,
+      "height": 500,
+      "mode": "RGB",
+      "bytes": 905867
+    }
+  ],
+  "protected_files_unchanged": [
+    "game/scripts/city_system.gd",
+    "game/scripts/unit_system.gd",
+    "game/scripts/main.gd",
+    "game/scripts/strategic_map.gd",
+    "game/scripts/web_extras.gd",
+    "tools/split_web_pack.py"
+  ],
+  "google_provider_readonly_check": {
+    "google": false,
+    "email": true,
+    "http_status": 200
+  },
+  "website": "unchanged at owner request",
+  "android_app": "already on Google Play and running per owner; no AAB built here",
+  "live_match": "blocked before menu by missing WebGL2; not completed"
+}
