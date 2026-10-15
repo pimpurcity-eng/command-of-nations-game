@@ -2,22 +2,24 @@ class_name CountryTraits
 extends RefCounted
 ## National traits (owner 2026-10-14, Call of War style): every country has one strength and one
 ## weakness, and some get certain weapons before the others. They stack with the doctrines.
-##   Russia   + units 15% cheaper            - research 15% slower        tanks & missiles 1 day early
+##   Russia   + units 10% cheaper            - research 15% slower        tanks & missiles 1 day early
 ##   China    + builds 25% faster            - units 10% weaker
 ##   America  + weapons 15% stronger         - units 20% more expensive   aircraft & missiles 2 days early
 ##   Europe   + research 20% faster          - production 15% slower      air defence 2 days early
-##   Ukraine  + drones 15% cheaper           - 15% less manpower          drones 2 days early
+##   Ukraine  + drones 20% cheaper           - 10% less manpower          drones 2 days early
+## Owner 2026-10-15 ("make it competitive"): Russia has more unit types (Lancet, MiG-31, A-50,
+## airborne IFV), so Russia's discount is 10% and Ukraine's drones 20% (its European doctrine already researches 15% faster).
 const TRAITS: = {
-	"russia": {"name": "Russia", "plus": "Units 15% cheaper", "minus": "Research 15% slower", "early": "Tanks and missiles 1 day early",
-		"cost": 0.85, "research": 0.85, "early_kinds": ["armor", "missile_launcher"], "early_days": 1},
+	"russia": {"name": "Russia", "plus": "Units 10% cheaper", "minus": "Research 15% slower", "early": "Tanks and missiles 1 day early",
+		"cost": 0.9, "research": 0.85, "early_kinds": ["armor", "missile_launcher"], "early_days": 1},
 	"china": {"name": "China", "plus": "Builds 25% faster", "minus": "Units 10% weaker", "early": "",
 		"build": 1.25, "combat": 0.9},
 	"united_states": {"name": "America", "plus": "Weapons 15% stronger", "minus": "Units 20% more expensive", "early": "Aircraft and missiles 2 days early",
 		"combat": 1.15, "cost": 1.2, "early_kinds": ["fighter", "missile_launcher"], "early_days": 2},
 	"europe": {"name": "Europe", "plus": "Research 20% faster", "minus": "Production 15% slower", "early": "Air defence 2 days early",
 		"research": 1.2, "build": 0.85, "early_kinds": ["air_defense"], "early_days": 2},
-	"ukraine": {"name": "Ukraine", "plus": "Drones 15% cheaper", "minus": "15% less manpower", "early": "Drones 2 days early",
-		"drone_cost": 0.85, "manpower": 0.85, "early_roles": ["drone"], "early_days": 2},
+	"ukraine": {"name": "Ukraine", "plus": "Drones 20% cheaper", "minus": "10% less manpower", "early": "Drones 2 days early",
+		"drone_cost": 0.8, "manpower": 0.9, "early_roles": ["drone"], "early_days": 2},
 }
 ## Countries that count as Europe for traits.
 const EUROPE: = ["united_kingdom", "france", "germany", "poland", "europe"]

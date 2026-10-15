@@ -710,10 +710,10 @@
     "building_requirements": {
       "airbase": 1
     },
-    "air_range": 16.0,
-    "air_speed": 3.0,
-    "air_damage": 8.0,
-    "ground_damage": 4.0,
+    "air_range": 15.0,
+    "air_speed": 3.1,
+    "air_damage": 7.5,
+    "ground_damage": 7.5,
     "research_tiers": [
       {
         "name": "Tornado IDS",
@@ -4860,12 +4860,12 @@
     "asset_roster_id": "strike_russia",
     "seconds": 60,
     "cost": {
-      "funds": 3000,
+      "funds": 3600,
       "materials": 960,
-      "electronics": 480,
-      "fuel": 360,
-      "manpower": 360,
-      "food": 276
+      "electronics": 1080,
+      "fuel": 960,
+      "manpower": 120,
+      "food": 132
     },
     "building_requirements": {
       "airbase": 1
@@ -4905,10 +4905,10 @@
       }
     ],
     "model_status": "Original supplied model",
-    "air_speed": 3.2,
-    "air_range": 14.0,
-    "air_damage": 5.0,
-    "ground_damage": 11.0,
+    "air_speed": 3.1,
+    "air_range": 15.0,
+    "air_damage": 5.5,
+    "ground_damage": 9.0,
     "requires_airbase": true,
     "upkeep": {
       "funds": 250.0,

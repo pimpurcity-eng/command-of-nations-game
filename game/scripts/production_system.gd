@@ -346,6 +346,7 @@ func active_job(city_name: String) -> Dictionary:
 	return {}
 
 func unit_speedup_price(job: Dictionary) -> int:
+	if not job.has("equipment"): return 0
 	var spec: = equipment(job.equipment)
 	var city: Dictionary = {}
 	for place in cities:
