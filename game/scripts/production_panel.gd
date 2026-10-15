@@ -95,7 +95,7 @@ func setup(system: ProductionSystem, units: UnitSystem, theme: Theme) -> void :
 		var error: = production.schedule(chosen, city_names[city_picker.selected] if city_picker.selected >= 0 else "")
 		message.text = "Planned · resources charged when production starts" if error.is_empty() else error)
 	column.add_child(build)
-	message = _label(column, "One unit at a time per city. It starts when resources and buildings are available.")
+	message = _label(column, "Up to five units queued per city; one is built at a time. Each starts when resources and buildings are available.")
 	message.max_lines_visible = 2
 	play_button = Button.new()
 	play_button.text = "Play · production paused"
@@ -103,7 +103,7 @@ func setup(system: ProductionSystem, units: UnitSystem, theme: Theme) -> void :
 	play_button.pressed.connect( func():
 		if clock != null and clock.paused: clock.toggle_pause())
 	column.add_child(play_button)
-	_label(content, "CITY QUEUES · ONE ACTIVE ORDER PER CITY")
+	_label(content, "CITY QUEUES · ONE BUILDING AT A TIME, FIVE IN LINE")
 	queue_list = ItemList.new()
 	queue_list.custom_minimum_size.y = 115
 	queue_list.add_theme_constant_override("v_separation", 12)

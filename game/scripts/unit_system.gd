@@ -684,8 +684,6 @@ func _replace_visual(unit: Dictionary, replacement: Node3D) -> void:
 
 const CITY_GARRISON_SCALE: = 1.40  # owner 2026-10-15: "I don't even know what the unit is"
 const SMALL_GARRISON_READABILITY: = 1.15  # owner 2026-10-15: infantry "a little bit too big" at 1.6
-# Owner 2026-10-14: ground armies out in the provinces were too small; cities a little too big.
-const FIELD_GROUND_SCALE: = 1.45
 
 static func garrison_scale(unit: Dictionary) -> float:
 	# Cached per unit and level: this runs every frame for every ground army.
@@ -696,8 +694,10 @@ static func garrison_scale(unit: Dictionary) -> float:
 		unit["_small"] = small or path.get_file().contains("mortar")
 		unit["_small_key"] = key
 	return CITY_GARRISON_SCALE * (SMALL_GARRISON_READABILITY if unit._small else 1.0)
+## Owner 2026-10-15 ("the infantry in the city is bigger ... but I like the size"): armies out in
+## the provinces are drawn the same size as in a city.
 static func field_scale(unit: Dictionary) -> float:
-	return garrison_scale(unit) / CITY_GARRISON_SCALE * FIELD_GROUND_SCALE
+	return garrison_scale(unit)
 func _process(delta: float) -> void :
 	# Do not load 3D vehicles behind the campaign's start menu on phones.
 	if UnitSystem.mobile_device() and get_parent() is Node3D and not (get_parent() as Node3D).visible:

@@ -420,6 +420,12 @@ func _ready() -> void :
 		rig.distance = 12
 		cities.select_city(city))
 	rig.map_clicked.connect(_map_click)
+	var reach: = Rect2()
+	for territory in map.territories:
+		if not territory.get("playable", true): continue
+		reach = Rect2(territory.center, Vector2.ZERO) if reach.size == Vector2.ZERO and reach.position == Vector2.ZERO else reach.expand(territory.center)
+	rig.bounds = reach.grow(2.0)
+	rig.ground_height = map.position_at(Vector2.ZERO).y
 	rig.input_blocked = _touch_over_ui
 
 	rig.target = Vector3(cities.cities[0].point.x, 0, cities.cities[0].point.y)
@@ -666,16 +672,16 @@ func _map_click(screen: Vector2, order: bool) -> void :
 		return
 	var city_hit: = cities.pick_screen(screen)
 	if not order and not order_mode:
-		# Owner 2026-10-13: "you can't click on the cities when units are there". Armies parked
-		# on a city cover it, so tapping the same spot again steps through everything there:
-		# each army, then the city, then round again.
+		# Owner 2026-10-15 ("click the city and the unit separately"): an army under the finger is
+		# selected; otherwise the town under the finger opens. Several armies on one spot are
+		# stepped through by tapping again.
 		var choices: Array = units.pick_all_screen(rig.camera, screen)
-		if not city_hit.is_empty():
-			var city_first: bool = choices.is_empty() or not choices[0].inside and city_hit.distance + 8.0 * get_window().content_scale_factor < choices[0].distance
-			if city_first: choices.push_front({"city": city_hit.city})
-			else: choices.append({"city": city_hit.city})
 		if choices.is_empty():
 			_tap_cycle = {}
+			if not city_hit.is_empty():
+				clear_army_selection()
+				cities.select_city(city_hit.city)
+				return
 			clear_army_selection()
 		else:
 			var step: = 0
@@ -683,13 +689,7 @@ func _map_click(screen: Vector2, order: bool) -> void :
 			if not _tap_cycle.is_empty() and _tap_cycle.screen.distance_to(screen) < near and Time.get_ticks_msec() - int(_tap_cycle.time) < 8000:
 				step = (int(_tap_cycle.step) + 1) % choices.size()
 			_tap_cycle = {"screen": screen, "step": step, "time": Time.get_ticks_msec()}
-			var choice: Dictionary = choices[step]
-			if choice.has("city"):
-				clear_army_selection()
-				cities.select_city(choice.city)
-			else:
-				units.select_unit(choice.index)
-				if not city_hit.is_empty(): hud.show_status("Tap again to open " + str(city_hit.city.name))
+			units.select_unit(choices[step].index)
 			return
 	if (order or order_mode) and units.selected >= 0 and (units.air.is_air(units.units[units.selected]) or units.is_naval(units.units[units.selected])):
 		var destination = Plane(Vector3.UP, 0).intersects_ray(rig.camera.project_ray_origin(screen), rig.camera.project_ray_normal(screen))
@@ -1380,11 +1380,14 @@ func _attack_army(target: Dictionary) -> void:
 			attack_order = false
 			_set_order_mode(false))
 
+var war_dialog: ConfirmationDialog
 func _with_war(enemy: String, then: Callable) -> void:
 	if match_rules.at_war or not match_rules.winner.is_empty() or GameSession.weapons_test:
 		then.call()
 		return
+	if war_dialog != null and is_instance_valid(war_dialog): war_dialog.free()
 	var dialog: = ConfirmationDialog.new()
+	war_dialog = dialog
 	dialog.title = "Declare war?"
 	dialog.dialog_text = "You are at peace with %s.\nAttacking declares war. Declare war and attack?" % enemy.capitalize()
 	dialog.ok_button_text = "Declare war"

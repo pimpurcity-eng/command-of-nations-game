@@ -3,7 +3,9 @@ extends RefCounted
 signal changed
 signal completed(city_id: String, building_id: String)
 ## Owner 2026-10-13 (later): one building at a time per city - finish it before the next.
-const QUEUE_LIMIT: = 1
+## Owner 2026-10-15 ("is there a spot you can queue the units and buildings?"): a city builds one
+## thing at a time and up to five wait in line; each is paid when it starts.
+const QUEUE_LIMIT: = 5
 var catalog: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/buildings.json"))
 var economy: ProductionSystem
 var capitals: Dictionary = {}
@@ -85,7 +87,7 @@ func reason(city_id: String, building_id: String, country: String = "", check_re
 		if job.city != city_id: continue
 		count += 1
 		if job.building == building_id: return "This building already has a construction order"
-	if count >= QUEUE_LIMIT: return "One building at a time - wait for the current construction to finish"
+	if count >= QUEUE_LIMIT: return "The construction queue is full (5)"
 	for resource in ProductionSystem.RESOURCES:
 		if check_resources and economy.stockpiles[country][resource] < cost(building_id, target)[resource]: return "Insufficient " + resource
 	return ""

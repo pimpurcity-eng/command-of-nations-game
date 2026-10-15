@@ -22,6 +22,13 @@ var rendered_pitch: = 1.02
 ## Finger taps may wobble a little on high-density phone screens.
 const TAP_SLOP: = 14.0
 var fling: = Vector3.ZERO
+## Where the camera may look (map x/z). Owner 2026-10-15 ("moving side to side ... not doing it
+## right"): the old fixed limits stopped panning short of eastern Russia; main sets these from
+## the playable map.
+var bounds: = Rect2(-20, -28, 48, 48)
+## Height of the map surface, so a dragged point stays under the finger.
+var ground_height: = 0.2
+var _last_drag_usec: = 0
 var _drag_velocity: = Vector3.ZERO
 func _ready() -> void :
 	add_child(camera)
@@ -44,8 +51,8 @@ func _process(delta: float) -> void :
 		fling = Vector3.ZERO if not touches.is_empty() or dragging else fling
 	_snap(1.0 - exp( - delta * 12.0))
 func _snap(weight: float) -> void :
-	target.x = clampf(target.x, -20, 22)
-	target.z = clampf(target.z, -26, 16)
+	target.x = clampf(target.x, bounds.position.x, bounds.end.x)
+	target.z = clampf(target.z, bounds.position.y, bounds.end.y)
 	rendered_target = rendered_target.lerp(target, weight)
 	rendered_distance = lerpf(rendered_distance, distance, weight)
 	rendered_yaw = lerpf(rendered_yaw, yaw, weight)
@@ -117,6 +124,7 @@ func _unhandled_input(event: InputEvent) -> void :
 			touches[event.index] = event.position
 			fling = Vector3.ZERO
 			_drag_velocity = Vector3.ZERO
+			_last_drag_usec = Time.get_ticks_usec()
 			if touches.size() > 1:
 				touch_moved = true
 				pinch_active = true
@@ -126,7 +134,9 @@ func _unhandled_input(event: InputEvent) -> void :
 		else:
 			if event.canceled: touch_moved = true
 			if touches.has(event.index) and touches.size() == 1 and not touch_moved and press.distance_to(event.position) < TAP_SLOP: map_clicked.emit(event.position, false)
-			if touches.size() == 1 and touch_moved and not pinch_active: fling = _drag_velocity.limit_length(distance * 2.0) if _drag_velocity.length() > distance * 0.15 else Vector3.ZERO
+			# A finger that stopped before lifting leaves the map where it is.
+			var held: = Time.get_ticks_usec() - _last_drag_usec > 80000
+			if touches.size() == 1 and touch_moved and not pinch_active: fling = _drag_velocity.limit_length(distance * 2.0) if _drag_velocity.length() > distance * 0.15 and not held else Vector3.ZERO
 			touches.erase(event.index)
 			if touches.is_empty(): pinch_active = false
 	elif event is InputEventScreenDrag:
@@ -159,14 +169,18 @@ func _notification(what: int) -> void :
 func rotate_view(amount: float) -> void :
 	yaw = clampf(yaw + amount, -1.1, 1.1)
 func _drag_map(previous: Vector2, current: Vector2) -> void :
-	var ground: = Plane(Vector3.UP, 0.0)
+	var ground: = Plane(Vector3.UP, ground_height)
 	var a = ground.intersects_ray(camera.project_ray_origin(previous), camera.project_ray_normal(previous))
 	var b = ground.intersects_ray(camera.project_ray_origin(current), camera.project_ray_normal(current))
 	if a != null and b != null:
 		var shift: Vector3 = a - b
+		shift.y = 0.0
 		if shift.is_finite():
 			target += shift
-			var dt: = maxf(get_process_delta_time(), 1.0 / 120.0)
+			# Flick speed from the time between finger events, not the frame time.
+			var now: = Time.get_ticks_usec()
+			var dt: = clampf(float(now - _last_drag_usec) / 1000000.0, 1.0 / 240.0, 0.1)
+			_last_drag_usec = now
 			_drag_velocity = _drag_velocity.lerp(shift / dt, 0.35)
 			_snap(1.0)
 

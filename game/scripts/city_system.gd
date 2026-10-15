@@ -6,6 +6,9 @@ const GARRISON_PLAZA_RADIUS := 0.30
 # Owner 2026-10-14: "make the square in the middle a lot smaller".
 ## District units around the army spot kept free of buildings while an army stands there.
 const GARRISON_CLEAR_RADIUS: = 0.55
+## How far a capital's houses reach (other towns ~1.55), before the district scale.
+const CAPITAL_REACH: = 1.97
+const CAPITAL_EDGE: = 1.55
 static var GARRISON_SQUARE := Rect2(-0.30, -0.28, 0.60, 0.56)
 ## Where a city's army stands (owner review 2026-10-14): "centre", or at the city's edge -
 ## "front" (facing the camera), "side" (east edge) or "outside" (just past the last houses).
@@ -63,7 +66,10 @@ func setup(map: StrategicMap, camera_rig: StrategyCamera) -> void :
 		for other in cities:
 			if other != city: neighbour = minf(neighbour, city.point.distance_to(other.point))
 		# Round towns reach ~1.55 units (uneven edge, houses), so leave a clear gap between the two.
-		district.scale = Vector3.ONE * clampf((neighbour * 0.5 - 0.18) / 1.55, 0.34, 0.72)
+		# Owner 2026-10-15: the capital is a bigger city with more buildings (reach ~1.97 units).
+		var reach: float = CAPITAL_REACH if city.get("capital", false) else 1.55
+		district.scale = Vector3.ONE * clampf((neighbour * 0.5 - 0.18) / reach, 0.34, 0.86 if city.get("capital", false) else 0.72)
+		district.set_meta("reach", reach * district.scale.x)
 		plaza_offsets[city_key(city.point)] = GARRISON_SQUARE.get_center() * district.scale.x
 		add_child(district)
 		districts[city.id] = district
@@ -353,15 +359,22 @@ func _process(delta: float) -> void :
 		for previous in occupied:
 			if bounds.grow(5).intersects(previous): entry.label.visible = false
 		if entry.label.visible: occupied.append(bounds)
+## Owner 2026-10-15 ("click the city and the unit separately"): the whole town is the city's tap
+## area (its houses, not just the centre where the garrison stands); the caller checks armies first.
 func pick_screen(screen: Vector2) -> Dictionary:
 	var nearest: Dictionary = {}
-	var radius: = 34.0 * get_window().content_scale_factor  # owner: cities were hard to tap
+	var best: = INF
 	for city in cities:
 		var anchor: = terrain.position_at(city.point) + Vector3.UP * 0.2
 		if rig.camera.is_position_behind(anchor): continue
-		var distance: = rig.camera.unproject_position(anchor).distance_to(screen)
-		if distance < radius:
-			radius = distance
+		var centre: = rig.camera.unproject_position(anchor)
+		var distance: = centre.distance_to(screen)
+		var district: Node3D = districts.get(city.id)
+		var reach: float = float(district.get_meta("reach", 1.0)) * 0.85 if district != null else 0.6
+		var edge: = rig.camera.unproject_position(anchor + rig.camera.global_transform.basis.x * reach).distance_to(centre)
+		var radius: = maxf(edge, 34.0 * get_window().content_scale_factor)
+		if distance < radius and distance / radius < best:
+			best = distance / radius
 			nearest = {"city": city, "distance": distance}
 	return nearest
 func controller_of(city: Dictionary) -> String:
@@ -570,8 +583,9 @@ func _build_city_district(district: Node3D, city: Dictionary, _ink: StandardMate
 			plate = CylinderMesh.new(); (plate as CylinderMesh).top_radius = 1.12 if city_style == "downtown" else 1.3; (plate as CylinderMesh).bottom_radius = (plate as CylinderMesh).top_radius; (plate as CylinderMesh).height = 0.004; (plate as CylinderMesh).radial_segments = 40
 		_city_mesh(district, plate, Vector3(0, 0.002, 0), ground_paint)
 	# Regular street blocks densely fill the city, including the removable garrison core.
-	for row in range(-7,8):
-		for column in range(-7,8):
+	var span: int = 9 if capital else 7
+	for row in range(-span, span + 1):
+		for column in range(-span, span + 1):
 			var point := Vector2(column * 0.18, row * 0.18)
 			match city_style:
 				"downtown": if point.length() > 1.02: continue
@@ -583,7 +597,7 @@ func _build_city_district(district: Node3D, city: Dictionary, _ink: StandardMate
 				"town":
 					# Irregular round edge, like a real town seen from above.
 					var bearing: = point.angle()
-					var edge: = 1.22 * (1.0 + 0.10 * sin(3.0 * bearing + float(city.name.hash() % 7)) + 0.06 * sin(5.0 * bearing))
+					var edge: = (CAPITAL_EDGE if capital else 1.22) * (1.0 + 0.10 * sin(3.0 * bearing + float(city.name.hash() % 7)) + 0.06 * sin(5.0 * bearing))
 					if point.length() > edge: continue
 				_: if point.length() > 1.34: continue
 			if point.y < -0.66 and absf(point.x) < 0.57: continue # permanent skyline
@@ -597,20 +611,20 @@ func _build_city_district(district: Node3D, city: Dictionary, _ink: StandardMate
 			var inside := GARRISON_SQUARE.grow(radius).has_point(point) or point.distance_to(GARRISON_SQUARE.get_center()) < GARRISON_CLEAR_RADIUS + radius
 			var target: Node3D = core if inside else district
 			if city_style == "town": point += Vector2(rng.randf_range(-0.03,0.03),rng.randf_range(-0.03,0.03))
-			if (city_style == "green" and point.length() > 0.62 and rng.randf() < 0.42) or (city_style == "town" and not inside and point.length() > 0.85 and rng.randf() < 0.30):
+			if (city_style == "green" and point.length() > 0.62 and rng.randf() < 0.42) or (city_style == "town" and not inside and point.length() > (1.15 if capital else 0.85) and rng.randf() < 0.30):
 				# Garden city: trees between the apartment blocks.
 				var crown_size: = rng.randf_range(0.045, 0.065)
 				var crown: = SphereMesh.new(); crown.radius = crown_size; crown.height = crown_size * 2.0; crown.radial_segments = 8; crown.rings = 4
 				_city_mesh(target, crown, Vector3(point.x, 0.04 + crown_size, point.y), leaves)
 				continue
-			var central := point.length() < (0.78 if city_style == "downtown" else 0.6 if city_style == "grid" else 0.55)
+			var central := point.length() < (0.78 if city_style == "downtown" else 0.6 if city_style == "grid" else 0.72 if capital else 0.55)
 			if city_style == "grid": central = absf(point.x) < 0.5 and absf(point.y) < 0.5
 			if central:
 				var height := rng.randf_range(0.30,0.65) * (1.25 if capital else 1.0)
 				if city_style == "town": height *= 0.8
 				if city_style == "downtown": height *= 1.0 + 0.6 * (1.0 - point.length() / 0.78)
 				_dense_tower(target, point, width, height, towers[rng.randi_range(0,towers.size()-1)])
-			elif point.length() < 1.01:
+			elif point.length() < (1.3 if capital else 1.01):
 				var height := rng.randf_range(0.13,0.25)
 				_city_block(target,Vector3(width,height,width*0.78),Vector3(point.x,0.02+height*0.5,point.y),0,blocks[rng.randi_range(0,blocks.size()-1)])
 				# Roof parapets make apartments read as buildings, not featureless blocks.

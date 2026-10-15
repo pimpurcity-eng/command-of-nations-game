@@ -505,11 +505,12 @@ func _refresh() -> void:
 			if bill[resource] > 0: row.costs.add_child(CowUI.cost(resource, bill[resource], stock[resource] >= bill[resource]))
 		row.time.text = " " + SimulationClock.duration(buildings.duration(id, target))
 		var reason: = buildings.reason(city_id, id, GameSession.player_country, false)
-		# One building at a time per city (owner 2026-10-13).
-		var busy: = jobs.size() >= BuildingSystem.QUEUE_LIMIT
-		row.button.disabled = not reason.is_empty() or busy
-		row.button.tooltip_text = "One building at a time" if busy else reason
-		caption.text = ("BUILDING NOW" if jobs[0].building == id else "WAIT") if busy else "CONSTRUCT LVL. " + str(target)
+		# One building at a time, up to five more queued (owner 2026-10-15).
+		var queued: Array = jobs.filter(func(job): return job.building == id)
+		row.button.disabled = not reason.is_empty()
+		row.button.tooltip_text = reason
+		if not queued.is_empty(): caption.text = "BUILDING NOW" if jobs[0].building == id else "QUEUED #" + str(jobs.find(queued[0]) + 1)
+		else: caption.text = ("CONSTRUCT LVL. " if jobs.is_empty() else "QUEUE LVL. ") + str(target)
 
 func _process(delta: float) -> void:
 	if not visible: return

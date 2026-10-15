@@ -15,7 +15,7 @@ var strategic: StrategicWeapons
 var jobs: Array = []
 var next_id: = 1
 ## Owner 2026-10-13 (later): one unit at a time per city.
-const PLAN_LIMIT: = 1
+const PLAN_LIMIT: = 5  # owner 2026-10-15: queue up to five units per city, built one after another
 const SAVED_PLAN_LIMIT: = 8  # older saves may still hold up to eight orders
 var rally_points: Dictionary = {}
 var cities: Array
@@ -151,7 +151,7 @@ func enqueue(equipment_id: String, city_name: String) -> String:
 	var count: = 0
 	for job in jobs:
 		if job.city == city_name: count += 1
-	if count >= PLAN_LIMIT: return "One unit at a time - wait for the current one to finish"
+	if count >= PLAN_LIMIT: return "The production queue is full (5)"
 	for resource in RESOURCES:
 		if stockpiles[spec.country][resource] < float(spec.cost.get(resource, 0.0)): return "Insufficient " + resource
 	for resource in RESOURCES: stockpiles[spec.country][resource] -= float(spec.cost.get(resource, 0.0))
@@ -293,7 +293,7 @@ func schedule(equipment_id: String, city_name: String) -> String:
 		if entry.name == city_name: place = entry
 	if place.is_empty() or not controlled(place, spec.country): return "Choose a controlled city"
 	if spec.get("requires_port", false) and not place.has("naval_spawn"): return "Ships require a coastal city"
-	if jobs.filter( func(job: Dictionary): return job.city == city_name).size() >= PLAN_LIMIT: return "One unit at a time - wait for the current one to finish"
+	if jobs.filter( func(job: Dictionary): return job.city == city_name).size() >= PLAN_LIMIT: return "The production queue is full (5)"
 	jobs.append({"id": next_id, "equipment": equipment_id, "city": city_name, "progress": 0.0, "paid": false})
 	next_id += 1
 	changed.emit()
