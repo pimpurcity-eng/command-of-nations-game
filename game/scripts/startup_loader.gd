@@ -19,7 +19,7 @@ func _ready() -> void:
 	add_child(panel)
 	panel.setup(StrategyTheme.create(), FileAccess.file_exists("user://regional_save.json"))
 	panel.layer = 30
-	panel.begin_loading()
+	panel.begin_background_loading()
 	await get_tree().process_frame
 	var path := "res://scenes/main.tscn"
 	if ResourceLoader.load_threaded_request(path) != OK:
@@ -52,6 +52,14 @@ func _ready() -> void:
 		await game.boot_ready
 	panel.set_progress(100, "Ready")
 	print("BOOT ready after ", Time.get_ticks_msec(), " ms")
+	# Hand the player's choices to the game's own home screen and carry out a start they
+	# already chose while the map was loading.
+	game.mobile_start.country_picker.select(panel.country_picker.selected)
+	game.mobile_start._show_nation()
+	if not panel.pending_start.is_empty():
+		var mode: = panel.pending_start
+		game.mobile_start.layer = panel.layer + 1
+		game.mobile_start.request_start(mode)
 	if "--startup-smoke" in OS.get_cmdline_user_args():
 		panel.hide()
 		print("WF_SMOKE READY")

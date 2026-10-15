@@ -489,8 +489,27 @@ func begin_loading() -> void:
 	scroll.ensure_control_visible(loading_label)
 func set_progress(value: float, message: String) -> void:
 	progress.value = value
-	loading_label.text = message
+	loading_label.text = ("Starting · " + message) if booting and not pending_start.is_empty() else message
+## Owner 2026-10-15: "go straight into the home screen, then choose, then wait". While the map
+## is still being prepared the home screen stays usable; a choice made then is remembered
+## (pending_start) and carried out as soon as the map is ready.
+var booting: = false
+var pending_start: = ""
+func begin_background_loading() -> void:
+	booting = true
+	profile_button.disabled = true
+	for button in nav_buttons.values(): button.disabled = true
+	set_progress(0, "Preparing map")
 func request_start(mode: String) -> void:
+	if booting:
+		if pending_start.is_empty():
+			pending_start = mode
+			loading = true
+			for button in [online_button, continue_button, fresh_button, test_button]: button.disabled = true
+			for card in country_cards.values(): card.disabled = true
+			country_picker.disabled = true
+			scroll.ensure_control_visible(loading_label)
+		return
 	if loading: return
 	begin_loading()
 	await get_tree().process_frame

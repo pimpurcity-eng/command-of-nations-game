@@ -4,6 +4,8 @@ signal city_selected(city: Dictionary)
 ## Clear space at the actual city destination. Sized for the enlarged map units.
 const GARRISON_PLAZA_RADIUS := 0.30
 # Owner 2026-10-14: "make the square in the middle a lot smaller".
+## District units around the army spot kept free of buildings while an army stands there.
+const GARRISON_CLEAR_RADIUS: = 0.55
 static var GARRISON_SQUARE := Rect2(-0.30, -0.28, 0.60, 0.56)
 ## Where a city's army stands (owner review 2026-10-14): "centre", or at the city's edge -
 ## "front" (facing the camera), "side" (east edge) or "outside" (just past the last houses).
@@ -589,7 +591,9 @@ func _build_city_district(district: Node3D, city: Dictionary, _ink: StandardMate
 			point += Vector2(rng.randf_range(-0.012,0.012),rng.randf_range(-0.012,0.012))
 			var width := rng.randf_range(0.115,0.145)
 			var radius := width * 0.8
-			var inside := GARRISON_SQUARE.grow(radius).has_point(point)
+			# Owner 2026-10-15: a tank parked in the city must not have buildings poking through
+			# it. The cleared area is as big as a garrisoned tank; the park in it stays small.
+			var inside := GARRISON_SQUARE.grow(radius).has_point(point) or point.distance_to(GARRISON_SQUARE.get_center()) < GARRISON_CLEAR_RADIUS + radius
 			var target: Node3D = core if inside else district
 			if city_style == "town": point += Vector2(rng.randf_range(-0.03,0.03),rng.randf_range(-0.03,0.03))
 			if (city_style == "green" and point.length() > 0.62 and rng.randf() < 0.42) or (city_style == "town" and not inside and point.length() > 0.85 and rng.randf() < 0.30):

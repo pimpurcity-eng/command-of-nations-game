@@ -8,7 +8,7 @@ extends Node
 ## Until a model arrives its unit shows a stand-in; `loaded` tells the game to swap the real one in.
 signal loaded
 const FOLDER: = "extras/"
-const PARALLEL: = 3
+const PARALLEL: = 8
 static var available: bool = not OS.has_feature("web")
 ## res:// path -> packs it needs (written by tools/split_web_pack.py as web_extras_index.txt).
 static var _needs: Dictionary = {}

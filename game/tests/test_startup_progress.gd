@@ -17,11 +17,12 @@ func run() -> void:
 		await process_frame
 		if not is_instance_valid(loader): break
 		if loader.panel.progress.value > 10 and loader.panel.progress.value < 90:
-			disabled = loader.panel.fresh_button.disabled and loader.panel.test_button.disabled
+			# Owner 2026-10-15: the home screen is usable while the map loads.
+			disabled = not loader.panel.fresh_button.disabled and not loader.panel.test_button.disabled
 			if not captured and not OS.get_cmdline_user_args().is_empty():
 				root.get_texture().get_image().save_png(OS.get_cmdline_user_args()[0].path_join("Start_Loading_Progress.png"))
 				captured = true
-	check(disabled,"real startup progress, disabled buttons")
+	check(disabled,"real startup progress, buttons usable while loading")
 	check(not is_instance_valid(loader),"startup completes")
 	var game = current_scene
 	check(game != null and game.get_script().resource_path == "res://scripts/main.gd","opens real campaign")

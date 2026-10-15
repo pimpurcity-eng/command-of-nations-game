@@ -23,7 +23,7 @@ func _initialize() -> void:
 			var square: Node3D = district.get_node("GarrisonSquare")
 			check(district.get_meta("urban_building_count") > 100,"Dense city has street blocks")
 			check(district.get_meta("core_building_count") > 5,"Empty city centre has buildings")
-			check(district.get_meta("permanent_building_count") > 70,"Occupied city retains a substantial district")
+			check(district.get_meta("permanent_building_count") > 50,"Occupied city retains a substantial district")
 			check(core.visible and not square.visible,"Empty city starts full without a square")
 			var tall := 0
 			for child in district.get_children():
