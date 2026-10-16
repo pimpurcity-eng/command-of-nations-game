@@ -1,6 +1,16 @@
-# Warfront Mandate — what's left (after 0.53, 15 Oct 2026)
+# Warfront Mandate — what's left (checkpoint 16 Oct 2026, latest build 0.57)
+
+> **Checkpoint 16 Oct 2026:** ChatGPT takes over development, builds and publishing.
+> Start with `CHATGPT_HANDOFF.md` in the repo root (authoritative source, build/publish/signing, test results).
+> Latest build 0.57 (`bcda1be`, versionCode 57); source tip adds `62dfac0` (≈45k funds/day), not yet built.
+> New blockers: the Play upload key is not in GitHub or Drive (upload-key reset may be needed), and the
+> Europe 20-country online work (`test_europe_online.gd`, lobby, picker) was never committed.
 
 ## Needs Matthew (one-time)
+- **Upload key.** Does anyone have the Warfront Play upload keystore? If not, approve an upload-key reset
+  (steps in `CHATGPT_HANDOFF.md` §5).
+- **Europe online work.** Find the conversation that has the uncommitted Europe lobby/country picker and
+  ask it to push its working tree to GitHub.
 0. **Account emails (5 minutes, Supabase dashboard).** Sign-up works now with the link email
    (tap the link, then "I tapped the link - sign me in" in the game), but to send a 6-digit code instead:
    - Authentication → URL Configuration → Site URL: `https://play.warfrontmandate.com`, and add the same address
