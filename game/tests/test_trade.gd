@@ -37,7 +37,7 @@ func run() -> void:
 		if game.production.stockpiles.russia.fuel > fuel_before: delivered = true; break
 	check(delivered, "the train delivers fuel when it reaches the partner")
 	check(game.production.earned.get("russia", {}).get("funds", 0.0) == earned_before, "paid imports cannot create victory income")
-	check(is_equal_approx(trade.delivery_amount(route), TradeNetwork.CARGO.fuel * game.buildings.level(route.city, "train_station")), "cargo grows with the station level")
+	check(is_equal_approx(trade.delivery_amount(route), roundf(TradeNetwork.CARGO.fuel * TransportMarket.level_scale(game.buildings.level(route.city, "train_station")))), "cargo grows with the station level")
 	# Rail transport for armies.
 	var station_city: Dictionary = game.buildings.city(route.city)
 	# Rail speed needs a line: join a second station to the capital (owner 2026-10-13).

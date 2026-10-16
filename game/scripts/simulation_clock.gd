@@ -13,6 +13,13 @@ static func speeds() -> Array:
 ## march took over 30 real minutes). Production, research and combat rounds are unchanged.
 ## Owner 2026-10-15: "the units are moving way too fast for 1x" - back to the economy clock's pace.
 const MOVEMENT_PACE: = 1.0
+## Owner 2026-10-16: "Units are moving too fast. I'm almost finished a whole game before I even get
+## something built." Ground armies march at Call of War pace: infantry crosses a typical province
+## (about 3 map units of road) in roughly 1.5 real hours at 1x on its own land, Kyiv to Kharkiv
+## takes about 5 hours, a march across the whole map days. Was 1.0 (5 min a province, 20 min
+## Kyiv-Kharkiv). Aircraft keep MOVEMENT_PACE (refuel and mission timings are owner rules) and
+## ships keep their pace.
+const LAND_PACE: = 0.05
 signal advanced(seconds: float)
 signal state_changed
 var elapsed: = 0.0

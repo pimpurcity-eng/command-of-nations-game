@@ -105,9 +105,10 @@ func run() -> void:
 	check(tank.waypoints.size() > 2 and off_road == 0, "the route follows the roads (%d of %d points off-road)" % [off_road, tank.waypoints.size()])
 	check(game.map.province_hubs.values().any(func(hub: Vector2): return hub.distance_to(tank.target) < 0.001), "armies travel to a province centre")
 	game.clock.paused = false
-	for step in 30: game.clock.advance(1.0)
+	# Owner 2026-10-16: Call of War march pace - about an hour a province at 1x.
+	for step in 30: game.clock.advance(60.0)
 	var moved: = Vector2(tank.node.position.x, tank.node.position.z).distance_to(start)
-	check(moved > 0.3, "a tank moves visibly in 30 seconds (%.2f map units)" % moved)
+	check(moved > 0.3, "a tank moves visibly in 30 minutes at 1x (%.2f map units)" % moved)
 	# 4b. Attack (Call of War): Attack declares war; tapping an enemy army attacks it and
 	# combat follows.
 	game.match_rules.at_war = false
@@ -134,7 +135,7 @@ func run() -> void:
 	check(attacker.attack_target == victim.id, "tapping the enemy orders the attack")
 	var health_before: float = victim.health
 	game.clock.paused = false
-	for step in 900: game.clock.advance(1.0)
+	for step in 900: game.clock.advance(20.0)
 	check(victim.health < health_before or not units.units.has(victim), "the attack reaches the enemy and deals damage")
 	# 5. Research is national: it runs at full speed even without the capital.
 	check(game.research.rate("russia") == 1.0, "research does not depend on a city")

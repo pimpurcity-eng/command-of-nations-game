@@ -361,7 +361,9 @@ func advance(seconds: float) -> void :
 				if production.equipment(job.equipment).country != country: continue
 				for city in cities:
 					if city.name == job.city and production.controlled(city, country): living = true
-		if not living:
+		# Owner 2026-10-16 ("I won the game. I don't know how."): wiping out the armies is not
+		# enough; the country is eliminated only once its capital has fallen too.
+		if not living and not VictoryRules.holds_capital(self, country):
 			var survivors: Array = production.stockpiles.keys().filter(func(c): return c != country and _has_forces(c))
 			if survivors.size() != 1: continue
 			end_match(survivors[0], "elimination")

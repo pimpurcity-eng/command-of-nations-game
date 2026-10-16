@@ -108,7 +108,7 @@ func path_for(unit: Dictionary, start: Vector2, finish: Vector2) -> Array:
 	if stacks.members(unit).any(func(member): return EquipmentIdentity.spec(member.equipment_id).get("stationary", false)): return []
 	if is_naval(unit): return sea_navigation.find_path(start, finish)
 	navigation.diplomacy = diplomacy
-	return navigation.find_path(start, finish, unit.visual_kind)
+	return navigation.find_path(start, finish, unit.visual_kind, str(unit.get("country", "")))
 func surface_position(unit: Dictionary, point: Vector2) -> Vector3:
 	if is_naval(unit): return Vector3(point.x, SEA_WATERLINE, point.y)
 	return footprint_ground(point)

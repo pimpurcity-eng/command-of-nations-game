@@ -35,16 +35,48 @@ func run() -> void:
 	check(not r.ok and calls.is_empty(),"Invalid registration cannot reach backend")
 	reply={"ok":true,"data":{}}
 	r=await auth.signup("tester@example.org","A8passw!","Tester")
-	check(r.ok and str(calls[-1][0]).begins_with("/signup?redirect_to=https%3A%2F%2Fplay.warfrontmandate.com") and calls[-1][1].data.commander_name=="Tester","Registration sends commander metadata")
+	check(r.ok and str(calls[-2][0]).begins_with("/signup?redirect_to=https%3A%2F%2Fplay.warfrontmandate.com") and calls[-2][1].data.commander_name=="Tester","Registration sends commander metadata")
 	r=await auth.signup("tester@example.org","A8passw!","Sir  Matthew ")
-	check(r.ok and calls[-1][1].data.commander_name=="Sir_Matthew","A name with spaces is accepted as underscores")
+	check(r.ok and calls[-2][1].data.commander_name=="Sir_Matthew","A name with spaces is accepted as underscores")
 	check(PlayerAuth.signup_problem("tester@example.org","short","Tester").contains("8 characters"),"Short password names the password")
+	check(str(calls[-2][0]).begins_with("/signup?redirect_to=https%3A%2F%2Fplay.warfrontmandate.com%2F"),"Email link returns to the allowed address (with the trailing slash)")
 	var back:=PlayerAuth.address_values("#access_token=abc.def&expires_in=3600&refresh_token=r1&token_type=bearer")
 	check(back.access_token=="abc.def" and back.refresh_token=="r1" and back.expires_in=="3600","Google return address is read")
 	check(auth.google_url("https://play.warfrontmandate.com/").begins_with("https://example.supabase.co/auth/v1/authorize?provider=google&redirect_to=https%3A%2F%2Fplay"),"Google sign-in goes through the account service")
 	check(PlayerAuth.signup_problem("tester@example.org","A8passw!","Al!").contains("letters, numbers"),"Bad name names the commander name")
 	check(calls[-1][1].password=="A8passw!","Eight-character registration password reaches the account service")
 	check(not auth.signed_in(),"Registration waits for confirmation")
+	# Owner 2026-10-16: no code step. Signup then signs in with the same password.
+	var signup_replies: Array=[]
+	var scripted:=func(path: String,payload: Dictionary,method: int,bearer: String) -> Dictionary:
+		calls.append([path,payload,method,bearer]);return signup_replies.pop_front() if not signup_replies.is_empty() else {"ok":true,"data":{"rows":[]}}
+	auth.transport=scripted
+	signup_replies.assign([{"ok":true,"data":session()}])
+	r=await auth.signup("tester@example.org","A8passw!","Tester")
+	check(r.ok and auth.signed_in() and not r.get("needs_email",false),"A session from signup signs the player straight in")
+	auth.clear_session()
+	signup_replies.assign([{"ok":true,"data":{"id":"test-player-id"}},{"ok":true,"data":session()}])
+	r=await auth.signup("tester@example.org","A8passw!","Tester")
+	check(r.ok and auth.signed_in() and str(calls[-2][0])=="/token?grant_type=password","Without a session, signup signs in with the password at once")
+	auth.clear_session()
+	signup_replies.assign([{"ok":true,"data":{"id":"test-player-id"}},PlayerAuth.failure("Confirm your email before signing in.",400)])
+	r=await auth.signup("tester@example.org","A8passw!","Tester")
+	check(r.ok and r.get("needs_email",false) and not auth.signed_in() and "tap it" in str(r.message),"If the email must be confirmed, signup asks for the link, not a code")
+	# Google in the Android app: return link handling and the allowed-address check.
+	var link_values:=PlayerAuth.link_values("warfrontmandate://auth-callback#access_token=abc&refresh_token=r2&expires_in=3600")
+	check(link_values.access_token=="abc" and link_values.refresh_token=="r2","App return link is read")
+	check(PlayerAuth.link_values("warfrontmandate://auth-callback?error=access_denied&error_description=x").error=="access_denied","App return link errors are read")
+	check(auth.google_url(PlayerAuth.APP_RETURN).ends_with("redirect_to=warfrontmandate%3A%2F%2Fauth-callback"),"App Google sign-in returns to the app link")
+	signup_replies.assign([{"ok":true,"data":{"location":"http://localhost:3000/#error=access_denied"}}])
+	check(not await auth.app_return_allowed(),"App link not allowed by the account service is detected")
+	signup_replies.assign([{"ok":true,"data":{"location":"warfrontmandate://auth-callback#error=access_denied"}}])
+	check(await auth.app_return_allowed() and str(calls[-1][0]).begins_with("/verify?"),"Allowed app link is detected")
+	signup_replies.assign([{"ok":true,"data":session().user}])
+	r=await auth.finish_google_from_app("warfrontmandate://auth-callback#access_token=google_access&refresh_token=g1&expires_in=3600")
+	check(r.ok and auth.signed_in() and auth.access_token=="google_access" and calls[-2][3]=="google_access","Return link signs the app in")
+	r=await auth.finish_google_from_app("warfrontmandate://auth-callback#access_token=google_access&refresh_token=g1&expires_in=3600")
+	check(not r.ok,"A return link is used only once")
+	auth.clear_session();auth.transport=mock
 	reply={"ok":true,"data":session(false)}
 	r=await auth.login("tester@example.org","strongpassword12")
 	check(not r.ok and not auth.signed_in(),"Unconfirmed email cannot become a player session")
@@ -105,6 +137,7 @@ func run() -> void:
 	panel.build("new_password")
 	check(panel.inputs.password.placeholder_text=="Password (8+ characters)","Password reset displays the eight-character minimum")
 	panel.build("recovery_code");check(panel.inputs.has("code"),"Recovery screen accepts email codes")
+	panel.build("check_email");check(not panel.inputs.has("code") and panel.fields.get_children().any(func(n): return n is Button and n.text=="Sign me in"),"Confirm-email screen has no code box, just Sign me in")
 	panel.queue_free();auth.queue_free()
 	print("ACCOUNT CHECKS ",checks," failures=",failures)
 	quit(1 if failures else 0)

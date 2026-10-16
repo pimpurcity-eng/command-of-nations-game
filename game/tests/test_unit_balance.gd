@@ -113,7 +113,7 @@ func run() -> void:
 	var patient_before: = UnitStats.current_hp(patient)
 	SupportRoles.heal(armies, null, SupportRoles.HOUR)
 	check(is_equal_approx(UnitStats.current_hp(patient) - patient_before, SupportRoles.MEDIC_PER_LEVEL * 1.5), "medic heals actual HP rather than percentage")
-	# Patrol attacks one stack once and shares damage across members.
+	# Patrol attacks one stack once and hits each of its members.
 	var plane: = make_unit("strike_russia", "plane", point)
 	plane.flight_mode = "patrol"; plane.patrol_center = point; plane.patrol_phase = 0.0
 	var first: = make_unit("infantry_ukraine", "d1", point)
@@ -124,7 +124,8 @@ func run() -> void:
 	var pending: = {}
 	air.advance(0, armies, pending, true)
 	var hp_hit: = float(pending.get("d1", 0)) * UnitStats.max_hp(first) / 100.0 + float(pending.get("d2", 0)) * UnitStats.max_hp(second) / 100.0
-	check(is_equal_approx(hp_hit, air.strike_value(plane, first) * AirBattleSystem.PATROL_DAMAGE), "patrol damage is one 65% attack, shared by stack")
+	# Owner 2026-10-16: a patrol hits every unit of the army at 65% of its attack damage.
+	check(is_equal_approx(hp_hit, air.strike_value(plane, first) * AirBattleSystem.PATROL_DAMAGE + air.strike_value(plane, second) * AirBattleSystem.PATROL_DAMAGE), "patrol hits each unit of the army at 65% of attack damage")
 	check(is_equal_approx(float(pending.get("d1", 0)), float(pending.get("d2", 0))), "patrol shares damage evenly across equal units")
 	# A squadron does not multiply the target's defensive volley by its plane count.
 	var squadron: Array = []

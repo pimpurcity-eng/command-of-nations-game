@@ -6,7 +6,9 @@ extends Node3D
 ## in one network (shortest links first), over its own land only. The original rail_straight
 ## model is laid at its true proportions along a smoothed line (it used to be squashed into a
 ## white "fence").
-const TRACK_WIDTH: = 0.06
+## Owner 2026-10-16: "make the tracks bigger" - more than twice as wide (was 0.06), so a line
+## between two stations reads clearly at strategic zoom.
+const TRACK_WIDTH: = 0.14
 const MODEL: = "res://assets/library/buildings_oct12/rail_straight.glb"
 static var active: RailwayMap
 var cities: CitySystem

@@ -50,7 +50,8 @@ func run() -> void:
 	game._map_click(screen,false)
 	check(not game.selecting_armies and not game.order_mode,"meeting tap completes selection")
 	check(armies.slice(0,3).all(func(u):return u.moving),"three armies receive meeting movement")
-	check(game.units.command_groups().size() == 3,"chosen armies stay selected")
+	# Owner 2026-10-15 ("One click, destination"): the selection clears once the order is given.
+	check(game.units.command_groups().is_empty(),"selection clears after the meeting order")
 	game.rig.target = Vector3(armies[0].node.position.x,0,armies[0].node.position.z)
 	game.rig.distance = 10
 	game.rig._snap(1.0)

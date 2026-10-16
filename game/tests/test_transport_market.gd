@@ -44,9 +44,32 @@ func run() -> void:
 	check(not TransportMarket.sale_allowed({"visual_kind":"infantry","equipment_id":"infantry_russia"}),"infantry cannot be sold")
 	check(market.capacity("a","air") == 2 and market.capacity("a","rail") == 12 and market.capacity("a","sea") == 30,"air capacity is smaller than rail and sea")
 	network.buildings.levels.a.train_station = 5
-	check(market.capacity("a","rail") == 60,"level five station carries five times level one")
+	check(market.capacity("a","rail") == 84,"level five station carries seven times level one")
 	network.buildings.levels.a.train_station = 99
-	check(market.capacity("a","rail") == 60,"capacity stops at facility level five")
+	check(market.capacity("a","rail") == 84,"capacity stops at facility level five")
+	# Owner 2026-10-16: every station / port / airbase level carries clearly more than the last,
+	# and the numbers shown to the player are the ones the transport logic uses.
+	for mode in TransportMarket.MODES:
+		var kept: int = network.buildings.levels.a[market.facility(mode)]
+		var increasing: = true
+		for level in range(1, 6):
+			network.buildings.levels.a[market.facility(mode)] = level
+			var now: = market.capacity("a", mode)
+			if now != TransportMarket.capacity_at(mode, level): increasing = false
+			if level > 1 and float(now) < TransportMarket.capacity_at(mode, level - 1) * 1.3: increasing = false
+		check(increasing, mode + " capacity rises at least 30% with every level and matches the shown table")
+		network.buildings.levels.a[market.facility(mode)] = kept
+	check(TransportMarket.per_level_text("rail", 3) == "Each train carries Lv1 1,200 · Lv2 2,400 · Lv3 4,200 cargo per trip", "train station card lists the load at every level")
+	check(TransportMarket.per_level_text("sea", 3) == "Each ship carries Lv1 3,000 · Lv2 6,000 · Lv3 10,500 cargo per trip", "naval base card lists the load at every level")
+	var catalog: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/buildings.json"))
+	for entry in catalog:
+		if entry.id == "train_station": check("1,200" in entry.description and "2,400" in entry.description and "4,200" in entry.description, "train station description matches real capacity")
+		if entry.id == "naval_base": check("3,000" in entry.description and "6,000" in entry.description and "10,500" in entry.description, "naval base description matches real capacity")
+	var vessel_route: = {"city":"a","mode":"sea","cargo":"food"}
+	check(network.delivery_amount(vessel_route) == roundf(TradeNetwork.CARGO.food * TradeNetwork.SEA_BONUS), "trade-route ship uses the same level table")
+	network.buildings.levels.a.naval_base = 3
+	check(network.delivery_amount(vessel_route) == roundf(TradeNetwork.CARGO.food * 3.5 * TradeNetwork.SEA_BONUS), "level three port ship carries 3.5 times level one")
+	network.buildings.levels.a.naval_base = 1
 	check(not market.list_resource("ukraine","a","fuel",100,200).is_empty(),"cannot list cargo from another country’s city")
 	check(not market.list_resource("russia","a","fuel",100,1).is_empty(),"minimum sale price is enforced")
 	check(market.list_resource("russia","a","fuel",100,200).is_empty(),"owned cargo can be listed")
@@ -200,17 +223,17 @@ func run() -> void:
 	network.buildings.levels.a.naval_base = 5
 	check(market.capacity("a","sea","materials") == 0,"cargo ships must first be researched")
 	naval_research.levels.cargo_russia = 1
-	check(market.capacity("a","sea","materials") == 30,"cargo ship research level one carries 30 slots")
+	check(market.capacity("a","sea","materials") == 210,"cargo ship research level one carries the port-level load (30 x 7)")
 	naval_research.levels.cargo_russia = 5
-	check(market.capacity("a","sea","materials") == 150,"cargo ship level five carries five times level one")
+	check(market.capacity("a","sea","materials") == 630,"cargo ship level five carries three times level one")
 	check(market.capacity("a","sea","fuel") == 0,"cargo ship research does not silently unlock oil tankers")
 	naval_research.levels.tankers_russia = 3
-	check(market.capacity("a","sea","fuel") == 90,"oil tanker research has its own capacity levels")
+	check(market.capacity("a","sea","fuel") == 420,"oil tanker research has its own capacity levels")
 	for family in ["cargo_russia","tankers_russia","cargo_ukraine","tankers_ukraine"]:
 		var spec: = EquipmentIdentity.spec(family)
 		check(spec.research_tiers.size() == 5 and ProductionGroups.index(spec) == 4,"five naval research levels exist for " + family)
 		check(spec.research_tiers.all(func(t): return t.preview == spec.research_tiers[0].preview),"all five levels keep the same artwork for " + family)
-	check(market.capacity("a","rail") == 60,"departure level-five station carries more than a level-one receiving station")
+	check(market.capacity("a","rail") == 84,"departure level-five station carries more than a level-one receiving station")
 	network.buildings.levels.a.train_station = 1
 	check(market.capacity("a","rail") == 12,"a different departure city at station level one sends a smaller train")
 	var station_cities: = CitySystem.new()
