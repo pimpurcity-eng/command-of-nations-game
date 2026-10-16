@@ -141,8 +141,6 @@ func run():
 	check(fighting_leader.engaged and fighting_leader.has("foe_point"), "the army in battle knows where its enemy stands")
 
 	# 6. The battle shows: shots fly between the armies.
-	# Owner 2026-10-16: the animation plays for a few seconds after each exchange of fire.
-	game.combat_effects.on_shot(fighting_leader, enemy, "tracer")
 	game.combat_effects._skirmish(2.0)
 	game.combat_effects._skirmish(2.0)
 	check(game.combat_effects.projectiles.any(func(p): return p.effect == "skirmish"), "armies in battle keep firing at each other")

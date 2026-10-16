@@ -23,7 +23,7 @@ const HELLO_TIMEOUT: = 15.0
 const MAX_COMMANDS_PER_SECOND: = 20
 const MAX_MESSAGE_BYTES: = 8192
 var countries: Array = ["russia", "ukraine"]
-const UNIT_OPS: = ["move", "stop", "attack", "retreat", "fire_mode"]
+const UNIT_OPS: = ["move", "stop", "attack", "retreat"]
 ## Private fields of enemy armies that are never sent (their orders are secret).
 const HIDDEN_FIELDS: = ["route", "attack_target", "fire_mode", "forced_march", "delay_remaining", "upgrade_remaining", "upgrade_target", "patrol_center", "patrol_phase", "flight_used", "refuel_remaining"]
 
@@ -335,7 +335,7 @@ func command(country: String, message: Dictionary) -> String:
 		"chat":
 			var to: = str(message.get("to", "all"))
 			var coalition: = talks.coalition_of(country)
-			if not (to == "all" or to == Diplomacy.NEWSPAPER or (to in countries and to != country) or (not coalition.is_empty() and to == "coalition:" + coalition)): return "Choose who to write to"
+			if not (to == "all" or (to in countries and to != country) or (not coalition.is_empty() and to == "coalition:" + coalition)): return "Choose who to write to"
 			talks.post(country, to, str(message.get("text", "")))
 			return ""
 		"coalition_create": return talks.create_coalition(str(message.get("name", "")), country)
@@ -353,21 +353,6 @@ func command(country: String, message: Dictionary) -> String:
 			return game.production.schedule(equipment_id, str(message.get("city", "")))
 		"build_queue":
 			return game.buildings.schedule(str(message.get("city", "")), str(message.get("building", "")), country)
-		"fire_mode":
-			# Owner 2026-10-16: fire control per army (Fire at will / Return fire / Hold fire ...).
-			var mode: = str(message.get("mode", ""))
-			if not FireControlPanel.MODES.has(mode): return "Unknown fire control"
-			var changed: = 0
-			for id in ids.slice(0, 64):
-				var unit: = units.find_id(str(id))
-				if unit.is_empty() or unit.country != country or units.air.is_air(unit): continue
-				for member in units.stacks.members(unit): member.fire_mode = mode
-				changed += 1
-			return "" if changed > 0 else "Select one of your ground armies"
-		"gold_heal":
-			# Owner 2026-10-16: heal a damaged army to full with gold.
-			if int(message.get("max_gold", -1)) < 0: return "Review the gold price first"
-			return GoldWallet.heal_army(game.production, units, country, str(message.get("id", "")), int(message.max_gold))
 		"gold_resource":
 			return game.production.buy_with_gold(country, str(message.get("resource", "")), int(message.get("quantity", 0)))
 		"gold_unit":

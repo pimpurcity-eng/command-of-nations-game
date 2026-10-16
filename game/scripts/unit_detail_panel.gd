@@ -151,7 +151,7 @@ func _build() -> void:
 		levels.add_child(button)
 	_section("Unit statistics")
 	_row(["Hit points", "%d HP" % roundi(UnitStats.max_hp(unit))])
-	_row(["Movement rate", "%d km/h" % roundi(ArmyStacks.km_per_hour(UnitStats.speed(unit) * (SimulationClock.MOVEMENT_PACE if unit.get("visual_kind", "") in ["fighter", "naval"] else SimulationClock.LAND_PACE)))])
+	_row(["Movement rate", "%.2f" % (UnitStats.speed(unit) * SimulationClock.MOVEMENT_PACE)])
 	_text(UnitStats.range_label(unit) + "\n" + str(role.get("purpose", "")))
 	_section("Attack and defence")
 	_row(["Target", "Attack", "Defence"], true)
@@ -180,8 +180,7 @@ func _build() -> void:
 		var cost: = EquipmentEconomy.cost(spec, level)
 		var upkeep: = EquipmentEconomy.upkeep(spec, level)
 		for resource in ProductionSystem.RESOURCES:
-			# Owner 2026-10-16: units no longer cost every resource; skip rows with nothing to pay.
-			if int(cost[resource]) > 0 or int(upkeep[resource]) > 0: _row([resource.capitalize(), str(int(cost[resource])), str(int(upkeep[resource]))])
+			_row([resource.capitalize(), str(int(cost[resource])), str(int(upkeep[resource]))])
 	if unit.visual_kind == "air_defense":
 		var layers: PackedStringArray = []
 		var names: = {"drone": "small drones", "low": "helicopters", "attack": "jets on attack runs", "high": "high-flying aircraft"}

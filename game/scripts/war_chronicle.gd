@@ -110,28 +110,10 @@ func publish(issue_day: int) -> Dictionary:
 	if not leader.is_empty() and rules.victory.income_share(leader) > 0.0:
 		lines.append("Economy: %s earns %d%% of all income." % [leader.capitalize(), roundi(100.0 * rules.victory.income_share(leader))])
 	var issue: = {"day": issue_day, "headline": headline, "lines": lines}
-	var statement: = _statement(issue_day, captures, losses)
-	if not statement.is_empty(): issue["statement"] = statement
 	issues.append(issue)
 	if issues.size() > MAX_ISSUES: issues.pop_front()
 	day_events = {"captures": [], "lost": {}, "research": {}, "built": {}}
 	return issue
-
-## Owner 2026-10-16 ("make the newspaper better"): one AI government gives the paper a short
-## statement each day, picked by how its day went. {country, text} or {} with no AI country.
-func _statement(issue_day: int, captures: Array, losses: Dictionary) -> Dictionary:
-	var speakers: Array = rules.diplomacy.ai_countries.filter(func(c): return rules.production == null or rules.production.stockpiles.has(c)) if rules.diplomacy != null else []
-	if speakers.is_empty(): return {}
-	var country: String = speakers[issue_day % speakers.size()]
-	var name: = country.capitalize()
-	var won: = captures.any(func(c: String): return c.to_lower().ends_with(" by " + name.to_lower()))
-	var lost: = captures.any(func(c: String): return not c.to_lower().ends_with(" by " + name.to_lower()))
-	var options: Array
-	if won: options = ["Our forces advance as planned. More will follow.", "Victory is near. The people of %s stand united." % name, "Another city returns to order under our flag."]
-	elif lost: options = ["A temporary setback. We will retake every metre.", "The enemy will pay for every town it holds.", "Reinforcements are already on the way."]
-	elif int(losses.get(country, 0)) > 0: options = ["Our soldiers fight with honour. Their sacrifice will not be forgotten.", "The front holds despite heavy fighting."]
-	else: options = ["We are ready for talks, and ready for war.", "Our factories work day and night. Let no one doubt our resolve.", "The government of %s is watching the border closely." % name]
-	return {"country": country, "text": options[issue_day % options.size()]}
 
 static func _size(b: Dictionary) -> int:
 	var total: = 0

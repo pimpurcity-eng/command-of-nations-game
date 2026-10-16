@@ -17,10 +17,6 @@ var next_id: = 1
 ## Owner 2026-10-13 (later): one unit at a time per city.
 const PLAN_LIMIT: = 5  # owner 2026-10-15: queue up to five units per city, built one after another
 const SAVED_PLAN_LIMIT: = 8  # older saves may still hold up to eight orders
-## Units one city may queue for this country: five, or eight for a Premium commander
-## (owner 2026-10-16; rally points and the five-unit queue stay free for everyone).
-func plan_limit(country: String) -> int:
-	return PlayerPremium.plan_limit(country)
 var rally_points: Dictionary = {}
 var cities: Array
 var terrain: StrategicMap
@@ -37,30 +33,13 @@ var armies: UnitSystem
 ## Owner 2026-10-16 ("Has to be more money. Check Call of War"): as in Call of War, every province makes
 ## money and a city makes several times a rural province. A city now makes about 4,300 a day and a
 ## province about 700, so a country starts near 45,000 a day.
-## Owner 2026-10-16 ("We're going to start with everything the same. Call of War"; "you can buy way,
-## way, way too much"): Russia and Ukraine now start and earn exactly the same. Each country's
-## specialty cities together make two cities' worth of each commodity (SPECIALTY_CITIES), its
-## provinces together pay PROVINCE_REFERENCE provinces' worth of money, and income was cut so a day
-## buys about three to five basic units: about 16,200 money, 5,200 of each commodity and 3,000
-## manpower a day. Money is still by far the biggest income.
-const CITY_BASE: = {"funds": 2.5, "materials": 2.4, "electronics": 2.4, "fuel": 2.4, "manpower": 0.6, "food": 2.4}
-## Each country's specialty cities share this many cities' worth of output per commodity: with three
-## oil cities each makes 2/3, with one it makes double (counted by the city's original country).
-const SPECIALTY_CITIES: = 2.0
-## Specialty output multiplier (Call of War: a resource city produces its resource).
-const SPECIALTY_BONUS: = 1.5
+const CITY_BASE: = {"funds": 6.0, "materials": 2.4, "electronics": 1.6, "fuel": 1.4, "manpower": 1.5, "food": 2.0}
 ## Manpower per recruitment-centre level, as a multiple of CITY_BASE.manpower.
 const RECRUITMENT_PER_LEVEL: = 4.0
-## Money per elapsed unit from a province without a city, for a country with PROVINCE_REFERENCE
-## provinces. Owner 2026-10-16: both countries earn the same, so a province pays
-## PROVINCE_FUNDS * PROVINCE_REFERENCE / (its original country's starting province count):
-## Russia's 39 provinces together pay what Ukraine's 20 do.
-const PROVINCE_FUNDS: = 0.25
-const PROVINCE_REFERENCE: = 20.0
+## Money per elapsed unit from each held province without a city.
+const PROVINCE_FUNDS: = 1.0
 ## Owner 2026-10-14: "give yourself more money" and "more starting resources" (every country).
-## Owner 2026-10-16 ("start with everything the same"; "you can buy way, way, way too much"): every
-## resource starts at the same amount, enough for about nine infantry, three tanks or two fighters.
-const START_STOCK: = {"funds": 11000.0, "manpower": 11000.0, "food": 11000.0, "materials": 11000.0, "fuel": 11000.0, "electronics": 11000.0}
+const START_STOCK: = {"funds": 60000.0, "manpower": 12000.0, "food": 15000.0, "materials": 20000.0, "fuel": 12000.0, "electronics": 8000.0}
 const DAY_SECONDS: = 86400.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
 var shortage_resources: Dictionary = {}
 ## Gold per country for this match only (GoldWallet.START at the start).
@@ -91,38 +70,8 @@ func city_income(city: Dictionary) -> Dictionary:
 			var centre: = buildings.level(city.id,"recruitment_center") if buildings != null else 1
 			result[resource] = CITY_BASE.manpower * (1.0 + RECRUITMENT_PER_LEVEL * centre) * multiplier * EconomyResearch.factor(controller(city),"recruitment_center") * CountryTraits.manpower_factor(controller(city))
 			continue
-		result[resource] = CITY_BASE[resource] * multiplier * facility * (1.0 if resource == "funds" else SPECIALTY_BONUS * specialty_share(city, resource) if resource in specialties else 0.0)
+		result[resource] = CITY_BASE[resource] * multiplier * facility * (1.0 if resource == "funds" else 1.5 if resource in specialties else 0.0)
 	return result
-## Owner 2026-10-16: the share of SPECIALTY_CITIES this city makes, so every country makes the same
-## total of each commodity whatever its number of cities with that specialty.
-var _specialty_counts: Dictionary = {}
-func specialty_share(city: Dictionary, resource: String) -> float:
-	var key: = str(city.get("country", "")).to_lower() + ":" + resource
-	if _specialty_counts.is_empty():
-		for place in cities:
-			for specialty in ResourceSites.city_resources(str(place.get("name", ""))):
-				var entry: = str(place.get("country", "")).to_lower() + ":" + str(specialty)
-				_specialty_counts[entry] = int(_specialty_counts.get(entry, 0)) + 1
-	return SPECIALTY_CITIES / maxf(1.0, float(_specialty_counts.get(key, 1)))
-## Owner 2026-10-16: provinces counted per original country at the start (one per title, as
-## gross_income counts them), so province money is the same for both countries.
-var _province_home: Dictionary = {}
-var _home_provinces: Dictionary = {}
-func _count_home_provinces() -> void:
-	_province_home.clear(); _home_provinces.clear()
-	if terrain == null: return
-	var counted: Dictionary = {}
-	for city in cities: counted[province(city).get("title", "")] = true
-	for region in terrain.territories:
-		if not region.get("playable", false): continue
-		_province_home[region.id] = str(region.get("owner", ""))
-		if counted.has(region.title): continue
-		counted[region.title] = true
-		_home_provinces[region.owner] = int(_home_provinces.get(region.owner, 0)) + 1
-func province_share(region: Dictionary) -> float:
-	if _province_home.is_empty(): _count_home_provinces()
-	var home: = str(_province_home.get(region.get("id", ""), region.get("owner", "")))
-	return PROVINCE_REFERENCE / maxf(1.0, float(_home_provinces.get(home, PROVINCE_REFERENCE)))
 func gross_income() -> Dictionary:
 	var result: Dictionary = {}
 	for country in stockpiles:
@@ -149,7 +98,7 @@ func province_income(place: Dictionary) -> Dictionary:
 	for resource in RESOURCES: result[resource] = 0.0
 	var region: Dictionary = place.region
 	var owner_factor: float = (1.0 if region.controller == region.owner else 0.25) if annexation == null else annexation.output(region.id, region.owner, region.controller)
-	result.funds = PROVINCE_FUNDS * province_share(region) * owner_factor * float(region.get("morale", 100.0 if region.controller == region.owner else 25.0)) / 100.0
+	result.funds = PROVINCE_FUNDS * owner_factor * float(region.get("morale", 100.0 if region.controller == region.owner else 25.0)) / 100.0
 	if strategic != null: result.funds *= strategic.output(region.id)
 	return result
 func upkeep() -> Dictionary:
@@ -187,8 +136,6 @@ func setup(map: StrategicMap, city_data: Array, countries: Dictionary) -> void :
 	for id in countries:
 		stockpiles[id] = START_STOCK.duplicate()
 		gold[id] = GoldWallet.START
-	_specialty_counts.clear()
-	_count_home_provinces()
 func equipment(id: String) -> Dictionary:
 	if id.begins_with("economy_"): return EconomyResearch.spec(id)
 	for spec in catalog:
@@ -230,8 +177,7 @@ func enqueue(equipment_id: String, city_name: String) -> String:
 	var count: = 0
 	for job in jobs:
 		if job.city == city_name: count += 1
-	# Owner 2026-10-16: five for everyone, eight with Premium (PlayerPremium).
-	if count >= plan_limit(spec.country): return "The production queue is full (%d)" % plan_limit(spec.country)
+	if count >= PLAN_LIMIT: return "The production queue is full (5)"
 	var bill: = cost(equipment_id)
 	for resource in RESOURCES:
 		if stockpiles[spec.country][resource] < float(bill[resource]): return "Insufficient " + resource
@@ -389,7 +335,7 @@ func schedule(equipment_id: String, city_name: String) -> String:
 		if entry.name == city_name: place = entry
 	if place.is_empty() or not controlled(place, spec.country): return "Choose a controlled city"
 	if spec.get("requires_port", false) and not place.has("naval_spawn"): return "Ships require a coastal city"
-	if jobs.filter( func(job: Dictionary): return job.city == city_name).size() >= plan_limit(spec.country): return "The production queue is full (%d)" % plan_limit(spec.country)
+	if jobs.filter( func(job: Dictionary): return job.city == city_name).size() >= PLAN_LIMIT: return "The production queue is full (5)"
 	jobs.append({"id": next_id, "equipment": equipment_id, "city": city_name, "progress": 0.0, "paid": false})
 	next_id += 1
 	changed.emit()

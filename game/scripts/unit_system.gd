@@ -18,10 +18,8 @@ const MOBILE_MAX_DETAILED_UNITS := 80  # owner 2026-10-15: real 3D models, never
 ## Zoom levels (owner request 2026-10-13): beyond FAR_ZOOM armies are map symbols only (no 3D
 ## models); closer, the 3D models show; within CLOSE_ZOOM the health bar and level appear.
 ## An army whose model is not loaded (phone cap) shows its symbol instead of a placeholder box.
-## Owner 2026-10-16 ("make the units render a little bit earlier"): models now show from a
-## wider zoom (was 24) and appear 4 a frame, nearest the middle of the screen first.
-const FAR_ZOOM := 30.0
-const REVEALS_PER_FRAME := 4
+const FAR_ZOOM := 24.0
+const REVEALS_PER_FRAME := 3
 const CLOSE_ZOOM := 11.0
 var view_distance := 20.0
 var _mobile_visual_refresh_budget := 1
@@ -104,9 +102,7 @@ func is_naval(unit: Dictionary) -> bool: return unit.visual_kind == "naval"
 func routes_for(unit: Dictionary) -> RefCounted: return sea_navigation if is_naval(unit) else navigation
 func path_for(unit: Dictionary, start: Vector2, finish: Vector2) -> Array:
 	if stacks.members(unit).any(func(member): return EquipmentIdentity.spec(member.equipment_id).get("stationary", false)): return []
-	if is_naval(unit): return sea_navigation.find_path(start, finish)
-	navigation.diplomacy = diplomacy
-	return navigation.find_path(start, finish, unit.visual_kind, str(unit.get("country", "")))
+	return sea_navigation.find_path(start, finish) if is_naval(unit) else navigation.find_path(start, finish, unit.visual_kind)
 func surface_position(unit: Dictionary, point: Vector2) -> Vector3:
 	if is_naval(unit): return Vector3(point.x, SEA_WATERLINE, point.y)
 	return footprint_ground(point)
@@ -295,7 +291,7 @@ func _spawn(data: Dictionary, point: Vector2, color: Color) -> void :
 	ink.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	ring.material_override = ink
 	marker.add_child(ring)
-	units.append({"battle_role": str(data.get("battle_role", "")), "fire_mode": data.get("fire_mode", "at_will"), "attack_target": data.get("attack_target", ""), "firing_halt": false, "level": data.get("level", 1), "upgrade_remaining": data.get("upgrade_remaining", 0.0), "upgrade_target": data.get("upgrade_target", data.get("level", 1)), "stack_id": data.get("stack_id", data.id), "equipment_id": equipment_id, "id": data.id, "country": data.country, "name": spec[0], "visual_kind": visual_kind, "presentation": data.get("presentation", ""), "node": marker, "target": spec[1], "moving": false, "engaged": false, "waypoints": [], "health": 100.0, "heading": _facing_enemy(data.country, point), "ring": ring, "faction_color": color, "icon_only": false})
+	units.append({"fire_mode": data.get("fire_mode", "at_will"), "attack_target": data.get("attack_target", ""), "firing_halt": false, "level": data.get("level", 1), "upgrade_remaining": data.get("upgrade_remaining", 0.0), "upgrade_target": data.get("upgrade_target", data.get("level", 1)), "stack_id": data.get("stack_id", data.id), "equipment_id": equipment_id, "id": data.id, "country": data.country, "name": spec[0], "visual_kind": visual_kind, "presentation": data.get("presentation", ""), "node": marker, "target": spec[1], "moving": false, "engaged": false, "waypoints": [], "health": 100.0, "heading": _facing_enemy(data.country, point), "ring": ring, "faction_color": color, "icon_only": false})
 	model.rotation.y = units[-1].heading
 	air.configure(units[-1], data)
 	units[-1].forced_march = data.get("forced_march", false)
@@ -431,13 +427,8 @@ func advance(delta: float) -> void :
 				unit.engaged = true
 				unit["foe_point"] = Vector2(enemy.node.position.x, enemy.node.position.z)
 				unit["foe_id"] = enemy.id
-				# Owner 2026-10-16: the army that moved in to fight is the attacker (CombatSystem.battle_role).
-				if str(unit.get("battle_role", "")).is_empty(): unit.battle_role = CombatSystem.battle_role(unit.moving or not str(unit.get("attack_target", "")).is_empty(), enemy)
 				break
-		if not unit.engaged: unit.battle_role = ""
-		for member in group:
-			member.engaged = unit.engaged
-			member.battle_role = unit.battle_role
+		for member in group: member.engaged = unit.engaged
 		var upgrading: = false
 		for member in group:
 			if member.get("upgrade_remaining", 0.0) <= 0: continue
@@ -619,7 +610,7 @@ func snapshot() -> Array:
 		if unit.health <= 0.001: continue  # destroyed this frame, removed after combat; never saved
 		var saved_route: Array = []
 		for point in unit.waypoints: saved_route.append([point.x, point.y])
-		result.append({"battle_role": unit.get("battle_role", ""), "forced_march": unit.forced_march, "delay_remaining": unit.delay_remaining, "fire_mode": unit.get("fire_mode", "at_will"), "attack_target": unit.get("attack_target", ""), "level": unit.get("level", 1), "upgrade_remaining": unit.get("upgrade_remaining", 0.0), "upgrade_target": unit.get("upgrade_target", unit.get("level", 1)), "stack_id": unit.stack_id, "route": saved_route, "equipment_id": unit.equipment_id, "id": unit.id, "name": unit.name, "country": unit.country, "visual_kind": unit.visual_kind, "presentation": unit.get("presentation", ""), "position": [unit.node.position.x, unit.node.position.z], "target": [unit.target.x, unit.target.y], "moving": unit.moving, "health": unit.health})
+		result.append({"forced_march": unit.forced_march, "delay_remaining": unit.delay_remaining, "fire_mode": unit.get("fire_mode", "at_will"), "attack_target": unit.get("attack_target", ""), "level": unit.get("level", 1), "upgrade_remaining": unit.get("upgrade_remaining", 0.0), "upgrade_target": unit.get("upgrade_target", unit.get("level", 1)), "stack_id": unit.stack_id, "route": saved_route, "equipment_id": unit.equipment_id, "id": unit.id, "name": unit.name, "country": unit.country, "visual_kind": unit.visual_kind, "presentation": unit.get("presentation", ""), "position": [unit.node.position.x, unit.node.position.z], "target": [unit.target.x, unit.target.y], "moving": unit.moving, "health": unit.health})
 		if air.is_air(unit): result[-1].merge(air.snapshot(unit))
 	return result
 func restore(state: Array) -> void :
@@ -742,35 +733,9 @@ func _process(delta: float) -> void :
 	var detailed: int = 0
 	var upgrades_left: int = _mobile_visual_refresh_budget
 	var reveals_left: int = REVEALS_PER_FRAME
-	# Owner 2026-10-16 ("render a little bit earlier"): on-screen armies are handled selected
-	# first, then nearest the middle of the screen, so the reveal and model-load budgets go where
-	# the player is looking. Armies just off screen keep their loaded model (a phone used to
-	# throw it away at the screen edge and load it again one a frame after every small pan).
-	var keep: = get_viewport().get_visible_rect().grow(get_viewport().get_visible_rect().size.length() * 0.5)
-	var middle: = get_viewport().get_visible_rect().get_center()
-	var ordered: Array = []
-	var rest: Array = []
 	for unit in units:
-		var near: = true
-		var on_screen: = true
-		if camera != null:
-			if camera.is_position_behind(unit.node.position):
-				on_screen = false
-				near = false
-			else:
-				var point: = camera.unproject_position(unit.node.position)
-				on_screen = view.has_point(point)
-				near = keep.has_point(point)
-				unit["_reveal_rank"] = -1.0 if chosen_stacks.has(unit.stack_id) else middle.distance_squared_to(point)
-		unit["_on_screen"] = on_screen
-		unit["_near_screen"] = near
-		if on_screen and leader_ids.has(unit.id): ordered.append(unit)
-		else: rest.append(unit)
-	ordered.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return float(a.get("_reveal_rank", 0.0)) < float(b.get("_reveal_rank", 0.0)))
-	ordered.append_array(rest)
-	for unit in ordered:
 		# Off-screen units should not force fog calculations or keep heavyweight models.
-		var on_screen: bool = unit._on_screen
+		var on_screen: bool = camera == null or (not camera.is_position_behind(unit.node.position) and view.has_point(camera.unproject_position(unit.node.position)))
 		var is_leader: bool = leader_ids.has(unit.id)
 		unit.icon_only = false
 		if on_screen and is_leader and view_distance > FAR_ZOOM:
@@ -780,16 +745,14 @@ func _process(delta: float) -> void :
 		if not on_screen or not is_leader:
 			unit.node.visible = false
 			if mobile and not unit.node.get_child(0).get_meta("startup_lightweight", false):
-				if is_leader and unit._near_screen and detailed < MOBILE_MAX_DETAILED_UNITS: detailed += 1
-				else: _replace_visual(unit, UnitVisual.lightweight(unit.visual_kind, unit.faction_color, unit.equipment_id, unit.level))
+				_replace_visual(unit, UnitVisual.lightweight(unit.visual_kind, unit.faction_color, unit.equipment_id, unit.level))
 			continue
 		# Owner 2026-10-16 ("the camera's getting stuck mid-zoom ... about halfway"): zooming in past
 		# FAR_ZOOM used to show every army's 3D model in the same frame; they now appear a few per
 		# frame (the map tag stands in for the rest until their turn).
 		var showing: bool = visible_to_player(unit)
 		if showing and not unit.node.visible:
-			# The army just tapped shows at once, whatever the budget.
-			if reveals_left <= 0 and not chosen_stacks.has(unit.stack_id):
+			if reveals_left <= 0:
 				unit.icon_only = true
 				continue
 			reveals_left -= 1
@@ -878,8 +841,7 @@ func _process(delta: float) -> void :
 		# Owner 2026-10-15 ("the units aren't actually touching when they're fighting ... look at
 		# Call of War, they kneel down and fire"): armies in a close battle step up to the enemy,
 		# face it and crouch while CombatEffects keeps their weapons firing between rounds.
-		# Owner 2026-10-16: only for the few seconds after each exchange of fire (CombatEffects.BURST_SECONDS).
-		var fighting: bool = unit.engaged and unit.get("fire_burst", 0.0) > 0.0 and unit.has("foe_point") and not is_naval(unit) and not air.is_air(unit)
+		var fighting: bool = unit.engaged and unit.has("foe_point") and not is_naval(unit) and not air.is_air(unit)
 		var lunge: = Vector3.ZERO
 		var crouch: = 0.0
 		if fighting:
@@ -1037,13 +999,10 @@ func pick_screen(camera: Camera3D, screen: Vector2, enemies_only: bool = false) 
 	return hits[0] if not hits.is_empty() else {}
 
 ## Every army under a tap, best match first: armies whose model is under the finger (closest to
-## the model centre first), then armies within PICK_RADIUS px (closest first).
-## Owner 2026-10-16 ("it's hard to click the units"): a fingertip-sized reach round each army
-## (was 28 px). The city still wins a tap on its own centre away from the armies (main.gd).
-const PICK_RADIUS: = 44.0
+## the model centre first), then armies within 40 px (closest first).
 func pick_all_screen(camera: Camera3D, screen: Vector2, enemies_only: bool = false) -> Array:
 	var hits: Array = []
-	var radius: = PICK_RADIUS * get_window().content_scale_factor
+	var radius: = 28.0 * get_window().content_scale_factor
 	var leader_ids: Dictionary = {}
 	for group in stacks.groups(): leader_ids[stacks.leader(group).id] = true
 	for i in units.size():
@@ -1066,16 +1025,9 @@ func pick_all_screen(camera: Camera3D, screen: Vector2, enemies_only: bool = fal
 				bounds.position += bounds.size * Vector3(0.2, 0.0, 0.2)
 				bounds.size *= Vector3(0.6, 0.75, 0.6)
 				var hull: PackedVector2Array = []
-				var behind: = false
-				for corner in 8:
-					var world: Vector3 = model.global_transform * bounds.get_endpoint(corner)
-					behind = behind or camera.is_position_behind(world)
-					hull.append(camera.unproject_position(world))
-				# A corner behind the camera projects to nonsense that can cover the whole screen.
-				if behind or hull.size() < 3: hull = PackedVector2Array()
-				else: hull = Geometry2D.convex_hull(hull)
-				if hull.is_empty(): pass
-				elif Geometry2D.is_point_in_polygon(screen,hull):
+				for corner in 8: hull.append(camera.unproject_position(model.global_transform * bounds.get_endpoint(corner)))
+				hull = Geometry2D.convex_hull(hull)
+				if Geometry2D.is_point_in_polygon(screen,hull):
 					distance = 0.0
 					inside_model = true
 					centre_distance = camera.unproject_position(model.to_global(bounds.get_center())).distance_to(screen)
@@ -1130,15 +1082,10 @@ func stop_many() -> void :
 		stop_selected()
 	selected = original
 	_draw_route()
-## Owner 2026-10-16 ("you can select how your weapon fires"): `leaders` picks the armies (the
-## army panel sets one army); by default every selected army. Online, the server is told too.
-func set_fire_mode(mode: String, leaders: Array = []) -> void :
+func set_fire_mode(mode: String) -> void :
 	if not FireControlPanel.MODES.has(mode): return
-	if leaders.is_empty(): leaders = command_groups()
-	if leaders.is_empty() and selected >= 0 and selected < units.size(): leaders = [units[selected]]
-	if MatchClient.active != null: MatchClient.active.send_units("fire_mode", leaders.map(func(leader: Dictionary): return leader.id), {"mode": mode})
-	for leader in leaders:
-		if air.is_air(leader) or leader.country != GameSession.player_country: continue
+	for leader in command_groups():
+		if air.is_air(leader): continue
 		for member in stacks.members(leader): member.fire_mode = mode
 	status_changed.emit("Fire control: " + FireControlPanel.MODES[mode].title)
 const DIRECT_ATTACK_RANGE: = 6.0
@@ -1247,8 +1194,6 @@ func apply_remote(entries: Array) -> void:
 		unit.stack_id = data.get("stack_id", unit.stack_id)
 		unit.level = data.get("level", unit.level)
 		unit.attack_target = data.get("attack_target", "")
-		unit.fire_mode = str(data.get("fire_mode", unit.get("fire_mode", "at_will")))
-		unit.battle_role = str(data.get("battle_role", ""))
 		unit.waypoints.clear()
 		for waypoint in data.get("route", []): unit.waypoints.append(Vector2(waypoint[0], waypoint[1]))
 		if air.is_air(unit):

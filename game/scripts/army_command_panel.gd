@@ -123,8 +123,7 @@ func open_upgrade(units: UnitSystem, research: ResearchSystem) -> void :
 		for resource in ProductionSystem.RESOURCES: bill[resource] += ceil(float(unit_cost[resource]) * 0.5)
 		duration = maxf(duration, research.economy.duration(unit.equipment_id, target) * 0.5)
 	var text: = str(count) + " units · " + SimulationClock.duration(duration)
-	for resource in bill:
-		if bill[resource] > 0: text += "\n" + resource.capitalize() + ": " + str(int(bill[resource]))  # Owner 2026-10-16: units no longer cost every resource
+	for resource in bill: text += "\n" + resource.capitalize() + ": " + str(int(bill[resource]))
 	_label(text)
 	confirm.disabled = count == 0 or group.any( func(unit: Dictionary): return unit.moving or unit.engaged or unit.get("upgrade_remaining", 0.0) > 0 or unit.get("refuel_remaining", 0.0) > 0)
 	for resource in bill:

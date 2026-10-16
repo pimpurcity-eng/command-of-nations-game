@@ -24,10 +24,7 @@ static func air_layer(aircraft: Dictionary) -> String:
 	var role: = str(EquipmentIdentity.spec(aircraft.equipment_id).get("role", ""))
 	if role == "drone": return "drone"
 	if role == "helicopter": return "low"
-	# Owner 2026-10-16 ("there was no damage from an air defence when the plane was patrolling"):
-	# a jet on patrol circles low over its area hunting targets, like one on an attack run, so
-	# short-range air defence reaches it too. Only jets passing over on a flight stay high.
-	if role in ["fighter", ""] and aircraft.get("flight_mode", "") in ["attack", "patrol"]: return "attack"
+	if role in ["fighter", ""] and aircraft.get("flight_mode", "") == "attack": return "attack"
 	return "high"
 static func engages(defender: Dictionary) -> Array:
 	var spec: Dictionary = EquipmentIdentity.spec(defender.equipment_id)
@@ -42,24 +39,13 @@ var cooldowns: Dictionary = {}
 func value(unit: Dictionary, name: String, defending: bool = false) -> float:
 	var target: = "air" if name in ["air_damage", "aa_damage"] else "infantry"
 	return UnitStats.damage(unit, target, defending) * TerrainRules.unit_factor(unit, "defense" if defending else "attack")
-## Owner 2026-10-16 ("my plane wouldn't attack the Ukrainian plane"): Call of War - aircraft parked
-## on their airfield are sitting targets, hit like the soft vehicles around them (the better of the
-## attacker's damage against planes and against light armour).
 func strike_value(unit: Dictionary, target: Dictionary, defending: bool = false) -> float:
-	var against: = UnitStats.damage(unit, UnitClasses.of(target), defending)
-	if target.get("visual_kind", "") == "fighter" and target.get("flight_mode", "grounded") == "grounded": against = maxf(against, UnitStats.damage(unit, "light", defending))
-	return against * TerrainRules.unit_factor(unit, "defense" if defending else "attack")
-## Fire control (owner 2026-10-16, "you can select how your weapon fires ... check Call of War"):
-## air defence on Hold fire never shoots; on Return fire it only shoots aircraft attacking or
-## patrolling over it, never planes just passing; Fire at will (and the bolder modes) shoots any.
-static func aa_holds_fire(defender: Dictionary, aircraft: Dictionary) -> bool:
-	var mode: = str(defender.get("fire_mode", "at_will"))
-	return mode == "hold" or (mode == "return" and aircraft.get("flight_mode", "") not in ["attack", "patrol"])
+	return UnitStats.damage(unit, UnitClasses.of(target), defending) * TerrainRules.unit_factor(unit, "defense" if defending else "attack")
 func can_defend_air(defender: Dictionary, aircraft: Dictionary) -> bool:
 	return (defender.visual_kind in ["air_defense", "naval"] and can_engage(defender, aircraft)) or (defender.visual_kind == "fighter" and defender.get("flight_mode", "grounded") != "grounded")
 func contributes(unit: Dictionary, target: Dictionary, armies: UnitSystem) -> bool:
 	var group: Array = armies.stacks.members(unit).filter(func(member: Dictionary):
-		return member.health > 0 and member.get("upgrade_remaining", 0.0) <= 0 and strike_value(member, target) > 0 and ((member.visual_kind in ["air_defense", "naval"] and can_engage(member, target) and not aa_holds_fire(member, target)) or (member.visual_kind == "fighter" and member.get("flight_mode", "grounded") != "grounded")))
+		return member.health > 0 and member.get("upgrade_remaining", 0.0) <= 0 and strike_value(member, target) > 0 and ((member.visual_kind in ["air_defense", "naval"] and can_engage(member, target)) or (member.visual_kind == "fighter" and member.get("flight_mode", "grounded") != "grounded")))
 	if group.size() <= CombatSystem.STACK_DAMAGE_LIMIT: return true
 	group.sort_custom(func(a: Dictionary, b: Dictionary):
 		var first: = strike_value(a, target)
@@ -92,7 +78,7 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 			for enemy in armies.units:
 				if enemy.health <= 0 or enemy.country == unit.country: continue
 				if aa and (enemy.visual_kind != "fighter" or enemy.flight_mode == "grounded"): continue
-				if aa and (not can_engage(unit, enemy) or aa_holds_fire(unit, enemy)): continue
+				if aa and not can_engage(unit, enemy): continue
 				var point: = Vector2(enemy.node.position.x, enemy.node.position.z)
 				if origin.distance_squared_to(point) > reach * reach: continue
 				if not armies.unit_visible(enemy, unit.country): continue
@@ -108,9 +94,6 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 					target = enemy
 			if target.is_empty() or (patrol and patrol_targets.is_empty()): continue
 			if not cooldowns.has(unit.id): cooldowns[unit.id] = 0.0
-			# A plane put on patrol right after an attack run does not wait out the half-hour
-			# attack cooldown: patrol strikes come every AA_INTERVAL.
-			if patrol: cooldowns[unit.id] = minf(cooldowns[unit.id], AA_INTERVAL)
 			if patrol and not EquipmentIdentity.spec(unit.equipment_id).get("single_use", false):
 				for enemy in patrol_targets: strikes.append([unit, enemy, aa])
 			else: strikes.append([unit, target, aa])
@@ -133,11 +116,8 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 			if not ready.has(unit.id): continue
 			var victims: Array = [enemy] if strike[2] else armies.stacks.members(enemy).filter(func(v: Dictionary): return v.health > 0)
 			var mission: float = aa_factor(enemy) if strike[2] else (PATROL_DAMAGE if unit.get("flight_mode", "") == "patrol" else 1.0)
-			# Owner 2026-10-16 ("when it patrolled it didn't do much damage"): Call of War - an
-			# aircraft hits every unit of the army it strikes, each at its own damage against that
-			# unit (65% on patrol), instead of one hit shared out across the whole stack.
 			for victim in victims:
-				var hit: = strike_value(unit, victim) * mission
+				var hit: = strike_value(unit, victim) * mission / maxf(1.0, victims.size())
 				damage[victim.id] = damage.get(victim.id, 0.0) + UnitStats.condition_damage(victim, hit)
 			var missile_loadout: bool = EquipmentIdentity.research_tier(unit.equipment_id, unit.get("level", 1)).has("projectile_model")
 			weapon_fired.emit(unit, enemy, "interceptor" if strike[2] else "missile" if missile_loadout else "drone_strike" if EquipmentIdentity.spec(unit.equipment_id).get("role", "") == "drone" else "air_strike")
@@ -151,7 +131,7 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 					var incoming: Dictionary = {}
 					for other in strikes:
 						if ready.has(other[0].id) and other[0].country == unit.country and other[0].stack_id == unit.stack_id and other[1].country == enemy.country and other[1].stack_id == enemy.stack_id: incoming[other[0].id] = other[0]
-					var defenders: Array = armies.stacks.members(enemy).filter(func(d: Dictionary): return d.health > 0 and value(d, "aa_damage", true) > 0 and incoming.values().any(func(a: Dictionary): return can_defend_air(d, a) and not (d.visual_kind in ["air_defense", "naval"] and aa_holds_fire(d, a))))
+					var defenders: Array = armies.stacks.members(enemy).filter(func(d: Dictionary): return d.health > 0 and value(d, "aa_damage", true) > 0 and incoming.values().any(func(a: Dictionary): return can_defend_air(d, a)))
 					defenders.sort_custom(func(a: Dictionary, b: Dictionary): return value(a, "aa_damage", true) > value(b, "aa_damage", true))
 					for defender in defenders.slice(0, CombatSystem.STACK_DAMAGE_LIMIT):
 						var targets: Array = incoming.values().filter(func(a: Dictionary): return can_defend_air(defender, a))

@@ -201,21 +201,9 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 			for id in damage: pending[id] = pending.get(id, 0.0) + damage[id]
 		else:
 			for unit in armies.units: unit.health = maxf(0, unit.health - damage.get(unit.id, 0.0))
-## True when the army stands on land its own country holds (Call of War Home Defence). The side
-## that moved in to attack never gets it, even where its land reaches into the battle.
+## True when the army stands on land its own country holds (Call of War Home Defence).
 func _home(armies: UnitSystem, unit: Dictionary) -> bool:
-	if unit.get("battle_role", "") == "attacker": return false
 	return armies != null and armies.navigation != null and armies.navigation.terrain != null and armies._land_owner(unit) == unit.country
-## Owner 2026-10-16 ("I attacked a Ukrainian troop at a city, and I was put as defending"): the
-## army that moved in to fight (an attack order, or marching into the enemy) is the attacker and
-## the army it ran into is the defender, whoever holds the ground. UnitSystem sets battle_role
-## when a battle starts; land ownership only decides for battles from before this rule.
-static func battle_role(mover: bool, foe: Dictionary) -> String:
-	return "attacker" if mover and foe.get("battle_role", "") != "attacker" else "defender"
-static func battle_label(unit: Dictionary, land_owner: String) -> String:
-	var role: = str(unit.get("battle_role", ""))
-	if role.is_empty(): role = "defender" if land_owner == unit.country else "attacker"
-	return "ATTACKING" if role == "attacker" else "DEFENDING"
 func remaining_for(unit: Dictionary) -> float:
 	return cooldowns.get(unit.country + ":" + unit.stack_id, 0.0)
 func snapshot() -> Dictionary:

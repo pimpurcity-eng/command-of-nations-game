@@ -16,11 +16,6 @@ const REJOIN_DAYS: = 3.0
 const PROPOSAL_COOLDOWN: = DAY / 4.0
 const SANCTION: = 0.25
 const MAX_MESSAGES: = 200
-## Owner 2026-10-16: "Make the newspaper better. Anyone can post" - articles are messages
-## addressed to the newspaper, so they save, load and travel online like the chat.
-const NEWSPAPER: = "newspaper"
-const ARTICLE_LENGTH: = 600
-const CHAT_LENGTH: = 300
 
 var relations: Dictionary = {}   # "a|b" (sorted) -> {"war", "right_of_way", "shared_vision", "since"}
 var embargoes: Dictionary = {}   # "from>to" -> true
@@ -128,24 +123,16 @@ func post(from: String, to: String, text: String) -> void:
 	if MatchClient.active != null:
 		MatchClient.active.send("chat", {"to": to, "text": text})
 		return
-	text = text.strip_edges().left(ARTICLE_LENGTH if to == NEWSPAPER else CHAT_LENGTH)
+	text = text.strip_edges().left(300)
 	if text.is_empty(): return
 	messages.append({"time": now, "from": from, "to": to, "text": text})
 	if messages.size() > MAX_MESSAGES: messages.pop_front()
 	changed.emit()
 
-## Any country (player or AI) writes an article for the war newspaper.
-func post_article(from: String, text: String) -> void:
-	post(from, NEWSPAPER, text)
-
-## Newspaper articles, oldest first: {time, from, to = NEWSPAPER, text}.
-func articles() -> Array:
-	return messages.filter(func(m: Dictionary): return m.to == NEWSPAPER)
-
 ## Messages a country can read: to it, from it, to everyone, or to its coalition.
 func inbox(country: String) -> Array:
 	var coalition: = coalition_of(country)
-	return messages.filter(func(m: Dictionary): return m.to != NEWSPAPER and (m.to in ["all", country] or m.from == country or (not coalition.is_empty() and m.to == "coalition:" + coalition)))
+	return messages.filter(func(m: Dictionary): return m.to in ["all", country] or m.from == country or (not coalition.is_empty() and m.to == "coalition:" + coalition))
 
 ## A proposal from one country to another: "peace", "right_of_way", "shared_vision",
 ## "coalition". Players answer later; AI countries answer at once by how the war is going.
