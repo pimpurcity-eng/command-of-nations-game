@@ -50,6 +50,10 @@ func run():
  check(ProductionSystem.START_STOCK.values().all(func(v):return v == ProductionSystem.START_STOCK.funds),"every resource starts at the same amount")
  for who in ["russia","ukraine"]:
   check(["manpower","food","materials","fuel","electronics"].all(func(r):return gross[who].funds > 2.0*gross[who][r]),"money is still by far the biggest income for %s" % who)
+  # Owner 2026-10-16 ("Has to be more money. Check Call of War."): about 40,000-50,000 money a day.
+  var money_day: float = gross[who].funds*ProductionSystem.DAY_SECONDS
+  check(money_day >= 40000.0 and money_day <= 50000.0,"%s earns 40,000-50,000 money a day (%d)" % [who,money_day])
+ check(ProductionSystem.CITY_BASE.funds >= 3.0*ProductionSystem.PROVINCE_FUNDS and ProductionSystem.CITY_BASE.funds <= 4.0*ProductionSystem.PROVINCE_FUNDS,"a city pays three to four provinces' worth of money")
  check(is_equal_approx(game.production.city_income(game.buildings.city("odesa")).fuel,2.0*game.production.city_income(game.buildings.city("lviv")).materials),"Ukraine's only oil city makes two cities' worth")
  check(ProductionSystem.RESOURCES.has("food") and game.hud.resource_values.has("food"),"food is a resource in the top bar")
  check(game.production.equipment("infantry_russia").cost.food>0,"units cost food")

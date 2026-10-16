@@ -43,7 +43,10 @@ var armies: UnitSystem
 ## provinces together pay PROVINCE_REFERENCE provinces' worth of money, and income was cut so a day
 ## buys about three to five basic units: about 16,200 money, 5,200 of each commodity and 3,000
 ## manpower a day. Money is still by far the biggest income.
-const CITY_BASE: = {"funds": 2.5, "materials": 2.4, "electronics": 2.4, "fuel": 2.4, "manpower": 0.6, "food": 2.4}
+## Owner 2026-10-16 ("Has to be more money. Check Call of War."): as in Call of War, money is by far
+## the largest income and rarely what limits building units; commodities and manpower limit you.
+## A city pays about 3.6 provinces' worth of money; each country earns about 45,000 money a day.
+const CITY_BASE: = {"funds": 5.0, "materials": 2.4, "electronics": 2.4, "fuel": 2.4, "manpower": 0.6, "food": 2.4}
 ## Each country's specialty cities share this many cities' worth of output per commodity: with three
 ## oil cities each makes 2/3, with one it makes double (counted by the city's original country).
 const SPECIALTY_CITIES: = 2.0
@@ -55,7 +58,7 @@ const RECRUITMENT_PER_LEVEL: = 4.0
 ## provinces. Owner 2026-10-16: both countries earn the same, so a province pays
 ## PROVINCE_FUNDS * PROVINCE_REFERENCE / (its original country's starting province count):
 ## Russia's 39 provinces together pay what Ukraine's 20 do.
-const PROVINCE_FUNDS: = 0.25
+const PROVINCE_FUNDS: = 1.4
 const PROVINCE_REFERENCE: = 20.0
 ## Owner 2026-10-14: "give yourself more money" and "more starting resources" (every country).
 ## Owner 2026-10-16 ("start with everything the same"; "you can buy way, way, way too much"): every
