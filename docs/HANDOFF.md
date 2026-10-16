@@ -49,7 +49,7 @@ Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to d
 | 7 | Google sign-in in the Android app | ✅ | Supabase redirect `warfrontmandate://auth-callback` |
 | 8 | Create account without a code box | ✅ | |
 | 9 | Premium account groundwork | ✅ | `29de857` and snapshots; `docs/PREMIUM.md`; migration 005 live |
-| 10 | Units render earlier when zooming/tapping | ✅ | phones load on-screen models between zoom 45 and 30 (`PREPARE_ZOOM`); `test_zoom_visibility` 7/8 passed, last check was still running |
+| 10 | Units render earlier when zooming/tapping | ✅ | phones load on-screen models between zoom 45 and 30 (`PREPARE_ZOOM`); `test_zoom_visibility` 8/8 |
 | 11 | Units easier to tap | ✅ | tap reach was in raw phone pixels (~3 mm on a 1080-1440 px phone); now scaled to the screen (`TapScale`). `test_tap_scale` |
 | 12 | Camera jiggle | ✅ | tap wobble (14 px) and pinch dead zone were in raw phone pixels, so a normal tap nudged the map; now scaled to the screen. Earlier smoothing work kept. `test_tap_scale`, `test_camera_pinch_anchor` |
 | 13 | Messages in Diplomacy | ✅ | verified by `test_oct16_diplomacy_news` (12/12) |
@@ -94,7 +94,7 @@ Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to d
 
 ## 5. Session state
 
-**In progress:** nothing. Every fix 1–40 is done or verified except 21 (question). Still to do: confirm the last `test_zoom_visibility` check ("enemy shown when zoomed out") on a machine with a GPU or via `--headless`.
+**In progress:** nothing. Every fix 1–40 is done or verified except 21 (question for Matthew). Tip: most tests run in seconds with `godot --headless`; use `xvfb-run` only for render checks.
 
 **Open bugs**
 - `test_multiplayer_phone.gd` / `test_phone_regression.gd`: fail without the private models (see `CHATGPT_HANDOFF.md` §2.4).
