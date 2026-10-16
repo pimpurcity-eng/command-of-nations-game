@@ -15,8 +15,10 @@ alter table public.player_profiles
 
 -- Readable by the owner of the profile (the row policy from 001 still limits rows to their own).
 grant select (premium_until) on public.player_profiles to authenticated;
--- Belt and braces: no client role may write it, whatever later grants are added.
-revoke insert, update (premium_until) on public.player_profiles from anon, authenticated;
+-- Belt and braces: no client role may write this column. (001 already revoked all table
+-- privileges and only grants update (commander_name); a column revoke cannot undo a later
+-- table-wide grant, so never "grant update on public.player_profiles" to clients.)
+revoke insert (premium_until), update (premium_until) on public.player_profiles from anon, authenticated;
 
 -- Audit log of every grant or extension (private; not readable through the Data API).
 create table private.premium_grants (
