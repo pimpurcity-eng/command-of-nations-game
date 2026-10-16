@@ -160,11 +160,12 @@ func run():
 		check(flight_error.is_empty(), "the plane takes off on patrol " + flight_error)
 		# Only the plane may hurt the victim: other armies are moved well away.
 		for other in units.units:
-			if other != victim and not units.air.is_air(other) and Vector2(other.node.position.x, other.node.position.z).distance_to(over) < 4.0:
+			if other.stack_id != victim.stack_id and not units.air.is_air(other) and Vector2(other.node.position.x, other.node.position.z).distance_to(over) < 4.0:
 				put(other, Vector2(other.node.position.x, other.node.position.z) + Vector2(60, 60))
 		var health_before: float = victim.health
 		await simulate(8.0 * 60.0)
 		var destroyed: bool = not is_instance_valid(victim.node) or not units.units.has(victim)
+		if not destroyed: print("DEBUG hawk=", hawk.flight_mode, " hawk_d=", Vector2(hawk.node.position.x, hawk.node.position.z).distance_to(over), " victim_d=", Vector2(victim.node.position.x, victim.node.position.z).distance_to(over), " vis=", units.unit_visible(victim, "ukraine"), " war=", units.at_war, " cd=", game.match_rules.air_combat.cooldowns.get(hawk.id, -1))
 		check(destroyed or victim.health < health_before, "a patrolling plane damages enemy armies under its circle (%.1f -> %s)" % [health_before, "destroyed" if destroyed else "%.1f" % victim.health])
 
 	check(is_equal_approx(AirBattleSystem.PATROL_DAMAGE, 0.65), "patrols strike at 65% damage")
