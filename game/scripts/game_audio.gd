@@ -65,6 +65,13 @@ const MUSIC_DB: = -9.0
 const SHOT_SOUNDS: = {"missile": "missile_launch", "artillery": "artillery", "cannon": "tank_cannon",
 	"tracer": "autocannon", "interceptor": "interceptor", "air_strike": "air_strike", "drone_strike": "drone_strike"}
 
+## Owner 2026-10-16: "find a new background sound, 3 or 4 different ones, more army-ish - put
+## them in the game and I'll pick". In a match the battle music is one chosen track, or all of them
+## in turn ("mix", the default). Credits: assets/audio/music/CREDITS.md and MUSIC_CREDITS.
+const BATTLE_TRACKS: = [["battle_theme", "Original theme"], ["battle_theme_2", "Drum Cadence"], ["battle_theme_3", "Volatile Reaction"], ["battle_theme_4", "Crusade"], ["battle_theme_5", "Dark Fog"]]
+const MUSIC_CREDITS: = "Battle music: Drum Cadence (U.S. military band, public domain) · \"Volatile Reaction\", \"Crusade\", \"Dark Fog\" Kevin MacLeod (incompetech.com), licensed under Creative Commons: By Attribution 3.0, creativecommons.org/licenses/by/3.0/"
+static var battle_choice: = "mix"
+var _mix_index: = -1
 static var sound_enabled: = true
 static var music_enabled: = true
 static var _loaded: = false
@@ -83,12 +90,14 @@ static func load_settings() -> void:
 	if settings.load(SETTINGS_PATH) == OK:
 		sound_enabled = settings.get_value("audio", "sound", true)
 		music_enabled = settings.get_value("audio", "music", true)
+		battle_choice = str(settings.get_value("audio", "battle_music", "mix"))
 
 static func _save() -> void:
 	var settings: = ConfigFile.new()
 	settings.load(SETTINGS_PATH)
 	settings.set_value("audio", "sound", sound_enabled)
 	settings.set_value("audio", "music", music_enabled)
+	settings.set_value("audio", "battle_music", battle_choice)
 	settings.save(SETTINGS_PATH)
 
 func _ready() -> void:
@@ -101,6 +110,7 @@ func _ready() -> void:
 	_music = AudioStreamPlayer.new()
 	_music.volume_db = MUSIC_DB
 	add_child(_music)
+	_music.finished.connect(_next_in_mix)
 	# Every button in the game clicks (when Sound is on).
 	get_tree().node_added.connect(_watch_button)
 	for node in get_tree().root.find_children("*", "BaseButton", true, false): _watch_button(node)
@@ -191,15 +201,37 @@ func play_music(name: String) -> void:
 	_music_name = name
 	if music_enabled: _start_music(name)
 
+## Picks the battle track: the player's choice, or the next one in turn.
+func set_battle_choice(choice: String) -> void:
+	battle_choice = choice
+	_save()
+	settings_changed.emit()
+	if _music_name == "battle_theme" and music_enabled: _start_music("battle_theme")
+static func battle_choice_title() -> String:
+	if battle_choice == "mix": return "All in turn"
+	for track in BATTLE_TRACKS:
+		if track[0] == battle_choice: return track[1]
+	return "All in turn"
+func _next_in_mix() -> void:
+	if _music_name == "battle_theme" and battle_choice == "mix" and music_enabled: _start_music("battle_theme")
 var _fade: Tween
 func _start_music(name: String) -> void:
-	var path: = MUSIC_DIR + name + ".ogg"
+	var track: = name
+	var mixing: = false
+	if name == "battle_theme":
+		if battle_choice == "mix":
+			_mix_index = (_mix_index + 1) % BATTLE_TRACKS.size()
+			track = BATTLE_TRACKS[_mix_index][0]
+			mixing = true
+		else: track = battle_choice
+	var path: = MUSIC_DIR + track + ".ogg"
 	if name == "menu_theme":
 		for custom in CUSTOM_MENU_THEME:
 			if ResourceLoader.exists(custom): path = custom
 	if not ResourceLoader.exists(path): return
 	var stream: AudioStream = load(path)
-	if stream is AudioStreamOggVorbis or stream is AudioStreamMP3: stream.loop = true
+	# One chosen track loops; in "all in turn" each track plays once and the next follows.
+	if stream is AudioStreamOggVorbis or stream is AudioStreamMP3: stream.loop = not mixing
 	# Owner 2026-10-15: the home song kept playing through the match on the website. Two song
 	# changes close together (start screen, then the match) each had their own fade, and the
 	# older one could finish last and put the home song back. Only the newest change counts:

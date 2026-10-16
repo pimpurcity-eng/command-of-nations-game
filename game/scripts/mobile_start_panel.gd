@@ -314,6 +314,11 @@ func _build_home() -> void:
 		credit_label = _label(GameAudio.MENU_THEME_CREDIT, 16, MUTED)
 		credit_label.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
 		body.add_child(credit_label)
+	# CC BY 3.0 requires the battle music credit to be shown.
+	var battle_credit: = _label(GameAudio.MUSIC_CREDITS, 14, MUTED)
+	battle_credit.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+	battle_credit.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	body.add_child(battle_credit)
 	_section(body, "MORE THAN CONQUEST")
 	for id in ["guard", "economy", "trade"]:
 		_feature_card(body, catalogue.features.filter(func(f: Dictionary): return f.id == id)[0])

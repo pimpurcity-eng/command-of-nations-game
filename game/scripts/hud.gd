@@ -239,7 +239,7 @@ func _build_toolbar(root: Control) -> void:
 	popup.add_item("Espionage", 38)
 	_nav_submenu(popup, "Reports", [[33,"War newspaper"],[34,"Battle reports"]])
 	nation_menu = _nav_submenu(popup, "Nation", [[24,"Victory progress"],[37,"Doctrine & strategic weapons"],[36,"Annex selected province"]])
-	settings_menu = _nav_submenu(popup, "Settings", [[31,"Sound: ON"],[32,"Music: ON"]])
+	settings_menu = _nav_submenu(popup, "Settings", [[31,"Sound: ON"],[32,"Music: ON"],[90,"Battle music: All in turn"]])
 	_nav_submenu(settings_menu, "Game speed", [[4,"1×"],[5,"2×"],[6,"4×"],[102,"10×"]])
 	_nav_submenu(settings_menu, "Map & camera", [[3,"Terrain / borders"],[0,"Reset north"],[1,"Rotate left"],[2,"Rotate right"]])
 	_nav_submenu(popup, "Game", [[7,"Save game"],[8,"Load game"],[11,"New match"]])
@@ -297,6 +297,12 @@ func _navigation_action(index: int) -> void:
 		30: account_requested.emit()
 		31: if audio != null: audio.set_sound(not GameAudio.sound_enabled)
 		32: if audio != null: audio.set_music(not GameAudio.music_enabled)
+		90:
+			# Cycles: all in turn, then each track on its own.
+			if audio != null:
+				var choices: Array = ["mix"] + GameAudio.BATTLE_TRACKS.map(func(t): return t[0])
+				audio.set_battle_choice(choices[(choices.find(GameAudio.battle_choice) + 1) % choices.size()])
+				show_status("Battle music: " + GameAudio.battle_choice_title())
 		33: campaign_requested.emit("news")
 		34: campaign_requested.emit("battles")
 		35: retreat_requested.emit()
@@ -812,6 +818,7 @@ func _show_audio_items() -> void:
 	var popup: = settings_menu
 	popup.set_item_text(popup.get_item_index(31), "Sound: " + ("ON" if GameAudio.sound_enabled else "OFF"))
 	popup.set_item_text(popup.get_item_index(32), "Music: " + ("ON" if GameAudio.music_enabled else "OFF"))
+	if popup.get_item_index(90) >= 0: popup.set_item_text(popup.get_item_index(90), "Battle music: " + GameAudio.battle_choice_title())
 
 func set_guard(on: bool) -> void:
 	if guard_button == null: return
