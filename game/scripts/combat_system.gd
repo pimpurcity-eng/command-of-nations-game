@@ -6,6 +6,10 @@ const ROUND_SECONDS: = 1800.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
 const STACK_DAMAGE_LIMIT: = 10
 ## Distance at which two ground armies are touching and fight hand to hand.
 const CLOSE_COMBAT_REACH: = 0.45
+## Owner 2026-10-16: show which side entered the fight. An attacking order
+## remains labelled attacker when it reaches a city; stationary defenders remain defenders.
+static func battle_role(ordered_attack: bool, _opponent: Dictionary = {}) -> String:
+	return "attacker" if ordered_attack else "defender"
 const MAX_ROUND_SECONDS: = ROUND_SECONDS * 4
 var cooldowns: Dictionary = {}
 ## The unit's type as a target: one of the six Call of War classes (UnitClasses).
