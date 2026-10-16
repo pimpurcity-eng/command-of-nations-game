@@ -291,6 +291,15 @@ cat /opt/warfront/web/VERSION
 | Signing | **Play App Signing** (Google holds the app key) + an **upload key** | ChatGPT's key, cert SHA-256 `0289d3b051ee5e71dd25bc707b459f0a1e5413faea920069aa8636dc95b84bf0` |
 | Latest | versionCode 57 / 0.57 | versionCode 23 in preset; last sideload 0.33 |
 
+**Upload certificate (public; read from `warfront-mandate-0.57.aab` with `keytool -printcert -jarfile`):**
+`CN=Warfront Mandate, O=Yaska, C=CA`, RSA 4096, serial `693084e6b72e3060`, created 2026-10-12 18:37 ADT,
+SHA-256 `52:E5:01:BA:65:57:58:0B:21:BB:76:42:6B:F1:F5:04:6B:86:CC:E7:41:DE:22:49:C3:44:6F:3F:26:AB:94:61`,
+SHA-1 `BD:18:A2:97:F0:F9:8E:D8:2C:68:F6:C7:3B:5B:88:DA:C5:C1:85:0D`.
+A recovered keystore is the right one only if `keytool -list -v -keystore <file> -alias <alias>` shows this SHA-256.
+Every Play bundle (0.32–0.57) was committed by Claude Code session
+`https://claude.ai/code/session_01UBVt9kY9HGW5aZ1EnRNagq` (also author of game commit `62dfac0`); that session's
+machine is the only known location of the key. It can't be reached from other sessions.
+
 **Upload key status — blocker.** `docs/PLAY_STORE_RELEASE.md` says every Play bundle so far (0.32 … 0.57)
 was signed with an upload key that existed only on an earlier Claude cloud machine. **It is not in GitHub,
 not in Drive (searched), and not on this machine (searched the filesystem).** Unless the owner has a copy:
