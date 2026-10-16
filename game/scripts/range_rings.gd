@@ -8,7 +8,9 @@ extends Node3D
 const SHOW_BELOW_DISTANCE: = UnitSystem.FAR_ZOOM
 const OWN: = Color(0.45, 0.75, 1.0, 0.45)
 const ENEMY: = Color(1.0, 0.35, 0.3, 0.45)
-const CHOSEN: = Color(1.0, 0.82, 0.35, 0.9)
+## Owner 2026-10-16 ("the circles are a little bit big"): the selected army's weapon range is a
+## faint white line, so it is not mistaken for the gold selection circle round the army itself.
+const CHOSEN: = Color(1.0, 1.0, 1.0, 0.45)
 var _pool: Array[MeshInstance3D] = []
 var _inks: Dictionary = {}
 var _ring: TorusMesh

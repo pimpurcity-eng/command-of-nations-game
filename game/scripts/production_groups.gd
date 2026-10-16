@@ -35,3 +35,19 @@ static func before(a: Dictionary, b: Dictionary) -> bool:
 	if a.category == "Air defense" and b.category == "Air defense": return a.get("aa_range", 0.0) < b.get("aa_range", 0.0)
 	if a.category == "Air defense" or b.category == "Air defense": return a.category == "Air defense"
 	return a.category < b.category if a.category != b.category else a.name < b.name
+
+## Owner 2026-10-16: "move all the units that have day one research to the front ... in order by
+## when you can start them first" - earliest unlock day first, the usual order within a day.
+static func by_unlock_day(list: Array, research: ResearchSystem) -> Array:
+	if research == null: return list
+	var days: Dictionary = {}
+	for spec in list: days[spec.id] = research.unlock_day(spec.id, 1)
+	var unique: Array = []
+	for value in days.values():
+		if not unique.has(value): unique.append(value)
+	unique.sort()
+	var ordered: Array = []
+	for day in unique:
+		for spec in list:
+			if days[spec.id] == day: ordered.append(spec)
+	return ordered

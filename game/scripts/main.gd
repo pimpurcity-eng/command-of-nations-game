@@ -568,6 +568,7 @@ func _ready() -> void :
 			mobile_start.hide())
 	boot_finished = true
 	boot_ready.emit()
+	if units != null and not GameSession.weapons_test: units.prewarm_models()
 	# Coming back from "Sign in with Google" on the website: finish it and show the account.
 	if OS.has_feature("web") and str(JavaScriptBridge.eval("/[#&](access_token|error)=/.test(window.location.hash)")) == "true":
 		open_home_account()

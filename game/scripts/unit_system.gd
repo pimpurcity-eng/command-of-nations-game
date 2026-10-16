@@ -19,6 +19,7 @@ const MOBILE_MAX_DETAILED_UNITS := 80  # owner 2026-10-15: real 3D models, never
 ## models); closer, the 3D models show; within CLOSE_ZOOM the health bar and level appear.
 ## An army whose model is not loaded (phone cap) shows its symbol instead of a placeholder box.
 const FAR_ZOOM := 24.0
+const REVEALS_PER_FRAME := 3
 const CLOSE_ZOOM := 11.0
 var view_distance := 20.0
 var _mobile_visual_refresh_budget := 1
@@ -731,6 +732,7 @@ func _process(delta: float) -> void :
 	var mobile: bool = UnitSystem.mobile_device() or force_mobile
 	var detailed: int = 0
 	var upgrades_left: int = _mobile_visual_refresh_budget
+	var reveals_left: int = REVEALS_PER_FRAME
 	for unit in units:
 		# Off-screen units should not force fog calculations or keep heavyweight models.
 		var on_screen: bool = camera == null or (not camera.is_position_behind(unit.node.position) and view.has_point(camera.unproject_position(unit.node.position)))
@@ -745,7 +747,16 @@ func _process(delta: float) -> void :
 			if mobile and not unit.node.get_child(0).get_meta("startup_lightweight", false):
 				_replace_visual(unit, UnitVisual.lightweight(unit.visual_kind, unit.faction_color, unit.equipment_id, unit.level))
 			continue
-		unit.node.visible = visible_to_player(unit)
+		# Owner 2026-10-16 ("the camera's getting stuck mid-zoom ... about halfway"): zooming in past
+		# FAR_ZOOM used to show every army's 3D model in the same frame; they now appear a few per
+		# frame (the map tag stands in for the rest until their turn).
+		var showing: bool = visible_to_player(unit)
+		if showing and not unit.node.visible:
+			if reveals_left <= 0:
+				unit.icon_only = true
+				continue
+			reveals_left -= 1
+		unit.node.visible = showing
 		if not unit.node.visible:
 			if mobile and not unit.node.get_child(0).get_meta("startup_lightweight", false):
 				_replace_visual(unit, UnitVisual.lightweight(unit.visual_kind, unit.faction_color, unit.equipment_id, unit.level))
@@ -875,6 +886,31 @@ func _model_reach(unit: Dictionary) -> float:
 	var model: Node3D = unit.node.get_child(0)
 	var box: AABB = model.get_meta("pick_bounds", AABB(Vector3.ZERO, Vector3(0.3, 0.3, 0.3)))
 	return maxf(box.size.x, box.size.z) * 0.5 * model.scale.x
+## Draws each kind of model on the map once, off screen, while the game is loading, so the phone
+## prepares its graphics then rather than in the middle of the first zoom.
+func prewarm_models() -> void:
+	var view: = SubViewport.new()
+	view.size = Vector2i(64, 64)
+	view.own_world_3d = false
+	view.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	add_child(view)
+	var eye: = Camera3D.new()
+	view.add_child(eye)
+	eye.position = Vector3(0, 400, 3)
+	eye.look_at(Vector3(0, 400, 0))
+	eye.current = true
+	var seen: Dictionary = {}
+	for unit in units:
+		var key: = str(unit.equipment_id) + ":" + str(unit.get("level", 1))
+		if seen.has(key): continue
+		seen[key] = true
+		var model: = UnitVisual.create(unit.visual_kind, unit.faction_color, unit.equipment_id, unit.get("level", 1))
+		model.position = Vector3(0, 400, 0)
+		view.add_child(model)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
+	view.queue_free()
 static var _crew_mesh: ArrayMesh
 func _refuel_crew(unit: Dictionary) -> void:
 	var crew: Node3D = unit.node.get_node_or_null("RefuelCrew")
@@ -966,7 +1002,7 @@ func pick_screen(camera: Camera3D, screen: Vector2, enemies_only: bool = false) 
 ## the model centre first), then armies within 40 px (closest first).
 func pick_all_screen(camera: Camera3D, screen: Vector2, enemies_only: bool = false) -> Array:
 	var hits: Array = []
-	var radius: = 40.0 * get_window().content_scale_factor
+	var radius: = 28.0 * get_window().content_scale_factor
 	var leader_ids: Dictionary = {}
 	for group in stacks.groups(): leader_ids[stacks.leader(group).id] = true
 	for i in units.size():
@@ -983,6 +1019,11 @@ func pick_all_screen(camera: Camera3D, screen: Vector2, enemies_only: bool = fal
 			var model: Node3D = units[i].node.get_child(0)
 			if model.has_meta("pick_bounds"):
 				var bounds: AABB = model.get_meta("pick_bounds")
+				# Owner 2026-10-16 ("it's hard to click the city"): the bigger models covered most of a
+				# town, so only the middle of a model picks it; taps around it reach the city.
+				bounds = bounds.grow(0.0)
+				bounds.position += bounds.size * Vector3(0.2, 0.0, 0.2)
+				bounds.size *= Vector3(0.6, 0.75, 0.6)
 				var hull: PackedVector2Array = []
 				for corner in 8: hull.append(camera.unproject_position(model.global_transform * bounds.get_endpoint(corner)))
 				hull = Geometry2D.convex_hull(hull)

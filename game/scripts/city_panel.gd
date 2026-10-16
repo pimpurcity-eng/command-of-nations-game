@@ -237,6 +237,7 @@ func show_tab(index: int) -> void:
 	if index >= 0 and research != null:
 		var families: Array = buildings.economy.catalog.filter(func(spec: Dictionary): return spec.country == GameSession.player_country and ProductionGroups.index(spec) == index and ProductionGroups.offered(spec) and not spec.get("research_only",false))
 		families.sort_custom(ProductionGroups.before)
+		families = ProductionGroups.by_unlock_day(families, research)
 		for spec in families: _add_unit_row(spec)
 	if scroll != null: scroll.scroll_vertical = 0
 	if visible: _refresh()

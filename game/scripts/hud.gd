@@ -187,7 +187,7 @@ func _build_top_bar(root: Control) -> void:
 	second.add_child(guard_button)
 	speed_button = _small_button("» 1x")
 	speed_button.pressed.connect(func():
-		var speeds: Array = SimulationClock.SPEEDS
+		var speeds: Array = SimulationClock.speeds()
 		_speed = speeds[(speeds.find(_speed) + 1) % speeds.size()]
 		speed_requested.emit(_speed))
 	second.add_child(speed_button)
