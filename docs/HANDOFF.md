@@ -75,7 +75,7 @@ Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to d
 | 33 | Clear building vs unit icons | ✅ | |
 | 34 | Bigger reports | ⬜ | |
 | 35 | Show how you won; why the win came early | ⬜ | |
-| 36 | Rally spot for new troops | ⬜ | **bug:** first unit from a city doesn't go to the rally point (second does) |
+| 36 | Rally spot for new troops | ✅ | bug fixed: a unit that appears standing on its rally point was refused ("no land route"); now counts as arrived. `test_oct16_premium_rally` all pass |
 | 37 | Queued troops go to the rally spot (free) | ⬜ | |
 | 38 | Units 2x faster by train | ⬜ | |
 | 39 | Bigger tracks | ✅ | |
@@ -97,7 +97,6 @@ Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to d
 **In progress:** Claude — fix 11 next. Confirm the last `test_zoom_visibility` check ("enemy shown when zoomed out") passes.
 
 **Open bugs**
-- Fix 36: first unit made at a city doesn't walk to the rally point.
 - Fix 21: level-1 buildings show 33 min instead of 30.
 - `test_economy_rules.gd`: one failing morale check.
 - `test_multiplayer_phone.gd` / `test_phone_regression.gd`: fail without the private models (see `CHATGPT_HANDOFF.md` §2.4).

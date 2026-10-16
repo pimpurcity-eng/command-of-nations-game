@@ -337,6 +337,8 @@ func select_unit(index: int) -> void :
 	unit_selected.emit(units[index])
 	status_changed.emit("Ready for movement orders")
 	_draw_route()
+## An order closer than this to where the army stands needs no march (fix 36).
+const ARRIVED_REACH: = 0.1
 func order(position: Vector3, append: bool = false) -> bool:
 	if selected < 0:
 		status_changed.emit("Select a unit before issuing a movement order")
@@ -361,6 +363,17 @@ func order(position: Vector3, append: bool = false) -> bool:
 	var current: = Vector2(units[selected].node.position.x, units[selected].node.position.z)
 	var origin: Vector2 = units[selected].target if append and units[selected].moving else current
 	var path: Array = path_for(units[selected], origin, destination)
+	# Owner 2026-10-16 (fix 36, "the first unit doesn't go to the rally point"): a unit that comes
+	# out of the city standing on its rally point was refused as "no connected land route". An
+	# order to where the army already stands is now simply done.
+	if path.is_empty() and not append and origin.distance_to(destination) < ARRIVED_REACH:
+		for member in stacks.members(units[selected]):
+			member.moving = false
+			member.waypoints.clear()
+			member.target = origin
+		status_changed.emit(units[selected].name + " is already there")
+		_draw_route()
+		return true
 	if path.is_empty():
 		status_changed.emit("No connected sea route. Ships cannot cross land." if is_naval(units[selected]) else "No connected land route. Ground units cannot cross water or neutral countries.")
 		return false

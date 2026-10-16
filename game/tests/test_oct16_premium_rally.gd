@@ -124,7 +124,8 @@ func run():
 
 	# --- every unit from the queue walks to the rally point ---
 	var produced: Array = []
-	for round in 2:
+	# Fix 36: three rounds cover all three spawn spots beside the city (one was off the roads).
+	for round in 3:
 		var first: Dictionary = production.jobs.filter(func(j): return j.city == city.name)[0]
 		first.progress = production.job_duration(first) - 0.0001
 		var before: = units.units.size()
@@ -136,8 +137,10 @@ func run():
 		var unit: Dictionary = fresh[0]
 		produced.append(unit)
 		var goal: Vector2 = unit.target
-		check(unit.moving and goal.distance_to(spot) < 1.5, "unit %d marches to the rally point (target %.2f from the flag)" % [round + 1, goal.distance_to(spot)])
-	check(production.jobs.filter(func(j): return j.city == city.name).size() == 3, "the queue moves on: three orders left")
+		# A unit that comes out standing on the flag is already there (fix 36).
+		var at: = Vector2(unit.node.position.x, unit.node.position.z)
+		check((unit.moving and goal.distance_to(spot) < 1.5) or (not unit.moving and at.distance_to(spot) < UnitSystem.ARRIVED_REACH), "unit %d marches to the rally point or already stands on it (target %.2f from the flag)" % [round + 1, goal.distance_to(spot)])
+	check(production.jobs.filter(func(j): return j.city == city.name).size() == 2, "the queue moves on: two orders left")
 
 	# --- clear: new units stay at the city ---
 	game.city_panel.rally_clear_button.pressed.emit()
