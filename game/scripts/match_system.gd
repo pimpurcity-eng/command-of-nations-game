@@ -123,12 +123,24 @@ func change_control(territory: Dictionary, country: String) -> void:
 	if armies != null: armies.terrain_revision += 1
 ## Keeps the campaign's war flag in step with diplomacy (an accepted peace ends the war).
 func _sync_war() -> void:
+	if not MapDefinition.is_regional():
+		at_war = diplomacy.relations.values().any(func(relation):return relation.war)
+		armies.at_war = at_war
+		terrain.update_relations(at_war)
+		return
 	var war: = diplomacy.at_war(GameSession.player_country, GameSession.opponent_country())
 	if war and not at_war: declare_war()
 	elif not war and at_war: ceasefire()
 func declare_war() -> void :
 	if MatchClient.active != null:
-		MatchClient.active.send("declare_war")
+		MatchClient.active.send("declare_war", {"to":GameSession.opponent_country()})
+		return
+	if not MapDefinition.is_regional():
+		var enemy: = GameSession.opponent_country()
+		if winner.is_empty() and not diplomacy.at_war(GameSession.player_country, enemy):
+			diplomacy.set_war(GameSession.player_country, enemy, true)
+			_sync_war()
+			report.emit("WAR DECLARED · " + MapDefinition.country_name(enemy))
 		return
 	if at_war or not winner.is_empty(): return
 	diplomacy.set_war(GameSession.player_country, GameSession.opponent_country(), true)
@@ -160,6 +172,17 @@ const CAPTURE_SECONDS: = 1.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
 ## Owner 2026-10-14: "As soon as I hit the center of that province, it should declare war."
 ## Walking over the border is not enough; reaching an enemy province's centre is.
 func _player_reached_enemy_centre() -> bool:
+	if not MapDefinition.is_regional():
+		for unit in armies.units:
+			if (not online and unit.country != GameSession.player_country) or unit.health<=0 or unit.visual_kind in ["fighter","naval"]: continue
+			var point: = Vector2(unit.node.position.x,unit.node.position.z)
+			for territory in terrain.territories:
+				if not territory.playable or territory.controller == unit.country or diplomacy.right_of_way(unit.country,territory.controller) or not RegionData.contains(territory,point): continue
+				if point.distance_squared_to(capture_point(territory)) > CAPTURE_RADIUS*CAPTURE_RADIUS: continue
+				if diplomacy.at_war(unit.country,territory.controller): continue
+				GameSession.enemy_country = territory.controller
+				diplomacy.set_war(unit.country,territory.controller,true)
+		return false
 	var enemy: = GameSession.opponent_country()
 	if diplomacy.right_of_way(GameSession.player_country, enemy): return false
 	for unit in armies.units:
@@ -241,7 +264,7 @@ func advance(seconds: float) -> void :
 	if seconds > 0: daily_provinces()
 	if not winner.is_empty() or seconds <= 0: return
 	diplomacy.now = clock.elapsed if clock != null else diplomacy.now + seconds
-	diplomacy.ai_countries = seat_ai.keys() if online else [GameSession.opponent_country()]
+	diplomacy.ai_countries = seat_ai.keys() if online or not MapDefinition.is_regional() else [GameSession.opponent_country()]
 	chronicle.advance(seconds)
 	for title in annexation.advance(seconds, terrain.territories): report.emit(title + " annexed")
 	for done in strategic.advance(seconds):
@@ -263,7 +286,7 @@ func advance(seconds: float) -> void :
 		return
 	# Owner 2026-10-14 ("I went onto Ukrainian territory ... it never switched over"): an army
 	# reaching the centre of an enemy province declares war, and the province is taken at once.
-	if not at_war and _player_reached_enemy_centre(): declare_war()
+	if (not at_war or not MapDefinition.is_regional()) and _player_reached_enemy_centre(): declare_war()
 	if not at_war: return
 	advance_battles(seconds)
 	var selected_stack: = ""
@@ -322,6 +345,7 @@ func advance(seconds: float) -> void :
 		for dx in range(-1,2):
 			for dy in range(-1,2): candidates.append_array(nearby.get(cell + Vector2i(dx,dy), []))
 		for unit in candidates:
+			if not MapDefinition.is_regional() and unit.country!=territory.controller and not diplomacy.at_war(unit.country,territory.controller): continue
 			var point: = Vector2(unit.node.position.x, unit.node.position.z)
 			if point.distance_squared_to(anchor) > CAPTURE_RADIUS * CAPTURE_RADIUS: continue
 			if not RegionData.contains(territory, point): continue
@@ -422,7 +446,8 @@ func retreat(group: Array, from: Vector2) -> Vector2:
 		unit.dug_in = 0.0
 	return best
 func city_score() -> Dictionary:
-	var score: = {"russia": 0, "ukraine": 0}
+	var score: Dictionary = {}
+	for country in production.stockpiles.keys() if production != null else ["russia","ukraine"]: score[country] = 0
 	for city in cities:
 		for territory in terrain.territories:
 			if territory.id == city.sector and territory.controller != city.country.to_lower(): score[territory.controller] += 1
@@ -492,7 +517,8 @@ func restore(state: Dictionary) -> void :
 	diplomacy.restore(state.get("diplomacy", {}))
 	espionage.restore(state.get("espionage", {}))
 	spy_ai_timer = clampf(float(state.get("spy_ai_timer", Espionage.HOUR * 6.0)), 0.0, Espionage.HOUR * 12.0)
-	diplomacy.relation(GameSession.player_country, GameSession.opponent_country()).war = at_war
+	if MapDefinition.is_regional(): diplomacy.relation(GameSession.player_country, GameSession.opponent_country()).war = at_war
+	else: _sync_war()
 
 func _has_forces(country: String) -> bool:
 	if armies.units.any(func(u): return u.country == country and u.health > 0): return true

@@ -64,6 +64,7 @@ func decide(armies: UnitSystem, terrain: StrategicMap, cities: Array, production
 		var targets: Array = []
 
 		for enemy in armies.units:
+			if not MapDefinition.is_regional() and armies.diplomacy != null and not armies.diplomacy.at_war(country,enemy.country): continue
 			var enemy_point: = Vector2(enemy.node.position.x, enemy.node.position.z)
 			if enemy.health > 0 and enemy.country != country and armies.unit_visible(enemy, country) and ( not armies.is_naval(unit) or armies.is_naval(enemy)) and point.distance_to(enemy_point) < 6: targets.append(enemy_point)
 		if strategy in ["economy","defensive"]:
@@ -72,10 +73,10 @@ func decide(armies: UnitSystem, terrain: StrategicMap, cities: Array, production
 		if targets.is_empty():
 			for city in cities:
 				for territory in terrain.territories:
-					if territory.id == city.sector and territory.controller != country: targets.append(city.point)
+					if territory.id == city.sector and territory.controller != country and (MapDefinition.is_regional() or armies.diplomacy == null or armies.diplomacy.at_war(country,territory.controller)): targets.append(city.point)
 		if targets.is_empty():
 			for territory in terrain.territories:
-				if territory.playable and territory.controller != country: targets.append(territory.center)
+				if territory.playable and territory.controller != country and (MapDefinition.is_regional() or armies.diplomacy == null or armies.diplomacy.at_war(country,territory.controller)): targets.append(territory.center)
 		targets.sort_custom( func(a: Vector2, b: Vector2): return point.distance_squared_to(a) < point.distance_squared_to(b))
 		for target in targets:
 			if unit.visual_kind == "fighter":

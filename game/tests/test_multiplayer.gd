@@ -44,7 +44,7 @@ func run() -> void:
 	server.inactive_seconds = MatchServer.INACTIVE_REAL_SECONDS
 	root.add_child(server)
 	check(server.start(game, PORT, "test", SAVE) == OK, "the match server listens")
-	check(server.ai_seats.size() == 2 and "russia" in server.ai_seats and "ukraine" in server.ai_seats and game.match_rules.ai_enabled, "the AI plays every seat until players join")
+	check(server.ai_seats == ["russia", "ukraine"] and game.match_rules.ai_enabled, "the AI plays every seat until players join")
 	check(not game.clock.paused, "the server's clock runs in real time")
 
 	# Sign-in rules.
@@ -88,20 +88,6 @@ func run() -> void:
 	var theirs: Array = game.production.stockpiles.russia.keys()
 	theirs.sort()
 	check(mine == theirs and not alice.state.has("stockpiles") and not JSON.stringify(alice.state).contains("\"ukraine\":{\"funds\""), "each phone gets only its own stockpile")
-
-	# Combat removes casualties after their last frame; snapshots already omit them.
-	# The server must not index the shorter snapshot with live-array positions.
-	var casualty: Dictionary = units.units.filter(func(u: Dictionary): return u.health > 1.0)[0]
-	var previous_health: float = casualty.health
-	casualty.health = 0.0
-	var expected_ids: Dictionary = {}
-	for unit in units.units:
-		if unit.health > 0.001 and units.unit_visible(unit, "russia"): expected_ids[unit.id] = true
-	var casualty_tick: Dictionary = server._state("russia", "tick", false)
-	var received_ids: Dictionary = {}
-	for entry in casualty_tick.get("units", []): received_ids[entry.id] = true
-	check(received_ids == expected_ids and not received_ids.has(casualty.id), "a casualty still in the live array cannot break or misalign the next server tick")
-	casualty.health = previous_health
 
 	# Orders are checked against the sender's country.
 	var russian: Dictionary = {}

@@ -43,6 +43,8 @@ var current_page := "home"
 var commander_label: Label
 var profile_button: Button
 var catalogue: Dictionary = {}
+var map_buttons: Array[Button] = []
+var nation_summary: Label
 
 static func _font(weight: int, spacing: int = 0) -> FontVariation:
 	var f := FontVariation.new()
@@ -51,7 +53,8 @@ static func _font(weight: int, spacing: int = 0) -> FontVariation:
 	f.spacing_glyph = spacing
 	return f
 func selected_country() -> String:
-	return "ukraine" if country_picker.selected == 0 else "russia"
+	if country_picker.selected < 0: return GameSession.player_country
+	return str(country_picker.get_item_metadata(country_picker.selected))
 func selected_doctrine() -> String:
 	return Doctrine.of(selected_country())
 func _label(text: String, pixels: int, color: Color = INK) -> Label:
@@ -110,7 +113,7 @@ func _section(parent: Node, text: String) -> void:
 	parent.add_child(title)
 
 func setup(theme: Theme, saved: bool) -> void:
-	has_save = saved
+	has_save = saved if MapDefinition.is_regional() else FileAccess.file_exists(MapDefinition.save_path())
 	layer = 15
 	catalogue = JSON.parse_string(FileAccess.get_file_as_string("res://data/home_features.json"))
 	screen = Control.new()
@@ -237,7 +240,7 @@ func _build_home() -> void:
 	panel = _card(body)
 	panel.visible = has_save
 	var campaign := _box(panel, 12)
-	campaign.add_child(_label("RUSSIA–UKRAINE", 28))
+	campaign.add_child(_label("RUSSIA–UKRAINE" if MapDefinition.is_regional() else "EUROPE — TEST MAP", 28))
 	campaign.add_child(_label("Offline campaign · Saved on this device", 19, MUTED))
 	continue_button = _button("RESUME CAMPAIGN  →", true)
 	continue_button.visible = has_save
@@ -246,18 +249,33 @@ func _build_home() -> void:
 	campaign.add_child(continue_button)
 	_section(body, "PLAY YOUR WAY")
 	var play := _box(_card(body), 16)
+	play.add_child(_label("CHOOSE YOUR MAP",17,GOLD))
+	for map_choice in [[MapDefinition.REGIONAL,"RUSSIA–UKRAINE"],[MapDefinition.EUROPE,"EUROPE — TEST MAP"]]:
+		var map_button: = _button(map_choice[1],MapDefinition.id == map_choice[0])
+		map_button.disabled = MapDefinition.id == map_choice[0]
+		map_button.pressed.connect(func():
+			if not loading: MapDefinition.launch(get_tree(),map_choice[0]))
+		play.add_child(map_button)
+		map_buttons.append(map_button)
 	play.add_child(_label("CHOOSE YOUR NATION", 17, GOLD))
 	country_picker = OptionButton.new()
-	country_picker.add_item("Ukraine")
-	country_picker.add_item("Russia")
-	country_picker.select(0 if GameSession.player_country == "ukraine" else 1)
-	country_picker.visible = false
+	for country in MapDefinition.players():
+		country_picker.add_item(country.name+" · "+Doctrine.info(country.id).name)
+		country_picker.set_item_metadata(country_picker.item_count-1,country.id)
+		if country.id == GameSession.player_country: country_picker.select(country_picker.item_count-1)
+	country_picker.visible = not MapDefinition.is_regional()
+	country_picker.custom_minimum_size.y = 60
+	country_picker.item_selected.connect(func(_index):_show_nation())
 	play.add_child(country_picker)
 	var nations := HBoxContainer.new()
 	nations.add_theme_constant_override("separation", 14)
 	play.add_child(nations)
-	for spec in [["russia", "RUSSIA", [Color.WHITE, Color("1c3f94"), Color("d52b1e")], "Russian"], ["ukraine", "UKRAINE", [Color("0057b7"), Color("ffd700")], "European"]]:
-		nations.add_child(_nation_card(spec[0], spec[1], spec[2], spec[3]))
+	if MapDefinition.is_regional():
+		for spec in [["russia", "RUSSIA", [Color.WHITE, Color("1c3f94"), Color("d52b1e")], "Russian"], ["ukraine", "UKRAINE", [Color("0057b7"), Color("ffd700")], "European"]]:
+			nations.add_child(_nation_card(spec[0], spec[1], spec[2], spec[3]))
+	else:
+		nation_summary = _label("",18,MUTED)
+		play.add_child(nation_summary)
 	_show_nation()
 	fresh_button = _button("NEW CAMPAIGN  →" if has_save else "START CAMPAIGN  →", not has_save)
 	fresh_button.pressed.connect(func(): request_start("fresh"))
@@ -265,7 +283,7 @@ func _build_home() -> void:
 	var secondary := HBoxContainer.new()
 	secondary.add_theme_constant_override("separation", 14)
 	play.add_child(secondary)
-	online_button = _button("ONLINE MATCH")
+	online_button = _button("ONLINE MATCH" if MapDefinition.is_regional() else "EUROPE ONLINE")
 	online_button.pressed.connect(func(): request_start("online"))
 	test_button = _button("WEAPONS RANGE")
 	test_button.pressed.connect(func():
@@ -288,7 +306,7 @@ func _build_home() -> void:
 		choice.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		choice.pressed.connect(func(): range_picker.hide(); request_start("test:" + str(scenario.id)))
 		range_picker.add_child(choice)
-	play.add_child(_label("Offline against AI · Online with an account", 17, MUTED))
+	play.add_child(_label("Offline against AI · Online with an account" if MapDefinition.is_regional() else "Europe online · 20 players · 1× speed\nChoose an available country, then join or resume your match.", 17, MUTED))
 	loading_label = _label("Ready to command", 18, MUTED)
 	play.add_child(loading_label)
 	progress = ProgressBar.new()
@@ -365,11 +383,13 @@ func _nation_card(id: String, title: String, stripes: Array, doctrine: String) -
 	body.add_child(_label("+ " + str(traits.plus) + "\n− " + str(traits.minus), 16, MUTED))
 	card.pressed.connect(func():
 		if loading: return
-		country_picker.select(0 if id == "ukraine" else 1)
+		for i in country_picker.item_count:
+			if country_picker.get_item_metadata(i) == id: country_picker.select(i)
 		_show_nation())
 	country_cards[id] = card
 	return card
 func _show_nation() -> void:
+	if nation_summary != null: nation_summary.text = Doctrine.summary(selected_country())+"\n20 selectable nations · 7 cities each · other nations controlled by AI"
 	for id in country_cards:
 		var chosen: bool = selected_country() == id
 		var card: Button = country_cards[id]
@@ -504,6 +524,7 @@ var booting: = false
 var pending_start: = ""
 func begin_background_loading() -> void:
 	booting = true
+	for map_button in map_buttons: map_button.disabled = true
 	profile_button.disabled = true
 	for button in nav_buttons.values(): button.disabled = true
 	set_progress(0, "Preparing map")

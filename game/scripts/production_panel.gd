@@ -58,9 +58,8 @@ func setup(system: ProductionSystem, units: UnitSystem, theme: Theme) -> void :
 	content.add_theme_constant_override("separation", 10)
 	scroll.add_child(content)
 	country_picker = OptionButton.new()
-	country_picker.add_item("Ukraine", 0)
-	country_picker.add_item("Russia", 1)
-	country_picker.select(1)
+	country_picker.add_item(MapDefinition.country_name(GameSession.player_country),0)
+	country_picker.select(0)
 	country_picker.custom_minimum_size.y = 48
 	country_picker.item_selected.connect( func(_index: int): _populate())
 	content.add_child(country_picker)
@@ -232,7 +231,9 @@ func _layout() -> void :
 	panel.offset_top = 10
 	panel.offset_bottom = -10
 func open(city_name: String = "") -> void :
-	country_picker.select(0 if GameSession.player_country == "ukraine" else 1)
+	country_picker.clear()
+	country_picker.add_item(MapDefinition.country_name(GameSession.player_country),0)
+	country_picker.select(0)
 	country_picker.disabled = true
 	_populate()
 	show()

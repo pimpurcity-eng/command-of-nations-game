@@ -20,7 +20,7 @@ var provinces: ProvinceConstruction
 var badges: Array[Sprite3D] = []
 
 static func data() -> Dictionary:
-	if _data.is_empty(): _data = JSON.parse_string(FileAccess.get_file_as_string(DATA_PATH))
+	if _data.is_empty(): _data = JSON.parse_string(FileAccess.get_file_as_string(DATA_PATH if MapDefinition.is_regional() else "res://data/maps/europe20/resources.json"))
 	return _data
 
 static func city_resources(city_name: String) -> Array:

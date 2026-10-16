@@ -26,7 +26,7 @@ func setup(owner: BuildingSystem) -> void:
   if not region.playable or city_titles.has(region.title): continue
   var id: String = "province:" + region.title
   if places.has(id): continue
-  places[id] = {"id":id,"name":region.title,"country":str(region.owner).capitalize(),"sector":region.id,"point":owner.economy.terrain.province_hubs.get(region.title,region.center),"rural":true,"region":region}
+  places[id] = {"id":id,"name":region.title,"country":str(region.owner).capitalize() if MapDefinition.is_regional() else str(region.owner),"sector":region.id,"point":owner.economy.terrain.province_hubs.get(region.title,region.center),"rural":true,"region":region}
  reset()
 func reset() -> void:
  levels.clear();jobs.clear();_roads.clear();_forts.clear();next_id = 1

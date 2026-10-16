@@ -20,6 +20,7 @@ const TICK: = 0.5
 const SLOW_EVERY: = 4
 const SAVE_EVERY: = 60.0
 const HELLO_TIMEOUT: = 15.0
+const LOBBY_TIMEOUT: = 120.0
 const MAX_COMMANDS_PER_SECOND: = 20
 const MAX_MESSAGE_BYTES: = 8192
 var countries: Array = ["russia", "ukraine"]
@@ -49,12 +50,15 @@ var _save: = 0.0
 ## Starts serving `main` (a running main.tscn) on `port`. Resumes `path` when it exists.
 func start(main: Node, port: int, id: String, path: String, bind: String = "*") -> Error:
 	game = main
-	countries = game.production.stockpiles.keys()
+	countries = game.production.stockpiles.keys() if MapDefinition.is_regional() else MapDefinition.players().map(func(country):return country.id)
 	match_id = id
 	save_path = path
 	for country in countries: seats[country] = {"user": "", "name": "", "last_seen": -INF}
 	_load()
 	game.set_process(false)  # the phone autosave is replaced by the match save
+	# The dedicated simulation does not render city garrisons or fog on a phone.
+	game.cities.set_process(false)
+	set_process(true)
 	game.mobile_start.hide()
 	game.clock.paused = false
 	game.match_rules.online = true
@@ -66,6 +70,7 @@ func start(main: Node, port: int, id: String, path: String, bind: String = "*") 
 	return tcp.listen(port, bind)
 
 func stop() -> void:
+	set_process(false)
 	if external_ai != null: external_ai.enabled = false
 	save()
 	for peer in peers: peer.ws.close(1001, "Server stopping")
@@ -83,6 +88,7 @@ func _process(delta: float) -> void:
 	while tcp.is_connection_available():
 		var ws: = WebSocketPeer.new()
 		ws.inbound_buffer_size = MAX_MESSAGE_BYTES * 4
+		ws.outbound_buffer_size = 1 << 22
 		if ws.accept_stream(tcp.take_connection()) == OK:
 			peers.append({"ws": ws, "state": "new", "user": "", "name": "", "country": "", "since": now, "budget": MAX_COMMANDS_PER_SECOND, "refill": now})
 	for peer in peers.duplicate():
@@ -91,7 +97,8 @@ func _process(delta: float) -> void:
 			WebSocketPeer.STATE_OPEN:
 				while peer.ws.get_available_packet_count() > 0:
 					_receive(peer, peer.ws.get_packet().get_string_from_utf8())
-				if peer.state != "play" and now - peer.since > HELLO_TIMEOUT: _reject(peer, "Sign-in timed out")
+				if peer.state in ["new", "auth"] and now - peer.since > HELLO_TIMEOUT: _reject(peer, "Sign-in timed out")
+				elif peer.state == "lobby" and now - peer.since > LOBBY_TIMEOUT: _reject(peer, "Refresh the match to choose your country")
 			WebSocketPeer.STATE_CLOSED:
 				peers.erase(peer)
 	_tick += delta
@@ -111,7 +118,14 @@ func _receive(peer: Dictionary, text: String) -> void:
 	var message: Variant = JSON.parse_string(text)
 	if not message is Dictionary: return
 	match [peer.state, message.get("t", "")]:
-		["new", "hello"]: _hello(peer, message)
+		["new", "hello"], ["lobby", "hello"]: _hello(peer, message)
+		["new", "lobby"], ["lobby", "lobby"]:
+			if not _right_match(peer, message): return
+			if not peer.user.is_empty() or str(message.get("token", "")).is_empty():
+				peer.state = "lobby"
+				peer.since = now
+				_send(peer, lobby_state(peer.user))
+			else: _hello(peer, message, true)
 		["play", "cmd"]:
 			peer.budget = minf(MAX_COMMANDS_PER_SECOND, peer.budget + (now - peer.refill) * MAX_COMMANDS_PER_SECOND)
 			peer.refill = now
@@ -128,10 +142,17 @@ func _receive(peer: Dictionary, text: String) -> void:
 
 ## Sign-in: development tokens ("dev:<name>") only when allowed; otherwise the Supabase access
 ## token is checked with Supabase itself.
-func _hello(peer: Dictionary, message: Dictionary) -> void:
+func _right_match(peer: Dictionary, message: Dictionary) -> bool:
 	if str(message.get("match", "")) != match_id:
 		_reject(peer, "No such match")
-		return
+		return false
+	if str(message.get("map", MapDefinition.id)) != MapDefinition.id:
+		_reject(peer, "This match uses a different map")
+		return false
+	return true
+
+func _hello(peer: Dictionary, message: Dictionary, preview: bool = false) -> void:
+	if not _right_match(peer, message): return
 	var token: = str(message.get("token", ""))
 	var wanted: = str(message.get("country", ""))
 	peer.state = "auth"
@@ -143,7 +164,7 @@ func _hello(peer: Dictionary, message: Dictionary) -> void:
 		if name.is_empty():
 			_reject(peer, "Sign in to play online")
 			return
-		admit(peer, "dev:" + name, name, wanted)
+		_authenticated(peer, "dev:" + name, name, wanted, preview)
 		return
 	if supabase_url.is_empty() or token.is_empty():
 		_reject(peer, "Sign in to play online")
@@ -159,10 +180,30 @@ func _hello(peer: Dictionary, message: Dictionary) -> void:
 			_reject(peer, "Your sign-in has expired; sign in again")
 			return
 		var metadata: Dictionary = user.get("user_metadata", {}) if user.get("user_metadata") is Dictionary else {}
-		admit(peer, str(user.id), str(metadata.get("commander_name", "Commander")).left(24), wanted))
+		_authenticated(peer, str(user.id), str(metadata.get("commander_name", "Commander")).left(24), wanted, preview))
 	if http.request(supabase_url.trim_suffix("/") + "/auth/v1/user", ["apikey: " + supabase_key, "Authorization: Bearer " + token]) != OK:
 		http.queue_free()
 		_reject(peer, "Sign-in service unavailable")
+
+func _authenticated(peer: Dictionary, user: String, name: String, wanted: String, preview: bool) -> void:
+	if not preview:
+		admit(peer, user, name, wanted)
+		return
+	peer.merge({"state":"lobby", "user":user, "name":name, "since":now}, true)
+	_send(peer, lobby_state(user))
+
+## Match information contains no account IDs, armies, resources or private orders.
+## Only a verified account is told which existing country belongs to it.
+func lobby_state(user: String = "") -> Dictionary:
+	var claimed: = 0
+	var own: = ""
+	for c in countries:
+		if not seats[c].user.is_empty(): claimed += 1
+		if not user.is_empty() and seats[c].user == user: own = c
+	return {"t":"lobby", "map":MapDefinition.id, "match":match_id,
+		"title":"Russia–Ukraine" if MapDefinition.is_regional() else "Europe — Test Match",
+		"time":game.clock.elapsed, "speed":game.clock.speed, "capacity":countries.size(),
+		"players":claimed, "own_country":own, "seats":public_seats(), "winner":game.match_rules.winner}
 
 ## Seats a signed-in player: their old country if they have one, else the one they asked for,
 ## else any free seat (join in progress).
@@ -170,8 +211,14 @@ func admit(peer: Dictionary, user: String, name: String, wanted: String) -> void
 	var country: = ""
 	for c in countries:
 		if seats[c].user == user: country = c
+	if country.is_empty() and not game.match_rules.winner.is_empty():
+		_reject(peer, "This match has ended")
+		return
 	if country.is_empty():
 		if wanted in countries and seats[wanted].user.is_empty(): country = wanted
+		elif not MapDefinition.is_regional():
+			_reject(peer, "That country is already taken · choose another country" if wanted in countries else "Choose one of the available countries")
+			return
 		else:
 			for c in countries:
 				if seats[c].user.is_empty() and country.is_empty(): country = c
@@ -207,6 +254,8 @@ func _update_seats(wall_time: float = -1.0) -> void:
 	for country in countries:
 		var seat: Dictionary = seats[country]
 		if seat.user.is_empty() or wall_time - float(seat.last_seen) >= inactive_seconds: ai.append(country)
+	for country in game.production.stockpiles:
+		if not country in countries: ai.append(country)
 	if ai == ai_seats: return
 	for country in countries:
 		if country in ai and not country in ai_seats and not seats[country].user.is_empty():
@@ -217,7 +266,7 @@ func _update_seats(wall_time: float = -1.0) -> void:
 func public_seats() -> Dictionary:
 	var result: = {}
 	for country in countries:
-		result[country] = {"name": seats[country].name, "online": connected(country), "ai": country in ai_seats}
+		result[country] = {"name": seats[country].name, "claimed":not seats[country].user.is_empty(), "online": connected(country), "ai": country in ai_seats}
 	return result
 
 ## What `country` may know: armies in its sight (enemy orders hidden), borders, its economy.
@@ -240,7 +289,7 @@ func _state(country: String, kind: String, full: bool) -> Dictionary:
 	for t in game.map.territories:
 		if t.playable: borders.append([t.id, t.controller])
 	var own_jobs: Array = game.production.jobs.filter(func(job: Dictionary): return game.production.equipment(job.equipment).country == country)
-	var state: = {"t": kind, "time": game.clock.elapsed, "units": visible, "territories": borders, "at_war": rules.at_war, "winner": rules.winner, "victory_type": rules.victory_type,
+	var state: = {"t": kind, "map":MapDefinition.id, "match":match_id, "time": game.clock.elapsed, "speed":game.clock.speed, "units": visible, "territories": borders, "at_war": rules.at_war, "winner": rules.winner, "victory_type": rules.victory_type,
 		"market": game.trade.market.snapshot(country), "stockpile": game.production.stockpiles.get(country, {}), "gold":int(game.production.gold.get(country,0)), "jobs": own_jobs, "seats": public_seats()}
 	if full:
 		var talks: = rules.diplomacy.snapshot()
@@ -273,7 +322,11 @@ func command(country: String, message: Dictionary) -> String:
 		"attack":
 			var enemy: = units.find_id(str(message.get("target", "")))
 			if enemy.is_empty() or enemy.country == country or not units.unit_visible(enemy, country): return "That target is not in sight"
-			if not rules.at_war: rules.declare_war()
+			if MapDefinition.is_regional():
+				if not rules.at_war: rules.declare_war()
+			elif not talks.at_war(country, enemy.country):
+				talks.set_war(country, enemy.country, true)
+				rules._sync_war()
 			return "" if units.command(country, ids, "attack", Vector2.ZERO, enemy.id) > 0 else "No army could attack"
 		"retreat":
 			var moved: = 0
@@ -317,25 +370,33 @@ func command(country: String, message: Dictionary) -> String:
 			_broadcast({"t": "event", "text": "%s %s guard mode" % [country.capitalize(), "switched on" if on else "switched off"]})
 			return ""
 		"declare_war":
+			if not MapDefinition.is_regional():
+				var enemy: = str(message.get("to", ""))
+				if not game.production.stockpiles.has(enemy) or enemy == country: return "Choose another country"
+				if talks.at_war(country, enemy): return "Already at war with that country"
+				talks.set_war(country, enemy, true)
+				rules._sync_war()
+				rules.report.emit("WAR DECLARED · %s and %s" % [MapDefinition.country_name(country), MapDefinition.country_name(enemy)])
+				return ""
 			if rules.at_war: return "Already at war"
 			rules.declare_war()
 			return ""
 		"propose":
 			var to: = str(message.get("to", ""))
-			if not to in countries or to == country: return "Choose another country"
+			if not game.production.stockpiles.has(to) or to == country: return "Choose another country"
 			if not str(message.get("kind", "")) in ["peace", "right_of_way", "shared_vision", "trade", "coalition"]: return "Unknown proposal"
 			return talks.propose(country, to, message.kind, VictoryRules.standings(game.map.territories, rules.cities, countries)).message.replace("Proposal sent", "")
 		"answer":
 			return talks.answer(country, str(message.get("from", "")), str(message.get("kind", "")), bool(message.get("accept", false)))
 		"embargo":
 			var to: = str(message.get("to", ""))
-			if not to in countries or to == country: return "Choose another country"
+			if not game.production.stockpiles.has(to) or to == country: return "Choose another country"
 			talks.set_embargo(country, to, bool(message.get("on", true)))
 			return ""
 		"chat":
 			var to: = str(message.get("to", "all"))
 			var coalition: = talks.coalition_of(country)
-			if not (to == "all" or (to in countries and to != country) or (not coalition.is_empty() and to == "coalition:" + coalition)): return "Choose who to write to"
+			if not (to == "all" or (game.production.stockpiles.has(to) and to != country) or (not coalition.is_empty() and to == "coalition:" + coalition)): return "Choose who to write to"
 			talks.post(country, to, str(message.get("text", "")))
 			return ""
 		"coalition_create": return talks.create_coalition(str(message.get("name", "")), country)
@@ -366,7 +427,7 @@ func command(country: String, message: Dictionary) -> String:
 			return game.research.buy_now(str(message.get("id","")),int(message.get("target",0)),country,bool(message.get("refinement",false)),int(message.max_gold))
 		"gold_hack":
 			var enemy: = str(message.get("enemy",""))
-			if enemy not in countries or enemy == country or int(message.get("max_gold",-1)) < 0: return "Choose an enemy and review the gold price"
+			if not game.production.stockpiles.has(enemy) or enemy == country or int(message.get("max_gold",-1)) < 0: return "Choose an enemy and review the gold price"
 			var city: Dictionary = game.buildings.city(str(message.get("city","")))
 			return rules.espionage.hack(country,str(message.get("kind","")),city,game.production.controller(city) if not city.is_empty() else "",enemy,int(game.production.gold.get(country,0)),game.production.spend_gold,rules.spy_world(),int(message.max_gold))
 		"research_upgrade":

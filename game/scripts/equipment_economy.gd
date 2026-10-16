@@ -9,7 +9,7 @@ const LEVEL_UPKEEP: = 0.10
 
 static func apply(catalog: Array) -> Array:
 	for spec in catalog:
-		var role: String = balance.families.get(str(spec.get("id", "")), "")
+		var role: String = spec.get("balance_profile",balance.families.get(str(spec.get("id", "")), ""))
 		if role.is_empty() or spec.get("_economy_applied", false): continue
 		var data: Dictionary = balance.profiles[role].economy
 		spec["_economy_applied"] = true

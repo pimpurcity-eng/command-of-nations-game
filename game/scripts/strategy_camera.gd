@@ -6,6 +6,7 @@ var target: = Vector3(3, 0, -5)
 var yaw: = 0.0
 var pitch: = 1.02
 var distance: = 57.0
+var maximum_distance: = 60.0
 var press: = Vector2.ZERO
 var last: = Vector2.ZERO
 var dragging: = false
@@ -71,7 +72,7 @@ func _pan(motion: Vector2) -> void :
 	var forward: = Vector3(sin(yaw), 0, cos(yaw))
 	target += (right * motion.x + forward * motion.y) * distance * 0.0015
 func zoom(amount: float) -> void :
-	distance = clampf(distance * exp(amount), 4.5, 60.0)
+	distance = clampf(distance * exp(amount), 4.5, maximum_distance)
 func zoom_at(amount: float, screen: Vector2) -> void :
 	# The ground point under the fingers stays under the fingers while zooming.
 	_snap(1.0)

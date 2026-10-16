@@ -4,6 +4,13 @@ const COUNTRY_IDS: = ["UKR", "RUS", "BLR", "POL", "ROU", "MDA", "GEO", "TUR", "S
 static var country_cache: Array = []
 static func countries() -> Array:
 	if not country_cache.is_empty(): return country_cache
+	if not MapDefinition.is_regional():
+		for outline in MapDefinition.provinces().outlines:
+			for ring in outline.rings:
+				var poly: = PackedVector2Array()
+				for point in ring: poly.append(GeographicProjection.project(point[0],point[1]))
+				if poly.size()>2: country_cache.append({"country":MapDefinition.country_name(outline.country_id),"country_id":outline.country_id,"code":outline.country_id,"polygon":poly})
+		return country_cache
 	var bounds: = PackedVector2Array([Vector2(-24, -27), Vector2(26, -27), Vector2(26, 21), Vector2(-24, 21)])
 	for code in COUNTRY_IDS:
 		var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/" + code + ".geo.json"))
@@ -19,6 +26,7 @@ static func countries() -> Array:
 					country_cache.append({"country": feature.properties.name, "polygon": clipped, "code": code})
 	return country_cache
 static func territories() -> Array:
+	if not MapDefinition.is_regional(): return _map_territories()
 	var result: Array = []
 	for country in countries():
 		if country.country not in ["Ukraine", "Russia"]:
@@ -64,6 +72,36 @@ static func territories() -> Array:
 			for city in cities:
 				if city.country == props.country and contains(entry, city.point): entry.center = city.point
 			result.append(entry)
+	return result
+static func _map_territories() -> Array:
+	var result: Array = []
+	var cities: = GeographicProjection.load_cities()
+	for feature in MapDefinition.provinces().features:
+		var p: Dictionary = feature.properties
+		var polygons: Array = feature.geometry.coordinates if feature.geometry.type == "MultiPolygon" else [feature.geometry.coordinates]
+		for i in polygons.size():
+			var rings: Array = polygons[i]
+			var poly: = _project_ring(rings[0])
+			if poly.size()<3 or Geometry2D.triangulate_polygon(poly).is_empty(): continue
+			var entry: = sector("europe20_"+str(p.id)+"_"+str(i),str(p.name),str(p.country_id),poly,p.get("role","") != "context")
+			entry.country_id = p.country_id
+			entry.country_name = p.country
+			entry.province = p.name
+			entry.holes = []
+			for hole in rings.slice(1): entry.holes.append(_project_ring(hole))
+			entry.mesh_polygons = []
+			for ring in feature.mesh_polygons[i]: entry.mesh_polygons.append(_project_ring(ring))
+			entry.center = GeographicProjection.project(feature.centers[i][0],feature.centers[i][1])
+			entry.terrain = TerrainProfile.sample(entry.center,false)
+			entry.terrain_profile = {"terrain":entry.terrain,"forest_density":0.4 if entry.terrain == "forest" else 0.1,"dryness":0.3,"wetness":0.0}
+			for city in cities:
+				if city.country_id == p.country_id and contains(entry,city.point): entry.center = city.point
+			result.append(entry)
+	return result
+static func _project_ring(coordinates: Array) -> PackedVector2Array:
+	var result: = PackedVector2Array()
+	for point in coordinates: result.append(GeographicProjection.project(point[0],point[1]))
+	if result.size()>2 and result[0].is_equal_approx(result[-1]): result.remove_at(result.size()-1)
 	return result
 static func contains(region: Dictionary, point: Vector2) -> bool:
 	if not Geometry2D.is_point_in_polygon(point, region.polygon): return false

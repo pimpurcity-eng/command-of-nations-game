@@ -9,6 +9,7 @@ static func profile_id(unit: Dictionary) -> String:
 	if balance.families.has(id): return balance.families[id]
 	# Older saved/catalogue unit IDs retain a sensible role; current families have explicit entries.
 	var spec: Dictionary = EquipmentIdentity.spec(id)
+	if spec.has("balance_profile"): return str(spec.balance_profile)
 	var role: String = str(spec.get("role", unit.get("role", "")))
 	if role in ["submarine", "carrier", "supply", "recovery", "engineer", "bridge", "medic"]: return role
 	match str(unit.get("visual_kind", spec.get("visual_kind", "infantry"))):

@@ -7,10 +7,11 @@ var terrain: StrategicMap
 var mask: Image
 var graph: AStar2D
 func on_sea(point: Vector2) -> bool:
-	if absf(point.x) > LIMIT or absf(point.y) > LIMIT: return false
+	var bounds: = Rect2(-LIMIT,-LIMIT,LIMIT*2,LIMIT*2) if MapDefinition.is_regional() else MapDefinition.bounds().grow(8)
+	if not bounds.has_point(point): return false
 	if terrain != null and terrain._ground_ready: return not terrain.on_land(point)
-	if mask == null: mask = (load("res://assets/coast_mask.png") as Texture2D).get_image()
-	var uv: = (point + Vector2(60, 60)) / 120.0
+	if mask == null: mask = (load("res://assets/coast_mask.png" if MapDefinition.is_regional() else "res://assets/materials/coast_europe20.png") as Texture2D).get_image()
+	var uv: = (point + Vector2(60, 60)) / 120.0 if MapDefinition.is_regional() else (point-MapDefinition.origin())/MapDefinition.extent()
 	return mask.get_pixel(clampi(int(uv.x * (mask.get_width() - 1)), 0, mask.get_width() - 1), clampi(int(uv.y * (mask.get_height() - 1)), 0, mask.get_height() - 1)).r < 0.5
 func clear_segment(a: Vector2, b: Vector2) -> bool:
 	var steps: = maxi(1, int(ceil(a.distance_to(b) / 0.05)))
@@ -59,10 +60,10 @@ func coastal_destination(point: Vector2) -> Vector2:
 func _build_graph() -> void :
 	graph = AStar2D.new()
 	var cells: Dictionary = {}
-	var extent: = int(floor(LIMIT / CELL))
+	var bounds: = Rect2(-LIMIT,-LIMIT,LIMIT*2,LIMIT*2) if MapDefinition.is_regional() else MapDefinition.bounds().grow(8)
 	var index: = 2
-	for x in range( - extent, extent + 1):
-		for y in range( - extent, extent + 1):
+	for x in range(floori(bounds.position.x/CELL),ceili(bounds.end.x/CELL)+1):
+		for y in range(floori(bounds.position.y/CELL),ceili(bounds.end.y/CELL)+1):
 			var cell: = Vector2i(x, y)
 			var point: = Vector2(cell) * CELL
 			if not on_sea(point): continue

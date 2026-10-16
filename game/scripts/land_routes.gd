@@ -1,8 +1,23 @@
 class_name LandRoutes
 extends RefCounted
 var terrain: StrategicMap
+var _region_cells: Dictionary = {}
+var _region_count: = -1
+func _regions_at(point: Vector2) -> Array:
+	if _region_count != terrain.territories.size():
+		_region_count=terrain.territories.size();_region_cells.clear()
+		for territory in terrain.territories:
+			if not territory.playable: continue
+			var box: = Rect2(territory.polygon[0],Vector2.ZERO)
+			for vertex in territory.polygon: box=box.expand(vertex)
+			for x in range(floori(box.position.x/2),floori(box.end.x/2)+1):
+				for y in range(floori(box.position.y/2),floori(box.end.y/2)+1):
+					var key: = Vector2i(x,y)
+					if not _region_cells.has(key): _region_cells[key]=[]
+					_region_cells[key].append(territory)
+	return _region_cells.get(Vector2i(floori(point.x/2),floori(point.y/2)),[])
 func on_land(point: Vector2) -> bool:
-	for territory in terrain.territories:
+	for territory in _regions_at(point):
 		if territory.playable and RegionData.contains(territory, point): return true
 	return false
 func clear_segment(a: Vector2, b: Vector2) -> bool:
@@ -18,6 +33,25 @@ var nodes: Array[Vector2] = []
 var links: Array = []  # {"a": id, "b": id, "points": PackedVector2Array from a to b}
 var _node_of: Dictionary = {}
 var _link_of: Dictionary = {}  # "a:b" -> link (either direction)
+var _road_points: Array[Vector2] = []
+var _road_regions: Dictionary = {}
+var _country_roads: Dictionary = {}
+var _controller_signature: = ""
+func _roads_for(country: String) -> Array:
+	if country.is_empty(): return _road_points
+	var controllers: Array = terrain.territories.map(func(t):return t.controller)
+	var signature: = str(hash(controllers))
+	if signature!=_controller_signature:
+		_controller_signature=signature;_country_roads.clear()
+		for point in _road_points:
+			if not _road_regions.has(point):
+				_road_regions[point]={}
+				for territory in _regions_at(point):
+					if RegionData.contains(territory,point): _road_regions[point]=territory;break
+			var controller: String = _road_regions[point].get("controller","")
+			if not _country_roads.has(controller): _country_roads[controller]=[]
+			_country_roads[controller].append(point)
+	return _country_roads.get(country,[])
 func _node(point: Vector2) -> int:
 	var key: = Vector2i(roundi(point.x * 1000.0), roundi(point.y * 1000.0))
 	if _node_of.has(key): return _node_of[key]
@@ -34,6 +68,7 @@ func _build_graph() -> void :
 		if a == b or _link_of.has("%d:%d" % [a, b]): continue
 		var link: = {"a": a, "b": b, "points": StrategicMap.road_curve(road[0], road[1], road[2])}
 		links.append(link)
+		for point in link.points: _road_points.append(point)
 		_link_of["%d:%d" % [a, b]] = link
 		_link_of["%d:%d" % [b, a]] = link
 		graph.connect_points(a, b)
@@ -49,18 +84,26 @@ func _leg(a: int, b: int) -> Array:
 ## (other armies), so armies placed together line up along the road instead of stacking.
 func on_road(point: Vector2, taken: Array = [], spacing: float = 0.0, country: String = "") -> Vector2:
 	if graph == null: _build_graph()
-	var candidates: = []
-	for link in links:
-		for road_point in link.points: candidates.append(road_point)
-	candidates.sort_custom(func(a: Vector2, b: Vector2): return a.distance_squared_to(point) < b.distance_squared_to(point))
-	for road_point in candidates:
+	# Select the same nearest eligible road point without sorting the entire continent for
+	# every army. Check spacing/ownership only when the candidate can improve the answer.
+	var best: = point
+	var distance: = INF
+	var nearest: = point
+	var nearest_distance: = INF
+	for road_point in _roads_for(country):
+		var d: float = road_point.distance_squared_to(point)
+		if d < nearest_distance: nearest=road_point;nearest_distance=d
+		if d >= distance: continue
 		if taken.any(func(other: Vector2): return other.distance_to(road_point) < spacing): continue
-		# Stay on the army's own side of the border.
-		if not country.is_empty() and controller_at(road_point) != country: continue
-		return road_point
-	return candidates[0] if not candidates.is_empty() else point
+		best=road_point;distance=d
+	if distance < INF: return best
+	# Preserve the legacy nearest-road fallback when every owned point is occupied.
+	for road_point in _road_points:
+		var d: float = road_point.distance_squared_to(point)
+		if d < nearest_distance: nearest=road_point;nearest_distance=d
+	return nearest
 func controller_at(point: Vector2) -> String:
-	for territory in terrain.territories:
+	for territory in _regions_at(point):
 		if territory.playable and RegionData.contains(territory, point): return territory.controller
 	return ""
 ## A free road point roughly `distance` from `anchor` (used when an army splits).
@@ -79,7 +122,7 @@ func beside_on_road(anchor: Vector2, distance: float, taken: Array = [], country
 	return best
 ## The province centre that an order to `point` goes to.
 func hub_for(point: Vector2) -> Vector2:
-	for territory in terrain.territories:
+	for territory in _regions_at(point):
 		if territory.playable and RegionData.contains(territory, point): return terrain.province_hubs.get(territory.title, territory.center)
 	return point
 func nearest_land(point: Vector2) -> Vector2:

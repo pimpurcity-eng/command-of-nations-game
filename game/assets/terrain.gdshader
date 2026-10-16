@@ -30,8 +30,8 @@ varying vec3 world;
 varying float altitude;
 varying float slope;
 
-const vec2 MAP_ORIGIN = vec2(-24.0, -27.0);
-const vec2 MAP_EXTENT = vec2(50.0, 48.0);
+uniform vec2 MAP_ORIGIN = vec2(-24.0, -27.0);
+uniform vec2 MAP_EXTENT = vec2(50.0, 48.0);
 
 float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 float noise(vec2 p) {
