@@ -6,6 +6,8 @@ signal unit_ready(spec: Dictionary)
 const RESOURCES: = ["funds", "manpower", "food", "materials", "fuel", "electronics"]
 var catalog: Array = EquipmentIdentity.catalog  # one shared catalogue
 var stockpiles: Dictionary = {}
+## Optional local scenario balance; normal campaign/online economies use 1.0.
+var scenario_income_factors: Dictionary = {}
 ## Gross income earned so far per country and resource (economic victory, newspaper).
 var earned: Dictionary = {}
 ## Occupied land produces less until annexed (MatchSystem.annexation, set by main).
@@ -61,7 +63,7 @@ func city_income(city: Dictionary) -> Dictionary:
 	var multiplier: = buildings.rate(city.id,"industry") if buildings != null else 1.0
 	if controller(city) != city.country.to_lower(): multiplier *= annexation.output(city.get("sector",""),city.country.to_lower(),controller(city)) if annexation != null else 0.25
 	if strategic != null: multiplier *= strategic.output(city.get("sector",""))
-	multiplier *= morale_factor(city) * EconomyResearch.factor(controller(city),"industry")
+	multiplier *= morale_factor(city) * EconomyResearch.factor(controller(city),"industry") * float(scenario_income_factors.get(controller(city), 1.0))
 	var specialties: = ResourceSites.city_resources(city.name)
 	for resource in RESOURCES:
 		var facility: = buildings.resource_rate(city.id,resource) if buildings != null and resource != "manpower" else 1.0
@@ -100,6 +102,7 @@ func province_income(place: Dictionary) -> Dictionary:
 	var owner_factor: float = (1.0 if region.controller == region.owner else 0.25) if annexation == null else annexation.output(region.id, region.owner, region.controller)
 	result.funds = PROVINCE_FUNDS * owner_factor * float(region.get("morale", 100.0 if region.controller == region.owner else 25.0)) / 100.0
 	if strategic != null: result.funds *= strategic.output(region.id)
+	result.funds *= float(scenario_income_factors.get(region.controller, 1.0))
 	return result
 func upkeep() -> Dictionary:
 	var result: Dictionary = {}
@@ -140,7 +143,7 @@ func equipment(id: String) -> Dictionary:
 	if id.begins_with("economy_"): return EconomyResearch.spec(id)
 	for spec in catalog:
 		if spec.id == id: return spec
-	return {}
+	return EquipmentIdentity.supplied_catalog.get(id, {})
 func production_level(id: String) -> int:
 	return clampi(research.level(id), 1, 5) if research != null else 1
 func cost(id: String, target: int = 0) -> Dictionary:

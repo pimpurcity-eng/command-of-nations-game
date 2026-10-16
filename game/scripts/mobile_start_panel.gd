@@ -6,6 +6,7 @@ signal fresh_requested
 signal test_requested(scenario: String)
 signal online_requested
 signal account_requested
+signal training_requested(resume: bool)
 const GOLD := Color("e2b866")
 const INK := Color("f4f1e8")
 const MUTED := Color("a9b8c2")
@@ -43,6 +44,7 @@ var current_page := "home"
 var commander_label: Label
 var profile_button: Button
 var catalogue: Dictionary = {}
+var training_buttons: Array[Button] = []
 
 static func _font(weight: int, spacing: int = 0) -> FontVariation:
 	var f := FontVariation.new()
@@ -259,6 +261,14 @@ func _build_home() -> void:
 	for spec in [["russia", "RUSSIA", [Color.WHITE, Color("1c3f94"), Color("d52b1e")], "Russian"], ["ukraine", "UKRAINE", [Color("0057b7"), Color("ffd700")], "European"]]:
 		nations.add_child(_nation_card(spec[0], spec[1], spec[2], spec[3]))
 	_show_nation()
+	play.add_child(_label("FIRST MATCH · LEVEL-1 TRAINING", 20, GOLD))
+	play.add_child(_label("Opening film → learn by playing → supply arrival → take command", 18, MUTED))
+	for spec in [["START TRAINING  →", "training"], ["RESUME TRAINING  →", "training_resume"]]:
+		if spec[1] == "training_resume" and not FileAccess.file_exists(TrainingScenario.SAVE_PATH): continue
+		var button := _button(spec[0], spec[1] == "training")
+		button.pressed.connect(func(): request_start(spec[1]))
+		play.add_child(button)
+		training_buttons.append(button)
 	fresh_button = _button("NEW CAMPAIGN  →" if has_save else "START CAMPAIGN  →", not has_save)
 	fresh_button.pressed.connect(func(): request_start("fresh"))
 	play.add_child(fresh_button)
@@ -488,6 +498,7 @@ func _layout() -> void:
 func begin_loading() -> void:
 	loading = true
 	for button in [online_button, continue_button, fresh_button, test_button, profile_button]: button.disabled = true
+	for button in training_buttons: button.disabled = true
 	language_picker.disabled = true
 	country_picker.disabled = true
 	for card in country_cards.values(): card.disabled = true
@@ -513,6 +524,7 @@ func request_start(mode: String) -> void:
 			pending_start = mode
 			loading = true
 			for button in [online_button, continue_button, fresh_button, test_button]: button.disabled = true
+			for button in training_buttons: button.disabled = true
 			for card in country_cards.values(): card.disabled = true
 			country_picker.disabled = true
 			scroll.ensure_control_visible(loading_label)
@@ -528,6 +540,8 @@ func request_start(mode: String) -> void:
 		"fresh": fresh_requested.emit()
 		"test": test_requested.emit("all")
 		"online": online_requested.emit()
+		"training": training_requested.emit(false)
+		"training_resume": training_requested.emit(true)
 ## Owner 2026-10-15 ("a button to go back to the home screen"): the match is saved and paused;
 ## Resume Campaign carries straight on.
 func show_paused_match() -> void:
@@ -541,6 +555,7 @@ func show_paused_match() -> void:
 func cancel_loading(message: String) -> void:
 	loading = false
 	for button in [online_button, fresh_button, test_button, profile_button]: button.disabled = false
+	for button in training_buttons: button.disabled = false
 	continue_button.disabled = not has_save
 	language_picker.disabled = false
 	country_picker.disabled = false

@@ -460,6 +460,7 @@ func _build_bottom(root: Control) -> void:
 	column.add_child(nav_row)
 	for entry in [["diplomacy", "Diplomacy"], ["produce", "Produce"], ["provinces", "Provinces"], ["market", "Trade"], ["research", "Research"], ["more", "More"]]:
 		var tab: = _tab(entry[0], entry[1])
+		tab.set_meta("tutorial_action", entry[0])
 		nav_row.add_child(tab)
 		match entry[0]:
 			"diplomacy": tab.pressed.connect(func(): campaign_requested.emit("diplomacy"))

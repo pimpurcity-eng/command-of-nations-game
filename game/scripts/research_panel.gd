@@ -450,9 +450,7 @@ func open() -> void:
 ## Opens the research card of one unit at one level (from a unit picture on the map cards).
 func open_unit(id: String, level: int) -> void:
 	open()
-	var spec: Dictionary = {}
-	for entry in _system().economy.catalog:
-		if entry.id == id: spec = entry
+	var spec: Dictionary = _system().economy.equipment(id)
 	if spec.is_empty(): return
 	show_category(ProductionGroups.index(spec))
 	selected_id = id
