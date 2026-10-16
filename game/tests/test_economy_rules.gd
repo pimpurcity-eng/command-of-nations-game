@@ -52,11 +52,13 @@ func run():
  check(game.production.validate(old_save),"saves from before food still load")
  game.production.restore(old_save)
  check(game.production.stockpiles.russia.food==ProductionSystem.START_STOCK.food,"older saves start with the normal food stock")
- # Manpower comes from recruitment centres only; the capital starts with one.
+ # Every city recruits some manpower; recruitment centres add more. Nothing is built at the start
+ # (owner), so the test builds the capital's first recruitment centre.
  var kyiv: Dictionary = game.buildings.capital("ukraine")
  var lviv: Dictionary = game.buildings.city("lviv")
+ game.buildings.levels[kyiv.id].recruitment_center = 1
  check(game.buildings.level(kyiv.id,"recruitment_center") == 1 and game.production.city_income(kyiv).manpower > 0,"the capital's recruitment centre recruits manpower")
- check(game.buildings.level(lviv.id,"recruitment_center") == 0 and game.production.city_income(lviv).manpower == 0.0,"a city without a recruitment centre recruits none")
+ check(game.buildings.level(lviv.id,"recruitment_center") == 0 and game.production.city_income(lviv).manpower > 0.0 and game.production.city_income(lviv).manpower < game.production.city_income(kyiv).manpower,"a city without a recruitment centre still recruits a little")
  game.buildings.levels[lviv.id].recruitment_center = 2
  check(game.production.city_income(lviv).manpower > game.production.city_income(kyiv).manpower,"more recruitment levels recruit more")
  game.buildings.levels[lviv.id].recruitment_center = 0
@@ -69,12 +71,16 @@ func run():
  check(game.production.buy_with_gold("ukraine","fuel",1000).is_empty() and game.production.stockpiles.ukraine.fuel == fuel_before + 1000.0,"gold buys resources")
  check(game.production.gold.ukraine == GoldWallet.START - GoldWallet.resource_price("fuel",1000),"and costs the shown gold")
  game.production.jobs.clear()
+ # Nothing is researched at the start (owner), so research the infantry first.
+ game.research.levels["infantry_ukraine"] = 1
+ game.buildings.levels[kyiv.id].barracks = 1
  check(game.production.schedule("infantry_ukraine",kyiv.name).is_empty(),"a unit is queued")
  var units_before: int = game.units.units.size()
  var price: int = game.production.unit_speedup_price(game.production.active_job(kyiv.name))
  check(price >= GoldWallet.MINIMUM,"the unit has a gold price to finish now (%d)" % price)
  var gold_before: int = game.production.gold.ukraine
- check(game.production.finish_unit_now(kyiv.name,"ukraine").is_empty() and game.units.units.size() == units_before + 1,"gold finishes the unit at once")
+ var finish_error: String = game.production.finish_unit_now(kyiv.name,"ukraine")
+ check(finish_error.is_empty() and game.units.units.size() == units_before + 1,"gold finishes the unit at once")
  check(game.production.gold.ukraine == gold_before - price,"finishing costs the shown gold")
  check(game.buildings.schedule(kyiv.id,"industry").is_empty(),"construction is queued")
  var level_before: int = game.buildings.level(kyiv.id,"industry")
