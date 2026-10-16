@@ -12,7 +12,8 @@ signal production_requested(city_name: String)
 signal research_requested  # kept for compatibility; research is opened from the HUD tab
 const SECONDS_PER_HOUR: = 3600.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
 const HIDDEN_BUILDINGS: = ["research_center", "finance", "material_works", "electronics_plant", "fuel_depot"]  # research is national, not a city building
-const SECTIONS := [["Economy", ["industry", "recruitment_center", "train_station", "capitol"]], ["Unit production", ["barracks", "tank_plant", "factory", "missile_factory", "airbase", "drone_factory", "naval_base", "support_depot"]], ["Defence, medical & roads", ["bunker", "hospital", "infrastructure"]]]
+## Owner 2026-10-15: "put the army buildings first, and then economy, then other".
+const SECTIONS := [["Army", ["barracks", "tank_plant", "factory", "missile_factory", "airbase", "drone_factory", "naval_base", "support_depot"]], ["Economy", ["industry", "recruitment_center", "train_station", "capitol"]], ["Other", ["bunker", "hospital", "infrastructure"]]]
 var clock: SimulationClock
 var research: ResearchSystem
 var tab_row: HBoxContainer
