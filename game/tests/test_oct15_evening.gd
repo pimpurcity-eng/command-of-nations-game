@@ -143,6 +143,7 @@ func run():
 	# 6. The battle shows: shots fly between the armies.
 	# Owner 2026-10-16: the animation plays for a few seconds after each exchange of fire.
 	game.combat_effects.on_shot(fighting_leader, enemy, "tracer")
+	print("DEBUG ", fighting_leader.get("fire_burst", -1), " vis=", fighting_leader.node.visible, " war=", units.at_war, " proj=", game.combat_effects.projectiles.size())
 	game.combat_effects._skirmish(2.0)
 	game.combat_effects._skirmish(2.0)
 	check(game.combat_effects.projectiles.any(func(p): return p.effect == "skirmish"), "armies in battle keep firing at each other")
