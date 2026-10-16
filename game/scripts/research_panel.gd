@@ -257,7 +257,7 @@ func _families(index: int) -> Array:
 	# Owner 2026-10-13: economy upgrades are city buildings, not research; retired families are hidden.
 	var result: Array = _system().economy.catalog.filter(func(spec: Dictionary): return spec.country == GameSession.player_country and ProductionGroups.index(spec) == index and ProductionGroups.offered(spec))
 	result.sort_custom(ProductionGroups.before)
-	return result
+	return ProductionGroups.by_unlock_day(result, _system())
 
 func show_category(index: int) -> void:
 	selected_upgrade = false

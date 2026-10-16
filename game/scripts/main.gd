@@ -568,6 +568,10 @@ func _ready() -> void :
 			mobile_start.hide())
 	boot_finished = true
 	boot_ready.emit()
+	if units != null and not GameSession.weapons_test: units.prewarm_models()
+	# Closed by the phone in the middle of a match: carry straight on with it.
+	if mobile_start != null and mobile_start.visible and _left_mid_match() and FileAccess.file_exists(SAVE_PATH) and not OS.has_feature("headless"):
+		mobile_start.continue_requested.emit()
 	# Coming back from "Sign in with Google" on the website: finish it and show the account.
 	if OS.has_feature("web") and str(JavaScriptBridge.eval("/[#&](access_token|error)=/.test(window.location.hash)")) == "true":
 		open_home_account()
@@ -1073,6 +1077,7 @@ func _report_sound(message: String) -> void:
 	if message.begins_with("WAR DECLARED"): audio.play("war_declared")
 	elif " captured by " in message: audio.play("city_captured")
 func show_result(country: String) -> void :
+	_remember_match(false)
 	_set_order_mode(false)
 	city_panel.hide()
 	production_panel.hide()
@@ -1353,8 +1358,25 @@ const ONLINE_SERVER: = "wss://play.warfrontmandate.com"
 var online: MatchClient
 var paused_to_home: = false
 ## Owner 2026-10-15: in-match button back to the home screen (the match is saved and paused).
+## Owner 2026-10-16: "every time I switch the screen over to do something else, it makes me restart
+## the game". Phones close games left in the background to free memory. The match is saved the
+## moment the game goes to the background, and when it is opened again it goes straight back into
+## that match instead of the start screen.
+const RESUME_STATE: = "user://resume.cfg"
+func _remember_match(running: bool) -> void:
+	var state: = ConfigFile.new()
+	state.set_value("match", "running", running)
+	state.save(RESUME_STATE)
+static func _left_mid_match() -> bool:
+	var state: = ConfigFile.new()
+	return state.load(RESUME_STATE) == OK and bool(state.get_value("match", "running", false))
+func _notification(what: int) -> void:
+	if what in [NOTIFICATION_APPLICATION_PAUSED, NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_WM_CLOSE_REQUEST, NOTIFICATION_WM_GO_BACK_REQUEST]:
+		if boot_finished and session != null and session.match_rules != null and mobile_start != null and not mobile_start.visible and MatchClient.active == null and not GameSession.weapons_test:
+			autosave()
 func return_to_home() -> void:
 	if mobile_start == null: return
+	_remember_match(false)
 	if MatchClient.active == null and not GameSession.weapons_test: save_game()
 	clock.paused = true
 	refresh_hud()
@@ -1416,6 +1438,7 @@ func join_online(match_code: String = "") -> void:
 
 func start_campaign_play() -> void :
 	if not match_rules.winner.is_empty(): return
+	_remember_match(MatchClient.active == null and not GameSession.weapons_test)
 	if match_started_msec == 0: match_started_msec = Time.get_ticks_msec()
 	if tutorial == null and not GameSession.weapons_test and not Tutorial.done() and not OS.has_feature("headless_tests"):
 		tutorial = Tutorial.new()

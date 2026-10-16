@@ -2,6 +2,12 @@ class_name SimulationClock
 extends Node
 const REAL_SECONDS_PER_SIM_SECOND: = 120.0
 const SPEEDS: = [1.0, 2.0, 4.0, 10.0]
+## Owner 2026-10-16: "make 100x speed for yourself to test games" - test builds only (the editor and
+## headless test runs); released website and Play builds never offer it.
+## "Or however fast you can go": 1000x as well (a game day in about 86 seconds).
+const TEST_SPEEDS: = [100.0, 1000.0]
+static func speeds() -> Array:
+	return SPEEDS + TEST_SPEEDS if OS.is_debug_build() else SPEEDS
 ## Armies and aircraft travel this many times faster than the real-time economy clock, so
 ## movement is visible on a phone (owner review: units with orders looked frozen; a 2-province
 ## march took over 30 real minutes). Production, research and combat rounds are unchanged.
@@ -39,7 +45,7 @@ func advance(real_seconds: float) -> void :
 		state_changed.emit()
 func set_speed(value: float) -> void :
 	if MatchClient.active != null: return
-	if value not in SPEEDS: return
+	if value not in speeds(): return
 	speed = value
 	game_speed = value
 	state_changed.emit()

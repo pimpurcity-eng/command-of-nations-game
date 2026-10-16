@@ -4,6 +4,32 @@ extends "res://scripts/main.gd"
 
 var _europe_label_revision: = -1
 var _city_visibility: UnitSystem
+var _online_session: = false
+
+func begin_online_session() -> void:
+	_online_session = true
+
+func autosave(path: String = SAVE_PATH) -> String:
+	if _online_session: return "Online matches are saved on the server"
+	return super.autosave(path)
+
+func save_game() -> void:
+	if _online_session:
+		hud.show_status("Online matches are saved on the server")
+		return
+	super.save_game()
+
+func load_game() -> void:
+	if not _online_session: super.load_game()
+
+func return_to_home() -> void:
+	if _online_session:
+		if online != null: online.leave()
+		elif MatchClient.active != null: MatchClient.active.leave()
+		paused_to_home = false
+		MapDefinition.launch(get_tree(), MapDefinition.EUROPE)
+		return
+	super.return_to_home()
 
 func sync_remote_view() -> void:
 	if _city_visibility != null: _city_visibility.sync(units)
@@ -111,6 +137,31 @@ func apply_player_country(focus: bool = true) -> void:
 func _attack_army(target: Dictionary) -> void:
 	if target.country!=GameSession.player_country: GameSession.enemy_country=target.country
 	super._attack_army(target)
+
+func _with_war(enemy: String, then: Callable) -> void:
+	if not match_rules.winner.is_empty(): return
+	if GameSession.weapons_test or match_rules.diplomacy.at_war(GameSession.player_country, enemy):
+		then.call()
+		return
+	if war_dialog != null and is_instance_valid(war_dialog): war_dialog.free()
+	var dialog: = ConfirmationDialog.new()
+	war_dialog = dialog
+	dialog.title = "Declare war?"
+	dialog.dialog_text = "You are at peace with %s.\nDeclare war and attack?" % MapDefinition.country_name(enemy)
+	dialog.ok_button_text = "Declare war"
+	dialog.cancel_button_text = "Cancel"
+	dialog.add_theme_font_size_override("font_size", 26)
+	add_child(dialog)
+	dialog.confirmed.connect(func():
+		GameSession.enemy_country = enemy
+		match_rules.declare_war()
+		then.call()
+		dialog.queue_free())
+	dialog.canceled.connect(func():
+		attack_order = false
+		_set_order_mode(false)
+		dialog.queue_free())
+	dialog.popup_centered()
 
 func join_online(operation: String = "") -> void:
 	if account_panel == null:

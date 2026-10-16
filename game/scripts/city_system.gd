@@ -7,7 +7,7 @@ const GARRISON_PLAZA_RADIUS := 0.30
 ## District units around the army spot kept free of buildings while an army stands there.
 ## Owner 2026-10-15: "The garden in the middle of the city went smaller, but the square didn't" -
 ## the bare ground around the garden now follows the garden instead of a tank-sized circle.
-const GARRISON_CLEAR_RADIUS: = 0.34
+const GARRISON_CLEAR_RADIUS: = 0.46  # owner 2026-10-16: a little bigger again for the bigger units
 ## How far a capital's houses reach (other towns ~1.55), before the district scale.
 const CAPITAL_REACH: = 1.97
 const CAPITAL_EDGE: = 1.55
@@ -16,7 +16,7 @@ static var GARRISON_SQUARE := Rect2(-0.30, -0.28, 0.60, 0.56)
 ## "front" (facing the camera), "side" (east edge) or "outside" (just past the last houses).
 ## The spot is filled with buildings while no army is there.
 static var garrison_layout: = "centre"  # owner 2026-10-15: armies stand in the middle of a round town (Call of War)
-const GARRISON_LAYOUTS: = {"centre": Rect2(-0.25, -0.24, 0.50, 0.48),  # owner 2026-10-15: square way too big
+const GARRISON_LAYOUTS: = {"centre": Rect2(-0.31, -0.30, 0.62, 0.60),  # owner 2026-10-15: square way too big
 	 "front": Rect2(-0.30, 0.62, 0.60, 0.50), "side": Rect2(0.50, -0.26, 0.50, 0.52), "outside": Rect2(-0.30, 1.16, 0.60, 0.46)}
 ## World offset of each city's army spot from the city point, keyed by city_key(point).
 static var plaza_offsets: Dictionary = {}

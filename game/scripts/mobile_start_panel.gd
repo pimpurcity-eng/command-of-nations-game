@@ -260,11 +260,16 @@ func _build_home() -> void:
 	play.add_child(_label("CHOOSE YOUR NATION", 17, GOLD))
 	country_picker = OptionButton.new()
 	for country in MapDefinition.players():
-		country_picker.add_item(country.name+" · "+Doctrine.info(country.id).name)
+		var nation_label: String = country.name+" · "+Doctrine.info(country.id).name+" weapons"
+		var flag_path: String = "res://assets/interface/flags/"+country.id+".svg"
+		if ResourceLoader.exists(flag_path): country_picker.add_icon_item(load(flag_path),nation_label)
+		else: country_picker.add_item(nation_label)
 		country_picker.set_item_metadata(country_picker.item_count-1,country.id)
 		if country.id == GameSession.player_country: country_picker.select(country_picker.item_count-1)
 	country_picker.visible = not MapDefinition.is_regional()
 	country_picker.custom_minimum_size.y = 60
+	country_picker.add_theme_font_size_override("font_size",20)
+	country_picker.add_theme_constant_override("icon_max_width",30)
 	country_picker.item_selected.connect(func(_index):_show_nation())
 	play.add_child(country_picker)
 	var nations := HBoxContainer.new()

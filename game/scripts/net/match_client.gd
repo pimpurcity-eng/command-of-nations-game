@@ -55,6 +55,7 @@ func join_country(chosen: String) -> void:
 ## Lets this client drive `main` (a running main.tscn): orders go to the server from now on.
 func attach(main: Node) -> void:
 	game = main
+	if game.has_method("begin_online_session"): game.begin_online_session()
 	active = self
 	game.match_rules.ai_enabled = false
 	game.match_rules.online = true

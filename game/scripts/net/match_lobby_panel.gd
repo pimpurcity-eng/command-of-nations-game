@@ -14,6 +14,10 @@ var own_country: = ""
 var joining: = false
 var refresh_elapsed: = 0.0
 var surface: PanelContainer
+var selected_flag: TextureRect
+var selected_name: Label
+var weapon_badge: Label
+var examples: HBoxContainer
 
 func open(theme: Theme, connection: MatchClient) -> void:
 	client = connection
@@ -47,9 +51,28 @@ func open(theme: Theme, connection: MatchClient) -> void:
 	_label(body, "CHOOSE YOUR COUNTRY", 20, MobileStartPanel.GOLD)
 	countries = OptionButton.new()
 	countries.custom_minimum_size.y = 64
+	countries.add_theme_font_size_override("font_size",18)
+	countries.add_theme_constant_override("icon_max_width",28)
+	countries.get_popup().add_theme_font_size_override("font_size",18)
 	countries.disabled = true
 	countries.item_selected.connect(func(_index): _show_nation())
 	body.add_child(countries)
+	var heading: = HBoxContainer.new()
+	heading.add_theme_constant_override("separation",16)
+	body.add_child(heading)
+	selected_flag = TextureRect.new()
+	selected_flag.custom_minimum_size = Vector2(72,48)
+	selected_flag.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	selected_flag.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	heading.add_child(selected_flag)
+	var identity: = VBoxContainer.new()
+	identity.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	heading.add_child(identity)
+	selected_name = _label(identity,"YOUR COUNTRY",28)
+	weapon_badge = _label(identity,"WEAPONS SYSTEM",19,MobileStartPanel.GOLD)
+	examples = HBoxContainer.new()
+	examples.add_theme_constant_override("separation",12)
+	body.add_child(examples)
 	nation = _label(body, "Your country is reserved for your account for this match.", 21)
 	_label(body, "The match continues while you are away. AI covers unclaimed countries and takes over after 48 hours of inactivity.", 19, MobileStartPanel.MUTED)
 	status = _label(body, "Connecting to the match server…", 20, MobileStartPanel.MUTED)
@@ -96,6 +119,16 @@ func _button(parent: Node, text: String) -> Button:
 	button.custom_minimum_size.y = 64
 	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	button.add_theme_font_size_override("font_size", 22)
+	var style: = StyleBoxFlat.new()
+	style.bg_color = MobileStartPanel.GOLD if text.begins_with("JOIN") else Color("213743")
+	style.border_color = Color("4c606a")
+	style.set_border_width_all(1)
+	style.set_corner_radius_all(6)
+	style.set_content_margin_all(12)
+	button.add_theme_stylebox_override("normal",style)
+	button.add_theme_stylebox_override("hover",style)
+	button.add_theme_stylebox_override("pressed",style)
+	button.add_theme_color_override("font_color",Color("14232d") if text.begins_with("JOIN") else MobileStartPanel.INK)
 	parent.add_child(button)
 	return button
 
@@ -116,7 +149,7 @@ func show_match(data: Dictionary) -> void:
 		var seat: Dictionary = seats.get(country.id, {})
 		var taken: bool = seat.get("claimed", false) and country.id != own_country
 		var suffix: = " · YOUR COUNTRY" if country.id == own_country else (" · TAKEN" if taken else " · AVAILABLE")
-		countries.add_item(country.name + suffix)
+		countries.add_icon_item(load("res://assets/interface/flags/"+country.id+".svg"),country.name+" · "+Doctrine.info(country.id).name+" weapons"+suffix)
 		var index: = countries.item_count - 1
 		countries.set_item_metadata(index, country.id)
 		countries.set_item_disabled(index, taken or (not own_country.is_empty() and country.id != own_country))
@@ -137,7 +170,29 @@ func _show_nation() -> void:
 		nation.text = "All countries have been claimed."
 		return
 	var country: = str(countries.get_item_metadata(countries.selected))
-	nation.text = MapDefinition.country_name(country) + " · " + Doctrine.info(country).name + " doctrine\n" + Doctrine.summary(country) + "\n7 starting cities · 30 starting units"
+	selected_flag.texture = load("res://assets/interface/flags/"+country+".svg")
+	selected_name.text = MapDefinition.country_name(country).to_upper()
+	weapon_badge.text = Doctrine.info(country).name.to_upper()+" WEAPONS"
+	weapon_badge.add_theme_color_override("font_color",{"american":Color("8fbcf1"),"russian":Color("f0a08b"),"european":MobileStartPanel.GOLD,"chinese":Color("f2b977")}[Doctrine.of(country)])
+	nation.text = "+ "+Doctrine.info(country).plus+"\n− "+Doctrine.info(country).minus+"\n7 starting cities · 30 starting units"
+	for child in examples.get_children():
+		examples.remove_child(child)
+		child.queue_free()
+	for profile in ["mbt","fighter"]:
+		var family: = EquipmentRosters.family(country,profile)
+		if family.is_empty(): continue
+		var path: = str(EquipmentIdentity.picture_tier(family,1).get("preview",""))
+		if path.is_empty() or not ResourceLoader.exists(path): continue
+		var card: = VBoxContainer.new()
+		card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		examples.add_child(card)
+		var photo: = TextureRect.new()
+		photo.custom_minimum_size.y = 138
+		photo.texture = load(path)
+		photo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		photo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		card.add_child(photo)
+		_label(card,EquipmentIdentity.research_title(family,1),18,MobileStartPanel.MUTED)
 
 func _process(delta: float) -> void:
 	refresh_elapsed += delta

@@ -24,11 +24,20 @@ var armies: UnitSystem
 ## Owner 2026-10-13: resources come from the seven cities per country (one specialty each);
 ## money from city industry, provinces and trade; manpower from recruitment centres. The whole
 ## economy was scaled up (income x10, starting stock x30, unit costs x12) to Call of War sizes.
-const CITY_BASE: = {"funds": 13.5, "materials": 2.4, "electronics": 1.6, "fuel": 1.4, "manpower": 1.5, "food": 2.0}
+## Owner 2026-10-16 ("it needs balanced ... how many can you buy?"; "the city only produces what it
+## has"): each city produces money and only its own speciality. Money was about 85,000 a day, far ahead
+## of what units cost against the other resources; it is now about 19,000 a day.
+## Owner 2026-10-16 (later): "Every city produces money and manpower and the resource it has ... it's
+## all shared": every city also recruits base manpower; recruitment centres add more on top. All of it
+## goes into the one national stockpile.
+## Owner 2026-10-16 ("Has to be more money. Check Call of War"): as in Call of War, every province makes
+## money and a city makes several times a rural province. A city now makes about 4,300 a day and a
+## province about 700, so a country starts near 45,000 a day.
+const CITY_BASE: = {"funds": 6.0, "materials": 2.4, "electronics": 1.6, "fuel": 1.4, "manpower": 1.5, "food": 2.0}
 ## Manpower per recruitment-centre level, as a multiple of CITY_BASE.manpower.
 const RECRUITMENT_PER_LEVEL: = 4.0
 ## Money per elapsed unit from each held province without a city.
-const PROVINCE_FUNDS: = 0.8
+const PROVINCE_FUNDS: = 1.0
 ## Owner 2026-10-14: "give yourself more money" and "more starting resources" (every country).
 const START_STOCK: = {"funds": 60000.0, "manpower": 12000.0, "food": 15000.0, "materials": 20000.0, "fuel": 12000.0, "electronics": 8000.0}
 const DAY_SECONDS: = 86400.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
@@ -57,9 +66,9 @@ func city_income(city: Dictionary) -> Dictionary:
 	for resource in RESOURCES:
 		var facility: = buildings.resource_rate(city.id,resource) if buildings != null and resource != "manpower" else 1.0
 		if resource == "manpower":
-			# Manpower is recruited by recruitment centres only (owner 2026-10-13).
+			# Every city recruits some manpower; each recruitment-centre level adds more.
 			var centre: = buildings.level(city.id,"recruitment_center") if buildings != null else 1
-			result[resource] = CITY_BASE.manpower * RECRUITMENT_PER_LEVEL * centre * multiplier * EconomyResearch.factor(controller(city),"recruitment_center") * CountryTraits.manpower_factor(controller(city))
+			result[resource] = CITY_BASE.manpower * (1.0 + RECRUITMENT_PER_LEVEL * centre) * multiplier * EconomyResearch.factor(controller(city),"recruitment_center") * CountryTraits.manpower_factor(controller(city))
 			continue
 		result[resource] = CITY_BASE[resource] * multiplier * facility * (1.0 if resource == "funds" else 1.5 if resource in specialties else 0.0)
 	return result

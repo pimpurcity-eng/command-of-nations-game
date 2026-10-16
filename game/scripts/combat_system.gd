@@ -46,6 +46,14 @@ const HOME_PROTECTION: = 0.85
 func damage_value(unit: Dictionary, target_kind: String, defending: bool = false) -> float:
 	var target: = UnitClasses.symbol(target_kind) if target_kind not in UnitClasses.ALL else target_kind
 	return UnitStats.damage(unit, target, defending)
+## Owner 2026-10-16: "sniper should have a bit of range" - snipers pick off targets from a little
+## further than close combat (about twice as far), far short of artillery's 2.4.
+const SNIPER_RANGE: = 0.9
+static func sniper(unit: Dictionary) -> bool:
+	return str(unit.get("equipment_id", "")).begins_with("snipers_")
+## Units that fire from range: artillery, rocket and missile launchers, warships and snipers.
+static func shoots_from_range(unit: Dictionary) -> bool:
+	return unit.get("visual_kind", "") in ["artillery", "missile_launcher", "naval"] or sniper(unit)
 func ranged_ready(unit: Dictionary) -> bool:
 	return not unit.get("moving", false) or unit.get("fire_mode", "at_will") in ["offensive", "aggressive"] or not unit.get("attack_target", "").is_empty()
 func attack_reach(unit: Dictionary) -> float:
@@ -53,6 +61,7 @@ func attack_reach(unit: Dictionary) -> float:
 	if ranged_ready(unit):
 		if unit.visual_kind == "naval": return EquipmentIdentity.spec(unit.equipment_id).get("sea_range", 2.8)
 		if unit.visual_kind == "artillery": return 2.4
+		if sniper(unit): return SNIPER_RANGE
 		if unit.visual_kind == "missile_launcher": return EquipmentIdentity.spec(unit.equipment_id).get("strike_range", 8.0)
 	# Close combat: armies on the move, or that were ordered to attack / are already in a
 	# battle, keep fighting after they arrive (a stopped attacker used to freeze the battle).
@@ -64,7 +73,7 @@ func eligible(group: Array, distance: float) -> Array:
 func potential(group: Array, target_kind: String, ranged: bool = false, defending: bool = false) -> float:
 	var contributions: Array[float] = []
 	for unit in group:
-		if unit.health <= 0 or (ranged and (unit.visual_kind not in ["artillery", "missile_launcher", "naval"] or not ranged_ready(unit))): continue
+		if unit.health <= 0 or (ranged and (not shoots_from_range(unit) or not ranged_ready(unit))): continue
 		if not defending and unit.get("upgrade_remaining", 0.0) > 0: continue
 		contributions.append(damage_value(unit, target_kind, defending) * TerrainRules.unit_factor(unit, "defense" if defending else "attack"))
 	contributions.sort()
@@ -153,7 +162,7 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 			var a: = Vector2(attackers[0].node.position.x, attackers[0].node.position.z)
 			var b: = Vector2(defenders[0].node.position.x, defenders[0].node.position.z)
 			var distance: = a.distance_to(b)
-			var ranged: = distance > 1.1
+			var ranged: = distance > CLOSE_COMBAT_REACH + 0.05  # beyond touching: snipers, guns and launchers
 			var contributors: = eligible(attackers, distance)
 			var attackers_home: = _home(armies, attackers[0])
 			var defenders_home: = _home(armies, defenders[0])

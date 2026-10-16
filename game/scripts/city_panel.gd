@@ -76,7 +76,7 @@ func setup(system: BuildingSystem, theme: Theme) -> void:
 	info_column.add_child(summary)
 	income_row = HBoxContainer.new()
 	income_row.alignment = BoxContainer.ALIGNMENT_CENTER
-	income_row.add_theme_constant_override("separation", 14)
+	income_row.add_theme_constant_override("separation", 6)
 	info_column.add_child(income_row)
 	# Construction and production status.
 	var boxes: = HBoxContainer.new()
@@ -237,6 +237,7 @@ func show_tab(index: int) -> void:
 	if index >= 0 and research != null:
 		var families: Array = buildings.economy.catalog.filter(func(spec: Dictionary): return spec.country == GameSession.player_country and ProductionGroups.index(spec) == index and ProductionGroups.offered(spec) and not spec.get("research_only",false))
 		families.sort_custom(ProductionGroups.before)
+		families = ProductionGroups.by_unlock_day(families, research)
 		for spec in families: _add_unit_row(spec)
 	if scroll != null: scroll.scroll_vertical = 0
 	if visible: _refresh()
@@ -426,14 +427,15 @@ func _refresh() -> void:
 	title.text = ("★ " if buildings.is_capital(place) else "") + place.name
 	summary.text = ("YOURS · " + ("captured city · income 25%" if captured else ("capital" if buildings.is_capital(place) else "core city"))) if controlled else ("Controlled by " + buildings.economy.controller(place).capitalize())
 	summary.text += " · MORALE " + str(roundi(buildings.economy.morale_factor(place)*100.0)) + "%"
-	# Income per hour at 1x (industry level, specialties, capture penalty).
+	# Income per game day (owner 2026-10-16: "I can barely see the resources in the city"; Call of
+	# of War counts production per day). Industry level, specialties and capture penalty included.
 	for child in income_row.get_children(): child.queue_free()
 	var specialties: = ResourceSites.city_resources(place.name)
 	var income: = buildings.economy.city_income(place)
 	for resource in ProductionSystem.RESOURCES:
-		var item: = CowUI.cost(resource, income[resource] * SECONDS_PER_HOUR, true)
+		var item: = CowUI.cost(resource, income[resource] * ProductionSystem.DAY_SECONDS, true, 1.45)
 		var amount: Label = item.get_child(1)
-		amount.text = "+" + amount.text + "/h"
+		amount.text = "+" + amount.text + "/day"
 		amount.add_theme_color_override("font_color", CowUI.GOLD if resource in specialties else Color("d9d3c0"))
 		income_row.add_child(item)
 	income_row.visible = own

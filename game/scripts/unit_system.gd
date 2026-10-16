@@ -19,6 +19,7 @@ const MOBILE_MAX_DETAILED_UNITS := 80  # owner 2026-10-15: real 3D models, never
 ## models); closer, the 3D models show; within CLOSE_ZOOM the health bar and level appear.
 ## An army whose model is not loaded (phone cap) shows its symbol instead of a placeholder box.
 const FAR_ZOOM := 24.0
+const REVEALS_PER_FRAME := 3
 const CLOSE_ZOOM := 11.0
 var view_distance := 20.0
 var _mobile_visual_refresh_budget := 1
@@ -448,7 +449,7 @@ func advance(delta: float) -> void :
 				# they only move while it is out of range.
 				var gun_reach: = 0.0
 				for member in group:
-					if member.visual_kind in ["artillery", "missile_launcher", "naval"]:
+					if CombatSystem.shoots_from_range(member):
 						var ready: Dictionary = member.duplicate()
 						ready.moving = false
 						gun_reach = maxf(gun_reach, fire_control.attack_reach(ready))
@@ -460,9 +461,9 @@ func advance(delta: float) -> void :
 				elif enemy_point.distance_to(unit.target) > 0.25:
 					var pursuit: = path_for(unit, current, enemy_point)
 					if not pursuit.is_empty(): unit.target = enemy_point;unit.waypoints = pursuit;unit.moving = true
-		var can_defer: bool = at_war and unit.moving and (unit.fire_mode in ["offensive", "aggressive"] or not unit.attack_target.is_empty()) and group.any( func(member: Dictionary): return member.visual_kind in ["artillery", "missile_launcher", "naval"])
+		var can_defer: bool = at_war and unit.moving and (unit.fire_mode in ["offensive", "aggressive"] or not unit.attack_target.is_empty()) and group.any( func(member: Dictionary): return CombatSystem.shoots_from_range(member))
 		var opponents: Array = fire_control.target(group, army_groups, self) if can_defer else []
-		if not opponents.is_empty() and group.any( func(member: Dictionary): return member.visual_kind in ["artillery", "missile_launcher", "naval"]):
+		if not opponents.is_empty() and group.any( func(member: Dictionary): return CombatSystem.shoots_from_range(member)):
 			unit.firing_halt = current.distance_to(Vector2(opponents[0].node.position.x, opponents[0].node.position.z)) > CombatSystem.CLOSE_COMBAT_REACH
 		for member in group: member.firing_halt = unit.firing_halt
 		var remaining: = delta
@@ -692,6 +693,7 @@ func _replace_visual(unit: Dictionary, replacement: Node3D) -> void:
 	unit.node.add_child(replacement)
 	unit.node.move_child(replacement, 0)
 
+const AIRCRAFT_SCALE: = 1.40
 const CITY_GARRISON_SCALE: = 1.40  # owner 2026-10-15: "I don't even know what the unit is"
 const SMALL_GARRISON_READABILITY: = 1.15  # owner 2026-10-15: infantry "a little bit too big" at 1.6
 
@@ -730,6 +732,7 @@ func _process(delta: float) -> void :
 	var mobile: bool = UnitSystem.mobile_device() or force_mobile
 	var detailed: int = 0
 	var upgrades_left: int = _mobile_visual_refresh_budget
+	var reveals_left: int = REVEALS_PER_FRAME
 	for unit in units:
 		# Off-screen units should not force fog calculations or keep heavyweight models.
 		var on_screen: bool = camera == null or (not camera.is_position_behind(unit.node.position) and view.has_point(camera.unproject_position(unit.node.position)))
@@ -744,7 +747,16 @@ func _process(delta: float) -> void :
 			if mobile and not unit.node.get_child(0).get_meta("startup_lightweight", false):
 				_replace_visual(unit, UnitVisual.lightweight(unit.visual_kind, unit.faction_color, unit.equipment_id, unit.level))
 			continue
-		unit.node.visible = visible_to_player(unit)
+		# Owner 2026-10-16 ("the camera's getting stuck mid-zoom ... about halfway"): zooming in past
+		# FAR_ZOOM used to show every army's 3D model in the same frame; they now appear a few per
+		# frame (the map tag stands in for the rest until their turn).
+		var showing: bool = visible_to_player(unit)
+		if showing and not unit.node.visible:
+			if reveals_left <= 0:
+				unit.icon_only = true
+				continue
+			reveals_left -= 1
+		unit.node.visible = showing
 		if not unit.node.visible:
 			if mobile and not unit.node.get_child(0).get_meta("startup_lightweight", false):
 				_replace_visual(unit, UnitVisual.lightweight(unit.visual_kind, unit.faction_color, unit.equipment_id, unit.level))
@@ -786,7 +798,12 @@ func _process(delta: float) -> void :
 		else: UnitShadow.update(unit, ground)
 		var chosen: = chosen_stacks.has(unit.stack_id)
 		unit.ring.material_override.albedo_color = Color("f5cf82") if chosen else unit.faction_color
-		unit.ring.scale = Vector3.ONE * (0.52 if chosen else 0.42)
+		# Owner 2026-10-16 ("when I click on units in the city the circle doesn't go around them
+		# anymore"): the ring is sized to the (now bigger) model so it shows round it, and drawn
+		# over the city's park paving.
+		unit.ring.scale = Vector3.ONE * maxf(0.52, _model_reach(unit) * 1.25 / 0.81)
+		unit.ring.material_override.no_depth_test = chosen
+		unit.ring.material_override.render_priority = 5
 		# Call of War: only the selected army gets a ring; the map tag shows ownership.
 		unit.ring.visible = chosen
 		var model: Node3D = unit.node.get_child(0)
@@ -851,9 +868,10 @@ func _process(delta: float) -> void :
 		# Owner 2026-10-13: ground armies standing in a city are drawn bigger so the garrison
 		# reads clearly among the buildings (aircraft and ships keep their size).
 		var on_land: = not is_naval(unit) and not air.is_air(unit)
-		var target_scale: = 0.65 * ((garrison_scale(unit) if _in_city(Vector2(unit.node.position.x, unit.node.position.z)) else field_scale(unit)) if on_land else 1.0)
+		# Owner 2026-10-16 ("make the planes bigger ... still the same size"): aircraft grow with
+		# the ground armies (ships keep their size at sea).
+		var target_scale: = 0.65 * ((garrison_scale(unit) if _in_city(Vector2(unit.node.position.x, unit.node.position.z)) else field_scale(unit)) if on_land else (AIRCRAFT_SCALE if air.is_air(unit) else 1.0))
 		model.scale = model.scale.lerp(Vector3.ONE * target_scale, 1.0 - exp( - delta * 6.0))
-		if unit.visual_kind == "air_defense": unit.ring.scale = Vector3.ONE * (0.52 if chosen else 0.42) * (model.scale.x / 0.65)
 		if unit.node.has_meta("detailed_sprite"):
 			var sprite: Sprite3D = unit.node.get_meta("detailed_sprite")
 			var relative: = wrapf(unit.heading - camera.rotation.y, - PI, PI)
@@ -868,6 +886,31 @@ func _model_reach(unit: Dictionary) -> float:
 	var model: Node3D = unit.node.get_child(0)
 	var box: AABB = model.get_meta("pick_bounds", AABB(Vector3.ZERO, Vector3(0.3, 0.3, 0.3)))
 	return maxf(box.size.x, box.size.z) * 0.5 * model.scale.x
+## Draws each kind of model on the map once, off screen, while the game is loading, so the phone
+## prepares its graphics then rather than in the middle of the first zoom.
+func prewarm_models() -> void:
+	var view: = SubViewport.new()
+	view.size = Vector2i(64, 64)
+	view.own_world_3d = false
+	view.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	add_child(view)
+	var eye: = Camera3D.new()
+	view.add_child(eye)
+	eye.position = Vector3(0, 400, 3)
+	eye.look_at(Vector3(0, 400, 0))
+	eye.current = true
+	var seen: Dictionary = {}
+	for unit in units:
+		var key: = str(unit.equipment_id) + ":" + str(unit.get("level", 1))
+		if seen.has(key): continue
+		seen[key] = true
+		var model: = UnitVisual.create(unit.visual_kind, unit.faction_color, unit.equipment_id, unit.get("level", 1))
+		model.position = Vector3(0, 400, 0)
+		view.add_child(model)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
+	view.queue_free()
 static var _crew_mesh: ArrayMesh
 func _refuel_crew(unit: Dictionary) -> void:
 	var crew: Node3D = unit.node.get_node_or_null("RefuelCrew")
@@ -881,7 +924,7 @@ func _refuel_crew(unit: Dictionary) -> void:
 		if _crew_mesh == null: _crew_mesh = _fuel_truck_mesh()
 		var truck: = MeshInstance3D.new()
 		truck.mesh = _crew_mesh
-		truck.position = Vector3(0.38, 0.0, 0.1)
+		truck.position = Vector3(0.62, 0.0, 0.15)
 		truck.rotation.y = -0.5
 		truck.scale = Vector3.ONE * 0.45
 		crew.add_child(truck)
@@ -959,7 +1002,7 @@ func pick_screen(camera: Camera3D, screen: Vector2, enemies_only: bool = false) 
 ## the model centre first), then armies within 40 px (closest first).
 func pick_all_screen(camera: Camera3D, screen: Vector2, enemies_only: bool = false) -> Array:
 	var hits: Array = []
-	var radius: = 40.0 * get_window().content_scale_factor
+	var radius: = 28.0 * get_window().content_scale_factor
 	var leader_ids: Dictionary = {}
 	for group in stacks.groups(): leader_ids[stacks.leader(group).id] = true
 	for i in units.size():
@@ -976,6 +1019,11 @@ func pick_all_screen(camera: Camera3D, screen: Vector2, enemies_only: bool = fal
 			var model: Node3D = units[i].node.get_child(0)
 			if model.has_meta("pick_bounds"):
 				var bounds: AABB = model.get_meta("pick_bounds")
+				# Owner 2026-10-16 ("it's hard to click the city"): the bigger models covered most of a
+				# town, so only the middle of a model picks it; taps around it reach the city.
+				bounds = bounds.grow(0.0)
+				bounds.position += bounds.size * Vector3(0.2, 0.0, 0.2)
+				bounds.size *= Vector3(0.6, 0.75, 0.6)
 				var hull: PackedVector2Array = []
 				for corner in 8: hull.append(camera.unproject_position(model.global_transform * bounds.get_endpoint(corner)))
 				hull = Geometry2D.convex_hull(hull)
@@ -1052,7 +1100,7 @@ func attack_selected(enemy: Dictionary) -> bool:
 	var in_range: bool = group.any(func(member):
 		var candidate: Dictionary = member.duplicate()
 		candidate.attack_target = enemy.id
-		return candidate.visual_kind in ["artillery","missile_launcher","naval"] and fire_control.attack_reach(candidate) >= distance)
+		return CombatSystem.shoots_from_range(candidate) and fire_control.attack_reach(candidate) >= distance)
 	# Nearby enemy with open land in between: drive straight at it (owner: "some units don't
 	# attack"). Roads only lead province centre to centre, which can stop short of the enemy.
 	var army_point: = Vector2(army.node.position.x, army.node.position.z)

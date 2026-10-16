@@ -96,7 +96,7 @@ func validate(state: Variant, map: StrategicMap, units: UnitSystem) -> String:
 	if not state.get("weapons_test", false) is bool: return "Invalid test mode"
 	if state.get("version") != SAVE_VERSION or state.get("scenario") != scenario.id: return "Save belongs to another version or scenario"
 	var time = state.get("clock")
-	if not time is Dictionary or not _number(time.get("elapsed"), 0, 1000000000000.0) or time.get("speed") not in SimulationClock.SPEEDS or not time.get("paused") is bool: return "Invalid saved clock"
+	if not time is Dictionary or not _number(time.get("elapsed"), 0, 1000000000000.0) or time.get("speed") not in SimulationClock.speeds() or not time.get("paused") is bool: return "Invalid saved clock"
 	var saved_countries = state.get("countries")
 	if not saved_countries is Dictionary or saved_countries.size() != countries.size(): return "Invalid saved countries"
 	for id in countries:

@@ -1,7 +1,9 @@
 class_name GameAudio
 extends Node
-## Sound effects and music (owner request 2026-10-12). All sounds and both music tracks are
-## synthesized by tools/make_sounds.py, so the owner holds every right to them.
+## Sound effects and music (owner request 2026-10-12). Owner 2026-10-16 ("every single sound is
+## terrible ... worse than Atari"): weapon, explosion and alert sounds are now real recordings -
+## U.S. military (public domain) and CC0 field recordings, listed in assets/audio/sfx/CREDITS.md.
+## The remaining few are still synthesized by tools/make_sounds.py.
 ## Two switches, remembered in user://settings.cfg: Sound (effects + button clicks) and Music.
 ## Battle sounds get quieter with distance from the camera's focus and are skipped when far
 ## off-screen; a few voices per sound and a small pool keep big battles from turning to noise.
