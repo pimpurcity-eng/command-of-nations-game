@@ -61,6 +61,9 @@ func attach(main: Node) -> void:
 	game.match_rules.online = true
 	game.clock.paused = true
 	_apply(state, true)
+	# A country change can rebuild the Europe AI seats while applying the welcome.
+	# The connected client always leaves simulation and AI decisions to the server.
+	game.match_rules.ai_enabled = false
 
 func leave() -> void:
 	ws.close(1000, "Left the match")

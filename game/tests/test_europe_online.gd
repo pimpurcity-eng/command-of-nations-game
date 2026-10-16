@@ -110,6 +110,8 @@ func run() -> void:
 	server = restart
 	var resumed: = phone("dev:alice", "romania")
 	check(await wait_for(func(): return resumed.country == "poland"), "returning account resumes Poland even when another country was requested")
+	# A device may still be showing another country when the account resumes Poland.
+	GameSession.player_country = "romania"
 	resumed.attach(game)
 	check(MatchClient.active == resumed and GameSession.player_country == "poland" and game.clock.paused and not game.match_rules.ai_enabled, "attached phone applies welcome immediately and stops its own simulation")
 	var speed: float = game.clock.speed

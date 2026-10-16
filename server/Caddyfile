@@ -22,6 +22,12 @@ play.warfrontmandate.com {
 		header Connection *Upgrade*
 		header Upgrade websocket
 	}
+	@europe_socket {
+		path /europe
+		header Connection *Upgrade*
+		header Upgrade websocket
+	}
+	reverse_proxy @europe_socket 127.0.0.1:8911
 	reverse_proxy @game_socket 127.0.0.1:8910
 	root * /opt/warfront/web
 	file_server

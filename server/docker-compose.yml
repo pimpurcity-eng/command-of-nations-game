@@ -6,6 +6,8 @@ services:
     ports: ["127.0.0.1:8910:8910"]
     environment:
       WM_MATCH: main
+      WM_MAP: regional
+      WM_SPEED: "1"
       WM_INACTIVE: "172800"
       WM_EXTERNAL_AI: ${WM_EXTERNAL_AI:-0}
       GROQ_API_KEY: ${GROQ_API_KEY:-}
@@ -14,5 +16,22 @@ services:
       SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
     volumes: ["match-main:/home/warfront/.local/share/godot"]
     stop_grace_period: 30s
+  match-europe:
+    build: { context: .., dockerfile: server/Dockerfile }
+    restart: unless-stopped
+    ports: ["127.0.0.1:8911:8910"]
+    environment:
+      WM_MATCH: europe-1
+      WM_MAP: europe20
+      WM_SPEED: ${WM_EUROPE_SPEED:-1}
+      WM_INACTIVE: "172800"
+      WM_EXTERNAL_AI: ${WM_EXTERNAL_AI:-0}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      WM_AI_MODEL: ${WM_AI_MODEL:-openai/gpt-oss-20b}
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
+    volumes: ["match-europe:/home/warfront/.local/share/Command of Nations"]
+    stop_grace_period: 30s
 volumes:
   match-main:
+  match-europe:

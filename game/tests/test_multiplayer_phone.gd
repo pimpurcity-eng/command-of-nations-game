@@ -24,7 +24,7 @@ func run() -> void:
 	OS.set_environment("WM_ALLOW_DEV_TOKENS", "1")
 	var server_pid: = OS.create_process(OS.get_executable_path(), ["--headless", "--path", ProjectSettings.globalize_path("res://"), "--script", "res://scripts/net/server_main.gd", "--", "--port", str(PORT), "--match", "phone-test"])
 	check(server_pid > 0, "the dedicated server starts")
-	ArsenalFixture.use_archive()
+	# The dedicated server loads the current arsenal; the phone must use that same catalogue.
 	GameSession.player_country = "russia"
 	var game = load("res://scenes/main.tscn").instantiate()
 	root.add_child(game)
