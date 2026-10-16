@@ -6,6 +6,9 @@
 > New blockers: the Play upload key is not in GitHub or Drive (upload-key reset may be needed), and the
 > Europe 20-country online work (`test_europe_online.gd`, lobby, picker) was never committed.
 
+> **16 Oct evening:** read  — upload key found, Oct 16 list and its status,
+> unfinished work on  (do not build it), one fix at a time.
+
 ## Needs Matthew (one-time)
 - **Upload key.** Does anyone have the Warfront Play upload keystore? If not, approve an upload-key reset
   (steps in `CHATGPT_HANDOFF.md` §5).
