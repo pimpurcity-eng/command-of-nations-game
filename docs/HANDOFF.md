@@ -60,7 +60,7 @@ Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to d
 | 18 | Game speed affects every timer | ✅ | verified by `test_oct16_pacing` (329 pass, 0 fail) |
 | 19 | Units move too fast | ✅ | verified by `test_oct16_pacing` (329 pass, 0 fail) |
 | 20 | Faster on own land, terrain matters | ✅ | verified by `test_oct16_pacing` (329 pass, 0 fail) |
-| 21 | Level-1 buildings 30 min at 1x, harder after | ⏸ | Matthew 2026-10-16: \"yes, but wait on that\" — ON HOLD. Data is 30 min; Ukraine shows 33 because of the European doctrine (×0.9). Before starting, confirm with Matthew which way (keep the penalty, or apply it to units only). |
+| 21 | Level-1 buildings 30 min at 1x, harder after | ⏸ | Matthew 2026-10-16: "yes, but wait on that" — ON HOLD. Data is 30 min; Ukraine shows 33 because of the European doctrine (×0.9). Before starting, confirm with Matthew which way (keep the penalty, or apply it to units only). |
 | 22 | Level-1 unit research 30 min–2 h | ✅ | verified by `test_oct16_pacing` (329 pass, 0 fail) |
 | 23 | Every unit's first level by day 6 (except nukes) | ✅ | verified by `test_oct16_pacing` (329 pass, 0 fail) |
 | 24 | Battle animation ~5 s, then still until next shot | ✅ | verified by `test_oct16_combat` (38/38) |
