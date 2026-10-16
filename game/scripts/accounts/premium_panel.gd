@@ -96,17 +96,18 @@ func build() -> void:
 		_label("Your Premium membership is active" + (" until " + until if not until.is_empty() else "") + ".", 28, Color("e9c46a"))
 	else:
 		_label("Conveniences for dedicated commanders. Premium never makes your armies stronger: every unit, building and research stays open to everyone.", 26)
+	if not PlayerPremium.is_premium():
+		_label("Planned price: " + PlayerPremium.PRICE_IDEA + " (Google Play subscription).", 24, Color("a9b4bb"))
+		var buy := _button("Coming soon — Google Play subscription", func():
+			status.text = "Coming soon: Premium will be a Google Play subscription. Nothing is charged yet.")
+		buy.add_theme_color_override("font_color", Color("e9c46a"))
+	status = _label("", 24, Color("e9c46a"))
 	_label("WHAT PREMIUM GIVES", 30, Color("c9ad73"))
 	for benefit in PlayerPremium.BENEFITS:
 		_label(("✔ " if benefit.live else "· ") + str(benefit.title) + (" (coming soon)" if not benefit.live else ""), 26, Color("f0dec1") if benefit.live else Color("a9b4bb"))
 		_label("    " + str(benefit.text), 22, Color("a9b4bb"))
 	_label("FREE FOR EVERY COMMANDER", 30, Color("c9ad73"))
 	for item in PlayerPremium.ALWAYS_FREE: _label("✔ " + str(item), 24)
-	status = _label("", 24, Color("e9c46a"))
-	if not PlayerPremium.is_premium():
-		var buy := _button("Get Premium · " + PlayerPremium.PRICE_IDEA + " — coming soon", func():
-			status.text = "Coming soon: Premium will be a Google Play subscription. Nothing is charged yet.")
-		buy.add_theme_color_override("font_color", Color("e9c46a"))
 	if auth == null or not auth.signed_in():
 		_label("Premium belongs to your commander account. Sign in so it follows you on every device.", 22, Color("a9b4bb"))
 	# Test toggle for the owner and testers; never shown in the store builds.

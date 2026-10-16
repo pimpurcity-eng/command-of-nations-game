@@ -135,7 +135,6 @@ func run():
 		if fresh.is_empty(): continue
 		var unit: Dictionary = fresh[0]
 		produced.append(unit)
-		if OS.has_environment("RALLY_DEBUG"): print("UNIT ", fresh.size(), " ", unit.position, " moving=", unit.moving, " path=", unit.get("path", []), " keys=", unit.keys())
 		var goal: Vector2 = unit.target
 		check(unit.moving and goal.distance_to(spot) < 1.5, "unit %d marches to the rally point (target %.2f from the flag)" % [round + 1, goal.distance_to(spot)])
 	check(production.jobs.filter(func(j): return j.city == city.name).size() == 3, "the queue moves on: three orders left")
