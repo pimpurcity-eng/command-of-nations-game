@@ -9,6 +9,8 @@ var audio: GameAudio
 var achievements: = Achievements.new()
 var lost_city: = false
 var tutorial: Tutorial
+var training_match: TrainingMatch
+var _campaign_initial_state: Dictionary = {}
 ## Alerts: an army attacked off-screen is announced (at most once every ALERT_GAP seconds).
 const ALERT_GAP: = 45.0
 var _last_alert: = -1000.0
@@ -510,12 +512,14 @@ func _ready() -> void :
 		await populate_campaign_forces(not OS.has_feature("headless"))
 		_boot_mark("armies")
 		apply_player_country()
+	_campaign_initial_state = session.capture(clock, map, units, rig)
 	if true:
 		mobile_start = MobileStartPanel.new()
 		add_child(mobile_start)
 		mobile_start.audio = audio
 		mobile_start.setup(hud.get_child(0).theme, FileAccess.file_exists(SAVE_PATH))
 		mobile_start.account_requested.connect(open_home_account)
+		mobile_start.training_requested.connect(start_training)
 		visible = false
 		mobile_start.visibility_changed.connect(func():
 			visible = not mobile_start.visible
@@ -530,13 +534,16 @@ func _ready() -> void :
 				paused_to_home = false
 				mobile_start.hide()
 				audio.play_music("battle_theme")
-				clock.paused = false
+				clock.paused = not session.training.is_empty() and session.training.phase in ["choice", "opening", "supply_video"]
 				refresh_hud()
 				return
 			load_game()
 			start_campaign_play()
 			mobile_start.hide())
 		mobile_start.fresh_requested.connect(func():
+			if not session.training.is_empty():
+				_clear_training()
+				session.restore(_campaign_initial_state, clock, map, units, rig)
 			if GameSession.weapons_test: await restore_campaign_forces()
 			GameSession.weapons_test = false
 			match_rules.ai_enabled = true
@@ -546,6 +553,7 @@ func _ready() -> void :
 			mobile_start.hide())
 		mobile_start.online_requested.connect(join_online)
 		mobile_start.test_requested.connect(func(scenario: String):
+			_clear_training()
 			GameSession.player_country = mobile_start.selected_country()
 			# Browser: each weapon's model is fetched when it appears (owner 2026-10-15: waiting for
 			# every model at once ran the phone out of memory).
@@ -612,8 +620,9 @@ func _process(delta: float) -> void :
 	if autosave_timer >= 30:
 		autosave_timer = 0
 		autosave()
-func autosave(path: String = SAVE_PATH) -> String:
+func autosave(path: String = "") -> String:
 	if session == null or session.match_rules == null: return "Game is still loading"
+	if path.is_empty(): path = active_save_path()
 	var state: = session.capture(clock, map, units, rig)
 	if browser_suspended: state.clock.paused = not resume_after_background
 	return session.write_save(path, state)
@@ -634,6 +643,8 @@ func _browser_visible(_arguments: Array) -> void :
 	rig.reset_gestures()
 	refresh_hud()
 func _map_click(screen: Vector2, order: bool) -> void :
+	if training_match != null and not (order or order_mode or attack_order or patrol_order or selecting_armies):
+		if training_match.pick_supply(screen): return
 	if selecting_armies:
 		# City hubs are destinations even when a garrison overlaps their model.
 		var meeting_city: = cities.pick_screen(screen)
@@ -749,18 +760,20 @@ func map_position(longitude: float, latitude: float) -> Vector3:
 	return Vector3(point.x, 0.15, point.y)
 
 func save_game() -> void :
-	var error: = session.write_save(SAVE_PATH, session.capture(clock, map, units, rig))
+	var error: = session.write_save(active_save_path(), session.capture(clock, map, units, rig))
 	hud.show_status("Game saved on this device" if error.is_empty() else error)
-func load_game() -> void :
-	var result: = session.read_save(SAVE_PATH, map, units)
+func load_game(path: String = SAVE_PATH) -> bool :
+	var result: = session.read_save(path, map, units)
 	if result.has("error"):
 		hud.show_status(result.error)
-		return
+		return false
+	_clear_training()
 	rally_city = ""
 	session.restore(result.state, clock, map, units, rig)
+	if not session.training.is_empty(): _attach_training()
 	apply_player_country(false)
 	units.fog_enabled = not GameSession.weapons_test
-	match_rules.ai_enabled = not GameSession.weapons_test
+	match_rules.ai_enabled = not GameSession.weapons_test and (session.training.is_empty() or session.training.phase == "free")
 	if test_models != null: test_models.queue_free(); test_models = null
 	combat_effects.clear()
 	_set_order_mode(false)
@@ -776,8 +789,10 @@ func load_game() -> void :
 	if not match_rules.winner.is_empty(): show_result(match_rules.winner)
 	hud.clear_unit_selection()
 	hud.show_status("Saved game restored")
+	return true
 
 func _touch_over_ui(screen: Vector2) -> bool:
+	if is_instance_valid(training_match) and training_match.contains_screen(screen): return true
 	if account_panel != null and account_panel.overlay.visible: return true
 	if badges != null and badges.contains(screen): return true
 	if exchange_panel != null and exchange_panel.visible: return true
@@ -1423,6 +1438,7 @@ func join_online(match_code: String = "") -> void:
 	online = MatchClient.new()
 	add_child(online)
 	online.welcomed.connect(func(_state: Dictionary):
+		_clear_training()
 		online.attach(self)
 		mobile_start.hide()
 		audio.play_music("battle_theme")
@@ -1440,7 +1456,7 @@ func start_campaign_play() -> void :
 	if not match_rules.winner.is_empty(): return
 	_remember_match(MatchClient.active == null and not GameSession.weapons_test)
 	if match_started_msec == 0: match_started_msec = Time.get_ticks_msec()
-	if tutorial == null and not GameSession.weapons_test and not Tutorial.done() and not OS.has_feature("headless_tests"):
+	if tutorial == null and session.training.is_empty() and not GameSession.weapons_test and not Tutorial.done() and not OS.has_feature("headless_tests"):
 		tutorial = Tutorial.new()
 		add_child(tutorial)
 		tutorial.setup(self, hud.get_child(0).theme)
@@ -1448,6 +1464,50 @@ func start_campaign_play() -> void :
 	clock.paused = false
 	refresh_hud()
 	hud.show_status("Campaign running at " + str(int(clock.speed)) + "x · select your army, then Move or Fly. Pause stops movement and builds.")
+
+func active_save_path() -> String:
+	return SAVE_PATH if session.training.is_empty() else TrainingScenario.SAVE_PATH
+
+func _clear_training() -> void:
+	if is_instance_valid(training_match):
+		training_match.set_process(false)
+		training_match.get_parent().remove_child(training_match)
+		training_match.queue_free()
+	training_match = null
+	if session != null: session.training = {}
+	if production != null: production.scenario_income_factors.clear()
+
+func _attach_training() -> void:
+	training_match = TrainingMatch.new()
+	add_child(training_match)
+	training_match.setup(self, hud.get_child(0).theme)
+	match_rules.ai_enabled = session.training.phase == "free"
+
+func start_training(resume: bool = false) -> void:
+	if MatchClient.active != null:
+		mobile_start.cancel_loading("Leave the online match before starting local training")
+		return
+	if is_instance_valid(tutorial): tutorial.queue_free(); tutorial = null
+	var chosen_country := mobile_start.selected_country()
+	if resume:
+		if not load_game(TrainingScenario.SAVE_PATH) or session.training.is_empty():
+			mobile_start.cancel_loading("Could not restore training")
+			return
+	else:
+		_clear_training()
+		session.restore(_campaign_initial_state, clock, map, units, rig)
+		GameSession.player_country = chosen_country
+		GameSession.weapons_test = false
+		TrainingScenario.prepare(self)
+		_attach_training()
+	apply_player_country()
+	mobile_start.hide()
+	paused_to_home = false
+	match_started_msec = Time.get_ticks_msec()
+	clock.paused = session.training.phase in ["choice", "opening", "supply_video"]
+	if session.training.phase not in ["opening", "supply_video"]: audio.play_music("battle_theme")
+	refresh_hud()
+	autosave()
 
 ## Attack orders (owner 2026-10-15): never against your own armies, and at peace the player is
 ## asked before war is declared.

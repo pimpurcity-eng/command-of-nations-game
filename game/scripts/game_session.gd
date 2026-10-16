@@ -9,9 +9,11 @@ static func opponent_country() -> String:
 const SAVE_VERSION: = 4
 var scenario: Dictionary
 var countries: Dictionary = {}
+var training: Dictionary = {}
 var production: ProductionSystem
 var match_rules: MatchSystem
 func _init() -> void :
+	TrainingScenario.ensure_supplied_equipment()
 	scenario = JSON.parse_string(FileAccess.get_file_as_string(scenario_path))
 	for country in scenario.countries: countries[country.id] = country.duplicate(true)
 func capture(clock: SimulationClock, map: StrategicMap, units: UnitSystem, rig: StrategyCamera) -> Dictionary:
@@ -19,7 +21,7 @@ func capture(clock: SimulationClock, map: StrategicMap, units: UnitSystem, rig: 
 	for territory in map.territories:
 		if territory.playable:
 			territory_state[territory.id] = {"owner": territory.owner, "controller": territory.controller, "morale": territory.get("morale", 100.0 if territory.owner == territory.controller else 25.0)}
-	return {"player_country": player_country, "weapons_test": weapons_test, "match": match_rules.snapshot(), "version": SAVE_VERSION, "scenario": scenario.id, "clock": clock.snapshot(), "countries": countries.duplicate(true), "territories": territory_state, "units": units.snapshot(), "production": production.snapshot(), "camera": {"target": [rig.target.x, rig.target.z], "distance": rig.distance, "yaw": rig.yaw, "pitch": rig.pitch}}
+	return {"player_country": player_country, "weapons_test": weapons_test, "training": training.duplicate(true), "match": match_rules.snapshot(), "version": SAVE_VERSION, "scenario": scenario.id, "clock": clock.snapshot(), "countries": countries.duplicate(true), "territories": territory_state, "units": units.snapshot(), "production": production.snapshot(), "camera": {"target": [rig.target.x, rig.target.z], "distance": rig.distance, "yaw": rig.yaw, "pitch": rig.pitch}}
 func write_save(path: String, state: Dictionary) -> String:
 	var file: = FileAccess.open(path + ".tmp", FileAccess.WRITE)
 	if file == null: return "Could not open save storage"
@@ -86,6 +88,7 @@ func validate(state: Variant, map: StrategicMap, units: UnitSystem) -> String:
 	if not state is Dictionary: return "Invalid save format"
 	if state.get("player_country", "russia") not in ["russia", "ukraine"]: return "Invalid player country"
 	if not state.get("weapons_test", false) is bool: return "Invalid test mode"
+	if not TrainingScenario.valid_state(state.get("training", {})): return "Invalid training progress"
 	if state.get("version") != SAVE_VERSION or state.get("scenario") != scenario.id: return "Save belongs to another version or scenario"
 	var time = state.get("clock")
 	if not time is Dictionary or not _number(time.get("elapsed"), 0, 1000000000000.0) or time.get("speed") not in SimulationClock.speeds() or not time.get("paused") is bool: return "Invalid saved clock"
@@ -166,6 +169,8 @@ func validate(state: Variant, map: StrategicMap, units: UnitSystem) -> String:
 func restore(state: Dictionary, clock: SimulationClock, map: StrategicMap, units: UnitSystem, rig: StrategyCamera) -> void :
 	player_country = state.get("player_country", "russia")
 	weapons_test = state.get("weapons_test", false)
+	training = state.get("training", {}).duplicate(true)
+	production.scenario_income_factors = {} if training.is_empty() else TrainingScenario.INCOME_FACTORS.duplicate()
 	countries = state.countries.duplicate(true)
 	for territory in map.territories:
 		if not territory.playable: continue

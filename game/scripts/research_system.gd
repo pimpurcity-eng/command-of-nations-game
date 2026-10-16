@@ -66,6 +66,7 @@ func reason(id: String, target: int, country: String = "", check_resources: bool
 	if country.is_empty(): country = GameSession.player_country
 	var spec: = economy.equipment(id)
 	if spec.is_empty() or spec.country != country: return "Choose your country's equipment"
+	if spec.get("supplied_only", false): return "Imported equipment · obtain through aid or trade"
 	if rate(country) <= 0: return capital_status(country)
 	if spec.get("retired", false): return "No longer in service"
 	if target < 1 or target > 5: return "Choose a level from 1 to 5"

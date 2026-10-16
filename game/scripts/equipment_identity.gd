@@ -3,6 +3,8 @@ extends RefCounted
 static var _by_id: Dictionary = {}
 static var _picture_by_model: Dictionary = {}
 static var refinements: Dictionary = {}
+## Imported units can be inspected and restored without unlocking domestic production.
+static var supplied_catalog: Dictionary = {}
 static func upgrade_factor(unit: Dictionary) -> float:
 	return 1.06 if refinements.get(unit.equipment_id,{}).get(str(int(unit.get("level",1))),false) else 1.0
 static var catalog: Array = CountryTraits.apply(EquipmentEconomy.apply(JSON.parse_string(FileAccess.get_file_as_string("res://data/equipment.json")))):
@@ -11,6 +13,7 @@ static var catalog: Array = CountryTraits.apply(EquipmentEconomy.apply(JSON.pars
 		_by_id.clear()
 		_picture_by_model.clear()
 static func spec(id: String) -> Dictionary:
+	if supplied_catalog.has(id): return supplied_catalog[id]
 	if id.begins_with("economy_"): return EconomyResearch.spec(id)
 	if _by_id.is_empty():
 		for equipment in catalog: _by_id[equipment.id] = equipment

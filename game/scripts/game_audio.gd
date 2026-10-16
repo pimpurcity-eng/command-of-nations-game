@@ -259,3 +259,7 @@ func _input(event: InputEvent) -> void:
 			_music.play()
 func music_playing() -> String:
 	return _music_name if _music.playing else ""
+
+## Preserve the player's music setting while a tutorial film plays its own soundtrack.
+func pause_music_for_cinematic(paused: bool) -> void:
+	if _music != null: _music.stream_paused = paused
