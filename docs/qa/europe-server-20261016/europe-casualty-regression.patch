@@ -1,0 +1,20 @@
+--- a/game/tests/test_europe_online.gd
++++ b/game/tests/test_europe_online.gd
+@@ -69,6 +69,17 @@
+ 	check(lobby.state.map == MapDefinition.EUROPE and lobby.state.match == "europe-test" and lobby.state.speed == 1, "welcome identifies the map, match and authoritative 1× speed")
+ 	check(lobby.state.units.all(func(u): return u.country == "poland" or (not u.has("route") and not u.has("attack_target"))), "enemy routes and attack targets remain private")
+ 	check(lobby.state.units.all(func(u): var actual: Dictionary = game.units.find_id(u.id); return not actual.is_empty() and game.units.unit_visible(actual, "poland")), "phone receives only armies in its country's sight")
++	var casualty: Dictionary = game.units.units.filter(func(u): return u.health > 1.0)[0]
++	var previous_health: float = casualty.health
++	casualty.health = 0.0
++	var expected_ids: Dictionary = {}
++	for unit in game.units.units:
++		if unit.health > 0.001 and game.units.unit_visible(unit, "poland"): expected_ids[unit.id] = true
++	var casualty_tick: Dictionary = server._state("poland", "tick", false)
++	var received_ids: Dictionary = {}
++	for entry in casualty_tick.get("units", []): received_ids[entry.id] = true
++	check(received_ids == expected_ids and not received_ids.has(casualty.id), "a destroyed army cannot corrupt the Europe server tick or fog of war")
++	casualty.health = previous_health
+ 	var foreign: Dictionary = game.units.units.filter(func(u): return u.country == "romania")[0]
+ 	var before: Variant = foreign.get("route", []).duplicate()
+ 	check(not server.command("poland", {"op":"move", "ids":[foreign.id], "x":0, "z":0}).is_empty() and foreign.get("route", []) == before, "players cannot command another country's army")
