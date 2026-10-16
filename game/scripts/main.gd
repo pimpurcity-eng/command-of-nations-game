@@ -733,9 +733,16 @@ func _map_click(screen: Vector2, order: bool) -> void :
 		else:
 			var step: = 0
 			var near: float = 36.0 * TapScale.of(self)
+			# Owner 2026-10-16: a garrison may cover the whole town centre. Include
+			# the town after its armies so repeated taps can still open it.
+			var choices_count: int = choices.size() + (0 if city_hit.is_empty() else 1)
 			if not _tap_cycle.is_empty() and _tap_cycle.screen.distance_to(screen) < near and Time.get_ticks_msec() - int(_tap_cycle.time) < 8000:
-				step = (int(_tap_cycle.step) + 1) % choices.size()
+				step = (int(_tap_cycle.step) + 1) % choices_count
 			_tap_cycle = {"screen": screen, "step": step, "time": Time.get_ticks_msec()}
+			if step == choices.size():
+				clear_army_selection()
+				cities.select_city(city_hit.city)
+				return
 			units.select_unit(choices[step].index)
 			return
 	if (order or order_mode) and units.selected >= 0 and (units.air.is_air(units.units[units.selected]) or units.is_naval(units.units[units.selected])):

@@ -22,6 +22,7 @@ Older notes (`CHATGPT_HANDOFF.md`, `docs/NEXT_LIST.md`, `docs/CHATGPT_NOTE_2026_
 | What | Where |
 | --- | --- |
 | Working branch | `claude/wip-oct16` — unfinished Oct 16 fixes. **Do not build from it.** |
+| Release audit | `chatgpt/release-oct16` — ChatGPT's current full-game check; owner authorized fixing and publishing after the review. |
 | Stable branch | `claude/v0.26-fixes` — buildable game; the match server auto-updates from it every 15 min. |
 | Merge plan | When the WIP list is finished and tested: merge WIP into stable, reverting `20c7171` (the commit that moved WIP off stable). Matthew approves first. |
 | Builds repo | `pimpurcity-eng/Command-of-nations-builds` (private): latest **0.57** = `bcda1be`, versionCode 57. |
@@ -94,7 +95,14 @@ Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to d
 
 ## 5. Session state
 
-**In progress:** nothing. Every fix 1–40 is done or verified except 21 (question for Matthew). Tip: most tests run in seconds with `godot --headless`; use `xvfb-run` only for render checks.
+**In progress:** ChatGPT full-game release audit on `chatgpt/release-oct16`, based on `beff4dc`.
+Matthew authorized fixing remaining bugs and publishing, then explicitly requested a whole-game
+review before the update (16 Oct, 22:46 UTC). This authorization supersedes the earlier publishing
+pause; fixes 21 and 41 remain on hold. One worker only. See [RELEASE_AUDIT_2026_10_16.md](RELEASE_AUDIT_2026_10_16.md).
+
+The latest WIP still failed the camera event-order regression (16 checks, 4 failures) and omitted
+the city from the garrison tap cycle. These two gaps are being fixed before release; do not treat
+the earlier green camera/tapping statuses as a complete release check.
 
 **Open bugs**
 - `test_multiplayer_phone.gd` / `test_phone_regression.gd`: fail without the private models (see `CHATGPT_HANDOFF.md` §2.4).

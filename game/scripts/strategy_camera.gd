@@ -44,6 +44,8 @@ var _pinch_span: = 0.0
 var _pinch_start_span: = 0.0
 var _pinch_mid: = Vector2.ZERO
 var _pinch_zooming: = false
+var _pinch_dirty: = false
+var _zoom_anchor: Dictionary = {}
 func _ready() -> void :
 	# Move the camera before the armies, labels and cities lay themselves out this frame, so
 	# screen-space tags never trail the 3D map by a frame.
@@ -54,6 +56,7 @@ func _ready() -> void :
 	camera.far = 250
 	_snap(1.0)
 func _process(delta: float) -> void :
+	_flush_pinch()
 	var direction: = Vector2.ZERO
 	if Input.is_physical_key_pressed(KEY_W) or Input.is_physical_key_pressed(KEY_UP): direction.y -= 1
 	if Input.is_physical_key_pressed(KEY_S) or Input.is_physical_key_pressed(KEY_DOWN): direction.y += 1
@@ -83,6 +86,9 @@ func _pose(at: Vector3, at_distance: float, at_yaw: float) -> Transform3D:
 	return Transform3D(Basis.IDENTITY, at + offset).looking_at(at, Vector3.UP)
 func _snap(weight: float) -> void :
 	_clamp_target()
+	# A programmatic move or pan supersedes the last anchored zoom.
+	if not _zoom_anchor.is_empty() and (target != _zoom_anchor.target or distance != _zoom_anchor.distance or yaw != _zoom_anchor.yaw or weight >= 1.0):
+		_zoom_anchor.clear()
 	rendered_target = rendered_target.lerp(target, weight)
 	rendered_distance = lerpf(rendered_distance, distance, weight)
 	rendered_yaw = lerpf(rendered_yaw, yaw, weight)
@@ -93,6 +99,18 @@ func _snap(weight: float) -> void :
 		rendered_yaw = yaw
 	rendered_pitch = _tilt(rendered_distance)
 	camera.transform = _pose(rendered_target, rendered_distance, rendered_yaw)
+	# Interpolating tilt, distance and target independently lets the ground drift under
+	# the fingers. Preserve the interpolated ground anchor throughout the whole zoom.
+	if not _zoom_anchor.is_empty():
+		_zoom_anchor.current = (_zoom_anchor.current as Vector3).lerp(_zoom_anchor.goal, weight)
+		var ground = _ground_at(_zoom_anchor.screen)
+		if ground != null:
+			var shift: Vector3 = _zoom_anchor.current - (ground as Vector3)
+			shift.y = 0.0
+			rendered_target += shift
+			rendered_target.x = clampf(rendered_target.x, bounds.position.x, bounds.end.x)
+			rendered_target.z = clampf(rendered_target.z, bounds.position.y, bounds.end.y)
+			camera.transform = _pose(rendered_target, rendered_distance, rendered_yaw)
 ## The map point under a screen position for the camera's goal (where input is aiming), not
 ## the smoothed camera still on its way there.
 func _goal_ground(screen: Vector2) -> Variant:
@@ -113,6 +131,7 @@ func zoom_at(amount: float, screen: Vector2) -> void:
 	# The ground point under the fingers stays under the fingers while zooming. Worked out on
 	# the camera's goal, so a pinch never snaps the shown camera (it glides there).
 	_clamp_target()
+	var shown_anchor = _ground_at(screen)
 	var before = _goal_ground(screen)
 	var old_distance: = distance
 	zoom(amount)
@@ -123,6 +142,9 @@ func zoom_at(amount: float, screen: Vector2) -> void:
 		shift.y = 0.0
 		target += shift
 		_clamp_target()
+		var goal_anchor = _goal_ground(screen)
+		if shown_anchor != null and goal_anchor != null:
+			_zoom_anchor = {"screen": screen, "current": shown_anchor, "goal": goal_anchor, "target": target, "distance": distance, "yaw": yaw}
 func _ground_at(screen: Vector2) -> Variant:
 	var hit = Plane(Vector3.UP, ground_height).intersects_ray(camera.project_ray_origin(screen), camera.project_ray_normal(screen))
 	return hit if hit != null and (hit as Vector3).is_finite() else null
@@ -160,6 +182,7 @@ func _unhandled_input(event: InputEvent) -> void :
 	elif event is InputEventScreenTouch:
 		if event.pressed:
 			if input_blocked.is_valid() and input_blocked.call(event.position): return
+			_flush_pinch()
 			touches[event.index] = event.position
 			fling = Vector3.ZERO
 			_drag_velocity = Vector3.ZERO
@@ -172,6 +195,7 @@ func _unhandled_input(event: InputEvent) -> void :
 				press = event.position
 				touch_moved = false
 		else:
+			_flush_pinch()
 			if event.canceled: touch_moved = true
 			if touches.has(event.index) and touches.size() == 1 and not touch_moved and press.distance_to(event.position) < _slop(): map_clicked.emit(event.position, false)
 			# A finger that stopped before lifting leaves the map where it is.
@@ -186,20 +210,25 @@ func _unhandled_input(event: InputEvent) -> void :
 		touch_moved = touch_moved or press.distance_to(event.position) > _slop() or touches.size() > 1
 		if touches.size() >= 2:
 			touches[event.index] = event.position
-			_update_pinch()
+			_pinch_dirty = true
 		elif not pinch_active and touch_moved:
 			# The first move past the tap slop drags from where the finger went down, so the
 			# map point under the finger stays under it (no catch-up jump later).
 			_drag_map(press if not was_moved else touches[event.index], event.position, true)
 		touches[event.index] = event.position
-## Owner 2026-10-16 ("still a little jiggly"): a pinch is read from both fingers' current
-## positions together (not one finger against the other's stale one), zooms only after the span
-## has clearly changed, and pans by the midpoint.
+## Owner 2026-10-16 ("still a little jiggly"): finger events arrive separately. Collect
+## both current positions before updating the pinch, so a two-finger pan cannot invent zoom.
+func _flush_pinch() -> void:
+	if not _pinch_dirty: return
+	_pinch_dirty = false
+	if touches.size() >= 2: _update_pinch()
+
 func _pinch_pair() -> Array:
 	var keys: = touches.keys()
 	keys.sort()
 	return [touches[keys[0]], touches[keys[1]]]
 func _begin_pinch() -> void:
+	_pinch_dirty = false
 	var pair: = _pinch_pair()
 	_pinch_mid = (pair[0] + pair[1]) * 0.5
 	_pinch_span = (pair[0] as Vector2).distance_to(pair[1])
@@ -220,6 +249,7 @@ func _update_pinch() -> void:
 		zoom_at(log(_pinch_span / span), mid)
 	_pinch_span = span
 func reset_gestures() -> void :
+	_zoom_anchor.clear()
 	fling = Vector3.ZERO
 	_drag_velocity = Vector3.ZERO
 	touches.clear()
@@ -228,6 +258,7 @@ func reset_gestures() -> void :
 	touch_moved = false
 	pinch_active = false
 	_pinch_zooming = false
+	_pinch_dirty = false
 func _notification(what: int) -> void :
 	if what == NOTIFICATION_WM_WINDOW_FOCUS_OUT: reset_gestures()
 
@@ -255,6 +286,7 @@ func _input(event: InputEvent) -> void :
 
 	if not input_blocked.is_valid(): return
 	if event is InputEventScreenTouch and not event.pressed and touches.has(event.index) and input_blocked.call(event.position):
+		_flush_pinch()
 		touch_moved = true
 		touches.erase(event.index)
 		if touches.is_empty(): pinch_active = false
