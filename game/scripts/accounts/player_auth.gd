@@ -24,6 +24,7 @@ func _ready() -> void:
 	if not env_url.is_empty():base_url=env_url
 	if not env_key.is_empty():public_key=env_key
 	base_url=base_url.trim_suffix("/")
+	if OS.has_feature("android"):_check_return_link.call_deferred()
 func configured() -> bool:
 	return base_url.begins_with("https://") and public_key.begins_with("sb_publishable_")
 func signed_in() -> bool:
@@ -63,19 +64,43 @@ func signup(email: String,password: String,commander: String) -> Dictionary:
 	var problem:=signup_problem(email,password,commander)
 	if not problem.is_empty():return failure(problem)
 	commander=commander_name(commander)
-	# Owner 2026-10-15 ("no code is sent, the link doesn't work"): if the account service sends a
-	# link instead of a code, the link confirms the email and opens the game's website.
-	var result:=await request("/signup?redirect_to="+GAME_ADDRESS.uri_encode(),{"email":email.strip_edges(),"password":password,"data":{"commander_name":commander}})
-	# Even if the server is misconfigured to auto-confirm, this UI never silently logs in after signup.
-	return result
+	email=email.strip_edges()
+	# Owner 2026-10-16 ("Create account ... still asks for a code. Fix that."): no code step.
+	# When the account service hands back a session the player is simply signed in; otherwise the
+	# app signs in with the same password straight away. Only if the service still insists on a
+	# confirmed email does the result say so (needs_email=true), and the panel shows "tap the link".
+	var result:=await request("/signup?redirect_to="+GAME_ADDRESS.uri_encode(),{"email":email,"password":password,"data":{"commander_name":commander}})
+	if not result.ok:return result
+	if not str(result.data.get("access_token","")).is_empty():
+		var session:=accept_session(result.data,false)
+		if session.ok:
+			await load_profile()
+			return session
+	var signed:=await login(email,password)
+	if signed.ok:
+		await load_profile()
+		return signed
+	if str(signed.get("message","")).begins_with("Confirm your email"):
+		return {"ok":true,"data":{},"needs_email":true,"message":"Account created. We sent a link to "+email+": tap it, then come back and tap \"Sign me in\"."}
+	return signed
 ## Sign in with Google (owner 2026-10-14). The website sends the player to Google through the
 ## account service and comes back with the session in the address (#access_token=...), which
-## finish_google_from_url() reads once and wipes from the address bar. The app keeps email
-## sign-in until it has a return link of its own.
-const GAME_ADDRESS:="https://play.warfrontmandate.com"
-static func google_available() -> bool:return OS.has_feature("web")
+## finish_google_from_url() reads once and wipes from the address bar.
+## In the Android app (owner 2026-10-16) the phone's browser does the same and comes back to the
+## app through the return link APP_RETURN (warfrontmandate://auth-callback#access_token=...),
+## which the app's manifest opens in the game (addons/warfront_app_link) and
+## finish_google_from_app() reads.
+## Trailing slash matters: the account service only accepts this exact return address.
+const GAME_ADDRESS:="https://play.warfrontmandate.com/"
+const APP_RETURN:="warfrontmandate://auth-callback"
+signal google_finished(result: Dictionary)
+static func google_available() -> bool:return OS.has_feature("web") or OS.has_feature("android")
 ## True once the owner has switched Google on in the account service (checked, never assumed).
 var google_enabled:=false
+## The app waits for the browser to come back after "Sign in with Google".
+var google_waiting:=false
+## Return links already used (tokens are single use; never read twice).
+static var used_links: Dictionary={}
 func check_google() -> bool:
 	if not configured() or not google_available():return false
 	var result:=await request("/settings",{},HTTPClient.METHOD_GET)
@@ -85,10 +110,75 @@ func google_url(return_to: String) -> String:
 	return base_url+"/auth/v1/authorize?provider=google&redirect_to="+return_to.uri_encode()
 func google_sign_in() -> Dictionary:
 	if not configured():return failure("Online accounts are being connected. You can keep playing offline.")
-	if not google_available():return failure("Google sign-in works on the website for now. In the app, use email.")
-	var here:=str(JavaScriptBridge.eval("window.location.origin + window.location.pathname"))
-	JavaScriptBridge.eval("window.location.assign("+JSON.stringify(google_url(here))+")")
-	return {"ok":true,"data":{},"message":"Opening Google…"}
+	if not google_available():return failure("Google sign-in works on the website. Here, use email.")
+	if OS.has_feature("web"):
+		var here:=str(JavaScriptBridge.eval("window.location.origin + window.location.pathname"))
+		JavaScriptBridge.eval("window.location.assign("+JSON.stringify(google_url(here))+")")
+		return {"ok":true,"data":{},"message":"Opening Google…"}
+	# The account service only sends the session to return addresses it allows; if the app's
+	# address is not allowed yet it would land on a dead page, so check first.
+	if not await app_return_allowed():
+		return failure("Google sign-in for the app is being switched on. Use email for now, or Google on play.warfrontmandate.com.")
+	google_waiting=true
+	OS.shell_open(google_url(APP_RETURN))
+	return {"ok":true,"data":{},"message":"Finish signing in with Google in your browser. It brings you back here."}
+var app_return_ok:=false
+## Asks the account service where it would send APP_RETURN (an expired-link request answers with
+## a redirect to the return address when it is allowed, or to its default site otherwise).
+func app_return_allowed() -> bool:
+	if app_return_ok:return true
+	if not configured() or busy:return false
+	var path:="/verify?type=signup&token=expired&redirect_to="+APP_RETURN.uri_encode()
+	var location:=""
+	busy=true
+	if transport.is_valid():
+		var reply: Dictionary=await transport.call(path,{},HTTPClient.METHOD_GET,"")
+		location=str(reply.get("data",{}).get("location",""))
+	else:
+		var client:=HTTPRequest.new();client.timeout=15;client.max_redirects=0;add_child(client)
+		if client.request(endpoint(path),PackedStringArray(["apikey: "+public_key]),HTTPClient.METHOD_GET)==OK:
+			var raw: Array=await client.request_completed
+			for header in raw[2]:
+				if str(header).to_lower().begins_with("location:"):location=str(header).substr(9).strip_edges()
+		client.queue_free()
+	busy=false
+	app_return_ok=location.begins_with(APP_RETURN)
+	return app_return_ok
+## The return link the app was opened with (Android), or "" when there is none.
+static func android_return_link() -> String:
+	if not OS.has_feature("android") or not Engine.has_singleton("AndroidRuntime"):return ""
+	var runtime: Variant=Engine.get_singleton("AndroidRuntime")
+	var activity: Variant=runtime.getActivity()
+	if activity==null:return ""
+	var intent: Variant=activity.getIntent()
+	if intent==null:return ""
+	var link: Variant=intent.getDataString()
+	if link==null or not str(link).begins_with(APP_RETURN) or used_links.has(str(link)):return ""
+	return str(link)
+static func link_values(link: String) -> Dictionary:
+	var values: Dictionary={}
+	var hash_at:=link.find("#")
+	var query_at:=link.find("?")
+	if query_at>=0:values.merge(address_values(link.substr(query_at+1,(hash_at-query_at-1) if hash_at>query_at else -1)))
+	if hash_at>=0:values.merge(address_values(link.substr(hash_at+1)),true)
+	return values
+func finish_google_from_app(link: String="") -> Dictionary:
+	if link.is_empty():link=android_return_link()
+	if link.is_empty() or used_links.has(link):return failure("No Google sign-in to finish.")
+	used_links[link]=true
+	google_waiting=false
+	var values:=link_values(link)
+	if not values.has("access_token") and not values.has("error"):return failure("No Google sign-in to finish.")
+	var result:=await accept_google(values)
+	google_finished.emit(result)
+	return result
+func _notification(what: int) -> void:
+	# Back from the browser: the return link arrives as the app comes to the front again.
+	if what in [NOTIFICATION_APPLICATION_RESUMED,NOTIFICATION_APPLICATION_FOCUS_IN] and OS.has_feature("android"):
+		_check_return_link.call_deferred()
+func _check_return_link() -> void:
+	if busy:return
+	if not android_return_link().is_empty():await finish_google_from_app()
 static func address_values(fragment: String) -> Dictionary:
 	var values: Dictionary={}
 	for pair in fragment.trim_prefix("#").split("&",false):
@@ -254,4 +344,7 @@ func http(path: String,payload: Dictionary,method: int,bearer: String) -> Dictio
 	if status==429:return failure("Too many attempts. Wait a moment and try again.",status)
 	if str(data.get("error_code",""))=="email_not_confirmed":return failure("Confirm your email before signing in.",status)
 	if status>=500:return failure("Account service is temporarily unavailable. Please try again.",status)
-	return failure("Could not complete that request. Check your details or request a new code.",status)
+	match str(data.get("error_code","")):
+		"invalid_credentials":return failure("Wrong email or password.",status)
+		"weak_password":return failure("That password is too easy to guess. Try a longer one.",status)
+	return failure("Could not complete that request. Check your details and try again.",status)
