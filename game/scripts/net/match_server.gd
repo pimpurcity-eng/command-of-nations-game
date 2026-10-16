@@ -224,12 +224,15 @@ func public_seats() -> Dictionary:
 func _state(country: String, kind: String, full: bool) -> Dictionary:
 	var units: UnitSystem = game.units
 	var rules: MatchSystem = game.match_rules
-	var all: = units.snapshot()
+	# snapshot() omits casualties before UnitSystem removes them from its live array.
+	# Match by id so a death cannot shift entries, leak another army or break every tick.
+	var sources: Dictionary = {}
+	for unit in units.units: sources[unit.id] = unit
 	var visible: Array = []
-	for i in units.units.size():
-		var unit: Dictionary = units.units[i]
+	for entry in units.snapshot():
+		var unit: Dictionary = sources.get(entry.id, {})
+		if unit.is_empty(): continue
 		if unit.health <= 0 or not units.unit_visible(unit, country): continue
-		var entry: Dictionary = all[i]
 		if unit.country != country:
 			for field in HIDDEN_FIELDS: entry.erase(field)
 		visible.append(entry)

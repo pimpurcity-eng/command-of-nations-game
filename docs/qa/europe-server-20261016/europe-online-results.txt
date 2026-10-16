@@ -1,0 +1,35 @@
+Godot 4.6.3; independent copy of the map author's uncommitted Europe working tree.
+Applied the casualty fix and the adjacent regression assertion in this folder.
+
+PASS Europe server listens
+PASS 20 claimable countries and 24 permanent AI countries
+PASS public lobby shows actual capacity and available countries
+PASS public lobby reveals no account IDs, armies or resources
+PASS phone loads match information before choosing a country
+PASS browsing does not reserve a country
+PASS home match picker lists all 20 countries
+PASS choosing Poland reserves that country
+PASS a taken country is refused without silently assigning another
+PASS refused country claims do not consume another seat
+PASS second player chooses Romania
+PASS each country belongs to one account
+PASS players control their countries while unclaimed and small nations keep AI
+PASS signed-in account sees its existing country on another device
+PASS returning players resume their reserved country
+PASS welcome identifies the map, match and authoritative 1× speed
+PASS enemy routes and attack targets remain private
+PASS phone receives only armies in its country's sight
+PASS a destroyed army cannot corrupt the Europe server tick or fog of war
+PASS players cannot command another country's army
+PASS players cannot produce another country's equipment
+PASS Romania can declare its own war
+PASS declaration uses the sender's country and selected enemy
+PASS another country can declare a separate war while a war already exists
+PASS phone rejects a different map before applying its state
+PASS all 20 country reservations are represented in the match
+PASS all country reservations are saved
+PASS server restart restores the Europe match and its country owners
+PASS returning account resumes Poland even when another country was requested
+PASS attached phone applies welcome immediately and stops its own simulation
+PASS phone cannot change the online match speed or pause the server
+RESULT EUROPE_ONLINE checks=31 failures=0
