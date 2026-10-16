@@ -325,6 +325,13 @@ func _build_home() -> void:
 	var all_features := _button("EXPLORE ALL FEATURES  →")
 	all_features.pressed.connect(_select_page.bind("features"))
 	body.add_child(all_features)
+	# Owner 2026-10-16: the Premium membership screen is reachable from home.
+	var premium := _button("★ PREMIUM MEMBERSHIP  →")
+	premium.pressed.connect(func():
+		if loading: return
+		var account: Variant = get_parent().get("account_panel") if get_parent() != null else null
+		PremiumPanel.show_over(self, account.auth if account is AccountPanel else null))
+	body.add_child(premium)
 	_section(body, "LATEST FROM THE FRONT")
 	_update_card(body, catalogue.updates[0])
 	footer = _label("WARFRONTMANDATE.COM", 16, MUTED)

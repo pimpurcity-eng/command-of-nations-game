@@ -18,7 +18,9 @@ func run() -> void:
 	var drone: = unit("geran_russia", "fighter", "attack")
 	var bomber: = unit("bombers_ukraine", "fighter", "attack")
 	var jet_run: = unit("fighters_ukraine", "fighter", "attack")
-	var jet_pass: = unit("fighters_ukraine", "fighter", "patrol")
+	var jet_pass: = unit("fighters_ukraine", "fighter", "fly")
+	# Owner 2026-10-16: a jet on patrol circles low, so short-range AA reaches it.
+	var jet_patrol: = unit("fighters_ukraine", "fighter", "patrol")
 	var heli: = unit("helicopters_ukraine", "fighter", "attack")
 	var radar: = unit("a50u_russia", "fighter", "patrol")
 	check(not AirBattleSystem.can_engage(sam, drone), "a level-5 long-range SAM cannot see a drone")
@@ -27,5 +29,6 @@ func run() -> void:
 	check(AirBattleSystem.can_engage(shorad, drone), "short-range AA shoots down drones")
 	check(AirBattleSystem.can_engage(shorad, heli) and AirBattleSystem.can_engage(shorad, jet_run), "short-range AA hits helicopters and jets on an attack run")
 	check(not AirBattleSystem.can_engage(shorad, bomber) and not AirBattleSystem.can_engage(shorad, jet_pass), "short-range AA cannot reach bombers or jets passing high")
+	check(AirBattleSystem.can_engage(shorad, jet_patrol) and AirBattleSystem.can_engage(sam, jet_patrol), "short-range and long-range AA both hit a jet patrolling over them")
 	print("RESULT failures=", failures.size())
 	quit(1 if not failures.is_empty() else 0)

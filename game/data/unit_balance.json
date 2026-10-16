@@ -41,10 +41,10 @@
         "cost": {
           "funds": 1200,
           "manpower": 600,
-          "food": 300,
-          "materials": 240,
-          "fuel": 60,
-          "electronics": 60
+          "food": 370,
+          "materials": 290,
+          "fuel": 0,
+          "electronics": 0
         },
         "upkeep": {
           "funds": 100,
@@ -86,10 +86,10 @@
         "cost": {
           "funds": 1800,
           "manpower": 650,
-          "food": 340,
-          "materials": 300,
-          "fuel": 120,
-          "electronics": 150
+          "food": 480,
+          "materials": 430,
+          "fuel": 0,
+          "electronics": 0
         },
         "upkeep": {
           "funds": 140,
@@ -153,10 +153,10 @@
         "cost": {
           "funds": 2400,
           "manpower": 500,
-          "food": 300,
-          "materials": 360,
-          "fuel": 120,
-          "electronics": 300
+          "food": 490,
+          "materials": 590,
+          "fuel": 0,
+          "electronics": 0
         },
         "upkeep": {
           "funds": 180,
@@ -210,10 +210,10 @@
         "cost": {
           "funds": 2000,
           "manpower": 700,
-          "food": 360,
-          "materials": 420,
-          "fuel": 150,
-          "electronics": 180
+          "food": 510,
+          "materials": 600,
+          "fuel": 0,
+          "electronics": 0
         },
         "upkeep": {
           "funds": 160,
@@ -272,10 +272,10 @@
         "cost": {
           "funds": 1500,
           "manpower": 350,
-          "food": 220,
-          "materials": 180,
-          "fuel": 60,
-          "electronics": 240
+          "food": 380,
+          "materials": 320,
+          "fuel": 0,
+          "electronics": 0
         },
         "upkeep": {
           "funds": 120,
@@ -317,10 +317,10 @@
         "cost": {
           "funds": 3600,
           "manpower": 180,
-          "food": 180,
-          "materials": 1200,
-          "fuel": 480,
-          "electronics": 480
+          "food": 0,
+          "materials": 1670,
+          "fuel": 670,
+          "electronics": 0
         },
         "upkeep": {
           "funds": 280,
@@ -362,10 +362,10 @@
         "cost": {
           "funds": 5400,
           "manpower": 180,
-          "food": 200,
-          "materials": 1560,
-          "fuel": 600,
-          "electronics": 960
+          "food": 0,
+          "materials": 2400,
+          "fuel": 920,
+          "electronics": 0
         },
         "upkeep": {
           "funds": 380,
@@ -424,10 +424,10 @@
         "cost": {
           "funds": 2400,
           "manpower": 150,
-          "food": 150,
-          "materials": 780,
-          "fuel": 300,
-          "electronics": 300
+          "food": 0,
+          "materials": 1100,
+          "fuel": 420,
+          "electronics": 0
         },
         "upkeep": {
           "funds": 190,
@@ -469,10 +469,10 @@
         "cost": {
           "funds": 1800,
           "manpower": 240,
-          "food": 200,
-          "materials": 600,
-          "fuel": 240,
-          "electronics": 180
+          "food": 0,
+          "materials": 870,
+          "fuel": 350,
+          "electronics": 0
         },
         "upkeep": {
           "funds": 140,
@@ -514,10 +514,10 @@
         "cost": {
           "funds": 2400,
           "manpower": 240,
-          "food": 220,
-          "materials": 780,
-          "fuel": 300,
-          "electronics": 360
+          "food": 0,
+          "materials": 1200,
+          "fuel": 460,
+          "electronics": 0
         },
         "upkeep": {
           "funds": 180,
@@ -559,10 +559,10 @@
         "cost": {
           "funds": 2700,
           "manpower": 220,
-          "food": 200,
-          "materials": 720,
-          "fuel": 300,
-          "electronics": 480
+          "food": 0,
+          "materials": 1200,
+          "fuel": 500,
+          "electronics": 0
         },
         "upkeep": {
           "funds": 190,
@@ -604,10 +604,10 @@
         "cost": {
           "funds": 3000,
           "manpower": 240,
-          "food": 200,
-          "materials": 960,
-          "fuel": 360,
-          "electronics": 480
+          "food": 0,
+          "materials": 1450,
+          "fuel": 550,
+          "electronics": 0
         },
         "upkeep": {
           "funds": 240,
@@ -649,10 +649,10 @@
         "cost": {
           "funds": 3800,
           "manpower": 240,
-          "food": 220,
-          "materials": 1080,
-          "fuel": 420,
-          "electronics": 780
+          "food": 0,
+          "materials": 1450,
+          "fuel": 0,
+          "electronics": 1050
         },
         "upkeep": {
           "funds": 300,
@@ -706,10 +706,10 @@
         "cost": {
           "funds": 1100,
           "manpower": 360,
-          "food": 220,
-          "materials": 240,
-          "fuel": 40,
-          "electronics": 60
+          "food": 0,
+          "materials": 480,
+          "fuel": 80,
+          "electronics": 0
         },
         "upkeep": {
           "funds": 90,
@@ -751,10 +751,10 @@
         "cost": {
           "funds": 1600,
           "manpower": 400,
-          "food": 240,
-          "materials": 420,
-          "fuel": 60,
-          "electronics": 120
+          "food": 0,
+          "materials": 740,
+          "fuel": 100,
+          "electronics": 0
         },
         "upkeep": {
           "funds": 120,
@@ -796,10 +796,10 @@
         "cost": {
           "funds": 2100,
           "manpower": 420,
-          "food": 260,
-          "materials": 600,
-          "fuel": 100,
-          "electronics": 180
+          "food": 0,
+          "materials": 980,
+          "fuel": 160,
+          "electronics": 0
         },
         "upkeep": {
           "funds": 150,
@@ -841,10 +841,10 @@
         "cost": {
           "funds": 2400,
           "manpower": 180,
-          "food": 160,
-          "materials": 720,
-          "fuel": 240,
-          "electronics": 660
+          "food": 0,
+          "materials": 930,
+          "fuel": 0,
+          "electronics": 850
         },
         "upkeep": {
           "funds": 180,
@@ -886,10 +886,10 @@
         "cost": {
           "funds": 4200,
           "manpower": 180,
-          "food": 180,
-          "materials": 1080,
-          "fuel": 300,
-          "electronics": 1500
+          "food": 0,
+          "materials": 1280,
+          "fuel": 0,
+          "electronics": 1780
         },
         "upkeep": {
           "funds": 300,
@@ -931,10 +931,10 @@
         "cost": {
           "funds": 4800,
           "manpower": 200,
-          "food": 180,
-          "materials": 1200,
-          "fuel": 600,
-          "electronics": 1200
+          "food": 0,
+          "materials": 1590,
+          "fuel": 0,
+          "electronics": 1590
         },
         "upkeep": {
           "funds": 320,
@@ -976,10 +976,10 @@
         "cost": {
           "funds": 6600,
           "manpower": 300,
-          "food": 240,
-          "materials": 2400,
-          "fuel": 480,
-          "electronics": 1560
+          "food": 0,
+          "materials": 2840,
+          "fuel": 0,
+          "electronics": 1840
         },
         "upkeep": {
           "funds": 400,
@@ -1021,10 +1021,10 @@
         "cost": {
           "funds": 3600,
           "manpower": 200,
-          "food": 180,
-          "materials": 960,
-          "fuel": 360,
-          "electronics": 960
+          "food": 0,
+          "materials": 1230,
+          "fuel": 0,
+          "electronics": 1230
         },
         "upkeep": {
           "funds": 260,
@@ -1066,10 +1066,10 @@
         "cost": {
           "funds": 10800,
           "manpower": 300,
-          "food": 240,
-          "materials": 2400,
-          "fuel": 1800,
-          "electronics": 2400
+          "food": 0,
+          "materials": 3420,
+          "fuel": 0,
+          "electronics": 3420
         },
         "upkeep": {
           "funds": 600,
@@ -1111,10 +1111,10 @@
         "cost": {
           "funds": 4200,
           "manpower": 120,
-          "food": 140,
-          "materials": 960,
-          "fuel": 720,
-          "electronics": 1080
+          "food": 0,
+          "materials": 0,
+          "fuel": 1160,
+          "electronics": 1740
         },
         "upkeep": {
           "funds": 300,
@@ -1156,10 +1156,10 @@
         "cost": {
           "funds": 4800,
           "manpower": 120,
-          "food": 140,
-          "materials": 1080,
-          "fuel": 840,
-          "electronics": 1200
+          "food": 0,
+          "materials": 0,
+          "fuel": 1340,
+          "electronics": 1920
         },
         "upkeep": {
           "funds": 340,
@@ -1201,10 +1201,10 @@
         "cost": {
           "funds": 4500,
           "manpower": 120,
-          "food": 140,
-          "materials": 1020,
-          "fuel": 840,
-          "electronics": 1140
+          "food": 0,
+          "materials": 0,
+          "fuel": 1330,
+          "electronics": 1810
         },
         "upkeep": {
           "funds": 320,
@@ -1246,10 +1246,10 @@
         "cost": {
           "funds": 7200,
           "manpower": 180,
-          "food": 180,
-          "materials": 1560,
-          "fuel": 1440,
-          "electronics": 1560
+          "food": 0,
+          "materials": 0,
+          "fuel": 2280,
+          "electronics": 2460
         },
         "upkeep": {
           "funds": 500,
@@ -1291,10 +1291,10 @@
         "cost": {
           "funds": 3300,
           "manpower": 180,
-          "food": 180,
-          "materials": 720,
-          "fuel": 480,
-          "electronics": 780
+          "food": 0,
+          "materials": 0,
+          "fuel": 820,
+          "electronics": 1340
         },
         "upkeep": {
           "funds": 250,
@@ -1336,10 +1336,10 @@
         "cost": {
           "funds": 2400,
           "manpower": 180,
-          "food": 180,
-          "materials": 600,
-          "fuel": 360,
-          "electronics": 420
+          "food": 0,
+          "materials": 0,
+          "fuel": 720,
+          "electronics": 840
         },
         "upkeep": {
           "funds": 180,
@@ -1381,10 +1381,10 @@
         "cost": {
           "funds": 2700,
           "manpower": 120,
-          "food": 140,
-          "materials": 660,
-          "fuel": 420,
-          "electronics": 540
+          "food": 0,
+          "materials": 0,
+          "fuel": 770,
+          "electronics": 990
         },
         "upkeep": {
           "funds": 190,
@@ -1426,10 +1426,10 @@
         "cost": {
           "funds": 1500,
           "manpower": 60,
-          "food": 60,
-          "materials": 240,
-          "fuel": 120,
-          "electronics": 540
+          "food": 0,
+          "materials": 0,
+          "fuel": 170,
+          "electronics": 790
         },
         "upkeep": {
           "funds": 90,
@@ -1471,10 +1471,10 @@
         "cost": {
           "funds": 2600,
           "manpower": 60,
-          "food": 80,
-          "materials": 420,
-          "fuel": 180,
-          "electronics": 840
+          "food": 0,
+          "materials": 0,
+          "fuel": 270,
+          "electronics": 1250
         },
         "upkeep": {
           "funds": 150,
@@ -1516,10 +1516,10 @@
         "cost": {
           "funds": 900,
           "manpower": 40,
-          "food": 40,
-          "materials": 180,
-          "fuel": 60,
-          "electronics": 300
+          "food": 0,
+          "materials": 0,
+          "fuel": 100,
+          "electronics": 480
         },
         "upkeep": {
           "funds": 50,
@@ -1561,10 +1561,10 @@
         "cost": {
           "funds": 1200,
           "manpower": 40,
-          "food": 40,
-          "materials": 240,
-          "fuel": 120,
-          "electronics": 360
+          "food": 0,
+          "materials": 0,
+          "fuel": 190,
+          "electronics": 570
         },
         "upkeep": {
           "funds": 60,
@@ -1606,10 +1606,10 @@
         "cost": {
           "funds": 3600,
           "manpower": 180,
-          "food": 180,
-          "materials": 1080,
-          "fuel": 720,
-          "electronics": 600
+          "food": 0,
+          "materials": 0,
+          "fuel": 1410,
+          "electronics": 1170
         },
         "upkeep": {
           "funds": 260,
@@ -1651,10 +1651,10 @@
         "cost": {
           "funds": 6000,
           "manpower": 180,
-          "food": 180,
-          "materials": 1200,
-          "fuel": 840,
-          "electronics": 1800
+          "food": 0,
+          "materials": 0,
+          "fuel": 1280,
+          "electronics": 2740
         },
         "upkeep": {
           "funds": 400,
@@ -1696,10 +1696,10 @@
         "cost": {
           "funds": 6600,
           "manpower": 360,
-          "food": 300,
-          "materials": 2400,
-          "fuel": 900,
-          "electronics": 1500
+          "food": 0,
+          "materials": 3710,
+          "fuel": 1390,
+          "electronics": 0
         },
         "upkeep": {
           "funds": 440,
@@ -1741,10 +1741,10 @@
         "cost": {
           "funds": 9600,
           "manpower": 480,
-          "food": 380,
-          "materials": 3600,
-          "fuel": 1320,
-          "electronics": 2100
+          "food": 0,
+          "materials": 5410,
+          "fuel": 1990,
+          "electronics": 0
         },
         "upkeep": {
           "funds": 620,
@@ -1786,10 +1786,10 @@
         "cost": {
           "funds": 4200,
           "manpower": 240,
-          "food": 220,
-          "materials": 1440,
-          "fuel": 600,
-          "electronics": 840
+          "food": 0,
+          "materials": 2190,
+          "fuel": 910,
+          "electronics": 0
         },
         "upkeep": {
           "funds": 280,
@@ -1831,10 +1831,10 @@
         "cost": {
           "funds": 8400,
           "manpower": 240,
-          "food": 240,
-          "materials": 3000,
-          "fuel": 1080,
-          "electronics": 1800
+          "food": 0,
+          "materials": 3120,
+          "fuel": 1120,
+          "electronics": 1870
         },
         "upkeep": {
           "funds": 520,
@@ -1876,10 +1876,10 @@
         "cost": {
           "funds": 16800,
           "manpower": 800,
-          "food": 600,
-          "materials": 6000,
-          "fuel": 1800,
-          "electronics": 3000
+          "food": 0,
+          "materials": 6330,
+          "fuel": 1900,
+          "electronics": 3170
         },
         "upkeep": {
           "funds": 1000,
@@ -1922,9 +1922,9 @@
           "funds": 3600,
           "manpower": 0,
           "food": 0,
-          "materials": 1440,
-          "fuel": 480,
-          "electronics": 240
+          "materials": 1620,
+          "fuel": 540,
+          "electronics": 0
         },
         "upkeep": {
           "funds": 0,
@@ -1967,9 +1967,9 @@
           "funds": 4200,
           "manpower": 0,
           "food": 0,
-          "materials": 1680,
-          "fuel": 600,
-          "electronics": 300
+          "materials": 1900,
+          "fuel": 680,
+          "electronics": 0
         },
         "upkeep": {
           "funds": 0,
@@ -2011,10 +2011,10 @@
         "cost": {
           "funds": 1200,
           "manpower": 180,
-          "food": 160,
-          "materials": 480,
-          "fuel": 240,
-          "electronics": 120
+          "food": 400,
+          "materials": 0,
+          "fuel": 600,
+          "electronics": 0
         },
         "upkeep": {
           "funds": 90,
@@ -2056,10 +2056,10 @@
         "cost": {
           "funds": 2100,
           "manpower": 180,
-          "food": 180,
-          "materials": 780,
-          "fuel": 300,
-          "electronics": 240
+          "food": 0,
+          "materials": 1080,
+          "fuel": 420,
+          "electronics": 0
         },
         "upkeep": {
           "funds": 150,
@@ -2101,10 +2101,10 @@
         "cost": {
           "funds": 1800,
           "manpower": 360,
-          "food": 240,
-          "materials": 600,
-          "fuel": 180,
-          "electronics": 240
+          "food": 360,
+          "materials": 900,
+          "fuel": 0,
+          "electronics": 0
         },
         "upkeep": {
           "funds": 140,
@@ -2146,10 +2146,10 @@
         "cost": {
           "funds": 2400,
           "manpower": 180,
-          "food": 180,
-          "materials": 1080,
-          "fuel": 360,
-          "electronics": 180
+          "food": 0,
+          "materials": 1350,
+          "fuel": 450,
+          "electronics": 0
         },
         "upkeep": {
           "funds": 170,
@@ -2191,10 +2191,10 @@
         "cost": {
           "funds": 1500,
           "manpower": 300,
-          "food": 240,
-          "materials": 300,
-          "fuel": 120,
-          "electronics": 300
+          "food": 640,
+          "materials": 0,
+          "fuel": 320,
+          "electronics": 0
         },
         "upkeep": {
           "funds": 120,

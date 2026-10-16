@@ -22,6 +22,14 @@ func _ready() -> void:
 	for state in ["normal","hover","pressed","disabled"]:theme.set_stylebox(state,"Button",style)
 	theme.set_stylebox("normal","LineEdit",style);theme.set_color("font_color","Button",Color("f0dec1"));fields.theme=theme
 	build("login");overlay.hide()
+	# Back from Google in the phone's browser (Android): show the account, or what went wrong.
+	auth.google_finished.connect(func(result: Dictionary):
+		working=false
+		overlay.show()
+		if result.ok:build("profile")
+		else:
+			if mode!="login":build("login")
+			status.text=str(result.message))
 	if preview_open:open()
 func open() -> void:
 	build("profile" if auth.signed_in() else "new_password" if auth.recovery_pending else "login");overlay.show()
@@ -52,10 +60,15 @@ func build(page: String) -> void:
 	mode=page;inputs.clear()
 	for item in fields.get_children():fields.remove_child(item);item.queue_free()
 	label_text("WARFRONT MANDATE: WW3",24).modulate=Color("c9ad73")
-	var titles: Dictionary={"login":"Welcome back, Commander","signup":"Create your commander account","verify":"Confirm your email","recover":"Reset your password","recovery_code":"Check your email","new_password":"Choose a new password","profile":"Commander account","delete":"Delete account","leaderboard":"Top commanders","achievements":"Achievements","alliance":"Alliance","alliance_browse":"Find an alliance","alliance_create":"Found an alliance"}
+	var titles: Dictionary={"login":"Welcome back, Commander","signup":"Create your commander account","check_email":"Check your email","recover":"Reset your password","recovery_code":"Check your email","new_password":"Choose a new password","profile":"Commander account","delete":"Delete account","leaderboard":"Top commanders","achievements":"Achievements","alliance":"Alliance","alliance_browse":"Find an alliance","alliance_create":"Found an alliance"}
 	label_text(titles[page],40)
 	if page=="profile":
-		label_text(str(auth.user.get("user_metadata",{}).get("commander_name","Commander")),34)
+		var commander_label:=label_text(str(auth.user.get("user_metadata",{}).get("commander_name","Commander")),34)
+		# Owner 2026-10-16: Premium badge and gold commander name while the membership is active.
+		if PlayerPremium.is_premium():
+			commander_label.modulate=Color("e9c46a")
+			label_text("★ PREMIUM COMMANDER"+((" · until "+PlayerPremium.until_text()) if PlayerPremium.until_text()!="" else ""),26).modulate=Color("e9c46a")
+		if auth.profile.has("xp") and PlayerPremium.premium_user!=str(auth.user.get("id","")):load_premium.call_deferred()
 		label_text(str(auth.user.get("email","")))
 		if auth.profile.has("xp"):
 			var xp:=int(auth.profile.xp);var level:=PlayerAuth.level_for(xp)
@@ -76,6 +89,7 @@ func build(page: String) -> void:
 			label_text("Loading your level and stats…",24)
 			load_profile.call_deferred()
 		label_text("Win a campaign for 100 XP, finish one for 25 XP, plus up to 50 XP for its length.",22)
+		button("★ Premium membership",func():PremiumPanel.show_over(self,auth))
 		button("Top commanders",func():build("leaderboard"))
 		button("Alliance",func():alliance=null;build("alliance"))
 		button("Achievements and medals",func():build("achievements"))
@@ -138,40 +152,46 @@ func build(page: String) -> void:
 		button("Delete my account forever",delete_account)
 		button("Keep my account",func():build("profile"))
 	else:
-		# Owner 2026-10-14: "add a sign in with Google" (website for now).
+		# Owner 2026-10-14: "add a sign in with Google"; 2026-10-16: in the Android app too.
 		if page in ["login","signup"] and PlayerAuth.google_available() and auth.google_enabled:
 			button("Sign in with Google",func():
-				status.text="Opening Google…"
-				var result:=auth.google_sign_in()
-				if not result.ok:status.text=str(result.message))
+				status.text="Opening Google…";working=true
+				var result:=await auth.google_sign_in();working=false
+				status.text=str(result.get("message","")))
 			label_text("or use your email",22)
 		if page in ["login","signup","recover"]:input("email","Email address")
 		if page=="signup":input("commander","Commander name")
 		if page in ["login","signup","new_password"]:input("password","Password (8+ characters)" if page!="login" else "Password",true)
 		if page in ["signup","new_password"]:input("confirm","Repeat password",true)
-		if page in ["verify","recovery_code"]:
+		if page=="recovery_code":
 			label_text("Enter the six-digit code sent to "+email+".",24);input("code","Six-digit email code")
-		button({"login":"Sign in","signup":"Create account","verify":"Confirm email","recover":"Send reset code","recovery_code":"Verify reset code","new_password":"Save new password"}[page],submit)
+		if page=="check_email":
+			# Owner 2026-10-16: no code box. Only shown while the account service still asks
+			# new players to confirm their email (a setting of the account service).
+			label_text("We sent a link to "+email+". Tap \"Confirm\" in that email, then come back here and tap \"Sign me in\".",26)
+			label_text("No email? Check the spam folder, or send it again.",22)
+			button("Sign me in",sign_in_after_link)
+			button("Send the email again",resend_code)
+		else:
+			button({"login":"Sign in","signup":"Create account","recover":"Send reset code","recovery_code":"Verify reset code","new_password":"Save new password"}[page],submit)
 		if page=="login":
 			button("Create an account",func():remember_email();build("signup"))
 			button("Achievements and medals",func():build("achievements"))
 			button("Forgot password?",func():remember_email();build("recover"))
-		elif page in ["verify","recovery_code"]:button("Send another code",resend_code)
-		if page=="verify":
-			# Owner 2026-10-15: the email may carry a link instead of a code. Tapping the link
-			# confirms the email; then sign in with the details just entered.
-			label_text("Got a link instead of a code? Tap \"Confirm email address\" in the email, then come back here.",22)
-			button("I tapped the link - sign me in",func():
-				working=true;status.text="Signing in…"
-				var result:=await auth.login(email,signup_password);working=false
-				if result.ok:signup_password="";build("profile")
-				else:status.text="Not confirmed yet - tap the link in the email first, then try again." if "Confirm your email" in str(result.message) else str(result.message))
+		elif page=="recovery_code":button("Send another code",resend_code)
 		if page!="login":button("Back to sign in",func():auth.clear_session();build("login"))
 	status=label_text("",24)
 	if not auth.configured():status.text="Online accounts are being connected. Offline play is available."
 	button("Back to game",func():overlay.hide())
-## Kept in memory only (never saved) so "I tapped the link" can sign in after signup.
+## Kept in memory only (never saved) so "Sign me in" can sign in after the email link.
 var signup_password:=""
+func sign_in_after_link() -> void:
+	if signup_password.is_empty():build("login");status.text="Your email is confirmed? Sign in with your password.";return
+	working=true;status.text="Signing in…"
+	var result:=await auth.login(email,signup_password);working=false
+	if result.ok:
+		signup_password="";build("profile")
+	else:status.text="Not confirmed yet - tap the link in the email first, then try again." if "Confirm your email" in str(result.message) else str(result.message)
 var leaderboard_rows: Array = []
 var board_metric:="xp"
 # ---------------------------------------------------------------- alliances
@@ -272,9 +292,16 @@ func load_leaderboard() -> void:
 		if leaderboard_rows.is_empty():status.text="No commanders yet."
 		else:build("leaderboard")
 	else:status.text=result.message
+## Premium flag for a profile that was loaded elsewhere (e.g. after Google sign-in).
+func load_premium() -> void:
+	if working or mode!="profile":return
+	working=true;await PlayerPremium.refresh(auth);working=false
+	if mode=="profile" and PlayerPremium.is_premium():build("profile")
 func load_profile() -> void:
 	if working or mode!="profile":return
-	working=true;var result:=await auth.load_profile();working=false
+	working=true;var result:=await auth.load_profile()
+	if result.ok:await PlayerPremium.refresh(auth)
+	working=false
 	if result.ok and mode=="profile":build("profile")
 	elif mode=="profile":status.text=result.message
 func delete_account() -> void:
@@ -291,24 +318,33 @@ func submit() -> void:
 	working=true;status.text="Connecting…"
 	var result: Dictionary
 	match mode:
-		"login":result=await auth.login(email,value("password"))
+		"login":
+			signup_password=value("password")
+			result=await auth.login(email,signup_password)
 		"signup":
 			signup_password=value("password")
 			result=await auth.signup(email,signup_password,value("commander"))
-		"verify":result=await auth.verify(email,value("code"))
 		"recover":result=await auth.resend(email,true)
 		"recovery_code":result=await auth.verify(email,value("code"),true)
 		"new_password":result=await auth.reset_password(value("password"))
 	working=false
-	if not result.ok:status.text=result.message;return
+	if not result.ok:
+		# Signed up earlier but never tapped the email link: show how to finish, no code box.
+		if mode=="login" and str(result.message).begins_with("Confirm your email"):
+			build("check_email");status.text="Your email is not confirmed yet."
+			return
+		signup_password=""
+		status.text=result.message;return
 	match mode:
-		"login","verify":build("profile")
-		"signup":cooldown_until=Time.get_ticks_msec()+60000;build("verify")
+		"login":signup_password="";build("profile")
+		"signup":
+			if result.get("needs_email",false):cooldown_until=Time.get_ticks_msec()+60000;build("check_email");status.text=str(result.message)
+			else:signup_password="";build("profile")
 		"recover":cooldown_until=Time.get_ticks_msec()+60000;build("recovery_code");status.text="If that account exists, a reset code has been sent."
 		"recovery_code":build("new_password")
 		"new_password":build("login");status.text="Password updated. Sign in with your new password."
 func resend_code() -> void:
 	if Time.get_ticks_msec()<cooldown_until:status.text="Please wait a minute before requesting another code.";return
 	working=true;var result:=await auth.resend(email,mode=="recovery_code");working=false
-	status.text="If eligible, a new code has been sent." if result.ok else result.message
+	status.text=("If eligible, a new email has been sent." if mode=="check_email" else "If eligible, a new code has been sent.") if result.ok else result.message
 	if result.ok:cooldown_until=Time.get_ticks_msec()+60000

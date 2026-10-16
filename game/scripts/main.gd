@@ -373,6 +373,7 @@ func _ready() -> void :
 		attack_order = false
 		append_order = false
 		patrol_order = false
+		selecting_armies = false  # owner 2026-10-16: the rally tap must not be taken as an army pick
 		_set_order_mode(true)
 		hud.show_status("Tap a rally point on land or sea. Each new unit checks its own route."))
 	city_panel.production_requested.connect( func(city_name: String): production_panel.open(city_name))
@@ -501,7 +502,7 @@ func _ready() -> void :
 	trade.delivered.connect(func(country: String, partner: String, cargo: String, amount: float):
 		if country == GameSession.player_country: hud.show_status("TRADE · %s delivered %d %s" % [trade.partner_name(partner), roundi(amount), cargo]))
 	units.status_changed.connect( func(_message: String): refresh_hud())
-	hud.show_status("PLANNING · Issue orders and queue production, then tap Play. Win by domination, economy or elimination.")
+	hud.show_status("PLANNING · Issue orders and queue production, then tap Play. " + VictoryRules.goal_text())
 	apply_player_country()
 	if GameSession.weapons_test: populate_weapons_test(); apply_player_country()
 	elif session.scenario.has("starting_tiers"):
@@ -578,6 +579,11 @@ func _ready() -> void :
 		await account_panel.auth.finish_google_from_url()
 		account_panel.open()
 		refresh_home_commander()
+	# The Android app was reopened by the browser after "Sign in with Google": finish it.
+	if OS.has_feature("android") and not PlayerAuth.android_return_link().is_empty():
+		open_home_account()
+		await account_panel.auth.finish_google_from_app()
+		refresh_home_commander()
 	if OS.has_feature("web") and not WebExtras.available:
 		web_extras = WebExtras.new()
 		add_child(web_extras)
@@ -605,7 +611,9 @@ func _web_extras_loaded() -> void:
 func _process(delta: float) -> void :
 	if map != null and rig != null:
 		map.set_view_distance(rig.distance)
-		if units != null: units.view_distance = rig.rendered_distance
+		# Owner 2026-10-16 ("render a little bit earlier"): models start appearing as soon as the
+		# zoom heads past the threshold, not when the gliding camera gets there.
+		if units != null: units.view_distance = minf(rig.rendered_distance, rig.distance)
 	if session == null or session.match_rules == null: return
 	if mobile_start != null and mobile_start.visible: return
 	autosave_timer += delta
@@ -636,11 +644,14 @@ func _browser_visible(_arguments: Array) -> void :
 func _map_click(screen: Vector2, order: bool) -> void :
 	if selecting_armies:
 		# City hubs are destinations even when a garrison overlaps their model.
+		# Owner 2026-10-16 ("it's hard to click the units"): one of your armies wins when the
+		# finger is on its model or nearer to it than to the city centre.
 		var meeting_city: = cities.pick_screen(screen)
-		if not meeting_city.is_empty() and not units.command_ids.is_empty():
+		var picked: = units.pick_screen(rig.camera,screen)
+		var own_army_tapped: bool = not picked.is_empty() and units.units[picked.index].country == GameSession.player_country and (meeting_city.is_empty() or picked.inside or float(picked.distance) < float(meeting_city.distance))
+		if not meeting_city.is_empty() and not units.command_ids.is_empty() and not own_army_tapped:
 			player_order(map.position_at(meeting_city.city.point))
 			return
-		var picked: = units.pick_screen(rig.camera,screen)
 		if not picked.is_empty():
 			var army: Dictionary = units.units[picked.index]
 			if army.country != GameSession.player_country:
@@ -686,6 +697,12 @@ func _map_click(screen: Vector2, order: bool) -> void :
 		# No army under the tap: advance on that province to take it.
 		var target: = map.pick(rig.camera, screen)
 		if target.is_empty(): hud.show_status("Choose an enemy army or province");return
+		# Owner 2026-10-16: aircraft attacking an airfield or province strike the enemy there (planes on the ground too).
+		if units.selected >= 0 and units.air.is_air(units.units[units.selected]):
+			var parked: = units.air.target_near(Vector2(target.position.x, target.position.z), GameSession.player_country)
+			if not parked.is_empty():
+				_attack_army(parked)
+				return
 		var land_owner: String = str(target.territory.get("controller", ""))
 		if land_owner.is_empty() or land_owner == GameSession.player_country:
 			hud.show_status("That is your own land · choose an enemy army or province")
@@ -703,6 +720,9 @@ func _map_click(screen: Vector2, order: bool) -> void :
 		# selected; otherwise the town under the finger opens. Several armies on one spot are
 		# stepped through by tapping again.
 		var choices: Array = units.pick_all_screen(rig.camera, screen)
+		# Owner 2026-10-16: armies are easier to tap (bigger reach), but a tap nearer the town's
+		# centre than to any army still opens the town.
+		if not choices.is_empty() and not city_hit.is_empty() and not choices[0].inside and float(city_hit.distance) < float(choices[0].distance): choices = []
 		if choices.is_empty():
 			_tap_cycle = {}
 			if not city_hit.is_empty():
@@ -846,9 +866,10 @@ func player_order(destination: Vector3) -> void :
 		return
 	if accepted:
 		hud.unit_moving = true
-		# Movement sound by unit type (owner 2026-10-13): tracks, wheels, boots or jet engines.
+		# Movement sound by unit type (owner 2026-10-13): tracks, wheels or jet engines. Owner
+		# 2026-10-16: "Take the horse racing sound out of the game" - the marching boots are gone.
 		var mover: Dictionary = units.units[units.selected]
-		var sound: String = {"heavy": "tracks_moving", "light": "wheels_moving", "infantry": "march", "air": "jet_flyby"}.get(UnitClasses.of(mover), "")
+		var sound: String = {"heavy": "tracks_moving", "light": "wheels_moving", "air": "jet_flyby"}.get(UnitClasses.of(mover), "")
 		if not sound.is_empty(): audio.play(sound, mover.node.position)
 		if GameSession.weapons_test and clock.paused:
 			clock.paused = false
@@ -879,6 +900,12 @@ func refresh_hud() -> void :
 		hud.city_scores = match_rules.city_score()
 		var table: = VictoryRules.standings(map.territories, match_rules.cities, match_rules.production.stockpiles.keys() if match_rules.production != null else ["russia", "ukraine"])
 		hud.domination = table.get(GameSession.player_country, {}).get("domination", 0.0) / VictoryRules.DOMINATION_SHARE
+		# Owner 2026-10-16: the goal and any domination countdown (either side) are on the top bar.
+		hud.victory_goal = VictoryRules.goal_text()
+		hud.victory_warning = ""
+		for country in match_rules.victory.domination_held:
+			var left: float = match_rules.victory.domination_countdown(country)
+			if left >= 0.0: hud.victory_warning = ("YOU WIN" if country == GameSession.player_country else country.to_upper() + " WINS") + " IN " + SimulationClock.duration(left, clock.speed)
 		map.update_relations(match_rules.at_war)
 	hud.show_clock(clock.elapsed, clock.speed, clock.paused)
 	if match_rules != null:
@@ -892,7 +919,7 @@ func refresh_hud() -> void :
 		hud.stack_count = units.stacks.members(unit).size()
 		hud.show_air_commands(units.air.is_air(unit))
 		if hud.inspecting_unit:
-			var state: = "WAIT " + SimulationClock.duration(unit.get("delay_remaining", 0.0), clock.speed) if unit.get("delay_remaining", 0.0) > 0 else "MODERNIZING" if unit.get("upgrade_remaining", 0.0) > 0 else ("DEFENDING" if units._land_owner(unit) == unit.country else "ATTACKING") if unit.engaged else "FIRING" if unit.get("firing_halt", false) else ("MOVING" if unit.moving else "READY")
+			var state: = "WAIT " + SimulationClock.duration(unit.get("delay_remaining", 0.0), clock.speed) if unit.get("delay_remaining", 0.0) > 0 else "MODERNIZING" if unit.get("upgrade_remaining", 0.0) > 0 else CombatSystem.battle_label(unit, units._land_owner(unit)) if unit.engaged else "FIRING" if unit.get("firing_halt", false) else ("MOVING" if unit.moving else "READY")
 			var group: = units.stacks.members(unit)
 			var hp: = 0.0
 			for member in group: hp += member.health
@@ -914,9 +941,12 @@ func refresh_hud() -> void :
 			if unit.visual_kind not in ["fighter", "naval"]:
 				var biome: = map.terrain_at(point)
 				hud.detail.text += " · " + biome.to_upper()
+				# Owner 2026-10-16: armies are faster on their own land, slower on enemy land.
+				var land_factor: = TerrainRules.territory_speed(unit.country, units.stacks.land_owner(point), units.diplomacy)
+				if land_factor != 1.0: hud.detail.text += " · " + TerrainRules.territory_label(land_factor).to_upper()
 			for territory in map.territories:
 				if match_rules.capture_progress.has(territory.id) and RegionData.contains(territory, point):
-					hud.detail.text += " · CAPTURE " + str(int(match_rules.capture_progress[territory.id].seconds / 6.0 * 100)) + "%"
+					hud.detail.text += " · CAPTURE " + str(mini(100, int(match_rules.capture_progress[territory.id].seconds / MatchSystem.CAPTURE_SECONDS * 100))) + "%"
 		if unit.node.get_child(0).get_meta("missing_original_model", false) and not unit.node.get_child(0).get_meta("simple_model", false): hud.detail.text = EquipmentIdentity.research_title(unit.equipment_id, unit.get("level", 1)).to_upper() + " · MODEL LOADING"
 		hud.move_button.disabled = unit.country != GameSession.player_country or unit.get("upgrade_remaining", 0.0) > 0 or (match_rules != null and not match_rules.winner.is_empty())
 		hud.stop_button.disabled = hud.move_button.disabled
@@ -1011,7 +1041,7 @@ func annex_selected() -> void:
 		return
 	var points: = VictoryRules.province_points(map.territories, match_rules.cities)
 	var error: = match_rules.annexation.start(territory, GameSession.player_country, production.stockpiles[GameSession.player_country], points)
-	hud.show_status(("ANNEXING " + territory.title + " · ready in one game day · output %d%% → %d%%" % [roundi(Annexation.OCCUPIED_OUTPUT * 100), roundi(Annexation.ANNEXED_OUTPUT * 100)]) if error.is_empty() else error)
+	hud.show_status(("ANNEXING " + territory.title + " · ready in one game day (" + SimulationClock.duration(VictoryRules.DAY) + ") · output %d%% → %d%%" % [roundi(Annexation.OCCUPIED_OUTPUT * 100), roundi(Annexation.ANNEXED_OUTPUT * 100)]) if error.is_empty() else error)
 	refresh_hud()
 func _selected_territory() -> Dictionary:
 	for t in map.territories:
@@ -1090,8 +1120,10 @@ func show_result(country: String) -> void :
 		result_dialog.ok_button_text = "Play again"
 		result_dialog.confirmed.connect(new_match)
 		add_child(result_dialog)
-	result_dialog.dialog_text = ("VICTORY" if country == GameSession.player_country else "DEFEAT") + "\n" + country.capitalize() + " wins the regional match."
-	result_dialog.popup_centered(Vector2i(mini(350, int(get_viewport().get_visible_rect().size.x) - 24), 180))
+	# Owner 2026-10-16 ("I won the game. I don't know how"): the result says how it was decided.
+	result_dialog.dialog_text = ("VICTORY" if country == GameSession.player_country else "DEFEAT") + " · " + MatchSystem.VICTORY_NAMES.get(match_rules.victory_type, "VICTORY") + "\n" + country.capitalize() + " wins the regional match.\n\n" + VictoryRules.explain(match_rules, country, match_rules.victory_type)
+	result_dialog.get_label().autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	result_dialog.popup_centered(Vector2i(mini(520, int(get_viewport().get_visible_rect().size.x) - 24), 320))
 func new_match() -> void :
 	get_tree().reload_current_scene()
 
@@ -1560,6 +1592,28 @@ func refresh_rally_markers() -> void :
 			ink.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 			marker.material_override = ink
 			marker.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			# Owner 2026-10-16: show the rally spot as a flag on the map (pole and gold cloth).
+			var pole: = MeshInstance3D.new()
+			var stick: = CylinderMesh.new()
+			stick.top_radius = 0.018
+			stick.bottom_radius = 0.018
+			stick.height = 0.56
+			pole.mesh = stick
+			pole.position.y = 0.28
+			pole.material_override = ink
+			pole.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			marker.add_child(pole)
+			var cloth: = MeshInstance3D.new()
+			var sheet: = BoxMesh.new()
+			sheet.size = Vector3(0.26, 0.16, 0.02)
+			cloth.mesh = sheet
+			cloth.position = Vector3(0.13, 0.47, 0)
+			var cloth_ink: = StandardMaterial3D.new()
+			cloth_ink.albedo_color = Color("d9a441")
+			cloth_ink.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+			cloth.material_override = cloth_ink
+			cloth.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			marker.add_child(cloth)
 			add_child(marker)
 			rally_markers[city.id] = marker
 		var marker: MeshInstance3D = rally_markers[city.id]

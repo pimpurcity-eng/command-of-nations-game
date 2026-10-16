@@ -36,6 +36,10 @@ window/handheld/orientation=1
 text_editor/behavior/indent/type=0
 text_editor/behavior/indent/size=4
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/warfront_app_link/plugin.cfg")
+
 [rendering]
 
 textures/vram_compression/import_etc2_astc=true

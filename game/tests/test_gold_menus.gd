@@ -22,7 +22,7 @@ func run() -> void:
 	hud.show_clock(0,1,false)
 	await frames()
 	var menu: = hud.navigation_menu.get_popup()
-	check(menu.item_count==8, "More has eight destinations instead of 42 entries")
+	check(menu.item_count==9, "More has nine destinations (newspaper on top level, owner 2026-10-16) instead of 42 entries")
 	check(menu.get_item_id(0)==100 and menu.get_item_id(1)==101, "Home and profile remain first")
 	var text: = ""
 	for i in menu.item_count:text+=menu.get_item_text(i)+"\n"

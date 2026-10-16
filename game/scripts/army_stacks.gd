@@ -142,8 +142,44 @@ func movement_speed(group: Array, point: Variant = null) -> float:
 	# Rail transport (owner 2026-10-13): twice as fast through friendly provinces with a train station.
 	if point != null and TradeNetwork.active != null and not group.is_empty() and group.all(func(u: Dictionary): return u.visual_kind not in ["fighter", "naval"]):
 		speed *= TradeNetwork.active.rail_factor(point, group[0].country)
-	if not group.is_empty() and group.all(func(u: Dictionary): return u.visual_kind not in ["fighter", "naval"]): speed *= SupportRoles.speed_factor(group)
+	if not group.is_empty() and group.all(func(u: Dictionary): return u.visual_kind not in ["fighter", "naval"]):
+		speed *= SupportRoles.speed_factor(group)
+		# Owner 2026-10-16: own/allied land is faster, enemy land slower; land armies march at LAND_PACE.
+		if point != null: speed *= TerrainRules.territory_speed(str(group[0].country), land_owner(point), armies.diplomacy)
+		return speed * SimulationClock.LAND_PACE
 	return speed * SimulationClock.MOVEMENT_PACE
+
+## Map units per simulation second as game km per game hour (1 map unit = 40 game km,
+## 1 game hour = 30 simulation seconds).
+static func km_per_hour(speed: float) -> float:
+	return speed * 40.0 * 86400.0 / 24.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
+
+## Who controls the land at `point` (cached on a 0.05 grid until provinces change hands).
+var _owner_memo: Dictionary = {}
+var _owner_revision: = -1
+func land_owner(point: Vector2) -> String:
+	if armies.navigation == null or armies.navigation.terrain == null: return ""
+	if _owner_revision != armies.terrain_revision or _owner_memo.size() > 50000:
+		_owner_memo.clear()
+		_owner_revision = armies.terrain_revision
+	var key: = Vector2i(roundi(point.x * 20.0), roundi(point.y * 20.0))
+	if not _owner_memo.has(key): _owner_memo[key] = armies.navigation.controller_at(point)
+	return _owner_memo[key]
+
+## The parts of the march speed at `point` for the army panel: [label, factor] pairs.
+func speed_factors(group: Array, point: Vector2) -> Array:
+	var result: Array = []
+	if group.is_empty() or group.any(func(u: Dictionary): return u.visual_kind in ["fighter", "naval"]): return result
+	var terrain_name: = TerrainProfile.sample(point)
+	var slowest: = INF
+	for unit in group: slowest = minf(slowest, TerrainRules.for_unit(unit, terrain_name, "speed"))
+	result.append([terrain_name, slowest])
+	result.append(["territory", TerrainRules.territory_speed(str(group[0].country), land_owner(point), armies.diplomacy)])
+	if armies.air.economy != null and armies.air.economy.buildings != null:
+		result.append(["roads", armies.air.economy.buildings.provinces.movement_factor(point, group[0].country)])
+	if TradeNetwork.active != null: result.append(["railway", TradeNetwork.active.rail_factor(point, group[0].country)])
+	if group.any(func(u: Dictionary): return u.get("forced_march", false)): result.append(["forced march", 1.5])
+	return result
 
 func split_units(ids: Array[String]) -> String:
 	if armies.selected < 0: return "Select an army first"

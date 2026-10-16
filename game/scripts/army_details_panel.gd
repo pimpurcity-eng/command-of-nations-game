@@ -102,6 +102,67 @@ func _row(body: VBoxContainer, cells: Array, header: bool = false, icon_kind: St
 		row.add_child(label)
 	return row
 
+## Owner 2026-10-16 ("you can heal armies with gold", Call of War): a damaged army of yours shows
+## a gold button that heals every unit to full (GoldWallet.heal_price).
+var heal_button: Button
+var heal_note: Label
+func _heal_row(body: VBoxContainer, armies: UnitSystem, terrain: StrategicMap, lead: Dictionary, group: Array) -> void:
+	var economy: ProductionSystem = armies.air.economy
+	var price: = GoldWallet.heal_price(economy, group)
+	if price <= 0 or armies.air.is_air(lead) and lead.get("flight_mode", "grounded") != "grounded": return
+	var back: = PanelContainer.new()
+	back.add_theme_stylebox_override("panel", CowUI.box(CowUI.LIST, 0, Color("14171a"), 1, 10))
+	body.add_child(back)
+	var row: = HBoxContainer.new()
+	row.add_theme_constant_override("separation", 10)
+	back.add_child(row)
+	var words: = VBoxContainer.new()
+	words.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(words)
+	words.add_child(CowUI.label("Heal army to full health", 17, CowUI.INK))
+	heal_note = CowUI.label("Price follows each unit's value and the health it has lost", 13, Color("3c3a33"))
+	heal_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	words.add_child(heal_note)
+	heal_button = CowUI.gold_finish_button()
+	heal_button.tooltip_text = "Heal with gold"
+	var caption: = heal_button.get_child(0).get_child(0) as Label
+	if caption != null: caption.text = "HEAL"
+	row.add_child(heal_button)
+	var lead_id: String = lead.id
+	CowUI.gold_button(heal_button, price, func():
+		var error: = GoldWallet.heal_army(economy, armies, GameSession.player_country, lead_id, price)
+		if not error.is_empty():
+			heal_note.text = error
+			return
+		if MatchClient.active != null:
+			heal_note.text = "Healing ordered"
+			heal_button.disabled = true
+			return
+		open(armies, terrain))
+
+## Fire control buttons for one army (owner 2026-10-16, Call of War stances).
+func _fire_control(body: VBoxContainer, armies: UnitSystem, terrain: StrategicMap, lead: Dictionary) -> void:
+	var current: = str(lead.get("fire_mode", "at_will"))
+	var mode_row: = _row(body, ["Fire control", FireControlPanel.MODES.get(current, FireControlPanel.MODES.at_will).title])
+	mode_row.tooltip_text = FireControlPanel.MODES.get(current, FireControlPanel.MODES.at_will).description
+	var buttons: = HBoxContainer.new()
+	buttons.add_theme_constant_override("separation", 6)
+	body.add_child(buttons)
+	for mode in FireControlPanel.MODES:
+		var button: = Button.new()
+		button.text = FireControlPanel.MODES[mode].title
+		button.tooltip_text = FireControlPanel.MODES[mode].description
+		button.toggle_mode = true
+		button.button_pressed = mode == current
+		button.custom_minimum_size.y = 48
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		button.clip_text = true
+		button.name = "Fire_" + mode
+		buttons.add_child(button)
+		button.pressed.connect(func():
+			armies.set_fire_mode(mode, [lead])
+			open(armies, terrain))
+
 static func strength(unit: Dictionary) -> float:
 	# Potential already includes condition, doctrine and terrain: never multiply health twice.
 	var combat: = CombatSystem.new()
@@ -181,7 +242,10 @@ func open(armies: UnitSystem, terrain: StrategicMap) -> void :
 	for member in group: total_strength += strength(member)
 	var stats: = _section("Army")
 	_row(stats, ["Strength", "%.1f" % total_strength])
-	_row(stats, ["Speed", "%.1f" % armies.stacks.movement_speed(group, point)])
+	# Owner 2026-10-16: speed in game km/h with what changes it here (terrain, own land, roads, rail).
+	_row(stats, ["Speed", "%d km/h" % roundi(ArmyStacks.km_per_hour(armies.stacks.movement_speed(group, point)))])
+	var factors: Array = armies.stacks.speed_factors(group, point).filter(func(f: Array): return not is_equal_approx(float(f[1]), 1.0))
+	if not factors.is_empty(): _row(stats, ["", ", ".join(factors.map(func(f: Array): return "%s ×%.2f" % [str(f[0]).capitalize(), float(f[1])]))])
 	_row(stats, ["Hit points", "%s / %d" % [UnitStats.number(hp.x), roundi(hp.y)]])
 	var bar: = ProgressBar.new()
 	bar.custom_minimum_size.y = 22
@@ -191,11 +255,12 @@ func open(armies: UnitSystem, terrain: StrategicMap) -> void :
 	bar.add_theme_stylebox_override("background", CowUI.box(Color("15181b"), 2))
 	bar.add_theme_stylebox_override("fill", CowUI.box(Color("5aa83a"), 2))
 	stats.add_child(bar)
+	if own: _heal_row(stats, armies, terrain, lead, group)
 	# Army status.
 	var status: = _section("Army status")
 	_row(status, ["Army size", str(group.size())])
-	_row(status, ["State", "In battle" if lead.get("engaged", false) else ("Moving" if lead.get("moving", false) else "Ready")])
-	if own and not armies.air.is_air(lead): _row(status, ["Fire control", FireControlPanel.MODES.get(lead.get("fire_mode", "at_will"), FireControlPanel.MODES.at_will).title])
+	_row(status, ["State", CombatSystem.battle_label(lead, armies._land_owner(lead)).capitalize() if lead.get("engaged", false) else ("Moving" if lead.get("moving", false) else "Ready")])
+	if own and not armies.air.is_air(lead): _fire_control(status, armies, terrain, lead)
 	# The same HP damage used by land, air and naval combat, including both doctrine and terrain.
 	var combat: = CombatSystem.new()
 	var table: = _section("Combat statistics")

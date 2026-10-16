@@ -32,8 +32,12 @@ const VOLUME: = {
 	"kamikaze_drone": -6.0, "ship_missile": -2.0, "torpedo_launch": -3.0, "sonar_ping": -8.0,
 	"depth_explosion": -2.0, "carrier_launch": -3.0,
 	"jet_flyby": -4.0, "bomb_whistle": -2.0, "nuclear_blast": 0.0,
-	"tracks_moving": -5.0, "wheels_moving": -6.0, "march": -6.0, "nuclear_alarm": -3.0,
+	"tracks_moving": -5.0, "wheels_moving": -6.0, "nuclear_alarm": -3.0,
 }
+## Owner 2026-10-16: "Take the horse racing sound out of the game". The infantry marching
+## recording (march.ogg: boots in step, two thuds a second, kit rattling) gallops like horses;
+## it never plays, whatever asks for it.
+const REMOVED_SOUNDS: = ["march"]
 ## Every weapon sounds like what it is (owner: "make sound for all weapons"). The first entry
 ## whose keyword appears in the unit's equipment id, family, name, role or kind wins; "ship" and
 ## "fighter" pick by what they fire. Works for the 63 families of 0.22 as well as the older set.
@@ -145,7 +149,7 @@ func _stream(name: String) -> AudioStream:
 ## Plays a sound. With a world position, it is quieter the further it is from the camera's
 ## focus and skipped when far outside the view.
 func play(name: String, world_position: Variant = null) -> bool:
-	if not sound_enabled: return false
+	if not sound_enabled or name in REMOVED_SOUNDS: return false
 	var stream: = _stream(name)
 	if stream == null: return false
 	var volume: float = VOLUME.get(name, -6.0)

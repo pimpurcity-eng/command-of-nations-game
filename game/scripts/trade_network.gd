@@ -192,9 +192,16 @@ func set_cargo(id: int, cargo: String) -> void:
 	changed.emit()
 
 func delivery_amount(route: Dictionary) -> float:
-	var level: = buildings.level(route.city, "train_station" if route.mode == "rail" else "naval_base")
-	if route.mode == "sea" and market != null: level = market.capacity(route.city,"sea",route.cargo) / int(TransportMarket.CAPACITY.sea)
-	return CARGO[route.cargo] * clampi(level, 0, 5) * (SEA_BONUS if route.mode == "sea" else 1.0)
+	return per_trip(route.cargo, route.mode, route.city)
+
+## Owner 2026-10-16: what one train or ship really carries on a trade route; the same
+## TransportMarket level table the panels show (each station / port level carries more).
+func per_trip(cargo: String, mode: String, city_id: String) -> float:
+	var factor: = market.scale(city_id, mode, cargo) if market != null else TransportMarket.level_scale(buildings.level(city_id, "train_station" if mode == "rail" else "naval_base"))
+	return per_trip_at(cargo, mode, factor)
+
+static func per_trip_at(cargo: String, mode: String, factor: float) -> float:
+	return roundf(float(CARGO.get(cargo, 0.0)) * factor * (SEA_BONUS if mode == "sea" else 1.0))
 
 ## Funds-equivalent value of a delivery (for income share / economic victory).
 static func value_of(cargo: String, amount: float) -> float:

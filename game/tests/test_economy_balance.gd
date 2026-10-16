@@ -64,26 +64,44 @@ func run() -> void:
 	var copy: Array = CountryTraits.apply(EquipmentEconomy.apply(economy.catalog.duplicate(true)))
 	check(copy[0].cost == economy.catalog[0].cost, "catalogue reload cannot double the discounts")
 	check(economy.cost("carriers_ukraine", 1).materials > economy.cost("destroyers_ukraine", 1).materials and economy.cost("destroyers_ukraine", 1).materials > economy.cost("corvettes_ukraine", 1).materials, "larger warships need a larger investment")
-	check(economy.cost("advanced_tanks_ukraine", 1).electronics > economy.cost("tanks_ukraine", 1).electronics and economy.cost("tanks_ukraine", 1).materials > economy.cost("light_tank_ukraine", 1).materials, "tank complexity affects resource mix")
+	check(economy.cost("advanced_tanks_ukraine", 1).fuel > economy.cost("tanks_ukraine", 1).fuel and economy.cost("tanks_ukraine", 1).materials > economy.cost("light_tank_ukraine", 1).materials, "tank complexity affects resource mix")
 	check(economy.cost("drones_ukraine", 1).funds < economy.cost("fighters_ukraine", 1).funds, "unarmed drone is cheaper than a fighter")
+	# Owner 2026-10-16 ("you can buy way, way, way too much"): the start funds a barracks, the
+	# infantry research and a handful of infantry, but no longer the old large opening.
 	for country in ["russia", "ukraine"]:
 		var opening: Dictionary = {}
-		for resource in ProductionSystem.RESOURCES: opening[resource] = 0
-		for bill in [buildings.cost("recruitment_center", 1), buildings.cost("barracks", 1), buildings.cost("tank_plant", 1), research.cost("infantry_" + country, 1), research.cost("light_tank_" + country, 1)]:
+		var old_opening: Dictionary = {}
+		for resource in ProductionSystem.RESOURCES: opening[resource] = 0; old_opening[resource] = 0
+		for bill in [buildings.cost("barracks", 1), research.cost("infantry_" + country, 1)]:
 			for resource in bill: opening[resource] += bill[resource]
-		for resource in opening: opening[resource] += 8 * economy.cost("infantry_" + country, 1)[resource] + 2 * economy.cost("light_tank_" + country, 1)[resource]
-		check(opening.keys().all(func(r): return opening[r] <= ProductionSystem.START_STOCK[r]), "starting stock can fund recruiting, two production buildings, research and an 8 infantry / 2 light tank expansion for " + country)
+		for resource in opening: opening[resource] += 6 * economy.cost("infantry_" + country, 1)[resource]
+		check(opening.keys().all(func(r): return opening[r] <= ProductionSystem.START_STOCK[r]), "starting stock funds a barracks, infantry research and six infantry for " + country)
+		for bill in [buildings.cost("recruitment_center", 1), buildings.cost("barracks", 1), buildings.cost("tank_plant", 1), research.cost("infantry_" + country, 1), research.cost("light_tank_" + country, 1)]:
+			for resource in bill: old_opening[resource] += bill[resource]
+		for resource in old_opening: old_opening[resource] += 8 * economy.cost("infantry_" + country, 1)[resource] + 2 * economy.cost("light_tank_" + country, 1)[resource]
+		check(not old_opening.keys().all(func(r): return old_opening[r] <= ProductionSystem.START_STOCK[r]), "the old three-building, 8 infantry / 2 light tank opening is no longer affordable for " + country)
+	# Owner 2026-10-16 ("some units will not use all 3 resources"): every unit costs money, manpower
+	# (freight research has no crew) and two or three of food, metal, oil and rare earths.
+	for spec in economy.catalog:
+		var bill: = economy.cost(spec.id, 1)
+		var others: = ["food", "materials", "fuel", "electronics"].filter(func(r): return bill[r] > 0).size()
+		check(bill.funds > 0 and (bill.manpower > 0 or spec.get("research_only", false)) and others >= 2 and others <= 3, "%s costs money, manpower and two or three resources (%d)" % [spec.id, others])
+	var themes: = {"infantry_ukraine": ["food", "materials"], "tanks_ukraine": ["materials", "fuel"], "fighters_ukraine": ["fuel", "electronics"], "skyguard_ukraine": ["materials", "electronics"]}
+	for id in themes:
+		var bill: = economy.cost(id, 1)
+		check(["food", "materials", "fuel", "electronics"].all(func(r): return (bill[r] > 0) == (r in themes[id])), id + " uses its thematic resources only")
 	check(EquipmentEconomy.upkeep(economy.equipment("cargo_ukraine"), 5).values().all(func(v): return v == 0), "freight research does not charge fictitious unit upkeep")
 	for building in buildings.catalog:
 		if building.get("retired", false): continue
 		for level in range(1, int(building.max_level) + 1):
-			check(buildings.duration(building.id, level) >= 2.0 * HOUR, "construction uses hours " + building.id)
+			# Owner 2026-10-16: level 1 is 30 minutes at 1x, each later level twice as long.
+			check(is_equal_approx(buildings.duration(building.id, level), 0.5 * HOUR * pow(2.0, level - 1)), "construction 30 min at level 1, doubling per level " + building.id)
 			if level > 1:
-				check(is_equal_approx(buildings.duration(building.id, level) / buildings.duration(building.id, level - 1), 1.5), "building work grows 1.5x " + building.id)
+				check(is_equal_approx(buildings.duration(building.id, level) / buildings.duration(building.id, level - 1), 2.0), "building work grows 2x " + building.id)
 				check(buildings.cost(building.id, level).funds > buildings.cost(building.id, level - 1).funds, "each building level costs more " + building.id)
 
 	# European discount is a duration discount, and all speeds affect actual completion.
-	check(is_equal_approx(research.duration(1, "infantry_ukraine") / research.rate("ukraine"), 1.275 * HOUR), "Europe's 1h30 baseline research takes exactly 1h16m30 at 1x")
+	check(is_equal_approx(research.duration(1, "infantry_ukraine") / research.rate("ukraine"), 0.425 * HOUR), "Europe's 30 min baseline research takes exactly 25m30s at 1x")
 	for speed in [1.0, 2.0, 4.0, 10.0]:
 		fund(); research.jobs.clear(); research.levels.infantry_ukraine = 0
 		clock.elapsed = 0; clock.paused = false; clock.set_speed(speed)
@@ -92,7 +110,7 @@ func run() -> void:
 		check(research.start("infantry_ukraine", 1).is_empty(), "research starts at " + str(speed))
 		check(economy.stockpiles.ukraine.funds == before.funds - bill.funds, "research debits displayed cost at " + str(speed))
 		clock.advanced.connect(research.advance)
-		var real_seconds: float = 4590.0 / speed
+		var real_seconds: float = 1530.0 / speed
 		clock.advance(real_seconds - 0.5)
 		check(research.level("infantry_ukraine") == 0, "research is unfinished before the displayed deadline at " + str(speed))
 		clock.advance(0.6)
@@ -136,8 +154,8 @@ func run() -> void:
 		clock.set_speed(speed)
 		check(buildings.enqueue("kyiv", "barracks").is_empty(), "construction starts")
 		clock.advanced.connect(buildings.advance)
-		clock.advance(8000.0 / speed - 0.5)
-		check(buildings.level("kyiv", "barracks") == 0, "European 2h barracks not completed early")
+		clock.advance(2000.0 / speed - 0.5)
+		check(buildings.level("kyiv", "barracks") == 0, "European 30 min barracks not completed early")
 		clock.advance(0.6)
 		check(buildings.level("kyiv", "barracks") == 1, "city construction completes with doctrine at " + str(speed))
 		clock.advanced.disconnect(buildings.advance)
@@ -206,7 +224,7 @@ func run() -> void:
 	fund(); clock.elapsed = VictoryRules.DAY * 10; research.levels.tanks_ukraine = 1
 	check(research.start_upgrade("tanks_ukraine", 1).is_empty(), "national refinement starts")
 	check(research.jobs[0].paid_cost.funds == 720, "refinement debits its displayed price")
-	research.advance(2.125 * HOUR - 0.01)
+	research.advance(0.935 * HOUR - 0.01)
 	check(not research.refined("tanks_ukraine", 1), "European refinement is unfinished before its discounted deadline")
 	research.advance(0.02)
 	check(research.refined("tanks_ukraine", 1), "European refinement completes with the same time discount")
@@ -238,7 +256,7 @@ func run() -> void:
 	check(market.equipment(tank) == TransportMarket.minimum_price(tank), "static and live market floor agree at zero demand")
 	var base_value: = market.equipment(UnitStats.specimen("tanks_ukraine", 1))
 	check(market.equipment(tank) > base_value, "higher model has a higher world price")
-	market.record("russia", "ukraine", "electronics", 1000, {})
+	market.record("russia", "ukraine", "materials", 1000, {})  # Owner 2026-10-16: tanks cost metal and oil, not rare earths
 	check(market.equipment(tank) > TransportMarket.minimum_price(tank), "resource demand feeds through equipment valuation")
 	check(SupplyExchange.PRICES.keys().all(func(r): return SupplyExchange.PRICES[r].buy > SupplyExchange.PRICES[r].sell and SupplyExchange.PRICES[r].sell == WorldMarketPrices.BASE[r]), "commodity buy/sell spread has no instant arbitrage")
 	check(StrategicWeapons.WEAPONS.nuclear.cost.funds > ProductionSystem.START_STOCK.funds and StrategicWeapons.WEAPONS.nuclear.build == 48 * HOUR, "nuclear warhead remains a costly late-game 48-hour project")

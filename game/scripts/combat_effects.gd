@@ -46,6 +46,8 @@ func sphere(parent: Node3D, radius: float, color: Color, smooth: bool = false) -
 	parent.add_child(mesh)
 	return mesh
 func on_shot(source: Dictionary, target_unit: Dictionary, effect: String) -> void :
+	_start_burst(source)
+	_start_burst(target_unit)
 	var source_visible: = armies.visible_to_player(source)
 	var target_visible: = armies.visible_to_player(target_unit)
 	if not source_visible and not target_visible: return
@@ -680,14 +682,25 @@ func _process(delta: float) -> void :
 ## Animate them somehow"): between the half-hour damage rounds, armies locked in a close battle keep
 ## shooting - muzzle flashes, tracers flying both ways and dust where they land - with the
 ## machine-gun and rifle sounds, so a battle reads at a glance like Call of War's.
+## Owner 2026-10-16 ("war animation should last 5 seconds and then stop until they fire again"):
+## each exchange of fire (a combat round) plays BURST_SECONDS of real-time battle animation - the
+## step forward, the crouch, tracers and muzzle flashes - and then both armies stand still until
+## the next round. UnitSystem reads the same `fire_burst` for the poses.
+const BURST_SECONDS: = 5.0
+func _start_burst(unit: Dictionary) -> void:
+	if armies == null or unit.is_empty() or not unit.get("engaged", false): return
+	for member in armies.stacks.members(unit): member.fire_burst = BURST_SECONDS
 const SKIRMISH_LIMIT: = 10
 var _skirmish_timers: Dictionary = {}
 func _skirmish(seconds: float) -> void:
 	if armies == null or not armies.at_war: return
 	var shown: = 0
 	for unit in armies.units:
-		if shown >= SKIRMISH_LIMIT: break
-		if not unit.get("engaged", false) or not unit.has("foe_point") or not unit.node.visible: continue
+		var burst: float = unit.get("fire_burst", 0.0)
+		if burst > 0.0: unit.fire_burst = maxf(0.0, burst - seconds)
+		if burst <= 0.0 or not unit.get("engaged", false): continue
+		if shown >= SKIRMISH_LIMIT: continue
+		if not unit.has("foe_point") or not unit.node.visible: continue
 		if armies.air.is_air(unit) or armies.is_naval(unit) or unit.health <= 0: continue
 		shown += 1
 		var left: float = _skirmish_timers.get(unit.id, randf_range(0.0, 0.6)) - seconds

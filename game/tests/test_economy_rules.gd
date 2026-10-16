@@ -42,9 +42,15 @@ func run():
   check(ProductionSystem.RESOURCES.all(func(r):return r == "funds" or is_equal_approx(city_total[who][r],gross[who][r])),"all of %s's resources come from its cities" % who)
   check(gross[who].funds > city_total[who].funds,"%s also earns money from provinces" % who)
   check(ProductionSystem.RESOURCES.all(func(r):return gross[who][r]>0),"%s's seven cities make every resource" % who)
- check(gross.russia.fuel>gross.ukraine.fuel,"Russia has more oil")
- check(gross.ukraine.electronics>gross.russia.electronics,"Ukraine has more rare earths")
- check(gross.ukraine.food>gross.russia.food,"Ukraine has more food")
+ # Owner 2026-10-16 ("We're going to start with everything the same. Call of War"): both countries
+ # start and earn the same; specialty cities share two cities' worth of each commodity per country.
+ for r in ["funds","food","materials","fuel","electronics"]:
+  check(absf(gross.russia[r]-gross.ukraine[r]) < 0.01,"both countries earn the same %s (%d vs %d a day)" % [r,gross.russia[r]*ProductionSystem.DAY_SECONDS,gross.ukraine[r]*ProductionSystem.DAY_SECONDS])
+ check(is_equal_approx(gross.russia.manpower/CountryTraits.manpower_factor("russia"),gross.ukraine.manpower/CountryTraits.manpower_factor("ukraine")),"both countries recruit the same manpower before doctrine")
+ check(ProductionSystem.START_STOCK.values().all(func(v):return v == ProductionSystem.START_STOCK.funds),"every resource starts at the same amount")
+ for who in ["russia","ukraine"]:
+  check(["manpower","food","materials","fuel","electronics"].all(func(r):return gross[who].funds > 2.0*gross[who][r]),"money is still by far the biggest income for %s" % who)
+ check(is_equal_approx(game.production.city_income(game.buildings.city("odesa")).fuel,2.0*game.production.city_income(game.buildings.city("lviv")).materials),"Ukraine's only oil city makes two cities' worth")
  check(ProductionSystem.RESOURCES.has("food") and game.hud.resource_values.has("food"),"food is a resource in the top bar")
  check(game.production.equipment("infantry_russia").cost.food>0,"units cost food")
  var old_save: Dictionary = game.production.snapshot()
@@ -63,7 +69,21 @@ func run():
  check(game.production.city_income(lviv).manpower > game.production.city_income(kyiv).manpower,"more recruitment levels recruit more")
  game.buildings.levels[lviv.id].recruitment_center = 0
  # Call of War scale.
- check(ProductionSystem.START_STOCK.funds >= 30000.0,"starting money is Call of War sized")
+ # Owner 2026-10-16 ("you can buy way, way, way too much"): like Call of War, the start buys only a
+ # handful of units and a day's income about three to five basic units.
+ game.buildings.levels[kyiv.id].recruitment_center = 0
+ var net_day: Dictionary = game.production.net_income()
+ for who in ["russia","ukraine"]:
+  for row in [["infantry",6,10],["tanks",3,4],["fighters",2,2]]:
+   var bill: Dictionary = game.production.cost(row[0]+"_"+who,1)
+   var start: = INF
+   var daily: = INF
+   for r in ProductionSystem.RESOURCES:
+    if bill[r] <= 0: continue
+    start = minf(start,ProductionSystem.START_STOCK[r]/float(bill[r]))
+    daily = minf(daily,net_day[who][r]*ProductionSystem.DAY_SECONDS/float(bill[r]))
+   check(floori(start) >= row[1] and floori(start) <= row[2],"the start buys %d-%d %s for %s (%.1f)" % [row[1],row[2],row[0],who,start])
+   check(daily >= 2.5 and daily <= 6.0,"a day's income buys about three to five %s for %s (%.1f)" % [row[0],who,daily])
  # Gold.
  check(game.production.gold.ukraine == GoldWallet.START and game.production.gold.russia == GoldWallet.START,"every player starts the match with 10,000 gold")
  for r in ProductionSystem.RESOURCES: game.production.stockpiles.ukraine[r] = 1000000.0

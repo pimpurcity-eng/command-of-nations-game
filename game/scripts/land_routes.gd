@@ -89,11 +89,34 @@ func nearest_land(point: Vector2) -> Vector2:
 			var candidate: Vector2 = point + Vector2.from_angle(angle * TAU / 16.0) * radius
 			if on_land(candidate): return candidate
 	return point
-func find_path(start: Vector2, finish: Vector2, kind: String = "armor") -> Array:
+## Owner 2026-10-16: route planning picks the fastest way, not only the shortest: own and allied
+## land (TerrainRules.territory_speed) and friendly railways (2x, owner 2026-10-16 "travel by the
+## train 2 times faster than walking") count, as terrain already did. Set by UnitSystem.path_for.
+var diplomacy: Diplomacy
+var _node_territory: Dictionary = {}  # graph node id -> territory (borders never move)
+func _territory_of_node(id: int) -> Dictionary:
+	if not _node_territory.has(id):
+		_node_territory[id] = {}
+		for territory in terrain.territories:
+			if territory.playable and RegionData.contains(territory, nodes[id]):
+				_node_territory[id] = territory
+				break
+	return _node_territory[id]
+func _node_speed(id: int, kind: String, country: String) -> float:
+	var factor: = TerrainRules.multiplier(kind, TerrainProfile.sample(graph.get_point_position(id)), "speed")
+	if country.is_empty(): return factor
+	var territory: = _territory_of_node(id)
+	if territory.is_empty(): return factor
+	var owner: = str(territory.controller)
+	factor *= TerrainRules.territory_speed(country, owner, diplomacy)
+	var served: Dictionary = RailwayMap.active.served if RailwayMap.active != null and is_instance_valid(RailwayMap.active) else {}
+	if served.has(str(territory.id)) and (owner == country or (diplomacy != null and not diplomacy.at_war(country, owner) and diplomacy.right_of_way(country, owner))): factor *= 2.0
+	return factor
+func find_path(start: Vector2, finish: Vector2, kind: String = "armor", country: String = "") -> Array:
 	if not on_land(finish): return []
 	if graph == null: _build_graph()
 	if nodes.is_empty(): return []
-	for id in graph.get_point_ids(): graph.set_point_weight_scale(id, 1.0 / TerrainRules.multiplier(kind, TerrainProfile.sample(graph.get_point_position(id)), "speed"))
+	for id in graph.get_point_ids(): graph.set_point_weight_scale(id, 1.0 / _node_speed(id, kind, country))
 	var goal: = graph.get_closest_point(hub_for(finish))
 	# Ways onto the network: already at a road end, part-way along a road (go to either
 	# end along the road), or off-road (straight to the nearest road end).

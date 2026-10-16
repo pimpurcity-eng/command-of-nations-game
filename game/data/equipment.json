@@ -482,11 +482,11 @@
     ],
     "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
     "research_days": [
-      13,
-      16,
-      19,
-      22,
-      25
+      6,
+      9,
+      12,
+      15,
+      18
     ],
     "upkeep": {
       "funds": 420.0,
@@ -676,11 +676,11 @@
     ],
     "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
     "research_days": [
-      13,
-      16,
-      19,
-      22,
-      25
+      6,
+      9,
+      12,
+      15,
+      18
     ],
     "upkeep": {
       "funds": 420.0,
@@ -748,11 +748,11 @@
     ],
     "model_status": "Original supplied model (owner Weapons folder 2026-10-09)",
     "research_days": [
-      7,
-      10,
-      13,
-      16,
-      19
+      5,
+      8,
+      11,
+      14,
+      17
     ],
     "upkeep": {
       "funds": 300.0,
@@ -1185,11 +1185,11 @@
       "missile_factory": 1
     },
     "research_days": [
+      5,
       8,
       11,
       14,
-      17,
-      20
+      17
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -1253,11 +1253,11 @@
       "missile_factory": 1
     },
     "research_days": [
+      5,
       8,
       11,
       14,
-      17,
-      20
+      17
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -3002,11 +3002,11 @@
       "airbase": 1
     },
     "research_days": [
+      5,
       8,
       11,
       14,
-      17,
-      20
+      17
     ],
     "research_tiers": [
       {
@@ -3077,11 +3077,11 @@
       "airbase": 1
     },
     "research_days": [
+      6,
+      9,
+      12,
       15,
-      18,
-      21,
-      24,
-      27
+      18
     ],
     "research_tiers": [
       {
@@ -3152,11 +3152,11 @@
       "airbase": 1
     },
     "research_days": [
+      6,
+      9,
+      12,
       15,
-      18,
-      21,
-      24,
-      27
+      18
     ],
     "research_tiers": [
       {
@@ -3297,11 +3297,11 @@
       "airbase": 1
     },
     "research_days": [
+      5,
       8,
       11,
       14,
-      17,
-      20
+      17
     ],
     "research_tiers": [
       {
@@ -3442,11 +3442,11 @@
       "tank_plant": 1
     },
     "research_days": [
-      10,
-      13,
-      16,
-      19,
-      22
+      6,
+      9,
+      12,
+      15,
+      18
     ],
     "research_tiers": [
       {
@@ -3507,11 +3507,11 @@
       "tank_plant": 1
     },
     "research_days": [
-      10,
-      13,
-      16,
-      19,
-      22
+      6,
+      9,
+      12,
+      15,
+      18
     ],
     "research_tiers": [
       {
@@ -3572,11 +3572,11 @@
       "missile_factory": 1
     },
     "research_days": [
+      6,
       9,
       12,
       15,
-      18,
-      21
+      18
     ],
     "research_tiers": [
       {
@@ -3651,11 +3651,11 @@
       "missile_factory": 1
     },
     "research_days": [
+      6,
       9,
       12,
       15,
-      18,
-      21
+      18
     ],
     "research_tiers": [
       {
@@ -3884,11 +3884,11 @@
       "naval_base": 1
     },
     "research_days": [
-      8,
-      12,
-      16,
-      20,
-      24
+      5,
+      9,
+      13,
+      17,
+      21
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -3961,11 +3961,11 @@
       "naval_base": 1
     },
     "research_days": [
-      8,
-      12,
-      16,
-      20,
-      24
+      5,
+      9,
+      13,
+      17,
+      21
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -4346,11 +4346,11 @@
       "naval_base": 1
     },
     "research_days": [
+      6,
+      10,
+      14,
       18,
-      22,
-      26,
-      30,
-      34
+      22
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -4423,11 +4423,11 @@
       "naval_base": 1
     },
     "research_days": [
+      6,
+      10,
+      14,
       18,
-      22,
-      26,
-      30,
-      34
+      22
     ],
     "model_status": "Original supplied model",
     "research_tiers": [
@@ -5086,11 +5086,11 @@
       "airbase": 1
     },
     "research_days": [
-      7,
-      10,
-      13,
-      16,
-      19
+      5,
+      8,
+      11,
+      14,
+      17
     ],
     "research_tiers": [
       {
@@ -5156,11 +5156,11 @@
       "airbase": 1
     },
     "research_days": [
+      6,
       9,
       12,
       15,
-      18,
-      21
+      18
     ],
     "research_tiers": [
       {
@@ -5226,11 +5226,11 @@
       "airbase": 1
     },
     "research_days": [
+      6,
       9,
       12,
       15,
-      18,
-      21
+      18
     ],
     "research_tiers": [
       {

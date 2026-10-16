@@ -29,16 +29,58 @@ static func load_size(unit: Dictionary) -> int:
 func facility(mode: String) -> String:
 	return {"rail": "train_station", "sea": "naval_base", "air": "airbase"}.get(mode, "")
 
+## Owner 2026-10-16: "It doesn't have how much the train and shipping carry, so every level
+## should be higher." One table drives what the panels show and what convoys really carry:
+## each terminal level carries clearly more than the last (train stations and naval bases have
+## three levels, airbases five).
+const LEVEL_SCALE: = [0.0, 1.0, 2.0, 3.5, 5.0, 7.0]
+## Owner 2026-10-16: cargo ship / oil tanker research adds +50% per level above I on top of the
+## port level. Level 0 (not researched) means the country has no merchant ships yet.
+const VESSEL_SCALE: = [0.0, 1.0, 1.5, 2.0, 2.5, 3.0]
+const TRANSPORT_NAME: = {"rail": "train", "sea": "ship", "air": "cargo plane"}
+
+static func level_scale(level: int) -> float:
+	return float(LEVEL_SCALE[clampi(level, 0, LEVEL_SCALE.size() - 1)])
+
+static func vessel_scale(level: int) -> float:
+	return float(VESSEL_SCALE[clampi(level, 0, VESSEL_SCALE.size() - 1)])
+
+## Market cargo slots per trip (100 resources or one light vehicle per slot).
+static func capacity_at(mode: String, level: int, vessel: int = 1) -> int:
+	return roundi(float(CAPACITY.get(mode, 0)) * level_scale(level) * (vessel_scale(vessel) if mode == "sea" else 1.0))
+
+static func per_level_text(mode: String, max_level: int, vessel: int = 1) -> String:
+	var parts: Array = []
+	for level in range(1, max_level + 1):
+		parts.append("Lv%d %s" % [level, _thousands(capacity_at(mode, level, vessel) * int(RESOURCE_LOAD))])
+	return "Each %s carries %s cargo per trip" % [TRANSPORT_NAME.get(mode, mode), " · ".join(parts)]
+
+static func _thousands(value: int) -> String:
+	var digits: = str(absi(value))
+	var out: = ""
+	while digits.length() > 3:
+		out = "," + digits.substr(digits.length() - 3) + out
+		digits = digits.substr(0, digits.length() - 3)
+	return ("-" if value < 0 else "") + digits + out
+
+func facility_level(city: String, mode: String) -> int:
+	return clampi(network.buildings.level(city, facility(mode)), 0, LEVEL_SCALE.size() - 1)
+
+## Research level of the ships that sail from this port (cargo ships, or oil tankers for fuel).
+func vessel_level(city: String, cargo: String) -> int:
+	var research: ResearchSystem = network.production.research
+	if research == null: return 1
+	var country: String = network.production.controller(network.buildings.city(city))
+	return clampi(research.level(("tankers_" if cargo == "fuel" else "cargo_") + country), 0, VESSEL_SCALE.size() - 1)
+
+## Capacity multiplier shared by the transport market and trade-route deliveries.
+func scale(city: String, mode: String, cargo: String = "materials") -> float:
+	var result: = level_scale(facility_level(city, mode))
+	if mode == "sea": result *= vessel_scale(vessel_level(city, cargo))
+	return result
+
 func capacity(city: String, mode: String, cargo: String = "materials") -> int:
-	var terminal: = clampi(network.buildings.level(city, facility(mode)), 0, 5)
-	if mode == "sea":
-		var place: = network.buildings.city(city)
-		var country: String = network.production.controller(place)
-		var research: ResearchSystem = network.production.research
-		var family: String = ("tankers_" if cargo == "fuel" else "cargo_") + country
-		var vessel: int = research.level(family) if research != null else 1
-		return int(CAPACITY.sea) * mini(terminal, clampi(vessel, 0, 5))
-	return int(CAPACITY.get(mode, 0)) * terminal
+	return roundi(float(CAPACITY.get(mode, 0)) * scale(city, mode, cargo))
 
 func _offer(id: int) -> Dictionary:
 	for offer in offers:
@@ -128,7 +170,8 @@ func quote(offer: Dictionary, buyer: String, destination: String, mode: String) 
 	var load: int = ceili(float(offer.amount) / RESOURCE_LOAD) if offer.unit.is_empty() else load_size(offer.unit)
 	if network.buildings.level(target.id,facility(mode)) < 1: return {"error": "Build a receiving terminal first"}
 	var limit: = capacity(origin.id, mode, str(offer.cargo))
-	if load > limit: return {"error": "Load %d exceeds capacity %d; upgrade the departure terminal / vessel research (levels 1–5) or use another transport" % [load, limit]}
+	if mode == "sea" and vessel_level(origin.id, str(offer.cargo)) < 1: return {"error": "The seller has no %s yet; research them first" % ("oil tankers" if offer.cargo == "fuel" else "cargo ships")}
+	if load > limit: return {"error": "Load %d slots exceeds this %s's %d (%s cargo); upgrade the departure %s%s or use another transport" % [load, TRANSPORT_NAME[mode], limit, _thousands(limit * int(RESOURCE_LOAD)), {"rail": "train station", "sea": "naval base", "air": "airbase"}[mode], " or ship research" if mode == "sea" else ""]}
 	if not offer.unit.is_empty() and UnitClasses.of(offer.unit) in ["naval", "submarine"] and mode != "sea": return {"error": "Naval equipment can only transfer between ports by sea"}
 	var path: Array = []
 	if mode == "air":

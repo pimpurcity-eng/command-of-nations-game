@@ -53,3 +53,35 @@ static func explanation(price: Dictionary) -> String:
 
 static func cad_label(gold: int) -> String:
 	return "CA$%.2f" % (float(gold) * PURCHASE_CAD_CENTS / PURCHASE_GOLD / 100.0)
+
+## Owner 2026-10-16 ("you can heal armies with gold", Call of War): a damaged army is healed to
+## full at once. The price follows the finish-now prices: each unit's value is what building it
+## again would cost in gold (its resources plus its production time), and the army pays that
+## value times the share of health each unit has lost.
+static func unit_value(economy: ProductionSystem, unit: Dictionary) -> float:
+	var level: = int(unit.get("level", 1))
+	var id: = str(unit.get("equipment_id", ""))
+	return float(bill_price(economy.cost(id, level)) + speedup(economy.duration(id, level)))
+
+static func heal_price(economy: ProductionSystem, group: Array) -> int:
+	if economy == null: return 0
+	var total: = 0.0
+	for unit in group:
+		if float(unit.get("health", 0.0)) <= 0.0: continue
+		total += unit_value(economy, unit) * clampf(1.0 - float(unit.health) / 100.0, 0.0, 1.0)
+	return 0 if total <= 0.0 else maxi(MINIMUM, ceili(total))
+
+## Heals the army `unit_id` of `country` to full. `max_gold` guards against a changed price.
+static func heal_army(economy: ProductionSystem, armies: UnitSystem, country: String, unit_id: String, max_gold: int = -1) -> String:
+	var unit: = armies.find_id(unit_id)
+	if unit.is_empty() or unit.country != country or unit.health <= 0: return "Choose one of your armies"
+	var group: Array = armies.stacks.members(unit)
+	var price: = heal_price(economy, group)
+	if MatchClient.active != null: return MatchClient.active.send("gold_heal", {"id": unit_id, "max_gold": price if max_gold < 0 else max_gold})
+	if price <= 0: return "This army is already at full health"
+	if max_gold >= 0 and price > max_gold: return "Price changed; review the new gold total"
+	var error: = economy.spend_gold(country, price)
+	if not error.is_empty(): return error
+	for member in group:
+		if member.health > 0: member.health = 100.0
+	return ""
