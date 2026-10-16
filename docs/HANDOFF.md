@@ -95,7 +95,9 @@ Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to d
 
 ## 5. Session state
 
-**In progress:** ChatGPT full-game release audit on `chatgpt/release-oct16`, based on `beff4dc`.
+**PAUSED at Matthew's request (16 Oct, 23:20 UTC):** Wait for Claude to finish before any more edits, merge or publication. The current map/update is a test build; larger tutorial work comes afterwards. Additional verified launcher-cleanup and tutorial-move fixes are saved on `chatgpt/release-oct16` only; reconcile after Claude finishes.
+
+ChatGPT full-game release audit on `chatgpt/release-oct16`, based on `beff4dc`.
 Matthew authorized fixing remaining bugs and publishing, then explicitly requested a whole-game
 review before the update (16 Oct, 22:46 UTC). This authorization supersedes the earlier publishing
 pause; fixes 21 and 41 remain on hold. One worker only. See [RELEASE_AUDIT_2026_10_16.md](RELEASE_AUDIT_2026_10_16.md).

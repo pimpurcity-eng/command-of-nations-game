@@ -54,3 +54,28 @@ Do not call the release complete from test exit code alone: check for script err
 `docs/HANDOFF.md` remains the shared source of truth. Read it first; the earlier camera-only PR
 is not merged, so this release branch incorporates its changes directly. Original signing key
 was recovered and verified earlier; no reset or new key is needed. Do not store credentials here.
+
+## Paused for Claude — 16 October, 23:20 UTC
+
+Matthew clarified that this map/build is for testing and that the larger tutorial changes
+come after this build. He then asked ChatGPT to wait because Claude is almost finished.
+Stop editing, merging and publishing until his completed work is available for reconciliation.
+
+Two additional verified fixes are saved on `chatgpt/release-oct16` only:
+- Physical launcher/silo animation tweens are bound to their model lifetime. Removing or
+  swapping a model now cancels pending callbacks: regression changed from 2 failures plus
+  freed-capture errors to 6/6 passing with no such errors.
+- Tutorial movement now follows the chosen army after a successful order clears selection.
+  The progression regression passes, including selection clearing and tutorial advancement.
+
+CPU-only profiling in this environment: simulation subscribers about 5.8 ms/tick; an 80-unit
+scene with 19 visible models about 13.2 ms/frame in the headless profiler. Zoom median
+6.7–7.3 ms, p95 23.3–25.6 ms; one initial-load hitch of 63.2 ms. These are cloud CPU timings,
+not physical-phone FPS. No rendering-performance claim or release has been made.
+
+The first broad run exposed many stale fixtures for the old starting buildings/research,
+queues, unit sizes, unlock days and physical launch delays. Updating them was in progress;
+do not interpret the original failures as all current gameplay bugs, or claim the whole suite
+is green. Local test-maintenance work remains unfinished. No APK/AAB export, production merge,
+server deployment, browser publication or Play upload occurred. Play Console currently shows
+admin@yaska.app signed out; no new login attempt or credential request was started.

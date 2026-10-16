@@ -106,7 +106,9 @@ func silo_launch(source: Dictionary, finish: Vector3, projectile_model: String) 
 	var lid_rest: Vector3 = model.get_meta("silo_lid_rest")
 	var missile_rest: Vector3 = model.get_meta("silo_missile_rest")
 	var length: float = model.get_meta("silo_missile_length")
-	var sequence: = create_tween()
+	# Upgrades, phone model budgets and army removal can free this visual mid-launch.
+	# Its physical animation must end with the model, before callbacks touch freed parts.
+	var sequence: = create_tween().bind_node(model)
 	sequence.tween_property(lid, "position:x", lid_rest.x + float(model.get_meta("silo_lid_slide")), 0.8 * pace).set_trans(Tween.TRANS_SINE)
 	sequence.tween_callback(func():
 		if is_instance_valid(missile):
@@ -137,7 +139,7 @@ func erect_and_launch(source: Dictionary, finish: Vector3, projectile_model: Str
 	var family: String = str(source.equipment_id).rsplit("_", true, 1)[0]
 	var angle: = deg_to_rad(float(ERECT_ANGLE.get(family, 60.0)))
 	var rise: = 1.2 * pace
-	var raised: = create_tween()
+	var raised: = create_tween().bind_node(model)
 	raised.tween_property(hinge, "rotation:z", angle, rise).set_trans(Tween.TRANS_SINE)
 	raised.tween_callback(func():
 		if not is_instance_valid(hinge): return
@@ -156,7 +158,7 @@ func raise_and_fire(source: Dictionary, start: Vector3, finish: Vector3) -> void
 	var hinge: Node3D = model.get_meta("erector_hinge", null) if model != null else null
 	var rise: = 3.0 * pace
 	if hinge != null and is_instance_valid(hinge):
-		var tween: = create_tween()
+		var tween: = create_tween().bind_node(model)
 		tween.tween_property(hinge, "rotation:z", deg_to_rad(88.0), rise).set_trans(Tween.TRANS_SINE)
 		var cap: Node3D = model.get_meta("erector_cap", null)
 		if cap != null: tween.tween_callback(func(): if is_instance_valid(cap): cap.visible = false)

@@ -66,16 +66,19 @@ func run() -> void:
 	game.mobile_start.fresh_requested.emit()
 	game.mobile_start.hide()
 	await process_frame
-	check(game.tutorial != null and game.tutorial.step == 0 and "TUTORIAL 1/7" in game.tutorial.text.text, "a first campaign starts the tutorial")
+	check(game.tutorial != null and game.tutorial.step == 0 and "TUTORIAL 1/8" in game.tutorial.text.text, "a first campaign starts the tutorial")
+	game.tutorial.chosen = true # Choose an opening before the select/move steps.
+	for i in 30: await process_frame
 	var army: Dictionary = {}
 	for unit in game.units.units:
 		if unit.country == "russia" and unit.visual_kind == "armor" and army.is_empty(): army = unit
 	game.units.select_unit(game.units.units.find(army))
 	for i in 30: await process_frame
-	check(game.tutorial.step >= 1, "selecting an army completes the first step")
+	check(game.tutorial.step >= 2, "selecting an army completes the first step")
 	game.player_order(game.map_position(39.2, 51.66))
+	check(game.units.selected < 0 and army.moving, "move closes selection while the chosen army continues")
 	for i in 30: await process_frame
-	check(game.tutorial.step >= 2, "moving it completes the second")
+	check(game.tutorial.step >= 3, "moving it completes the second")
 	game.tutorial.finish()
 	await process_frame
 	check(Tutorial.done(), "finishing (or skipping) the tutorial is remembered")

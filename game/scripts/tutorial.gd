@@ -21,6 +21,7 @@ var step: = 0
 var panel: PanelContainer
 var text: Label
 var _poll: = 0.0
+var _chosen_army: = ""
 
 static func done() -> bool:
 	var settings: = ConfigFile.new()
@@ -35,6 +36,8 @@ static func mark_done() -> void:
 
 func setup(main: Node, theme: Theme) -> void:
 	game = main
+	game.units.unit_selected.connect(_army_selected)
+	if game.units.selected >= 0: _army_selected(game.units.units[game.units.selected])
 	layer = 12
 	var root: = Control.new()
 	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -80,13 +83,20 @@ func _show() -> void:
 	text.text = "TUTORIAL %d/%d · %s" % [step + 1, STEPS.size(), STEPS[step][1]]
 
 ## Whether the current step's action has happened.
+func _army_selected(unit: Dictionary) -> void:
+	if unit.get("country", "") == GameSession.player_country: _chosen_army = str(unit.get("id", ""))
+
 func step_done(id: String) -> bool:
 	var units: UnitSystem = game.units
 	var mine: bool = units.selected >= 0 and units.units[units.selected].country == GameSession.player_country
 	match id:
 		"choose": return chosen
 		"select": return mine
-		"move": return mine and units.units[units.selected].get("moving", false)
+		"move":
+			# A successful move intentionally closes the army selection. Follow the army
+			# the player chose instead of waiting for a selection that has already cleared.
+			var army: Dictionary = units.find_id(_chosen_army)
+			return not army.is_empty() and (army.get("moving", false) or army.get("flight_mode", "grounded") == "fly")
 		"play": return not game.clock.paused
 		"city": return game.city_panel != null and game.city_panel.visible
 		"research": return game.research_panel != null and game.research_panel.visible
