@@ -30,11 +30,14 @@ var armies: UnitSystem
 ## Owner 2026-10-16 (later): "Every city produces money and manpower and the resource it has ... it's
 ## all shared": every city also recruits base manpower; recruitment centres add more on top. All of it
 ## goes into the one national stockpile.
-const CITY_BASE: = {"funds": 3.0, "materials": 2.4, "electronics": 1.6, "fuel": 1.4, "manpower": 1.5, "food": 2.0}
+## Owner 2026-10-16 ("Has to be more money. Check Call of War"): as in Call of War, every province makes
+## money and a city makes several times a rural province. A city now makes about 4,300 a day and a
+## province about 700, so a country starts near 45,000 a day.
+const CITY_BASE: = {"funds": 6.0, "materials": 2.4, "electronics": 1.6, "fuel": 1.4, "manpower": 1.5, "food": 2.0}
 ## Manpower per recruitment-centre level, as a multiple of CITY_BASE.manpower.
 const RECRUITMENT_PER_LEVEL: = 4.0
 ## Money per elapsed unit from each held province without a city.
-const PROVINCE_FUNDS: = 0.25
+const PROVINCE_FUNDS: = 1.0
 ## Owner 2026-10-14: "give yourself more money" and "more starting resources" (every country).
 const START_STOCK: = {"funds": 60000.0, "manpower": 12000.0, "food": 15000.0, "materials": 20000.0, "fuel": 12000.0, "electronics": 8000.0}
 const DAY_SECONDS: = 86400.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
