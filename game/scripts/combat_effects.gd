@@ -227,9 +227,14 @@ func launch(start: Vector3, finish: Vector3, effect: String, country: String = "
 	var root: = Node3D.new()
 	add_child(root)
 	root.position = start
+	var path: String = ""
 	if effect in ["missile", "interceptor"]:
-		var path: String = projectile_model if not projectile_model.is_empty() else "res://assets/library/arsenal/russia_p800_oniks.glb" if country == "russia" else "res://assets/library/arsenal/euro_nsm.glb"
-		if not flight_scenes.has(path): flight_scenes[path] = load(path)
+		path = projectile_model if not projectile_model.is_empty() else "res://assets/library/arsenal/russia_p800_oniks.glb" if country == "russia" else "res://assets/library/arsenal/euro_nsm.glb"
+		# Owner 2026-10-16 (combat check): a missile whose model is not on the phone yet (still
+		# downloading) used to stop the whole effect with a script error; it now flies as the
+		# simple shell below instead.
+		if not flight_scenes.has(path): flight_scenes[path] = load(path) if ResourceLoader.exists(path) else null
+	if effect in ["missile", "interceptor"] and flight_scenes[path] != null:
 		var original: Node3D = flight_scenes[path].instantiate()
 		var body: Node3D = UnitVisual.merged(original)
 		var pivot: = Node3D.new()

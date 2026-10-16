@@ -63,13 +63,13 @@ Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to d
 | 21 | Level-1 buildings 30 min at 1x, harder after | ❓ | data is 30 min (`test_oct16_pacing`). The 33 min is the European doctrine's "Production 10% slower" (×0.9) on Ukraine's cities. Ask Matthew: keep, or make the penalty units-only? |
 | 22 | Level-1 unit research 30 min–2 h | ✅ | verified by `test_oct16_pacing` (329 pass, 0 fail) |
 | 23 | Every unit's first level by day 6 (except nukes) | ✅ | verified by `test_oct16_pacing` (329 pass, 0 fail) |
-| 24 | Battle animation ~5 s, then still until next shot | ⬜ | earlier helper work: `tests/test_oct16_combat.gd`, "Owner 2026-10-16" comments |
-| 25 | Planes can attack enemy planes | ⬜ | |
-| 26 | Patrol hits regularly (65% of a strike) | ⬜ | |
-| 27 | Air defence hits patrolling planes | ⬜ | |
-| 28 | Heal armies with gold | ⬜ | |
-| 29 | Attacker at a city shows as attacker | ⬜ | |
-| 30 | Fire modes: fire at will / return fire / hold fire | ⬜ | |
+| 24 | Battle animation ~5 s, then still until next shot | ✅ | verified by `test_oct16_combat` (38/38) |
+| 25 | Planes can attack enemy planes | ✅ | verified by `test_oct16_combat` (38/38) |
+| 26 | Patrol hits regularly (65% of a strike) | ✅ | verified by `test_oct16_combat` (38/38) |
+| 27 | Air defence hits patrolling planes | ✅ | verified by `test_oct16_combat` (38/38) |
+| 28 | Heal armies with gold | ✅ | verified by `test_oct16_combat` (38/38) |
+| 29 | Attacker at a city shows as attacker | ✅ | verified by `test_oct16_combat` (38/38) |
+| 30 | Fire modes: fire at will / return fire / hold fire | ✅ | verified by `test_oct16_combat` (38/38) |
 | 31 | City screen: resources only, no tank picture | ✅ | |
 | 32 | Visible production countdown | ✅ | |
 | 33 | Clear building vs unit icons | ✅ | |
@@ -100,7 +100,7 @@ Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to d
 - `test_economy_rules.gd`: one failing morale check.
 - `test_multiplayer_phone.gd` / `test_phone_regression.gd`: fail without the private models (see `CHATGPT_HANDOFF.md` §2.4).
 - Europe 20-country online work was never committed (`CHATGPT_HANDOFF.md` §2.2).
-- `claude/combat-oct16` (second Claude, fixes 24–30) was never pushed; treat 24–30 as not started.
+- `test_battle_effects`: 4 fails only because the private launcher models are missing here.
 
 **Needs Matthew**
 - Fix 21: European doctrine makes Ukraine's level-1 buildings 33 min. Keep, or apply the 10% only to units?
