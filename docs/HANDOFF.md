@@ -52,10 +52,10 @@ Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to d
 | 10 | Units render earlier when zooming/tapping | ✅ | phones load on-screen models between zoom 45 and 30 (`PREPARE_ZOOM`); `test_zoom_visibility` 7/8 passed, last check was still running |
 | 11 | Units easier to tap | ⬜ | **next** |
 | 12 | Camera jiggle | ⬜ | |
-| 13 | Messages in Diplomacy | ⬜ | |
-| 14 | Diplomacy shows this map's alliance only | ⬜ | |
-| 15 | Show which country is leading | ⬜ | |
-| 16 | Better newspaper anyone can post in | ⬜ | |
+| 13 | Messages in Diplomacy | ✅ | verified by `test_oct16_diplomacy_news` (12/12) |
+| 14 | Diplomacy shows this map's alliance only | ✅ | verified by `test_oct16_diplomacy_news` (12/12) |
+| 15 | Show which country is leading | ✅ | verified by `test_oct16_diplomacy_news` (12/12) |
+| 16 | Better newspaper anyone can post in | ✅ | verified by `test_oct16_diplomacy_news` (12/12) |
 | 17 | Remove the horse-racing sound | ✅ | |
 | 18 | Game speed affects every timer | ⬜ | |
 | 19 | Units move too fast | ⬜ | |
