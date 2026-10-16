@@ -58,6 +58,36 @@ func run():
 	check(not game.order_mode and units.selected < 0 and walker.moving, "Done closes the panel and the army keeps its route")
 	put(walker, start)
 
+	# 8. A patrol over enemy armies hurts them (before the test takes any Ukrainian land).
+	if not game.match_rules.at_war: game.match_rules.declare_war()
+	var hawks: Array = units.units.filter(func(u): return u.country == "ukraine" and units.air.is_air(u))
+	if not hawks.is_empty():
+		var hawk: Dictionary = hawks[0]
+		var victim: Dictionary = mine[4]
+		var hawk_base: Vector2 = units.air.base(hawk).point
+		# The test took eastern Ukraine above; give the plane's airfield back.
+		for t in game.map.territories:
+			if t.playable and RegionData.contains(t, hawk_base): game.match_rules.change_control(t, "ukraine")
+		var over: = hawk_base + Vector2(0.8, 0.3)
+		put(victim, over + Vector2(0.9, 0.0))
+		victim.health = 100.0
+		hawk.flight_mode = "grounded"
+		hawk.refuel_remaining = 0.0
+		hawk.flight_used = 0.0
+		units.air.position(hawk, hawk_base)
+		var flight_error: String = units.air.order(hawk, over, "patrol")
+		check(flight_error.is_empty(), "the plane takes off on patrol " + flight_error)
+		# Only the plane may hurt the victim: other armies are moved well away.
+		for other in units.units:
+			if other.stack_id != victim.stack_id and other.stack_id != hawk.stack_id and Vector2(other.node.position.x, other.node.position.z).distance_to(over) < 12.0:
+				put(other, Vector2(other.node.position.x, other.node.position.z) + Vector2(60, 60))
+		var health_before: float = victim.health
+		await simulate(8.0 * 60.0)
+		var destroyed: bool = not is_instance_valid(victim.node) or not units.units.has(victim)
+		if not is_instance_valid(hawk.node): print("DEBUG hawk lost, health ", hawk.health)
+		elif not destroyed: print("DEBUG hawk=", hawk.flight_mode, " hawk_d=", Vector2(hawk.node.position.x, hawk.node.position.z).distance_to(over), " victim_d=", Vector2(victim.node.position.x, victim.node.position.z).distance_to(over), " vis=", units.unit_visible(victim, "ukraine"), " war=", units.at_war, " cd=", game.match_rules.air_combat.cooldowns.get(hawk.id, -1))
+		check(destroyed or victim.health < health_before, "a patrolling plane damages enemy armies under its circle (%.1f -> %s)" % [health_before, "destroyed" if destroyed else "%.1f" % victim.health])
+
 	# 2. City labels and capture points: no province centre inside another city's houses.
 	var kyiv: Dictionary = {}
 	for city in game.cities.cities:
@@ -139,35 +169,6 @@ func run():
 		units.select_unit(units.units.find(plane))
 		units.stop_selected()
 		check(str(plane.get("repeat_target", "")).is_empty(), "a new order (Return) ends the repeat strikes")
-
-	# 8. A patrol over enemy armies hurts them.
-	var hawks: Array = units.units.filter(func(u): return u.country == "ukraine" and units.air.is_air(u))
-	if not hawks.is_empty():
-		var hawk: Dictionary = hawks[0]
-		var victim: Dictionary = mine[4]
-		var hawk_base: Vector2 = units.air.base(hawk).point
-		# The test took eastern Ukraine above; give the plane's airfield back.
-		for t in game.map.territories:
-			if t.playable and RegionData.contains(t, hawk_base): game.match_rules.change_control(t, "ukraine")
-		var over: = hawk_base + Vector2(0.8, 0.3)
-		put(victim, over + Vector2(0.9, 0.0))
-		victim.health = 100.0
-		hawk.flight_mode = "grounded"
-		hawk.refuel_remaining = 0.0
-		hawk.flight_used = 0.0
-		units.air.position(hawk, hawk_base)
-		var flight_error: String = units.air.order(hawk, over, "patrol")
-		check(flight_error.is_empty(), "the plane takes off on patrol " + flight_error)
-		# Only the plane may hurt the victim: other armies are moved well away.
-		for other in units.units:
-			if other.stack_id != victim.stack_id and other.stack_id != hawk.stack_id and Vector2(other.node.position.x, other.node.position.z).distance_to(over) < 12.0:
-				put(other, Vector2(other.node.position.x, other.node.position.z) + Vector2(60, 60))
-		var health_before: float = victim.health
-		await simulate(8.0 * 60.0)
-		var destroyed: bool = not is_instance_valid(victim.node) or not units.units.has(victim)
-		if not is_instance_valid(hawk.node): print("DEBUG hawk lost, health ", hawk.health)
-		elif not destroyed: print("DEBUG hawk=", hawk.flight_mode, " hawk_d=", Vector2(hawk.node.position.x, hawk.node.position.z).distance_to(over), " victim_d=", Vector2(victim.node.position.x, victim.node.position.z).distance_to(over), " vis=", units.unit_visible(victim, "ukraine"), " war=", units.at_war, " cd=", game.match_rules.air_combat.cooldowns.get(hawk.id, -1))
-		check(destroyed or victim.health < health_before, "a patrolling plane damages enemy armies under its circle (%.1f -> %s)" % [health_before, "destroyed" if destroyed else "%.1f" % victim.health])
 
 	check(is_equal_approx(AirBattleSystem.PATROL_DAMAGE, 0.65), "patrols strike at 65% damage")
 	# 9. Times follow the game speed.
