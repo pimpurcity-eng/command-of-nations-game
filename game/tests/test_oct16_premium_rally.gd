@@ -45,6 +45,14 @@ func run():
 	# --- pick a city of ours and a weapon it can build ---
 	for country in production.stockpiles:
 		for resource in ProductionSystem.RESOURCES: production.stockpiles[country][resource] = 1.0e9
+	# Owner 2026-10-15: nothing is researched at the start; this test is about the queue, so
+	# mark every weapon as researched first.
+	for spec in production.catalog: game.research.levels[spec.id] = maxi(1, game.research.level(spec.id))
+	# Infantry needs a barracks in the city (cities start without one).
+	for place in production.cities:
+		if production.controlled(place, "russia"):
+			if not game.buildings.levels.has(place.id): game.buildings.levels[place.id] = {}
+			game.buildings.levels[place.id]["barracks"] = maxi(1, game.buildings.level(place.id, "barracks"))
 	var city: Dictionary = {}
 	var weapon: = ""
 	for place in production.cities:
@@ -127,6 +135,7 @@ func run():
 		if fresh.is_empty(): continue
 		var unit: Dictionary = fresh[0]
 		produced.append(unit)
+		if OS.has_environment("RALLY_DEBUG"): print("UNIT ", fresh.size(), " ", unit.position, " moving=", unit.moving, " path=", unit.get("path", []), " keys=", unit.keys())
 		var goal: Vector2 = unit.target
 		check(unit.moving and goal.distance_to(spot) < 1.5, "unit %d marches to the rally point (target %.2f from the flag)" % [round + 1, goal.distance_to(spot)])
 	check(production.jobs.filter(func(j): return j.city == city.name).size() == 3, "the queue moves on: three orders left")
