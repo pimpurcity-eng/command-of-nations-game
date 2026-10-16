@@ -19,13 +19,28 @@ and troop-carrying helicopter (41) on hold.
   test to check every smoothed frame at three phone sizes and subsequent pan/programmatic moves.
 - Restored 406 manifest-verified original weapon/building assets from 22 owner-supplied archives;
   zero missing entries across the arsenal, air-defence, new-weapons and October 12 manifests.
+- Fixed joining a multiplayer match before its first periodic tick: the client now applies the
+  already-received welcome snapshot when the running scene attaches. The dedicated-server phone
+  test passes, with the correct country, armies and resources present immediately.
+- Fixed group selection treating a large garrison polygon as the target of every tap on the
+  town beneath it. Model-centre priority now leaves a distinct town destination. Phone regression
+  11/11, army selection 10/10, touch controls 14/14 and city tap cycle 4/4 pass.
+- Added a real-system speed regression: at 1×, 2×, 4× and 10×, production, construction,
+  research, movement and the game clock advance consistently. Construction's displayed deadline
+  agrees with actual completion at every speed. 48 checks pass.
+- Corrected old test fixtures for intentional selection clearing after movement, archived
+  research defaults, real-time dedicated-server waits and the launcher's physical erector delay.
+  Campaign and multiplayer phone regressions now pass.
 
 Focused checks after the changes: camera gestures 16/16, pinch anchor 9/9 across three phone
 sizes, screen-scaled tap reach passes, city/army tap cycle 4/4. The pinch-anchor test now fails
 with a nonzero exit code if drift recurs; previously it printed FAIL but exited successfully.
 Real OpenGL city and menu screenshots rendered successfully with the original assets.
 
-The broader suite and actual speed/performance checks are still running. No release claim yet.
+Economy rules 64/64, economy balance 8,410 checks, accounts 58/58, multiplayer 36/36,
+Oct 16 combat 38/38, pacing 329/329, zoom 8/8 and diplomacy/news 12/12 pass.
+The broader suite and performance profiling are still running. It has flagged further failures
+that need triage against current rules; no release claim yet.
 - Builds repo remains at 0.57; none of this WIP has been released there yet.
 
 ## Validation and publication status

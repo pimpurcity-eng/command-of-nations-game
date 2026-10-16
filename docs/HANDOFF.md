@@ -100,17 +100,20 @@ Matthew authorized fixing remaining bugs and publishing, then explicitly request
 review before the update (16 Oct, 22:46 UTC). This authorization supersedes the earlier publishing
 pause; fixes 21 and 41 remain on hold. One worker only. See [RELEASE_AUDIT_2026_10_16.md](RELEASE_AUDIT_2026_10_16.md).
 
-The latest WIP still failed the camera event-order regression (16 checks, 4 failures) and omitted
-the city from the garrison tap cycle. These two gaps are being fixed before release; do not treat
-the earlier green camera/tapping statuses as a complete release check.
+The camera event-order regression, smoothed-zoom anchor drift, garrison tap cycle and group-mode
+town destination gaps are fixed and tested. A real multiplayer initial-snapshot bug is also
+fixed: the phone now shows its assigned country and server state as soon as it attaches.
+Actual timer/movement consistency passes 48 checks at 1×/2×/4×/10×. Broad-suite failures and
+performance profiling are still being investigated; this is not a released build yet.
 
 **Open bugs**
-- `test_multiplayer_phone.gd` / `test_phone_regression.gd`: fail without the private models (see `CHATGPT_HANDOFF.md` §2.4).
+- Original assets are restored locally; multiplayer phone and phone regression now pass.
 - Europe 20-country online work was never committed (`CHATGPT_HANDOFF.md` §2.2).
-- `test_battle_effects`: 4 fails only because the private launcher models are missing here.
+- `test_battle_effects` passes with restored launcher models.
 
 **Needs Matthew**
 - Fixes 21 and 41 are ON HOLD until Matthew says go (see the table).
-- In-game check of every ✅ above before WIP is merged into stable.
+- Physical-phone review of camera feel, tap targets and report readability remains useful;
+  automated and rendered checks are being completed under Matthew's publish authorization.
 
 **Last session:** 2026-10-16, Claude — created this file; fixes 10, 11, 12, 36 bug; verified 13–16, 18–20, 22–30, 35, 37, 38, 40 with tests; `test_economy_rules` now 64/64.

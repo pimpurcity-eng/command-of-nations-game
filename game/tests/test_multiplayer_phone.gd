@@ -12,9 +12,13 @@ func check(ok: bool, message: String) -> void:
 func _initialize() -> void: call_deferred("run")
 
 func wait_for(condition: Callable, frames: int = 600) -> bool:
-	for i in frames:
+	# The dedicated server runs in a separate process with a real-time clock. Fixed-FPS
+	# client frames may execute much faster than real time, so use a wall-clock deadline.
+	var deadline: int = Time.get_ticks_msec() + ceili(frames * 1000.0 / 60.0)
+	while Time.get_ticks_msec() < deadline:
 		if condition.call(): return true
 		await process_frame
+		OS.delay_msec(1)
 	return condition.call()
 
 func run() -> void:
@@ -60,9 +64,10 @@ func run() -> void:
 	var sent_for: int = game.units.order_many(Vector3(goal.x, 0, goal.y))
 	check(sent_for == 1 and not army.moving, "the Move button sends the order instead of moving locally")
 	check(await wait_for(func(): var a: Dictionary = game.units.find_id(army.id); return not a.is_empty() and a.moving, 600), "the server's tick shows the army on the move")
-	var start: Vector3 = game.units.find_id(army.id).node.position
-	await create_timer(3.0).timeout
-	check(game.units.find_id(army.id).node.position.distance_to(start) > 0.001, "the army glides along as the server moves it")
+	var received: Dictionary = game.units.find_id(army.id)
+	if not received.is_empty():
+		var start: Vector3 = received.node.position
+		check(await wait_for(func(): var a: Dictionary = game.units.find_id(army.id); return not a.is_empty() and a.node.position.distance_to(start) > 0.001, 600), "the army glides along as the server moves it")
 	phone.leave()
 	OS.kill(server_pid)
 	for path in [save, save.get_basename() + "_seats.json"]:

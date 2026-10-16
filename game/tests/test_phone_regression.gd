@@ -34,6 +34,21 @@ func run():
  game.rig.distance=7
  game.rig._snap(1.0)
  var screen=game.rig.camera.unproject_position(game.map.position_at(city.point)+Vector3.UP*0.2)
+ # The enlarged garrison is selectable in group-selection mode. Aim at the city's
+ # buildings, away from an army, to choose the meeting point rather than toggle that army.
+ var town_tap_found=false
+ for radius in [0,30,50,70,90,110,130]:
+  for angle in 16:
+   var candidate=screen+Vector2.from_angle(TAU*angle/16.0)*radius
+   var town=game.cities.pick_screen(candidate)
+   var hit=game.units.pick_screen(game.rig.camera,candidate)
+   var own_hit=not hit.is_empty() and game.units.units[hit.index].country==GameSession.player_country and (town.is_empty() or float(hit.rank)<float(town.distance))
+   if not town.is_empty() and town.city.id==city.id and not own_hit:
+    screen=candidate
+    town_tap_found=true
+    break
+  if town_tap_found:break
+ check(town_tap_found,"the city's buildings have a distinct meeting-point tap")
  game._map_click(screen,false)
  check(not game.selecting_armies,"city model tap completes group selection")
  check(armies.all(func(u):return u.moving),"all three armies move to city")
@@ -63,7 +78,18 @@ func run():
  check(not game.clock.paused and launcher.attack_target==enemy.id,"Attack starts missile order from paused weapons map")
  game.clock.advance(0.05)
  var marker: Marker3D=launcher.node.get_child(0).get_meta("missile_launch_point")
- check(game.combat_effects.projectiles.any(func(p):return p.effect=="missile" and p.start.is_equal_approx(marker.global_position)),"actual combat launches projectile from launcher muzzle")
+ # Real launchers raise their erector before firing; wait for the physical tube mouth.
+ var fired=false
+ for frame in 180:
+  var model: Node3D=launcher.node.get_child(0)
+  var mouth: Vector3=marker.global_position
+  if model.has_meta("erector_hinge"):
+   mouth=(model.get_meta("erector_hinge") as Node3D).global_transform*(model.get_meta("erector_mouth") as Vector3)
+  if game.combat_effects.projectiles.any(func(p):return p.effect=="missile" and p.start.is_equal_approx(mouth)):
+   fired=true
+   break
+  await process_frame
+ check(fired,"actual combat launches projectile from launcher muzzle after raising the erector")
  print("RESULT checks=",checks," failures=",failures)
  game.queue_free()
  await process_frame

@@ -34,6 +34,8 @@ func run() -> void:
 		check(unit.moving, country + " movement ordered")
 		game.units.advance(1.0)
 		check(start.distance_to(Vector2(unit.node.position.x, unit.node.position.z)) > 0, country + " army moved")
+		# Move orders intentionally clear the selection; select the moving army again to stop it.
+		game.units.select_unit(game.units.units.find(unit))
 		game.hud.stop_requested.emit()
 		check(not unit.moving, country + " Stop UI accepted")
 		game.production_panel.open()
@@ -42,11 +44,14 @@ func run() -> void:
 		var first = game.production.catalog.filter(func(spec): return spec.country == country and game.production.research_lock(spec).is_empty() and not spec.get("requires_port", false))[0]
 		var base = game.buildings.capital(country)
 		check(game.production.schedule(first.id, base.name).is_empty(), country + " production queues")
-		var locked = game.production.catalog.filter(func(spec): return spec.country == country and not game.production.research_lock(spec).is_empty())[0]
+		# Archived arsenals predate the empty-research rule. Explicitly leave one family
+		# unresearched to exercise the real lock and subsequent level-one research.
+		var locked = game.production.catalog.filter(func(spec): return spec.country == country and spec.id != first.id and not spec.get("retired", false))[0]
+		game.research.levels[locked.id] = 0
 		check(not game.production.schedule(locked.id, base.name).is_empty(), country + " unresearched weapons cannot be built")
 		game.research_panel.open()
 		var research_spec = game.production.catalog.filter(func(spec): return spec.country == country and game.research.reason(spec.id, game.research.level(spec.id) + 1, country).is_empty())[0]
-		check(game.research.start(research_spec.id, game.research.level(research_spec.id) + 1, country).is_empty(), country + " research starts on day 1 (" + research_spec.research_branch + ")")
+		check(game.research.start(research_spec.id, game.research.level(research_spec.id) + 1, country).is_empty(), country + " research starts on day 1 (" + str(research_spec.get("research_branch", research_spec.name)) + ")")
 		var cash = game.production.stockpiles[country].funds
 		var exchange = SupplyExchange.new(); exchange.economy = game.production
 		check(exchange.transact("fuel", 1, true).is_empty(), country + " market buys")

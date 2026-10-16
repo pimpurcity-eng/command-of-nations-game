@@ -38,10 +38,14 @@ func connect_to(url: String, account_token: String, match: String, country_wante
 
 ## Lets this client drive `main` (a running main.tscn): orders go to the server from now on.
 func attach(main: Node) -> void:
+	var needs_state: bool = game != main or active != self
 	game = main
 	active = self
 	game.match_rules.ai_enabled = false
 	game.clock.paused = true
+	# The welcome may arrive before its handler attaches the running scene. Apply
+	# that snapshot now, so country, armies and resources are correct from the first frame.
+	if needs_state and not country.is_empty() and not state.is_empty(): _apply(state, true)
 
 func leave() -> void:
 	ws.close(1000, "Left the match")

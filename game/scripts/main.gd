@@ -644,11 +644,12 @@ func _browser_visible(_arguments: Array) -> void :
 func _map_click(screen: Vector2, order: bool) -> void :
 	if selecting_armies:
 		# City hubs are destinations even when a garrison overlaps their model.
-		# Owner 2026-10-16 ("it's hard to click the units"): one of your armies wins when the
-		# finger is on its model or nearer to it than to the city centre.
+		# Owner 2026-10-16: compare the visible model's centre with the town's centre.
+		# A large garrison can cover the whole town, so polygon overlap alone must not
+		# make every tap on its buildings toggle the army instead of choosing a destination.
 		var meeting_city: = cities.pick_screen(screen)
 		var picked: = units.pick_screen(rig.camera,screen)
-		var own_army_tapped: bool = not picked.is_empty() and units.units[picked.index].country == GameSession.player_country and (meeting_city.is_empty() or picked.inside or float(picked.distance) < float(meeting_city.distance))
+		var own_army_tapped: bool = not picked.is_empty() and units.units[picked.index].country == GameSession.player_country and (meeting_city.is_empty() or float(picked.rank) < float(meeting_city.distance))
 		if not meeting_city.is_empty() and not units.command_ids.is_empty() and not own_army_tapped:
 			player_order(map.position_at(meeting_city.city.point))
 			return
