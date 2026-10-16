@@ -1424,7 +1424,7 @@ func start_campaign_play() -> void :
 	audio.play_music("battle_theme")
 	clock.paused = false
 	refresh_hud()
-	hud.show_status("Campaign running at " + str(int(clock.speed)) + "x · select a your army, then Move or Fly. Pause stops movement and builds.")
+	hud.show_status("Campaign running at " + str(int(clock.speed)) + "x · select your army, then Move or Fly. Pause stops movement and builds.")
 
 ## Attack orders (owner 2026-10-15): never against your own armies, and at peace the player is
 ## asked before war is declared.

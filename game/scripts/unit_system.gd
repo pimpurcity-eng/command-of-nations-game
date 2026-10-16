@@ -881,9 +881,9 @@ func _refuel_crew(unit: Dictionary) -> void:
 		if _crew_mesh == null: _crew_mesh = _fuel_truck_mesh()
 		var truck: = MeshInstance3D.new()
 		truck.mesh = _crew_mesh
-		truck.position = Vector3(0.45, 0.0, 0.12)
+		truck.position = Vector3(0.38, 0.0, 0.1)
 		truck.rotation.y = -0.5
-		truck.scale = Vector3.ONE * 0.75
+		truck.scale = Vector3.ONE * 0.45
 		crew.add_child(truck)
 		var timer: = Label3D.new()
 		timer.name = "Timer"
