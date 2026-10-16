@@ -22,6 +22,8 @@ const MOBILE_MAX_DETAILED_UNITS := 80  # owner 2026-10-15: real 3D models, never
 ## wider zoom (was 24) and appear 4 a frame, nearest the middle of the screen first.
 const FAR_ZOOM := 30.0
 const REVEALS_PER_FRAME := 4
+## Fix 10: between PREPARE_ZOOM and FAR_ZOOM phones load the on-screen armies' models, hidden.
+const PREPARE_ZOOM := 45.0
 const CLOSE_ZOOM := 11.0
 var view_distance := 20.0
 var _mobile_visual_refresh_budget := 1
@@ -693,6 +695,23 @@ func _update_heading(unit: Dictionary) -> void :
 	if direction.length_squared() > 0.0001:
 		unit.heading = atan2( - direction.x, - direction.y)
 ## Keep the new detailed model at child zero: combat, selection and shadows use it.
+## Swaps a phone army's lightweight stand-in for its real model. Returns 1 when a model now counts
+## towards MOBILE_MAX_DETAILED_UNITS, 0 when the original is missing (retried after 5 s).
+func _load_real_model(unit: Dictionary) -> int:
+	var visual: Node3D = unit.node.get_child(0)
+	if visual.get_meta("missing_original_model", false) and Time.get_ticks_msec() - int(visual.get_meta("missing_at", 0)) < 5000: return 0
+	var replacement: Node3D = UnitVisual.create(unit.visual_kind, unit.faction_color, unit.equipment_id, unit.level)
+	if replacement.get_meta("missing_original_model", false) and not replacement.get_meta("simple_model", false):
+		# Retried every 5 s (owner 2026-10-15: units stayed blank for good).
+		visual.set_meta("missing_original_model", true)
+		visual.set_meta("missing_at", Time.get_ticks_msec())
+		replacement.free()
+		return 0
+	# A simple model of the kind stands in until the real one loads (retried later).
+	if replacement.get_meta("missing_original_model", false): replacement.set_meta("missing_at", Time.get_ticks_msec())
+	_replace_visual(unit, replacement)
+	return 1
+
 func _replace_visual(unit: Dictionary, replacement: Node3D) -> void:
 	var old: Node3D = unit.node.get_child(0)
 	replacement.rotation = old.rotation
@@ -776,6 +795,15 @@ func _process(delta: float) -> void :
 		if on_screen and is_leader and view_distance > FAR_ZOOM:
 			unit.node.visible = false
 			unit.icon_only = visible_to_player(unit)
+			# Owner 2026-10-16 (fix 10, "units render earlier when zooming"): while the player zooms
+			# in towards FAR_ZOOM, phones load the real models of the armies on screen ahead of time
+			# (hidden, one a frame), so they are ready the moment the zoom crosses FAR_ZOOM instead of
+			# loading one a frame only after it. Loaded models already count towards the phone cap.
+			if mobile and unit.icon_only:
+				if not unit.node.get_child(0).get_meta("startup_lightweight", false): detailed += 1
+				elif view_distance < PREPARE_ZOOM and upgrades_left > 0 and detailed < MOBILE_MAX_DETAILED_UNITS:
+					detailed += _load_real_model(unit)
+					upgrades_left -= 1
 			continue
 		if not on_screen or not is_leader:
 			unit.node.visible = false
@@ -810,17 +838,7 @@ func _process(delta: float) -> void :
 					continue
 			elif upgrades_left > 0 and detailed < MOBILE_MAX_DETAILED_UNITS and not (visual.get_meta("missing_original_model", false) and Time.get_ticks_msec() - int(visual.get_meta("missing_at", 0)) < 5000):
 				# One expensive model import per frame; missing originals are not retried forever.
-				var replacement: Node3D = UnitVisual.create(unit.visual_kind, unit.faction_color, unit.equipment_id, unit.level)
-				if replacement.get_meta("missing_original_model", false) and not replacement.get_meta("simple_model", false):
-					# Retried every 5 s (owner 2026-10-15: units stayed blank for good).
-					visual.set_meta("missing_original_model", true)
-					visual.set_meta("missing_at", Time.get_ticks_msec())
-					replacement.free()
-				else:
-					# A simple model of the kind stands in until the real one loads (retried below).
-					if replacement.get_meta("missing_original_model", false): replacement.set_meta("missing_at", Time.get_ticks_msec())
-					_replace_visual(unit, replacement)
-					detailed += 1
+				detailed += _load_real_model(unit)
 				upgrades_left -= 1
 		if unit.node.get_child(0).get_meta("startup_lightweight", false):
 			# Model not loaded yet (phone cap): show the map symbol, never a placeholder box.

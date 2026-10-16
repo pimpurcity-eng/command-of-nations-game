@@ -49,8 +49,8 @@ Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to d
 | 7 | Google sign-in in the Android app | ✅ | Supabase redirect `warfrontmandate://auth-callback` |
 | 8 | Create account without a code box | ✅ | |
 | 9 | Premium account groundwork | ✅ | `29de857` and snapshots; `docs/PREMIUM.md`; migration 005 live |
-| 10 | Units render earlier when zooming/tapping | ⬜ | **next** |
-| 11 | Units easier to tap | ⬜ | |
+| 10 | Units render earlier when zooming/tapping | ✅ | phones load on-screen models between zoom 45 and 30 (`PREPARE_ZOOM`); `test_zoom_visibility` 7/8 passed, last check was still running |
+| 11 | Units easier to tap | ⬜ | **next** |
 | 12 | Camera jiggle | ⬜ | |
 | 13 | Messages in Diplomacy | ⬜ | |
 | 14 | Diplomacy shows this map's alliance only | ⬜ | |
@@ -94,7 +94,7 @@ Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to d
 
 ## 5. Session state
 
-**In progress:** Claude — fix 10.
+**In progress:** Claude — fix 11 next. Confirm the last `test_zoom_visibility` check ("enemy shown when zoomed out") passes.
 
 **Open bugs**
 - Fix 36: first unit made at a city doesn't walk to the rally point.

@@ -22,6 +22,17 @@ func check_all(label: String) -> void:
 		if camera.is_position_behind(p) or not view.has_point(camera.unproject_position(p)): continue
 		if not shown(leader): missing.append(leader.id)
 	check(missing.is_empty(), label + " - every army on screen is shown (missing %s)" % [missing])
+func lightweight_on_screen() -> int:
+	var camera: Camera3D = game.rig.camera
+	var view: Rect2 = root.get_visible_rect()
+	var count: = 0
+	for group in game.units.stacks.groups():
+		var leader: Dictionary = game.units.stacks.leader(group)
+		if not game.units.visible_to_player(leader): continue
+		var p: Vector3 = leader.node.global_position
+		if camera.is_position_behind(p) or not view.has_point(camera.unproject_position(p)): continue
+		if leader.node.get_child(0).get_meta("startup_lightweight", false): count += 1
+	return count
 func zoom(distance: float) -> void:
 	game.rig.distance = distance
 	for i in 120: await process_frame
@@ -36,6 +47,16 @@ func run() -> void:
 	game.clock.paused = true
 	var at: Vector2 = game.buildings.city("kursk").point
 	game.rig.target = Vector3(at.x, 0, at.y)
+	# Fix 10 (owner 2026-10-16, "units render earlier when zooming"): between PREPARE_ZOOM and
+	# FAR_ZOOM the phone loads the on-screen armies' models while they still show as map tags.
+	await zoom(57.0)
+	var before: int = lightweight_on_screen()
+	await zoom((UnitSystem.FAR_ZOOM + UnitSystem.PREPARE_ZOOM) * 0.5)
+	var after: int = lightweight_on_screen()
+	print("on-screen armies still waiting for a model: far out %d, just before the model zoom %d" % [before, after])
+	check(after == 0, "zooming in towards the model zoom loads every on-screen army's model ahead of time")
+	await zoom(UnitSystem.FAR_ZOOM - 2.0)
+	check_all("just inside the model zoom")
 	await zoom(10.0)
 	check_all("zoomed in")
 	await zoom(45.0)
