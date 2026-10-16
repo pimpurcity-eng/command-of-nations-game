@@ -1,5 +1,7 @@
 # Start here — second Claude session (combat fixes 24-30)
 
+> **Shared handoff:** start with `docs/HANDOFF.md` on branch `claude/wip-oct16` (live fix status, branch rules, session state). Where this file disagrees with it, `docs/HANDOFF.md` wins.
+
 You are joining development of "Warfront Mandate: WW3", a Godot 4.6.3 Call-of-War-style strategy game
 (Russia vs Ukraine), web + Android. Owner: Matthew (GitHub pimpurcity-eng).
 

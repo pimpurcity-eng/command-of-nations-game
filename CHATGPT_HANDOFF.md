@@ -1,5 +1,7 @@
 # Warfront Mandate: WW3 — handoff to ChatGPT (16 October 2026)
 
+> **Shared handoff:** start with `docs/HANDOFF.md` on branch `claude/wip-oct16` (live fix status, branch rules, session state). Where this file disagrees with it, `docs/HANDOFF.md` wins.
+
 Written by Claude on 2026-10-16 for ChatGPT to continue development, builds and publishing.
 No passwords, private keys, tokens or keystore files are in this file or anywhere in Git.
 Owner: Matthew (GitHub `pimpurcity-eng`). Read this whole file before changing anything.

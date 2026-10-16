@@ -1,5 +1,7 @@
 # Warfront Mandate — what's left (checkpoint 16 Oct 2026, latest build 0.57)
 
+> **Shared handoff:** start with `docs/HANDOFF.md` on branch `claude/wip-oct16` (live fix status, branch rules, session state). Where this file disagrees with it, `docs/HANDOFF.md` wins.
+
 > **Checkpoint 16 Oct 2026:** ChatGPT takes over development, builds and publishing.
 > Start with `CHATGPT_HANDOFF.md` in the repo root (authoritative source, build/publish/signing, test results).
 > Latest build 0.57 (`bcda1be`, versionCode 57); source tip adds `62dfac0` (≈45k funds/day), not yet built.
