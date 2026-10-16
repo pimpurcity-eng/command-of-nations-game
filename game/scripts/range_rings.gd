@@ -2,8 +2,7 @@ class_name RangeRings
 extends Node3D
 ## Owner 2026-10-15: "I want to see a range ring around everything that has a range."
 ## Thin rings on the ground: air defence, artillery, rocket and missile launchers and warships.
-## Your armies' rings are blue, visible enemies' red, the selected army's gold. They show when the
-## map is zoomed in far enough to read (the selected army's ring at any zoom). Aircraft keep
+## Only the selected army's ring shows (owner 2026-10-16): blue for yours, red for an enemy's. Aircraft keep
 ## their own operating-radius ring around their base (UnitSystem.air_range).
 const SHOW_BELOW_DISTANCE: = UnitSystem.FAR_ZOOM
 const OWN: = Color(0.45, 0.75, 1.0, 0.45)
@@ -42,13 +41,20 @@ static func reach(unit: Dictionary) -> float:
 func update(armies: UnitSystem, view_distance: float) -> void:
 	var used: = 0
 	var chosen_ids: Dictionary = {}
-	for leader in armies.command_groups(): chosen_ids[leader.stack_id] = true
+	for leader in armies.command_groups(): chosen_ids[leader.country + ":" + leader.stack_id] = true
+	# An enemy army tapped for a look counts too.
+	if armies.selected >= 0 and armies.selected < armies.units.size():
+		var looked: Dictionary = armies.units[armies.selected]
+		chosen_ids[looked.country + ":" + looked.stack_id] = true
 	var leaders: Dictionary = {}
 	for group in armies.stacks.groups(): leaders[armies.stacks.leader(group).id] = group
 	for unit in armies.units:
 		if not leaders.has(unit.id) or unit.health <= 0 or armies.air.is_air(unit): continue
-		var chosen: bool = chosen_ids.has(unit.stack_id)
-		if view_distance > SHOW_BELOW_DISTANCE and not chosen: continue
+		var chosen: bool = chosen_ids.has(unit.country + ":" + unit.stack_id)
+		# Owner 2026-10-16: "only have the range when they're clicked, and you can click the enemy's
+		# units as well to see their range" - the ring shows only round the selected army, yours
+		# (blue) or the enemy's (red).
+		if not chosen: continue
 		if not armies.visible_to_player(unit): continue
 		var radius: = 0.0
 		for member in leaders[unit.id]: radius = maxf(radius, reach(member))
@@ -62,7 +68,7 @@ func update(armies: UnitSystem, view_distance: float) -> void:
 		var ring: = _pool[used]
 		used += 1
 		ring.visible = true
-		ring.material_override = _inks["chosen" if chosen else ("own" if unit.country == GameSession.player_country else "enemy")]
+		ring.material_override = _inks["own" if unit.country == GameSession.player_country else "enemy"]
 		var point: = Vector2(unit.node.position.x, unit.node.position.z)
 		ring.position = armies.terrain.position_at(point) + Vector3.UP * 0.06
 		ring.scale = Vector3(radius, 1.0, radius)
