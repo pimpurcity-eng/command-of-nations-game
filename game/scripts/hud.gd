@@ -231,8 +231,8 @@ func _build_toolbar(root: Control) -> void:
 	navigation_menu.visible = false
 	# Eight destinations; unit and province actions stay with their selection.
 	var popup: = navigation_menu.get_popup()
-	popup.add_theme_font_size_override("font_size",20)
-	popup.add_theme_constant_override("v_separation",10)
+	# Owner 2026-10-16 ("the side menu, I can barely see anything - make it bigger for mobile").
+	_big_menu(popup)
 	popup.add_item("Home screen", 100)
 	popup.add_item("Commander profile", 101)
 	popup.add_item("Army roster", 10)
@@ -248,13 +248,33 @@ func _build_toolbar(root: Control) -> void:
 	popup.id_pressed.connect(_navigation_action)
 	root.add_child(navigation_menu)
 
+## Large, phone-readable menu: big type, tall rows and a padded dark panel.
+static func _big_menu(menu: PopupMenu) -> void:
+	menu.add_theme_font_size_override("font_size", 34)
+	menu.add_theme_constant_override("v_separation", 26)
+	menu.add_theme_constant_override("h_separation", 18)
+	menu.add_theme_constant_override("item_start_padding", 22)
+	menu.add_theme_constant_override("item_end_padding", 22)
+	var panel: = StyleBoxFlat.new()
+	panel.bg_color = Color("1b2026")
+	panel.border_color = Color("c9a24a")
+	panel.set_border_width_all(2)
+	panel.set_corner_radius_all(12)
+	panel.content_margin_top = 14
+	panel.content_margin_bottom = 14
+	menu.add_theme_stylebox_override("panel", panel)
+	var hover: = StyleBoxFlat.new()
+	hover.bg_color = Color("3a4048")
+	hover.set_corner_radius_all(8)
+	menu.add_theme_stylebox_override("hover", hover)
+	menu.add_theme_color_override("font_color", Color("efe6cf"))
+	menu.add_theme_color_override("font_hover_color", Color("ffd36b"))
 func _nav_submenu(parent: PopupMenu, title: String, entries: Array) -> PopupMenu:
 	var menu: = PopupMenu.new()
 	menu.name = title.replace(" ", "_").replace("&", "and")
 	parent.add_child(menu)
 	parent.add_submenu_item(title, str(menu.name), 200 + parent.item_count)
-	menu.add_theme_font_size_override("font_size",20)
-	menu.add_theme_constant_override("v_separation",10)
+	_big_menu(menu)
 	menu.id_pressed.connect(_navigation_action)
 	for entry in entries: menu.add_item(str(entry[1]), int(entry[0]))
 	return menu

@@ -230,17 +230,17 @@ static func action(caption: String, kind: String, color: Color = GREEN) -> Butto
 	return button
 
 ## Resource cost: icon with the amount underneath (red when unaffordable).
-static func cost(resource: String, amount: float, enough: bool) -> VBoxContainer:
+static func cost(resource: String, amount: float, enough: bool, scale: float = 1.0) -> VBoxContainer:
 	var column: = VBoxContainer.new()
 	column.add_theme_constant_override("separation", 0)
 	column.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var icon: = TextureRect.new()
 	icon.texture = ResourceSites.icon(resource)
-	icon.custom_minimum_size = Vector2(28, 28)
+	icon.custom_minimum_size = Vector2(28, 28) * scale
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	column.add_child(icon)
-	var value: = label(short(amount), 13, INK if enough else Color("b0302a"))
+	var value: = label(short(amount), roundi(13 * scale), INK if enough else Color("b0302a"))
 	value.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	column.add_child(value)
 	return column
