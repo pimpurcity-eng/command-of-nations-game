@@ -3,7 +3,7 @@ extends RefCounted
 
 ## Strategic map dimensions before UnitSystem's 0.65 scale. These are readable
 ## symbols, not metres at the geographical map scale. Preserve model proportions.
-const DISPLAY_SCALE := 1.20
+const DISPLAY_SCALE := 1.50  # owner 2026-10-16: "make all units bigger"
 ## Extra readability for tanks after the owner reviewed the city concept.
 const ARMOR_READABILITY := 1.10
 const FOOTPRINT := {

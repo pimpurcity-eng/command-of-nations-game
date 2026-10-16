@@ -4,10 +4,12 @@ extends Control
 ## symbol of the army's unit type (UnitClasses), the number of units, and five health bars
 ## beside it. White for your armies, red for enemies you are at war with, grey for others;
 ## gold edge when selected. "token" (zoomed out) is a slightly smaller plate than "tag".
-const TOKEN_SIZE: = Vector2(54, 27)  # owner 2026-10-15: tags were bigger than the tanks
-const TAG_SIZE: = Vector2(58, 28)
+## Owner 2026-10-16: "the power left and what kind of unit it is - I can barely see it, it's like a
+## little dot" - the plate, symbol, count and health bar are drawn about 60% bigger.
+const TOKEN_SIZE: = Vector2(86, 43)
+const TAG_SIZE: = Vector2(92, 45)
 ## Owner 2026-10-15 ("can't see health bar"): a full-width bar under the plate.
-const BAR_HEIGHT: = 6.0
+const BAR_HEIGHT: = 9.0
 var mode: = "token"
 ## Map class (UnitClasses.ALL) or menu kind; picks the symbol.
 var kind: = "heavy"
@@ -35,7 +37,7 @@ func _draw() -> void:
 	var plate: = Rect2(Vector2(1, 1), Vector2(size.x - 2, size.y - BAR_HEIGHT - 3))
 	var face: = StyleBoxFlat.new()
 	face.bg_color = _fill()
-	face.set_corner_radius_all(6)
+	face.set_corner_radius_all(8)
 	face.border_color = Color("f3c440") if selected else Color(0.08, 0.08, 0.07, 0.9)
 	face.set_border_width_all(3 if selected else 1)
 	face.shadow_color = Color(0, 0, 0, 0.35)
@@ -51,7 +53,7 @@ func _draw() -> void:
 		var drawn: = Vector2(picture.get_width(), picture.get_height()) * scale
 		draw_texture_rect(picture, Rect2(area.get_center() - drawn * 0.5, drawn), false)
 	draw_line(Vector2(split, plate.position.y + 5), Vector2(split, plate.end.y - 5), Color(1, 1, 1, 0.6) if hostile else Color(0.55, 0.53, 0.5), 1.0)
-	var font_size: = 13
+	var font_size: = 21
 	draw_string(font, Vector2(split, plate.get_center().y + font_size * 0.36), str(count), HORIZONTAL_ALIGNMENT_CENTER, plate.end.x - split, font_size, ink)
 	# Health bar under the plate: green, yellow below 60%, red below 30%.
 	var bar: = Rect2(Vector2(3, size.y - BAR_HEIGHT - 1), Vector2(size.x - 6, BAR_HEIGHT))
