@@ -1,0 +1,20 @@
+name: Recover Europe checkpoint
+on:
+  push:
+    branches: [chatgpt/europe-transfer-20261016]
+    paths: [recovery/europe.bundle]
+permissions:
+  contents: write
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - name: Restore the verified Git checkpoint
+        run: |
+          test -f recovery/europe.bundle
+          git bundle verify recovery/europe.bundle
+          git fetch recovery/europe.bundle HEAD:refs/remotes/recovered/europe
+          git push origin refs/remotes/recovered/europe:refs/heads/chatgpt/europe-finish-20261016
