@@ -57,12 +57,12 @@ Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to d
 | 15 | Show which country is leading | ✅ | verified by `test_oct16_diplomacy_news` (12/12) |
 | 16 | Better newspaper anyone can post in | ✅ | verified by `test_oct16_diplomacy_news` (12/12) |
 | 17 | Remove the horse-racing sound | ✅ | |
-| 18 | Game speed affects every timer | ⬜ | |
-| 19 | Units move too fast | ⬜ | |
-| 20 | Faster on own land, terrain matters | ⬜ | |
-| 21 | Level-1 buildings 30 min at 1x, harder after | ⬜ | **bug:** shows 33 min, not 30 |
-| 22 | Level-1 unit research 30 min–2 h | ⬜ | |
-| 23 | Every unit's first level by day 6 (except nukes) | ⬜ | |
+| 18 | Game speed affects every timer | ✅ | verified by `test_oct16_pacing` (329 pass, 0 fail) |
+| 19 | Units move too fast | ✅ | verified by `test_oct16_pacing` (329 pass, 0 fail) |
+| 20 | Faster on own land, terrain matters | ✅ | verified by `test_oct16_pacing` (329 pass, 0 fail) |
+| 21 | Level-1 buildings 30 min at 1x, harder after | ❓ | data is 30 min (`test_oct16_pacing`). The 33 min is the European doctrine's "Production 10% slower" (×0.9) on Ukraine's cities. Ask Matthew: keep, or make the penalty units-only? |
+| 22 | Level-1 unit research 30 min–2 h | ✅ | verified by `test_oct16_pacing` (329 pass, 0 fail) |
+| 23 | Every unit's first level by day 6 (except nukes) | ✅ | verified by `test_oct16_pacing` (329 pass, 0 fail) |
 | 24 | Battle animation ~5 s, then still until next shot | ⬜ | earlier helper work: `tests/test_oct16_combat.gd`, "Owner 2026-10-16" comments |
 | 25 | Planes can attack enemy planes | ⬜ | |
 | 26 | Patrol hits regularly (65% of a strike) | ⬜ | |
@@ -97,13 +97,13 @@ Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to d
 **In progress:** Claude — fixes 17+ (17 already done). Confirm the last `test_zoom_visibility` check ("enemy shown when zoomed out") passes.
 
 **Open bugs**
-- Fix 21: level-1 buildings show 33 min instead of 30.
 - `test_economy_rules.gd`: one failing morale check.
 - `test_multiplayer_phone.gd` / `test_phone_regression.gd`: fail without the private models (see `CHATGPT_HANDOFF.md` §2.4).
 - Europe 20-country online work was never committed (`CHATGPT_HANDOFF.md` §2.2).
 - `claude/combat-oct16` (second Claude, fixes 24–30) was never pushed; treat 24–30 as not started.
 
 **Needs Matthew**
+- Fix 21: European doctrine makes Ukraine's level-1 buildings 33 min. Keep, or apply the 10% only to units?
 - Fix 41: should the transport helicopter carry troops?
 - In-game check of every ✅ above before WIP is merged into stable.
 
