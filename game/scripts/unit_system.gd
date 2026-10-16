@@ -692,6 +692,7 @@ func _replace_visual(unit: Dictionary, replacement: Node3D) -> void:
 	unit.node.add_child(replacement)
 	unit.node.move_child(replacement, 0)
 
+const AIRCRAFT_SCALE: = 1.40
 const CITY_GARRISON_SCALE: = 1.40  # owner 2026-10-15: "I don't even know what the unit is"
 const SMALL_GARRISON_READABILITY: = 1.15  # owner 2026-10-15: infantry "a little bit too big" at 1.6
 
@@ -786,7 +787,12 @@ func _process(delta: float) -> void :
 		else: UnitShadow.update(unit, ground)
 		var chosen: = chosen_stacks.has(unit.stack_id)
 		unit.ring.material_override.albedo_color = Color("f5cf82") if chosen else unit.faction_color
-		unit.ring.scale = Vector3.ONE * (0.52 if chosen else 0.42)
+		# Owner 2026-10-16 ("when I click on units in the city the circle doesn't go around them
+		# anymore"): the ring is sized to the (now bigger) model so it shows round it, and drawn
+		# over the city's park paving.
+		unit.ring.scale = Vector3.ONE * maxf(0.52, _model_reach(unit) * 1.25 / 0.81)
+		unit.ring.material_override.no_depth_test = chosen
+		unit.ring.material_override.render_priority = 5
 		# Call of War: only the selected army gets a ring; the map tag shows ownership.
 		unit.ring.visible = chosen
 		var model: Node3D = unit.node.get_child(0)
@@ -851,9 +857,10 @@ func _process(delta: float) -> void :
 		# Owner 2026-10-13: ground armies standing in a city are drawn bigger so the garrison
 		# reads clearly among the buildings (aircraft and ships keep their size).
 		var on_land: = not is_naval(unit) and not air.is_air(unit)
-		var target_scale: = 0.65 * ((garrison_scale(unit) if _in_city(Vector2(unit.node.position.x, unit.node.position.z)) else field_scale(unit)) if on_land else 1.0)
+		# Owner 2026-10-16 ("make the planes bigger ... still the same size"): aircraft grow with
+		# the ground armies (ships keep their size at sea).
+		var target_scale: = 0.65 * ((garrison_scale(unit) if _in_city(Vector2(unit.node.position.x, unit.node.position.z)) else field_scale(unit)) if on_land else (AIRCRAFT_SCALE if air.is_air(unit) else 1.0))
 		model.scale = model.scale.lerp(Vector3.ONE * target_scale, 1.0 - exp( - delta * 6.0))
-		if unit.visual_kind == "air_defense": unit.ring.scale = Vector3.ONE * (0.52 if chosen else 0.42) * (model.scale.x / 0.65)
 		if unit.node.has_meta("detailed_sprite"):
 			var sprite: Sprite3D = unit.node.get_meta("detailed_sprite")
 			var relative: = wrapf(unit.heading - camera.rotation.y, - PI, PI)

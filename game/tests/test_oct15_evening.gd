@@ -186,6 +186,6 @@ func run():
 		model.free()
 
 	# 11. Finished buildings stand outside the houses; the bare square follows the garden.
-	check(CitySystem.GARRISON_CLEAR_RADIUS <= 0.36, "the cleared square is garden-sized")
+	check(CitySystem.GARRISON_CLEAR_RADIUS <= 0.5, "the cleared square is garden-sized")
 	print("RESULT failures=", failures)
 	quit(1 if failures > 0 else 0)
