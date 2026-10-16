@@ -1,48 +1,40 @@
 # Warfront Mandate Android signing recovery — 16 October 2026
 
-The original Play upload key has not been recovered. This note records a verified older test key and a prepared fallback; no upload-key reset, Play upload, or production deployment has been performed.
+The original Play upload key has been recovered and independently verified. A replacement upload-key reset is still pending; cancellation and restoration of Play uploads have not yet been confirmed. No Play upload or production deployment was performed during this recovery.
 
-## Original Play upload key
+## Verified original upload key
 
-Claude's updated handoff identifies the original builder session as the only known location of the key used for Play bundles 0.32–0.57. That separate session is unavailable to the owner for two days.
+- File: `warfront-upload.jks`, PKCS12 container, 4296 bytes.
+- File SHA-256: `d75db8aa1c8f70ddc718b68aee445598ca909679cd34159287c4e0e5c299e8e1`.
+- Alias: `upload`; RSA 4096 private key.
+- Certificate subject: `CN=Warfront Mandate, O=Yaska, C=CA`.
+- Certificate SHA-256: `52:E5:01:BA:65:57:58:0B:21:BB:76:42:6B:F1:F5:04:6B:86:CC:E7:41:DE:22:49:C3:44:6F:3F:26:AB:94:61`.
+- Certificate SHA-1: `BD:18:A2:97:F0:F9:8E:D8:2C:68:F6:C7:3B:5B:88:DA:C5:C1:85:0D`.
+- The owner supplied the keystore and its password. Loading the private key succeeded; signing a test message with RSA/SHA-256 and verifying against this certificate passed.
+- The full certificate fingerprint matches the previously recorded original Play upload certificate.
+- An encrypted keystore backup was saved in the owner's existing private signing folder. Readback confirmed the expected size, folder, and owner-only permissions. The password was not copied to Drive or GitHub.
+- This test establishes key access and certificate identity; it does not validate a new game build or a Play upload.
 
-Expected SHA-256 from the signed 0.57 bundle, as recorded in the handoff:
+## Pending upload-key reset
 
-`52:E5:01:BA:65:57:58:0B:21:BB:76:42:6B:F1:F5:04:6B:86:CC:E7:41:DE:22:49:C3:44:6F:3F:26:AB:94:61`
+The owner submitted a replacement certificate on 16 October at 16:41 UTC. Google's confirmation email schedules activation for **18 October 2026 at 16:41 UTC** (13:41 Atlantic Daylight Time). Google says new APK/AAB uploads are blocked while this reset is pending.
 
-## Backup recovered and verified
+The scheduled replacement is the older backed-up test key, with certificate SHA-256:
 
-- Existing private backup: `Command_of_Nations_Private_Signing_Backup.zip`, created 10 October 2026.
-- Contains `commandofnations-test.p12`, alias `commandofnations-test`, and the owner's existing signing configuration.
-- Key type: RSA 3072, private key entry. Loading the private key and signing/verifying a test message succeeded.
-- SHA-256: `02:89:D3:B0:51:EE:5E:71:DD:25:BC:70:7B:45:9F:0A:1E:54:13:FA:EA:92:00:69:AA:86:36:DC:95:B8:4B:F0`.
-- This is the older sideload/test key, not the current Play upload key.
-- An encrypted copy of the recovered .p12 has been restored to the owner's existing **Command of Nations - App signing (PRIVATE, do not share)** Drive folder. Readback confirmed owner-only access.
-- The password remains in the owner's pre-existing private backup; no password was copied to Drive, this repository, or the chat.
-- Exported public certificate: `warfront_recovered_key_certificate.pem`, saved with the recovery files and available to the owner as a download.
+`02:89:D3:B0:51:EE:5E:71:DD:25:BC:70:7B:45:9F:0A:1E:54:13:FA:EA:92:00:69:AA:86:36:DC:95:B8:4B:F0`
 
-## Search coverage
+The original key is now verified, so the owner has been advised to cancel the pending reset in Play Console. **Cancellation has not yet been observed.** After cancellation, confirm Play Console retains the original upload certificate and permits uploads. Do not assume the block clears immediately.
 
-- Current workspace and available local Android/Gradle directories: no original Play key.
-- Drive filename searches for .jks, .keystore and signing/upload-key names: no matching Play keystore.
-- Existing private signing folder and its Optomized child: empty before the recovered test key was restored.
-- All 60 commits in the private builds repository were inspected for signing/key file paths: none.
-- All 243 commits reachable from the authoritative source branch were inspected for keystore/private-signing file paths: none.
-- These checks do not inspect the original Claude session's filesystem, the owner's phone, or differently named keys inside unrelated archives.
+If the reset remains pending and activates, the scheduled replacement key must be used for subsequent Play uploads. Check Console status before signing a release.
 
-## Available paths
+## Recovery history
 
-1. Recover the original key inside the original Claude builder session when that session becomes available, and verify its full certificate fingerprint.
-2. If the owner chooses to change upload keys now, the recovered, backed-up RSA key meets Google's minimum upload-key size. Its exported public certificate is ready for an upload-key reset request. It becomes a Play upload key only after Google accepts and activates that reset.
-
-Google Play Console: existing Warfront Mandate app → Manage Play app signing → Upload key certificate → Request upload key reset. Attach the public PEM certificate. Keep the existing package `com.warfrontmandate.game` and the Google-held app signing key.
-
-The browser available to this task currently shows Google sign-in before Play Console; account authentication is required before the current Play certificate or reset status can be checked. A browser upload-key change must be completed by the owner because the browser's credential-change policy requires user handoff.
-
-Official guidance: [Use Play App Signing](https://support.google.com/googleplay/android-developer/answer/9842756?hl=en) and [Android app signing](https://developer.android.com/studio/publish/app-signing).
+Before the owner recovered the original key from Claude, searches of the current machine, Drive filenames, source/build repository histories and saved Play-build artifacts did not locate it. The older backup `Command_of_Nations_Private_Signing_Backup.zip` was found and verified first. It remains a fallback, rather than the original Play credential.
 
 ## Release preparation
 
-The repository's checked-in Android preset still uses `com.commandofnations.test`, version code 23. A Play build must use `com.warfrontmandate.game` and a version code higher than the latest accepted Play upload. No export preset or game source was changed during this recovery.
+Use the authoritative `claude/v0.26-fixes` source branch and confirm the current head before building. Preserve the Play package `com.warfrontmandate.game`; use a version code higher than the latest accepted upload. Apply release export settings privately.
 
-After the signing path is chosen, restore private models, run the required game checks, build an APK and AAB from the same source commit, verify the package/certificate, and show genuine build screenshots before a Play upload.
+Restore required private assets, run the required game checks, build an APK and AAB from the same source commit, verify package and signing certificate, and show genuine build screenshots before a Play upload.
+
+Official references: [Use Play App Signing](https://support.google.com/googleplay/android-developer/answer/9842756?hl=en) and [Android app signing](https://developer.android.com/studio/publish/app-signing).
