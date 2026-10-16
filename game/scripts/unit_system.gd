@@ -449,7 +449,7 @@ func advance(delta: float) -> void :
 				# they only move while it is out of range.
 				var gun_reach: = 0.0
 				for member in group:
-					if member.visual_kind in ["artillery", "missile_launcher", "naval"]:
+					if CombatSystem.shoots_from_range(member):
 						var ready: Dictionary = member.duplicate()
 						ready.moving = false
 						gun_reach = maxf(gun_reach, fire_control.attack_reach(ready))
@@ -461,9 +461,9 @@ func advance(delta: float) -> void :
 				elif enemy_point.distance_to(unit.target) > 0.25:
 					var pursuit: = path_for(unit, current, enemy_point)
 					if not pursuit.is_empty(): unit.target = enemy_point;unit.waypoints = pursuit;unit.moving = true
-		var can_defer: bool = at_war and unit.moving and (unit.fire_mode in ["offensive", "aggressive"] or not unit.attack_target.is_empty()) and group.any( func(member: Dictionary): return member.visual_kind in ["artillery", "missile_launcher", "naval"])
+		var can_defer: bool = at_war and unit.moving and (unit.fire_mode in ["offensive", "aggressive"] or not unit.attack_target.is_empty()) and group.any( func(member: Dictionary): return CombatSystem.shoots_from_range(member))
 		var opponents: Array = fire_control.target(group, army_groups, self) if can_defer else []
-		if not opponents.is_empty() and group.any( func(member: Dictionary): return member.visual_kind in ["artillery", "missile_launcher", "naval"]):
+		if not opponents.is_empty() and group.any( func(member: Dictionary): return CombatSystem.shoots_from_range(member)):
 			unit.firing_halt = current.distance_to(Vector2(opponents[0].node.position.x, opponents[0].node.position.z)) > CombatSystem.CLOSE_COMBAT_REACH
 		for member in group: member.firing_halt = unit.firing_halt
 		var remaining: = delta
@@ -1100,7 +1100,7 @@ func attack_selected(enemy: Dictionary) -> bool:
 	var in_range: bool = group.any(func(member):
 		var candidate: Dictionary = member.duplicate()
 		candidate.attack_target = enemy.id
-		return candidate.visual_kind in ["artillery","missile_launcher","naval"] and fire_control.attack_reach(candidate) >= distance)
+		return CombatSystem.shoots_from_range(candidate) and fire_control.attack_reach(candidate) >= distance)
 	# Nearby enemy with open land in between: drive straight at it (owner: "some units don't
 	# attack"). Roads only lead province centre to centre, which can stop short of the enemy.
 	var army_point: = Vector2(army.node.position.x, army.node.position.z)

@@ -31,6 +31,7 @@ func _ready() -> void:
 ## Weapon reach of an army in map units, or 0 when it has no ranged weapon.
 static func reach(unit: Dictionary) -> float:
 	var spec: = EquipmentIdentity.spec(unit.equipment_id)
+	if CombatSystem.sniper(unit): return CombatSystem.SNIPER_RANGE
 	match unit.visual_kind:
 		"air_defense": return EquipmentIdentity.air_defense_range(unit)
 		"artillery": return 2.4
