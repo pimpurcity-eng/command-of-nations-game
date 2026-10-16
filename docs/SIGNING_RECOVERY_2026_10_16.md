@@ -1,6 +1,6 @@
 # Warfront Mandate Android signing recovery — 16 October 2026
 
-The original Play upload key has been recovered and independently verified. A replacement upload-key reset is still pending; cancellation and restoration of Play uploads have not yet been confirmed. No Play upload or production deployment was performed during this recovery.
+The original Play upload key has been recovered and independently verified. The owner reported cancelling the replacement upload-key reset on 16 October at approximately 17:16 UTC. Restoration of Play uploads has not yet been independently confirmed. No Play upload or production deployment was performed during this recovery.
 
 ## Verified original upload key
 
@@ -23,7 +23,7 @@ The scheduled replacement is the older backed-up test key, with certificate SHA-
 
 `02:89:D3:B0:51:EE:5E:71:DD:25:BC:70:7B:45:9F:0A:1E:54:13:FA:EA:92:00:69:AA:86:36:DC:95:B8:4B:F0`
 
-The original key is now verified, so the owner has been advised to cancel the pending reset in Play Console. **Cancellation has not yet been observed.** After cancellation, confirm Play Console retains the original upload certificate and permits uploads. Do not assume the block clears immediately.
+The owner reported cancelling the pending reset in Play Console on 16 October at approximately 17:16 UTC. No cancellation email was found in the first inbox check. Before the next Play upload, confirm Play Console retains the original upload certificate and permits uploads.
 
 If the reset remains pending and activates, the scheduled replacement key must be used for subsequent Play uploads. Check Console status before signing a release.
 
