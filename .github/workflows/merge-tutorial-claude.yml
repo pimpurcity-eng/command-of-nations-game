@@ -1,0 +1,55 @@
+name: Merge Claude release fixes with training tutorial (isolated branch)
+on:
+  push:
+    branches: ['chatgpt/release-tutorial-claude-oct16']
+    paths: ['.github/workflows/merge-tutorial-claude.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: chatgpt/release-tutorial-claude-oct16
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Merge tutorial onto Claude's audited fixes without replacing them
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Warfront release integration"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin chatgpt/russia-ukraine-training-20261016
+          git merge --no-commit --no-ff FETCH_HEAD || true
+          git diff --name-only --diff-filter=U > /tmp/conflicts.txt
+          allowed='
+          backend/migrations/005_premium.sql
+          docs/CHATGPT_NOTE_2026_10_16.md
+          game/scripts/accounts/account_panel.gd
+          game/scripts/accounts/premium_panel.gd
+          game/scripts/main.gd
+          game/scripts/production_system.gd
+          game/scripts/strategy_camera.gd
+          game/scripts/unit_system.gd
+          game/tests/test_economy_rules.gd
+          game/tests/test_oct15_evening.gd
+          game/tests/test_oct16_premium_rally.gd'
+          while IFS= read -r conflicted; do
+            test -z "$conflicted" && continue
+            if ! grep -Fxq "$conflicted" <<< "$allowed"; then
+              echo "::error::Unexpected conflict: $conflicted"; exit 1
+            fi
+            git checkout --ours -- "$conflicted"
+            git add -- "$conflicted"
+          done < /tmp/conflicts.txt
+          test -z "$(git diff --name-only --diff-filter=U)"
+          git diff --cached --check
+          test -s game/assets/cinematics/training_opening.ogv
+          test -s game/assets/cinematics/training_supply.ogv
+          test -f game/scripts/training_match.gd
+          test -f game/tests/test_training_match.gd
+          git commit -m "Merge guided Russia-Ukraine tutorial with Claude Oct 16 fixes"
+          git push origin HEAD:chatgpt/release-tutorial-claude-oct16
+          echo "Combined source saved: $(git rev-parse HEAD)"
