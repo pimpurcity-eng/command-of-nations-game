@@ -158,10 +158,14 @@ func run():
 		units.air.position(hawk, hawk_base)
 		var flight_error: String = units.air.order(hawk, over, "patrol")
 		check(flight_error.is_empty(), "the plane takes off on patrol " + flight_error)
+		# Only the plane may hurt the victim: other armies are moved well away.
+		for other in units.units:
+			if other != victim and not units.air.is_air(other) and Vector2(other.node.position.x, other.node.position.z).distance_to(over) < 4.0:
+				put(other, Vector2(other.node.position.x, other.node.position.z) + Vector2(60, 60))
 		var health_before: float = victim.health
-		await simulate(16.0 * 60.0)
-		print("DEBUG hawk mode=", hawk.flight_mode, " dist=", Vector2(hawk.node.position.x, hawk.node.position.z).distance_to(over), " victim_d=", Vector2(victim.node.position.x, victim.node.position.z).distance_to(over), " war=", units.at_war, " vis=", units.unit_visible(victim, "ukraine"), " hp_hawk=", hawk.health)
-		check(victim.health < health_before, "a patrolling plane damages enemy armies under its circle (%.1f -> %.1f)" % [health_before, victim.health])
+		await simulate(8.0 * 60.0)
+		var destroyed: bool = not is_instance_valid(victim.node) or not units.units.has(victim)
+		check(destroyed or victim.health < health_before, "a patrolling plane damages enemy armies under its circle (%.1f -> %s)" % [health_before, "destroyed" if destroyed else "%.1f" % victim.health])
 
 	check(is_equal_approx(AirBattleSystem.PATROL_DAMAGE, 0.65), "patrols strike at 65% damage")
 	# 9. Times follow the game speed.

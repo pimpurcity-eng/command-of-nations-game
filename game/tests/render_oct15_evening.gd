@@ -49,7 +49,7 @@ func run() -> void:
 		await process_frame
 	game.clock.paused = true
 	game.combat_effects.clock.paused = false
-	await shot(field, 4.0, "Battle", 50)
+	await shot(field, 7.0, "Battle", 50)
 	# A plane refuelling.
 	var plane: Dictionary = units.units.filter(func(u): return u.country == "russia" and units.air.is_air(u))[0]
 	plane.flight_mode = "grounded"
