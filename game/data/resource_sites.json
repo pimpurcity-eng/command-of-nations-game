@@ -1,5 +1,5 @@
 {
-  "note": "Owner 2026-10-13: all resources come from the seven cities of each country; provinces produce nothing. Each city has one specialty: metal (materials), rare earths (electronics), oil (fuel) or food. By country: Russia has more oil (3 cities: Voronezh, Rostov-on-Don, Bryansk), Ukraine more rare earths (Kyiv, Kharkiv) and food (Poltava, Vinnytsia - the grain belt). Money comes from city industry, manpower from every city. 'sites' are kept only as old map hints and no longer appear or earn. Owner 2026-10-16 ('start with everything the same'): both countries now earn the same; ProductionSystem.specialty_share splits two cities' worth of each commodity between a country's cities with that specialty (Russia's three oil cities make 2/3 each, Ukraine's one makes double).",
+  "note": "Owner 2026-10-13: all resources come from the seven cities of each country; provinces produce nothing. Each city has one specialty: metal (materials), rare earths (electronics), oil (fuel) or food. By country: Russia has more oil (3 cities: Voronezh, Rostov-on-Don, Bryansk), Ukraine more rare earths (Kyiv, Kharkiv) and food (Poltava, Vinnytsia - the grain belt). Money comes from city industry, manpower from every city. 'sites' are kept only as old map hints and no longer appear or earn.",
   "rates": {
     "fuel": 0.06,
     "materials": 0.09,

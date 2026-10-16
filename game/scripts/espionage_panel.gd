@@ -99,9 +99,7 @@ func setup(rules: MatchSystem, system: ProductionSystem, theme: Theme) -> void:
 		var row: = HBoxContainer.new()
 		row.add_theme_constant_override("separation", 10)
 		card.add_child(row)
-		# Owner 2026-10-16: game-hour effects also show their real length at the current speed.
-		var lasts: float = float(Espionage.HACKS[kind].get("hours", 0.0)) * Espionage.HOUR
-		var info: = CowUI.label(Espionage.HACKS[kind].name + "\n" + Espionage.HACKS[kind].text + (" (%s at this speed)" % SimulationClock.duration(lasts) if lasts > 0.0 else ""), 18, CowUI.INK)
+		var info: = CowUI.label(Espionage.HACKS[kind].name + "\n" + Espionage.HACKS[kind].text, 18, CowUI.INK)
 		info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.add_child(info)

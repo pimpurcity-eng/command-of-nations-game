@@ -125,7 +125,7 @@ func _card(me: String, partner: String) -> Control:
 		if plan.has("error"):
 			detail.text = plan.error
 		else:
-			detail.text = "From %s · %s every %s\n%s\nChoose a cargo:" % [plan.city.name, "train" if mode == "rail" else "ship", SimulationClock.duration(TradeNetwork.DEPARTURE_EVERY), carry_text(plan.city.id, mode)]
+			detail.text = "From %s · %s every %s · choose a cargo:" % [plan.city.name, "train" if mode == "rail" else "ship", SimulationClock.duration(TradeNetwork.DEPARTURE_EVERY)]
 			var cargo_row: = HBoxContainer.new()
 			cargo_row.add_theme_constant_override("separation", 6)
 			text.add_child(cargo_row)
@@ -141,7 +141,7 @@ func _card(me: String, partner: String) -> Control:
 				cargo_row.add_child(button)
 	else:
 		var city: = trade.buildings.city(route.city)
-		detail.text = "%s → %s · %s · each %s carries %s %s · paid import · next departure in %s · %d on the way\n%s" % [city.get("name", route.city), trade.partner_name(partner), route.cargo.capitalize(), "train" if route.mode == "rail" else "ship", TransportMarket._thousands(roundi(trade.delivery_amount(route))), route.cargo, SimulationClock.duration(maxf(0.0, route.timer)), trade.convoys.filter(func(c: Dictionary): return c.route == route.id).size(), carry_text(route.city, route.mode)]
+		detail.text = "%s → %s · %s · +%d %s per delivery · paid import · next departure in %s · %d on the way" % [city.get("name", route.city), trade.partner_name(partner), route.cargo.capitalize(), roundi(trade.delivery_amount(route)), route.cargo, SimulationClock.duration(maxf(0.0, route.timer)), trade.convoys.filter(func(c: Dictionary): return c.route == route.id).size()]
 		var close: = CowUI.action("Close", "", CowUI.RED)
 		close.pressed.connect(func():
 			trade.close_route(route.id)
@@ -150,47 +150,10 @@ func _card(me: String, partner: String) -> Control:
 		actions.add_child(close)
 	return card
 
-## Owner 2026-10-16: "It doesn't have how much the train and shipping carry, so every level
-## should be higher." Trade-route load per cargo at this terminal level, and the next level.
-func carry_text(city_id: String, mode: String) -> String:
-	var building: = "train_station" if mode == "rail" else "naval_base"
-	var level: = trade.buildings.level(city_id, building)
-	var top: = int(trade.buildings.spec(building).get("max_level", 3))
-	var factor: = trade.market.scale(city_id, mode, "materials") if trade.market != null else TransportMarket.level_scale(level)
-	var parts: Array = []
-	for cargo in TradeNetwork.CARGO:
-		parts.append("%s %s" % [cargo.capitalize(), TransportMarket._thousands(roundi(trade.per_trip(cargo, mode, city_id)))])
-	var text: = "Each %s carries %s (%s level %d)" % ["train" if mode == "rail" else "ship", " · ".join(parts), "station" if mode == "rail" else "port", level]
-	if level < top and level > 0:
-		var gain: = TransportMarket.level_scale(level + 1) / maxf(TransportMarket.level_scale(level), 0.01)
-		text += " · level %d: %s food (+%d%%)" % [level + 1, TransportMarket._thousands(roundi(trade.per_trip("food", mode, city_id) * gain)), roundi((gain - 1.0) * 100.0)]
-	elif factor <= 0.0 and mode == "sea":
-		text += " · research cargo ships to sail"
-	return text
-
-## Market cargo slots per trip from a city, now and at the next terminal level.
-func market_capacity_text(city_id: String) -> String:
-	var market: TransportMarket = trade.market
-	var lines: Array = ["TRANSPORT CAPACITY PER TRIP · 1 slot = 100 resources or 1 light vehicle (planes 2, heavy 4)"]
-	for mode in TransportMarket.MODES:
-		var building: String = market.facility(mode)
-		var level: = market.facility_level(city_id, mode)
-		var top: = int(trade.buildings.spec(building).get("max_level", 3))
-		var slots: = market.capacity(city_id, mode)
-		var line: = "%s · %s level %d: %d slots = %s cargo" % [TransportMarket.TRANSPORT_NAME[mode].capitalize(), trade.buildings.spec(building).get("name", building), level, slots, TransportMarket._thousands(slots * int(TransportMarket.RESOURCE_LOAD))]
-		if level == 0: line += " (build one to ship)"
-		if level < top:
-			var vessel: = market.vessel_level(city_id, "materials") if mode == "sea" else 1
-			var next: = TransportMarket.capacity_at(mode, level + 1, vessel)
-			line += " · level %d: %s" % [level + 1, TransportMarket._thousands(next * int(TransportMarket.RESOURCE_LOAD))]
-		if mode == "sea": line += " · ship research Lv%d (fuel: tanker Lv%d)" % [market.vessel_level(city_id, "materials"), market.vessel_level(city_id, "fuel")]
-		lines.append(line)
-	return "\n".join(lines)
-
 func _market() -> void:
 	for child in list.get_children(): list.remove_child(child); child.queue_free()
 	title.text = "Transport market"
-	summary.text = "Sell equipment or resources. Infantry cannot be sold. Cargo arrives by train, ship or cargo plane; each station, port or airbase level carries more per trip (see capacity below). Ships and trains can be attacked. Buyer payment is held until delivery; destroyed cargo is lost and the buyer is refunded."
+	summary.text = "Sell equipment or resources. Infantry cannot be sold. Cargo arrives by train, ship or cargo plane; terminals have five levels. Ships and trains can be attacked. Buyer payment is held until delivery; destroyed cargo is lost and the buyer is refunded."
 	var market: TransportMarket = trade.market
 	var me: = GameSession.player_country
 	var cities: Array = trade._cities_of(me)
@@ -226,11 +189,6 @@ func _market() -> void:
 	for city in cities: city_pick.add_item(city.name)
 	list.add_child(CowUI.label("Your selling / receiving city", 16))
 	list.add_child(city_pick)
-	var capacity_label: = CowUI.label(market_capacity_text(cities[0].id), 14, Color("f1c27a"))
-	capacity_label.name = "TransportCapacity"
-	capacity_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	list.add_child(capacity_label)
-	city_pick.item_selected.connect(func(i): capacity_label.text = market_capacity_text(cities[i].id))
 	var cargo_pick: = OptionButton.new()
 	var choices: Array = []
 	for cargo in TradeNetwork.CARGO:
@@ -297,8 +255,7 @@ func _market() -> void:
 	if market.offers.is_empty(): list.add_child(CowUI.label("No player offers yet. List cargo or ask a trade partner to sell.",14))
 	for offer in market.offers:
 		var name: String = offer.unit.get("name", offer.cargo.capitalize())
-		var slots: int = ceili(float(offer.amount) / TransportMarket.RESOURCE_LOAD) if offer.unit.is_empty() else TransportMarket.load_size(offer.unit)
-		var text: = CowUI.label("%s · %s · %d · asking %d · world minimum %d · needs %d cargo slot%s" % [offer.seller.capitalize(),name,offer.amount,offer.price,market.offer_floor(offer),slots,"" if slots == 1 else "s"],16)
+		var text: = CowUI.label("%s · %s · %d · asking %d · world minimum %d" % [offer.seller.capitalize(),name,offer.amount,offer.price,market.offer_floor(offer)],16)
 		text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		list.add_child(text)
 		if offer.seller == me:
@@ -318,7 +275,7 @@ func _market() -> void:
 		else:
 			for mode in TransportMarket.MODES:
 				var buy: = Button.new()
-				buy.text = "Buy via %s · carries %d slots from %s" % [TransportMarket.TRANSPORT_NAME[mode], market.capacity(str(offer.city), mode, str(offer.cargo)), trade.buildings.city(str(offer.city)).get("name", offer.city)]
+				buy.text = "Buy via " + {"rail":"train", "sea":"ship", "air":"cargo plane"}[mode]
 				buy.custom_minimum_size.y = 44
 				buy.pressed.connect(func():
 					var error: = market.buy(me,int(offer.id),cities[city_pick.selected].id,mode)

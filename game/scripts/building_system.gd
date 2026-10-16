@@ -58,13 +58,9 @@ func cost(building_id: String, target: int) -> Dictionary:
 	return bill
 ## Owner 2026-10-15: construction times were too short. Honour actual data hours,
 ## and grow each level by 1.5; the city/province's live construction rate applies once.
-## Owner 2026-10-16: "Make all factories 30 minutes at one time speed for level one, and then make
-## them harder after that." Every building's level 1 is 30 real minutes at 1x (data "minutes");
-## each further level takes twice as long (1 h, 2 h, 4 h, 8 h).
-const LEVEL_GROWTH: = 2.0
-const LEVEL_ONE_MINUTES: = 30.0
+const LEVEL_GROWTH: = 1.5
 static func level_one_minutes(building: Dictionary) -> float:
-	return float(building.minutes) if building.has("minutes") else float(building.get("hours", LEVEL_ONE_MINUTES / 60.0)) * 60.0
+	return float(building.minutes) if building.has("minutes") else float(building.get("hours", 2.0)) * 60.0
 func duration(building_id: String, target: int) -> float:
 	var minutes: float = level_one_minutes(spec(building_id)) * pow(LEVEL_GROWTH, maxi(0, target - 1))
 	return minutes * 60.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND

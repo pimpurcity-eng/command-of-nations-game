@@ -7,15 +7,12 @@ extends RefCounted
 ## - ECONOMIC: double the country’s starting productive income, keep a treasury of
 ##   ECONOMIC_FUNDS and hold your capital, every moment for ECONOMIC_DAYS days in a row.
 ##   Losing any condition resets the count.
-## - ELIMINATION: every rival has lost all armies and production AND its capital (MatchSystem keeps
-##   this one; owner 2026-10-16: destroying the starting armies alone ended matches unexpectedly).
+## - ELIMINATION: every rival has lost all armies and production (MatchSystem keeps this one).
 ## - POINTS: after TIME_LIMIT_DAYS the country with the most victory points wins.
 ## Game time: one day is 86 400 displayed seconds = 720 simulation seconds at 1x.
 const DAY: = 86400.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
 const DOMINATION_SHARE: = 0.6
-## Owner 2026-10-16 ("I won the game. I don't know how."): domination is held for six game hours
-## (was one) and the top bar counts it down, so a win never arrives unannounced.
-const DOMINATION_HOLD: = DAY / 4.0
+const DOMINATION_HOLD: = DAY / 24.0
 const ECONOMIC_GROWTH: = 2.0
 const ECONOMIC_SHARE: = 0.8 # legacy saves/tests only; no longer a victory requirement
 const ECONOMIC_FUNDS: = 250000.0
@@ -142,50 +139,3 @@ func restore(state: Dictionary) -> void:
 	domination_held = state.get("domination_held", {}).duplicate()
 	economic_held = state.get("economic_held", {}).duplicate()
 	income_rate = state.get("income_rate", {}).duplicate()
-
-## Owner 2026-10-16: "make me ... I don't know how I won." The goals in one line (top bar tooltip,
-## planning hint) and a plain explanation of how a finished match was won (result screen).
-static func goal_text() -> String:
-	return "Win: hold %d%% of enemy victory points for %s · or destroy every enemy army and take its capital · or double your economy for %d days · or lead on points on day %d" % [roundi(DOMINATION_SHARE * 100), SimulationClock.duration(DOMINATION_HOLD), int(ECONOMIC_DAYS), int(TIME_LIMIT_DAYS)]
-
-## Seconds left until `country` wins by domination, or -1 when it is not holding the share.
-func domination_countdown(country: String) -> float:
-	if not domination_held.has(country): return -1.0
-	return maxf(0.0, DOMINATION_HOLD - float(domination_held[country]))
-
-## Enemy cities `country` controls, capitals first ("Kyiv (capital)").
-static func captured_cities(rules: MatchSystem, country: String) -> Array:
-	var names: Array = []
-	for city in rules.cities:
-		if str(city.get("country", "")).to_lower() == country: continue
-		for t in rules.terrain.territories:
-			if t.id == city.get("sector", "") and t.controller == country:
-				if city.get("capital", false): names.push_front(str(city.name) + " (capital)")
-				else: names.append(str(city.name))
-	return names
-
-static func explain(rules: MatchSystem, winner: String, kind: String) -> String:
-	var countries: Array = rules.production.stockpiles.keys() if rules.production != null else ["russia", "ukraine"]
-	var table: = standings(rules.terrain.territories, rules.cities, countries)
-	var row: Dictionary = table.get(winner, {"points": 0, "foreign_total": 0, "foreign_held": 0, "domination": 0.0})
-	var rivals: Array = countries.filter(func(c): return c != winner)
-	var day: = 1 + int(rules.clock.elapsed / DAY) if rules.clock != null else 1
-	var lines: Array = []
-	match kind:
-		"domination":
-			lines.append("%s held %d of %d enemy victory points (%d%%; the goal is %d%%) for %s without a break." % [winner.capitalize(), row.foreign_held, row.foreign_total, roundi(row.domination * 100), roundi(DOMINATION_SHARE * 100), SimulationClock.duration(DOMINATION_HOLD)])
-			lines.append("Provinces are worth %d point, cities %d, capitals %d." % [PROVINCE_POINTS, CITY_POINTS, CAPITAL_POINTS])
-		"economic":
-			lines.append("%s doubled its starting income, kept %s funds and held its capital for %d days in a row." % [winner.capitalize(), StrategyHUD._thousands(int(ECONOMIC_FUNDS)), int(ECONOMIC_DAYS)])
-		"elimination":
-			lines.append("%s destroyed every army of %s, stopped all its production and took its capital." % [winner.capitalize(), ", ".join(rivals.map(func(c): return str(c).capitalize()))])
-		"points":
-			var scores: Array = countries.map(func(c): return "%s %d" % [str(c).capitalize(), int(table[c].points)])
-			lines.append("Time limit reached on day %d: %s had the most victory points (%s)." % [int(TIME_LIMIT_DAYS), winner.capitalize(), ", ".join(scores)])
-		_:
-			lines.append("%s won the match." % winner.capitalize())
-	var taken: = captured_cities(rules, winner)
-	if not taken.is_empty(): lines.append("Enemy cities held: " + ", ".join(taken.slice(0, 8)) + (" and %d more" % (taken.size() - 8) if taken.size() > 8 else "") + ".")
-	lines.append("Decided on day %d." % day)
-	return "\n".join(lines)
-

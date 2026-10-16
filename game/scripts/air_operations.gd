@@ -178,17 +178,3 @@ func _strike_again(unit: Dictionary) -> void:
 	armies.status_changed.emit(unit.name + " refueled · attacking again")
 func snapshot(unit: Dictionary) -> Dictionary:
 	return {"repeat_target": unit.get("repeat_target", ""), "base_city": unit.base_city, "flight_mode": unit.flight_mode, "flight_used": unit.flight_used, "refuel_remaining": unit.refuel_remaining, "patrol_center": [unit.patrol_center.x, unit.patrol_center.y], "patrol_phase": unit.patrol_phase}
-## Owner 2026-10-16 (Call of War: planes on an airfield are hit by an attack on that airfield): an
-## aircraft sent to attack a spot with no army tapped goes for the nearest enemy there - a plane
-## parked on its airfield included. Returns {} when nothing hostile is in sight near the spot.
-const STRIKE_PICK_RADIUS: = 1.0
-func target_near(point: Vector2, country: String) -> Dictionary:
-	var best: Dictionary = {}
-	var nearest: = STRIKE_PICK_RADIUS
-	for enemy in armies.units:
-		if enemy.country == country or enemy.health <= 0 or not armies.unit_visible(enemy, country): continue
-		var distance: = point.distance_to(Vector2(enemy.node.position.x, enemy.node.position.z))
-		if distance <= nearest:
-			nearest = distance
-			best = enemy
-	return best

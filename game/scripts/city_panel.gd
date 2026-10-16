@@ -25,15 +25,11 @@ var buildings: BuildingSystem
 var panel: PanelContainer
 var title: Label
 var summary: Label
+var city_picture: TextureRect
 var income_row: HBoxContainer
 var construction: Dictionary
 var production: Dictionary
 var rally_tab: Button
-## Owner 2026-10-16: "You can choose a rally spot for when new troops come out ... not on premium
-## account" - a clear rally row (free for everyone): where new units go, Set and Clear.
-var rally_label: Label
-var rally_set_button: Button
-var rally_clear_button: Button
 var section_labels: Array = []
 var list: VBoxContainer
 var rows: Dictionary = {}
@@ -62,64 +58,39 @@ func setup(system: BuildingSystem, theme: Theme) -> void:
 	var info: = PanelContainer.new()
 	info.add_theme_stylebox_override("panel", CowUI.box(Color(0, 0, 0, 0), 0, Color(0, 0, 0, 0), 0, 8))
 	column.add_child(info)
-	# Owner 2026-10-16: "Take the tank off the top of the city screen and just have the resources
-	# up there" - no picture; the income row uses the full width.
+	var info_row := HBoxContainer.new()
+	info_row.add_theme_constant_override("separation", 12)
+	info.add_child(info_row)
+	city_picture = TextureRect.new()
+	city_picture.custom_minimum_size = Vector2(92, 80)
+	city_picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	city_picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	info_row.add_child(city_picture)
 	var info_column: = VBoxContainer.new()
 	info_column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	info_column.alignment = BoxContainer.ALIGNMENT_CENTER
-	info_column.add_theme_constant_override("separation", 4)
-	info.add_child(info_column)
-	summary = CowUI.label("", 16, Color("c9c3ae"))
+	info_row.add_child(info_column)
+	summary = CowUI.label("", 14, Color("c9c3ae"))
 	summary.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	summary.clip_text = true
 	info_column.add_child(summary)
 	income_row = HBoxContainer.new()
 	income_row.alignment = BoxContainer.ALIGNMENT_CENTER
-	income_row.add_theme_constant_override("separation", 2)
+	income_row.add_theme_constant_override("separation", 6)
 	info_column.add_child(income_row)
 	# Construction and production status.
-	# Stacked full width so the name and the countdown are never cut off by FINISH NOW.
-	var boxes: = VBoxContainer.new()
-	boxes.add_theme_constant_override("separation", 6)
+	var boxes: = HBoxContainer.new()
+	boxes.add_theme_constant_override("separation", 8)
 	var boxes_margin: = MarginContainer.new()
 	for side in ["left", "right", "bottom"]: boxes_margin.add_theme_constant_override("margin_" + side, 8)
 	boxes_margin.add_child(boxes)
 	column.add_child(boxes_margin)
-	# Owner 2026-10-16: "the symbols at the top for the construction. Have one a building and have
-	# one a unit" - a building with a crane over "BUILDING", a tank over "UNIT", and a big
-	# countdown of the time left ("can't see the production time countdown").
 	construction = CowUI.status_box("hammer")
-	_dress_status(construction, "BUILDING", BuildingGlyph.new())
 	boxes.add_child(construction.panel)
 	production = CowUI.status_box("produce")
-	_dress_status(production, "UNIT", UnitTypeIcon.silhouette("armor", Color("ece6d6"), Vector2(60, 40)))
 	boxes.add_child(production.panel)
 	production.panel.gui_input.connect(func(event: InputEvent):
 		if (event is InputEventMouseButton or event is InputEventScreenTouch) and event.pressed and not event.is_echo(): _produce())
-	var rally_row: = HBoxContainer.new()
-	rally_row.add_theme_constant_override("separation", 8)
-	var rally_margin: = MarginContainer.new()
-	for side in ["left", "right", "bottom"]: rally_margin.add_theme_constant_override("margin_" + side, 8)
-	rally_margin.add_child(rally_row)
-	column.add_child(rally_margin)
-	rally_label = CowUI.label("", 15, Color("e3d9bd"))
-	rally_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	rally_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	rally_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	rally_row.add_child(rally_label)
-	rally_set_button = CowUI.action("SET RALLY POINT", "")
-	rally_set_button.custom_minimum_size = Vector2(150, 48)
-	rally_set_button.pressed.connect(func():
-		hide()
-		rally_requested.emit(city_id))
-	rally_row.add_child(rally_set_button)
-	rally_clear_button = CowUI.action("CLEAR", "", CowUI.RED)
-	rally_clear_button.custom_minimum_size = Vector2(90, 48)
-	rally_clear_button.pressed.connect(func():
-		buildings.economy.clear_rally(city_id)
-		message.text = "Rally point cleared · new units stay at the city"
-		_refresh())
-	rally_row.add_child(rally_clear_button)
 	# Tabs: Buildings, one per unit group, Rally point.
 	tab_row = HBoxContainer.new()
 	tab_row.add_theme_constant_override("separation", 0)
@@ -177,46 +148,6 @@ func setup(system: BuildingSystem, theme: Theme) -> void:
 	_layout()
 	hide()
 
-## Status box with a captioned symbol on the left and a large countdown under the name.
-func _dress_status(box: Dictionary, caption: String, symbol: Control) -> void:
-	var old: Control = box.icon
-	var row: = old.get_parent()
-	var holder: = VBoxContainer.new()
-	holder.alignment = BoxContainer.ALIGNMENT_CENTER
-	holder.add_theme_constant_override("separation", 2)
-	holder.custom_minimum_size.x = 64
-	holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	row.add_child(holder)
-	row.move_child(holder, old.get_index())
-	row.remove_child(old)
-	old.queue_free()
-	symbol.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	holder.add_child(symbol)
-	var picture: TextureRect = box.picture
-	row.remove_child(picture)
-	picture.custom_minimum_size = Vector2(64, 44)
-	holder.add_child(picture)
-	var tag: = CowUI.label(caption, 14, CowUI.GOLD)
-	tag.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	holder.add_child(tag)
-	box.icon = symbol
-	box.panel.custom_minimum_size.y = 92
-	var column: Control = box.text.get_parent()
-	var line: = HBoxContainer.new()
-	line.add_theme_constant_override("separation", 6)
-	line.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	line.add_child(CowUI.Icon.new("clock", Color("ffd36b"), Vector2(24, 28)))
-	var time: = CowUI.label("", 26, Color("ffd36b"))
-	time.add_theme_font_override("font", StrategyTheme.font("RobotoCondensed", 700))
-	time.clip_text = true
-	time.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	line.add_child(time)
-	column.add_child(line)
-	column.move_child(line, box.text.get_index() + 1)
-	box.text.add_theme_font_size_override("font_size", 18)
-	box["time"] = time
-	box["time_line"] = line
-
 func _produce() -> void:
 	var place: = buildings.city(city_id)
 	if place.is_empty() or not buildings.economy.controlled(place, GameSession.player_country): return
@@ -248,10 +179,6 @@ func _add_row(definition: Dictionary) -> void:
 	middle.add_child(name_label)
 	var effect: = CowUI.label(_effect(definition), 12, Color("5a584e"))
 	effect.clip_text = true
-	# Owner 2026-10-16: transport capacity per level must be readable, so it wraps.
-	if definition.id in ["train_station", "naval_base"]:
-		effect.clip_text = false
-		effect.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	middle.add_child(effect)
 	var costs: = HBoxContainer.new()
 	costs.add_theme_constant_override("separation", 12)
@@ -462,8 +389,7 @@ func _effect(definition: Dictionary) -> String:
 		"industry": return "+25% city income per level"
 		"tank_plant": return "Tanks & mechanized vehicles"
 		"barracks": return "Infantry production"
-		"naval_base": return "Ships, submarines & carriers · coastal cities\n" + TransportMarket.per_level_text("sea", int(definition.get("max_level", 3))) + " with level I ships; +50% per ship research level"
-		"train_station": return TransportMarket.per_level_text("rail", int(definition.get("max_level", 3))) + " · railways for armies"
+		"naval_base": return "Ships, submarines & carriers · coastal cities"
 		"airbase": return "Base for aircraft; more per level"
 		"drone_factory": return "Drones: recon, strike, loitering, one-way attack"
 		"support_depot": return "Engineers, bridge layers, recovery, supply, medics"
@@ -493,6 +419,7 @@ func _jobs_here() -> Array:
 func _refresh() -> void:
 	var place: = buildings.city(city_id)
 	if place.is_empty(): return
+	city_picture.texture = MenuArt.city(buildings.economy.controller(place))
 	var controlled: = buildings.economy.controlled(place, GameSession.player_country)
 	var own: bool = controlled
 	var scouted := controlled or (buildings.economy.armies != null and buildings.economy.armies.point_visible(place.point))
@@ -506,8 +433,7 @@ func _refresh() -> void:
 	var specialties: = ResourceSites.city_resources(place.name)
 	var income: = buildings.economy.city_income(place)
 	for resource in ProductionSystem.RESOURCES:
-		var item: = CowUI.cost(resource, income[resource] * ProductionSystem.DAY_SECONDS, true, 1.7)
-		item.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		var item: = CowUI.cost(resource, income[resource] * ProductionSystem.DAY_SECONDS, true, 1.45)
 		var amount: Label = item.get_child(1)
 		amount.text = "+" + amount.text + "/day"
 		amount.add_theme_color_override("font_color", CowUI.GOLD if resource in specialties else Color("d9d3c0"))
@@ -516,28 +442,19 @@ func _refresh() -> void:
 	var rally: Dictionary = buildings.economy.rally_points.get(city_id, {})
 	rally_tab.get_child(0).get_child(1).text = "Clear rally" if rally.get("country", "") == GameSession.player_country else "Rally point"
 	rally_tab.disabled = not controlled
-	var rally_on: bool = rally.get("country", "") == GameSession.player_country
-	rally_label.text = ("RALLY POINT SET · new units from this city march to the flag" if rally_on else "NO RALLY POINT · new units wait at the city") if own else ""
-	rally_set_button.get_meta("caption").text = "MOVE RALLY POINT" if rally_on else "SET RALLY POINT"
-	rally_set_button.disabled = not controlled
-	rally_set_button.visible = own
-	rally_clear_button.visible = own and rally_on
 	list.visible = own and tab_index < 0
 	unit_list.visible = own and tab_index >= 0
 	var paused: = not controlled or (clock != null and clock.paused)
 	# Construction status.
 	var jobs: = _jobs_here()
 	construction.bar.visible = not jobs.is_empty() and own
-	construction.time_line.visible = not jobs.is_empty() and own
 	if not own: construction.text.text = "Enemy city"
 	elif jobs.is_empty(): construction.text.text = "No construction"
 	else:
 		var job: Dictionary = jobs[0]
 		var total: = buildings.duration(job.building, job.level)
-		construction.text.text = buildings.spec(job.building).name + " Lvl. " + str(int(job.level))
-		if jobs.size() > 1: construction.text.text += "  (+" + str(jobs.size() - 1) + " queued)"
-		# The time left keeps showing while paused (owner 2026-10-16: "can't see the countdown").
-		construction.time.text = "waiting for resources" if not job.get("paid", true) else SimulationClock.duration((total - job.progress) / maxf(buildings.construction_rate(city_id), 0.01)) + (" · paused" if paused else "")
+		construction.text.text = buildings.spec(job.building).name + " " + str(int(job.level)) + ("  ·  " + ("waiting" if not job.get("paid", true) else ("paused" if paused else SimulationClock.duration((total - job.progress) / maxf(buildings.construction_rate(city_id), 0.01)))))
+		if jobs.size() > 1: construction.text.text += "  (+" + str(jobs.size() - 1) + ")"
 		construction.bar.max_value = total
 		construction.bar.value = job.progress
 	var building_price: = buildings.speedup_price(city_id) if own and not jobs.is_empty() else 0
@@ -548,7 +465,6 @@ func _refresh() -> void:
 	# Production status.
 	production.text.text = "No production" if own else "Hidden"
 	production.bar.visible = false
-	production.time_line.visible = false
 	production.picture.visible = false
 	production.icon.visible = true
 	production.gold.visible = false
@@ -557,12 +473,7 @@ func _refresh() -> void:
 			if job.city != place.name or buildings.economy.equipment(job.equipment).country != GameSession.player_country: continue
 			var spec: Dictionary = buildings.economy.equipment(job.equipment)
 			var seconds: float = (buildings.economy.job_duration(job) - job.progress) / buildings.production_rate(city_id, spec)
-			production.text.text = EquipmentIdentity.title(job.equipment)
-			# Owner 2026-10-16: show how full the city queue is (5 free, 8 with Premium).
-			var queued: int = buildings.economy.jobs.filter(func(entry: Dictionary): return entry.city == place.name).size()
-			if queued > 1: production.text.text += "  (+%d · %d/%d)" % [queued - 1, queued, buildings.economy.plan_limit(GameSession.player_country)]
-			production.time.text = SimulationClock.duration(seconds) + (" · paused" if paused else "")
-			production.time_line.visible = true
+			production.text.text = EquipmentIdentity.title(job.equipment) + "  ·  " + ("paused" if paused else SimulationClock.duration(seconds))
 			# Same picture as in research (owner 2026-10-14).
 			production.picture.texture = CowUI.research_picture(job.equipment, buildings.economy.job_level(job))
 			production.picture.visible = true
@@ -632,29 +543,6 @@ class Chevrons extends Control:
 		var text_width := font.get_string_size(numeral, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
 		var baseline := (h - font.get_height(font_size)) * 0.5 + font.get_ascent(font_size) - h * 0.05
 		draw_string(font, Vector2((w - text_width) * 0.5, baseline), numeral, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, Color("f3dc9a"))
-
-## Construction symbol: a building with a crane over it (owner 2026-10-16).
-class BuildingGlyph extends Control:
-	func _init() -> void:
-		custom_minimum_size = Vector2(60, 44)
-		mouse_filter = Control.MOUSE_FILTER_IGNORE
-	func _draw() -> void:
-		var u: = minf(size.x / 60.0, size.y / 44.0)
-		var o: = (size - Vector2(60, 44) * u) * 0.5
-		var ink: = Color("ece6d6")
-		# Building: block with windows.
-		draw_rect(Rect2(o + Vector2(4, 18) * u, Vector2(30, 26) * u), ink)
-		for row in 2:
-			for col in 3:
-				draw_rect(Rect2(o + Vector2(8 + col * 9, 23 + row * 9) * u, Vector2(5, 5) * u), Color("263239"))
-		# Crane: mast, jib, counter-jib, hook.
-		var line: = maxf(2.0, 3.0 * u)
-		draw_line(o + Vector2(44, 44) * u, o + Vector2(44, 4) * u, ink, line)
-		draw_line(o + Vector2(20, 6) * u, o + Vector2(58, 6) * u, ink, line)
-		draw_line(o + Vector2(44, 4) * u, o + Vector2(28, 6) * u, ink, maxf(1.0, 1.5 * u))
-		draw_line(o + Vector2(24, 6) * u, o + Vector2(24, 14) * u, CowUI.GOLD, maxf(1.5, 2.0 * u))
-		draw_rect(Rect2(o + Vector2(21, 13) * u, Vector2(6, 4) * u), CowUI.GOLD)
-		draw_rect(Rect2(o + Vector2(52, 6) * u, Vector2(6, 6) * u), ink)
 
 func message_gold(error: String, done: String) -> void:
 	if message != null: message.text = error if not error.is_empty() else done

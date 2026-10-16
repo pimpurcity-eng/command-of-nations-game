@@ -79,12 +79,11 @@ func run() -> void:
 	reset(); economy.schedule("infantry_russia","Moscow")
 	var job: Dictionary = economy.jobs[0]
 	var price: = economy.unit_gold_quote(job)
-	# Owner 2026-10-16: infantry costs money, manpower, food and metal only.
-	check(price.time == 1600 and price.resources == 4095 and price.total == 5695, "Russian infantry full purchase costs 5695, rather than an army for 5000")
+	check(price.time == 1600 and price.resources == 4320 and price.total == 5920, "Russian infantry full purchase costs 5920, rather than an army for 5000")
 	var bill: = economy.cost("infantry_russia",1)
 	economy.stockpiles.russia.funds = bill.funds
 	price = economy.unit_gold_quote(job)
-	check(price.resources == 3015 and price.total == 4615, "only the missing resources are added to time")
+	check(price.resources == 3240 and price.total == 4840, "only the missing resources are added to time")
 	economy.gold.russia = price.total-1
 	var stock: Dictionary = economy.stockpiles.russia.duplicate()
 	check(not economy.finish_unit_now("Moscow","russia",price.total,int(job.id)).is_empty() and economy.gold.russia == price.total-1 and economy.stockpiles.russia == stock and not economy.jobs[0].paid, "failed payment changes no resources, jobs or gold")
@@ -105,7 +104,7 @@ func run() -> void:
 	check(economy.finish_unit_now("Moscow","russia",800,int(job.id)).is_empty() and economy.gold.russia == wallet_before-800, "paid order spends only its remaining-time price")
 	reset(); economy.schedule("tanks_russia","Moscow"); job=economy.jobs[0]
 	price=economy.unit_gold_quote(job)
-	check(price.time == 4800 and price.total == 12900, "full tank price includes 8100 resources plus 4800 time")
+	check(price.time == 4800 and price.total == 14034, "full tank price includes 9234 resources plus 4800 time")
 	economy.stockpiles.russia.funds = 1000
 	var capped: = economy.unit_speedup_price(job)
 	economy.stockpiles.russia.funds = 0
@@ -118,18 +117,17 @@ func run() -> void:
 	# Buildings use the identical paid/unpaid contract.
 	reset(); buildings.levels.moscow.industry=0; buildings.schedule("moscow","industry")
 	price=buildings.gold_quote("moscow"); job=buildings.jobs[0]
-	check(price.resources == GoldWallet.bill_price(buildings.cost("industry",1)) and price.time == GoldWallet.speedup(buildings.duration("industry",1)), "construction adds missing resources and full time %s" % price)
+	check(price.resources == GoldWallet.bill_price(buildings.cost("industry",1)) and price.time == 3200, "construction adds missing resources and full time")
 	wallet_before=economy.gold.russia
 	check(buildings.finish_now("moscow","russia",price.total,int(job.id)).is_empty() and buildings.level("moscow","industry")==1 and economy.gold.russia == wallet_before-price.total, "gold funds missing construction stock and finishes")
 	reset(100000); buildings.enqueue("moscow","industry");job=buildings.jobs[0]
 	job.progress=buildings.duration("industry",2)*0.75
-	check(buildings.gold_quote("moscow").resources==0 and buildings.speedup_price("moscow")==GoldWallet.speedup(buildings.duration("industry",2)*0.25), "paid higher-level construction charges its last quarter only %s" % buildings.gold_quote("moscow"))
+	check(buildings.gold_quote("moscow").resources==0 and buildings.speedup_price("moscow")==1200, "paid higher-level construction charges its last quarter only")
 
 	# Research can be bought before starting, with only its shortfall charged.
 	reset(); research.levels.infantry_ukraine=0
 	price=research.gold_quote("infantry_ukraine",1)
-	# Times follow the live research/construction data (other owners tune those); resources are exact.
-	check(price.time==GoldWallet.speedup(research.duration(1,"infantry_ukraine")/research.rate("ukraine")) and price.resources==1820 and price.total==price.time+1820, "European research uses exact time discount and missing-resource bill %s" % price)
+	check(price.time==1020 and price.resources==1920 and price.total==2940, "European research uses exact time discount and missing-resource bill")
 	check(research.buy_now("infantry_ukraine",1,"ukraine",false,price.total).is_empty() and research.level("infantry_ukraine")==1 and economy.gold.ukraine==100000-price.total, "gold buys missing research resources and completes eligible research")
 	check(not research.buy_now("infantry_ukraine",1,"ukraine",false,price.total).is_empty(), "research cannot be bought twice")
 	check(not research.buy_now("infantry_russia",3,"russia").is_empty(), "gold cannot skip prior research")
@@ -138,7 +136,7 @@ func run() -> void:
 	job=research.active("infantry_russia");job.progress=research.job_duration(job)*0.5
 	for resource in ProductionSystem.RESOURCES:economy.stockpiles.russia[resource]=0
 	price=research.gold_quote("infantry_russia",1)
-	check(price.resources==0 and price.total==GoldWallet.speedup(research.job_duration(job)*0.5/research.rate("russia")), "active research charges half the remaining time and no resources %s" % price)
+	check(price.resources==0 and price.total==667, "active research charges half the remaining time and no resources")
 	check(research.buy_now("infantry_russia",1,"russia",false,price.total).is_empty(), "active research finishes at its quote")
 	clock.elapsed=VictoryRules.DAY*3
 	price=research.gold_quote("infantry_russia",1,true)
