@@ -1,0 +1,39 @@
+Godot 4.6.3; minimal casualty fix on f214d036380eea0ce5c6b35fb8c0930e3e0f284f.
+Exit 0. No script errors.
+
+PASS the match server listens
+PASS the AI plays every seat until players join
+PASS the server's clock runs in real time
+PASS development sign-ins are refused unless the server allows them
+PASS a phone asking for another match is turned away
+PASS the first player gets the country they asked for
+PASS a taken seat sends the next player to a free one (join in progress)
+PASS a full match turns new players away
+PASS the AI hands both countries to their players
+PASS Russia's phone gets all its own armies and only the enemies in sight
+PASS armies out of sight are not sent at all
+PASS enemy routes and targets are never sent
+PASS each phone gets only its own stockpile
+PASS a casualty still in the live array cannot break or misalign the next server tick
+PASS a player cannot move another country's army
+PASS a player's own move order is carried out by the server
+PASS a player cannot produce the other country's equipment
+PASS a player cannot research for the other country
+PASS unknown orders are refused
+PASS online, the production button sends an order instead of building locally
+PASS the server answers the production order
+PASS a declaration of war reaches both phones
+PASS a peace offer to a player waits for their answer
+PASS the other player accepts and the war ends
+PASS chat reaches the other player
+PASS players cannot write to a coalition they are not in
+PASS the AI takes over a player who has been away
+PASS only the absent player's country is played by the AI
+PASS a returning player gets their country back
+PASS the AI hands back command when they return
+PASS signing in on a second phone moves the seat there
+PASS the match is saved
+PASS seats are saved with the match
+PASS a restarted server resumes the match and its seats
+PASS armies resume where they were
+ALL MULTIPLAYER TESTS PASSED
