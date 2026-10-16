@@ -407,7 +407,7 @@ func pick_screen(screen: Vector2) -> Dictionary:
 		var district: Node3D = districts.get(city.id)
 		var reach: float = float(district.get_meta("reach", 1.0)) * 0.85 if district != null else 0.6
 		var edge: = rig.camera.unproject_position(anchor + rig.camera.global_transform.basis.x * reach).distance_to(centre)
-		var radius: = maxf(edge, 34.0 * get_window().content_scale_factor)
+		var radius: = maxf(edge, 34.0 * TapScale.of(self))
 		if distance < radius and distance / radius < best:
 			best = distance / radius
 			nearest = {"city": city, "distance": distance}

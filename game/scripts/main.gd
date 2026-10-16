@@ -732,7 +732,7 @@ func _map_click(screen: Vector2, order: bool) -> void :
 			clear_army_selection()
 		else:
 			var step: = 0
-			var near: float = 36.0 * get_window().content_scale_factor
+			var near: float = 36.0 * TapScale.of(self)
 			if not _tap_cycle.is_empty() and _tap_cycle.screen.distance_to(screen) < near and Time.get_ticks_msec() - int(_tap_cycle.time) < 8000:
 				step = (int(_tap_cycle.step) + 1) % choices.size()
 			_tap_cycle = {"screen": screen, "step": step, "time": Time.get_ticks_msec()}

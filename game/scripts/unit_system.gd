@@ -1074,7 +1074,7 @@ func pick_screen(camera: Camera3D, screen: Vector2, enemies_only: bool = false) 
 const PICK_RADIUS: = 44.0
 func pick_all_screen(camera: Camera3D, screen: Vector2, enemies_only: bool = false) -> Array:
 	var hits: Array = []
-	var radius: = PICK_RADIUS * get_window().content_scale_factor
+	var radius: = PICK_RADIUS * TapScale.of(self)
 	var leader_ids: Dictionary = {}
 	for group in stacks.groups(): leader_ids[stacks.leader(group).id] = true
 	for i in units.size():

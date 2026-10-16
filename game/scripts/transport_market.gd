@@ -403,7 +403,7 @@ func apply_remote(state: Dictionary) -> void:
 
 func pick_screen(camera: Camera3D, screen: Vector2) -> Dictionary:
 	var best: Dictionary = {}
-	var distance: = 28.0 * network.get_window().content_scale_factor
+	var distance: = 28.0 * TapScale.of(network)
 	for shipment in shipments:
 		if not is_instance_valid(shipment.node) or not shipment.node.visible or camera.is_position_behind(shipment.node.position): continue
 		var separation: = camera.unproject_position(shipment.node.position).distance_to(screen)

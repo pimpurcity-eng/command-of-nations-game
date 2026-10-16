@@ -50,7 +50,7 @@ Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to d
 | 8 | Create account without a code box | ✅ | |
 | 9 | Premium account groundwork | ✅ | `29de857` and snapshots; `docs/PREMIUM.md`; migration 005 live |
 | 10 | Units render earlier when zooming/tapping | ✅ | phones load on-screen models between zoom 45 and 30 (`PREPARE_ZOOM`); `test_zoom_visibility` 7/8 passed, last check was still running |
-| 11 | Units easier to tap | ⬜ | **next** |
+| 11 | Units easier to tap | ✅ | tap reach was in raw phone pixels (~3 mm on a 1080-1440 px phone); now scaled to the screen (`TapScale`). `test_tap_scale` |
 | 12 | Camera jiggle | ⬜ | |
 | 13 | Messages in Diplomacy | ✅ | verified by `test_oct16_diplomacy_news` (12/12) |
 | 14 | Diplomacy shows this map's alliance only | ✅ | verified by `test_oct16_diplomacy_news` (12/12) |
