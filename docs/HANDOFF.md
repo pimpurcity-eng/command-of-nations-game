@@ -36,7 +36,7 @@ Some tests need the private `.glb` models (Google Drive / builds repo); note it 
 
 ## 3. Oct 16 fix list (Matthew's numbers)
 
-Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to do · ⏭ skipped by Matthew · ❓ question
+Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to do · ⏭ skipped by Matthew · ❓ question · ⏸ on hold (Matthew said wait)
 
 | # | Fix | Status | Commit / note |
 | --- | --- | --- | --- |
@@ -60,7 +60,7 @@ Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to d
 | 18 | Game speed affects every timer | ✅ | verified by `test_oct16_pacing` (329 pass, 0 fail) |
 | 19 | Units move too fast | ✅ | verified by `test_oct16_pacing` (329 pass, 0 fail) |
 | 20 | Faster on own land, terrain matters | ✅ | verified by `test_oct16_pacing` (329 pass, 0 fail) |
-| 21 | Level-1 buildings 30 min at 1x, harder after | ❓ | data is 30 min (`test_oct16_pacing`). The 33 min is the European doctrine's "Production 10% slower" (×0.9) on Ukraine's cities. Ask Matthew: keep, or make the penalty units-only? |
+| 21 | Level-1 buildings 30 min at 1x, harder after | ⏸ | Matthew 2026-10-16: \"yes, but wait on that\" — ON HOLD. Data is 30 min; Ukraine shows 33 because of the European doctrine (×0.9). Before starting, confirm with Matthew which way (keep the penalty, or apply it to units only). |
 | 22 | Level-1 unit research 30 min–2 h | ✅ | verified by `test_oct16_pacing` (329 pass, 0 fail) |
 | 23 | Every unit's first level by day 6 (except nukes) | ✅ | verified by `test_oct16_pacing` (329 pass, 0 fail) |
 | 24 | Battle animation ~5 s, then still until next shot | ✅ | verified by `test_oct16_combat` (38/38) |
@@ -80,7 +80,7 @@ Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to d
 | 38 | Units 2x faster by train | ✅ | verified by `test_oct16_pacing` (train twice as fast as walking) |
 | 39 | Bigger tracks | ✅ | |
 | 40 | Show and raise train/ship capacity per level | ✅ | verified by `test_transport_market` (capacity table per level, shown on station/port cards) |
-| 41 | Transport helicopter carries no troops | ❓ | ask Matthew |
+| 41 | Transport helicopter carries no troops | ⏸ | Matthew 2026-10-16: yes, the transport helicopter should carry troops — but WAIT, do not start until he says go. |
 
 ## 4. Commit log (WIP branch, newest first)
 
@@ -102,8 +102,7 @@ Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to d
 - `test_battle_effects`: 4 fails only because the private launcher models are missing here.
 
 **Needs Matthew**
-- Fix 21: European doctrine makes Ukraine's level-1 buildings 33 min. Keep, or apply the 10% only to units?
-- Fix 41: should the transport helicopter carry troops?
+- Fixes 21 and 41 are ON HOLD until Matthew says go (see the table).
 - In-game check of every ✅ above before WIP is merged into stable.
 
 **Last session:** 2026-10-16, Claude — created this file; fixes 10, 11, 12, 36 bug; verified 13–16, 18–20, 22–30, 35, 37, 38, 40 with tests; `test_economy_rules` now 64/64.
