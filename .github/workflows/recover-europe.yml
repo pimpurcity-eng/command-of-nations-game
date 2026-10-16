@@ -14,7 +14,8 @@ jobs:
           fetch-depth: 0
       - name: Restore the verified Git checkpoint
         run: |
-          test -f recovery/europe.bundle
+          echo '481948696438fbfd98947a7fa7da17908eb6dbdf8b8db8971e072f81a3ecfe60  recovery/europe.bundle' | sha256sum --check
           git bundle verify recovery/europe.bundle
           git fetch recovery/europe.bundle HEAD:refs/remotes/recovered/europe
+          test "$(git rev-parse refs/remotes/recovered/europe)" = df3233fe4614b1e7d76ad44e4f5fc02b8eb652b2
           git push origin refs/remotes/recovered/europe:refs/heads/chatgpt/europe-finish-20261016
