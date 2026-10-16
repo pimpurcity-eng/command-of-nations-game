@@ -52,6 +52,18 @@ func input(key: String,placeholder: String,secret: bool=false) -> void:
 			for name in ["password","confirm"]:
 				if inputs.has(name):inputs[name].secret=not shown)
 		fields.add_child(reveal)
+## Owner 2026-10-16 ("or give it a frame ... for him"): a Premium commander's name and badge sit
+## inside a gold frame on the profile.
+func premium_frame(items: Array) -> PanelContainer:
+	var frame:=PanelContainer.new();frame.name="PremiumFrame"
+	var style:=StyleBoxFlat.new();style.bg_color=Color(0.79,0.64,0.29,0.12);style.border_color=Color("e9c46a")
+	style.set_border_width_all(4);style.set_corner_radius_all(14);style.set_content_margin_all(16)
+	style.shadow_color=Color(0.91,0.77,0.42,0.35);style.shadow_size=8
+	frame.add_theme_stylebox_override("panel",style)
+	var inside:=VBoxContainer.new();inside.add_theme_constant_override("separation",6);frame.add_child(inside)
+	fields.add_child(frame);fields.move_child(frame,(items[0] as Control).get_index())
+	for item in items:fields.remove_child(item);inside.add_child(item)
+	return frame
 func button(text: String,action: Callable) -> void:
 	var item:=Button.new();item.text=text;item.custom_minimum_size.y=64;item.pressed.connect(func():
 		if not working:action.call())
@@ -67,7 +79,9 @@ func build(page: String) -> void:
 		# Owner 2026-10-16: Premium badge and gold commander name while the membership is active.
 		if PlayerPremium.is_premium():
 			commander_label.modulate=Color("e9c46a")
-			label_text("★ PREMIUM COMMANDER"+((" · until "+PlayerPremium.until_text()) if PlayerPremium.until_text()!="" else ""),26).modulate=Color("e9c46a")
+			var badge:=label_text("★ PREMIUM COMMANDER"+((" · until "+PlayerPremium.until_text()) if PlayerPremium.until_text()!="" else ""),26)
+			badge.modulate=Color("e9c46a")
+			premium_frame([commander_label,badge])
 		if auth.profile.has("xp") and PlayerPremium.premium_user!=str(auth.user.get("id","")):load_premium.call_deferred()
 		label_text(str(auth.user.get("email","")))
 		if auth.profile.has("xp"):
