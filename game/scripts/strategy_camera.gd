@@ -21,6 +21,8 @@ var rendered_yaw: = 0.0
 var rendered_pitch: = 1.02
 ## Finger taps may wobble a little on high-density phone screens.
 const TAP_SLOP: = 14.0
+## Fix 11: TAP_SLOP in the 720 px layout, converted to the phone's real pixels.
+func _slop() -> float: return TAP_SLOP * TapScale.of(self)
 var fling: = Vector3.ZERO
 ## Where the camera may look (map x/z). Owner 2026-10-15 ("moving side to side ... not doing it
 ## right"): the old fixed limits stopped panning short of eastern Russia; main sets these from
@@ -144,11 +146,11 @@ func _unhandled_input(event: InputEvent) -> void :
 				dragging = true
 				mouse_moved = false
 			else:
-				if dragging and event.button_index == button and not mouse_moved and press.distance_to(event.position) < TAP_SLOP and not event.canceled:
+				if dragging and event.button_index == button and not mouse_moved and press.distance_to(event.position) < _slop() and not event.canceled:
 					map_clicked.emit(event.position, event.button_index == MOUSE_BUTTON_RIGHT)
 				dragging = false
 	elif event is InputEventMouseMotion and dragging:
-		mouse_moved = mouse_moved or press.distance_to(event.position) >= TAP_SLOP
+		mouse_moved = mouse_moved or press.distance_to(event.position) >= _slop()
 		if not mouse_moved: return
 		if button == MOUSE_BUTTON_MIDDLE or Input.is_physical_key_pressed(KEY_SHIFT):
 			rotate_view( - event.relative.x * 0.004)
@@ -171,7 +173,7 @@ func _unhandled_input(event: InputEvent) -> void :
 				touch_moved = false
 		else:
 			if event.canceled: touch_moved = true
-			if touches.has(event.index) and touches.size() == 1 and not touch_moved and press.distance_to(event.position) < TAP_SLOP: map_clicked.emit(event.position, false)
+			if touches.has(event.index) and touches.size() == 1 and not touch_moved and press.distance_to(event.position) < _slop(): map_clicked.emit(event.position, false)
 			# A finger that stopped before lifting leaves the map where it is.
 			var held: = Time.get_ticks_usec() - _last_drag_usec > 80000
 			if touches.size() == 1 and touch_moved and not pinch_active: fling = _drag_velocity.limit_length(distance * 2.0) if _drag_velocity.length() > distance * 0.15 and not held else Vector3.ZERO
@@ -181,7 +183,7 @@ func _unhandled_input(event: InputEvent) -> void :
 	elif event is InputEventScreenDrag:
 		if not touches.has(event.index): return
 		var was_moved: = touch_moved
-		touch_moved = touch_moved or press.distance_to(event.position) > TAP_SLOP or touches.size() > 1
+		touch_moved = touch_moved or press.distance_to(event.position) > _slop() or touches.size() > 1
 		if touches.size() >= 2:
 			touches[event.index] = event.position
 			_update_pinch()
@@ -211,7 +213,7 @@ func _update_pinch() -> void:
 	var span: float = (pair[0] as Vector2).distance_to(pair[1])
 	_drag_map(_pinch_mid, mid, false)
 	_pinch_mid = mid
-	if not _pinch_zooming and absf(span - _pinch_start_span) >= PINCH_DEAD_ZONE:
+	if not _pinch_zooming and absf(span - _pinch_start_span) >= PINCH_DEAD_ZONE * TapScale.of(self):
 		_pinch_zooming = true
 		_pinch_span = span
 	if _pinch_zooming and _pinch_span >= 16.0 and span >= 16.0:

@@ -51,7 +51,7 @@ Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to d
 | 9 | Premium account groundwork | ✅ | `29de857` and snapshots; `docs/PREMIUM.md`; migration 005 live |
 | 10 | Units render earlier when zooming/tapping | ✅ | phones load on-screen models between zoom 45 and 30 (`PREPARE_ZOOM`); `test_zoom_visibility` 7/8 passed, last check was still running |
 | 11 | Units easier to tap | ✅ | tap reach was in raw phone pixels (~3 mm on a 1080-1440 px phone); now scaled to the screen (`TapScale`). `test_tap_scale` |
-| 12 | Camera jiggle | ⬜ | |
+| 12 | Camera jiggle | ✅ | tap wobble (14 px) and pinch dead zone were in raw phone pixels, so a normal tap nudged the map; now scaled to the screen. Earlier smoothing work kept. `test_tap_scale`, `test_camera_pinch_anchor` |
 | 13 | Messages in Diplomacy | ✅ | verified by `test_oct16_diplomacy_news` (12/12) |
 | 14 | Diplomacy shows this map's alliance only | ✅ | verified by `test_oct16_diplomacy_news` (12/12) |
 | 15 | Show which country is leading | ✅ | verified by `test_oct16_diplomacy_news` (12/12) |
@@ -94,7 +94,7 @@ Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to d
 
 ## 5. Session state
 
-**In progress:** Claude — fix 11 next. Confirm the last `test_zoom_visibility` check ("enemy shown when zoomed out") passes.
+**In progress:** Claude — fixes 17+ (17 already done). Confirm the last `test_zoom_visibility` check ("enemy shown when zoomed out") passes.
 
 **Open bugs**
 - Fix 21: level-1 buildings show 33 min instead of 30.

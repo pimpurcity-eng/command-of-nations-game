@@ -21,6 +21,7 @@ func run() -> void:
 	game.clock.paused = true
 	var scale: float = TapScale.of(game.units)
 	check(absf(scale - 2.0) < 0.05, "tap scale follows the screen (%.2f, expected 2.00)" % scale)
+	check(absf(game.rig._slop() - UnitStrategyTapSlop.expected(scale)) < 0.01, "tap wobble allowance grows with the screen")
 	var at: Vector2 = game.buildings.city("kursk").point
 	game.rig.target = Vector3(at.x, 0, at.y)
 	game.rig.distance = 20.0
@@ -50,3 +51,6 @@ func run() -> void:
 		check(hits.any(func(h): return game.units.units[h.index].id == army.id), "a tap a fingertip away from the army still picks it")
 	print("RESULT failures=", failures)
 	quit(1 if failures > 0 else 0)
+
+class UnitStrategyTapSlop:
+	static func expected(scale: float) -> float: return StrategyCamera.TAP_SLOP * scale
