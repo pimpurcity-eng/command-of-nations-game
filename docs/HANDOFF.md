@@ -73,13 +73,13 @@ Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to d
 | 31 | City screen: resources only, no tank picture | ✅ | |
 | 32 | Visible production countdown | ✅ | |
 | 33 | Clear building vs unit icons | ✅ | |
-| 34 | Bigger reports | ⬜ | |
-| 35 | Show how you won; why the win came early | ⬜ | |
+| 34 | Bigger reports | ✅ | in code (full-screen reports, 28–34 px type); no automated check — look on a phone |
+| 35 | Show how you won; why the win came early | ✅ | verified by `test_oct16_pacing` (result says how it was won; elimination needs the capital too) |
 | 36 | Rally spot for new troops | ✅ | bug fixed: a unit that appears standing on its rally point was refused ("no land route"); now counts as arrived. `test_oct16_premium_rally` all pass |
-| 37 | Queued troops go to the rally spot (free) | ⬜ | |
-| 38 | Units 2x faster by train | ⬜ | |
+| 37 | Queued troops go to the rally spot (free) | ✅ | verified by `test_oct16_premium_rally` (every queued unit goes to the rally point) |
+| 38 | Units 2x faster by train | ✅ | verified by `test_oct16_pacing` (train twice as fast as walking) |
 | 39 | Bigger tracks | ✅ | |
-| 40 | Show and raise train/ship capacity per level | ⬜ | |
+| 40 | Show and raise train/ship capacity per level | ✅ | verified by `test_transport_market` (capacity table per level, shown on station/port cards) |
 | 41 | Transport helicopter carries no troops | ❓ | ask Matthew |
 
 ## 4. Commit log (WIP branch, newest first)
@@ -94,10 +94,9 @@ Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to d
 
 ## 5. Session state
 
-**In progress:** Claude — fixes 17+ (17 already done). Confirm the last `test_zoom_visibility` check ("enemy shown when zoomed out") passes.
+**In progress:** nothing. Every fix 1–40 is done or verified except 21 (question). Still to do: confirm the last `test_zoom_visibility` check ("enemy shown when zoomed out") on a machine with a GPU or via `--headless`.
 
 **Open bugs**
-- `test_economy_rules.gd`: one failing morale check.
 - `test_multiplayer_phone.gd` / `test_phone_regression.gd`: fail without the private models (see `CHATGPT_HANDOFF.md` §2.4).
 - Europe 20-country online work was never committed (`CHATGPT_HANDOFF.md` §2.2).
 - `test_battle_effects`: 4 fails only because the private launcher models are missing here.
@@ -107,4 +106,4 @@ Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to d
 - Fix 41: should the transport helicopter carry troops?
 - In-game check of every ✅ above before WIP is merged into stable.
 
-**Last session:** 2026-10-16, Claude — created this file; connected GitHub, Google Drive, Supabase, builds repo.
+**Last session:** 2026-10-16, Claude — created this file; fixes 10, 11, 12, 36 bug; verified 13–16, 18–20, 22–30, 35, 37, 38, 40 with tests; `test_economy_rules` now 64/64.
