@@ -174,15 +174,7 @@ static func status_box(kind: String) -> Dictionary:
 	bar.visible = false
 	column.add_child(bar)
 	# Finish now with gold (owner 2026-10-13); the screen shows it when something is running.
-	var gold: = Button.new()
-	gold.icon = ResourceSites.icon("gold")
-	gold.add_theme_constant_override("icon_max_width", 22)
-	gold.custom_minimum_size = Vector2(80, 56)
-	gold.add_theme_font_size_override("font_size", 16)
-	gold.add_theme_color_override("font_color", Color("2b2410"))
-	for state in ["normal", "hover", "pressed", "disabled"]: gold.add_theme_stylebox_override(state, box(Color("e9c46a") if state != "disabled" else Color("8a8270"), 6))
-	gold.tooltip_text = "Finish now with gold"
-	gold.visible = false
+	var gold: = gold_finish_button()
 	row.add_child(gold)
 	return {"panel": panel, "picture": picture, "icon": icon, "text": text, "bar": bar, "gold": gold}
 
@@ -311,8 +303,62 @@ class Icon extends Control:
 				for dx in [-4, 4]: draw_polyline(PackedVector2Array([c + Vector2(dx - 4, -7) * u, c + Vector2(dx + 3, 0) * u, c + Vector2(dx - 4, 7) * u]), tint, 3.0 * u)
 
 ## Points a status-box gold button at `action` with `price` (hidden when price <= 0).
+## Owner 2026-10-16 ("the buy now gold bar looks like shit"): a proper Call of War style
+## "finish now" button - a bevelled gold plate with a "FINISH NOW" caption over the gold bar and
+## price, instead of a flat yellow box.
+static func gold_finish_button() -> Button:
+	var gold: = Button.new()
+	gold.custom_minimum_size = Vector2(104, 60)
+	gold.tooltip_text = "Finish now with gold"
+	gold.visible = false
+	for state in ["normal", "hover", "pressed", "disabled"]:
+		var face: = StyleBoxFlat.new()
+		face.bg_color = {"normal": Color("d9a62e"), "hover": Color("e8b83c"), "pressed": Color("b98a20"), "disabled": Color("7d7766")}[state]
+		face.border_color = Color("7a5410") if state != "disabled" else Color("4d4a40")
+		face.set_border_width_all(2)
+		face.border_width_top = 1
+		face.border_width_bottom = 4
+		face.set_corner_radius_all(10)
+		face.shadow_color = Color(0, 0, 0, 0.45)
+		face.shadow_size = 3
+		face.shadow_offset = Vector2(0, 2)
+		face.content_margin_left = 6
+		face.content_margin_right = 6
+		gold.add_theme_stylebox_override(state, face)
+	var column: = VBoxContainer.new()
+	column.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	column.alignment = BoxContainer.ALIGNMENT_CENTER
+	column.add_theme_constant_override("separation", 0)
+	column.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	gold.add_child(column)
+	var caption: = label("FINISH NOW", 12, Color("4a3208"))
+	caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	caption.add_theme_font_override("font", StrategyTheme.font("RobotoCondensed", 700))
+	caption.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	column.add_child(caption)
+	var line: = HBoxContainer.new()
+	line.alignment = BoxContainer.ALIGNMENT_CENTER
+	line.add_theme_constant_override("separation", 4)
+	line.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	column.add_child(line)
+	var bar: = TextureRect.new()
+	bar.texture = ResourceSites.icon("gold")
+	bar.custom_minimum_size = Vector2(22, 22)
+	bar.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	bar.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	line.add_child(bar)
+	var price: = label("", 19, Color("2a1c04"))
+	price.add_theme_font_override("font", StrategyTheme.font("RobotoCondensed", 700))
+	price.add_theme_color_override("font_outline_color", Color(1, 0.92, 0.6, 0.6))
+	price.add_theme_constant_override("outline_size", 2)
+	price.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	line.add_child(price)
+	gold.set_meta("price_label", price)
+	return gold
 static func gold_button(button: Button, price: int, action: Callable) -> void:
 	button.visible = price > 0
-	button.text = StrategyHUD._thousands(price)
+	if button.has_meta("price_label"): (button.get_meta("price_label") as Label).text = StrategyHUD._thousands(price)
+	else: button.text = StrategyHUD._thousands(price)
 	for connection in button.pressed.get_connections(): button.pressed.disconnect(connection.callable)
 	if price > 0: button.pressed.connect(action)

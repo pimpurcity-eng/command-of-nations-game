@@ -50,7 +50,15 @@ func update(armies: UnitSystem, view_distance: float) -> void:
 	var leaders: Dictionary = {}
 	for group in armies.stacks.groups(): leaders[armies.stacks.leader(group).id] = group
 	for unit in armies.units:
-		if not leaders.has(unit.id) or unit.health <= 0 or armies.air.is_air(unit): continue
+		if not leaders.has(unit.id) or unit.health <= 0: continue
+		if armies.air.is_air(unit):
+			# Owner 2026-10-16 ("airplanes should have a patrol circle so that anything in them gets
+			# hit, like Call of War"): a patrolling squadron shows the circle it strikes inside -
+			# always for yours, and for an enemy squadron you tap.
+			if unit.get("flight_mode", "") != "patrol" or not armies.visible_to_player(unit): continue
+			if unit.country != GameSession.player_country and not chosen_ids.has(unit.country + ":" + unit.stack_id): continue
+			used = _place(used, Vector3(unit.patrol_center.x, 0, unit.patrol_center.y), AirBattleSystem.PATROL_STRIKE_REACH, unit, armies)
+			continue
 		var chosen: bool = chosen_ids.has(unit.country + ":" + unit.stack_id)
 		# Owner 2026-10-16: "only have the range when they're clicked, and you can click the enemy's
 		# units as well to see their range" - the ring shows only round the selected army, yours
@@ -60,17 +68,19 @@ func update(armies: UnitSystem, view_distance: float) -> void:
 		var radius: = 0.0
 		for member in leaders[unit.id]: radius = maxf(radius, reach(member))
 		if radius <= 0.0: continue
-		if used >= _pool.size():
-			var mesh: = MeshInstance3D.new()
-			mesh.mesh = _ring
-			mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-			add_child(mesh)
-			_pool.append(mesh)
-		var ring: = _pool[used]
-		used += 1
-		ring.visible = true
-		ring.material_override = _inks["own" if unit.country == GameSession.player_country else "enemy"]
-		var point: = Vector2(unit.node.position.x, unit.node.position.z)
-		ring.position = armies.terrain.position_at(point) + Vector3.UP * 0.06
-		ring.scale = Vector3(radius, 1.0, radius)
+		used = _place(used, unit.node.position, radius, unit, armies)
 	for i in range(used, _pool.size()): _pool[i].visible = false
+
+func _place(used: int, at: Vector3, radius: float, unit: Dictionary, armies: UnitSystem) -> int:
+	if used >= _pool.size():
+		var mesh: = MeshInstance3D.new()
+		mesh.mesh = _ring
+		mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		add_child(mesh)
+		_pool.append(mesh)
+	var ring: = _pool[used]
+	ring.visible = true
+	ring.material_override = _inks["own" if unit.country == GameSession.player_country else "enemy"]
+	ring.position = armies.terrain.position_at(Vector2(at.x, at.z)) + Vector3.UP * 0.06
+	ring.scale = Vector3(radius, 1.0, radius)
+	return used + 1
