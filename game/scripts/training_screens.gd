@@ -129,7 +129,13 @@ static func side_picker(parent: Control, current: String, on_start: Callable) ->
 		full.button_pressed = value
 		quick.button_pressed = not value
 		for pair in [[full, value], [quick, not value]]:
-			pair[0].add_theme_stylebox_override("normal", CowUI.box(Color("1d2a31") if pair[1] else Color("2c3a41"), 14, CowUI.GOLD if pair[1] else EDGE, 3 if pair[1] else 2, 16))
+			var face := CowUI.box(Color("3a3214") if pair[1] else Color("2c3a41"), 14, CowUI.GOLD if pair[1] else EDGE, 4 if pair[1] else 2, 16)
+			for look in ["normal", "hover", "pressed", "hover_pressed", "focus"]:
+				pair[0].add_theme_stylebox_override(look, face)
+			pair[0].add_theme_color_override("font_color", CowUI.GOLD if pair[1] else Color.WHITE)
+			pair[0].add_theme_color_override("font_pressed_color", CowUI.GOLD if pair[1] else Color.WHITE)
+			pair[0].add_theme_color_override("font_hover_pressed_color", CowUI.GOLD if pair[1] else Color.WHITE)
+			pair[0].text = ("✓  " if pair[1] else "") + ("FULL TRAINING" if pair[0] == full else "SKIP THE BASICS")
 		hint.text = "New to strategy games: 8 quick hands-on lessons first." if value else "Played games like this before? Go straight to what's new in Warfront Mandate."
 	full.pressed.connect(pick_mode.bind(true))
 	quick.pressed.connect(pick_mode.bind(false))

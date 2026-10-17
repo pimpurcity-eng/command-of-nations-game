@@ -8,7 +8,10 @@ var game: Node
 
 func _initialize() -> void: call_deferred("run")
 
+## CAPTURE_QUICK=1 keeps only the key screens (for checking extra screen shapes faster).
+const KEY_SHOTS := ["02_film_opening_b", "03_choose_side", "04_lesson_select", "06_lesson_move", "08_city_panel_hint", "10_feature_guard", "14_ship_docked", "15_ship_manifest", "18_train_docked", "20_finish"]
 func shot(name: String, frames: int = 20) -> void:
+	if OS.get_environment("CAPTURE_QUICK") == "1" and name not in KEY_SHOTS: return
 	for i in frames: await process_frame
 	var image := root.get_texture().get_image()
 	image.save_jpg(out.path_join(name + ".jpg"), 0.85)
