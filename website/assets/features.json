@@ -47,7 +47,7 @@
       "id": "online",
       "icon": "provinces",
       "title": "Persistent online play",
-      "text": "Join the Russia–Ukraine match with your commander account. The server runs the match, remembers your nation and enforces fog of war."
+      "text": "Join the 2-player Russia–Ukraine tutorial with your commander account. The server runs the match, remembers your nation and enforces fog of war."
     },
     {
       "id": "combat",
