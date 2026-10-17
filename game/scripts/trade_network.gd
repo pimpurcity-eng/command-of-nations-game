@@ -74,19 +74,22 @@ func _exit_tree() -> void:
 func partners_for(country: String) -> Array:
 	var result: Array = []
 	for id in PARTNERS:
-		if country in PARTNERS[id]["for"]: result.append(id)
+		if MapDefinition.is_regional() and country in PARTNERS[id]["for"]: result.append(id)
 	for other in production.stockpiles:
 		if other != country: result.append(other)
 	return result
 
 func partner_name(id: String) -> String:
-	return PARTNERS[id].name if PARTNERS.has(id) else id.capitalize()
+	return PARTNERS[id].name if _neutral(id) else MapDefinition.country_name(id)
 
 func partner_mode(id: String) -> String:
-	return PARTNERS[id].mode if PARTNERS.has(id) else "rail"
+	if _neutral(id): return PARTNERS[id].mode
+	return "sea" if not MapDefinition.is_regional() and (id in ["united_kingdom","ireland","cyprus","malta"] or GameSession.player_country in ["united_kingdom","ireland","cyprus","malta"]) else "rail"
+
+func _neutral(id: String) -> bool: return MapDefinition.is_regional() and PARTNERS.has(id)
 
 func agreement(country: String, partner: String) -> bool:
-	if PARTNERS.has(partner): return true
+	if _neutral(partner): return true
 	if diplomacy == null: return false
 	return not diplomacy.at_war(country, partner) and bool(diplomacy.relation(country, partner).get("trade", false))
 
@@ -96,8 +99,8 @@ func _cities_of(country: String) -> Array:
 ## The best city to start a route to `partner` (and the path), or {"error": reason}.
 func plan(country: String, partner: String, city_id: String = "") -> Dictionary:
 	if not agreement(country, partner):
-		return {"error": "Agree a trade deal with " + partner_name(partner) + " in Diplomacy first" if not PARTNERS.has(partner) else "No trade while at war"}
-	if diplomacy != null and not PARTNERS.has(partner) and diplomacy.embargoed(partner, country): return {"error": partner_name(partner) + " has an embargo on you"}
+		return {"error": "Agree a trade deal with " + partner_name(partner) + " in Diplomacy first" if not _neutral(partner) else "No trade while at war"}
+	if diplomacy != null and not _neutral(partner) and diplomacy.embargoed(partner, country): return {"error": partner_name(partner) + " has an embargo on you"}
 	var mode: = partner_mode(partner)
 	var best: Dictionary = {}
 	for city in _cities_of(country):
@@ -118,13 +121,19 @@ func _route_path(country: String, partner: String, city: Dictionary, mode: Strin
 	if mode == "sea":
 		if not city.has("naval_spawn"): return []
 		var port: = GeographicProjection.project(city.naval_spawn.longitude, city.naval_spawn.latitude)
-		var goal: = GeographicProjection.project(PARTNERS[partner].goal[0], PARTNERS[partner].goal[1])
+		var goal: Vector2
+		if _neutral(partner): goal = GeographicProjection.project(PARTNERS[partner].goal[0], PARTNERS[partner].goal[1])
+		else:
+			var ports: Array = _cities_of(partner).filter(func(other):return other.has("naval_spawn") and buildings.level(other.id,"naval_base")>0)
+			if ports.is_empty(): return []
+			ports.sort_custom(func(a,b):return a.point.distance_to(start)<b.point.distance_to(start))
+			goal=GeographicProjection.project(ports[0].naval_spawn.longitude,ports[0].naval_spawn.latitude)
 		var sea_goal: = armies.sea_navigation.coastal_destination(goal)
 		var path: Array = armies.sea_navigation.find_path(port, sea_goal)
 		if path.is_empty(): return []
 		return [port] + path + [goal]
 	var finish: Vector2
-	if PARTNERS.has(partner):
+	if _neutral(partner):
 		var cross: Array = PARTNERS[partner].cross[country]
 		finish = _border_hub(country, GeographicProjection.project(cross[0], cross[1]))
 	else:
@@ -143,7 +152,7 @@ func _route_path(country: String, partner: String, city: Dictionary, mode: Strin
 		var owner: = armies.navigation.controller_at(point)
 		if owner != country and owner != partner: return []
 	var full: Array = [start] + path
-	if PARTNERS.has(partner):
+	if _neutral(partner):
 		full.append(GeographicProjection.project(PARTNERS[partner].goal[0], PARTNERS[partner].goal[1]))
 	return full
 
@@ -218,7 +227,7 @@ func advance(seconds: float) -> void:
 		var r: Dictionary = routes[i]
 		var city: = buildings.city(r.city)
 		var level: = buildings.level(r.city, "train_station" if r.mode == "rail" else "naval_base")
-		if not PARTNERS.has(r.partner) or city.is_empty() or not production.controlled(city, r.country) or level <= 0 or not agreement(r.country, r.partner):
+		if (not _neutral(r.partner) and not production.stockpiles.has(r.partner)) or city.is_empty() or not production.controlled(city, r.country) or level <= 0 or not agreement(r.country, r.partner):
 			routes.remove_at(i)
 			changed.emit()
 			continue
@@ -253,14 +262,18 @@ func advance(seconds: float) -> void:
 func _depart(route: Dictionary) -> void:
 	# Neutral supply contracts are paid imports, never free resources.
 	var amount: = delivery_amount(route)
+	if not _neutral(route.partner): amount = minf(amount,float(production.stockpiles.get(route.partner,{}).get(route.cargo,0)))
 	var bill: float = amount * maxf(float(SupplyExchange.PRICES[route.cargo].buy), world_prices.resource(route.cargo))
 	if amount <= 0 or production.stockpiles[route.country].funds < bill: return
 	production.stockpiles[route.country].funds -= bill
+	if not _neutral(route.partner):
+		production.stockpiles[route.partner][route.cargo] -= amount
+		production.stockpiles[route.partner].funds += bill
 	production.changed.emit()
 	var level: int = production.research.level(("tankers_" if route.cargo == "fuel" else "cargo_") + route.country) if production.research != null else 1
 	var node: = _convoy_visual(route.mode, route.cargo,route.country,level)
 	add_child(node)
-	var c: = {"route": route.id, "country": route.country, "partner": route.partner, "mode": route.mode, "cargo": route.cargo, "amount": amount, "vessel_level": level, "seller": route.country, "buyer": route.country, "health": 100.0, "attack_timer": 0.0, "node": node, "path": route.path, "progress": 0.0, "length": _length(route.path)}
+	var c: = {"route": route.id, "country": route.country, "partner": route.partner, "mode": route.mode, "cargo": route.cargo, "amount": amount, "vessel_level": level, "seller": route.country if _neutral(route.partner) else route.partner, "buyer": route.country, "health": 100.0, "attack_timer": 0.0, "node": node, "path": route.path, "progress": 0.0, "length": _length(route.path)}
 	convoys.append(c)
 	_place(c)
 
@@ -298,7 +311,7 @@ func _ai_trade(country: String) -> void:
 			lowest = float(needs.get(resource, 0.0)) / CARGO[resource]
 			cargo = resource
 	for partner in partners_for(country):
-		if not PARTNERS.has(partner): continue
+		if not _neutral(partner): continue
 		if routes_of(country).any(func(r: Dictionary): return r.partner == partner): continue
 		if open_route(country, partner, cargo).is_empty(): return
 

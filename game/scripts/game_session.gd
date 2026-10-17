@@ -4,7 +4,12 @@ static var player_country: String = "russia"
 static var weapons_test: bool = false
 ## Scenario file (tests point this at data/archive/... while the arsenal is empty).
 static var scenario_path: String = "res://data/scenario_regional.json"
+static var enemy_country: = ""
 static func opponent_country() -> String:
+	if not MapDefinition.is_regional():
+		if enemy_country != player_country and MapDefinition.countries().any(func(c):return c.id == enemy_country): return enemy_country
+		for country in MapDefinition.players():
+			if country.id != player_country: return country.id
 	return "ukraine" if player_country == "russia" else "russia"
 const SAVE_VERSION: = 4
 var scenario: Dictionary
@@ -23,6 +28,7 @@ func capture(clock: SimulationClock, map: StrategicMap, units: UnitSystem, rig: 
 			territory_state[territory.id] = {"owner": territory.owner, "controller": territory.controller, "morale": territory.get("morale", 100.0 if territory.owner == territory.controller else 25.0)}
 	return {"player_country": player_country, "weapons_test": weapons_test, "training": training.duplicate(true), "match": match_rules.snapshot(), "version": SAVE_VERSION, "scenario": scenario.id, "clock": clock.snapshot(), "countries": countries.duplicate(true), "territories": territory_state, "units": units.snapshot(), "production": production.snapshot(), "camera": {"target": [rig.target.x, rig.target.z], "distance": rig.distance, "yaw": rig.yaw, "pitch": rig.pitch}}
 func write_save(path: String, state: Dictionary) -> String:
+	if path == "user://regional_save.json" and not MapDefinition.is_regional(): path = MapDefinition.save_path()
 	var file: = FileAccess.open(path + ".tmp", FileAccess.WRITE)
 	if file == null: return "Could not open save storage"
 	file.store_string(JSON.stringify(state))
@@ -32,6 +38,7 @@ func write_save(path: String, state: Dictionary) -> String:
 	if DirAccess.rename_absolute(path + ".tmp", path) != OK: return "Could not finish save"
 	return ""
 func read_save(path: String, map: StrategicMap, units: UnitSystem) -> Dictionary:
+	if path == "user://regional_save.json" and not MapDefinition.is_regional(): path = MapDefinition.save_path()
 	if not FileAccess.file_exists(path): return {"error": "No saved game yet"}
 	var parser: = JSON.new()
 	if parser.parse(FileAccess.get_file_as_string(path)) != OK: return {"error": "Save file is damaged"}
@@ -83,10 +90,11 @@ func migrate_geography(state: Variant, map: StrategicMap) -> void :
 func _number(value: Variant, minimum: float, maximum: float) -> bool:
 	return (value is float or value is int) and is_finite(float(value)) and value >= minimum and value <= maximum
 func _point(value: Variant) -> bool:
-	return value is Array and value.size() == 2 and _number(value[0], -60, 60) and _number(value[1], -60, 60)
+	var frame: = Rect2(-60,-60,120,120) if MapDefinition.is_regional() else MapDefinition.bounds().grow(30)
+	return value is Array and value.size() == 2 and _number(value[0], frame.position.x, frame.end.x) and _number(value[1], frame.position.y, frame.end.y)
 func validate(state: Variant, map: StrategicMap, units: UnitSystem) -> String:
 	if not state is Dictionary: return "Invalid save format"
-	if state.get("player_country", "russia") not in ["russia", "ukraine"]: return "Invalid player country"
+	if state.get("player_country", "russia") not in countries: return "Invalid player country"
 	if not state.get("weapons_test", false) is bool: return "Invalid test mode"
 	if not TrainingScenario.valid_state(state.get("training", {})): return "Invalid training progress"
 	if state.get("version") != SAVE_VERSION or state.get("scenario") != scenario.id: return "Save belongs to another version or scenario"
@@ -149,7 +157,7 @@ func validate(state: Variant, map: StrategicMap, units: UnitSystem) -> String:
 	if not production.validate(state.get("production")): return "Invalid saved production"
 	var match_state = state.get("match")
 	if match_state is Dictionary and (not _number(match_state.get("last_day",1),1,1000000000) or match_state.get("last_day",1) != floor(match_state.get("last_day",1))): return "Invalid saved day"
-	if not match_state is Dictionary or match_state.get("winner") not in ["", "russia", "ukraine"] or not _number(match_state.get("decision_timer"), 0, 5) or not _number(match_state.get("recruitment_timer"), 0, 20) or not match_state.get("capture_progress") is Dictionary: return "Invalid saved match"
+	if not match_state is Dictionary or (match_state.get("winner") != "" and not countries.has(match_state.get("winner"))) or not _number(match_state.get("decision_timer"), 0, 5) or not _number(match_state.get("recruitment_timer"), 0, 20) or not match_state.get("capture_progress") is Dictionary: return "Invalid saved match"
 	if match_state.has("combat_cooldowns"):
 		if not match_state.combat_cooldowns is Dictionary or match_state.combat_cooldowns.size() > 1000: return "Invalid battle timers"
 		for id in match_state.combat_cooldowns:
@@ -164,7 +172,7 @@ func validate(state: Variant, map: StrategicMap, units: UnitSystem) -> String:
 		var progress = match_state.capture_progress[id]
 		if not regions.has(id) or not progress is Dictionary or not countries.has(progress.get("country")) or not _number(progress.get("seconds"), 0, 6): return "Invalid capture progress"
 	var camera = state.get("camera")
-	if not camera is Dictionary or not _point(camera.get("target")) or not _number(camera.get("distance"), 4.5, 60) or not _number(camera.get("yaw"), -1.1, 1.1) or not _number(camera.get("pitch"), 0.35, 1.35): return "Invalid saved camera"
+	if not camera is Dictionary or not _point(camera.get("target")) or not _number(camera.get("distance"), 4.5, 60 if MapDefinition.is_regional() else 140) or not _number(camera.get("yaw"), -1.1, 1.1) or not _number(camera.get("pitch"), 0.35, 1.35): return "Invalid saved camera"
 	return ""
 func restore(state: Dictionary, clock: SimulationClock, map: StrategicMap, units: UnitSystem, rig: StrategyCamera) -> void :
 	player_country = state.get("player_country", "russia")

@@ -60,6 +60,7 @@ func decide(armies: UnitSystem, cities: Array, production: ProductionSystem, sec
 	var threats: Array = []
 	for enemy in armies.units:
 		if enemy.country == country or enemy.health <= 0 or not armies.unit_visible(enemy, country): continue
+		if not MapDefinition.is_regional() and armies.diplomacy != null and not armies.diplomacy.at_war(country,enemy.country): continue
 		var at: = Vector2(enemy.node.position.x, enemy.node.position.z)
 		var city: = _nearest(own_cities, at)
 		var near_city: bool = not city.is_empty() and city.point.distance_to(at) <= THREAT_RADIUS

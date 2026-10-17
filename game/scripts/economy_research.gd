@@ -6,7 +6,7 @@ static var _catalog: Array = []
 static func catalog() -> Array:
 	if not _catalog.is_empty(): return _catalog
 	var buildings: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/buildings.json"))
-	for country in ["russia","ukraine"]:
+	for country in MapDefinition.countries().map(func(c):return c.id):
 		for building in buildings:
 			if building.id not in ["industry","recruitment_center","infrastructure","train_station","bunker"]: continue
 			var item: Dictionary = building.duplicate(true)

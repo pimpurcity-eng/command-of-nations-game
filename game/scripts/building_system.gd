@@ -89,7 +89,7 @@ func reason(city_id: String, building_id: String, country: String = "", check_re
 	if building_id == "capitol" and capitals.get(country,"") == city_id: return "This is already your capital"
 	if not economy.controlled(place, country): return "Recover control of this city first"
 	if definition.capital_only and place.id != capitals.get(country, ""): return "Research centers are built in your capital"
-	if definition.get("coastal_only", false) and not place.has("naval_spawn"): return "Naval bases require a coastal city (Odesa or Rostov-on-Don)"
+	if definition.get("coastal_only", false) and not place.has("naval_spawn"): return "Naval bases require a coastal city"
 	var target: = level(city_id, building_id) + 1
 	if target > definition.max_level: return "Maximum level reached"
 	var count: = 0

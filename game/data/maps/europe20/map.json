@@ -1,0 +1,388 @@
+{
+  "id": "europe20",
+  "name": "Europe (20 players)",
+  "players": [
+    {
+      "id": "russia",
+      "name": "Russia",
+      "color": "ad4741",
+      "provinces": 25,
+      "cities": 7,
+      "doctrine": "russian"
+    },
+    {
+      "id": "ukraine",
+      "name": "Ukraine",
+      "color": "376bba",
+      "provinces": 27,
+      "cities": 7,
+      "doctrine": "european"
+    },
+    {
+      "id": "belarus",
+      "name": "Belarus",
+      "color": "4f8a4a",
+      "provinces": 25,
+      "cities": 7,
+      "doctrine": "russian"
+    },
+    {
+      "id": "poland",
+      "name": "Poland",
+      "color": "c9a53c",
+      "provinces": 25,
+      "cities": 7,
+      "doctrine": "american"
+    },
+    {
+      "id": "germany",
+      "name": "Germany",
+      "color": "6b6f78",
+      "provinces": 25,
+      "cities": 7,
+      "doctrine": "european"
+    },
+    {
+      "id": "france",
+      "name": "France",
+      "color": "4e74c9",
+      "provinces": 25,
+      "cities": 7,
+      "doctrine": "european"
+    },
+    {
+      "id": "united_kingdom",
+      "name": "United Kingdom",
+      "color": "b8565f",
+      "provinces": 25,
+      "cities": 7,
+      "doctrine": "european"
+    },
+    {
+      "id": "spain",
+      "name": "Spain",
+      "color": "d39a34",
+      "provinces": 25,
+      "cities": 7,
+      "doctrine": "european"
+    },
+    {
+      "id": "italy",
+      "name": "Italy",
+      "color": "5a9c63",
+      "provinces": 25,
+      "cities": 7,
+      "doctrine": "european"
+    },
+    {
+      "id": "turkey",
+      "name": "Turkey",
+      "color": "c46a3c",
+      "provinces": 25,
+      "cities": 7,
+      "doctrine": "european"
+    },
+    {
+      "id": "sweden",
+      "name": "Sweden",
+      "color": "3d8fb0",
+      "provinces": 25,
+      "cities": 7,
+      "doctrine": "european"
+    },
+    {
+      "id": "norway",
+      "name": "Norway",
+      "color": "8a4f8f",
+      "provinces": 25,
+      "cities": 7,
+      "doctrine": "european"
+    },
+    {
+      "id": "finland",
+      "name": "Finland",
+      "color": "8bb7d8",
+      "provinces": 25,
+      "cities": 7,
+      "doctrine": "european"
+    },
+    {
+      "id": "romania",
+      "name": "Romania",
+      "color": "d2c25a",
+      "provinces": 25,
+      "cities": 7,
+      "doctrine": "american"
+    },
+    {
+      "id": "hungary",
+      "name": "Hungary",
+      "color": "9c7a4f",
+      "provinces": 25,
+      "cities": 7,
+      "doctrine": "european"
+    },
+    {
+      "id": "czechia",
+      "name": "Czechia",
+      "color": "5c6fa0",
+      "provinces": 25,
+      "cities": 7,
+      "doctrine": "european"
+    },
+    {
+      "id": "austria",
+      "name": "Austria",
+      "color": "c97b8a",
+      "provinces": 25,
+      "cities": 7,
+      "doctrine": "european"
+    },
+    {
+      "id": "greece",
+      "name": "Greece",
+      "color": "6cb2c4",
+      "provinces": 25,
+      "cities": 7,
+      "doctrine": "european"
+    },
+    {
+      "id": "serbia",
+      "name": "Serbia",
+      "color": "8f5b4a",
+      "provinces": 25,
+      "cities": 7,
+      "doctrine": "russian"
+    },
+    {
+      "id": "bulgaria",
+      "name": "Bulgaria",
+      "color": "7aa35a",
+      "provinces": 25,
+      "cities": 7,
+      "doctrine": "european"
+    }
+  ],
+  "ai_countries": [
+    {
+      "id": "portugal",
+      "name": "Portugal",
+      "color": "9a9a8c",
+      "provinces": 5,
+      "cities": 1,
+      "doctrine": "european"
+    },
+    {
+      "id": "ireland",
+      "name": "Ireland",
+      "color": "9a9a8c",
+      "provinces": 5,
+      "cities": 1,
+      "doctrine": "european"
+    },
+    {
+      "id": "belgium",
+      "name": "Belgium",
+      "color": "9a9a8c",
+      "provinces": 2,
+      "cities": 1,
+      "doctrine": "european"
+    },
+    {
+      "id": "netherlands",
+      "name": "Netherlands",
+      "color": "9a9a8c",
+      "provinces": 3,
+      "cities": 1,
+      "doctrine": "european"
+    },
+    {
+      "id": "luxembourg",
+      "name": "Luxembourg",
+      "color": "9a9a8c",
+      "provinces": 1,
+      "cities": 1,
+      "doctrine": "european"
+    },
+    {
+      "id": "switzerland",
+      "name": "Switzerland",
+      "color": "9a9a8c",
+      "provinces": 3,
+      "cities": 1,
+      "doctrine": "european"
+    },
+    {
+      "id": "denmark",
+      "name": "Denmark",
+      "color": "9a9a8c",
+      "provinces": 4,
+      "cities": 1,
+      "doctrine": "european"
+    },
+    {
+      "id": "estonia",
+      "name": "Estonia",
+      "color": "9a9a8c",
+      "provinces": 3,
+      "cities": 1,
+      "doctrine": "european"
+    },
+    {
+      "id": "latvia",
+      "name": "Latvia",
+      "color": "9a9a8c",
+      "provinces": 5,
+      "cities": 1,
+      "doctrine": "european"
+    },
+    {
+      "id": "lithuania",
+      "name": "Lithuania",
+      "color": "9a9a8c",
+      "provinces": 4,
+      "cities": 1,
+      "doctrine": "european"
+    },
+    {
+      "id": "moldova",
+      "name": "Moldova",
+      "color": "9a9a8c",
+      "provinces": 2,
+      "cities": 1,
+      "doctrine": "european"
+    },
+    {
+      "id": "slovakia",
+      "name": "Slovakia",
+      "color": "9a9a8c",
+      "provinces": 3,
+      "cities": 1,
+      "doctrine": "european"
+    },
+    {
+      "id": "slovenia",
+      "name": "Slovenia",
+      "color": "9a9a8c",
+      "provinces": 1,
+      "cities": 1,
+      "doctrine": "european"
+    },
+    {
+      "id": "croatia",
+      "name": "Croatia",
+      "color": "9a9a8c",
+      "provinces": 3,
+      "cities": 1,
+      "doctrine": "european"
+    },
+    {
+      "id": "bosnia",
+      "name": "Bosnia and Herzegovina",
+      "color": "9a9a8c",
+      "provinces": 3,
+      "cities": 1,
+      "doctrine": "european"
+    },
+    {
+      "id": "montenegro",
+      "name": "Montenegro",
+      "color": "9a9a8c",
+      "provinces": 1,
+      "cities": 1,
+      "doctrine": "european"
+    },
+    {
+      "id": "albania",
+      "name": "Albania",
+      "color": "9a9a8c",
+      "provinces": 1,
+      "cities": 1,
+      "doctrine": "european"
+    },
+    {
+      "id": "north_macedonia",
+      "name": "North Macedonia",
+      "color": "9a9a8c",
+      "provinces": 2,
+      "cities": 1,
+      "doctrine": "european"
+    },
+    {
+      "id": "kosovo",
+      "name": "Kosovo",
+      "color": "9a9a8c",
+      "provinces": 1,
+      "cities": 1,
+      "doctrine": "european"
+    },
+    {
+      "id": "cyprus",
+      "name": "Cyprus",
+      "color": "9a9a8c",
+      "provinces": 1,
+      "cities": 1,
+      "doctrine": "european"
+    },
+    {
+      "id": "malta",
+      "name": "Malta",
+      "color": "9a9a8c",
+      "provinces": 2,
+      "cities": 1,
+      "doctrine": "european"
+    },
+    {
+      "id": "georgia",
+      "name": "Georgia",
+      "color": "9a9a8c",
+      "provinces": 5,
+      "cities": 1,
+      "doctrine": "european"
+    },
+    {
+      "id": "armenia",
+      "name": "Armenia",
+      "color": "9a9a8c",
+      "provinces": 2,
+      "cities": 1,
+      "doctrine": "european"
+    },
+    {
+      "id": "azerbaijan",
+      "name": "Azerbaijan",
+      "color": "9a9a8c",
+      "provinces": 6,
+      "cities": 1,
+      "doctrine": "european"
+    }
+  ],
+  "projection": {
+    "type": "laea",
+    "longitude": 20.0,
+    "latitude": 52.0,
+    "units_per_km": 0.023423423423423424
+  },
+  "frame": {
+    "origin": [
+      -62,
+      -54
+    ],
+    "extent": [
+      124,
+      101
+    ]
+  },
+  "relief": "res://assets/materials/relief_europe20.png",
+  "coast_mask": "res://assets/materials/coast_europe20.png",
+  "cities": "res://data/maps/europe20/cities.json",
+  "view": {
+    "longitude": 15.0,
+    "latitude": 50.0,
+    "distance": 110.0,
+    "max_distance": 140.0
+  },
+  "resources": true,
+  "units": true,
+  "test": true
+}

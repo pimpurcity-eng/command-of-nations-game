@@ -631,6 +631,10 @@ func show_status(message: String) -> void :
 	status.text = ("PAUSED · Tap Play to run orders · " if clock_paused else "") + message
 	status.add_theme_color_override("font_color", Color("ebd5aa") if clock_paused else MUTED)
 func show_clock(elapsed: float, speed: float, paused: bool) -> void :
+	var online: bool = MatchClient.active != null
+	if online: paused = false
+	pause_button.disabled = online
+	speed_button.disabled = online
 	var seconds: = int(elapsed * SimulationClock.REAL_SECONDS_PER_SIM_SECOND)
 	time_label.text = "Day %d · %02d:%02d" % [1 + seconds / 86400, (seconds % 86400) / 3600, (seconds % 3600) / 60]
 	_speed = speed

@@ -11,7 +11,7 @@ static func entry(id: String) -> Dictionary:
 static func appearance(id: String, country: String) -> Dictionary:
 	var item: = entry(id)
 	if item.is_empty(): return {}
-	var theme: = "shared" if item.shared_building else ("russian" if country == "russia" else "european")
+	var theme: = "shared" if item.shared_building else Doctrine.of(country)
 	return item.assets.get(theme, {})
 
 static func category_counts(country: String) -> Dictionary:

@@ -19,7 +19,30 @@ func run() -> void:
 	lobby.setup(StrategyTheme.create(), false)
 	await frames()
 	check(not lobby.continue_button.visible and lobby.continue_button.disabled, "new player has no invented saved match")
-	check(lobby.fresh_button.get_global_rect().end.y < lobby.navigation.position.y, "primary campaign button is visible on the phone")
+	check(lobby.join_button.get_global_rect().end.y < lobby.navigation.position.y, "Join New is visible on the phone's first screen")
+	check(lobby.active_games().is_empty() and lobby.empty_labels[0].visible, "new player sees an empty active-games list")
+	lobby.join_button.pressed.emit()
+	for i in 4: await process_frame
+	check(lobby.current_page == "games" and lobby.fresh_button.is_visible_in_tree(), "Join New opens the Games list with the 1-player tutorial")
+	check(lobby.online_button.is_visible_in_tree() and lobby.europe_button.disabled and lobby.europe_button.text == "COMING SOON", "2-player tutorial listed, Europe coming soon")
+	var started := [""]
+	lobby.training_requested.connect(func(resume: bool): started[0] = "resume" if resume else "new")
+	check(not lobby.online_button.disabled, "2-player Russia vs Ukraine is open while it is being built (owner 2026-10-17)")
+	lobby.fresh_button.pressed.emit()
+	for i in 3: await process_frame
+	check(lobby.side_overlay.visible and started[0] == "", "Play asks which side first")
+	if DisplayServer.get_name() != "headless":
+		await RenderingServer.frame_post_draw
+		root.get_texture().get_image().save_png(OS.get_environment("HOME_REVIEW_DIR").path_join("Side_Choice.png"))
+	lobby.country_cards.ukraine.pressed.emit()
+	for i in 3: await process_frame
+	check(started[0] == "new" and lobby.selected_country() == "ukraine" and not lobby.side_overlay.visible, "choosing a side starts Russia vs Ukraine")
+	lobby.cancel_loading("Ready")
+	if DisplayServer.get_name() != "headless":
+		await RenderingServer.frame_post_draw
+		root.get_texture().get_image().save_png(OS.get_environment("HOME_REVIEW_DIR").path_join("Games_List.png"))
+	lobby.nav_buttons.home.pressed.emit()
+	await frames()
 	check(lobby.scroll.get_combined_minimum_size().x <= 720, "phone page does not overflow horizontally")
 	check(audio.music_playing() == "menu_theme", "menu music remains active")
 	lobby.country_cards.ukraine.pressed.emit()
@@ -36,7 +59,7 @@ func run() -> void:
 	lobby.account_requested.connect(func(): actions[0] += 1)
 	lobby.profile_button.pressed.emit()
 	check(actions[0] == 1, "account action is wired")
-	for id in ["features", "updates", "settings", "home"]:
+	for id in ["games", "features", "updates", "settings", "home"]:
 		lobby.nav_buttons[id].pressed.emit()
 		await frames()
 		check(lobby.current_page == id and lobby.pages[id].visible, "navigation opens " + id)
@@ -59,7 +82,18 @@ func run() -> void:
 	saved.audio = audio
 	saved.setup(StrategyTheme.create(), true)
 	await frames()
-	check(saved.continue_button.visible and not saved.continue_button.disabled, "saved player can resume")
+	check(saved.continue_button.is_visible_in_tree() and not saved.continue_button.disabled, "saved player can resume")
+	saved.show_paused_match("training")
+	await frames()
+	var kinds: Array = saved.game_rows.filter(func(r): return r.card.is_visible_in_tree()).map(func(r): return r.kind)
+	check("training" in kinds and "campaign" in kinds, "several games are listed at once: " + str(kinds))
+	var resumed := [0]
+	saved.resume_requested.connect(func(): resumed[0] += 1)
+	for r in saved.game_rows:
+		if r.kind == "training" and r.card.is_visible_in_tree(): r.button.pressed.emit()
+	for i in 3: await process_frame
+	check(resumed[0] == 1, "the paused tutorial resumes in place")
+	saved.cancel_loading("Ready")
 	if DisplayServer.get_name() != "headless":
 		await RenderingServer.frame_post_draw
 		root.get_texture().get_image().save_png(OS.get_environment("HOME_REVIEW_DIR").path_join("Saved_Campaign_Home.png"))

@@ -531,15 +531,14 @@ func _ready() -> void :
 		# The start screen covers the map: do not draw the 3D map behind it from the very first
 		# frame (owner 2026-10-14: start screen lagging; it was only switched off after a game).
 		get_viewport().disable_3d = mobile_start.visible
+		mobile_start.resume_requested.connect(resume_paused_match)
 		mobile_start.continue_requested.connect( func():
-			if paused_to_home:
-				# Back from the home screen: the match is still loaded, just carry on.
-				paused_to_home = false
-				mobile_start.hide()
-				audio.play_music("battle_theme")
-				clock.paused = not session.training.is_empty() and session.training.phase in ["choice", "opening", "supply_video"]
-				refresh_hud()
+			if paused_to_home and session.training.is_empty():
+				resume_paused_match()
 				return
+			# Owner 2026-10-17: several games at once — the paused tutorial is already saved, so
+			# switching to the saved campaign simply loads it.
+			paused_to_home = false
 			load_game()
 			start_campaign_play()
 			mobile_start.hide())
@@ -1431,6 +1430,20 @@ func _notification(what: int) -> void:
 	if what in [NOTIFICATION_APPLICATION_PAUSED, NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_WM_CLOSE_REQUEST, NOTIFICATION_WM_GO_BACK_REQUEST]:
 		if boot_finished and session != null and session.match_rules != null and mobile_start != null and not mobile_start.visible and MatchClient.active == null and not GameSession.weapons_test:
 			autosave()
+## Back from the home screen: the paused match is still loaded, just carry on.
+func resume_paused_match() -> void:
+	mobile_start.paused_kind = ""
+	if MatchClient.active != null:
+		mobile_start.hide()
+		audio.play_music("battle_theme")
+		return
+	if not paused_to_home: return
+	paused_to_home = false
+	mobile_start.hide()
+	audio.play_music("battle_theme")
+	clock.paused = not session.training.is_empty() and session.training.phase in ["choice", "opening", "supply_video"]
+	refresh_hud()
+
 func return_to_home() -> void:
 	if mobile_start == null: return
 	_remember_match(false)
@@ -1439,7 +1452,7 @@ func return_to_home() -> void:
 	refresh_hud()
 	paused_to_home = MatchClient.active == null and not GameSession.weapons_test
 	audio.play_music("menu_theme")
-	mobile_start.show_paused_match()
+	mobile_start.show_paused_match("online" if MatchClient.active != null else ("training" if not session.training.is_empty() else "campaign"))
 
 func open_home_account() -> void:
 	if account_panel == null:
@@ -1482,6 +1495,7 @@ func join_online(match_code: String = "") -> void:
 	online = MatchClient.new()
 	add_child(online)
 	online.welcomed.connect(func(_state: Dictionary):
+		MobileStartPanel.remember_online(online.country)
 		_clear_training()
 		online.attach(self)
 		mobile_start.hide()

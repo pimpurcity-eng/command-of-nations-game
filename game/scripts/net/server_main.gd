@@ -4,6 +4,8 @@ extends SceneTree
 ## Settings come from the command line or the environment:
 ##   --port / WM_PORT                 TCP port for WebSocket connections (default 8910)
 ##   --match / WM_MATCH               match id phones must ask for (default "main")
+##   --map / WM_MAP                   regional or europe20 (default regional)
+##   --speed / WM_SPEED               match speed: 1, 2, 4 or 10 (default 1)
 ##   --save / WM_SAVE                 save file (default user://matches/<match>.json)
 ##   --inactive / WM_INACTIVE         seconds away before the AI takes over (default 172800 = 48 real hours)
 ##   SUPABASE_URL, SUPABASE_ANON_KEY  account sign-in check (required in production)
@@ -22,7 +24,14 @@ func run() -> void:
 	var match_id: = option("match", "WM_MATCH", "main")
 	var save: = option("save", "WM_SAVE", "user://matches/%s.json" % match_id)
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(save.get_base_dir()))
-	var game = load("res://scenes/main.tscn").instantiate()
+	var map_id: = option("map", "WM_MAP", MapDefinition.REGIONAL)
+	var speed: = float(option("speed", "WM_SPEED", "1"))
+	if not speed in SimulationClock.SPEEDS:
+		printerr("Unsupported match speed");quit(1);return
+	if not map_id in [MapDefinition.REGIONAL,MapDefinition.EUROPE]:
+		printerr("Unknown map: "+map_id);quit(1);return
+	MapDefinition.use(map_id)
+	var game = load(MapDefinition.scene_path()).instantiate()
 	root.add_child(game)
 	current_scene = game
 	while not game.boot_finished: await process_frame
@@ -38,6 +47,7 @@ func run() -> void:
 		printerr("Could not listen on port %d (error %d)" % [port, error])
 		quit(1)
 		return
+	game.clock.set_speed(speed)
 	if server.supabase_url.is_empty() and not server.allow_dev_tokens: printerr("Warning: SUPABASE_URL is not set, nobody can sign in")
 	print("Warfront Mandate match '%s' listening on port %d · save %s" % [match_id, port, ProjectSettings.globalize_path(save)])
 

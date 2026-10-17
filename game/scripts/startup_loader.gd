@@ -17,11 +17,11 @@ func _ready() -> void:
 	panel = MobileStartPanel.new()
 	panel.audio = audio
 	add_child(panel)
-	panel.setup(StrategyTheme.create(), FileAccess.file_exists("user://regional_save.json"))
+	panel.setup(StrategyTheme.create(), FileAccess.file_exists(MapDefinition.save_path()))
 	panel.layer = 30
 	panel.begin_background_loading()
 	await get_tree().process_frame
-	var path := "res://scenes/main.tscn"
+	var path := MapDefinition.scene_path()
 	if ResourceLoader.load_threaded_request(path) != OK:
 		panel.set_progress(0, "Unable to load campaign. Please restart.")
 		push_error("Could not start main scene request")
@@ -63,7 +63,11 @@ func _ready() -> void:
 	if "--startup-smoke" in OS.get_cmdline_user_args():
 		panel.hide()
 		print("WF_SMOKE READY")
+		# Owner 2026-10-17: the Russia–Ukraine start is now the 1-player tutorial on the Games tab.
+		game.mobile_start._select_page("games")
 		for i in 4: await get_tree().process_frame
+		game.mobile_start.scroll.ensure_control_visible(game.mobile_start.fresh_button)
+		for i in 2: await get_tree().process_frame
 		var point: Vector2 = game.mobile_start.fresh_button.get_global_rect().get_center()
 		var click := InputEventMouseButton.new()
 		click.button_index = MOUSE_BUTTON_LEFT
@@ -74,9 +78,13 @@ func _ready() -> void:
 		click = click.duplicate()
 		click.pressed = false
 		get_viewport().push_input(click, true)
+		# Owner 2026-10-17: Play asks for the side first.
+		await get_tree().process_frame
+		game.mobile_start.country_cards.russia.pressed.emit()
 		for i in 8: await get_tree().process_frame
-		if game.mobile_start.visible or game.clock.paused:
-			print("WF_SMOKE FAIL Start button did not open campaign")
+		# The tutorial opens on its film with the clock paused, so only the screen change is checked.
+		if game.mobile_start.visible:
+			print("WF_SMOKE FAIL Start button did not open the tutorial")
 		else:
 			print("WF_SMOKE MAP_OPEN units=", game.units.units.size())
 			var until := Time.get_ticks_msec() + 30000

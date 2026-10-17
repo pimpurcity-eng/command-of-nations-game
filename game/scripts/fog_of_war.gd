@@ -10,6 +10,7 @@ var elapsed: = 0.0
 var signature: = ""
 var sight_outline: MeshInstance3D
 var sight_signature: = ""
+func bounds() -> Rect2: return BOUNDS if MapDefinition.is_regional() else MapDefinition.bounds()
 func setup(units: UnitSystem, map: StrategicMap) -> void :
 	armies = units
 	terrain = map
@@ -39,11 +40,11 @@ func refresh(force: bool = false) -> void :
 		for scout in scouts:
 			var center: Vector2 = scout[0]
 			var radius: float = scout[1]
-			var low: Vector2 = (center-Vector2.ONE*radius-BOUNDS.position)/BOUNDS.size*SIZE
-			var high: Vector2 = (center+Vector2.ONE*radius-BOUNDS.position)/BOUNDS.size*SIZE
+			var low: Vector2 = (center-Vector2.ONE*radius-bounds().position)/bounds().size*SIZE
+			var high: Vector2 = (center+Vector2.ONE*radius-bounds().position)/bounds().size*SIZE
 			for y in range(maxi(0,floori(low.y)),mini(SIZE,ceili(high.y))):
 				for x in range(maxi(0,floori(low.x)),mini(SIZE,ceili(high.x))):
-					var point: = BOUNDS.position + Vector2((x+0.5)/SIZE,(y+0.5)/SIZE)*BOUNDS.size
+					var point: = bounds().position + Vector2((x+0.5)/SIZE,(y+0.5)/SIZE)*bounds().size
 					var sight: = clampf((radius-point.distance_to(center))/0.8,0,1)
 					if sight > image.get_pixel(x,y).r: image.set_pixel(x,y,Color(sight,0,0))
 		if mask == null: mask = ImageTexture.create_from_image(image)

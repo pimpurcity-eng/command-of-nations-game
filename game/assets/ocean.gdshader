@@ -1,12 +1,15 @@
 shader_type spatial;
 render_mode specular_disabled;
 uniform sampler2D coast_mask : filter_linear, repeat_disable;
+uniform vec2 mask_origin = vec2(-60.0,-60.0);
+uniform vec2 mask_size = vec2(120.0,120.0);
 varying vec3 world;
 void vertex() { world=(MODEL_MATRIX*vec4(VERTEX,1.0)).xyz; }
 void fragment() {
- vec2 uv=(world.xz+vec2(60.0))/120.0;
+ vec2 uv=(world.xz-mask_origin)/mask_size;
  vec4 coast=texture(coast_mask,clamp(uv,vec2(0),vec2(1)));
- float distance_to_land=coast.g*8.0;
+ // Continue into deep water beyond the finite mask rather than stretching an edge pixel.
+ float distance_to_land=coast.g*8.0+length((uv-clamp(uv,vec2(0),vec2(1)))*mask_size);
  vec3 sea=mix(vec3(0.25,0.47,0.48),vec3(0.065,0.20,0.28),smoothstep(0.0,2.6,distance_to_land));
  float wave_a=world.x*14.0+world.z*8.0+TIME*0.4;
  float wave_b=world.z*21.0-TIME*0.3;

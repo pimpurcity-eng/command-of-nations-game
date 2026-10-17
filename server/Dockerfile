@@ -11,8 +11,8 @@ COPY --chown=warfront game /srv/game
 USER warfront
 WORKDIR /srv/game
 # Import once at build time so the server starts quickly.
-RUN godot --headless --path . --import || true
-ENV WM_PORT=8910 WM_MATCH=main WM_INACTIVE=600
+RUN godot --headless --path . --import
+ENV WM_PORT=8910 WM_MATCH=main WM_MAP=regional WM_SPEED=1 WM_INACTIVE=172800
 # Saves live in ~/.local/share/godot/app_userdata/<project>/matches: mount a volume there.
 VOLUME ["/home/warfront/.local/share/godot"]
 EXPOSE 8910

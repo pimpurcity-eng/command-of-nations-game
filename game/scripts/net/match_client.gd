@@ -11,6 +11,7 @@ signal ticked(state: Dictionary)
 signal event_received(text: String)
 signal result_received(op: String, ok: bool, message: String)
 signal closed(reason: String)
+signal lobby_received(info: Dictionary)
 
 ## The client whose orders go to the server (null in single-player).
 static var active: MatchClient
@@ -28,6 +29,7 @@ var error: = ""
 var _hello_sent: = false
 var _closed: = false
 var _shown_winner: = false
+var _preview: = false
 
 func connect_to(url: String, account_token: String, match: String, country_wanted: String = "") -> Error:
 	token = account_token
@@ -36,16 +38,35 @@ func connect_to(url: String, account_token: String, match: String, country_wante
 	ws.inbound_buffer_size = 1 << 22  # a full state can be a few hundred kB
 	return ws.connect_to_url(url)
 
+func preview(url: String, account_token: String, match: String) -> Error:
+	_preview = true
+	return connect_to(url, account_token, match)
+
+func refresh_lobby() -> void:
+	if ws.get_ready_state() == WebSocketPeer.STATE_OPEN:
+		_send({"t":"lobby", "match":match_id, "map":MapDefinition.id})
+
+func join_country(chosen: String) -> void:
+	if ws.get_ready_state() != WebSocketPeer.STATE_OPEN: return
+	wanted_country = chosen
+	_preview = false
+	_send({"t":"hello", "token":token, "match":match_id, "map":MapDefinition.id, "country":chosen})
+
 ## Lets this client drive `main` (a running main.tscn): orders go to the server from now on.
 func attach(main: Node) -> void:
 	var needs_state: bool = game != main or active != self
 	game = main
+	if game.has_method("begin_online_session"): game.begin_online_session()
 	active = self
 	game.match_rules.ai_enabled = false
+	game.match_rules.online = true
 	game.clock.paused = true
 	# The welcome may arrive before its handler attaches the running scene. Apply
 	# that snapshot now, so country, armies and resources are correct from the first frame.
 	if needs_state and not country.is_empty() and not state.is_empty(): _apply(state, true)
+	# A country change can rebuild the Europe AI seats while applying the welcome.
+	# The connected client always leaves simulation and AI decisions to the server.
+	game.match_rules.ai_enabled = false
 
 func leave() -> void:
 	ws.close(1000, "Left the match")
@@ -59,7 +80,7 @@ func _process(delta: float) -> void:
 	var ready: = ws.get_ready_state()
 	if ready == WebSocketPeer.STATE_OPEN and not _hello_sent:
 		_hello_sent = true
-		_send({"t": "hello", "token": token, "match": match_id, "country": wanted_country})
+		_send({"t": "lobby" if _preview else "hello", "token": token, "match": match_id, "map":MapDefinition.id, "country": wanted_country})
 	# Read even while closing: a refusal arrives just before the server closes the connection.
 	while ws.get_available_packet_count() > 0:
 		var message: Variant = JSON.parse_string(ws.get_packet().get_string_from_utf8())
@@ -76,7 +97,13 @@ func _process(delta: float) -> void:
 		game.units.glide(delta)
 
 func _handle(message: Dictionary) -> void:
+	if message.get("t", "") in ["lobby", "welcome", "tick"] and str(message.get("map", MapDefinition.id)) != MapDefinition.id:
+		error = "This match uses a different map"
+		ws.close(4000, error)
+		return
 	match str(message.get("t", "")):
+		"lobby":
+			lobby_received.emit(message)
 		"welcome":
 			country = str(message.get("country", ""))
 			state = message
@@ -130,7 +157,9 @@ func _apply(message: Dictionary, full: bool) -> void:
 		GameSession.player_country = country
 		game.apply_player_country(false)
 	game.clock.elapsed = float(message.get("time", game.clock.elapsed))
+	game.clock.speed = float(message.get("speed", game.clock.speed))
 	game.units.apply_remote(message.get("units", []))
+	if game.has_method("sync_remote_view"): game.sync_remote_view()
 	var controllers: = {}
 	for pair in message.get("territories", []): controllers[pair[0]] = pair[1]
 	for t in game.map.territories:
