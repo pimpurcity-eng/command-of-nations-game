@@ -7,7 +7,8 @@ Older notes (`CHATGPT_HANDOFF.md`, `docs/NEXT_LIST.md`, `docs/CHATGPT_NOTE_2026_
 
 ## 1. Session rules
 
-1. Start: `git fetch`, check out `claude/wip-oct16`, read §3 and §5 of this file.
+1. Start: `git fetch`, then read §2 and the newest entry in §5 before choosing a branch.
+   For the current tutorial handoff, use `claude/v0.61`; the older Oct 16 fix list uses `claude/wip-oct16`.
 2. **One fix at a time:** change → run the related tests → commit → push → update §3 and §4 → tell Matthew in
    plain words what changed and what to test in the game.
 3. Push **only** to `claude/wip-oct16` (or a branch named in §2). Never push to or merge into
@@ -22,7 +23,7 @@ Older notes (`CHATGPT_HANDOFF.md`, `docs/NEXT_LIST.md`, `docs/CHATGPT_NOTE_2026_
 | What | Where |
 | --- | --- |
 | Working branch | `claude/wip-oct16` — unfinished Oct 16 fixes. **Do not build from it.** |
-| Tutorial repair review | `chatgpt/training-flow-fix-20261017`, based on `claude/v0.61` at `585e635`. Matthew requested preserving Claude's design and repairing the flagship tutorial. Source review only; no publication. |
+| Current tutorial release source | `claude/v0.61` — Matthew explicitly requested "Add to 61 and Claude will finish." Tutorial repair `dfb615c` merged through PR #22 as `c61b2e0` on 17 Oct. Claude owns final Android integration/testing/release; no app or website publication in this handoff. |
 | Release audit | `chatgpt/release-oct16` — ChatGPT's current full-game check; owner authorized fixing and publishing after the review. |
 | Stable branch | `claude/v0.26-fixes` — buildable game; the match server auto-updates from it every 15 min. |
 | Merge plan | When the WIP list is finished and tested: merge WIP into stable, reverting `20c7171` (the commit that moved WIP off stable). Matthew approves first. |
@@ -96,6 +97,31 @@ Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to d
 
 ## 5. Session state
 
+**17 Oct (ChatGPT) — added tutorial repairs to 0.61; handed back to Claude.**
+Matthew's latest instruction: **"Add to 61 and Claude will finish."**
+PR [#22](https://github.com/pimpurcity-eng/command-of-nations-game/pull/22) is merged into
+`claude/v0.61` at `c61b2e0192829d04927c9cdae40427aacb516603`, retaining repair commit
+`dfb615c030642298e4a0c3d66efbeb7a733f2d52`. The merged game tree exactly matches the
+previously validated repair (150 checks passed, zero failures); no game code changed during integration.
+This instruction supersedes the older Oct 16 pause for this tutorial integration only.
+
+**Claude next:** fetch `claude/v0.61` into the complete release checkout, retaining all private
+models, textures, music, account configuration and signing. Finish the Android release from that
+complete project; do not substitute the thin source checkout or an old exported pack.
+- Walk both Full training and Skip the basics as **Ukraine and Russia**, including save/resume.
+  Required Warfront lessons must remain required after either choice.
+- Russia's city/unit targets use Russia's own forces and cities (Moscow); Ukraine uses its own
+  (Kyiv). The American ship at Odesa and European train at Lviv still supply **Ukraine** when
+  the player is Russia. Russia observes that enemy aid and moves its own reinforcements.
+  Do not describe the scripted tutorial aid models as attackable trade convoys.
+- Inspect the final AAB for both opening/supply `.ogv` films, then test playback with sound,
+  city versus garrison taps, animated guidance, lesson progression and startup responsiveness on
+  Matthew's Samsung. Check small, tall and landscape layouts.
+- Shared online two-player teaching and server-side commander-level gating are separate work;
+  they were not implemented or certified by this patch.
+No APK/AAB export, Play upload or website deployment was done. See
+[TRAINING_REPAIR_2026_10_17.md](TRAINING_REPAIR_2026_10_17.md) for the detailed test evidence and limits.
+
 **17 Oct (ChatGPT) — flagship tutorial repairs for review, `chatgpt/training-flow-fix-20261017`.**
 Matthew confirmed the flow: opening film on all phone shapes → optional basic controls →
 supply film and ship/train arrivals → required Warfront features → keep playing the full match.
@@ -109,7 +135,7 @@ ordinary city tap cycle 4/0; Home 5/0; startup 8/0 (**150 checks, 0 failures**).
 Native OpenGL captures use the live game's original assets in asset-only QA packs; these packs
 are not committed or used to replace the game. Both films decode in source tests; the owner's
 installed Android playback failure has not been reproduced on a physical phone.
-**No APK/AAB export, Play upload, website deployment or release-branch merge was performed.**
+**At the repair-validation checkpoint, no APK/AAB export, Play upload, website deployment or release-branch merge had been performed. The newer entry above records the subsequently authorized merge into 0.61.**
 See [TRAINING_REPAIR_2026_10_17.md](TRAINING_REPAIR_2026_10_17.md) before integrating into the
 complete release project. Keep all private assets and existing signing/configuration intact.
 
@@ -126,7 +152,7 @@ and the Russia–Ukraine start replaced by tutorials listed in the Games list (1
   the joined online side is remembered in `settings.cfg` [online] `joined_regional`.
 - Tests updated and passing: `review_homepage`, `test_home_button`, `test_startup_progress`, `test_american_europe`.
 
-**PAUSED at Matthew's request (16 Oct, 23:20 UTC):** Wait for Claude to finish before any more edits, merge or publication. The current map/update is a test build; larger tutorial work comes afterwards. Additional verified launcher-cleanup and tutorial-move fixes are saved on `chatgpt/release-oct16` only; reconcile after Claude finishes.
+**Historical pause (16 Oct, 23:20 UTC; the newer 0.61 tutorial integration is authorized above):** Wait for Claude to finish before any more edits, merge or publication. The current map/update is a test build; larger tutorial work comes afterwards. Additional verified launcher-cleanup and tutorial-move fixes are saved on `chatgpt/release-oct16` only; reconcile after Claude finishes.
 
 ChatGPT full-game release audit on `chatgpt/release-oct16`, based on `beff4dc`.
 Matthew authorized fixing remaining bugs and publishing, then explicitly requested a whole-game
@@ -149,4 +175,4 @@ performance profiling are still being investigated; this is not a released build
 - Physical-phone review of camera feel, tap targets and report readability remains useful;
   automated and rendered checks are being completed under Matthew's publish authorization.
 
-**Last session:** 2026-10-16, Claude — created this file; fixes 10, 11, 12, 36 bug; verified 13–16, 18–20, 22–30, 35, 37, 38, 40 with tests; `test_economy_rules` now 64/64.
+**Last session:** 2026-10-17, ChatGPT — merged PR #22 into `claude/v0.61` at Matthew's request and documented Claude's remaining Android work. No build or deployment.

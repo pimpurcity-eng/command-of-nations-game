@@ -21,6 +21,18 @@ Only the basic controls have a Skip button. Both training choices retain the sup
 aid arrival and required feature lessons. As before, a film can be skipped without awarding
 lesson completion. Section two's progress covers the aid and feature chapters together.
 
+## Russia versus Ukraine
+
+The selected side controls the player's own city, armour and feature targets: Moscow and Russian
+forces for Russia, Kyiv and Ukrainian forces for Ukraine. Both sides retain their existing
+formations and economy. The American ship at Odesa and European train at Lviv supply Ukraine
+regardless of the player's side; Russia observes enemy aid and uses its own units for reinforcement
+practice. The scripted tutorial cargo models are not certified attackable trade convoys.
+
+Claude's final phone walkthrough must cover both sides with Full training and Skip the basics,
+including save/resume and completion of the required feature lessons. The 150 checks in the Validation section
+are source validation, not a claim that all four paths have been completed on an Android phone.
+
 ## Confirmed failures and repairs
 
 - **City tap picked an army.** During a city-related lesson, the city model or an overlapping
@@ -81,7 +93,14 @@ These are not physical Android tests, a performance certification or a completed
 
 ## Integration and release status
 
-No APK/AAB was exported, no Play release uploaded, no website deployed and no live branch merged.
+Matthew subsequently instructed: **"Add to 61 and Claude will finish."**
+On 17 October 2026, PR [#22](https://github.com/pimpurcity-eng/command-of-nations-game/pull/22)
+merged repair commit `dfb615c030642298e4a0c3d66efbeb7a733f2d52` into `claude/v0.61` as
+`c61b2e0192829d04927c9cdae40427aacb516603`. The merge tree is identical to the validated
+repair tree; integration introduced no additional game-code changes. Claude owns the remaining
+complete-project Android integration, physical-phone checks and release.
+
+No APK/AAB was exported, no Play release uploaded and no website deployed.
 Both films play in source tests and exist in the retrieved live web pack. That does not establish
 what is packaged in the owner's installed AAB or reproduce the phone-specific failure.
 
