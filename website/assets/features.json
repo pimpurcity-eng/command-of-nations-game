@@ -1,0 +1,90 @@
+{
+  "tagline": "Build an economy. Command a nation.",
+  "features": [
+    {
+      "id": "warfare",
+      "icon": "attack",
+      "title": "Land, air & sea",
+      "text": "Command infantry, armour, artillery, helicopters, aircraft, drones, warships and submarines on a 3D campaign map."
+    },
+    {
+      "id": "research",
+      "icon": "research",
+      "title": "An arsenal that evolves",
+      "text": "Research five equipment tiers, unlock new weapons as the campaign advances and develop your nation's doctrine."
+    },
+    {
+      "id": "economy",
+      "icon": "funds",
+      "title": "Win through your economy",
+      "text": "Build industry, manage food, fuel, materials, electronics and manpower, and pursue a dedicated economic victory."
+    },
+    {
+      "id": "trade",
+      "icon": "market",
+      "title": "Real trade routes",
+      "text": "Connect trading partners with trains, container ships and oil tankers. Cargo deliveries grow your national income."
+    },
+    {
+      "id": "diplomacy",
+      "icon": "diplomacy",
+      "title": "Diplomacy has consequences",
+      "text": "Negotiate peace, trade agreements, right of way and shared vision. Form coalitions, declare war or impose an embargo."
+    },
+    {
+      "id": "guard",
+      "icon": "stop",
+      "title": "Guard your nation",
+      "text": "Use Guard mode for automated defence while you are away. Online matches also give absent nations an AI caretaker."
+    },
+    {
+      "id": "cities",
+      "icon": "city",
+      "title": "Build your nation's future",
+      "text": "Develop cities and provinces with factories, airbases, naval bases, hospitals, support depots, bunkers and railway stations."
+    },
+    {
+      "id": "online",
+      "icon": "provinces",
+      "title": "Persistent online play",
+      "text": "Join 2-player Russia vs Ukraine with your commander account. The server runs the match, remembers your nation and enforces fog of war."
+    },
+    {
+      "id": "combat",
+      "icon": "patrol",
+      "title": "A deeper battlefield",
+      "text": "Use ranged artillery, air patrols, layered air defence, radar, stealth, entrenchment, retreat and strategic missile weapons."
+    },
+    {
+      "id": "victory",
+      "icon": "gold",
+      "title": "Choose your route to victory",
+      "text": "Compete through domination, economic strength, elimination or victory points. Your strategy can reach beyond conquest."
+    },
+    {
+      "id": "reports",
+      "icon": "more",
+      "title": "Know what happens",
+      "text": "Read the war newspaper, battle and Guard reports, track army details and respond to attack alerts."
+    },
+    {
+      "id": "commander",
+      "icon": "chevrons",
+      "title": "Grow as a commander",
+      "text": "Follow achievements, medals, ranks and account progression. Six interface languages and a first-play tutorial help you get started."
+    }
+  ],
+  "updates": [
+    {
+      "date": "14 OCT 2026",
+      "title": "The browser front is open",
+      "text": "Play the current Russia–Ukraine campaign in your browser, or sign in to join the online match."
+    },
+    {
+      "date": "14 OCT 2026",
+      "title": "One command centre",
+      "text": "A consistent home across the website, app and game, with campaign access, feature details and music controls in the lobby."
+    }
+  ],
+  "roadmap": "Larger Europe and world scenarios are in development. The current playable campaign is Russia–Ukraine."
+}
