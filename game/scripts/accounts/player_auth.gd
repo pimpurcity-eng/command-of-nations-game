@@ -284,6 +284,35 @@ func record_result(won: bool,minutes: int,destroyed: int=0,lost: int=0,provinces
 	var rows: Variant=result.data.get("rows",[])
 	if rows is Array and not rows.is_empty():profile.merge(rows[0],true)
 	return {"ok":true,"data":profile}
+## Finishing the training match grants 10 XP once per commander (migration 006). The Europe
+## map requires TRAINING_XP, so a finished-but-unclaimed training is kept on the phone and
+## claimed on the next sign-in (claim_pending_training).
+const TRAINING_XP: = 10
+const TRAINING_FLAG: = "user://training_reward.cfg"
+static func training_finished_locally() -> bool:
+	var file: = ConfigFile.new()
+	return file.load(TRAINING_FLAG) == OK and bool(file.get_value("training", "finished", false))
+static func training_claimed_locally() -> bool:
+	var file: = ConfigFile.new()
+	return file.load(TRAINING_FLAG) == OK and bool(file.get_value("training", "claimed", false))
+static func _set_training_flag(key: String) -> void:
+	var file: = ConfigFile.new()
+	file.load(TRAINING_FLAG)
+	file.set_value("training", key, true)
+	file.save(TRAINING_FLAG)
+## Called when the training ends. Returns {"ok", "granted", "xp"} or a failure that keeps it pending.
+func complete_training() -> Dictionary:
+	_set_training_flag("finished")
+	if not signed_in(): return failure("Sign in to collect your %d XP." % TRAINING_XP)
+	var result:=await request("/rest/v1/rpc/complete_training",{},HTTPClient.METHOD_POST,access_token)
+	if not result.ok: return result
+	_set_training_flag("claimed")
+	var rows: Variant=result.data.get("rows",[])
+	var row: Dictionary = rows[0] if rows is Array and not rows.is_empty() else {}
+	if not row.is_empty(): profile.merge({"xp": row.get("xp", profile.get("xp", 0))}, true)
+	return {"ok": true, "granted": bool(row.get("granted", false)), "xp": int(row.get("xp", profile.get("xp", 0)))}
+func claim_pending_training() -> void:
+	if signed_in() and training_finished_locally() and not training_claimed_locally(): await complete_training()
 ## Achievements go to the account (server accepts known ids once each, migration 003).
 func unlock_achievement(code: String) -> Dictionary:
 	if not signed_in():return failure("Sign in first.")

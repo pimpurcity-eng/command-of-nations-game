@@ -7,13 +7,25 @@ const SUPPLY_VIDEO := "res://assets/cinematics/training_supply.ogv"
 const MIN_PLAY_SECONDS := 300.0
 const MAX_PLAY_SECONDS := 600.0
 const STARTING_FORCES := {
-	"russia": {"tanks": 5, "infantry": 4, "artillery": 2, "skyguard": 2, "drones": 2, "yak130": 1},
+	"russia": {"tanks": 6, "infantry": 4, "artillery": 2, "skyguard": 2, "drones": 3, "yak130": 2, "missiles": 2},
 	"ukraine": {"tanks": 3, "infantry": 4, "artillery": 1, "skyguard": 1, "drones": 2, "hawk_t2": 1},
+}
+## Where each family starts (owner 2026-10-17): identical units share one stack instead of being
+## spread across every city; infantry stays as single units. Russia's 6-tank column waits on the
+## Russian side of the border west of Belgorod, facing Ukraine, with drones and missiles behind it. Each entry: [family, place, count]
+## where place is a city id or [longitude, latitude] for a field position (snapped to a road).
+const FORMATIONS := {
+	"russia": [["tanks", [36.0, 50.55], 6], ["drones", "belgorod", 3], ["missiles", "belgorod", 2],
+		["artillery", "belgorod", 2], ["infantry", "belgorod", 2], ["infantry", "kursk", 2],
+		["skyguard", "kursk", 2], ["yak130", "kursk", 2]],
+	"ukraine": [["tanks", "kharkiv", 3], ["artillery", "kharkiv", 1], ["infantry", "kharkiv", 2],
+		["infantry", "kyiv", 2], ["skyguard", "kyiv", 1], ["drones", "kyiv", 2], ["hawk_t2", "kyiv", 1]],
 }
 ## Scenario balance, not a historical GDP ratio. The bonus follows the controlling country.
 const INCOME_FACTORS := {"russia": 1.5, "ukraine": 1.0}
 const AID_LOADS := {
-	"odesa": {"donor": "America", "mode": "sea", "equipment": {"tanks": 1, "artillery": 1, "skyguard": 1, "drones": 1, "fighters": 1}, "resources": {"funds": 25000.0, "materials": 12000.0, "fuel": 9000.0, "electronics": 5000.0, "food": 8000.0}},
+	# Owner 2026-10-17: five on the ship, "mainly tanks", one of them a plane; five on the train.
+	"odesa": {"donor": "America", "mode": "sea", "equipment": {"tanks": 4, "fighters": 1},"resources": {"funds": 25000.0, "materials": 12000.0, "fuel": 9000.0, "electronics": 5000.0, "food": 8000.0}},
 	"lviv": {"donor": "Europe", "mode": "rail", "equipment": {"tanks": 2, "artillery": 1, "skyguard": 1, "drones": 1}, "resources": {"funds": 15000.0}},
 }
 const AMERICAN_HARDWARE := {
@@ -23,7 +35,7 @@ const AMERICAN_HARDWARE := {
 	"drones": ["MQ-9A Reaper", "usa_mq9a_reaper"],
 	"fighters": ["F-16AM Fighting Falcon", "euro_f16am_belgium"],
 }
-const PHASES := ["choice", "opening", "basics", "features", "practice", "supply_video", "logistics", "free"]
+const PHASES := ["choice", "opening", "side", "basics", "features", "practice", "supply_video", "logistics", "reward", "free"]
 
 static func aid_equipment(destination: String, family: String) -> String:
 	return "aid_american_%s_ukraine" % family if destination == "odesa" else family + "_ukraine"
@@ -50,7 +62,7 @@ static func ensure_supplied_equipment() -> void:
 		EquipmentIdentity.supplied_catalog[id] = spec
 
 static func initial_state() -> Dictionary:
-	return {"version": 1, "phase": "choice", "route": "full", "step": 0, "active_seconds": 0.0, "aid_received": [], "aid_pending": [], "aid_requested": [], "aid_unload_requested": false, "actions": {}, "video_position": 0.0}
+	return {"version": 1, "phase": "opening", "players": 1, "route": "full", "step": 0, "active_seconds": 0.0, "aid_received": [], "aid_pending": [], "aid_requested": [], "aid_unload_requested": false, "actions": {}, "video_position": 0.0}
 
 static func valid_state(value: Variant) -> bool:
 	if not value is Dictionary: return false
@@ -63,6 +75,7 @@ static func valid_state(value: Variant) -> bool:
 	var video_position = value.get("video_position", 0.0)
 	if not (video_position is int or video_position is float) or not is_finite(float(video_position)) or video_position < 0 or video_position > 3600: return false
 	if not value.get("aid_unload_requested", false) is bool: return false
+	if value.get("players", 1) not in [1, 2]: return false
 	var actions = value.get("actions", {})
 	if not actions is Dictionary or actions.size() > 32: return false
 	for key in actions:
@@ -94,12 +107,20 @@ static func prepare(game: Node) -> void:
 				game.buildings.levels[home.id][facility] = 1
 		for resource in ProductionSystem.RESOURCES:
 			game.production.stockpiles[country][resource] *= 1.5 if country == "russia" else 1.0
-		var count := 0
-		for family in STARTING_FORCES[country]:
-			for number in int(STARTING_FORCES[country][family]):
-				var home: Dictionary = homes[count % homes.size()]
-				_spawn(game, "%s_%s" % [family, country], home, "training_%s_%s_%d" % [country, family, number])
-				count += 1
+		var numbers := {}
+		for entry in FORMATIONS[country]:
+			var family: String = entry[0]
+			var place = entry[1]
+			var city: Dictionary = game.buildings.city(place) if place is String else _nearest_city(homes, place)
+			if city.is_empty(): city = capital
+			var point: Vector2 = city.point if place is String else GeographicProjection.project(place[0], place[1])
+			for _i in int(entry[2]):
+				var number: int = numbers.get(family, 0)
+				numbers[family] = number + 1
+				var id := "training_%s_%s_%d" % [country, family, number]
+				# Infantry are separate armies; every other family shares one stack per place.
+				var stack := id if family == "infantry" else "training_%s_%s_%s" % [country, family, str(place) if place is String else "field"]
+				_spawn(game, "%s_%s" % [family, country], city, id, point, stack)
 	for id in ["lviv", "kyiv"]:
 		if game.buildings.levels.has(id): game.buildings.levels[id].train_station = 1
 	if game.buildings.levels.has("odesa"): game.buildings.levels.odesa.naval_base = 1
@@ -114,15 +135,30 @@ static func prepare(game: Node) -> void:
 	game.units.command_ids.clear()
 	game.hud.clear_unit_selection()
 
-static func _spawn(game: Node, equipment: String, city: Dictionary, id: String) -> void:
+static func _nearest_city(cities: Array, lon_lat: Array) -> Dictionary:
+	var target := GeographicProjection.project(lon_lat[0], lon_lat[1])
+	var best: Dictionary = {}
+	for city in cities:
+		if best.is_empty() or (city.point as Vector2).distance_to(target) < (best.point as Vector2).distance_to(target): best = city
+	return best
+
+## city is the unit's home/base (aircraft refuel there); point is where it stands on the map.
+static func _spawn(game: Node, equipment: String, city: Dictionary, id: String, point = null, stack: String = "") -> void:
 	if not game.units.find_id(id).is_empty(): return
 	var spec := EquipmentIdentity.spec(equipment)
 	if spec.is_empty():
 		push_error("Unknown training equipment: " + equipment)
 		return
-	var data := {"id": id, "name": EquipmentIdentity.research_title(equipment, 1), "country": spec.country, "equipment_id": equipment, "visual_kind": spec.visual_kind, "level": 1, "base_city": city.id, "flight_mode": "grounded", "stack_id": "training_ad_" + city.id if spec.visual_kind == "air_defense" else "training_ground_" + city.id}
-	if spec.visual_kind == "fighter": data.stack_id = id
-	game.units._spawn(data, city.point, Color("ef827c") if spec.country == "russia" else Color("73bcff"))
+	if stack.is_empty(): stack = id if spec.visual_kind == "infantry" else "training_%s_%s" % [equipment, city.id]
+	var data := {"id": id, "name": EquipmentIdentity.research_title(equipment, 1), "country": spec.country, "equipment_id": equipment, "visual_kind": spec.visual_kind, "level": 1, "base_city": city.id, "flight_mode": "grounded", "stack_id": stack}
+	# Aircraft stand on their airbase and stack only with the same type at the same base.
+	var stand: Vector2 = city.point if point == null or spec.visual_kind == "fighter" else point
+	game.units._spawn(data, stand, Color("ef827c") if spec.country == "russia" else Color("73bcff"))
+	# A field position (the border column) stays exactly where it was placed instead of being
+	# drawn back to the nearest city's roads.
+	if point != null and spec.visual_kind != "fighter" and (point as Vector2).distance_to(city.point) > UnitSystem.CITY_RADIUS:
+		var unit: Dictionary = game.units.find_id(id)
+		if not unit.is_empty(): unit.node.position = game.units.footprint_ground(point)
 
 ## Called only when the supply cinematic ends (or the player explicitly skips it).
 ## Aid is never income for economic victory, and reloading cannot deliver it twice.

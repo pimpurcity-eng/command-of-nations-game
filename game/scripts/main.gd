@@ -1,6 +1,8 @@
 extends Node3D
 signal boot_progress(completed: int, total: int)
 signal boot_ready
+## The training match ended (owner 2026-10-17); players is 1 or 2 as chosen in the games menu.
+signal training_completed(players: int)
 var boot_finished: bool = false
 var match_started_msec := 0
 var account_panel: AccountPanel
@@ -1453,6 +1455,8 @@ func refresh_home_commander() -> void:
 	if mobile_start == null or account_panel == null: return
 	var name_text: String = str(account_panel.auth.user.get("user_metadata", {}).get("commander_name", "Commander"))
 	mobile_start.set_commander(name_text, account_panel.auth.signed_in())
+	# A training finished while signed out is claimed (10 XP, once) at the next sign-in.
+	account_panel.auth.claim_pending_training()
 
 ## Alliance operations (owner 2026-10-15): one tap joins the posted match on the posted side.
 func join_operation(code: String, side: String) -> void:
@@ -1521,9 +1525,12 @@ func _attach_training() -> void:
 	training_match = TrainingMatch.new()
 	add_child(training_match)
 	training_match.setup(self, hud.get_child(0).theme)
-	match_rules.ai_enabled = session.training.phase == "free"
+	training_match.training_finished.connect(func(players: int): training_completed.emit(players))
+	match_rules.ai_enabled = session.training.phase == "free" and int(session.training.get("players", 1)) == 1
 
-func start_training(resume: bool = false) -> void:
+## players: 1 = the computer takes the other side after the training; 2 = a second commander
+## does (the games menu passes the choice). The side itself is chosen after the opening film.
+func start_training(resume: bool = false, players: int = 1) -> void:
 	if MatchClient.active != null:
 		mobile_start.cancel_loading("Leave the online match before starting local training")
 		return
@@ -1539,12 +1546,13 @@ func start_training(resume: bool = false) -> void:
 		GameSession.player_country = chosen_country
 		GameSession.weapons_test = false
 		TrainingScenario.prepare(self)
+		session.training.players = clampi(players, 1, 2)
 		_attach_training()
 	apply_player_country()
 	mobile_start.hide()
 	paused_to_home = false
 	match_started_msec = Time.get_ticks_msec()
-	clock.paused = session.training.phase in ["choice", "opening", "supply_video"]
+	clock.paused = session.training.phase in ["choice", "opening", "side", "supply_video", "reward"]
 	if session.training.phase not in ["opening", "supply_video"]: audio.play_music("battle_theme")
 	refresh_hud()
 	autosave()

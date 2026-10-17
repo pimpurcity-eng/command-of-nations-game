@@ -34,6 +34,11 @@ func _vehicle(id: String) -> Node3D:
 		point = GeographicProjection.project(city.naval_spawn.longitude, city.naval_spawn.latitude)
 	node.position = Vector3(point.x, 0.08, point.y) if sea else game.map.position_at(point) + Vector3(0.15, 0.03, 0.15)
 	if not sea:
+		# The train waits at the station on Lviv's western edge, in the open, not among the
+		# city blocks (owner 2026-10-17: the train has to be seen coming in).
+		var towards_border: Vector2 = (GeographicProjection.project(23.9, 50.2) - point).normalized()
+		node.position = game.map.position_at(point + towards_border * 1.25) + Vector3(0, 0.03, 0)
+	if not sea:
 		var border := GeographicProjection.project(23.9, 50.2)
 		node.rotation.y = atan2(point.x - border.x, point.y - border.y)
 	var model_path := "res://assets/library/transport/civil_container_t1_feeder.glb" if sea else "res://assets/library/transport/train_diesel_locomotive.glb"
@@ -66,8 +71,10 @@ func _vehicle(id: String) -> Node3D:
 	var label := Label3D.new()
 	label.name = "Manifest"
 	label.position.y = 1.2
-	label.font_size = 28
-	label.pixel_size = 0.0015
+	label.font_size = 44
+	label.outline_size = 12
+	label.outline_modulate = Color(0, 0, 0, 0.85)
+	label.pixel_size = 0.0022
 	label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	label.no_depth_test = true
 	label.modulate = Color("ffe0a0")
@@ -96,6 +103,28 @@ func _box(parent: Node3D, size: Vector3, position: Vector3, color: Color) -> voi
 	material.albedo_color = color
 	mesh.material_override = material
 	parent.add_child(mesh)
+
+## The arrival itself (owner 2026-10-17: "I still want the train coming in and the boat"):
+## the ship sails in from the open sea to Odesa, the train rolls from the Polish border to Lviv.
+func arrive(id: String, seconds: float = 6.0) -> void:
+	refresh()
+	if not vehicles.has(id): return
+	var vehicle: Node3D = vehicles[id]
+	var berth: Vector3 = vehicle.position
+	var start: Vector3
+	if id == "odesa":
+		start = berth + Vector3(1.6, 0.0, 3.4)
+	else:
+		var border := GeographicProjection.project(23.9, 50.2)
+		start = game.map.position_at(border) + Vector3(0, 0.03, 0)
+	var heading := Vector2(berth.x - start.x, berth.z - start.z)
+	if heading.length() > 0.01: vehicle.rotation.y = atan2(heading.x, heading.y)
+	vehicle.position = start
+	var tween := vehicle.create_tween()
+	tween.tween_property(vehicle, "position", berth, seconds).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	# Keep the camera on the vehicle while it comes in.
+	tween.parallel().tween_method(func(_v: float):
+		if game != null and game.rig != null: game.rig.target = vehicle.position, 0.0, 1.0, seconds)
 
 func focus(id: String) -> void:
 	if not vehicles.has(id): return
