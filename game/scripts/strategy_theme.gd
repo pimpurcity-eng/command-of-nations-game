@@ -13,11 +13,25 @@ static func surface(name: String, margin: float = 12.0) -> StyleBoxFlat:
 
 ## Consistent scalable typography; included fonts use SIL Open Font License.
 static var _fonts: Dictionary = {}
+## Symbols the text fonts lack (▶ ★ → ✓ ✕ ▲ ▼ …): phone browsers have no system fonts to
+## fill them in, so they showed as empty boxes (owner 2026-10-17). A 16 KB DejaVu subset
+## (assets/fonts/Symbols.ttf, LICENSE-DejaVu.txt) is the fallback of every game font.
+static var _symbols_ready: = false
+static func ensure_symbols() -> void:
+	if _symbols_ready: return
+	_symbols_ready = true
+	var symbols: Font = load("res://assets/fonts/Symbols.ttf")
+	if symbols == null: return
+	for family in ["RobotoCondensed", "Oswald"]:
+		var base: Font = load("res://assets/fonts/" + family + ".ttf")
+		if base != null and symbols not in base.fallbacks: base.fallbacks = base.fallbacks + [symbols]
 static func font(family: String, weight: int) -> Font:
+	ensure_symbols()
 	var key: = family + str(weight)
 	if not _fonts.has(key):
 		var variation: = FontVariation.new()
 		variation.base_font = load("res://assets/fonts/" + family + ".ttf")
+		variation.fallbacks = [load("res://assets/fonts/Symbols.ttf")]
 		variation.variation_opentype = {TextServerManager.get_primary_interface().name_to_tag("wght"): weight}
 		_fonts[key] = variation
 	return _fonts[key]

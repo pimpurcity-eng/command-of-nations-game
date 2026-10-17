@@ -78,7 +78,9 @@ var paused_kind := ""
 
 static func _font(weight: int, spacing: int = 0) -> FontVariation:
 	var f := FontVariation.new()
+	StrategyTheme.ensure_symbols()
 	f.base_font = load("res://assets/fonts/Oswald.ttf")
+	f.fallbacks = [load("res://assets/fonts/Symbols.ttf")]
 	f.variation_embolden = clampf((weight - 400) / 300.0, 0, 1) * 0.9
 	f.spacing_glyph = spacing
 	return f

@@ -43,7 +43,7 @@ func _ready() -> void:
 	fields.add_theme_constant_override("separation", 16)
 	scroll.add_child(fields)
 	var theme := Theme.new()
-	theme.default_font = load("res://assets/fonts/RobotoCondensed.ttf")
+	theme.default_font = (func(): StrategyTheme.ensure_symbols(); return load("res://assets/fonts/RobotoCondensed.ttf")).call()
 	theme.default_font_size = 28
 	var style := StyleBoxFlat.new()
 	style.bg_color = Color("172a35")

@@ -17,7 +17,7 @@ func _ready() -> void:
 	var shade:=ColorRect.new();shade.color=Color(0.02,0.04,0.07,0.96);shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);overlay.add_child(shade)
 	var scroll:=ScrollContainer.new();scroll.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);scroll.offset_left=32;scroll.offset_right=-32;scroll.offset_top=60;scroll.offset_bottom=-40;overlay.add_child(scroll)
 	fields=VBoxContainer.new();fields.size_flags_horizontal=Control.SIZE_EXPAND_FILL;fields.add_theme_constant_override("separation",18);scroll.add_child(fields)
-	var theme:=Theme.new();theme.default_font=load("res://assets/fonts/RobotoCondensed.ttf");theme.default_font_size=28
+	var theme:=Theme.new();theme.default_font=(func(): StrategyTheme.ensure_symbols(); return load("res://assets/fonts/RobotoCondensed.ttf")).call();theme.default_font_size=28
 	var style:=StyleBoxFlat.new();style.bg_color=Color("172a35");style.set_corner_radius_all(18);style.content_margin_left=20;style.content_margin_right=20;style.content_margin_top=16;style.content_margin_bottom=16
 	for state in ["normal","hover","pressed","disabled"]:theme.set_stylebox(state,"Button",style)
 	theme.set_stylebox("normal","LineEdit",style);theme.set_color("font_color","Button",Color("f0dec1"));fields.theme=theme

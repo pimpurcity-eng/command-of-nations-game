@@ -156,7 +156,15 @@ func next_step() -> void:
 		if state.phase == "basics":
 			start_supply_movie()
 			return
-		elif state.phase == "logistics": state.phase = "features"
+		elif state.phase == "logistics":
+			state.phase = "features"
+			# The feature lessons are about the player's own country: leave the aid terminals
+			# (Odesa/Lviv) and return to the player's capital (Moscow for Russia, Kyiv for Ukraine).
+			var capital: Dictionary = game.buildings.capital(GameSession.player_country)
+			if not capital.is_empty():
+				game.rig.target = game.map.position_at(capital.point)
+				game.rig.distance = 12.0
+				game.rig._snap(1.0)
 		else:
 			state.phase = "reward"
 	show_step()
