@@ -299,6 +299,7 @@ func _ready() -> void :
 	badges.badge_clicked.connect(func(index: int):
 		if index < 0 or index >= units.units.size(): return
 		var tapped: Dictionary = units.units[index]
+		if is_instance_valid(training_match) and not order_mode and training_match.prefer_city_for_unit(tapped): return
 		if attack_order:
 			_attack_army(tapped)
 			return
@@ -655,6 +656,7 @@ func _browser_visible(_arguments: Array) -> void :
 	refresh_hud()
 func _map_click(screen: Vector2, order: bool) -> void :
 	if training_match != null and not (order or order_mode or attack_order or patrol_order or selecting_armies):
+		if training_match.pick_lesson_target(screen): return
 		if training_match.pick_supply(screen): return
 	if selecting_armies:
 		# City hubs are destinations even when a garrison overlaps their model.
@@ -891,6 +893,8 @@ func player_order(destination: Vector3) -> void :
 		_draw_waypoints_now()
 		return
 	if accepted:
+		# Owner 2026-10-17: a successful tutorial order counts before its selection closes.
+		if is_instance_valid(training_match): training_match.order_accepted()
 		hud.unit_moving = true
 		# Movement sound by unit type (owner 2026-10-13): tracks, wheels or jet engines. Owner
 		# 2026-10-16: "Take the horse racing sound out of the game" - the marching boots are gone.
@@ -1440,7 +1444,7 @@ func resume_paused_match() -> void:
 	paused_to_home = false
 	mobile_start.hide()
 	audio.play_music("battle_theme")
-	clock.paused = not session.training.is_empty() and session.training.phase in ["choice", "opening", "supply_video"]
+	clock.paused = not session.training.is_empty() and session.training.phase in ["choice", "opening", "side", "supply_video", "reward"]
 	refresh_hud()
 
 func return_to_home() -> void:
@@ -1547,6 +1551,16 @@ func start_training(resume: bool = false, players: int = 1) -> void:
 	if MatchClient.active != null:
 		mobile_start.cancel_loading("Leave the online match before starting local training")
 		return
+	# Owner 2026-10-17: a menu or unfinished Move from the previous game must not swallow
+	# the first lesson's city tap or leave the coach hidden behind an old full-screen panel.
+	for key in ["city_panel", "province_panel", "research_panel", "production_panel", "campaign_panel", "trade_panel", "exchange_panel", "weapon_showcase", "army_selection", "army_command", "stack_dialog", "fire_panel", "guard_popup", "result_dialog"]:
+		var menu = get(key)
+		if is_instance_valid(menu): menu.hide()
+	if is_instance_valid(research_panel.unit_card): research_panel.unit_card.hide()
+	clear_army_selection()
+	_set_order_mode(false)
+	_tap_cycle = {}
+	combat_effects.clear()
 	if is_instance_valid(tutorial): tutorial.queue_free(); tutorial = null
 	var chosen_country := mobile_start.selected_country()
 	if resume:
@@ -1555,10 +1569,17 @@ func start_training(resume: bool = false, players: int = 1) -> void:
 			return
 	else:
 		_clear_training()
-		session.restore(_campaign_initial_state, clock, map, units, rig)
+		# Owner 2026-10-17: do not rebuild the whole campaign army only to delete it below.
+		var baseline := _campaign_initial_state.duplicate(true)
+		baseline.units = []
+		session.restore(baseline, clock, map, units, rig)
+		if UnitSystem.mobile_device():
+			mobile_start.set_progress(0, "Preparing training")
+			# Release the old models before allocating the tutorial force on a phone.
+			await get_tree().process_frame
 		GameSession.player_country = chosen_country
 		GameSession.weapons_test = false
-		TrainingScenario.prepare(self)
+		await TrainingScenario.prepare(self, UnitSystem.mobile_device())
 		session.training.players = clampi(players, 1, 2)
 		_attach_training()
 	apply_player_country()

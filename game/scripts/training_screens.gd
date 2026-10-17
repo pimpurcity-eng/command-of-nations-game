@@ -112,7 +112,8 @@ static func side_picker(parent: Control, current: String, on_start: Callable) ->
 				state.country = id
 				refresh.call())
 		column.add_child(card)
-	column.add_child(text("How much training?", 34, TEXT, 700))
+	column.add_child(text("Two sections. Choose your start.", 34, TEXT, 700))
+	column.add_child(text("1 · Basic controls — optional\n2 · Warfront features — required for everyone", 27, SOFT, 600))
 	var modes := HBoxContainer.new()
 	modes.add_theme_constant_override("separation", 14)
 	column.add_child(modes)
@@ -136,7 +137,7 @@ static func side_picker(parent: Control, current: String, on_start: Callable) ->
 			pair[0].add_theme_color_override("font_pressed_color", CowUI.GOLD if pair[1] else Color.WHITE)
 			pair[0].add_theme_color_override("font_hover_pressed_color", CowUI.GOLD if pair[1] else Color.WHITE)
 			pair[0].text = ("✓  " if pair[1] else "") + ("FULL TRAINING" if pair[0] == full else "SKIP THE BASICS")
-		hint.text = "New to strategy games: 8 quick hands-on lessons first." if value else "Played games like this before? Go straight to what's new in Warfront Mandate."
+		hint.text = "Start with the basic controls, then watch the supply arrival and learn Warfront's features." if value else "Skip city taps and basic orders. Watch the supply arrival, then learn the required Warfront features."
 	full.pressed.connect(pick_mode.bind(true))
 	quick.pressed.connect(pick_mode.bind(false))
 	pick_mode.call(true)

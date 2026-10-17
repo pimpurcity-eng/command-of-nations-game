@@ -2,8 +2,8 @@ class_name TrainingMatch
 extends CanvasLayer
 ## The training match (owner 2026-10-17: "take what we got there and make it 10 times better").
 ## Flow: opening film → choose a side and how much training → the basics (optional for
-## experienced players) → what only Warfront Mandate has (everyone) → the supply film → the
-## ship docks at Odesa and the train rolls into Lviv, unload both → +10 XP (unlocks the Europe
+## experienced players) → the supply film → ship at Odesa and train at Lviv → the required
+## Warfront systems (everyone), including unloading both → +10 XP (unlocks the Europe
 ## map) → the match carries on with 1 or 2 players, as chosen in the games menu.
 ## Every lesson completes from the real action in the real game, never from tapping Next.
 signal training_finished(players: int)
@@ -19,11 +19,15 @@ const BASICS := [
 	["build", "GROW YOUR ECONOMY", "Open a city and queue a building, such as Industry."],
 ]
 const FEATURES := [
-	["trade", "REAL CARGO, REAL ROUTES", "Open TRADE. Every shipment really travels by train, ship or plane, and it can be attacked on the way."],
-	["world_prices", "THE TRANSPORT MARKET", "Open the Transport market tab. Compare world prices and how much each route can carry."],
-	["guard", "SLEEP DEFENCE", "Tap GUARD. While you're away, the AI defends your cities and land. It never attacks."],
-	["victory", "WIN WITH YOUR ECONOMY", "Open Victory progress. A strong economy can win this war, not only armies."],
-	["diplomacy", "DIPLOMACY", "Open Diplomacy to see alliances, relations and resources you can send to friends."],
+	["guard", "SLEEP DEFENCE", "Turn GUARD on. Its AI defends your country while you are away, without starting an offensive. Online AI takeover after 48 hours inactive is a separate system."],
+	["economy", "BUILD YOUR ECONOMY", "Open your capital and queue Industry. It raises productive income. Check the resource income and upkeep before expanding your army."],
+	["trade", "REAL CARGO, REAL ROUTES", "Open TRADE and choose a resource on an available neutral trade route. Opening the menu is not enough: create the route. Its trains or ships carry real, vulnerable cargo."],
+	["transport", "BIGGER TERMINALS, MORE CARGO", "Open your capital and queue a Train Station upgrade. Higher terminal levels carry more cargo; friendly railway provinces let ground armies move twice as fast."],
+	["world_prices", "WEAPONS AND WORLD PRICES", "Open Transport market. In WORLD PRICES, choose a weapon and inspect its minimum price. Demand changes prices; AI countries can also trade. Infantry and strategic weapons cannot be sold."],
+	["victory", "WIN WITH YOUR ECONOMY", "Open Victory progress and read the Economic target: grow productive income, maintain the required treasury and keep your capital. Imported aid alone does not count as earned income."],
+	["diplomacy", "TRADE ACCESS AND ALLIES", "Open Diplomacy. Trade deals, right of way and shared vision connect allies and their supply lines. Resources can support other countries."],
+	["reports", "KNOW WHAT HAPPENED", "Open Battle reports. Check fights, losses and defences when you return, then use the newspaper to follow the wider war."],
+	["guard_resume", "TAKE BACK COMMAND", "Turn GUARD off before continuing the match. You now know how to enable sleep defence and take control again."],
 ]
 const LOGISTICS := [
 	["inspect_ship", "THE SHIP HAS DOCKED", {"ukraine": "America sent four Abrams tanks and an F-16 to Odesa. Tap the ship to see the cargo.", "russia": "Western aid has reached Odesa. Tap the ship to see what Ukraine is getting."}],
@@ -31,9 +35,10 @@ const LOGISTICS := [
 	["inspect_train", "THE TRAIN IS IN", {"ukraine": "Europe sent five more units to Lviv by rail. Tap the train.", "russia": "A European train has reached Lviv. Tap it to see what's aboard."}],
 	["unload_train", "UNLOAD THE TRAIN", {"ukraine": "Unload the train. Its units stand ready at Lviv.", "russia": "Watch Ukraine unload the train at Lviv."}],
 	["reinforcements", "SEND THEM TO THE FRONT", {"ukraine": "Select one of your new tank stacks and move it toward the front.", "russia": "Move your tank column before the aid reaches the front."}],
-	["next", "PROTECT YOUR SUPPLY LINES", "Ports and stations bring in aid and trade. Hold them, and hit the enemy's."],
+	["next", "PROTECT YOUR SUPPLY LINES", "Ports and stations bring in aid and trade. Hold them, and hit the enemy's. Next: the required Warfront feature training."],
 ]
-const CHAPTERS := {"basics": "BASIC TRAINING", "features": "ONLY IN WARFRONT MANDATE", "logistics": "AID ARRIVES"}
+const CHAPTERS := {"basics": "1 · OPTIONAL BASICS", "features": "2 · WARFRONT FEATURES", "logistics": "2 · AID ARRIVES"}
+const CITY_ACTIONS := ["city", "build", "produce", "economy", "transport"]
 
 var game: Node
 var root: Control
@@ -54,6 +59,7 @@ var _menu_hint: PanelContainer
 var _complete_delay := 0.0
 var _shown_key := ""
 var _target_on_map := false
+var _menu_glow: Panel
 
 func setup(main: Node, theme: Theme) -> void:
 	game = main
@@ -68,11 +74,21 @@ func setup(main: Node, theme: Theme) -> void:
 	coach.build(theme)
 	card = coach.card
 	coach.show_me.connect(focus_objective)
+	coach.target_pressed.connect(_tap_lesson_target)
 	coach.continue_pressed.connect(next_step)
 	coach.skip_pressed.connect(skip_lessons)
 	var state: Dictionary = game.session.training
 	if not state.has("actions"): state.actions = {}
 	if not state.has("players"): state.players = 1
+	# Owner 2026-10-17: older saves credited opening a panel as doing a trade. Re-teach those
+	# unfinished feature chapters with real actions while preserving delivered aid and armies.
+	if int(state.get("lesson_revision", 1)) < 2:
+		for action in FEATURES: state.actions.erase("features:" + str(action[0]))
+		if state.phase == "features":
+			state.phase = "supply_video" if state.aid_received.is_empty() and state.aid_pending.is_empty() else "features"
+			state.step = 0
+			state.video_position = 0.0
+		state.lesson_revision = 2
 	# Saves from the earlier training layout resume at the matching point of this one.
 	if state.phase == "choice": state.phase = "opening"
 	if state.phase == "practice": state.phase = "supply_video"
@@ -89,9 +105,7 @@ func begin(route: String) -> void:
 		game.session.training.phase = "opening"
 		play_movie(true)
 	elif route == "features":
-		game.session.training.phase = "features"
-		game.clock.paused = false
-		show_step()
+		start_supply_movie()
 	else:
 		TrainingScenario.release_aid(game, true)
 		free_play()
@@ -116,16 +130,19 @@ func show_step() -> void:
 		var index := clampi(int(state.step), 0, steps.size() - 1)
 		var entry: Array = steps[index]
 		var is_info: bool = entry[0] == "next"
-		var main := ("FINISH TRAINING" if phase == "logistics" and index == steps.size() - 1 else "CONTINUE") if is_info else ""
+		var main := "CONTINUE" if is_info else ""
 		var skip := "Skip the basics  ›" if phase == "basics" else ""
-		coach.present(CHAPTERS[phase], index, steps.size(), entry[1], _text_for(entry), main, not is_info, skip)
+		var progress_index := index + (LOGISTICS.size() if phase == "features" else 0)
+		var progress_total := steps.size() if phase == "basics" else LOGISTICS.size() + FEATURES.size()
+		coach.present(CHAPTERS[phase], progress_index, progress_total, entry[1], _text_for(entry), main, not is_info, skip)
 		_shown_key = phase + ":" + str(index)
 		if phase == "logistics" and entry[0] == "inspect_train" and not state.actions.get("train_arrived", false):
 			state.actions["train_arrived"] = true
 			_ensure_supplies()
 			supplies.arrive("lviv")
 			supplies.focus("lviv")
-		if phase == "basics" and index == 0: focus_objective()
+		if phase == "basics" and entry[0] in ["select", "city", "move", "patrol"]:
+			focus_objective()
 	game.autosave()
 
 func next_step() -> void:
@@ -136,10 +153,10 @@ func next_step() -> void:
 	state.step += 1
 	if state.step >= steps.size():
 		state.step = 0
-		if state.phase == "basics": state.phase = "features"
-		elif state.phase == "features":
+		if state.phase == "basics":
 			start_supply_movie()
 			return
+		elif state.phase == "logistics": state.phase = "features"
 		else:
 			state.phase = "reward"
 	show_step()
@@ -148,13 +165,7 @@ func next_step() -> void:
 ## the new features and the aid arrival are for everyone).
 func skip_lessons() -> void:
 	var state: Dictionary = game.session.training
-	if state.phase == "choice" or state.phase == "side":
-		begin("skip")
-	elif state.phase == "basics":
-		state.phase = "features"
-		state.step = 0
-		game.clock.paused = false
-		show_step()
+	if state.phase == "basics": start_supply_movie()
 
 func advance_training(real_seconds: float) -> void:
 	var state: Dictionary = game.session.training
@@ -172,8 +183,8 @@ func play_movie(opening: bool) -> void:
 	if is_instance_valid(cinema): cinema.queue_free()
 	cinema = TrainingCinema.new()
 	root.add_child(cinema)
-	cinema.setup("opening" if opening else "supply", TrainingScenario.OPENING_VIDEO if opening else TrainingScenario.SUPPLY_VIDEO, float(game.session.training.get("video_position", 0.0)), GameAudio.sound_enabled)
 	cinema.finished.connect(movie_finished, CONNECT_ONE_SHOT)
+	cinema.setup("opening" if opening else "supply", TrainingScenario.OPENING_VIDEO if opening else TrainingScenario.SUPPLY_VIDEO, float(game.session.training.get("video_position", 0.0)), GameAudio.sound_enabled)
 	_previous_music = GameAudio.music_enabled
 	if game.audio != null: game.audio.pause_music_for_cinematic(true)
 	game.autosave()
@@ -226,12 +237,13 @@ func choose_side(country: String, full_training: bool) -> void:
 	game.hud.clear_unit_selection()
 	var state: Dictionary = game.session.training
 	state.route = "full" if full_training else "features"
-	state.phase = "basics" if full_training else "features"
+	state.phase = "basics" if full_training else "supply_video"
 	state.step = 0
 	game.clock.paused = false
 	if game.audio != null: game.audio.play_music("battle_theme")
 	game.refresh_hud()
-	show_step()
+	if full_training: show_step()
+	else: start_supply_movie()
 
 func _show_finish() -> void:
 	if is_instance_valid(finish_screen): return
@@ -308,6 +320,7 @@ func _menu_open() -> bool:
 		var menu = game.get(key)
 		if menu != null and is_instance_valid(menu) and menu.visible: return true
 	if game.account_panel != null and game.account_panel.overlay.visible: return true
+	if game.guard_popup != null and game.guard_popup.visible: return true
 	if is_instance_valid(game.research_panel.unit_card) and game.research_panel.unit_card.visible: return true
 	return is_instance_valid(cargo_overlay) and cargo_overlay.visible
 
@@ -348,6 +361,55 @@ func _action_key() -> String:
 func action_completed() -> bool:
 	return bool(game.session.training.get("actions", {}).get(_action_key(), false)) or _action_done()
 
+## Owner 2026-10-17: normal Move closes its army controls; remember the accepted action now.
+func order_accepted() -> void:
+	if current_action() not in ["move", "patrol", "reinforcements"] or not _action_done(): return
+	game.session.training.actions[_action_key()] = true
+	game.autosave()
+
+## A city lesson must not cycle through every troop stationed in that city.
+func pick_lesson_target(screen: Vector2) -> bool:
+	if not _movie_after.is_empty() or _menu_open(): return false
+	if current_action() in CITY_ACTIONS:
+		var hit: Dictionary = game.cities.pick_screen(screen)
+		if hit.is_empty() or not game.production.controlled(hit.city, GameSession.player_country): return false
+		game.clear_army_selection()
+		game._set_order_mode(false)
+		game.cities.select_city(hit.city)
+		return true
+	if current_action() == "select":
+		for hit in game.units.pick_all_screen(game.rig.camera, screen):
+			var unit: Dictionary = game.units.units[hit.index]
+			if unit.country == GameSession.player_country and unit.visual_kind == "armor":
+				game.units.select_unit(hit.index)
+				return true
+	return false
+
+## Army badges sit above a garrison and receive the touch before the 3D map does.
+func prefer_city_for_unit(unit: Dictionary) -> bool:
+	if current_action() not in CITY_ACTIONS or not _movie_after.is_empty(): return false
+	var point := Vector2(unit.node.position.x, unit.node.position.z)
+	for city in game.production.cities:
+		if game.production.controlled(city, GameSession.player_country) and point.distance_to(city.point) <= UnitSystem.CITY_RADIUS:
+			game.clear_army_selection()
+			game._set_order_mode(false)
+			game.cities.select_city(city)
+			return true
+	return false
+
+## The animated map callout activates the very same city, army or cargo as a map tap.
+func _tap_lesson_target() -> void:
+	var action := current_action()
+	if action in CITY_ACTIONS:
+		game.clear_army_selection()
+		game._set_order_mode(false)
+		game.cities.select_city(game.buildings.capital(GameSession.player_country))
+	elif action in ["select", "move", "patrol", "reinforcements"]:
+		var unit := _lesson_unit(action)
+		if not unit.is_empty(): game.units.select_unit(game.units.units.find(unit))
+	elif action in ["inspect_ship", "unload_ship", "inspect_train", "unload_train"]:
+		open_cargo("odesa" if action.ends_with("ship") else "lviv")
+
 func _selected() -> Dictionary:
 	var index: int = game.units.selected
 	if index < 0 or index >= game.units.units.size(): return {}
@@ -366,9 +428,13 @@ func _action_done() -> bool:
 		"produce": return game.production.jobs.any(func(job: Dictionary): return game.production.equipment(job.equipment).country == country)
 		"patrol": return game.units.units.any(func(unit: Dictionary): return unit.country == country and EquipmentIdentity.spec(unit.equipment_id).get("role", "") == "drone" and unit.get("flight_mode", "") == "patrol")
 		"build": return game.buildings.jobs.any(func(job: Dictionary): return job.country == country)
-		"trade": return game.trade_panel != null and game.trade_panel.visible
-		"world_prices": return game.trade_panel != null and game.trade_panel.visible and game.trade_panel.market_view
+		"economy": return game.buildings.jobs.any(func(job: Dictionary): return job.country == country and job.building == "industry") or game.production.cities.any(func(city: Dictionary): return game.production.controlled(city, country) and game.buildings.level(city.id, "industry") > 0)
+		"trade": return not game.trade.routes_of(country).is_empty()
+		"transport": return game.buildings.jobs.any(func(job: Dictionary): return job.country == country and job.building == "train_station" and job.level >= 2) or game.production.cities.any(func(city: Dictionary): return game.production.controlled(city, country) and game.buildings.level(city.id, "train_station") >= 2)
+		"world_prices": return game.trade_panel != null and game.trade_panel.visible and game.trade_panel.market_view and game.trade_panel.inspected_world_item.has("equipment_id")
 		"guard": return game.match_rules.guarded(country)
+		"guard_resume": return not game.match_rules.guarded(country) and game.session.training.actions.get("features:guard", false)
+		"reports": return game.campaign_panel != null and game.campaign_panel.visible and game.campaign_panel.tab == "battles"
 		"victory", "diplomacy": return game.campaign_panel != null and game.campaign_panel.visible and game.campaign_panel.tab == current_action()
 		"inspect_ship", "inspect_train": return is_instance_valid(cargo_overlay) and cargo_overlay.visible and _cargo_id == ("odesa" if current_action() == "inspect_ship" else "lviv")
 		"unload_ship": return "odesa" in game.session.training.aid_received
@@ -401,14 +467,18 @@ func focus_objective() -> void:
 			game.trade_panel.setup(game.trade, root.theme)
 		game.trade_panel.open()
 		return
-	if action in ["victory", "diplomacy"]:
-		game.open_campaign(action)
+	if action in ["victory", "diplomacy", "reports"]:
+		game.open_campaign("battles" if action == "reports" else action)
 		return
 	var position := Vector3.ZERO
-	if action in ["city", "build", "produce"]:
+	if action in ["city", "build", "produce", "economy", "transport"]:
 		var capital: Dictionary = game.buildings.capital(GameSession.player_country)
 		position = game.map.position_at(capital.point)
-		if action in ["build", "produce"]: game.city_panel.open(capital)
+		if action in ["build", "produce", "economy", "transport"]:
+			game.city_panel.open(capital)
+			if action in ["economy", "transport"]:
+				var building := "industry" if action == "economy" else "train_station"
+				game.city_panel.scroll.ensure_control_visible.call_deferred(game.city_panel.rows[building].card)
 	else:
 		var unit := _lesson_unit(action)
 		if unit.is_empty(): return
@@ -416,7 +486,20 @@ func focus_objective() -> void:
 		if action in ["patrol", "reinforcements"]: game.units.select_unit(game.units.units.find(unit))
 	game.rig.target = position
 	game.rig.distance = 8.0
+	game.rig.reset_gestures()
 	game.rig._snap(1.0)
+	# Put the target in the open map above the coach, rather than underneath its card.
+	_track_bottom()
+	var viewport := game.get_viewport().get_visible_rect().size
+	var top := 180.0
+	var bottom := minf(coach.card.position.y, viewport.y - 200.0)
+	var desired := Vector2(viewport.x * 0.5, (top + maxf(top + 140.0, bottom)) * 0.5)
+	var ground = game.rig._ground_at(desired)
+	if ground != null:
+		var offset: Vector3 = position - ground
+		offset.y = 0.0
+		game.rig.target += offset
+		game.rig._snap(1.0)
 	if is_instance_valid(_beacon): _beacon.queue_free()
 	_beacon = MeshInstance3D.new()
 	var ring := TorusMesh.new()
@@ -446,24 +529,25 @@ func _target_rect() -> Rect2:
 	var action := current_action()
 	var control: Control
 	match action:
-		"move": control = game.hud.move_button
-		"guard": control = game.hud.guard_button
+		"move":
+			if not _selected().is_empty(): control = game.hud.move_button
+		"guard", "guard_resume": control = game.hud.guard_button
 		"patrol":
 			if game.hud.patrol_button.is_visible_in_tree(): control = game.hud.patrol_button
 		"select", "reinforcements":
 			if action == "reinforcements" and not _selected().is_empty(): control = game.hud.move_button
 		_:
-			var tab: String = {"unit_card": "research", "research": "research", "produce": "produce", "build": "produce", "trade": "market", "world_prices": "market", "victory": "more", "diplomacy": "diplomacy"}.get(action, "")
+			var tab: String = {"unit_card": "research", "research": "research", "trade": "market", "world_prices": "market", "victory": "more", "diplomacy": "diplomacy", "reports": "more"}.get(action, "")
 			for button in game.hud.nav_row.get_children():
 				if button.get_meta("tutorial_action", "") == tab: control = button
 	_target_on_map = false
 	if control != null and control.is_visible_in_tree() and not (control is BaseButton and control.disabled): return _to_root(control)
 	_target_on_map = true
 	match action:
-		"select", "reinforcements", "patrol":
+		"select", "move", "reinforcements", "patrol":
 			var unit := _lesson_unit(action)
 			if not unit.is_empty(): return _world_rect(unit.node.global_position)
-		"city":
+		"city", "build", "produce", "economy", "transport":
 			return _world_rect(game.map.position_at(game.buildings.capital(GameSession.player_country).point), 80.0)
 		"inspect_ship", "unload_ship":
 			if is_instance_valid(supplies) and supplies.vehicles.has("odesa"): return _world_rect(supplies.vehicles.odesa.global_position, 80.0)
@@ -474,9 +558,16 @@ func _target_rect() -> Rect2:
 func _update_guidance(menu_open: bool) -> void:
 	if not menu_open:
 		if is_instance_valid(_menu_hint): _menu_hint.hide()
+		_clear_menu_glow()
 		var rect := _target_rect() if not action_completed() or current_action() == "next" else Rect2()
 		if rect.has_area() and current_action() != "next": coach.point_at(rect, _target_on_map)
 		else: coach.clear_target()
+		var captions := {"select": "TAP YOUR TANKS", "move": "SELECT YOUR TANKS", "patrol": "SELECT YOUR DRONE", "reinforcements": "SELECT YOUR TANKS", "inspect_ship": "INSPECT THE SHIP", "unload_ship": "UNLOAD THE SHIP", "inspect_train": "INSPECT THE TRAIN", "unload_train": "UNLOAD THE TRAIN"}
+		if current_action() == "select":
+			var own_tanks := _lesson_unit("select")
+			if not own_tanks.is_empty(): captions.select = "TAP YOUR %d TANKS" % game.units.stacks.members(own_tanks).size()
+		for action in CITY_ACTIONS: captions[action] = "OPEN " + game.buildings.capital(GameSession.player_country).name.to_upper() + "  ·  CITY"
+		coach.set_target_caption(str(captions.get(current_action(), "")) if _target_on_map and not action_completed() else "")
 		return
 	coach.clear_target()
 	var panel: Node
@@ -515,8 +606,42 @@ func _update_guidance(menu_open: bool) -> void:
 	var entry: Array = steps[clampi(int(game.session.training.step), 0, steps.size() - 1)]
 	hint_label.text = "✓  Done! Close this menu to continue." if done else "TRAINING  ·  " + _text_for(entry)
 	_menu_hint.show()
+	var target: Control
+	var action := current_action()
+	if not done and game.city_panel.visible and action in ["build", "economy", "transport"]:
+		var building := "train_station" if action == "transport" else "industry"
+		target = game.city_panel.rows[building].button
+	elif not done and game.trade_panel != null and game.trade_panel.visible:
+		var wanted := "world_price_item" if action == "world_prices" and game.trade_panel.market_view else "transport_market" if action == "world_prices" else "create_trade_route" if action == "trade" else ""
+		for control in game.trade_panel.panel.find_children("*", "Control", true, false):
+			if not wanted.is_empty() and control.get_meta("tutorial_action", "") == wanted:
+				target = control
+				break
+	if target == null or not target.is_visible_in_tree():
+		_clear_menu_glow()
+	elif not is_instance_valid(_menu_glow) or _menu_glow.get_parent() != target:
+		_clear_menu_glow()
+		_menu_glow = Panel.new()
+		_menu_glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var outline := StyleBoxFlat.new()
+		outline.draw_center = false
+		outline.border_color = CowUI.GOLD
+		outline.set_border_width_all(4)
+		outline.set_corner_radius_all(8)
+		_menu_glow.add_theme_stylebox_override("panel", outline)
+		target.add_child(_menu_glow)
+		_menu_glow.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		var glow := _menu_glow.create_tween().set_loops()
+		glow.tween_property(_menu_glow, "modulate:a", 0.25, 0.55)
+		glow.tween_property(_menu_glow, "modulate:a", 1.0, 0.55)
+
+func _clear_menu_glow() -> void:
+	if is_instance_valid(_menu_glow):
+		_menu_glow.queue_free()
+		_menu_glow = null
 
 func _clear_focus() -> void:
+	_clear_menu_glow()
 	if is_instance_valid(_beacon): _beacon.queue_free()
 	if coach != null: coach.clear_target()
 	if is_instance_valid(_menu_hint):

@@ -9,6 +9,7 @@ extends Control
 signal show_me
 signal continue_pressed
 signal skip_pressed
+signal target_pressed
 
 const CARD := Color("141b20")
 const CARD_EDGE := Color("e9c46a")
@@ -47,6 +48,7 @@ var body: Label
 var show_button: Button
 var main_button: Button
 var skip_button: Button
+var target_button: Button
 var _style: StyleBoxFlat
 var _hole := Rect2()
 var _round := false
@@ -73,6 +75,15 @@ func build(theme_source: Theme) -> void:
 	pulse.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	pulse.draw.connect(_draw_pulse)
 	add_child(pulse)
+	# Owner 2026-10-17: a clear animated "click here" target, separate from a city's troops.
+	target_button = make_button("TAP HERE", CowUI.GOLD, 26)
+	target_button.custom_minimum_size = Vector2(180, 68)
+	target_button.add_theme_color_override("font_color", Color("211c10"))
+	target_button.add_theme_color_override("font_hover_color", Color("211c10"))
+	target_button.add_theme_color_override("font_pressed_color", Color("211c10"))
+	target_button.pressed.connect(func(): target_pressed.emit())
+	target_button.hide()
+	add_child(target_button)
 	card = PanelContainer.new()
 	card.mouse_filter = Control.MOUSE_FILTER_STOP
 	_style = CowUI.box(CARD, 22, CARD_EDGE, 0, 26)
@@ -211,6 +222,12 @@ func point_at(rect: Rect2, round: bool = false) -> void:
 func clear_target() -> void:
 	_hole = Rect2()
 	_strength = 0.0
+	if target_button != null: target_button.hide()
+
+func set_target_caption(value: String) -> void:
+	target_button.text = value
+	target_button.visible = card.visible and _hole.has_area() and not value.is_empty()
+	_layout_target()
 
 func set_card_visible(value: bool) -> void:
 	card.visible = value
@@ -222,7 +239,15 @@ func set_bottom_limit(y: float) -> void:
 		_layout()
 
 func contains(point: Vector2) -> bool:
-	return card.visible and card.get_global_rect().has_point(point)
+	return (card.visible and card.get_global_rect().has_point(point)) or (target_button.visible and target_button.get_global_rect().has_point(point))
+
+func _layout_target() -> void:
+	if target_button == null or not target_button.visible: return
+	target_button.size = target_button.get_combined_minimum_size()
+	var wanted := _hole.get_center() - Vector2(target_button.size.x * 0.5, _hole.size.y * 0.5 + target_button.size.y + 74.0)
+	if wanted.y < 160.0: wanted.y = _hole.end.y + 65.0
+	wanted.x = clampf(wanted.x, 12.0, maxf(12.0, size.x - target_button.size.x - 12.0))
+	target_button.position = wanted
 
 func _layout() -> void:
 	var area := size
@@ -235,6 +260,7 @@ func _layout() -> void:
 	var floor_y := _bottom if _bottom > 0.0 else area.y - 24.0
 	card.position = Vector2((area.x - width) * 0.5, floor_y - card.size.y - 14.0)
 	card.pivot_offset = card.size * 0.5
+	_layout_target()
 
 func _process(delta: float) -> void:
 	_pulse_time += delta
@@ -246,6 +272,8 @@ func _process(delta: float) -> void:
 	var current: float = material.get_shader_parameter("strength") if material.get_shader_parameter("strength") != null else 0.0
 	material.set_shader_parameter("strength", move_toward(current, _strength if _hole.has_area() and card.visible else 0.0, delta * 2.5))
 	pulse.queue_redraw()
+	if target_button.visible:
+		target_button.modulate = Color.WHITE.lerp(Color("ffe4a0"), (sin(_pulse_time * 4.0) + 1.0) * 0.15)
 
 func _draw_pulse() -> void:
 	if not _hole.has_area() or not card.visible: return

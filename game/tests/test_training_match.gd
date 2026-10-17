@@ -6,6 +6,10 @@ func check(ok: bool, message: String) -> void:
 	print("PASS " if ok else "FAIL ", message)
 	if not ok: failures += 1
 func _initialize() -> void: call_deferred("run")
+func feature(game: Node, action: String) -> void:
+	game.session.training.phase = "features"
+	game.session.training.step = game.training_match.FEATURES.find_custom(func(entry): return entry[0] == action)
+	game.training_match.show_step()
 func run() -> void:
 	var game = load("res://scenes/main.tscn").instantiate()
 	root.add_child(game)
@@ -90,24 +94,32 @@ func run() -> void:
 	game.session.training.step = 7
 	training.show_step()
 	check(game.buildings.enqueue(game.buildings.capital(GameSession.player_country).id, "industry").is_empty() and training.action_completed(), "actual construction completes the building objective")
-	game.session.training.phase = "features"
-	game.session.training.step = 0
-	training.show_step()
+	feature(game, "trade")
 	training.focus_objective()
-	check(training.action_completed(), "Show me opens the actual physical trade panel")
-	game.session.training.step = 1
-	training.show_step()
+	check(game.trade_panel.visible and not training.action_completed(), "opening Trade alone cannot complete the required trade lesson")
+	check(game.trade.open_route(GameSession.player_country, "poland", "materials").is_empty() and training.action_completed(), "creating a real physical route completes the trade lesson")
+	feature(game, "world_prices")
 	check(not training.action_completed(), "world prices require the market tab")
 	game.trade_panel.market_view = true
-	check(training.action_completed(), "transport market tab completes the price objective")
+	game.trade_panel.open()
+	check(not training.action_completed(), "opening the market alone cannot complete weapon-price inspection")
+	for picker in game.trade_panel.panel.find_children("*", "OptionButton", true, false):
+		if picker.get_meta("tutorial_action", "") == "world_price_item":
+			picker.select(TradeNetwork.CARGO.size())
+			picker.item_selected.emit(TradeNetwork.CARGO.size())
+	check(training.action_completed(), "choosing a real weapon in the price selector completes inspection")
 	game.trade_panel.hide()
-	game.session.training.step = 2
-	training.show_step()
+	feature(game, "guard")
 	check(game.match_rules.set_guard(GameSession.player_country, true).is_empty() and training.action_completed(), "Guard objective detects the actual defence toggle")
+	training._process(0.11)
 	game.match_rules.set_guard(GameSession.player_country, false)
-	for index in [3, 4]:
-		game.session.training.step = index
-		training.show_step()
+	feature(game, "economy")
+	check(training.action_completed(), "Industry actually queued in the basics also satisfies required economy training")
+	feature(game, "transport")
+	check(not training.action_completed(), "transport capacity needs a real station upgrade")
+	check(game.buildings.enqueue(game.buildings.capital(GameSession.player_country).id, "train_station").is_empty() and training.action_completed(), "queueing a station upgrade completes transport-capacity training")
+	for action in ["victory", "diplomacy", "reports"]:
+		feature(game, action)
 		training.focus_objective()
 		check(training.action_completed(), "actual campaign panel completes " + training.current_action())
 	game.campaign_panel.hide()
@@ -121,13 +133,9 @@ func run() -> void:
 	check(game.session.training.active_seconds == paused_seconds, "background time does not advance teaching")
 	training._backgrounded = false
 	training.skip_lessons()
-	check(game.session.training.phase == "features", "experienced players can skip the basics")
+	check(game.session.training.phase == "supply_video", "skipping optional basics opens the supply film before mandatory features")
 	training.skip_lessons()
-	check(game.session.training.phase == "features", "the new features cannot be skipped")
-	game.session.training.step = training.FEATURES.size() - 1
-	game.session.training.actions["features:" + training.current_action()] = true
-	training.next_step()
-	check(game.session.training.phase == "supply_video" and game.clock.paused, "the supply film follows the new features")
+	check(game.session.training.phase == "supply_video" and game.clock.paused, "the skip-basics control cannot skip the supply chapter")
 	check(game.units.units.size() == 33 and game.session.training.aid_received.is_empty(), "aid is withheld until the second film finishes")
 	var funds_before: float = game.production.stockpiles.ukraine.funds
 	var earned_before: Dictionary = game.production.earned.duplicate(true)
@@ -183,7 +191,13 @@ func run() -> void:
 	game.session.training.phase = "logistics"
 	game.session.training.step = game.training_match.LOGISTICS.size() - 1
 	game.training_match.next_step()
-	check(game.session.training.phase == "reward" and is_instance_valid(game.training_match.finish_screen) and PlayerAuth.training_finished_locally(), "finishing the aid chapter shows the XP finish and records the training as done")
+	check(game.session.training.phase == "features" and not is_instance_valid(game.training_match.finish_screen), "finishing aid leads to required features, without awarding completion early")
+	game.training_match.skip_lessons()
+	check(game.session.training.phase == "features", "the required Warfront feature section cannot be skipped")
+	feature(game, "guard_resume")
+	game.session.training.actions["features:guard"] = true
+	game.training_match.next_step()
+	check(game.session.training.phase == "reward" and is_instance_valid(game.training_match.finish_screen) and PlayerAuth.training_finished_locally(), "the feature chapter ends at the training reward")
 	var finished_players := []
 	game.training_match.training_finished.connect(func(n: int): finished_players.append(n))
 	game.training_match.free_play()
@@ -196,11 +210,7 @@ func run() -> void:
 	training = game.training_match
 	training.set_process(false)
 	training.begin("features")
-	check(game.session.training.phase == "features" and not game.clock.paused, "experienced-player route goes straight to new features")
-	game.session.training.step = training.FEATURES.size() - 1
-	game.session.training.actions["features:" + training.current_action()] = true
-	training.next_step()
-	check(game.session.training.phase == "supply_video", "the feature route reaches the supply chapter")
+	check(game.session.training.phase == "supply_video" and game.clock.paused, "experienced players reach the supply film without repeating basic controls")
 	training.movie_finished()
 	check(game.units.units.size() == 33 and game.session.training.aid_pending.size() == 2, "feature-only route gets the same loaded vehicles")
 	training.free_play()
