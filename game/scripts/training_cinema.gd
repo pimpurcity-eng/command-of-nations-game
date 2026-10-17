@@ -3,7 +3,7 @@ extends Control
 ## Full-screen film player for the training (owner 2026-10-17: "I want the video to fit on a phone
 ## straight up"). A landscape film fills an upright phone edge to edge: the frame is scaled to
 ## cover the screen and the visible window pans to follow the action (PANS, per film second).
-## Portrait or landscape screens both work; captions, a progress line and hold-to-skip sit on top.
+## The player can also show the full frame. All phone sizes keep captions and controls usable.
 signal finished
 
 ## Horizontal centre of the action (0 = left edge, 1 = right edge of the film) at a film time.
@@ -39,11 +39,20 @@ var progress: ColorRect
 var skip_button: Button
 var skip_fill: ColorRect
 var message: Label
+var fit_button: Button
+var retry_button: Button
 var _holding := false
 var _hold := 0.0
 var _caption := -1
 var _done := false
 var _length := 30.0
+var fill_screen := true
+var _paused := false
+var _load_seconds := 0.0
+var _stall_seconds := 0.0
+var _last_position := 0.0
+const LOAD_TIMEOUT := 30.0
+const STALL_TIMEOUT := 8.0
 
 func setup(which: String, path: String, start_at: float, sound_on: bool) -> void:
 	film = which
@@ -120,19 +129,25 @@ func setup(which: String, path: String, start_at: float, sound_on: bool) -> void
 	message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	message.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
 	add_child(message)
+	# Owner 2026-10-17: retain the upright cinematic framing and offer the complete frame too.
+	fit_button = Button.new()
+	fit_button.text = "SHOW FULL VIDEO"
+	fit_button.focus_mode = Control.FOCUS_NONE
+	fit_button.add_theme_font_size_override("font_size", 22)
+	fit_button.custom_minimum_size = Vector2(150, 62)
+	fit_button.pressed.connect(func():
+		fill_screen = not fill_screen
+		fit_button.text = "SHOW FULL VIDEO" if fill_screen else "FILL SCREEN"
+		_layout())
+	add_child(fit_button)
+	retry_button = TrainingCoach.make_button("RETRY FILM", Color("2c3a41"), 26)
+	retry_button.pressed.connect(_request_film)
+	retry_button.hide()
+	add_child(retry_button)
 	resized.connect(_layout)
 	_path = path
 	_start_at = start_at
-	# Browser: the films download in the background after the home screen. If this one is still
-	# on its way, show that and start it the moment it arrives.
-	if not WebExtras.has(path):
-		message.text = "Loading the film…"
-		skip_button.text = "SKIP FILM  ›"
-		skip_button.pressed.connect(_finish)
-		_waiting = true
-		_layout()
-		return
-	_begin()
+	_request_film()
 
 var _path := ""
 var _start_at := 0.0
@@ -140,21 +155,55 @@ var _waiting := false
 
 func _begin() -> void:
 	_waiting = false
+	# Theora's playback instance belongs to the main thread. Load it once, after its pack
+	# is available; the large army setup is budgeted separately across frames on phones.
+	_play_loaded(load(_path) as VideoStream)
+
+func _request_film() -> void:
+	if _done: return
+	_waiting = false
+	_load_seconds = 0.0
+	_stall_seconds = 0.0
+	_last_position = 0.0
+	_holding = false
+	_hold = 0.0
+	player.stop()
+	retry_button.hide()
+	fit_button.hide()
+	message.text = "Loading the film…"
+	skip_button.text = "CONTINUE  ›"
+	if not skip_button.pressed.is_connected(_finish): skip_button.pressed.connect(_finish)
+	if WebExtras.has(_path, true): _begin()
+	elif WebExtras.can_download(_path): _waiting = true
+	else: _film_error("This film is missing from this build.")
+	_layout()
+
+func _play_loaded(stream: VideoStream) -> void:
+	if stream == null:
+		_film_error("This film could not be decoded.")
+		return
+	player.stream = stream
+	if not player.finished.is_connected(_finish): player.finished.connect(_finish)
+	player.paused = _paused
+	player.play()
+	if _start_at > 0.0: player.stream_position = _start_at
+	var duration := player.get_stream_length()
+	_length = duration if duration > 1.0 else 30.033333
 	message.text = ""
+	fit_button.show()
 	skip_button.text = "HOLD TO SKIP  ›"
 	if skip_button.pressed.is_connected(_finish): skip_button.pressed.disconnect(_finish)
-	var path := _path
-	var start_at := _start_at
-	if ResourceLoader.exists(path) and load(path) is VideoStream:
-		player.stream = load(path)
-		player.finished.connect(_finish)
-		player.play()
-		player.stream_position = start_at
-		_length = maxf(player.get_stream_length(), 1.0)
-	else:
-		message.text = "This film is not included in this build.\nTap Continue."
-		skip_button.text = "CONTINUE  ›"
-		skip_button.pressed.connect(_finish)
+	_layout()
+
+func _film_error(reason: String) -> void:
+	_waiting = false
+	player.stop()
+	caption_box.modulate.a = 0.0
+	message.text = reason + "\nRetry, or continue to the hands-on training."
+	skip_button.text = "CONTINUE  ›"
+	if not skip_button.pressed.is_connected(_finish): skip_button.pressed.connect(_finish)
+	retry_button.show()
+	fit_button.hide()
 	_layout()
 
 func _text(size: int, color: Color, weight: int) -> Label:
@@ -185,11 +234,10 @@ func _layout() -> void:
 	var source := Vector2(16, 9)
 	var texture := player.get_video_texture() if player.stream != null else null
 	if texture != null and texture.get_width() > 0: source = Vector2(texture.get_width(), texture.get_height())
-	# Cover: the film fills the screen; on an upright phone the sides are cropped and panned.
-	var scale := maxf(screen.x / source.x, screen.y / source.y)
+	var scale := maxf(screen.x / source.x, screen.y / source.y) if fill_screen else minf(screen.x / source.x, screen.y / source.y)
 	frame.size = source * scale
 	var centre := pan_at(film, player.stream_position if player.stream != null else 0.0)
-	frame.position = Vector2(clampf(screen.x * 0.5 - frame.size.x * centre, screen.x - frame.size.x, 0.0), (screen.y - frame.size.y) * 0.5)
+	frame.position = Vector2(clampf(screen.x * 0.5 - frame.size.x * centre, screen.x - frame.size.x, 0.0) if fill_screen else (screen.x - frame.size.x) * 0.5, (screen.y - frame.size.y) * 0.5)
 	var side := maxf(28.0, (screen.x - 760.0) * 0.5)
 	caption_box.offset_left = side
 	caption_box.offset_right = -side
@@ -202,6 +250,10 @@ func _layout() -> void:
 	var button_size := skip_button.get_combined_minimum_size()
 	skip_button.size = button_size
 	skip_button.position = Vector2(screen.x - button_size.x - 24, 40)
+	fit_button.size = fit_button.get_combined_minimum_size()
+	fit_button.position = Vector2(24, 40 if button_size.x + fit_button.size.x + 72 <= screen.x else 52 + button_size.y)
+	retry_button.size = retry_button.get_combined_minimum_size()
+	retry_button.position = Vector2((screen.x - retry_button.size.x) * 0.5, screen.y * 0.5 + 110)
 	skip_fill.position = Vector2.ZERO
 	skip_fill.size = Vector2(button_size.x * clampf(_hold / HOLD_TO_SKIP, 0.0, 1.0), button_size.y)
 	message.offset_left = -minf(320, screen.x * 0.5 - 24)
@@ -210,7 +262,11 @@ func _layout() -> void:
 func _process(delta: float) -> void:
 	if _done: return
 	if _waiting:
-		if WebExtras.has(_path): _begin()
+		if not _paused: _load_seconds += delta
+		if _load_seconds >= LOAD_TIMEOUT:
+			_film_error("The film is taking too long to load.")
+		elif _waiting:
+			if WebExtras.has(_path, true): _begin()
 		return
 	if _holding: _hold += delta
 	else: _hold = maxf(0.0, _hold - delta * 3.0)
@@ -218,6 +274,12 @@ func _process(delta: float) -> void:
 		_finish()
 		return
 	var time := player.stream_position if player.stream != null else 0.0
+	if player.is_playing() and not _paused:
+		_stall_seconds = 0.0 if time > _last_position + 0.001 else _stall_seconds + delta
+		_last_position = time
+		if _stall_seconds >= STALL_TIMEOUT:
+			_film_error("Playback stopped before the film finished.")
+			return
 	var index := -1
 	var list: Array = CAPTIONS.get(film, [])
 	for i in list.size():
@@ -235,7 +297,8 @@ func _process(delta: float) -> void:
 	_layout()
 
 func set_paused(value: bool) -> void:
-	if player.stream != null: player.paused = value
+	_paused = value
+	player.paused = value
 
 func position_seconds() -> float:
 	return player.stream_position if player.stream != null and player.is_playing() else 0.0

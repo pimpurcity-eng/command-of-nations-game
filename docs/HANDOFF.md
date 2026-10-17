@@ -22,6 +22,7 @@ Older notes (`CHATGPT_HANDOFF.md`, `docs/NEXT_LIST.md`, `docs/CHATGPT_NOTE_2026_
 | What | Where |
 | --- | --- |
 | Working branch | `claude/wip-oct16` — unfinished Oct 16 fixes. **Do not build from it.** |
+| Tutorial repair review | `chatgpt/training-flow-fix-20261017`, based on `claude/v0.61` at `585e635`. Matthew requested preserving Claude's design and repairing the flagship tutorial. Source review only; no publication. |
 | Release audit | `chatgpt/release-oct16` — ChatGPT's current full-game check; owner authorized fixing and publishing after the review. |
 | Stable branch | `claude/v0.26-fixes` — buildable game; the match server auto-updates from it every 15 min. |
 | Merge plan | When the WIP list is finished and tested: merge WIP into stable, reverting `20c7171` (the commit that moved WIP off stable). Matthew approves first. |
@@ -94,6 +95,23 @@ Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to d
 | 10-16 | `8570af0` | Claude | Combat test change from a stopped helper |
 
 ## 5. Session state
+
+**17 Oct (ChatGPT) — flagship tutorial repairs for review, `chatgpt/training-flow-fix-20261017`.**
+Matthew confirmed the flow: opening film on all phone shapes → optional basic controls →
+supply film and ship/train arrivals → required Warfront features → keep playing the full match.
+Claude's films, art, formations and 5+5 aid loadout are retained. Fixed city-model and garrison-badge
+taps during city lessons, Move completion after selection clears, stale menus/order modes on a new
+training game, and missing/stalled film recovery. Added actionable animated map callouts and menu
+outlines. Required features now include actual Industry, trade-route and station-upgrade actions,
+weapon-price inspection, Guard on/off, economic victory, diplomacy and reports.
+Godot 4.6.3: training 97/0; real-input regressions 13/0; cinema/layout/recovery 23/0;
+ordinary city tap cycle 4/0; Home 5/0; startup 8/0 (**150 checks, 0 failures**).
+Native OpenGL captures use the live game's original assets in asset-only QA packs; these packs
+are not committed or used to replace the game. Both films decode in source tests; the owner's
+installed Android playback failure has not been reproduced on a physical phone.
+**No APK/AAB export, Play upload, website deployment or release-branch merge was performed.**
+See [TRAINING_REPAIR_2026_10_17.md](TRAINING_REPAIR_2026_10_17.md) before integrating into the
+complete release project. Keep all private assets and existing signing/configuration intact.
 
 **17 Oct (Claude) — home screen for several games, branch `claude/home-multigame-20261017`** (based on
 `chatgpt/europe-live-20261017`). Owner asked: several games at once, news on home, "Europe map coming soon",

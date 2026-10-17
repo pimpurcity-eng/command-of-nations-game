@@ -19,7 +19,7 @@ var _requested: Dictionary = {}
 var _active: int = 0
 
 ## True when the resource can be loaded now; otherwise starts fetching it and returns false.
-static func has(path: String) -> bool:
+static func has(path: String, urgent: bool = false) -> bool:
 	if path.is_empty(): return false
 	if available: return ResourceLoader.exists(path)
 	_read_index()
@@ -28,8 +28,14 @@ static func has(path: String) -> bool:
 	for pack in _needs[path]:
 		if not _loaded.has(pack):
 			ready = false
-			if _instance != null: _instance._want(pack)
+			if _instance != null: _instance._want(pack, urgent)
 	return ready
+
+## A missing installed file is not a browser download and must not wait forever.
+static func can_download(path: String) -> bool:
+	if available: return false
+	_read_index()
+	return _needs.has(path) and is_instance_valid(_instance)
 
 static func _read_index() -> void:
 	if not _needs.is_empty() or not FileAccess.file_exists("res://web_extras_index.txt"): return

@@ -10,6 +10,8 @@ var title: Label
 var summary: Label
 var list: VBoxContainer
 var message: Label
+## The player deliberately inspected this market item; used by the guided training.
+var inspected_world_item: Dictionary = {}
 
 func setup(network: TradeNetwork, theme: Theme) -> void:
 	trade = network
@@ -36,6 +38,7 @@ func setup(network: TradeNetwork, theme: Theme) -> void:
 	for label in ["Trade routes", "Transport market"]:
 		var button: = Button.new()
 		button.text = label
+		if label == "Transport market": button.set_meta("tutorial_action", "transport_market")
 		button.custom_minimum_size.y = 44
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.pressed.connect(func():
@@ -132,6 +135,7 @@ func _card(me: String, partner: String) -> Control:
 			for cargo in TradeNetwork.CARGO:
 				var button: = Button.new()
 				button.text = cargo.capitalize()
+				button.set_meta("tutorial_action", "create_trade_route")
 				button.custom_minimum_size = Vector2(0, 40)
 				button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 				button.pressed.connect(func():
@@ -214,7 +218,10 @@ func _market() -> void:
 		var floor_price: float = trade.world_prices.resource(item.cargo) if item.has("cargo") else market.unit_floor(item)
 		var item_name: String = item.cargo.capitalize() if item.has("cargo") else EquipmentIdentity.research_title(item.equipment_id,item.level)
 		world_label.text = "%s · world minimum %.2f per %s · completed net purchases drive demand; prices cool over time" % [item_name,floor_price,"resource unit" if item.has("cargo") else "weapon unit"]
-	world_pick.item_selected.connect(func(_i): show_world.call())
+	world_pick.set_meta("tutorial_action", "world_price_item")
+	world_pick.item_selected.connect(func(i):
+		inspected_world_item = world_items[i].duplicate()
+		show_world.call())
 	world_level.value_changed.connect(func(_v): show_world.call())
 	show_world.call()
 	var refresh: = Button.new()

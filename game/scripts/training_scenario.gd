@@ -62,7 +62,7 @@ static func ensure_supplied_equipment() -> void:
 		EquipmentIdentity.supplied_catalog[id] = spec
 
 static func initial_state() -> Dictionary:
-	return {"version": 1, "phase": "opening", "players": 1, "route": "full", "step": 0, "active_seconds": 0.0, "aid_received": [], "aid_pending": [], "aid_requested": [], "aid_unload_requested": false, "actions": {}, "video_position": 0.0}
+	return {"version": 1, "lesson_revision": 2, "phase": "opening", "players": 1, "route": "full", "step": 0, "active_seconds": 0.0, "aid_received": [], "aid_pending": [], "aid_requested": [], "aid_unload_requested": false, "actions": {}, "video_position": 0.0}
 
 static func valid_state(value: Variant) -> bool:
 	if not value is Dictionary: return false
@@ -76,6 +76,7 @@ static func valid_state(value: Variant) -> bool:
 	if not (video_position is int or video_position is float) or not is_finite(float(video_position)) or video_position < 0 or video_position > 3600: return false
 	if not value.get("aid_unload_requested", false) is bool: return false
 	if value.get("players", 1) not in [1, 2]: return false
+	if value.get("lesson_revision", 1) not in [1, 2]: return false
 	var actions = value.get("actions", {})
 	if not actions is Dictionary or actions.size() > 32: return false
 	for key in actions:
@@ -91,16 +92,23 @@ static func valid_state(value: Variant) -> bool:
 		if id in value.aid_received: return false
 	return true
 
-static func prepare(game: Node) -> void:
+static func prepare(game: Node, spread_frames: bool = false) -> void:
 	ensure_supplied_equipment()
 	game.session.training = initial_state()
 	game.production.scenario_income_factors = INCOME_FACTORS.duplicate()
 	game.units.restore([])
+	var deployed := 0
+	var total := 0
+	for force in STARTING_FORCES.values():
+		for amount in force.values(): total += int(amount)
+	FrameBudget.restart()
 	for country in STARTING_FORCES:
 		# One known family lets the player queue production while another family researches.
 		game.research.levels["infantry_" + country] = 1
 		var homes: Array = game.production.cities.filter(func(c: Dictionary): return c.country.to_lower() == country)
 		var capital: Dictionary = game.buildings.capital(country)
+		# Both sides can practise a real export route and a terminal-capacity upgrade.
+		game.buildings.levels[capital.id].train_station = 1
 		homes.sort_custom(func(a: Dictionary, b: Dictionary): return a.id == capital.id and b.id != capital.id)
 		for home in homes:
 			for facility in ["airbase", "drone_factory", "tank_plant", "barracks", "factory"]:
@@ -121,6 +129,12 @@ static func prepare(game: Node) -> void:
 				# Infantry are separate armies; every other family shares one stack per place.
 				var stack := id if family == "infantry" else "training_%s_%s_%s" % [country, family, str(place) if place is String else "field"]
 				_spawn(game, "%s_%s" % [family, country], city, id, point, stack)
+				deployed += 1
+				# Owner 2026-10-17: keep the phone responsive while loading real unit models.
+				if spread_frames and FrameBudget.spent():
+					game.mobile_start.set_progress(100.0 * deployed / maxi(total, 1), "Deploying training armies")
+					await game.get_tree().process_frame
+					FrameBudget.restart()
 	for id in ["lviv", "kyiv"]:
 		if game.buildings.levels.has(id): game.buildings.levels[id].train_station = 1
 	if game.buildings.levels.has("odesa"): game.buildings.levels.odesa.naval_base = 1
