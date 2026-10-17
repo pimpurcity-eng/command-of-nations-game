@@ -9,7 +9,10 @@ var _online_session: = false
 func begin_online_session() -> void:
 	_online_session = true
 
-func autosave(path: String = SAVE_PATH) -> String:
+func active_save_path() -> String:
+	return MapDefinition.save_path() if session.training.is_empty() else TrainingScenario.SAVE_PATH
+
+func autosave(path: String = "") -> String:
 	if _online_session: return "Online matches are saved on the server"
 	return super.autosave(path)
 
@@ -19,8 +22,9 @@ func save_game() -> void:
 		return
 	super.save_game()
 
-func load_game() -> void:
-	if not _online_session: super.load_game()
+func load_game(path: String = SAVE_PATH) -> bool:
+	if _online_session: return false
+	return super.load_game(active_save_path() if path == SAVE_PATH else path)
 
 func return_to_home() -> void:
 	if _online_session:

@@ -284,14 +284,15 @@ func _build_home() -> void:
 		nation_summary = _label("",18,MUTED)
 		play.add_child(nation_summary)
 	_show_nation()
-	play.add_child(_label("FIRST MATCH · LEVEL-1 TRAINING", 20, GOLD))
-	play.add_child(_label("Opening film → learn by playing → supply arrival → take command", 18, MUTED))
-	for spec in [["START TRAINING  →", "training"], ["RESUME TRAINING  →", "training_resume"]]:
-		if spec[1] == "training_resume" and not FileAccess.file_exists(TrainingScenario.SAVE_PATH): continue
-		var button := _button(spec[0], spec[1] == "training")
-		button.pressed.connect(func(): request_start(spec[1]))
-		play.add_child(button)
-		training_buttons.append(button)
+	if MapDefinition.is_regional():
+		play.add_child(_label("FIRST MATCH · LEVEL-1 TRAINING", 20, GOLD))
+		play.add_child(_label("Opening film → learn by playing → supply arrival → take command", 18, MUTED))
+		for spec in [["START TRAINING  →", "training"], ["RESUME TRAINING  →", "training_resume"]]:
+			if spec[1] == "training_resume" and not FileAccess.file_exists(TrainingScenario.SAVE_PATH): continue
+			var button := _button(spec[0], spec[1] == "training")
+			button.pressed.connect(func(): request_start(spec[1]))
+			play.add_child(button)
+			training_buttons.append(button)
 	fresh_button = _button("NEW CAMPAIGN  →" if has_save else "START CAMPAIGN  →", not has_save)
 	fresh_button.pressed.connect(func(): request_start("fresh"))
 	play.add_child(fresh_button)
