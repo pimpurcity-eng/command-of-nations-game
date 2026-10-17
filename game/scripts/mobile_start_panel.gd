@@ -57,6 +57,17 @@ var resume_button: Button
 var show_all_button: Button
 ## The game RESUME GAME carries on with: the paused one, otherwise the most recently saved.
 var featured_kind := ""
+var side_overlay: Control
+var side_panel: PanelContainer
+var side_title: Label
+## The game waiting for a side: "training" (1 player) or "online" (2 players).
+var pending_side := ""
+var _last_facts: Label
+## Owner 2026-10-17: "they have to play that game first" — the other games open once the
+## 1-player Russia vs Ukraine guided opening is finished (Tutorial.done()).
+var unlock_note: Label
+var locked_games: Array = []
+var coming_soon_buttons: Array = []
 var europe_button: Button
 var game_rows: Array = []
 var empty_labels: Array[Label] = []
@@ -172,6 +183,7 @@ func setup(theme: Theme, saved: bool) -> void:
 	_build_features()
 	_build_updates()
 	_build_settings()
+	_build_side_choice()
 	refresh_active_games()
 	# Loading and connection messages stay in view whichever tab started them.
 	status_bar = PanelContainer.new()
@@ -280,7 +292,7 @@ func _build_home() -> void:
 	body.add_child(quick)
 	resume_button = _big_action("▶  RESUME GAME", "", true)
 	resume_button.pressed.connect(func(): _resume_game(featured_kind))
-	join_button = _big_action("+  JOIN NEW GAME", "Tutorials · Europe soon", false)
+	join_button = _big_action("+  JOIN NEW GAME", "Russia vs Ukraine · Europe soon", false)
 	join_button.pressed.connect(_open_games.bind(true))
 	quick.add_child(resume_button)
 	quick.add_child(join_button)
@@ -295,7 +307,7 @@ func _build_home() -> void:
 	for kind in GAME_KINDS:
 		var button := _game_row(rows, kind)
 		if kind == "campaign": continue_button = button
-	_empty_games(rows, "No games in progress yet. Tap JOIN NEW GAME — the 1-player tutorial is the best first game.")
+	_empty_games(rows, "No games in progress yet. Tap JOIN NEW GAME to start Russia vs Ukraine.")
 	show_all_button = _button("SHOW ALL GAMES  →")
 	show_all_button.pressed.connect(_open_games.bind(false))
 	body.add_child(show_all_button)
@@ -353,49 +365,35 @@ func _build_games() -> void:
 	page.add_child(my_games_heading)
 	var rows := _box(page, 12)
 	for kind in GAME_KINDS: _game_row(rows, kind)
-	_empty_games(rows, "No games in progress yet. Start one below — the 1-player tutorial is the best first game.")
+	_empty_games(rows, "No games in progress yet. Start one below.")
 	new_games_heading = _label("NEW GAMES", 24)
 	new_games_heading.add_theme_font_override("font", _font(600, 2))
 	page.add_child(new_games_heading)
-	# Side choice shared by both tutorials (Ukraine uses European weapons only).
-	var sides := _box(_card(page), 14)
-	sides.add_child(_label("RUSSIA–UKRAINE · CHOOSE YOUR SIDE", 17, GOLD))
-	country_picker = OptionButton.new()
-	for country in MapDefinition.players():
-		var nation_label: String = country.name+" · "+Doctrine.info(country.id).name+" weapons"
-		var flag_path: String = "res://assets/interface/flags/"+country.id+".svg"
-		if ResourceLoader.exists(flag_path): country_picker.add_icon_item(load(flag_path),nation_label)
-		else: country_picker.add_item(nation_label)
-		country_picker.set_item_metadata(country_picker.item_count-1,country.id)
-		if country.id == GameSession.player_country: country_picker.select(country_picker.item_count-1)
-	country_picker.visible = not MapDefinition.is_regional()
-	country_picker.custom_minimum_size.y = 60
-	country_picker.add_theme_font_size_override("font_size",20)
-	country_picker.add_theme_constant_override("icon_max_width",30)
-	country_picker.item_selected.connect(func(_index):_show_nation())
-	sides.add_child(country_picker)
-	if MapDefinition.is_regional():
-		var nations := HBoxContainer.new()
-		nations.add_theme_constant_override("separation", 14)
-		sides.add_child(nations)
-		for spec in [["russia", "RUSSIA", [Color.WHITE, Color("1c3f94"), Color("d52b1e")], "Russian"], ["ukraine", "UKRAINE", [Color("0057b7"), Color("ffd700")], "European"]]:
-			nations.add_child(_nation_card(spec[0], spec[1], spec[2], spec[3]))
-	else:
-		nation_summary = _label("",18,MUTED)
-		sides.add_child(nation_summary)
-	_show_nation()
+	unlock_note = _label("LOCKED · Play Russia vs Ukraine (1 player) first. Finish its guided opening to unlock the other games.", 19, GOLD)
+	page.add_child(unlock_note)
 	# Call of War-style rows: picture, name, facts and one JOIN button; details underneath.
 	# 1 player: the offline training match against the AI.
 	fresh_button = _row_button("PLAY  ▶", true)
-	fresh_button.pressed.connect(func(): request_start("training"))
+	fresh_button.pressed.connect(func(): _choose_side("training", "RUSSIA VS UKRAINE · 1 PLAYER"))
 	training_buttons.append(fresh_button)
-	_new_game_card(page, "chevrons", "1P", "TUTORIAL · 1 PLAYER", "1 player · vs AI · offline",
-		"Russia vs Ukraine. Opening film → learn by playing → allied supplies arrive → take command.", fresh_button)
+	_new_game_card(page, "chevrons", "1P", "RUSSIA VS UKRAINE", "1 player · vs AI · offline",
+		"Opening film, guided first orders, allied supplies by ship and train — then full command against the AI.", fresh_button)
 	# 2 players: the persistent online Russia–Ukraine match, one commander per side.
 	online_button = _row_button("JOIN  ▶", true)
-	online_button.pressed.connect(func(): request_start("online"))
-	_new_game_card(page, "provinces", "2P", "TUTORIAL · 2 PLAYERS", "2 players · online · always running",
-		"Russia vs Ukraine, one commander per side. Needs an account; the AI covers your side while you are away.", online_button)
+	online_button.pressed.connect(func(): _choose_side("online", "RUSSIA VS UKRAINE · 2 PLAYERS"))
+	_new_game_card(page, "provinces", "2P", "RUSSIA VS UKRAINE", "2 players · online · always running",
+		"One commander per side. Needs an account; the AI covers your side while you are away.", online_button)
+	locked_games.append({"button": online_button, "facts": _last_facts, "open": "JOIN  ▶", "text": _last_facts.text})
+	# Owner 2026-10-17: two more small-map games are being built.
+	var middle_east := _row_button("COMING SOON", false)
+	middle_east.disabled = true
+	_new_game_card(page, "attack", "6P", "IRAN · U.S. · ISRAEL", "6 players · smaller map · coming soon",
+		"A six-nation war in the Middle East on a compact map.", middle_east)
+	var china := _row_button("COMING SOON", false)
+	china.disabled = true
+	_new_game_card(page, "funds", "CN", "CHINA · ECONOMY", "Economy game · coming soon",
+		"Build China into the world's leading economy through industry and trade.", china)
+	coming_soon_buttons = [middle_east, china]
 	# Europe: the 20-nation map is not open yet.
 	europe_button = _row_button("COMING SOON", false)
 	europe_button.disabled = true
@@ -421,6 +419,71 @@ func _build_games() -> void:
 		choice.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		choice.pressed.connect(func(): range_picker.hide(); request_start("test:" + str(scenario.id)))
 		range_picker.add_child(choice)
+
+## Owner 2026-10-17: no side picker on the Games list — tapping Play or Join asks for the side.
+func _build_side_choice() -> void:
+	side_overlay = Control.new()
+	side_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	side_overlay.visible = false
+	screen.add_child(side_overlay)
+	var dim := ColorRect.new()
+	dim.color = Color(0.02, 0.05, 0.08, 0.82)
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dim.gui_input.connect(func(event: InputEvent):
+		if event is InputEventMouseButton and event.pressed: _cancel_side())
+	side_overlay.add_child(dim)
+	var centre := CenterContainer.new()
+	centre.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	centre.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	side_overlay.add_child(centre)
+	side_panel = PanelContainer.new()
+	side_panel.add_theme_stylebox_override("panel", _surface(Color("14232d"), GOLD, 24))
+	centre.add_child(side_panel)
+	var sides := _box(side_panel, 16)
+	side_title = _label("RUSSIA VS UKRAINE", 30)
+	side_title.add_theme_font_override("font", _font(600, 1))
+	sides.add_child(side_title)
+	sides.add_child(_label("CHOOSE YOUR SIDE", 17, GOLD))
+	country_picker = OptionButton.new()
+	for country in MapDefinition.players():
+		var nation_label: String = country.name+" · "+Doctrine.info(country.id).name+" weapons"
+		var flag_path: String = "res://assets/interface/flags/"+country.id+".svg"
+		if ResourceLoader.exists(flag_path): country_picker.add_icon_item(load(flag_path),nation_label)
+		else: country_picker.add_item(nation_label)
+		country_picker.set_item_metadata(country_picker.item_count-1,country.id)
+		if country.id == GameSession.player_country: country_picker.select(country_picker.item_count-1)
+	country_picker.visible = not MapDefinition.is_regional()
+	country_picker.custom_minimum_size.y = 60
+	country_picker.add_theme_font_size_override("font_size",20)
+	country_picker.add_theme_constant_override("icon_max_width",30)
+	country_picker.item_selected.connect(func(_index):_show_nation())
+	sides.add_child(country_picker)
+	if MapDefinition.is_regional():
+		var nations := HBoxContainer.new()
+		nations.add_theme_constant_override("separation", 14)
+		sides.add_child(nations)
+		for spec in [["russia", "RUSSIA", [Color.WHITE, Color("1c3f94"), Color("d52b1e")], "Russian"], ["ukraine", "UKRAINE", [Color("0057b7"), Color("ffd700")], "European"]]:
+			nations.add_child(_nation_card(spec[0], spec[1], spec[2], spec[3]))
+	else:
+		nation_summary = _label("",18,MUTED)
+		sides.add_child(nation_summary)
+	var cancel := _button("CANCEL")
+	cancel.pressed.connect(_cancel_side)
+	sides.add_child(cancel)
+	_show_nation()
+
+func _choose_side(mode: String, title: String) -> void:
+	if loading: return
+	if not MapDefinition.is_regional():
+		request_start(mode)
+		return
+	pending_side = mode
+	side_title.text = title
+	side_overlay.show()
+
+func _cancel_side() -> void:
+	pending_side = ""
+	side_overlay.hide()
 
 func _big_action(title: String, subtitle: String, primary: bool) -> Button:
 	var button := _button(title + ("\n" + subtitle if not subtitle.is_empty() else ""), primary)
@@ -469,16 +532,17 @@ func _new_game_card(parent: Node, icon_name: String, tag: String, title: String,
 	var name_label := _label(title, 24)
 	name_label.add_theme_font_override("font", _font(600, 1))
 	words.add_child(name_label)
-	words.add_child(_label(facts, 17, GOLD))
+	_last_facts = _label(facts, 17, GOLD)
+	words.add_child(_last_facts)
 	top.add_child(button)
 	body.add_child(_label(text, 18, MUTED))
 	return body
 
 const GAME_KINDS := ["training", "online", "campaign"]
 const GAME_INFO := {
-	"training": ["chevrons", "1P", "TUTORIAL · 1 PLAYER"],
-	"online": ["provinces", "2P", "TUTORIAL · 2 PLAYERS"],
-	"campaign": ["city", "AI", "RUSSIA–UKRAINE CAMPAIGN"],
+	"training": ["chevrons", "1P", "RUSSIA VS UKRAINE"],
+	"online": ["provinces", "2P", "RUSSIA VS UKRAINE"],
+	"campaign": ["city", "AI", "RUSSIA VS UKRAINE · CLASSIC"],
 }
 func _game_row(parent: Node, kind: String) -> Button:
 	var card := PanelContainer.new()
@@ -531,10 +595,10 @@ func refresh_active_games() -> void:
 		var paused := paused_kind == kind
 		var meta := ""
 		match kind:
-			"training": meta = "Russia vs Ukraine · against the AI · " + _saved_text(TrainingScenario.SAVE_PATH)
+			"training": meta = "1 player · against the AI · " + _saved_text(TrainingScenario.SAVE_PATH)
 			"online":
 				var country := online_country() if not online_country().is_empty() else selected_country()
-				meta = "Online · you command " + MapDefinition.country_name(country) + " · runs on the server"
+				meta = "2 players · online · you command " + MapDefinition.country_name(country)
 			"campaign": meta = "Offline · against the AI · " + _saved_text("user://regional_save.json")
 		item.meta.text = ("PAUSED · " if paused else "") + meta
 		item.button.visible = kind in games
@@ -548,9 +612,15 @@ func refresh_active_games() -> void:
 		if stamp > newest: newest = stamp; featured_kind = kind
 	resume_button.visible = not featured_kind.is_empty()
 	resume_button.disabled = loading
-	if not featured_kind.is_empty(): resume_button.text = "▶  RESUME GAME\n" + str(GAME_INFO[featured_kind][2]).capitalize()
-	join_button.text = "+  JOIN NEW GAME\n" + ("Start the 1-player tutorial" if games.is_empty() else "Tutorials · Europe soon")
+	if not featured_kind.is_empty(): resume_button.text = "▶  RESUME GAME\n" + {"training": "Russia vs Ukraine · 1P", "online": "Russia vs Ukraine · 2P", "campaign": "Russia vs Ukraine · classic"}[featured_kind]
+	join_button.text = "+  JOIN NEW GAME\n" + "Russia vs Ukraine · Europe soon"
 	show_all_button.visible = not games.is_empty()
+	var unlocked := Tutorial.done()
+	if unlock_note != null: unlock_note.visible = not unlocked
+	for item in locked_games:
+		item.button.text = item.open if unlocked else "LOCKED"
+		item.button.disabled = loading or not unlocked
+		item.facts.text = item.text
 	if fresh_button != null: fresh_button.text = "RESTART" if "training" in games else "PLAY  ▶"
 
 static func _saved_text(path: String) -> String:
@@ -636,7 +706,11 @@ func _nation_card(id: String, title: String, stripes: Array, doctrine: String) -
 		if loading: return
 		for i in country_picker.item_count:
 			if country_picker.get_item_metadata(i) == id: country_picker.select(i)
-		_show_nation())
+		_show_nation()
+		if not pending_side.is_empty():
+			var mode := pending_side
+			_cancel_side()
+			request_start(mode))
 	country_cards[id] = card
 	return card
 func _show_nation() -> void:
@@ -746,6 +820,8 @@ func _layout() -> void:
 	masthead.size = Vector2(width, 88)
 	navigation.position = Vector2(left, size.y - 86)
 	navigation.size = Vector2(width, 86)
+	screen.move_child(side_overlay, -1)
+	side_panel.custom_minimum_size.x = minf(660, width - 32)
 	var status_height := 64.0 if status_bar.visible else 0.0
 	status_bar.position = Vector2(left, size.y - 86 - status_height)
 	status_bar.size = Vector2(width, status_height)
@@ -822,7 +898,7 @@ func show_paused_match(kind: String = "campaign") -> void:
 	scroll.scroll_vertical = 0
 func cancel_loading(message: String) -> void:
 	loading = false
-	for button in [online_button, fresh_button, test_button, profile_button, join_button, resume_button]: button.disabled = false
+	for button in [fresh_button, test_button, profile_button, join_button, resume_button]: button.disabled = false
 	for button in training_buttons: button.disabled = false
 	refresh_active_games()
 	language_picker.disabled = false

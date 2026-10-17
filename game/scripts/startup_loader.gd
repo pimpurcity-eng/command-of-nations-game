@@ -78,6 +78,9 @@ func _ready() -> void:
 		click = click.duplicate()
 		click.pressed = false
 		get_viewport().push_input(click, true)
+		# Owner 2026-10-17: Play asks for the side first.
+		await get_tree().process_frame
+		game.mobile_start.country_cards.russia.pressed.emit()
 		for i in 8: await get_tree().process_frame
 		# The tutorial opens on its film with the clock paused, so only the screen change is checked.
 		if game.mobile_start.visible:

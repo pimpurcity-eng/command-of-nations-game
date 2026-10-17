@@ -27,9 +27,16 @@ func run() -> void:
 	check(lobby.online_button.is_visible_in_tree() and lobby.europe_button.disabled and lobby.europe_button.text == "COMING SOON", "2-player tutorial listed, Europe coming soon")
 	var started := [""]
 	lobby.training_requested.connect(func(resume: bool): started[0] = "resume" if resume else "new")
+	check(lobby.online_button.disabled == not Tutorial.done(), "2-player game is locked until Russia vs Ukraine is played")
 	lobby.fresh_button.pressed.emit()
 	for i in 3: await process_frame
-	check(started[0] == "new", "1-player tutorial button starts the tutorial")
+	check(lobby.side_overlay.visible and started[0] == "", "Play asks which side first")
+	if DisplayServer.get_name() != "headless":
+		await RenderingServer.frame_post_draw
+		root.get_texture().get_image().save_png(OS.get_environment("HOME_REVIEW_DIR").path_join("Side_Choice.png"))
+	lobby.country_cards.ukraine.pressed.emit()
+	for i in 3: await process_frame
+	check(started[0] == "new" and lobby.selected_country() == "ukraine" and not lobby.side_overlay.visible, "choosing a side starts Russia vs Ukraine")
 	lobby.cancel_loading("Ready")
 	if DisplayServer.get_name() != "headless":
 		await RenderingServer.frame_post_draw

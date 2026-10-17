@@ -8,7 +8,7 @@
     {"id":"diplomacy","icon":"diplomacy","title":"Diplomacy has consequences","text":"Negotiate peace, trade agreements, right of way and shared vision. Form coalitions, declare war or impose an embargo."},
     {"id":"guard","icon":"stop","title":"Guard your nation","text":"Use Guard mode for automated defence while you are away. Online matches also give absent nations an AI caretaker."},
     {"id":"cities","icon":"city","title":"Build your nation's future","text":"Develop cities and provinces with factories, airbases, naval bases, hospitals, support depots, bunkers and railway stations."},
-    {"id":"online","icon":"provinces","title":"Persistent online play","text":"Join the 2-player Russia–Ukraine tutorial with your commander account. The server runs the match, remembers your nation and enforces fog of war."},
+    {"id":"online","icon":"provinces","title":"Persistent online play","text":"Join 2-player Russia vs Ukraine with your commander account. The server runs the match, remembers your nation and enforces fog of war."},
     {"id":"combat","icon":"patrol","title":"A deeper battlefield","text":"Use ranged artillery, air patrols, layered air defence, radar, stealth, entrenchment, retreat and strategic missile weapons."},
     {"id":"victory","icon":"gold","title":"Choose your route to victory","text":"Compete through domination, economic strength, elimination or victory points. Your strategy can reach beyond conquest."},
     {"id":"reports","icon":"more","title":"Know what happens","text":"Read the war newspaper, battle and Guard reports, track army details and respond to attack alerts."},
@@ -16,10 +16,11 @@
   ],
   "updates": [
     {"date":"17 OCT 2026","title":"Europe map — coming soon","text":"A 20-nation Europe map is being finished. Choose your country, build your economy and fight for the continent online. Watch this page for the launch."},
-    {"date":"17 OCT 2026","title":"Russia–Ukraine is now the tutorial","text":"Find it on the Games tab: a 1-player tutorial against the AI, or a 2-player tutorial online with one commander per side."},
-    {"date":"17 OCT 2026","title":"Play several games at once","text":"Every game you have going is listed under Your Active Games on Home, each with its own Resume button. Tap Join New to start another."},
+    {"date":"17 OCT 2026","title":"Start with Russia vs Ukraine","text":"Every commander starts here: play Russia vs Ukraine against the AI to unlock the other games. Then take it online with two players, one per side."},
+    {"date":"17 OCT 2026","title":"More maps on the way","text":"Two smaller maps are being built: an Iran · U.S. · Israel war for six players, and a China economy game."},
+    {"date":"17 OCT 2026","title":"Play several games at once","text":"Every game you have going is listed under Your Active Games on Home, each with its own Resume button. Tap Join New Game to start another."},
     {"date":"14 OCT 2026","title":"The browser front is open","text":"Play the current Russia–Ukraine campaign in your browser, or sign in to join the online match."},
     {"date":"14 OCT 2026","title":"One command centre","text":"A consistent home across the website, app and game, with campaign access, feature details and music controls in the lobby."}
   ],
-  "roadmap": "The Europe 20-nation map is coming soon, with larger world scenarios to follow. Russia–Ukraine is the tutorial: play it alone against the AI or with a second player online."
+  "roadmap": "The Europe 20-nation map is coming soon, with larger world scenarios to follow. Russia vs Ukraine is the first game: play it alone against the AI, then online with two players. Iran · U.S. · Israel and a China economy game are on the way."
 }

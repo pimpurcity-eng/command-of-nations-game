@@ -43,6 +43,9 @@ func run() -> void:
 		click = click.duplicate()
 		click.pressed = false
 		root.push_input(click)
+		# Owner 2026-10-17: Play asks for the side first.
+		await process_frame
+		game.mobile_start.country_cards.russia.pressed.emit()
 		for i in 6: await process_frame
 		check(not game.mobile_start.visible and not game.session.training.is_empty(), "actual Start Tutorial input opens the 1-player tutorial")
 		game._clear_training()

@@ -100,7 +100,8 @@ Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to d
 and the Russia–Ukraine start replaced by tutorials listed in the Games list (1-player and 2-player).
 - Home: YOUR ACTIVE GAMES rows (1-player tutorial, 2-player online tutorial, any older offline campaign),
   each with its own Resume; SHOW ALL / JOIN NEW; NEWS (two newest items + All news).
-- New GAMES tab: MY GAMES + NEW GAMES (side choice, Tutorial · 1 player, Tutorial · 2 players online,
+- New GAMES tab: MY GAMES + NEW GAMES (Russia vs Ukraine 1P, Russia vs Ukraine 2P online (locked until
+  Tutorial.done()), Iran · U.S. · Israel 6P and China economy (coming soon), side asked in a popup on Play/Join,
   Europe · 20 nations **COMING SOON** (button disabled; Europe code untouched), Weapons range).
 - The old START/NEW CAMPAIGN button is gone; `fresh_button` is now Start Tutorial. Existing campaign saves still resume.
 - Main: `resume_requested` resumes the paused game; "continue" while the tutorial is paused loads the saved campaign;
