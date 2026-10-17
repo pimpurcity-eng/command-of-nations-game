@@ -53,6 +53,10 @@ var active_heading: Label
 var my_games_heading: Label
 var new_games_heading: Label
 var join_button: Button
+var resume_button: Button
+var show_all_button: Button
+## The game RESUME GAME carries on with: the paused one, otherwise the most recently saved.
+var featured_kind := ""
 var europe_button: Button
 var game_rows: Array = []
 var empty_labels: Array[Label] = []
@@ -270,6 +274,16 @@ func _build_home() -> void:
 	status.autowrap_mode = TextServer.AUTOWRAP_OFF
 	status.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	greeting.add_child(status)
+	# Owner 2026-10-17: "a join new game button or a resume game" — the two big actions come first.
+	var quick := HBoxContainer.new()
+	quick.add_theme_constant_override("separation", 14)
+	body.add_child(quick)
+	resume_button = _big_action("▶  RESUME GAME", "", true)
+	resume_button.pressed.connect(func(): _resume_game(featured_kind))
+	join_button = _big_action("+  JOIN NEW GAME", "Tutorials · Europe soon", false)
+	join_button.pressed.connect(_open_games.bind(true))
+	quick.add_child(resume_button)
+	quick.add_child(join_button)
 	# YOUR ACTIVE GAMES: one row per game in progress, each with its own Resume.
 	active_heading = _label("YOUR ACTIVE GAMES", 24)
 	active_heading.add_theme_font_override("font", _font(600, 2))
@@ -281,17 +295,10 @@ func _build_home() -> void:
 	for kind in GAME_KINDS:
 		var button := _game_row(rows, kind)
 		if kind == "campaign": continue_button = button
-	_empty_games(rows, "No games in progress yet. Tap JOIN NEW and start the 1-player tutorial.")
-	var actions := HBoxContainer.new()
-	actions.add_theme_constant_override("separation", 14)
-	body.add_child(actions)
-	var show_all := _button("SHOW ALL")
-	show_all.pressed.connect(_open_games.bind(false))
-	join_button = _button("JOIN NEW  →", true)
-	join_button.pressed.connect(_open_games.bind(true))
-	for button in [show_all, join_button]:
-		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		actions.add_child(button)
+	_empty_games(rows, "No games in progress yet. Tap JOIN NEW GAME — the 1-player tutorial is the best first game.")
+	show_all_button = _button("SHOW ALL GAMES  →")
+	show_all_button.pressed.connect(_open_games.bind(false))
+	body.add_child(show_all_button)
 	# News sits on home; the full list is on the News tab.
 	_section(body, "NEWS")
 	for i in mini(2, catalogue.updates.size()): _update_card(body, catalogue.updates[i])
@@ -377,34 +384,30 @@ func _build_games() -> void:
 		nation_summary = _label("",18,MUTED)
 		sides.add_child(nation_summary)
 	_show_nation()
+	# Call of War-style rows: picture, name, facts and one JOIN button; details underneath.
 	# 1 player: the offline training match against the AI.
-	var solo := _new_game_card(page, "chevrons", "1P", "TUTORIAL · 1 PLAYER", "Russia vs Ukraine · you against the AI",
-		"Opening film → learn by playing → allied supplies arrive → take command. Saved on this device.")
-	fresh_button = _button("START TUTORIAL  →", true)
+	fresh_button = _row_button("PLAY  ▶", true)
 	fresh_button.pressed.connect(func(): request_start("training"))
-	solo.add_child(fresh_button)
 	training_buttons.append(fresh_button)
+	_new_game_card(page, "chevrons", "1P", "TUTORIAL · 1 PLAYER", "1 player · vs AI · offline",
+		"Russia vs Ukraine. Opening film → learn by playing → allied supplies arrive → take command.", fresh_button)
 	# 2 players: the persistent online Russia–Ukraine match, one commander per side.
-	var duo := _new_game_card(page, "provinces", "2P", "TUTORIAL · 2 PLAYERS", "Russia vs Ukraine · online, one player per side",
-		"Needs a commander account. The match keeps running on the server and the AI covers your side while you are away.")
-	online_button = _button("JOIN ONLINE  →", true)
+	online_button = _row_button("JOIN  ▶", true)
 	online_button.pressed.connect(func(): request_start("online"))
-	duo.add_child(online_button)
+	_new_game_card(page, "provinces", "2P", "TUTORIAL · 2 PLAYERS", "2 players · online · always running",
+		"Russia vs Ukraine, one commander per side. Needs an account; the AI covers your side while you are away.", online_button)
 	# Europe: the 20-nation map is not open yet.
-	var europe := _new_game_card(page, "research", "20", "EUROPE · 20 NATIONS", "COMING SOON",
-		"Pick one of 20 European countries and fight for the continent online. Watch News for the launch.")
-	var soon := _button("COMING SOON")
-	soon.disabled = true
-	europe.add_child(soon)
-	europe_button = soon
+	europe_button = _row_button("COMING SOON", false)
+	europe_button.disabled = true
+	_new_game_card(page, "research", "20", "EUROPE · 20 NATIONS", "20 players · online · coming soon",
+		"Pick one of 20 European countries and fight for the continent. Watch News for the launch.", europe_button)
 	# Practice maps for each kind of weapon.
-	var practice := _new_game_card(page, "attack", "★", "WEAPONS RANGE", "Practice · try every unit",
-		"Separate test maps per kind of unit.")
-	test_button = _button("CHOOSE A RANGE  ▾")
+	test_button = _row_button("PLAY  ▾", false)
 	test_button.pressed.connect(func():
 		range_picker.visible = not range_picker.visible
 		if range_picker.visible: scroll.ensure_control_visible.call_deferred(range_picker))
-	practice.add_child(test_button)
+	var practice := _new_game_card(page, "attack", "★", "WEAPONS RANGE", "Practice · every unit",
+		"Separate test maps per kind of unit.", test_button)
 	# Owner 2026-10-14: separate test maps per kind of unit ("too much if they're all in one").
 	range_picker = GridContainer.new()
 	range_picker.columns = 2
@@ -418,6 +421,14 @@ func _build_games() -> void:
 		choice.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		choice.pressed.connect(func(): range_picker.hide(); request_start("test:" + str(scenario.id)))
 		range_picker.add_child(choice)
+
+func _big_action(title: String, subtitle: String, primary: bool) -> Button:
+	var button := _button(title + ("\n" + subtitle if not subtitle.is_empty() else ""), primary)
+	button.custom_minimum_size.y = 104
+	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	button.add_theme_font_size_override("font_size", 24)
+	button.add_theme_constant_override("line_spacing", -2)
+	return button
 
 func _badge(icon_name: String, tag: String) -> PanelContainer:
 	var badge := PanelContainer.new()
@@ -440,18 +451,27 @@ func _badge(icon_name: String, tag: String) -> PanelContainer:
 	stack.add_child(label)
 	return badge
 
-func _new_game_card(parent: Node, icon_name: String, tag: String, title: String, subtitle: String, text: String) -> VBoxContainer:
-	var body := _box(_card(parent), 14)
+func _row_button(text: String, primary: bool) -> Button:
+	var button := _button(text, primary)
+	button.custom_minimum_size = Vector2(150, 64)
+	button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	button.add_theme_font_size_override("font_size", 20)
+	return button
+
+func _new_game_card(parent: Node, icon_name: String, tag: String, title: String, facts: String, text: String, button: Button) -> VBoxContainer:
+	var body := _box(_card(parent), 12)
 	var top := HBoxContainer.new()
-	top.add_theme_constant_override("separation", 18)
+	top.add_theme_constant_override("separation", 16)
 	body.add_child(top)
 	top.add_child(_badge(icon_name, tag))
 	var words := _box(top, 4)
-	var name_label := _label(title, 26)
+	words.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	var name_label := _label(title, 24)
 	name_label.add_theme_font_override("font", _font(600, 1))
 	words.add_child(name_label)
-	words.add_child(_label(subtitle, 18, GOLD))
-	body.add_child(_label(text, 19, MUTED))
+	words.add_child(_label(facts, 17, GOLD))
+	top.add_child(button)
+	body.add_child(_label(text, 18, MUTED))
 	return body
 
 const GAME_KINDS := ["training", "online", "campaign"]
@@ -520,7 +540,18 @@ func refresh_active_games() -> void:
 		item.button.visible = kind in games
 		item.button.disabled = loading or not item.button.visible
 	for label in empty_labels: label.visible = games.is_empty()
-	if fresh_button != null: fresh_button.text = "RESTART TUTORIAL  →" if "training" in games else "START TUTORIAL  →"
+	# RESUME GAME: the paused game first, otherwise the one saved most recently.
+	featured_kind = ""
+	var newest := -1
+	for kind in games:
+		var stamp := 1 << 40 if kind == paused_kind else FileAccess.get_modified_time({"training": TrainingScenario.SAVE_PATH, "campaign": "user://regional_save.json"}.get(kind, GameAudio.SETTINGS_PATH))
+		if stamp > newest: newest = stamp; featured_kind = kind
+	resume_button.visible = not featured_kind.is_empty()
+	resume_button.disabled = loading
+	if not featured_kind.is_empty(): resume_button.text = "▶  RESUME GAME\n" + str(GAME_INFO[featured_kind][2]).capitalize()
+	join_button.text = "+  JOIN NEW GAME\n" + ("Start the 1-player tutorial" if games.is_empty() else "Tutorials · Europe soon")
+	show_all_button.visible = not games.is_empty()
+	if fresh_button != null: fresh_button.text = "RESTART" if "training" in games else "PLAY  ▶"
 
 static func _saved_text(path: String) -> String:
 	var stamp := FileAccess.get_modified_time(path)
@@ -731,7 +762,7 @@ func _layout() -> void:
 		card.custom_minimum_size.y = maxf(194.0 if width >= 680 else 244.0, card.get_child(0).get_combined_minimum_size().y)
 func begin_loading() -> void:
 	loading = true
-	for button in [online_button, continue_button, fresh_button, test_button, profile_button, join_button]: button.disabled = true
+	for button in [online_button, continue_button, fresh_button, test_button, profile_button, join_button, resume_button]: button.disabled = true
 	for button in training_buttons: button.disabled = true
 	for item in game_rows: item.button.disabled = true
 	language_picker.disabled = true
@@ -760,7 +791,7 @@ func request_start(mode: String) -> void:
 		if pending_start.is_empty():
 			pending_start = mode
 			loading = true
-			for button in [online_button, continue_button, fresh_button, test_button, join_button]: button.disabled = true
+			for button in [online_button, continue_button, fresh_button, test_button, join_button, resume_button]: button.disabled = true
 			for button in training_buttons: button.disabled = true
 			for item in game_rows: item.button.disabled = true
 			for card in country_cards.values(): card.disabled = true
@@ -791,7 +822,7 @@ func show_paused_match(kind: String = "campaign") -> void:
 	scroll.scroll_vertical = 0
 func cancel_loading(message: String) -> void:
 	loading = false
-	for button in [online_button, fresh_button, test_button, profile_button, join_button]: button.disabled = false
+	for button in [online_button, fresh_button, test_button, profile_button, join_button, resume_button]: button.disabled = false
 	for button in training_buttons: button.disabled = false
 	refresh_active_games()
 	language_picker.disabled = false
