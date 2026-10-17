@@ -95,6 +95,18 @@ Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to d
 
 ## 5. Session state
 
+**17 Oct (Claude) — home screen for several games, branch `claude/home-multigame-20261017`** (based on
+`chatgpt/europe-live-20261017`). Owner asked: several games at once, news on home, "Europe map coming soon",
+and the Russia–Ukraine start replaced by tutorials listed in the Games list (1-player and 2-player).
+- Home: YOUR ACTIVE GAMES rows (1-player tutorial, 2-player online tutorial, any older offline campaign),
+  each with its own Resume; SHOW ALL / JOIN NEW; NEWS (two newest items + All news).
+- New GAMES tab: MY GAMES + NEW GAMES (side choice, Tutorial · 1 player, Tutorial · 2 players online,
+  Europe · 20 nations **COMING SOON** (button disabled; Europe code untouched), Weapons range).
+- The old START/NEW CAMPAIGN button is gone; `fresh_button` is now Start Tutorial. Existing campaign saves still resume.
+- Main: `resume_requested` resumes the paused game; "continue" while the tutorial is paused loads the saved campaign;
+  the joined online side is remembered in `settings.cfg` [online] `joined_regional`.
+- Tests updated and passing: `review_homepage`, `test_home_button`, `test_startup_progress`, `test_american_europe`.
+
 **PAUSED at Matthew's request (16 Oct, 23:20 UTC):** Wait for Claude to finish before any more edits, merge or publication. The current map/update is a test build; larger tutorial work comes afterwards. Additional verified launcher-cleanup and tutorial-move fixes are saved on `chatgpt/release-oct16` only; reconcile after Claude finishes.
 
 ChatGPT full-game release audit on `chatgpt/release-oct16`, based on `beff4dc`.

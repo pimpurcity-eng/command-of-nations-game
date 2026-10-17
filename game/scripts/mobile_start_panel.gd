@@ -7,6 +7,8 @@ signal test_requested(scenario: String)
 signal online_requested
 signal account_requested
 signal training_requested(resume: bool)
+## Carry on with the match that was paused when the player went back to the home screen.
+signal resume_requested
 const GOLD := Color("e2b866")
 const INK := Color("f4f1e8")
 const MUTED := Color("a9b8c2")
@@ -45,8 +47,17 @@ var commander_label: Label
 var profile_button: Button
 var catalogue: Dictionary = {}
 var training_buttons: Array[Button] = []
-var map_buttons: Array[Button] = []
 var nation_summary: Label
+var status_bar: PanelContainer
+var active_heading: Label
+var my_games_heading: Label
+var new_games_heading: Label
+var join_button: Button
+var europe_button: Button
+var game_rows: Array = []
+var empty_labels: Array[Label] = []
+## Which game is loaded and paused behind the home screen: "", "training", "campaign" or "online".
+var paused_kind := ""
 
 static func _font(weight: int, spacing: int = 0) -> FontVariation:
 	var f := FontVariation.new()
@@ -153,20 +164,38 @@ func setup(theme: Theme, saved: bool) -> void:
 	screen.add_child(scroll)
 	content = _box(scroll, 0)
 	_build_home()
+	_build_games()
 	_build_features()
 	_build_updates()
 	_build_settings()
+	refresh_active_games()
+	# Loading and connection messages stay in view whichever tab started them.
+	status_bar = PanelContainer.new()
+	status_bar.add_theme_stylebox_override("panel", _surface(Color("101e27"), Color("2b3b45"), 10))
+	status_bar.visible = false
+	screen.add_child(status_bar)
+	var status_box := _box(status_bar, 6)
+	loading_label = _label("Ready to command", 18, MUTED)
+	status_box.add_child(loading_label)
+	progress = ProgressBar.new()
+	progress.value = 100
+	progress.show_percentage = false
+	progress.custom_minimum_size.y = 4
+	progress.add_theme_stylebox_override("background", _surface(Color("243743"), Color.TRANSPARENT, 0))
+	progress.add_theme_stylebox_override("fill", _surface(GOLD, Color.TRANSPARENT, 0))
+	status_box.add_child(progress)
 	navigation = PanelContainer.new()
 	navigation.add_theme_stylebox_override("panel", _surface(NAVY, Color("2b3b45"), 12))
 	screen.add_child(navigation)
 	var nav := HBoxContainer.new()
 	nav.add_theme_constant_override("separation", 8)
 	navigation.add_child(nav)
-	for item in [["home", "HOME", "city"], ["features", "FEATURES", "research"], ["updates", "NEWS", "more"], ["settings", "SETTINGS", "chevrons"]]:
+	for item in [["home", "HOME", "city"], ["games", "GAMES", "attack"], ["updates", "NEWS", "more"], ["features", "FEATURES", "research"], ["settings", "SETTINGS", "chevrons"]]:
 		var button := _chip(item[1])
 		button.icon = load("res://assets/interface/icons/" + item[2] + ".svg")
 		button.expand_icon = true
 		button.add_theme_constant_override("icon_max_width", 22)
+		button.add_theme_font_size_override("font_size", 15)
 		button.pressed.connect(_select_page.bind(item[0]))
 		nav.add_child(button)
 		nav_buttons[item[0]] = button
@@ -175,7 +204,10 @@ func setup(theme: Theme, saved: bool) -> void:
 	_layout()
 	_layout.call_deferred()
 	visibility_changed.connect(func():
-		if visible: _layout.call_deferred())
+		if visible:
+			refresh_active_games()
+			_layout.call_deferred()
+		else: paused_kind = "")
 func _page(id: String, padded: bool = true) -> VBoxContainer:
 	var margin := MarginContainer.new()
 	for side in ["left", "right", "top", "bottom"]:
@@ -184,11 +216,14 @@ func _page(id: String, padded: bool = true) -> VBoxContainer:
 	content.add_child(margin)
 	pages[id] = margin
 	return _box(margin, 22)
+## Owner 2026-10-17: Call of War-style home — several games at once ("like as a person"), each
+## resumed from YOUR ACTIVE GAMES; the Games list holds the 1-player and 2-player Russia–Ukraine
+## tutorials (which replace the old Russia–Ukraine start) and "Europe map coming soon"; news on home.
 func _build_home() -> void:
 	var home := _page("home", false)
 	home.add_theme_constant_override("separation", 0)
 	hero = Control.new()
-	hero.custom_minimum_size.y = 360
+	hero.custom_minimum_size.y = 300
 	home.add_child(hero)
 	artwork = TextureRect.new()
 	artwork.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -221,9 +256,6 @@ func _build_home() -> void:
 	heading.add_theme_constant_override("shadow_offset_y", 3)
 	branding.add_child(heading)
 	branding.add_child(_label(str(catalogue.tagline), 23))
-	var pillars := _label("AI DEFENCE  ·  ECONOMIC VICTORY  ·  REAL TRADE", 16, GOLD)
-	pillars.add_theme_font_override("font", _font(500, 1))
-	branding.add_child(pillars)
 	var margin := MarginContainer.new()
 	for side in ["left", "right", "top", "bottom"]: margin.add_theme_constant_override("margin_" + side, 32)
 	home.add_child(margin)
@@ -238,100 +270,34 @@ func _build_home() -> void:
 	status.autowrap_mode = TextServer.AUTOWRAP_OFF
 	status.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	greeting.add_child(status)
-	if has_save: _section(body, "YOUR CAMPAIGN")
-	panel = _card(body)
-	panel.visible = has_save
-	var campaign := _box(panel, 12)
-	campaign.add_child(_label("RUSSIA–UKRAINE" if MapDefinition.is_regional() else "EUROPE — TEST MAP", 28))
-	campaign.add_child(_label("Offline campaign · Saved on this device", 19, MUTED))
-	continue_button = _button("RESUME CAMPAIGN  →", true)
-	continue_button.visible = has_save
-	continue_button.disabled = not has_save
-	continue_button.pressed.connect(func(): request_start("continue"))
-	campaign.add_child(continue_button)
-	_section(body, "PLAY YOUR WAY")
-	var play := _box(_card(body), 16)
-	play.add_child(_label("CHOOSE YOUR MAP",17,GOLD))
-	for map_choice in [[MapDefinition.REGIONAL,"RUSSIA–UKRAINE"],[MapDefinition.EUROPE,"EUROPE — TEST MAP"]]:
-		var map_button: = _button(map_choice[1],MapDefinition.id == map_choice[0])
-		map_button.disabled = MapDefinition.id == map_choice[0]
-		map_button.pressed.connect(func():
-			if not loading: MapDefinition.launch(get_tree(),map_choice[0]))
-		play.add_child(map_button)
-		map_buttons.append(map_button)
-	play.add_child(_label("CHOOSE YOUR NATION", 17, GOLD))
-	country_picker = OptionButton.new()
-	for country in MapDefinition.players():
-		var nation_label: String = country.name+" · "+Doctrine.info(country.id).name+" weapons"
-		var flag_path: String = "res://assets/interface/flags/"+country.id+".svg"
-		if ResourceLoader.exists(flag_path): country_picker.add_icon_item(load(flag_path),nation_label)
-		else: country_picker.add_item(nation_label)
-		country_picker.set_item_metadata(country_picker.item_count-1,country.id)
-		if country.id == GameSession.player_country: country_picker.select(country_picker.item_count-1)
-	country_picker.visible = not MapDefinition.is_regional()
-	country_picker.custom_minimum_size.y = 60
-	country_picker.add_theme_font_size_override("font_size",20)
-	country_picker.add_theme_constant_override("icon_max_width",30)
-	country_picker.item_selected.connect(func(_index):_show_nation())
-	play.add_child(country_picker)
-	var nations := HBoxContainer.new()
-	nations.add_theme_constant_override("separation", 14)
-	play.add_child(nations)
-	if MapDefinition.is_regional():
-		for spec in [["russia", "RUSSIA", [Color.WHITE, Color("1c3f94"), Color("d52b1e")], "Russian"], ["ukraine", "UKRAINE", [Color("0057b7"), Color("ffd700")], "European"]]:
-			nations.add_child(_nation_card(spec[0], spec[1], spec[2], spec[3]))
-	else:
-		nation_summary = _label("",18,MUTED)
-		play.add_child(nation_summary)
-	_show_nation()
-	if MapDefinition.is_regional():
-		play.add_child(_label("FIRST MATCH · LEVEL-1 TRAINING", 20, GOLD))
-		play.add_child(_label("Opening film → learn by playing → supply arrival → take command", 18, MUTED))
-		for spec in [["START TRAINING  →", "training"], ["RESUME TRAINING  →", "training_resume"]]:
-			if spec[1] == "training_resume" and not FileAccess.file_exists(TrainingScenario.SAVE_PATH): continue
-			var button := _button(spec[0], spec[1] == "training")
-			button.pressed.connect(func(): request_start(spec[1]))
-			play.add_child(button)
-			training_buttons.append(button)
-	fresh_button = _button("NEW CAMPAIGN  →" if has_save else "START CAMPAIGN  →", not has_save)
-	fresh_button.pressed.connect(func(): request_start("fresh"))
-	play.add_child(fresh_button)
-	var secondary := HBoxContainer.new()
-	secondary.add_theme_constant_override("separation", 14)
-	play.add_child(secondary)
-	online_button = _button("ONLINE MATCH" if MapDefinition.is_regional() else "EUROPE ONLINE")
-	online_button.pressed.connect(func(): request_start("online"))
-	test_button = _button("WEAPONS RANGE")
-	test_button.pressed.connect(func():
-		range_picker.visible = not range_picker.visible
-		if range_picker.visible: scroll.ensure_control_visible.call_deferred(range_picker))
-	for button in [online_button, test_button]:
-		button.add_theme_font_size_override("font_size", 20)
+	# YOUR ACTIVE GAMES: one row per game in progress, each with its own Resume.
+	active_heading = _label("YOUR ACTIVE GAMES", 24)
+	active_heading.add_theme_font_override("font", _font(600, 2))
+	body.add_child(active_heading)
+	panel = PanelContainer.new()
+	panel.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+	body.add_child(panel)
+	var rows := _box(panel, 12)
+	for kind in GAME_KINDS:
+		var button := _game_row(rows, kind)
+		if kind == "campaign": continue_button = button
+	_empty_games(rows, "No games in progress yet. Tap JOIN NEW and start the 1-player tutorial.")
+	var actions := HBoxContainer.new()
+	actions.add_theme_constant_override("separation", 14)
+	body.add_child(actions)
+	var show_all := _button("SHOW ALL")
+	show_all.pressed.connect(_open_games.bind(false))
+	join_button = _button("JOIN NEW  →", true)
+	join_button.pressed.connect(_open_games.bind(true))
+	for button in [show_all, join_button]:
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		secondary.add_child(button)
-	# Owner 2026-10-14: separate test maps per kind of unit ("too much if they're all in one").
-	range_picker = GridContainer.new()
-	range_picker.columns = 2
-	range_picker.add_theme_constant_override("h_separation", 10)
-	range_picker.add_theme_constant_override("v_separation", 10)
-	range_picker.visible = false
-	play.add_child(range_picker)
-	for scenario in WeaponScenarios.LIST:
-		var choice: = _button(str(scenario.title).to_upper())
-		choice.add_theme_font_size_override("font_size", 18)
-		choice.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		choice.pressed.connect(func(): range_picker.hide(); request_start("test:" + str(scenario.id)))
-		range_picker.add_child(choice)
-	play.add_child(_label("Offline against AI · Online with an account" if MapDefinition.is_regional() else "Europe online · 20 players · 1× speed\nChoose an available country, then join or resume your match.", 17, MUTED))
-	loading_label = _label("Ready to command", 18, MUTED)
-	play.add_child(loading_label)
-	progress = ProgressBar.new()
-	progress.value = 100
-	progress.show_percentage = false
-	progress.custom_minimum_size.y = 4
-	progress.add_theme_stylebox_override("background", _surface(Color("243743"), Color.TRANSPARENT, 0))
-	progress.add_theme_stylebox_override("fill", _surface(GOLD, Color.TRANSPARENT, 0))
-	play.add_child(progress)
+		actions.add_child(button)
+	# News sits on home; the full list is on the News tab.
+	_section(body, "NEWS")
+	for i in mini(2, catalogue.updates.size()): _update_card(body, catalogue.updates[i])
+	var all_news := _button("ALL NEWS  →")
+	all_news.pressed.connect(_select_page.bind("updates"))
+	body.add_child(all_news)
 	var toggles := HBoxContainer.new()
 	toggles.add_theme_constant_override("separation", 12)
 	body.add_child(toggles)
@@ -344,15 +310,6 @@ func _build_home() -> void:
 		sound_button.pressed.connect(func(): audio.set_sound(not GameAudio.sound_enabled))
 		audio.settings_changed.connect(_show_audio)
 		_show_audio()
-	if GameAudio.custom_menu_theme():
-		credit_label = _label(GameAudio.MENU_THEME_CREDIT, 16, MUTED)
-		credit_label.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
-		body.add_child(credit_label)
-	# CC BY 3.0 requires the battle music credit to be shown.
-	var battle_credit: = _label(GameAudio.MUSIC_CREDITS, 14, MUTED)
-	battle_credit.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
-	battle_credit.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	body.add_child(battle_credit)
 	_section(body, "MORE THAN CONQUEST")
 	for id in ["guard", "economy", "trade"]:
 		_feature_card(body, catalogue.features.filter(func(f: Dictionary): return f.id == id)[0])
@@ -366,12 +323,252 @@ func _build_home() -> void:
 		var account: Variant = get_parent().get("account_panel") if get_parent() != null else null
 		PremiumPanel.show_over(self, account.auth if account is AccountPanel else null))
 	body.add_child(premium)
-	_section(body, "LATEST FROM THE FRONT")
-	_update_card(body, catalogue.updates[0])
+	if GameAudio.custom_menu_theme():
+		credit_label = _label(GameAudio.MENU_THEME_CREDIT, 16, MUTED)
+		credit_label.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+		body.add_child(credit_label)
+	# CC BY 3.0 requires the battle music credit to be shown.
+	var battle_credit: = _label(GameAudio.MUSIC_CREDITS, 14, MUTED)
+	battle_credit.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+	battle_credit.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	body.add_child(battle_credit)
 	footer = _label("WARFRONTMANDATE.COM", 16, MUTED)
 	footer.add_theme_font_override("font", _font(500, 3))
 	footer.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	body.add_child(footer)
+
+## The Games tab: MY GAMES (same rows as home) and NEW GAMES.
+func _build_games() -> void:
+	var page := _page("games")
+	page.add_child(_label("GAMES", 44))
+	my_games_heading = _label("MY GAMES", 24)
+	my_games_heading.add_theme_font_override("font", _font(600, 2))
+	page.add_child(my_games_heading)
+	var rows := _box(page, 12)
+	for kind in GAME_KINDS: _game_row(rows, kind)
+	_empty_games(rows, "No games in progress yet. Start one below — the 1-player tutorial is the best first game.")
+	new_games_heading = _label("NEW GAMES", 24)
+	new_games_heading.add_theme_font_override("font", _font(600, 2))
+	page.add_child(new_games_heading)
+	# Side choice shared by both tutorials (Ukraine uses European weapons only).
+	var sides := _box(_card(page), 14)
+	sides.add_child(_label("RUSSIA–UKRAINE · CHOOSE YOUR SIDE", 17, GOLD))
+	country_picker = OptionButton.new()
+	for country in MapDefinition.players():
+		var nation_label: String = country.name+" · "+Doctrine.info(country.id).name+" weapons"
+		var flag_path: String = "res://assets/interface/flags/"+country.id+".svg"
+		if ResourceLoader.exists(flag_path): country_picker.add_icon_item(load(flag_path),nation_label)
+		else: country_picker.add_item(nation_label)
+		country_picker.set_item_metadata(country_picker.item_count-1,country.id)
+		if country.id == GameSession.player_country: country_picker.select(country_picker.item_count-1)
+	country_picker.visible = not MapDefinition.is_regional()
+	country_picker.custom_minimum_size.y = 60
+	country_picker.add_theme_font_size_override("font_size",20)
+	country_picker.add_theme_constant_override("icon_max_width",30)
+	country_picker.item_selected.connect(func(_index):_show_nation())
+	sides.add_child(country_picker)
+	if MapDefinition.is_regional():
+		var nations := HBoxContainer.new()
+		nations.add_theme_constant_override("separation", 14)
+		sides.add_child(nations)
+		for spec in [["russia", "RUSSIA", [Color.WHITE, Color("1c3f94"), Color("d52b1e")], "Russian"], ["ukraine", "UKRAINE", [Color("0057b7"), Color("ffd700")], "European"]]:
+			nations.add_child(_nation_card(spec[0], spec[1], spec[2], spec[3]))
+	else:
+		nation_summary = _label("",18,MUTED)
+		sides.add_child(nation_summary)
+	_show_nation()
+	# 1 player: the offline training match against the AI.
+	var solo := _new_game_card(page, "chevrons", "1P", "TUTORIAL · 1 PLAYER", "Russia vs Ukraine · you against the AI",
+		"Opening film → learn by playing → allied supplies arrive → take command. Saved on this device.")
+	fresh_button = _button("START TUTORIAL  →", true)
+	fresh_button.pressed.connect(func(): request_start("training"))
+	solo.add_child(fresh_button)
+	training_buttons.append(fresh_button)
+	# 2 players: the persistent online Russia–Ukraine match, one commander per side.
+	var duo := _new_game_card(page, "provinces", "2P", "TUTORIAL · 2 PLAYERS", "Russia vs Ukraine · online, one player per side",
+		"Needs a commander account. The match keeps running on the server and the AI covers your side while you are away.")
+	online_button = _button("JOIN ONLINE  →", true)
+	online_button.pressed.connect(func(): request_start("online"))
+	duo.add_child(online_button)
+	# Europe: the 20-nation map is not open yet.
+	var europe := _new_game_card(page, "research", "20", "EUROPE · 20 NATIONS", "COMING SOON",
+		"Pick one of 20 European countries and fight for the continent online. Watch News for the launch.")
+	var soon := _button("COMING SOON")
+	soon.disabled = true
+	europe.add_child(soon)
+	europe_button = soon
+	# Practice maps for each kind of weapon.
+	var practice := _new_game_card(page, "attack", "★", "WEAPONS RANGE", "Practice · try every unit",
+		"Separate test maps per kind of unit.")
+	test_button = _button("CHOOSE A RANGE  ▾")
+	test_button.pressed.connect(func():
+		range_picker.visible = not range_picker.visible
+		if range_picker.visible: scroll.ensure_control_visible.call_deferred(range_picker))
+	practice.add_child(test_button)
+	# Owner 2026-10-14: separate test maps per kind of unit ("too much if they're all in one").
+	range_picker = GridContainer.new()
+	range_picker.columns = 2
+	range_picker.add_theme_constant_override("h_separation", 10)
+	range_picker.add_theme_constant_override("v_separation", 10)
+	range_picker.visible = false
+	practice.add_child(range_picker)
+	for scenario in WeaponScenarios.LIST:
+		var choice: = _button(str(scenario.title).to_upper())
+		choice.add_theme_font_size_override("font_size", 18)
+		choice.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		choice.pressed.connect(func(): range_picker.hide(); request_start("test:" + str(scenario.id)))
+		range_picker.add_child(choice)
+
+func _badge(icon_name: String, tag: String) -> PanelContainer:
+	var badge := PanelContainer.new()
+	badge.custom_minimum_size = Vector2(76, 76)
+	badge.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	badge.add_theme_stylebox_override("panel", _surface(Color("0f1b23"), Color("344754"), 6))
+	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var stack := _box(badge, 2)
+	stack.alignment = BoxContainer.ALIGNMENT_CENTER
+	var icon := TextureRect.new()
+	icon.texture = load("res://assets/interface/icons/" + icon_name + ".svg")
+	icon.custom_minimum_size = Vector2(30, 30)
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	stack.add_child(icon)
+	var label := _label(tag, 18, GOLD)
+	label.add_theme_font_override("font", _font(600, 1))
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.autowrap_mode = TextServer.AUTOWRAP_OFF
+	stack.add_child(label)
+	return badge
+
+func _new_game_card(parent: Node, icon_name: String, tag: String, title: String, subtitle: String, text: String) -> VBoxContainer:
+	var body := _box(_card(parent), 14)
+	var top := HBoxContainer.new()
+	top.add_theme_constant_override("separation", 18)
+	body.add_child(top)
+	top.add_child(_badge(icon_name, tag))
+	var words := _box(top, 4)
+	var name_label := _label(title, 26)
+	name_label.add_theme_font_override("font", _font(600, 1))
+	words.add_child(name_label)
+	words.add_child(_label(subtitle, 18, GOLD))
+	body.add_child(_label(text, 19, MUTED))
+	return body
+
+const GAME_KINDS := ["training", "online", "campaign"]
+const GAME_INFO := {
+	"training": ["chevrons", "1P", "TUTORIAL · 1 PLAYER"],
+	"online": ["provinces", "2P", "TUTORIAL · 2 PLAYERS"],
+	"campaign": ["city", "AI", "RUSSIA–UKRAINE CAMPAIGN"],
+}
+func _game_row(parent: Node, kind: String) -> Button:
+	var card := PanelContainer.new()
+	card.add_theme_stylebox_override("panel", _surface(Color("14232d"), Color("2b3b45"), 16))
+	parent.add_child(card)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 16)
+	card.add_child(row)
+	row.add_child(_badge(GAME_INFO[kind][0], GAME_INFO[kind][1]))
+	var words := _box(row, 4)
+	words.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	var title := _label(GAME_INFO[kind][2], 22)
+	title.add_theme_font_override("font", _font(600, 1))
+	words.add_child(title)
+	var meta := _label("", 17, MUTED)
+	words.add_child(meta)
+	var button := _button("RESUME  ▶", true)
+	button.custom_minimum_size.x = 168
+	button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	button.add_theme_font_size_override("font_size", 20)
+	button.pressed.connect(_resume_game.bind(kind))
+	row.add_child(button)
+	game_rows.append({"kind": kind, "card": card, "meta": meta, "button": button})
+	return button
+
+func _empty_games(parent: Node, text: String) -> void:
+	var empty := _label(text, 19, MUTED)
+	parent.add_child(empty)
+	empty_labels.append(empty)
+
+## Which games this player has going: the paused match plus anything saved on the device or joined online.
+func active_games() -> Array[String]:
+	var list: Array[String] = []
+	for kind in GAME_KINDS:
+		var live: bool = paused_kind == kind
+		match kind:
+			"training": live = live or FileAccess.file_exists(TrainingScenario.SAVE_PATH)
+			"online": live = live or not online_country().is_empty()
+			"campaign": live = live or (MapDefinition.is_regional() and has_save)
+		if live: list.append(kind)
+	return list
+
+func refresh_active_games() -> void:
+	var games := active_games()
+	active_heading.text = "YOUR ACTIVE GAMES" + ("  ·  %d" % games.size() if games.size() > 1 else "")
+	if my_games_heading != null: my_games_heading.text = "MY GAMES" + ("  ·  %d" % games.size() if not games.is_empty() else "")
+	for item in game_rows:
+		var kind: String = item.kind
+		item.card.visible = kind in games
+		var paused := paused_kind == kind
+		var meta := ""
+		match kind:
+			"training": meta = "Russia vs Ukraine · against the AI · " + _saved_text(TrainingScenario.SAVE_PATH)
+			"online":
+				var country := online_country() if not online_country().is_empty() else selected_country()
+				meta = "Online · you command " + MapDefinition.country_name(country) + " · runs on the server"
+			"campaign": meta = "Offline · against the AI · " + _saved_text("user://regional_save.json")
+		item.meta.text = ("PAUSED · " if paused else "") + meta
+		item.button.visible = kind in games
+		item.button.disabled = loading or not item.button.visible
+	for label in empty_labels: label.visible = games.is_empty()
+	if fresh_button != null: fresh_button.text = "RESTART TUTORIAL  →" if "training" in games else "START TUTORIAL  →"
+
+static func _saved_text(path: String) -> String:
+	var stamp := FileAccess.get_modified_time(path)
+	if stamp == 0: return "saved on this device"
+	var bias: int = int(Time.get_time_zone_from_system().get("bias", 0))
+	var d := Time.get_datetime_dict_from_unix_time(stamp + bias * 60)
+	var months := ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"]
+	return "saved %d %s · %02d:%02d" % [d.day, months[d.month - 1], d.hour, d.minute]
+
+## Owner 2026-10-17: remember the online match the player joined so it is listed with their other games.
+static func remember_online(country: String) -> void:
+	if not MapDefinition.is_regional() or country.is_empty(): return
+	var file := ConfigFile.new()
+	file.load(GameAudio.SETTINGS_PATH)
+	file.set_value("online", "joined_regional", country)
+	file.save(GameAudio.SETTINGS_PATH)
+static func online_country() -> String:
+	var file := ConfigFile.new()
+	if file.load(GameAudio.SETTINGS_PATH) != OK: return ""
+	return str(file.get_value("online", "joined_regional", ""))
+
+func _resume_game(kind: String) -> void:
+	if loading: return
+	# The Russia–Ukraine games run on the regional map; from another map, go back there first.
+	if not MapDefinition.is_regional():
+		MapDefinition.launch(get_tree(), MapDefinition.REGIONAL)
+		return
+	if paused_kind == kind:
+		request_start("resume")
+		return
+	match kind:
+		"training": request_start("training_resume")
+		"campaign": request_start("continue")
+		"online":
+			_choose_country(online_country())
+			request_start("online")
+
+func _choose_country(id: String) -> void:
+	for i in country_picker.item_count:
+		if country_picker.get_item_metadata(i) == id: country_picker.select(i)
+	_show_nation()
+
+func _open_games(focus_new: bool) -> void:
+	_select_page("games")
+	if not focus_new or current_page != "games": return
+	await get_tree().process_frame
+	await get_tree().process_frame
+	scroll.ensure_control_visible(new_games_heading)
 func _nation_card(id: String, title: String, stripes: Array, doctrine: String) -> Button:
 	var card := Button.new()
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -445,7 +642,7 @@ func _build_features() -> void:
 	for feature in catalogue.features:
 		if feature.id not in priorities: _feature_card(page, feature)
 	page.add_child(_label(catalogue.roadmap, 21, MUTED))
-	var play := _button("BACK TO YOUR CAMPAIGN  →", true)
+	var play := _button("BACK TO HOME  →", true)
 	play.pressed.connect(_select_page.bind("home"))
 	page.add_child(play)
 func _update_card(parent: Node, update: Dictionary) -> void:
@@ -518,27 +715,34 @@ func _layout() -> void:
 	masthead.size = Vector2(width, 88)
 	navigation.position = Vector2(left, size.y - 86)
 	navigation.size = Vector2(width, 86)
+	var status_height := 64.0 if status_bar.visible else 0.0
+	status_bar.position = Vector2(left, size.y - 86 - status_height)
+	status_bar.size = Vector2(width, status_height)
 	scroll.position = Vector2(left, 88)
-	scroll.size = Vector2(width, maxf(100, size.y - 174))
+	scroll.size = Vector2(width, maxf(100, size.y - 174 - status_height))
 	content.custom_minimum_size.x = maxf(0, width - 16)
 	var portrait := size.y > size.x
-	hero.custom_minimum_size.y = 360 if portrait else 380
+	hero.custom_minimum_size.y = 300 if portrait else 320
 	artwork.texture = load("res://assets/interface/campaign_hero_landscape.webp")
 	branding.position = Vector2(32, 24)
-	branding.size = Vector2(width - 64, 310)
+	branding.size = Vector2(width - 64, 260)
 	heading.add_theme_font_size_override("font_size", 70 if width >= 680 else 58)
-	for card in country_cards.values(): card.custom_minimum_size.y = 194 if width >= 680 else 244
+	for card in country_cards.values():
+		card.custom_minimum_size.y = maxf(194.0 if width >= 680 else 244.0, card.get_child(0).get_combined_minimum_size().y)
 func begin_loading() -> void:
 	loading = true
-	for button in [online_button, continue_button, fresh_button, test_button, profile_button]: button.disabled = true
+	for button in [online_button, continue_button, fresh_button, test_button, profile_button, join_button]: button.disabled = true
 	for button in training_buttons: button.disabled = true
+	for item in game_rows: item.button.disabled = true
 	language_picker.disabled = true
 	country_picker.disabled = true
 	for card in country_cards.values(): card.disabled = true
 	for button in nav_buttons.values(): button.disabled = true
-	set_progress(0, "Loading campaign")
-	scroll.ensure_control_visible(loading_label)
+	set_progress(0, "Loading game")
 func set_progress(value: float, message: String) -> void:
+	if not status_bar.visible:
+		status_bar.visible = true
+		_layout()
 	progress.value = value
 	loading_label.text = ("Starting · " + message) if booting and not pending_start.is_empty() else message
 ## Owner 2026-10-15: "go straight into the home screen, then choose, then wait". While the map
@@ -548,7 +752,6 @@ var booting: = false
 var pending_start: = ""
 func begin_background_loading() -> void:
 	booting = true
-	for map_button in map_buttons: map_button.disabled = true
 	profile_button.disabled = true
 	for button in nav_buttons.values(): button.disabled = true
 	set_progress(0, "Preparing map")
@@ -557,11 +760,11 @@ func request_start(mode: String) -> void:
 		if pending_start.is_empty():
 			pending_start = mode
 			loading = true
-			for button in [online_button, continue_button, fresh_button, test_button]: button.disabled = true
+			for button in [online_button, continue_button, fresh_button, test_button, join_button]: button.disabled = true
 			for button in training_buttons: button.disabled = true
+			for item in game_rows: item.button.disabled = true
 			for card in country_cards.values(): card.disabled = true
 			country_picker.disabled = true
-			scroll.ensure_control_visible(loading_label)
 		return
 	if loading: return
 	begin_loading()
@@ -570,6 +773,7 @@ func request_start(mode: String) -> void:
 		test_requested.emit(mode.get_slice(":", 1))
 		return
 	match mode:
+		"resume": resume_requested.emit()
 		"continue": continue_requested.emit()
 		"fresh": fresh_requested.emit()
 		"test": test_requested.emit("all")
@@ -578,24 +782,27 @@ func request_start(mode: String) -> void:
 		"training_resume": training_requested.emit(true)
 ## Owner 2026-10-15 ("a button to go back to the home screen"): the match is saved and paused;
 ## Resume Campaign carries straight on.
-func show_paused_match() -> void:
-	has_save = true
-	panel.visible = true
-	continue_button.visible = true
-	fresh_button.text = "NEW CAMPAIGN  →"
-	cancel_loading("Match paused · tap Resume Campaign to carry on")
+func show_paused_match(kind: String = "campaign") -> void:
+	paused_kind = kind
+	if kind == "campaign": has_save = true
+	cancel_loading("")
 	show()
+	_select_page("home")
 	scroll.scroll_vertical = 0
 func cancel_loading(message: String) -> void:
 	loading = false
-	for button in [online_button, fresh_button, test_button, profile_button]: button.disabled = false
+	for button in [online_button, fresh_button, test_button, profile_button, join_button]: button.disabled = false
 	for button in training_buttons: button.disabled = false
-	continue_button.disabled = not has_save
+	refresh_active_games()
 	language_picker.disabled = false
 	country_picker.disabled = false
 	for card in country_cards.values(): card.disabled = false
 	for button in nav_buttons.values(): button.disabled = false
 	set_progress(100, message)
+	# Nothing to report: give the space back to the page.
+	if message.is_empty() or message == "Ready":
+		status_bar.visible = false
+		_layout()
 func _show_audio() -> void:
 	music_button.text = "MUSIC: " + ("ON" if GameAudio.music_enabled else "OFF")
 	sound_button.text = "SOUND: " + ("ON" if GameAudio.sound_enabled else "OFF")

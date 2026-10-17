@@ -68,7 +68,7 @@ func run() -> void:
 	check(not Doctrine.stealth(UnitStats.specimen("yak130_poland",1)),"ordinary F-16 is not stealth")
 	check(Doctrine.stealth(UnitStats.specimen("fighters_poland",3)),"F-22 tier has stealth")
 	var panel: = MobileStartPanel.new();root.add_child(panel);panel.setup(StrategyTheme.create(),false)
-	check(panel.country_picker.item_count==20 and panel.map_buttons.size()==2,"home has Europe test entry and 20-country selector")
+	check(panel.country_picker.item_count==20 and panel.europe_button.disabled and panel.europe_button.text=="COMING SOON","Europe 20-country selector kept; Games list shows Europe as coming soon (owner 2026-10-17)")
 	check(panel.selected_country()=="poland","selected nation preserved")
 	check(session._point([-61.0,-40.0]) and not session._point([5000,5000]),"save bounds fit Europe and reject invalid positions")
 	panel.free();terrain.free();clock.free()

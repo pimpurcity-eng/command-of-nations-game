@@ -28,6 +28,11 @@ func run() -> void:
 	check(game != null and game.get_script().resource_path == "res://scripts/main.gd","opens real campaign")
 	if game != null:
 		check(game.mobile_start.progress.value == 100 and not game.mobile_start.fresh_button.disabled,"ready screen completed")
+		# Owner 2026-10-17: the Russia–Ukraine start is the 1-player tutorial on the Games tab.
+		game.mobile_start._select_page("games")
+		for i in 4: await process_frame
+		game.mobile_start.scroll.ensure_control_visible(game.mobile_start.fresh_button)
+		for i in 2: await process_frame
 		var point: Vector2 = game.mobile_start.fresh_button.get_global_rect().get_center()
 		var click := InputEventMouseButton.new()
 		click.button_index = MOUSE_BUTTON_LEFT
@@ -39,8 +44,10 @@ func run() -> void:
 		click.pressed = false
 		root.push_input(click)
 		for i in 6: await process_frame
-		check(not game.mobile_start.visible and not game.clock.paused, "actual Start button input opens running campaign")
+		check(not game.mobile_start.visible and not game.session.training.is_empty(), "actual Start Tutorial input opens the 1-player tutorial")
+		game._clear_training()
 		game.mobile_start.show()
+		game.mobile_start._select_page("games")
 		game.mobile_start.cancel_loading("Ready")
 		game.mobile_start.test_button.pressed.emit()
 		# The weapons range now offers separate test maps; "All weapons" is the last choice.
