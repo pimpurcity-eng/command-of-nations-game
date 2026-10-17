@@ -54,7 +54,9 @@ static func ensure_supplied_equipment() -> void:
 		spec.id = id
 		spec.name = AMERICAN_HARDWARE[family][0]
 		spec.supplied_only = true
-		var tier: Dictionary = spec.research_tiers[0].duplicate(true)
+		var tiers: Array = spec.get("research_tiers", [])
+		if tiers.is_empty(): continue
+		var tier: Dictionary = tiers[0].duplicate(true)
 		tier.name = spec.name
 		tier.model = "res://assets/library/arsenal/%s.glb" % AMERICAN_HARDWARE[family][1]
 		tier.erase("preview")

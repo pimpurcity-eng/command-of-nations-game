@@ -12,7 +12,7 @@ var inputs: Dictionary = {}
 var cooldown_until := 0
 var working := false
 func _ready() -> void:
-	layer=30;auth=PlayerAuth.new();add_child(auth)
+	layer=30;auth=PlayerAuth.shared(get_tree())
 	overlay=Control.new();overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);add_child(overlay)
 	var shade:=ColorRect.new();shade.color=Color(0.02,0.04,0.07,0.96);shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);overlay.add_child(shade)
 	var scroll:=ScrollContainer.new();scroll.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);scroll.offset_left=32;scroll.offset_right=-32;scroll.offset_top=60;scroll.offset_bottom=-40;overlay.add_child(scroll)

@@ -30,7 +30,7 @@ Older notes (`CHATGPT_HANDOFF.md`, `docs/NEXT_LIST.md`, `docs/CHATGPT_NOTE_2026_
 | Builds repo | `pimpurcity-eng/Command-of-nations-builds` (private): latest **0.57** = `bcda1be`, versionCode 57. |
 | Website | https://warfrontmandate.com — branch `chatgpt/warfront-mandate-hosting`, folder `website/`. |
 | Browser game | https://play.warfrontmandate.com |
-| Supabase | project `wrnmscdtwbezcmrlukvg`. Migrations applied: foundation, hardening, achievements, **004 stats_alliances, 005 premium** (both live 16 Oct). |
+| Supabase | project `wrnmscdtwbezcmrlukvg`. Migrations applied: foundation, hardening, achievements, **004 stats_alliances, 005 premium** (both live 16 Oct), training XP, and read-only `multiplayer_access` (live 17 Oct). |
 | Engine | Godot **4.6.3 stable** (4.4.x breaks the scripts). |
 
 Tests: `rm -f "$HOME/.local/share/Command of Nations/resume.cfg"` then
@@ -96,6 +96,20 @@ Status: ✅ done (needs Matthew's in-game check) · 🔧 in progress · ⬜ to d
 | 10-16 | `8570af0` | Claude | Combat test change from a stopped helper |
 
 ## 5. Session state
+
+**17 Oct (ChatGPT) — website/online audit fixes added to 0.61; Claude finishes the release.**
+Matthew repeated: "Add to sixty-one ... and Claude will finish." This patch is rebased on
+`912b2e2`; it preserves PR #22's tutorial, films, city targeting, mandatory feature lessons and
+loading improvements. Added: authoritative completed-training + level-10 admission; a real
+match browser and account-scoped individual Resume targets; occupied-country refusal;
+scene-persistent authentication; saved nonsecret match choice across sign-in; web mode routing.
+The read-only `multiplayer_access` database RPC is **already applied** to Supabase.
+Read [V61_FIX_HANDOFF.md](V61_FIX_HANDOFF.md) for exact integration/release steps, remaining
+work, and the website CTA patch. There was no app build, server deployment, or web publication.
+Final merged focused tests: training 97/0; training interaction 13/0; cinema 23/0; online flow
+28/0. Multiplayer, accounts 58/0, Europe online 31/0 and Home tests pass. The full legacy
+asset-dependent suite is not release-clean here; the handoff lists failures honestly.
+**In progress: none. Claude owns final build, original-asset restoration, phone QA and release.**
 
 **17 Oct (ChatGPT) — added tutorial repairs to 0.61; handed back to Claude.**
 Matthew's latest instruction: **"Add to 61 and Claude will finish."**
@@ -175,4 +189,4 @@ performance profiling are still being investigated; this is not a released build
 - Physical-phone review of camera feel, tap targets and report readability remains useful;
   automated and rendered checks are being completed under Matthew's publish authorization.
 
-**Last session:** 2026-10-17, ChatGPT — merged PR #22 into `claude/v0.61` at Matthew's request and documented Claude's remaining Android work. No build or deployment.
+**Last session:** 2026-10-17, ChatGPT — added website/online audit fixes on top of the latest `claude/v0.61`; see `docs/V61_FIX_HANDOFF.md`. Claude finishes the build/release. No build or deployment.

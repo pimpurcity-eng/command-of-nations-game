@@ -18,6 +18,7 @@ var selected_flag: TextureRect
 var selected_name: Label
 var weapon_badge: Label
 var examples: HBoxContainer
+var title_label: Label
 
 func open(theme: Theme, connection: MatchClient) -> void:
 	client = connection
@@ -46,7 +47,7 @@ func open(theme: Theme, connection: MatchClient) -> void:
 	body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	body.add_theme_constant_override("separation", 20)
 	scroll.add_child(body)
-	_label(body, "EUROPE — ONLINE TEST", 30, MobileStartPanel.GOLD)
+	title_label = _label(body, "CHOOSE YOUR COUNTRY", 30, MobileStartPanel.GOLD)
 	info = _label(body, "Checking the match…", 21)
 	_label(body, "CHOOSE YOUR COUNTRY", 20, MobileStartPanel.GOLD)
 	countries = OptionButton.new()
@@ -139,6 +140,7 @@ func _layout() -> void:
 	surface.size = Vector2(width, maxf(250, area.y - 64))
 
 func show_match(data: Dictionary) -> void:
+	title_label.text = str(data.get("title", "ONLINE MATCH")).to_upper()
 	seats = data.get("seats", {})
 	own_country = str(data.get("own_country", ""))
 	var previous: = str(countries.get_item_metadata(countries.selected)) if countries.selected >= 0 else GameSession.player_country

@@ -30,27 +30,31 @@ var _hello_sent: = false
 var _closed: = false
 var _shown_winner: = false
 var _preview: = false
+var map_id := ""
+var endpoint := ""
 
-func connect_to(url: String, account_token: String, match: String, country_wanted: String = "") -> Error:
+func connect_to(url: String, account_token: String, match: String, country_wanted: String = "", requested_map: String = "") -> Error:
 	token = account_token
+	endpoint = url
+	map_id = MapDefinition.id if requested_map.is_empty() else requested_map
 	match_id = match
 	wanted_country = country_wanted
 	ws.inbound_buffer_size = 1 << 22  # a full state can be a few hundred kB
 	return ws.connect_to_url(url)
 
-func preview(url: String, account_token: String, match: String) -> Error:
+func preview(url: String, account_token: String, match: String, requested_map: String = "") -> Error:
 	_preview = true
-	return connect_to(url, account_token, match)
+	return connect_to(url, account_token, match, "", requested_map)
 
 func refresh_lobby() -> void:
 	if ws.get_ready_state() == WebSocketPeer.STATE_OPEN:
-		_send({"t":"lobby", "match":match_id, "map":MapDefinition.id})
+		_send({"t":"lobby", "match":match_id, "map":map_id})
 
 func join_country(chosen: String) -> void:
 	if ws.get_ready_state() != WebSocketPeer.STATE_OPEN: return
 	wanted_country = chosen
 	_preview = false
-	_send({"t":"hello", "token":token, "match":match_id, "map":MapDefinition.id, "country":chosen})
+	_send({"t":"hello", "token":token, "match":match_id, "map":map_id, "country":chosen})
 
 ## Lets this client drive `main` (a running main.tscn): orders go to the server from now on.
 func attach(main: Node) -> void:
@@ -80,7 +84,7 @@ func _process(delta: float) -> void:
 	var ready: = ws.get_ready_state()
 	if ready == WebSocketPeer.STATE_OPEN and not _hello_sent:
 		_hello_sent = true
-		_send({"t": "lobby" if _preview else "hello", "token": token, "match": match_id, "map":MapDefinition.id, "country": wanted_country})
+		_send({"t": "lobby" if _preview else "hello", "token": token, "match": match_id, "map":map_id, "country": wanted_country})
 	# Read even while closing: a refusal arrives just before the server closes the connection.
 	while ws.get_available_packet_count() > 0:
 		var message: Variant = JSON.parse_string(ws.get_packet().get_string_from_utf8())
@@ -97,7 +101,8 @@ func _process(delta: float) -> void:
 		game.units.glide(delta)
 
 func _handle(message: Dictionary) -> void:
-	if message.get("t", "") in ["lobby", "welcome", "tick"] and str(message.get("map", MapDefinition.id)) != MapDefinition.id:
+	var expected_map := MapDefinition.id if map_id.is_empty() else map_id
+	if message.get("t", "") in ["lobby", "welcome", "tick"] and str(message.get("map", expected_map)) != expected_map:
 		error = "This match uses a different map"
 		ws.close(4000, error)
 		return

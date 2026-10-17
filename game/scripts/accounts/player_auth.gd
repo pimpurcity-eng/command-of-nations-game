@@ -14,6 +14,14 @@ var recovery_pending := false
 var busy := false
 var refresh_retry_at := 0.0
 var transport: Callable # Test injection only; production uses HTTPRequest.
+## Keep the signed-in session alive when switching between campaign scenes.
+static var current: PlayerAuth
+static func shared(tree: SceneTree) -> PlayerAuth:
+	if not is_instance_valid(current) or current.is_queued_for_deletion():
+		current = PlayerAuth.new()
+		current.name = "WarfrontPlayerAuth"
+		tree.root.add_child(current)
+	return current
 func _ready() -> void:
 	var config := ConfigFile.new()
 	if config.load("res://config/accounts.cfg")==OK:
@@ -261,6 +269,23 @@ func post_alliance_message(text: String) -> Dictionary:return await alliance_cal
 func post_alliance_operation(code: String,side: String,note: String) -> Dictionary:return await alliance_call("post_alliance_operation",{"code":code,"play_side":side,"operation_note":note})
 static func level_for(xp: int) -> int:return int(floor(sqrt(maxf(xp,0)/100.0)))+1
 static func xp_for_level(level: int) -> int:return 100*(level-1)*(level-1)
+const MULTIPLAYER_LEVEL := 10
+static func multiplayer_reason(access: Dictionary) -> String:
+	if not bool(access.get("training_complete", false)): return "Complete Russia vs Ukraine training before joining regular multiplayer."
+	if level_for(int(access.get("xp", 0))) < MULTIPLAYER_LEVEL: return "Regular multiplayer unlocks at commander level %d. Your level is %d. Continue training matches to earn XP." % [MULTIPLAYER_LEVEL, level_for(int(access.get("xp", 0)))]
+	return ""
+
+func multiplayer_access() -> Dictionary:
+	if not signed_in(): return failure("Sign in to play online.")
+	var until := Time.get_ticks_msec() + 12000
+	while busy and Time.get_ticks_msec() < until: await get_tree().process_frame
+	if not signed_in(): return failure("Sign in to play online.")
+	var result := await request("/rest/v1/rpc/multiplayer_access", {}, HTTPClient.METHOD_POST, access_token)
+	if not result.ok: return failure("Could not verify multiplayer eligibility. Try again in a moment.")
+	var rows: Variant = result.data.get("rows", [])
+	if not rows is Array or rows.is_empty() or not rows[0] is Dictionary: return failure("Could not verify multiplayer eligibility.")
+	var reason := multiplayer_reason(rows[0])
+	return {"ok": reason.is_empty(), "message": reason, "data": rows[0]}
 func load_profile() -> Dictionary:
 	if not signed_in():return failure("Sign in first.")
 	var profile_user := str(user.get("id",""))
@@ -285,7 +310,7 @@ func record_result(won: bool,minutes: int,destroyed: int=0,lost: int=0,provinces
 	if rows is Array and not rows.is_empty():profile.merge(rows[0],true)
 	return {"ok":true,"data":profile}
 ## Finishing the training match grants 10 XP once per commander (migration 006). The Europe
-## map requires TRAINING_XP, so a finished-but-unclaimed training is kept on the phone and
+## map also requires commander level 10; a finished-but-unclaimed training is kept locally and
 ## claimed on the next sign-in (claim_pending_training).
 const TRAINING_XP: = 10
 const TRAINING_FLAG: = "user://training_reward.cfg"

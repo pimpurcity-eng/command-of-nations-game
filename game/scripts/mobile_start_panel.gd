@@ -5,6 +5,8 @@ signal continue_requested
 signal fresh_requested
 signal test_requested(scenario: String)
 signal online_requested
+signal online_match_requested(entry: Dictionary)
+signal online_browser_requested(mine: bool)
 signal account_requested
 signal training_requested(resume: bool)
 ## Carry on with the match that was paused when the player went back to the home screen.
@@ -385,7 +387,7 @@ func _build_games() -> void:
 		"Opening film, guided first orders, allied supplies by ship and train — then full command against the AI.", fresh_button)
 	# 2 players: the persistent online Russia–Ukraine match, one commander per side.
 	online_button = _row_button("JOIN  ▶", true)
-	online_button.pressed.connect(func(): _choose_side("online", "RUSSIA VS UKRAINE · 2 PLAYERS"))
+	online_button.pressed.connect(func(): request_start("online"))
 	_new_game_card(page, "map:russia_ukraine", "2", "RUSSIA VS UKRAINE", "2 players · online · being built",
 		"One commander per side. Needs an account; the AI covers your side while you are away.", online_button)
 	# Owner 2026-10-17: "unlock the two-player Russia, being built right now" — open while it is tested.
@@ -619,7 +621,7 @@ func _game_row(parent: Node, kind: String) -> Button:
 	row.add_child(_badge(GAME_INFO[kind][0], GAME_INFO[kind][1]))
 	var words := _box(row, 4)
 	words.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	var title := _label(GAME_INFO[kind][2], 22)
+	var title := _label("YOUR ONLINE GAMES" if kind == "online" else GAME_INFO[kind][2], 22)
 	title.add_theme_font_override("font", _font(600, 1))
 	words.add_child(title)
 	var meta := _label("", 17, MUTED)
@@ -628,7 +630,8 @@ func _game_row(parent: Node, kind: String) -> Button:
 	button.custom_minimum_size.x = 168
 	button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	button.add_theme_font_size_override("font_size", 20)
-	button.pressed.connect(_resume_game.bind(kind))
+	if kind == "online": button.pressed.connect(func(): online_browser_requested.emit(true))
+	else: button.pressed.connect(_resume_game.bind(kind))
 	row.add_child(button)
 	game_rows.append({"kind": kind, "card": card, "meta": meta, "button": button})
 	return button
@@ -662,8 +665,8 @@ func refresh_active_games() -> void:
 		match kind:
 			"training": meta = "1 player · against the AI · " + _saved_text(TrainingScenario.SAVE_PATH)
 			"online":
-				var country := online_country() if not online_country().is_empty() else selected_country()
-				meta = "2 players · online · you command " + MapDefinition.country_name(country)
+				var matches := OnlineGames.games()
+				meta = "%d online round%s · choose a game to resume" % [matches.size(), "s" if matches.size() != 1 else ""]
 			"campaign": meta = "Offline · against the AI · " + _saved_text("user://regional_save.json")
 		item.meta.text = ("PAUSED · " if paused else "") + meta
 		item.button.visible = kind in games
@@ -704,9 +707,8 @@ static func remember_online(country: String) -> void:
 	file.set_value("online", "joined_regional", country)
 	file.save(GameAudio.SETTINGS_PATH)
 static func online_country() -> String:
-	var file := ConfigFile.new()
-	if file.load(GameAudio.SETTINGS_PATH) != OK: return ""
-	return str(file.get_value("online", "joined_regional", ""))
+	var matches := OnlineGames.games()
+	return str(matches[0].get("country", "")) if not matches.is_empty() else ""
 
 func _resume_game(kind: String) -> void:
 	if loading: return
@@ -721,8 +723,11 @@ func _resume_game(kind: String) -> void:
 		"training": request_start("training_resume")
 		"campaign": request_start("continue")
 		"online":
-			_choose_country(online_country())
-			request_start("online")
+			var matches := OnlineGames.games()
+			if matches.is_empty(): online_browser_requested.emit(true)
+			else:
+				matches[0]["resume"] = true
+				online_match_requested.emit(matches[0])
 
 func _choose_country(id: String) -> void:
 	for i in country_picker.item_count:

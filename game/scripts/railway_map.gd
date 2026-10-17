@@ -28,6 +28,8 @@ func setup(city_system: CitySystem, building_system: BuildingSystem) -> void:
 
 func _exit_tree() -> void:
 	if active == self: active = null
+	if is_instance_valid(_model): _model.free()
+	_model = null
 
 func stations() -> Array:
 	var result: Array = []
@@ -129,6 +131,7 @@ func _mark_served() -> void:
 
 func _load_model() -> bool:
 	if _model != null: return true
+	if not WebExtras.has(MODEL): return false
 	var scene: = load(MODEL) as PackedScene
 	if scene == null: return false
 	_model = UnitVisual.merged(scene.instantiate() as Node3D)

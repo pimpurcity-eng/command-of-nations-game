@@ -59,8 +59,10 @@ func run() -> void:
 	# Two players join.
 	var alice: = client("dev:alice", "russia")
 	check(await wait_for(func(): return alice.country == "russia"), "the first player gets the country they asked for")
-	var bob: = client("dev:bob", "russia")
-	check(await wait_for(func(): return bob.country == "ukraine"), "a taken seat sends the next player to a free one (join in progress)")
+	var taken: = client("dev:bob", "russia")
+	check(await wait_for(func(): return taken.error.contains("already taken")) and server.seats.ukraine.user.is_empty(), "a taken seat never silently assigns another country")
+	var bob: = client("dev:bob", "ukraine")
+	check(await wait_for(func(): return bob.country == "ukraine"), "the second player gets the free country they explicitly chose")
 	var carol: = client("dev:carol")
 	check(await wait_for(func(): return carol.error == "This match is full"), "a full match turns new players away")
 	await wait_for(func(): return server.ai_seats.is_empty(), 60)

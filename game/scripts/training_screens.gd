@@ -276,7 +276,7 @@ static func finish(parent: Control, players: int, signed_in: bool, on_continue: 
 	var map_line := text("EUROPE MAP UNLOCKED", 34, Color("b9f0a6"), 700)
 	map_line.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	inside.add_child(map_line)
-	var note := text("You now have the experience to join the Europe map." if signed_in else "Sign in to add these XP to your commander and unlock the Europe map.", 25, TEXT, 500)
+	var note := text("Training completed. Regular multiplayer unlocks at commander level 10. Keep playing this match to earn more XP." if signed_in else "Sign in to save your training completion and XP. Regular multiplayer unlocks at commander level 10.", 25, TEXT, 500)
 	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	inside.add_child(note)
 	column.add_child(unlocked)

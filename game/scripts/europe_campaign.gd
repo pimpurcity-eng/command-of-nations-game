@@ -168,45 +168,7 @@ func _with_war(enemy: String, then: Callable) -> void:
 	dialog.popup_centered()
 
 func join_online(operation: String = "") -> void:
-	if account_panel == null:
-		account_panel = AccountPanel.new()
-		add_child(account_panel)
-		account_panel.auth.session_changed.connect(refresh_home_commander)
-		await get_tree().process_frame
-	if not account_panel.auth.signed_in():
-		mobile_start.cancel_loading("Sign in to choose your online country")
-		account_panel.open()
-		return
-	var settings: = ConfigFile.new()
-	settings.load(GameAudio.SETTINGS_PATH)
-	if online != null:
-		online.leave()
-		online.queue_free()
-	online = MatchClient.new()
-	add_child(online)
-	var lobby: = MatchLobbyPanel.new()
-	add_child(lobby)
-	lobby.open(hud.get_child(0).theme, online)
-	lobby.cancelled.connect(func(): mobile_start.cancel_loading("Choose a match or start an offline campaign"))
-	online.welcomed.connect(func(_state):
-		_clear_training()
-		online.attach(self)
-		apply_player_country()
-		# Country focusing must not enable local AI while connected.
-		match_rules.ai_enabled = false
-		mobile_start.hide()
-		lobby.queue_free()
-		audio.play_music("battle_theme")
-		hud.show_status("ONLINE · " + MapDefinition.country_name(online.country) + " · game " + online.match_id))
-	online.closed.connect(func(reason):
-		mobile_start.cancel_loading(reason if not reason.is_empty() else "Disconnected · open Europe Online to rejoin")
-		hud.show_status("Disconnected · open Europe Online to rejoin"))
-	var match_id: = operation if not operation.is_empty() else str(settings.get_value("online", "europe_match", "europe-1"))
-	var endpoint: = str(settings.get_value("online", "europe_server_url", ONLINE_SERVER + "/europe"))
-	var error: = online.preview(endpoint, account_panel.auth.access_token, match_id)
-	if error != OK:
-		lobby.status.text = "Could not reach the match server · go back and try again"
-		mobile_start.cancel_loading("Could not reach the match server")
+	super.join_online(operation)
 
 func _configure_europe_view() -> void:
 	rig.bounds=MapDefinition.bounds().grow(-2)

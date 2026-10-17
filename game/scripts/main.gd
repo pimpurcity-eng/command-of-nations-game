@@ -555,6 +555,8 @@ func _ready() -> void :
 			start_campaign_play()
 			mobile_start.hide())
 		mobile_start.online_requested.connect(join_online)
+		mobile_start.online_match_requested.connect(_open_online_entry)
+		mobile_start.online_browser_requested.connect(func(mine: bool): join_online("__my_games" if mine else ""))
 		mobile_start.test_requested.connect(func(scenario: String):
 			_clear_training()
 			GameSession.player_country = mobile_start.selected_country()
@@ -579,6 +581,8 @@ func _ready() -> void :
 			mobile_start.hide())
 	boot_finished = true
 	boot_ready.emit()
+	_ensure_account()
+	_apply_launch_intent.call_deferred()
 	if units != null and not GameSession.weapons_test: units.prewarm_models()
 	# Owner 2026-10-17: "it takes me right to the game. It doesn't give me a choice." The app
 	# always opens on the home screen; a match that was interrupted is its Resume Game button.
@@ -620,6 +624,7 @@ func _web_extras_loaded() -> void:
 			# downloading as missing and never asked for it again. It may have just arrived.
 			model.set_meta("missing_original_model", false)
 	if cities != null: cities.sync_buildings()
+	if RailwayMap.active != null and not RailwayMap.active.links.is_empty() and RailwayMap.active._model == null: RailwayMap.active._draw()
 func _process(delta: float) -> void :
 	if map != null and rig != null:
 		map.set_view_distance(rig.distance)
@@ -1417,8 +1422,11 @@ func show_stack_info() -> void :
 ## Online matches (owner request 2026-10-12): the server address is in user://settings.cfg
 ## [online] server_url (default below, set up per docs/MULTIPLAYER_SERVER.md) and match.
 const ONLINE_SERVER: = "wss://play.warfrontmandate.com"
+var online_browser: MatchBrowserPanel
+var joining_online := false
 var online: MatchClient
 var paused_to_home: = false
+var _launch_intent_handled := false
 ## Owner 2026-10-15: in-match button back to the home screen (the match is saved and paused).
 ## Owner 2026-10-16: "every time I switch the screen over to do something else, it makes me restart
 ## the game". Phones close games left in the background to free memory. The match is saved the
@@ -1458,60 +1466,125 @@ func return_to_home() -> void:
 	mobile_start.show_paused_match("online" if MatchClient.active != null else ("training" if not session.training.is_empty() else "campaign"))
 
 func open_home_account() -> void:
+	_ensure_account()
+	account_panel.open()
+	refresh_home_commander()
+
+func _ensure_account() -> void:
 	if account_panel == null:
 		account_panel = AccountPanel.new()
 		add_child(account_panel)
 	if not account_panel.operation_requested.is_connected(join_operation): account_panel.operation_requested.connect(join_operation)
 	if not account_panel.auth.session_changed.is_connected(refresh_home_commander):
 		account_panel.auth.session_changed.connect(refresh_home_commander)
-	account_panel.open()
-	refresh_home_commander()
+		refresh_home_commander()
 
 func refresh_home_commander() -> void:
 	if mobile_start == null or account_panel == null: return
 	var name_text: String = str(account_panel.auth.user.get("user_metadata", {}).get("commander_name", "Commander"))
 	mobile_start.set_commander(name_text, account_panel.auth.signed_in())
+	mobile_start.refresh_active_games()
 	# A training finished while signed out is claimed (10 XP, once) at the next sign-in.
 	account_panel.auth.claim_pending_training()
+	if account_panel.auth.signed_in() and not OnlineGames.pending_entry().is_empty(): _apply_launch_intent.call_deferred()
 
 ## Alliance operations (owner 2026-10-15): one tap joins the posted match on the posted side.
 func join_operation(code: String, side: String) -> void:
-	mobile_start.country_picker.select(0 if side == "ukraine" else 1)
-	mobile_start.show()
-	mobile_start.begin_loading()
-	await join_online(code)
+	var entry := OnlineGames.find_match(code)
+	if entry.is_empty():
+		entry = OnlineGames.configured()[0].duplicate(true)
+		entry["match"] = code
+	entry["country"] = side
+	entry["operation"] = true
+	_open_online_entry(entry)
 
 func join_online(match_code: String = "") -> void:
-	if account_panel == null:
-		account_panel = AccountPanel.new()
-		add_child(account_panel)
-		account_panel.operation_requested.connect(join_operation)
-		await get_tree().process_frame
+	_ensure_account()
+	mobile_start.cancel_loading("")
+	if not match_code.is_empty():
+		var entry := OnlineGames.find_match(match_code)
+		if not entry.is_empty(): _open_online_entry(entry); return
+	if is_instance_valid(online_browser): online_browser.queue_free()
+	var browser := MatchBrowserPanel.new()
+	online_browser = browser
+	add_child(browser)
+	browser.open(hud.get_child(0).theme, match_code == "__my_games")
+	browser.selected.connect(_open_online_entry)
+	browser.cancelled.connect(func(): mobile_start.cancel_loading(""))
+
+func _open_online_entry(entry: Dictionary) -> void:
+	if joining_online: return
+	if not OnlineGames.valid(entry): mobile_start.cancel_loading("Invalid match address"); return
+	_ensure_account()
 	if not account_panel.auth.signed_in():
-		hud.show_status("Sign in to your account to play online")
-		mobile_start.cancel_loading("Sign in to your account to play online")
+		OnlineGames.queue_pending(entry)
+		mobile_start.cancel_loading("Sign in to join game " + str(entry.match))
 		account_panel.open()
 		return
-	var settings: = ConfigFile.new()
-	settings.load(GameAudio.SETTINGS_PATH)
+	joining_online = true
+	var access := await account_panel.auth.multiplayer_access()
+	joining_online = false
+	if not access.ok:
+		mobile_start.cancel_loading(str(access.message))
+		return
+	if str(entry.map) != MapDefinition.id:
+		if online != null: online.leave()
+		OnlineGames.queue_pending(entry)
+		MapDefinition.launch(get_tree(), str(entry.map), str(entry.get("country", "")))
+		return
 	if online != null: online.leave(); online.queue_free()
 	online = MatchClient.new()
 	add_child(online)
-	online.welcomed.connect(func(_state: Dictionary):
-		MobileStartPanel.remember_online(online.country)
+	var connection := online
+	var lobby := MatchLobbyPanel.new()
+	add_child(lobby)
+	lobby.open(hud.get_child(0).theme, connection)
+	lobby.cancelled.connect(func(): mobile_start.cancel_loading(""))
+	connection.welcomed.connect(func(_state: Dictionary):
+		var saved := entry.duplicate(true)
+		saved["country"] = connection.country
+		OnlineGames.clear_pending()
+		OnlineGames.remember(saved)
 		_clear_training()
-		online.attach(self)
+		connection.attach(self)
+		apply_player_country()
+		match_rules.ai_enabled = false
 		mobile_start.hide()
+		account_panel.overlay.hide()
+		if is_instance_valid(lobby): lobby.queue_free()
 		audio.play_music("battle_theme")
-		hud.show_status("ONLINE · you command " + online.country.capitalize() + " · the AI covers you while you are away"))
-	online.closed.connect(func(reason: String):
-		var text: = "Disconnected from the match" + (": " + reason if not reason.is_empty() else "") + " · tap Online Match to rejoin"
+		hud.show_status("ONLINE · game " + connection.match_id + " · " + MapDefinition.country_name(connection.country)))
+	connection.closed.connect(func(reason: String):
+		var text := "Disconnected · " + (reason if not reason.is_empty() else "open My Games to reconnect")
 		hud.show_status(text)
 		if mobile_start.visible: mobile_start.cancel_loading(text))
-	var error: = online.connect_to(str(settings.get_value("online", "server_url", ONLINE_SERVER)), account_panel.auth.access_token, match_code if not match_code.is_empty() else str(settings.get_value("online", "match", "main")), mobile_start.selected_country())
-	hud.show_status("Connecting to the match server…" if error == OK else "Could not reach the match server")
-	if error == OK: mobile_start.set_progress(50, "Connecting to the match server…")
-	else: mobile_start.cancel_loading("Could not reach the match server")
+	connection.lobby_received.connect(func(data: Dictionary):
+		if entry.get("resume", false) and not str(data.get("own_country", "")).is_empty(): connection.join_country(str(data.own_country))
+		elif entry.get("operation", false): connection.join_country(str(entry.get("country", ""))), CONNECT_ONE_SHOT)
+	if connection.preview(str(entry.url), account_panel.auth.access_token, str(entry.match), str(entry.map)) != OK:
+		lobby.status.text = "Could not reach the match server · go back and try again"
+		mobile_start.cancel_loading("Could not reach the match server")
+
+func _apply_launch_intent() -> void:
+	if not OnlineGames.pending_entry().is_empty():
+		_launch_intent_handled = true
+		var pending := OnlineGames.pending_entry()
+		OnlineGames.clear_pending()
+		_open_online_entry(pending)
+		return
+	if _launch_intent_handled or not OS.has_feature("web"): return
+	_launch_intent_handled = true
+	var mode := str(JavaScriptBridge.eval("new URL(location.href).searchParams.get('mode') || ''"))
+	match mode:
+		"training": mobile_start.request_start("training")
+		"online": join_online()
+		"practice": mobile_start._select_page("games"); mobile_start.range_picker.show()
+		"new-games": mobile_start._open_games(true)
+		"resume":
+			var games := OnlineGames.games()
+			if not games.is_empty(): games[0]["resume"] = true; _open_online_entry(games[0])
+			elif not mobile_start.featured_kind.is_empty(): mobile_start._resume_game(mobile_start.featured_kind)
+			else: mobile_start._open_games(true)
 
 func start_campaign_play() -> void :
 	if not match_rules.winner.is_empty(): return

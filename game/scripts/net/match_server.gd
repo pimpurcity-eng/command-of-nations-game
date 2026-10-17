@@ -176,14 +176,36 @@ func _hello(peer: Dictionary, message: Dictionary, preview: bool = false) -> voi
 		http.queue_free()
 		if not peers.has(peer): return
 		var user: Variant = JSON.parse_string(body.get_string_from_utf8()) if result == HTTPRequest.RESULT_SUCCESS and code == 200 else null
-		if not user is Dictionary or str(user.get("id", "")).is_empty():
+		if not user is Dictionary or str(user.get("id", "")).is_empty() or not PlayerAuth.confirmed(user):
 			_reject(peer, "Your sign-in has expired; sign in again")
 			return
 		var metadata: Dictionary = user.get("user_metadata", {}) if user.get("user_metadata") is Dictionary else {}
-		_authenticated(peer, str(user.id), str(metadata.get("commander_name", "Commander")).left(24), wanted, preview))
+		var name: String = str(metadata.get("commander_name", "Commander")).left(24)
+		if preview: _authenticated(peer, str(user.id), name, wanted, true)
+		else: _verify_access(peer, token, str(user.id), name, wanted))
 	if http.request(supabase_url.trim_suffix("/") + "/auth/v1/user", ["apikey: " + supabase_key, "Authorization: Bearer " + token]) != OK:
 		http.queue_free()
 		_reject(peer, "Sign-in service unavailable")
+
+## Eligibility comes from the account database, never from client fields or user metadata.
+func _verify_access(peer: Dictionary, token: String, user: String, name: String, wanted: String) -> void:
+	var http := HTTPRequest.new()
+	http.timeout = 10.0
+	add_child(http)
+	peer.since = now
+	http.request_completed.connect(func(result: int, code: int, _headers: PackedStringArray, body: PackedByteArray):
+		http.queue_free()
+		if not peers.has(peer) or peer.state != "auth": return
+		var rows: Variant = JSON.parse_string(body.get_string_from_utf8()) if result == HTTPRequest.RESULT_SUCCESS and code == 200 else null
+		if not rows is Array or rows.is_empty() or not rows[0] is Dictionary:
+			_reject(peer, "Could not verify multiplayer eligibility; try again")
+			return
+		var reason := PlayerAuth.multiplayer_reason(rows[0])
+		if not reason.is_empty(): _reject(peer, reason); return
+		_authenticated(peer, user, name, wanted, false))
+	if http.request(supabase_url.trim_suffix("/") + "/rest/v1/rpc/multiplayer_access", ["apikey: " + supabase_key, "Authorization: Bearer " + token, "Content-Type: application/json"], HTTPClient.METHOD_POST, "{}") != OK:
+		http.queue_free()
+		_reject(peer, "Could not verify multiplayer eligibility; try again")
 
 func _authenticated(peer: Dictionary, user: String, name: String, wanted: String, preview: bool) -> void:
 	if not preview:
@@ -216,7 +238,7 @@ func admit(peer: Dictionary, user: String, name: String, wanted: String) -> void
 		return
 	if country.is_empty():
 		if wanted in countries and seats[wanted].user.is_empty(): country = wanted
-		elif not MapDefinition.is_regional():
+		elif not wanted.is_empty() or not MapDefinition.is_regional():
 			_reject(peer, "That country is already taken · choose another country" if wanted in countries else "Choose one of the available countries")
 			return
 		else:

@@ -1,0 +1,57 @@
+diff --git a/website/index.html b/website/index.html
+index e6875cf..e56ae03 100644
+--- a/website/index.html
++++ b/website/index.html
+@@ -28,7 +28,7 @@
+ <header class="masthead"><div class="wrap mast">
+ <a class="brand" href="/" aria-label="Warfront Mandate home"><img class="logo" src="/assets/logo.svg" width="64" height="64" alt=""><span>WARFRONT<br>MANDATE<span class="brand-small">MODERN STRATEGY · WW3</span></span></a>
+ <nav aria-label="Main navigation"><a href="#games">Games</a><a href="#news">News</a><a href="#difference">The difference</a><a href="#features">Features</a></nav>
+-<a class="button compact" href="https://play.warfrontmandate.com/">PLAY NOW <span aria-hidden="true">↗</span></a>
++<a class="button compact" href="https://play.warfrontmandate.com/?mode=resume">PLAY NOW <span aria-hidden="true">↗</span></a>
+ </div></header>
+ <main id="main">
+ <section class="hero" aria-labelledby="hero-title">
+@@ -38,7 +38,7 @@
+ <div class="edition"><span>WW3</span><i></i>MODERN STRATEGY</div>
+ <h2>Build an economy.<br>Command a nation.</h2>
+ <p class="hero-copy">Fight for territory. Build a trading power. Let AI defend your nation while you're away. Choose your own route to victory.</p>
+-<div class="hero-actions big-actions"><a class="action primary" href="https://play.warfrontmandate.com/"><b>▶ RESUME GAME</b><small>Carry on where you left off</small></a><a class="action" href="#games"><b>+ JOIN NEW GAME</b><small>Russia vs Ukraine · Europe soon</small></a></div>
++<div class="hero-actions big-actions"><a class="action primary" href="https://play.warfrontmandate.com/?mode=resume"><b>▶ RESUME GAME</b><small>Carry on where you left off</small></a><a class="action" href="#games"><b>+ JOIN NEW GAME</b><small>Russia vs Ukraine · Europe soon</small></a></div>
+ <p class="availability"><span class="dot" aria-hidden="true"></span>Early access · Russia vs Ukraine open · more maps coming soon</p>
+ </div>
+ <div class="hero-caption">LAND. AIR. SEA. ECONOMY.</div>
+@@ -52,13 +52,13 @@
+ <div class="section-heading"><div><p class="eyebrow">NEW GAMES</p><h2>Join a game.<br>Run several at once.</h2></div><p>Keep more than one game going. Every game you join is listed under Your Active Games, each with its own Resume.</p></div>
+ <p class="unlock-note">New here? Start with <strong>Russia vs Ukraine</strong> against the AI — it opens with a film and guides your first orders.</p>
+ <div class="game-list">
+-<article class="game-row"><div class="badge map"><img src="/assets/games/russia_ukraine.webp" width="112" height="112" alt="" loading="lazy"><b>★ 1 ★</b></div><div class="game-info"><h3>Russia vs Ukraine</h3><p class="facts">1 player · vs AI · start here</p><p>Choose your side. Opening film, guided first orders, allied supplies by ship and train — then full command against the AI.</p></div><a class="button join" href="https://play.warfrontmandate.com/">PLAY <span aria-hidden="true">▶</span></a></article>
+-<article class="game-row"><div class="badge map"><img src="/assets/games/russia_ukraine.webp" width="112" height="112" alt="" loading="lazy"><b>★ 2 ★</b></div><div class="game-info"><h3>Russia vs Ukraine</h3><p class="facts">2 players · online · being built</p><p>One commander per side. Sign in to join; the AI covers your side while you are away.</p></div><a class="button join" href="https://play.warfrontmandate.com/">JOIN <span aria-hidden="true">▶</span></a></article>
++<article class="game-row"><div class="badge map"><img src="/assets/games/russia_ukraine.webp" width="112" height="112" alt="" loading="lazy"><b>★ 1 ★</b></div><div class="game-info"><h3>Russia vs Ukraine</h3><p class="facts">1 player · vs AI · start here</p><p>Choose your side. Opening film, guided first orders, allied supplies by ship and train — then full command against the AI.</p></div><a class="button join" href="https://play.warfrontmandate.com/?mode=training">PLAY <span aria-hidden="true">▶</span></a></article>
++<article class="game-row"><div class="badge map"><img src="/assets/games/russia_ukraine.webp" width="112" height="112" alt="" loading="lazy"><b>★ 2 ★</b></div><div class="game-info"><h3>Russia vs Ukraine</h3><p class="facts">2 players · online · being built</p><p>One commander per side. Sign in to join; the AI covers your side while you are away.</p></div><a class="button join" href="https://play.warfrontmandate.com/?mode=online">JOIN <span aria-hidden="true">▶</span></a></article>
+ <article class="game-row soon"><div class="badge map"><img src="/assets/games/middle_east.webp" width="112" height="112" alt="" loading="lazy"><b>★ 6 ★</b></div><div class="game-info"><h3>Iran · U.S. · Israel</h3><p class="facts">6 players · smaller map · coming soon</p><p>A six-nation war in the Middle East on a compact map.</p></div><span class="button join disabled" aria-disabled="true">COMING SOON</span></article>
+ <article class="game-row soon"><div class="badge map"><img src="/assets/games/china.webp" width="112" height="112" alt="" loading="lazy"><b>★ $ ★</b></div><div class="game-info"><h3>China · Economy</h3><p class="facts">Economy game · coming soon</p><p>Build China into the world's leading economy through industry and trade.</p></div><span class="button join disabled" aria-disabled="true">COMING SOON</span></article>
+ <article class="game-row soon"><div class="badge map"><img src="/assets/games/europe.webp" width="112" height="112" alt="" loading="lazy"><b>★ 20 ★</b></div><div class="game-info"><h3>Europe · 20 nations</h3><p class="facts">20 players · online · coming soon</p><p>Pick one of 20 European countries and fight for the continent.</p></div><span class="button join disabled" aria-disabled="true">COMING SOON</span></article>
+ <article class="game-row soon"><div class="badge map"><img src="/assets/games/world.webp" width="112" height="112" alt="" loading="lazy"><b>★ 100 ★</b></div><div class="game-info"><h3>World · 100 nations</h3><p class="facts">100 players · online · coming soon</p><p>The whole world: 100 nations on one map, with every continent in play.</p></div><span class="button join disabled" aria-disabled="true">COMING SOON</span></article>
+-<article class="game-row"><div class="badge"><img src="/assets/icons/attack.svg" width="28" height="28" alt=""><b>★</b></div><div class="game-info"><h3>Weapons range</h3><p class="facts">Practice · every unit</p><p>Separate test maps for each kind of unit.</p></div><a class="button join ghost" href="https://play.warfrontmandate.com/">PLAY <span aria-hidden="true">▶</span></a></article>
++<article class="game-row"><div class="badge"><img src="/assets/icons/attack.svg" width="28" height="28" alt=""><b>★</b></div><div class="game-info"><h3>Weapons range</h3><p class="facts">Practice · every unit</p><p>Separate test maps for each kind of unit.</p></div><a class="button join ghost" href="https://play.warfrontmandate.com/?mode=practice">PLAY <span aria-hidden="true">▶</span></a></article>
+ </div>
+ </section>
+ <section class="europe-soon"><div class="wrap europe-grid"><div><p class="eyebrow">COMING SOON</p><h2>More fronts are opening.</h2><p>A six-player Iran · U.S. · Israel war on a smaller map, a China economy game, the 20-nation Europe map and the 100-nation world map.</p></div><a class="text-link" href="#news">Follow the news <span aria-hidden="true">↓</span></a></div></section>
+@@ -99,7 +99,7 @@
+ </div>
+ </section>
+ <section id="news" class="section wrap">
+-<div class="section-heading"><div><p class="eyebrow">DISPATCHES</p><h2>Latest from the front.</h2></div><a class="text-link" href="https://play.warfrontmandate.com/">Open the command centre <span aria-hidden="true">↗</span></a></div>
++<div class="section-heading"><div><p class="eyebrow">DISPATCHES</p><h2>Latest from the front.</h2></div><a class="text-link" href="https://play.warfrontmandate.com/?mode=resume">Open the command centre <span aria-hidden="true">↗</span></a></div>
+ <div class="news-grid">
+ <!-- UPDATES -->
+ <article><time datetime="2026-10-17">17 OCT 2026</time><h3>Europe map — coming soon</h3><p>A 20-nation Europe map is being finished. Choose your country, build your economy and fight for the continent online. Watch this page for the launch.</p></article>
+@@ -111,7 +111,7 @@
+ <!-- /UPDATES -->
+ </div>
+ </section>
+-<section class="last-call wrap"><p class="eyebrow">BUILD. TRADE. DEFEND. COMMAND.</p><h2>Find your route to victory.</h2><div class="big-actions center"><a class="action primary" href="https://play.warfrontmandate.com/"><b>▶ RESUME GAME</b><small>Open the command centre</small></a><a class="action" href="#games"><b>+ JOIN NEW GAME</b><small>Start with Russia vs Ukraine</small></a></div></section>
++<section class="last-call wrap"><p class="eyebrow">BUILD. TRADE. DEFEND. COMMAND.</p><h2>Find your route to victory.</h2><div class="big-actions center"><a class="action primary" href="https://play.warfrontmandate.com/?mode=resume"><b>▶ RESUME GAME</b><small>Open the command centre</small></a><a class="action" href="#games"><b>+ JOIN NEW GAME</b><small>Start with Russia vs Ukraine</small></a></div></section>
+ </main>
+ <footer><div class="wrap footer-main"><a class="brand" href="/"><img class="logo" src="/assets/logo.svg" width="64" height="64" alt=""><span>WARFRONT<br>MANDATE</span></a><p>A modern strategy game in early access.<br>Build an economy. Command a nation.</p><nav aria-label="Legal and support"><a href="/privacy">Privacy</a><a href="/delete-account">Account deletion</a><a href="mailto:support@warfrontmandate.com">Support</a></nav></div><div class="wrap footer-bottom"><span>© 2026 Warfront Mandate</span><span>YOUR ORDERS. THE WORLD'S FUTURE.</span></div></footer>
+ </body>
