@@ -159,9 +159,14 @@ func setup(theme: Theme, saved: bool) -> void:
 	var mast := HBoxContainer.new()
 	mast.add_theme_constant_override("separation", 16)
 	masthead.add_child(mast)
-	var mark := _label("W / M", 26, GOLD)
-	mark.add_theme_font_override("font", _font(600, 1))
-	mark.custom_minimum_size.x = 92
+	# Owner 2026-10-17: new "Shield & Globe" logo replaces the W / M text mark.
+	var mark := TextureRect.new()
+	mark.texture = load("res://assets/interface/logo_shield_globe.svg")
+	mark.custom_minimum_size = Vector2(68, 68)
+	mark.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	mark.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	mark.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	mark.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	mast.add_child(mark)
 	var name_label := _label("WARFRONT MANDATE", 23)
 	name_label.add_theme_font_override("font", _font(600, 2))
