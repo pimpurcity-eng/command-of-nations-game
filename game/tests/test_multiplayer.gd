@@ -31,7 +31,6 @@ func last_result(c: MatchClient, op: String) -> Array:
 	return []
 
 func run() -> void:
-	ArsenalFixture.use_archive()
 	GameSession.player_country = "russia"
 	for path in [SAVE, SAVE.get_basename() + "_seats.json"]:
 		if FileAccess.file_exists(path): DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
