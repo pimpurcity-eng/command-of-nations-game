@@ -16,7 +16,7 @@ const DOCTRINES: = {
 	"chinese": {"name": "Chinese", "plus": "Builds 25% faster. Units 10% cheaper.", "minus": "Units deal 10% less damage and have 5% less HP.", "hp": 0.95,
 		"early": "", "build": 1.25, "cost": 0.9},
 }
-const DEFAULTS: = {"russia": "russian", "ukraine": "european", "united_states": "american", "united_kingdom": "european", "france": "european", "germany": "european", "poland": "european", "europe": "european", "china": "chinese"}
+const DEFAULTS: = {"russia": "russian", "belarus": "russian", "serbia": "russian", "ukraine": "european", "united_states": "american", "poland": "american", "romania": "american", "europe": "european", "china": "chinese"}
 const AIR: = ["fighter", "bomber", "drone", "helicopter"]
 const ROCKETS: = ["air_defense", "artillery", "missile_launcher"]
 
@@ -61,7 +61,9 @@ static func hp_factor(unit: Dictionary) -> float:
 
 ## Western aircraft are stealthy (seen only by radar or up close, UnitSystem.unit_visible).
 static func stealth(unit: Dictionary) -> bool:
-	return of(str(unit.get("country", ""))) == "american" and unit.get("visual_kind", "") in AIR
+	if of(str(unit.get("country", ""))) != "american" or unit.get("visual_kind", "") not in AIR: return false
+	var model: String = EquipmentIdentity.research_tier(str(unit.get("equipment_id","")),int(unit.get("level",1))).get("model","")
+	return ["f22","f35","f47","b2a","b21","xq58"].any(func(word):return model.contains(word))
 
 ## Saves no longer carry doctrines (older saves with a picked doctrine load with the country's own).
 static func snapshot() -> Dictionary:

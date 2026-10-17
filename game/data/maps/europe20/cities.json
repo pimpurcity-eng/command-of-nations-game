@@ -1,0 +1,2062 @@
+[
+  {
+    "id": "russia_0",
+    "name": "Moscow",
+    "country": "russia",
+    "country_id": "russia",
+    "longitude": 37.6136,
+    "latitude": 55.7541,
+    "capital": true,
+    "province": "eu_rus_22",
+    "country_name": "Russia"
+  },
+  {
+    "id": "russia_1",
+    "name": "St. Petersburg",
+    "country": "russia",
+    "country_id": "russia",
+    "longitude": 30.3141,
+    "latitude": 59.941,
+    "capital": false,
+    "province": "eu_rus_14",
+    "country_name": "Russia",
+    "naval_spawn": {
+      "longitude": 30.100133662892155,
+      "latitude": 59.89834969735389
+    }
+  },
+  {
+    "id": "russia_2",
+    "name": "Nizhny Novgorod",
+    "country": "russia",
+    "country_id": "russia",
+    "longitude": 43.9981,
+    "latitude": 56.335,
+    "capital": false,
+    "province": "eu_rus_18",
+    "country_name": "Russia"
+  },
+  {
+    "id": "russia_3",
+    "name": "Rostov",
+    "country": "russia",
+    "country_id": "russia",
+    "longitude": 39.7107,
+    "latitude": 47.2366,
+    "capital": false,
+    "province": "eu_rus_10",
+    "country_name": "Russia",
+    "naval_spawn": {
+      "longitude": 39.21862669545031,
+      "latitude": 47.14881357623849
+    }
+  },
+  {
+    "id": "russia_4",
+    "name": "Volgograd",
+    "country": "russia",
+    "country_id": "russia",
+    "longitude": 44.498,
+    "latitude": 48.712,
+    "capital": false,
+    "province": "eu_rus_5",
+    "country_name": "Russia"
+  },
+  {
+    "id": "ukraine_0",
+    "name": "Kiev",
+    "country": "ukraine",
+    "country_id": "ukraine",
+    "longitude": 30.5147,
+    "latitude": 50.4353,
+    "capital": true,
+    "province": "adm1_ukr_up12",
+    "country_name": "Ukraine"
+  },
+  {
+    "id": "ukraine_1",
+    "name": "Kharkiv",
+    "country": "ukraine",
+    "country_id": "ukraine",
+    "longitude": 36.2481,
+    "latitude": 50.0019,
+    "capital": false,
+    "province": "adm1_ukr_up07",
+    "country_name": "Ukraine"
+  },
+  {
+    "id": "ukraine_2",
+    "name": "Dnipro",
+    "country": "ukraine",
+    "country_id": "ukraine",
+    "longitude": 34.9981,
+    "latitude": 48.4819,
+    "capital": false,
+    "province": "adm1_ukr_up04",
+    "country_name": "Ukraine"
+  },
+  {
+    "id": "ukraine_3",
+    "name": "Odessa",
+    "country": "ukraine",
+    "country_id": "ukraine",
+    "longitude": 30.7081,
+    "latitude": 46.492,
+    "capital": false,
+    "province": "adm1_ukr_up17",
+    "country_name": "Ukraine",
+    "naval_spawn": {
+      "longitude": 30.790960018168345,
+      "latitude": 46.48365417784436
+    }
+  },
+  {
+    "id": "ukraine_4",
+    "name": "Donetsk",
+    "country": "ukraine",
+    "country_id": "ukraine",
+    "longitude": 37.828,
+    "latitude": 48.0019,
+    "capital": false,
+    "province": "adm1_ukr_up05",
+    "country_name": "Ukraine"
+  },
+  {
+    "id": "belarus_0",
+    "name": "Minsk",
+    "country": "belarus",
+    "country_id": "belarus",
+    "longitude": 27.5647,
+    "latitude": 53.9019,
+    "capital": true,
+    "province": "eu_blr_24",
+    "country_name": "Belarus"
+  },
+  {
+    "id": "belarus_1",
+    "name": "Homyel",
+    "country": "belarus",
+    "country_id": "belarus",
+    "longitude": 31.0,
+    "latitude": 52.43,
+    "capital": false,
+    "province": "eu_blr_3",
+    "country_name": "Belarus"
+  },
+  {
+    "id": "belarus_2",
+    "name": "Mahilyow",
+    "country": "belarus",
+    "country_id": "belarus",
+    "longitude": 30.3246,
+    "latitude": 53.8985,
+    "capital": false,
+    "province": "eu_blr_15",
+    "country_name": "Belarus"
+  },
+  {
+    "id": "belarus_3",
+    "name": "Vitsyebsk",
+    "country": "belarus",
+    "country_id": "belarus",
+    "longitude": 30.1853,
+    "latitude": 55.1887,
+    "capital": false,
+    "province": "eu_blr_5",
+    "country_name": "Belarus"
+  },
+  {
+    "id": "belarus_4",
+    "name": "Hrodna",
+    "country": "belarus",
+    "country_id": "belarus",
+    "longitude": 23.8341,
+    "latitude": 53.6779,
+    "capital": false,
+    "province": "eu_blr_22",
+    "country_name": "Belarus"
+  },
+  {
+    "id": "poland_0",
+    "name": "Warsaw",
+    "country": "poland",
+    "country_id": "poland",
+    "longitude": 20.9981,
+    "latitude": 52.2519,
+    "capital": true,
+    "province": "eu_pol_3",
+    "country_name": "Poland"
+  },
+  {
+    "id": "poland_1",
+    "name": "Katowice",
+    "country": "poland",
+    "country_id": "poland",
+    "longitude": 19.02,
+    "latitude": 50.2604,
+    "capital": false,
+    "province": "eu_pol_11",
+    "country_name": "Poland"
+  },
+  {
+    "id": "poland_2",
+    "name": "Lodz",
+    "country": "poland",
+    "country_id": "poland",
+    "longitude": 19.4494,
+    "latitude": 51.7769,
+    "capital": false,
+    "province": "eu_pol_20",
+    "country_name": "Poland"
+  },
+  {
+    "id": "poland_3",
+    "name": "Gdansk",
+    "country": "poland",
+    "country_id": "poland",
+    "longitude": 18.64,
+    "latitude": 54.36,
+    "capital": false,
+    "province": "eu_pol_24",
+    "country_name": "Poland",
+    "naval_spawn": {
+      "longitude": 18.67610678634818,
+      "latitude": 54.413618324348306
+    }
+  },
+  {
+    "id": "poland_4",
+    "name": "Wroclaw",
+    "country": "poland",
+    "country_id": "poland",
+    "longitude": 17.03,
+    "latitude": 51.1104,
+    "capital": false,
+    "province": "eu_pol_17",
+    "country_name": "Poland"
+  },
+  {
+    "id": "germany_0",
+    "name": "Berlin",
+    "country": "germany",
+    "country_id": "germany",
+    "longitude": 13.3996,
+    "latitude": 52.5238,
+    "capital": true,
+    "province": "eu_deu_22",
+    "country_name": "Germany"
+  },
+  {
+    "id": "germany_1",
+    "name": "Stuttgart",
+    "country": "germany",
+    "country_id": "germany",
+    "longitude": 9.2,
+    "latitude": 48.78,
+    "capital": false,
+    "province": "eu_deu_9",
+    "country_name": "Germany"
+  },
+  {
+    "id": "germany_2",
+    "name": "Frankfurt",
+    "country": "germany",
+    "country_id": "germany",
+    "longitude": 8.675,
+    "latitude": 50.1,
+    "capital": false,
+    "province": "eu_deu_2",
+    "country_name": "Germany"
+  },
+  {
+    "id": "germany_3",
+    "name": "Hamburg",
+    "country": "germany",
+    "country_id": "germany",
+    "longitude": 9.9981,
+    "latitude": 53.552,
+    "capital": false,
+    "province": "eu_deu_23",
+    "country_name": "Germany"
+  },
+  {
+    "id": "germany_4",
+    "name": "Essen",
+    "country": "germany",
+    "country_id": "germany",
+    "longitude": 7.0166,
+    "latitude": 51.45,
+    "capital": false,
+    "province": "eu_deu_10",
+    "country_name": "Germany"
+  },
+  {
+    "id": "france_0",
+    "name": "Paris",
+    "country": "france",
+    "country_id": "france",
+    "longitude": 2.3314,
+    "latitude": 48.8686,
+    "capital": true,
+    "province": "eu_fra_9",
+    "country_name": "France"
+  },
+  {
+    "id": "france_1",
+    "name": "Lyon",
+    "country": "france",
+    "country_id": "france",
+    "longitude": 4.8281,
+    "latitude": 45.772,
+    "capital": false,
+    "province": "eu_fra_4",
+    "country_name": "France"
+  },
+  {
+    "id": "france_2",
+    "name": "Marseille",
+    "country": "france",
+    "country_id": "france",
+    "longitude": 5.3731,
+    "latitude": 43.2919,
+    "capital": false,
+    "province": "eu_fra_2",
+    "country_name": "France",
+    "naval_spawn": {
+      "longitude": 5.337209421750812,
+      "latitude": 43.24022275911915
+    }
+  },
+  {
+    "id": "france_3",
+    "name": "Lille",
+    "country": "france",
+    "country_id": "france",
+    "longitude": 3.0781,
+    "latitude": 50.6519,
+    "capital": false,
+    "province": "eu_fra_1",
+    "country_name": "France",
+    "naval_spawn": {
+      "longitude": 2.6428804155554495,
+      "latitude": 51.15578127306054
+    }
+  },
+  {
+    "id": "france_4",
+    "name": "Toulouse",
+    "country": "france",
+    "country_id": "france",
+    "longitude": 1.448,
+    "latitude": 43.6219,
+    "capital": false,
+    "province": "eu_fra_12",
+    "country_name": "France"
+  },
+  {
+    "id": "united_kingdom_0",
+    "name": "London",
+    "country": "united_kingdom",
+    "country_id": "united_kingdom",
+    "longitude": -0.1187,
+    "latitude": 51.5019,
+    "capital": true,
+    "province": "eu_gbr_14",
+    "country_name": "United Kingdom",
+    "naval_spawn": {
+      "longitude": 0.6254219881341818,
+      "latitude": 51.507335678712714
+    }
+  },
+  {
+    "id": "united_kingdom_1",
+    "name": "Birmingham",
+    "country": "united_kingdom",
+    "country_id": "united_kingdom",
+    "longitude": -1.9219,
+    "latitude": 52.4769,
+    "capital": false,
+    "province": "eu_gbr_4",
+    "country_name": "United Kingdom"
+  },
+  {
+    "id": "united_kingdom_2",
+    "name": "Manchester",
+    "country": "united_kingdom",
+    "country_id": "united_kingdom",
+    "longitude": -2.2499,
+    "latitude": 53.5024,
+    "capital": false,
+    "province": "eu_gbr_17",
+    "country_name": "United Kingdom",
+    "naval_spawn": {
+      "longitude": -3.1260420481132307,
+      "latitude": 53.473767604266165
+    }
+  },
+  {
+    "id": "united_kingdom_3",
+    "name": "Glasgow",
+    "country": "united_kingdom",
+    "country_id": "united_kingdom",
+    "longitude": -4.2527,
+    "latitude": 55.8764,
+    "capital": false,
+    "province": "eu_gbr_23",
+    "country_name": "United Kingdom",
+    "naval_spawn": {
+      "longitude": -4.717040167135696,
+      "latitude": 55.570953756370855
+    }
+  },
+  {
+    "id": "united_kingdom_4",
+    "name": "Newcastle",
+    "country": "united_kingdom",
+    "country_id": "united_kingdom",
+    "longitude": -1.6019,
+    "latitude": 55.0023,
+    "capital": false,
+    "province": "eu_gbr_9",
+    "country_name": "United Kingdom",
+    "naval_spawn": {
+      "longitude": -1.3123885113009415,
+      "latitude": 55.053263053021546
+    }
+  },
+  {
+    "id": "spain_0",
+    "name": "Madrid",
+    "country": "spain",
+    "country_id": "spain",
+    "longitude": -3.6853,
+    "latitude": 40.402,
+    "capital": true,
+    "province": "eu_esp_16",
+    "country_name": "Spain"
+  },
+  {
+    "id": "spain_1",
+    "name": "Barcelona",
+    "country": "spain",
+    "country_id": "spain",
+    "longitude": 2.1814,
+    "latitude": 41.3852,
+    "capital": false,
+    "province": "eu_esp_23",
+    "country_name": "Spain",
+    "naval_spawn": {
+      "longitude": 2.2563024046841953,
+      "latitude": 41.39876209889463
+    }
+  },
+  {
+    "id": "spain_2",
+    "name": "Seville",
+    "country": "spain",
+    "country_id": "spain",
+    "longitude": -5.98,
+    "latitude": 37.405,
+    "capital": false,
+    "province": "eu_esp_6",
+    "country_name": "Spain"
+  },
+  {
+    "id": "spain_3",
+    "name": "Bilbao",
+    "country": "spain",
+    "country_id": "spain",
+    "longitude": -2.93,
+    "latitude": 43.25,
+    "capital": false,
+    "province": "eu_esp_9",
+    "country_name": "Spain",
+    "naval_spawn": {
+      "longitude": -3.07991808654074,
+      "latitude": 43.381346387235695
+    }
+  },
+  {
+    "id": "spain_4",
+    "name": "Valencia",
+    "country": "spain",
+    "country_id": "spain",
+    "longitude": -0.402,
+    "latitude": 39.487,
+    "capital": false,
+    "province": "eu_esp_2",
+    "country_name": "Spain",
+    "naval_spawn": {
+      "longitude": -0.2573320800705581,
+      "latitude": 39.5178173128751
+    }
+  },
+  {
+    "id": "italy_0",
+    "name": "Rome",
+    "country": "italy",
+    "country_id": "italy",
+    "longitude": 12.4813,
+    "latitude": 41.8979,
+    "capital": true,
+    "province": "eu_ita_1",
+    "country_name": "Italy",
+    "naval_spawn": {
+      "longitude": 12.416632180248865,
+      "latitude": 41.612732255401774
+    }
+  },
+  {
+    "id": "italy_1",
+    "name": "Milan",
+    "country": "italy",
+    "country_id": "italy",
+    "longitude": 9.2031,
+    "latitude": 45.4719,
+    "capital": false,
+    "province": "eu_ita_5",
+    "country_name": "Italy"
+  },
+  {
+    "id": "italy_2",
+    "name": "Naples",
+    "country": "italy",
+    "country_id": "italy",
+    "longitude": 14.2431,
+    "latitude": 40.842,
+    "capital": false,
+    "province": "eu_ita_9",
+    "country_name": "Italy",
+    "naval_spawn": {
+      "longitude": 14.306283153994396,
+      "latitude": 40.81036222839188
+    }
+  },
+  {
+    "id": "italy_3",
+    "name": "Turin",
+    "country": "italy",
+    "country_id": "italy",
+    "longitude": 7.668,
+    "latitude": 45.0723,
+    "capital": false,
+    "province": "eu_ita_2",
+    "country_name": "Italy"
+  },
+  {
+    "id": "italy_4",
+    "name": "Florence",
+    "country": "italy",
+    "country_id": "italy",
+    "longitude": 11.25,
+    "latitude": 43.78,
+    "capital": false,
+    "province": "eu_ita_14",
+    "country_name": "Italy"
+  },
+  {
+    "id": "turkey_0",
+    "name": "Ankara",
+    "country": "turkey",
+    "country_id": "turkey",
+    "longitude": 32.8624,
+    "latitude": 39.9292,
+    "capital": true,
+    "province": "eu_tur_18",
+    "country_name": "Turkey"
+  },
+  {
+    "id": "turkey_1",
+    "name": "Istanbul",
+    "country": "turkey",
+    "country_id": "turkey",
+    "longitude": 29.0081,
+    "latitude": 41.1069,
+    "capital": false,
+    "province": "eu_tur_4",
+    "country_name": "Turkey",
+    "naval_spawn": {
+      "longitude": 29.011289034744674,
+      "latitude": 40.991300817502704
+    }
+  },
+  {
+    "id": "turkey_2",
+    "name": "Izmir",
+    "country": "turkey",
+    "country_id": "turkey",
+    "longitude": 27.1498,
+    "latitude": 38.4381,
+    "capital": false,
+    "province": "eu_tur_16",
+    "country_name": "Turkey",
+    "naval_spawn": {
+      "longitude": 27.083699701973924,
+      "latitude": 38.41392711249594
+    }
+  },
+  {
+    "id": "turkey_3",
+    "name": "Adana",
+    "country": "turkey",
+    "country_id": "turkey",
+    "longitude": 35.3181,
+    "latitude": 36.9969,
+    "capital": false,
+    "province": "eu_tur_9",
+    "country_name": "Turkey",
+    "naval_spawn": {
+      "longitude": 35.1057928004746,
+      "latitude": 36.63351413261659
+    }
+  },
+  {
+    "id": "turkey_4",
+    "name": "Gaziantep",
+    "country": "turkey",
+    "country_id": "turkey",
+    "longitude": 37.383,
+    "latitude": 37.0769,
+    "capital": false,
+    "province": "eu_tur_15",
+    "country_name": "Turkey"
+  },
+  {
+    "id": "sweden_0",
+    "name": "Stockholm",
+    "country": "sweden",
+    "country_id": "sweden",
+    "longitude": 18.0954,
+    "latitude": 59.3527,
+    "capital": true,
+    "province": "eu_swe_22",
+    "country_name": "Sweden",
+    "naval_spawn": {
+      "longitude": 18.20811330113995,
+      "latitude": 59.354203652555064
+    }
+  },
+  {
+    "id": "sweden_1",
+    "name": "Goteborg",
+    "country": "sweden",
+    "country_id": "sweden",
+    "longitude": 12.0,
+    "latitude": 57.75,
+    "capital": false,
+    "province": "eu_swe_3",
+    "country_name": "Sweden",
+    "naval_spawn": {
+      "longitude": 11.827222988623756,
+      "latitude": 57.681463912594616
+    }
+  },
+  {
+    "id": "sweden_2",
+    "name": "Malmo",
+    "country": "sweden",
+    "country_id": "sweden",
+    "longitude": 13.0333,
+    "latitude": 55.5833,
+    "capital": false,
+    "province": "eu_swe_13",
+    "country_name": "Sweden",
+    "naval_spawn": {
+      "longitude": 12.931423844283394,
+      "latitude": 55.58520476885254
+    }
+  },
+  {
+    "id": "sweden_3",
+    "name": "Orebro",
+    "country": "sweden",
+    "country_id": "sweden",
+    "longitude": 15.22,
+    "latitude": 59.2803,
+    "capital": false,
+    "province": "eu_swe_16",
+    "country_name": "Sweden"
+  },
+  {
+    "id": "sweden_4",
+    "name": "Jonkoping",
+    "country": "sweden",
+    "country_id": "sweden",
+    "longitude": 14.165,
+    "latitude": 57.7713,
+    "capital": false,
+    "province": "eu_swe_14",
+    "country_name": "Sweden"
+  },
+  {
+    "id": "norway_0",
+    "name": "Oslo",
+    "country": "norway",
+    "country_id": "norway",
+    "longitude": 10.748,
+    "latitude": 59.9186,
+    "capital": true,
+    "province": "eu_nor_24",
+    "country_name": "Norway",
+    "naval_spawn": {
+      "longitude": 10.719063944710156,
+      "latitude": 59.86291666464679
+    }
+  },
+  {
+    "id": "norway_1",
+    "name": "Bergen",
+    "country": "norway",
+    "country_id": "norway",
+    "longitude": 5.3245,
+    "latitude": 60.391,
+    "capital": false,
+    "province": "eu_nor_8",
+    "country_name": "Norway",
+    "naval_spawn": {
+      "longitude": 5.21863474640068,
+      "latitude": 60.41576926425231
+    }
+  },
+  {
+    "id": "norway_2",
+    "name": "Stavanger",
+    "country": "norway",
+    "country_id": "norway",
+    "longitude": 5.68,
+    "latitude": 58.97,
+    "capital": false,
+    "province": "eu_nor_19",
+    "country_name": "Norway",
+    "naval_spawn": {
+      "longitude": 5.789455137037381,
+      "latitude": 58.981527571663385
+    }
+  },
+  {
+    "id": "norway_3",
+    "name": "Trondheim",
+    "country": "norway",
+    "country_id": "norway",
+    "longitude": 10.4167,
+    "latitude": 63.4167,
+    "capital": false,
+    "province": "eu_nor_3",
+    "country_name": "Norway",
+    "naval_spawn": {
+      "longitude": 10.381415981906434,
+      "latitude": 63.47241325520718
+    }
+  },
+  {
+    "id": "norway_4",
+    "name": "Kristiansand",
+    "country": "norway",
+    "country_id": "norway",
+    "longitude": 8.0,
+    "latitude": 58.1666,
+    "capital": false,
+    "province": "eu_nor_20",
+    "country_name": "Norway",
+    "naval_spawn": {
+      "longitude": 8.032887253163759,
+      "latitude": 58.111626116844675
+    }
+  },
+  {
+    "id": "finland_0",
+    "name": "Helsinki",
+    "country": "finland",
+    "country_id": "finland",
+    "longitude": 24.9322,
+    "latitude": 60.1775,
+    "capital": true,
+    "province": "eu_fin_10",
+    "country_name": "Finland",
+    "naval_spawn": {
+      "longitude": 24.982397373132038,
+      "latitude": 60.12562033732514
+    }
+  },
+  {
+    "id": "finland_1",
+    "name": "Tampere",
+    "country": "finland",
+    "country_id": "finland",
+    "longitude": 23.75,
+    "latitude": 61.5,
+    "capital": false,
+    "province": "eu_fin_7",
+    "country_name": "Finland"
+  },
+  {
+    "id": "finland_2",
+    "name": "Turku",
+    "country": "finland",
+    "country_id": "finland",
+    "longitude": 22.255,
+    "latitude": 60.4539,
+    "capital": false,
+    "province": "eu_fin_9",
+    "country_name": "Finland",
+    "naval_spawn": {
+      "longitude": 22.181117264445152,
+      "latitude": 60.409215495361615
+    }
+  },
+  {
+    "id": "finland_3",
+    "name": "Oulu",
+    "country": "finland",
+    "country_id": "finland",
+    "longitude": 25.47,
+    "latitude": 65.0,
+    "capital": false,
+    "province": "eu_fin_1",
+    "country_name": "Finland",
+    "naval_spawn": {
+      "longitude": 25.347442946106412,
+      "latitude": 64.97501872289124
+    }
+  },
+  {
+    "id": "finland_4",
+    "name": "Jyvaskyla",
+    "country": "finland",
+    "country_id": "finland",
+    "longitude": 25.75,
+    "latitude": 62.2603,
+    "capital": false,
+    "province": "eu_fin_5",
+    "country_name": "Finland"
+  },
+  {
+    "id": "romania_0",
+    "name": "Bucharest",
+    "country": "romania",
+    "country_id": "romania",
+    "longitude": 26.098,
+    "latitude": 44.4353,
+    "capital": true,
+    "province": "eu_rou_5",
+    "country_name": "Romania"
+  },
+  {
+    "id": "romania_1",
+    "name": "Iasi",
+    "country": "romania",
+    "country_id": "romania",
+    "longitude": 27.5749,
+    "latitude": 47.1683,
+    "capital": false,
+    "province": "eu_rou_8",
+    "country_name": "Romania"
+  },
+  {
+    "id": "romania_2",
+    "name": "Cluj-Napoca",
+    "country": "romania",
+    "country_id": "romania",
+    "longitude": 23.5984,
+    "latitude": 46.7884,
+    "capital": false,
+    "province": "eu_rou_24",
+    "country_name": "Romania"
+  },
+  {
+    "id": "romania_3",
+    "name": "Timisoara",
+    "country": "romania",
+    "country_id": "romania",
+    "longitude": 21.2234,
+    "latitude": 45.7588,
+    "capital": false,
+    "province": "eu_rou_12",
+    "country_name": "Romania"
+  },
+  {
+    "id": "romania_4",
+    "name": "Galati",
+    "country": "romania",
+    "country_id": "romania",
+    "longitude": 28.0459,
+    "latitude": 45.4559,
+    "capital": false,
+    "province": "eu_rou_11",
+    "country_name": "Romania"
+  },
+  {
+    "id": "hungary_0",
+    "name": "Budapest",
+    "country": "hungary",
+    "country_id": "hungary",
+    "longitude": 19.0814,
+    "latitude": 47.502,
+    "capital": true,
+    "province": "eu_hun_21",
+    "country_name": "Hungary"
+  },
+  {
+    "id": "hungary_1",
+    "name": "Miskolc",
+    "country": "hungary",
+    "country_id": "hungary",
+    "longitude": 20.78,
+    "latitude": 48.1004,
+    "capital": false,
+    "province": "eu_hun_22",
+    "country_name": "Hungary"
+  },
+  {
+    "id": "hungary_2",
+    "name": "Szeged",
+    "country": "hungary",
+    "country_id": "hungary",
+    "longitude": 20.15,
+    "latitude": 46.2504,
+    "capital": false,
+    "province": "eu_hun_19",
+    "country_name": "Hungary"
+  },
+  {
+    "id": "hungary_3",
+    "name": "Pecs",
+    "country": "hungary",
+    "country_id": "hungary",
+    "longitude": 18.22,
+    "latitude": 46.0804,
+    "capital": false,
+    "province": "eu_hun_9",
+    "country_name": "Hungary"
+  },
+  {
+    "id": "hungary_4",
+    "name": "Gyor",
+    "country": "hungary",
+    "country_id": "hungary",
+    "longitude": 17.63,
+    "latitude": 47.7004,
+    "capital": false,
+    "province": "eu_hun_11",
+    "country_name": "Hungary"
+  },
+  {
+    "id": "czechia_0",
+    "name": "Prague",
+    "country": "czechia",
+    "country_id": "czechia",
+    "longitude": 14.464,
+    "latitude": 50.0853,
+    "capital": true,
+    "province": "eu_cze_24",
+    "country_name": "Czechia"
+  },
+  {
+    "id": "czechia_1",
+    "name": "Ostrava",
+    "country": "czechia",
+    "country_id": "czechia",
+    "longitude": 18.25,
+    "latitude": 49.8304,
+    "capital": false,
+    "province": "eu_cze_12",
+    "country_name": "Czechia"
+  },
+  {
+    "id": "czechia_2",
+    "name": "Brno",
+    "country": "czechia",
+    "country_id": "czechia",
+    "longitude": 16.61,
+    "latitude": 49.2004,
+    "capital": false,
+    "province": "eu_cze_1",
+    "country_name": "Czechia"
+  },
+  {
+    "id": "czechia_3",
+    "name": "Ceske Budejovice",
+    "country": "czechia",
+    "country_id": "czechia",
+    "longitude": 14.46,
+    "latitude": 48.98,
+    "capital": false,
+    "province": "eu_cze_18",
+    "country_name": "Czechia"
+  },
+  {
+    "id": "czechia_4",
+    "name": "Pizen",
+    "country": "czechia",
+    "country_id": "czechia",
+    "longitude": 13.36,
+    "latitude": 49.7404,
+    "capital": false,
+    "province": "eu_cze_2",
+    "country_name": "Czechia"
+  },
+  {
+    "id": "austria_0",
+    "name": "Vienna",
+    "country": "austria",
+    "country_id": "austria",
+    "longitude": 16.3647,
+    "latitude": 48.202,
+    "capital": true,
+    "province": "eu_aut_24",
+    "country_name": "Austria"
+  },
+  {
+    "id": "austria_1",
+    "name": "Linz",
+    "country": "austria",
+    "country_id": "austria",
+    "longitude": 14.2888,
+    "latitude": 48.3192,
+    "capital": false,
+    "province": "eu_aut_10",
+    "country_name": "Austria"
+  },
+  {
+    "id": "austria_2",
+    "name": "Graz",
+    "country": "austria",
+    "country_id": "austria",
+    "longitude": 15.41,
+    "latitude": 47.0778,
+    "capital": false,
+    "province": "eu_aut_2",
+    "country_name": "Austria"
+  },
+  {
+    "id": "austria_3",
+    "name": "Innsbruck",
+    "country": "austria",
+    "country_id": "austria",
+    "longitude": 11.41,
+    "latitude": 47.2804,
+    "capital": false,
+    "province": "eu_aut_14",
+    "country_name": "Austria"
+  },
+  {
+    "id": "austria_4",
+    "name": "Bregenz",
+    "country": "austria",
+    "country_id": "austria",
+    "longitude": 9.7667,
+    "latitude": 47.5167,
+    "capital": false,
+    "province": "eu_aut_18",
+    "country_name": "Austria"
+  },
+  {
+    "id": "greece_0",
+    "name": "Athens",
+    "country": "greece",
+    "country_id": "greece",
+    "longitude": 23.7314,
+    "latitude": 37.9853,
+    "capital": true,
+    "province": "eu_grc_19",
+    "country_name": "Greece",
+    "naval_spawn": {
+      "longitude": 23.72505031202691,
+      "latitude": 37.86939845311203
+    }
+  },
+  {
+    "id": "greece_1",
+    "name": "Thessaloniki",
+    "country": "greece",
+    "country_id": "greece",
+    "longitude": 22.8831,
+    "latitude": 40.6981,
+    "capital": false,
+    "province": "eu_grc_8",
+    "country_name": "Greece",
+    "naval_spawn": {
+      "longitude": 22.917035967986642,
+      "latitude": 40.58523780908039
+    }
+  },
+  {
+    "id": "greece_2",
+    "name": "Patra",
+    "country": "greece",
+    "country_id": "greece",
+    "longitude": 21.73,
+    "latitude": 38.23,
+    "capital": false,
+    "province": "eu_grc_9",
+    "country_name": "Greece",
+    "naval_spawn": {
+      "longitude": 21.659336423343447,
+      "latitude": 38.21623438518359
+    }
+  },
+  {
+    "id": "greece_3",
+    "name": "Iraklio",
+    "country": "greece",
+    "country_id": "greece",
+    "longitude": 25.1305,
+    "latitude": 35.325,
+    "capital": false,
+    "province": "eu_grc_14",
+    "country_name": "Greece",
+    "naval_spawn": {
+      "longitude": 25.091251384121236,
+      "latitude": 35.373411169495206
+    }
+  },
+  {
+    "id": "greece_4",
+    "name": "Larissa",
+    "country": "greece",
+    "country_id": "greece",
+    "longitude": 22.42,
+    "latitude": 39.6304,
+    "capital": false,
+    "province": "eu_grc_6",
+    "country_name": "Greece",
+    "naval_spawn": {
+      "longitude": 22.694678727890974,
+      "latitude": 39.97445975440193
+    }
+  },
+  {
+    "id": "serbia_0",
+    "name": "Belgrade",
+    "country": "serbia",
+    "country_id": "serbia",
+    "longitude": 20.466,
+    "latitude": 44.8206,
+    "capital": true,
+    "province": "eu_srb_9",
+    "country_name": "Serbia"
+  },
+  {
+    "id": "serbia_1",
+    "name": "Nis",
+    "country": "serbia",
+    "country_id": "serbia",
+    "longitude": 21.9,
+    "latitude": 43.3304,
+    "capital": false,
+    "province": "eu_srb_14",
+    "country_name": "Serbia"
+  },
+  {
+    "id": "serbia_2",
+    "name": "Subotica",
+    "country": "serbia",
+    "country_id": "serbia",
+    "longitude": 19.68,
+    "latitude": 46.07,
+    "capital": false,
+    "province": "eu_srb_23",
+    "country_name": "Serbia"
+  },
+  {
+    "id": "serbia_3",
+    "name": "Novi Sad",
+    "country": "serbia",
+    "country_id": "serbia",
+    "longitude": 19.8499,
+    "latitude": 45.2504,
+    "capital": false,
+    "province": "eu_srb_1",
+    "country_name": "Serbia"
+  },
+  {
+    "id": "serbia_4",
+    "name": "Kragujevac",
+    "country": "serbia",
+    "country_id": "serbia",
+    "longitude": 20.92,
+    "latitude": 44.02,
+    "capital": false,
+    "province": "eu_srb_19",
+    "country_name": "Serbia"
+  },
+  {
+    "id": "bulgaria_0",
+    "name": "Sofia",
+    "country": "bulgaria",
+    "country_id": "bulgaria",
+    "longitude": 23.3147,
+    "latitude": 42.6853,
+    "capital": true,
+    "province": "eu_bgr_18",
+    "country_name": "Bulgaria"
+  },
+  {
+    "id": "bulgaria_1",
+    "name": "Plovdiv",
+    "country": "bulgaria",
+    "country_id": "bulgaria",
+    "longitude": 24.754,
+    "latitude": 42.154,
+    "capital": false,
+    "province": "eu_bgr_4",
+    "country_name": "Bulgaria"
+  },
+  {
+    "id": "bulgaria_2",
+    "name": "Varna",
+    "country": "bulgaria",
+    "country_id": "bulgaria",
+    "longitude": 27.8953,
+    "latitude": 43.2156,
+    "capital": false,
+    "province": "eu_bgr_15",
+    "country_name": "Bulgaria",
+    "naval_spawn": {
+      "longitude": 27.97375918898546,
+      "latitude": 43.20949246755353
+    }
+  },
+  {
+    "id": "bulgaria_3",
+    "name": "Ruse",
+    "country": "bulgaria",
+    "country_id": "bulgaria",
+    "longitude": 25.9733,
+    "latitude": 43.8537,
+    "capital": false,
+    "province": "eu_bgr_24",
+    "country_name": "Bulgaria"
+  },
+  {
+    "id": "bulgaria_4",
+    "name": "Pleven",
+    "country": "bulgaria",
+    "country_id": "bulgaria",
+    "longitude": 24.6134,
+    "latitude": 43.4238,
+    "capital": false,
+    "province": "eu_bgr_9",
+    "country_name": "Bulgaria"
+  },
+  {
+    "id": "portugal_0",
+    "name": "Lisbon",
+    "country": "portugal",
+    "country_id": "portugal",
+    "longitude": -9.1468,
+    "latitude": 38.7247,
+    "capital": true,
+    "province": "eu_prt_0",
+    "country_name": "Portugal",
+    "naval_spawn": {
+      "longitude": -9.07718583358784,
+      "latitude": 38.74657796588816
+    }
+  },
+  {
+    "id": "ireland_0",
+    "name": "Dublin",
+    "country": "ireland",
+    "country_id": "ireland",
+    "longitude": -6.2509,
+    "latitude": 53.335,
+    "capital": true,
+    "province": "eu_irl_2",
+    "country_name": "Ireland",
+    "naval_spawn": {
+      "longitude": -6.159904275810842,
+      "latitude": 53.355523267059056
+    }
+  },
+  {
+    "id": "belgium_0",
+    "name": "Brussels",
+    "country": "belgium",
+    "country_id": "belgium",
+    "longitude": 4.3314,
+    "latitude": 50.8353,
+    "capital": true,
+    "province": "eu_bel_1",
+    "country_name": "Belgium"
+  },
+  {
+    "id": "netherlands_0",
+    "name": "Amsterdam",
+    "country": "netherlands",
+    "country_id": "netherlands",
+    "longitude": 4.9147,
+    "latitude": 52.3519,
+    "capital": true,
+    "province": "eu_nld_0",
+    "country_name": "Netherlands",
+    "naval_spawn": {
+      "longitude": 4.443344901062803,
+      "latitude": 52.32860754912603
+    }
+  },
+  {
+    "id": "luxembourg_0",
+    "name": "Luxembourg",
+    "country": "luxembourg",
+    "country_id": "luxembourg",
+    "longitude": 6.13,
+    "latitude": 49.6117,
+    "capital": true,
+    "province": "eu_lux_0",
+    "country_name": "Luxembourg"
+  },
+  {
+    "id": "switzerland_0",
+    "name": "Bern",
+    "country": "switzerland",
+    "country_id": "switzerland",
+    "longitude": 7.467,
+    "latitude": 46.9167,
+    "capital": true,
+    "province": "eu_che_2",
+    "country_name": "Switzerland"
+  },
+  {
+    "id": "denmark_0",
+    "name": "Kobenhavn",
+    "country": "denmark",
+    "country_id": "denmark",
+    "longitude": 12.5615,
+    "latitude": 55.6805,
+    "capital": true,
+    "province": "eu_dnk_2",
+    "country_name": "Denmark",
+    "naval_spawn": {
+      "longitude": 12.663121872648755,
+      "latitude": 55.68642033876403
+    }
+  },
+  {
+    "id": "estonia_0",
+    "name": "Tallinn",
+    "country": "estonia",
+    "country_id": "estonia",
+    "longitude": 24.728,
+    "latitude": 59.4339,
+    "capital": true,
+    "province": "eu_est_0",
+    "country_name": "Estonia",
+    "naval_spawn": {
+      "longitude": 24.721106697769383,
+      "latitude": 59.49147274572756
+    }
+  },
+  {
+    "id": "latvia_0",
+    "name": "Riga",
+    "country": "latvia",
+    "country_id": "latvia",
+    "longitude": 24.1,
+    "latitude": 56.95,
+    "capital": true,
+    "province": "eu_lva_4",
+    "country_name": "Latvia",
+    "naval_spawn": {
+      "longitude": 23.799160876034563,
+      "latitude": 57.003904161324996
+    }
+  },
+  {
+    "id": "lithuania_0",
+    "name": "Vilnius",
+    "country": "lithuania",
+    "country_id": "lithuania",
+    "longitude": 25.3166,
+    "latitude": 54.6834,
+    "capital": true,
+    "province": "eu_ltu_0",
+    "country_name": "Lithuania"
+  },
+  {
+    "id": "moldova_0",
+    "name": "Chisinau",
+    "country": "moldova",
+    "country_id": "moldova",
+    "longitude": 28.8577,
+    "latitude": 47.005,
+    "capital": true,
+    "province": "eu_mda_1",
+    "country_name": "Moldova"
+  },
+  {
+    "id": "slovakia_0",
+    "name": "Bratislava",
+    "country": "slovakia",
+    "country_id": "slovakia",
+    "longitude": 17.117,
+    "latitude": 48.15,
+    "capital": true,
+    "province": "eu_svk_0",
+    "country_name": "Slovakia"
+  },
+  {
+    "id": "slovenia_0",
+    "name": "Ljubljana",
+    "country": "slovenia",
+    "country_id": "slovenia",
+    "longitude": 14.515,
+    "latitude": 46.0553,
+    "capital": true,
+    "province": "eu_svn_0",
+    "country_name": "Slovenia"
+  },
+  {
+    "id": "croatia_0",
+    "name": "Zagreb",
+    "country": "croatia",
+    "country_id": "croatia",
+    "longitude": 16.0,
+    "latitude": 45.8,
+    "capital": true,
+    "province": "eu_hrv_2",
+    "country_name": "Croatia"
+  },
+  {
+    "id": "bosnia_0",
+    "name": "Sarajevo",
+    "country": "bosnia",
+    "country_id": "bosnia",
+    "longitude": 18.383,
+    "latitude": 43.85,
+    "capital": true,
+    "province": "eu_bih_1",
+    "country_name": "Bosnia and Herzegovina"
+  },
+  {
+    "id": "montenegro_0",
+    "name": "Podgorica",
+    "country": "montenegro",
+    "country_id": "montenegro",
+    "longitude": 19.2663,
+    "latitude": 42.466,
+    "capital": true,
+    "province": "eu_mne_0",
+    "country_name": "Montenegro",
+    "naval_spawn": {
+      "longitude": 18.999855545372363,
+      "latitude": 42.11330867476782
+    }
+  },
+  {
+    "id": "albania_0",
+    "name": "Tirana",
+    "country": "albania",
+    "country_id": "albania",
+    "longitude": 19.8189,
+    "latitude": 41.3275,
+    "capital": true,
+    "province": "eu_alb_0",
+    "country_name": "Albania",
+    "naval_spawn": {
+      "longitude": 19.450785277498365,
+      "latitude": 41.25129400036835
+    }
+  },
+  {
+    "id": "north_macedonia_0",
+    "name": "Skopje",
+    "country": "north_macedonia",
+    "country_id": "north_macedonia",
+    "longitude": 21.4335,
+    "latitude": 42.0,
+    "capital": true,
+    "province": "eu_mkd_0",
+    "country_name": "North Macedonia"
+  },
+  {
+    "id": "kosovo_0",
+    "name": "Pristina",
+    "country": "kosovo",
+    "country_id": "kosovo",
+    "longitude": 21.166,
+    "latitude": 42.6667,
+    "capital": true,
+    "province": "eu_kos_0",
+    "country_name": "Kosovo"
+  },
+  {
+    "id": "cyprus_0",
+    "name": "Nicosia",
+    "country": "cyprus",
+    "country_id": "cyprus",
+    "longitude": 33.3666,
+    "latitude": 35.1667,
+    "capital": true,
+    "province": "eu_cyp_0",
+    "country_name": "Cyprus",
+    "naval_spawn": {
+      "longitude": 33.26487551343481,
+      "latitude": 35.38504287487655
+    }
+  },
+  {
+    "id": "malta_0",
+    "name": "Valletta",
+    "country": "malta",
+    "country_id": "malta",
+    "longitude": 14.5147,
+    "latitude": 35.8997,
+    "capital": true,
+    "province": "eu_mlt_0",
+    "country_name": "Malta",
+    "naval_spawn": {
+      "longitude": 14.584983286853792,
+      "latitude": 35.903817413293275
+    }
+  },
+  {
+    "id": "georgia_0",
+    "name": "Tbilisi",
+    "country": "georgia",
+    "country_id": "georgia",
+    "longitude": 44.7888,
+    "latitude": 41.727,
+    "capital": true,
+    "province": "eu_geo_2",
+    "country_name": "Georgia"
+  },
+  {
+    "id": "armenia_0",
+    "name": "Yerevan",
+    "country": "armenia",
+    "country_id": "armenia",
+    "longitude": 44.5116,
+    "latitude": 40.1831,
+    "capital": true,
+    "province": "eu_arm_0",
+    "country_name": "Armenia"
+  },
+  {
+    "id": "azerbaijan_0",
+    "name": "Baku",
+    "country": "azerbaijan",
+    "country_id": "azerbaijan",
+    "longitude": 49.8603,
+    "latitude": 40.3972,
+    "capital": true,
+    "province": "eu_aze_3",
+    "country_name": "Azerbaijan",
+    "naval_spawn": {
+      "longitude": 49.9002843840435,
+      "latitude": 40.34719784129587
+    }
+  },
+  {
+    "id": "russia_5",
+    "name": "Kursk",
+    "country": "russia",
+    "country_id": "russia",
+    "longitude": 36.193,
+    "latitude": 51.7304,
+    "capital": false,
+    "province": "eu_rus_7",
+    "country_name": "Russia"
+  },
+  {
+    "id": "russia_6",
+    "name": "Voronezh",
+    "country": "russia",
+    "country_id": "russia",
+    "longitude": 39.2003,
+    "latitude": 51.6608,
+    "capital": false,
+    "province": "eu_rus_7",
+    "country_name": "Russia"
+  },
+  {
+    "id": "ukraine_5",
+    "name": "Vinnytsia",
+    "country": "ukraine",
+    "country_id": "ukraine",
+    "longitude": 28.468,
+    "latitude": 49.233,
+    "capital": false,
+    "province": "adm1_ukr_up23",
+    "country_name": "Ukraine"
+  },
+  {
+    "id": "ukraine_6",
+    "name": "Poltava",
+    "country": "ukraine",
+    "country_id": "ukraine",
+    "longitude": 34.552,
+    "latitude": 49.589,
+    "capital": false,
+    "province": "adm1_ukr_up18",
+    "country_name": "Ukraine"
+  },
+  {
+    "id": "belarus_5",
+    "name": "Grodno",
+    "country": "belarus",
+    "country_id": "belarus",
+    "longitude": 23.834,
+    "latitude": 53.669,
+    "capital": false,
+    "province": "eu_blr_22",
+    "country_name": "Belarus"
+  },
+  {
+    "id": "belarus_6",
+    "name": "Bobruisk",
+    "country": "belarus",
+    "country_id": "belarus",
+    "longitude": 29.225,
+    "latitude": 53.139,
+    "capital": false,
+    "province": "eu_blr_19",
+    "country_name": "Belarus"
+  },
+  {
+    "id": "poland_5",
+    "name": "Szczecin",
+    "country": "poland",
+    "country_id": "poland",
+    "longitude": 14.553,
+    "latitude": 53.428,
+    "capital": false,
+    "province": "eu_pol_10",
+    "country_name": "Poland",
+    "naval_spawn": {
+      "longitude": 14.452973294350954,
+      "latitude": 53.70971052614015
+    }
+  },
+  {
+    "id": "poland_6",
+    "name": "Lublin",
+    "country": "poland",
+    "country_id": "poland",
+    "longitude": 22.568,
+    "latitude": 51.246,
+    "capital": false,
+    "province": "eu_pol_12",
+    "country_name": "Poland"
+  },
+  {
+    "id": "germany_5",
+    "name": "Bremen",
+    "country": "germany",
+    "country_id": "germany",
+    "longitude": 8.802,
+    "latitude": 53.079,
+    "capital": false,
+    "province": "eu_deu_24",
+    "country_name": "Germany",
+    "naval_spawn": {
+      "longitude": 8.582348740287776,
+      "latitude": 53.52000943107732
+    }
+  },
+  {
+    "id": "germany_6",
+    "name": "Dresden",
+    "country": "germany",
+    "country_id": "germany",
+    "longitude": 13.737,
+    "latitude": 51.05,
+    "capital": false,
+    "province": "eu_deu_8",
+    "country_name": "Germany"
+  },
+  {
+    "id": "france_5",
+    "name": "Bordeaux",
+    "country": "france",
+    "country_id": "france",
+    "longitude": -0.579,
+    "latitude": 44.838,
+    "capital": false,
+    "province": "eu_fra_19",
+    "country_name": "France",
+    "naval_spawn": {
+      "longitude": -0.7280755888078723,
+      "latitude": 45.224211269951276
+    }
+  },
+  {
+    "id": "france_6",
+    "name": "Nice",
+    "country": "france",
+    "country_id": "france",
+    "longitude": 7.262,
+    "latitude": 43.71,
+    "capital": false,
+    "province": "eu_fra_2",
+    "country_name": "France",
+    "naval_spawn": {
+      "longitude": 7.319884826930343,
+      "latitude": 43.670891946456585
+    }
+  },
+  {
+    "id": "united_kingdom_5",
+    "name": "Bristol",
+    "country": "united_kingdom",
+    "country_id": "united_kingdom",
+    "longitude": -2.587,
+    "latitude": 51.455,
+    "capital": false,
+    "province": "eu_gbr_13",
+    "country_name": "United Kingdom",
+    "naval_spawn": {
+      "longitude": -2.7622363386676305,
+      "latitude": 51.493079281731724
+    }
+  },
+  {
+    "id": "united_kingdom_6",
+    "name": "Belfast",
+    "country": "united_kingdom",
+    "country_id": "united_kingdom",
+    "longitude": -5.93,
+    "latitude": 54.597,
+    "capital": false,
+    "province": "eu_gbr_20",
+    "country_name": "United Kingdom",
+    "naval_spawn": {
+      "longitude": -5.888986172746339,
+      "latitude": 54.64909569221761
+    }
+  },
+  {
+    "id": "spain_5",
+    "name": "Malaga",
+    "country": "spain",
+    "country_id": "spain",
+    "longitude": -4.421,
+    "latitude": 36.721,
+    "capital": false,
+    "province": "eu_esp_21",
+    "country_name": "Spain",
+    "naval_spawn": {
+      "longitude": -4.351422469495901,
+      "latitude": 36.70945454066712
+    }
+  },
+  {
+    "id": "spain_6",
+    "name": "Zaragoza",
+    "country": "spain",
+    "country_id": "spain",
+    "longitude": -0.889,
+    "latitude": 41.649,
+    "capital": false,
+    "province": "eu_esp_15",
+    "country_name": "Spain"
+  },
+  {
+    "id": "italy_5",
+    "name": "Genoa",
+    "country": "italy",
+    "country_id": "italy",
+    "longitude": 8.946,
+    "latitude": 44.405,
+    "capital": false,
+    "province": "eu_ita_12",
+    "country_name": "Italy",
+    "naval_spawn": {
+      "longitude": 9.010319663342221,
+      "latitude": 44.37070506815492
+    }
+  },
+  {
+    "id": "italy_6",
+    "name": "Palermo",
+    "country": "italy",
+    "country_id": "italy",
+    "longitude": 13.362,
+    "latitude": 38.116,
+    "capital": false,
+    "province": "eu_ita_6",
+    "country_name": "Italy",
+    "naval_spawn": {
+      "longitude": 13.384505084072948,
+      "latitude": 38.17129839769065
+    }
+  },
+  {
+    "id": "turkey_5",
+    "name": "Antalya",
+    "country": "turkey",
+    "country_id": "turkey",
+    "longitude": 30.713,
+    "latitude": 36.896,
+    "capital": false,
+    "province": "eu_tur_2",
+    "country_name": "Turkey",
+    "naval_spawn": {
+      "longitude": 30.749122635018896,
+      "latitude": 36.84547247008671
+    }
+  },
+  {
+    "id": "turkey_6",
+    "name": "Samsun",
+    "country": "turkey",
+    "country_id": "turkey",
+    "longitude": 36.331,
+    "latitude": 41.286,
+    "capital": false,
+    "province": "eu_tur_11",
+    "country_name": "Turkey",
+    "naval_spawn": {
+      "longitude": 36.30663003520397,
+      "latitude": 41.34099741601304
+    }
+  },
+  {
+    "id": "sweden_5",
+    "name": "Umea",
+    "country": "sweden",
+    "country_id": "sweden",
+    "longitude": 20.264,
+    "latitude": 63.826,
+    "capital": false,
+    "province": "eu_swe_1",
+    "country_name": "Sweden",
+    "naval_spawn": {
+      "longitude": 20.48795600073213,
+      "latitude": 63.767563736874955
+    }
+  },
+  {
+    "id": "sweden_6",
+    "name": "Vasteras",
+    "country": "sweden",
+    "country_id": "sweden",
+    "longitude": 16.545,
+    "latitude": 59.61,
+    "capital": false,
+    "province": "eu_swe_18",
+    "country_name": "Sweden"
+  },
+  {
+    "id": "norway_5",
+    "name": "Drammen",
+    "country": "norway",
+    "country_id": "norway",
+    "longitude": 10.204,
+    "latitude": 59.744,
+    "capital": false,
+    "province": "eu_nor_7",
+    "country_name": "Norway",
+    "naval_spawn": {
+      "longitude": 10.499002311792493,
+      "latitude": 59.83129153947468
+    }
+  },
+  {
+    "id": "norway_6",
+    "name": "Hamar",
+    "country": "norway",
+    "country_id": "norway",
+    "longitude": 11.068,
+    "latitude": 60.794,
+    "capital": false,
+    "province": "eu_nor_10",
+    "country_name": "Norway"
+  },
+  {
+    "id": "finland_5",
+    "name": "Vaasa",
+    "country": "finland",
+    "country_id": "finland",
+    "longitude": 21.616,
+    "latitude": 63.095,
+    "capital": false,
+    "province": "eu_fin_13",
+    "country_name": "Finland",
+    "naval_spawn": {
+      "longitude": 21.490814906065765,
+      "latitude": 63.103822434041525
+    }
+  },
+  {
+    "id": "finland_6",
+    "name": "Lahti",
+    "country": "finland",
+    "country_id": "finland",
+    "longitude": 25.662,
+    "latitude": 60.983,
+    "capital": false,
+    "province": "eu_fin_14",
+    "country_name": "Finland"
+  },
+  {
+    "id": "romania_5",
+    "name": "Constanta",
+    "country": "romania",
+    "country_id": "romania",
+    "longitude": 28.634,
+    "latitude": 44.16,
+    "capital": false,
+    "province": "eu_rou_19",
+    "country_name": "Romania",
+    "naval_spawn": {
+      "longitude": 28.713677434326144,
+      "latitude": 44.15330678754923
+    }
+  },
+  {
+    "id": "romania_6",
+    "name": "Craiova",
+    "country": "romania",
+    "country_id": "romania",
+    "longitude": 23.795,
+    "latitude": 44.33,
+    "capital": false,
+    "province": "eu_rou_20",
+    "country_name": "Romania"
+  },
+  {
+    "id": "hungary_5",
+    "name": "Veszprem",
+    "country": "hungary",
+    "country_id": "hungary",
+    "longitude": 17.909,
+    "latitude": 47.093,
+    "capital": false,
+    "province": "eu_hun_8",
+    "country_name": "Hungary"
+  },
+  {
+    "id": "hungary_6",
+    "name": "Debrecen",
+    "country": "hungary",
+    "country_id": "hungary",
+    "longitude": 21.627,
+    "latitude": 47.532,
+    "capital": false,
+    "province": "eu_hun_20",
+    "country_name": "Hungary"
+  },
+  {
+    "id": "czechia_5",
+    "name": "Liberec",
+    "country": "czechia",
+    "country_id": "czechia",
+    "longitude": 15.056,
+    "latitude": 50.767,
+    "capital": false,
+    "province": "eu_cze_9",
+    "country_name": "Czechia"
+  },
+  {
+    "id": "czechia_6",
+    "name": "Olomouc",
+    "country": "czechia",
+    "country_id": "czechia",
+    "longitude": 17.251,
+    "latitude": 49.594,
+    "capital": false,
+    "province": "eu_cze_11",
+    "country_name": "Czechia"
+  },
+  {
+    "id": "austria_5",
+    "name": "Klagenfurt",
+    "country": "austria",
+    "country_id": "austria",
+    "longitude": 14.306,
+    "latitude": 46.624,
+    "capital": false,
+    "province": "eu_aut_19",
+    "country_name": "Austria"
+  },
+  {
+    "id": "austria_6",
+    "name": "Sankt Polten",
+    "country": "austria",
+    "country_id": "austria",
+    "longitude": 15.625,
+    "latitude": 48.204,
+    "capital": false,
+    "province": "eu_aut_7",
+    "country_name": "Austria"
+  },
+  {
+    "id": "greece_5",
+    "name": "Patras",
+    "country": "greece",
+    "country_id": "greece",
+    "longitude": 21.735,
+    "latitude": 38.246,
+    "capital": false,
+    "province": "eu_grc_9",
+    "country_name": "Greece",
+    "naval_spawn": {
+      "longitude": 21.671242887387965,
+      "latitude": 38.218124618339004
+    }
+  },
+  {
+    "id": "greece_6",
+    "name": "Ioannina",
+    "country": "greece",
+    "country_id": "greece",
+    "longitude": 20.853,
+    "latitude": 39.666,
+    "capital": false,
+    "province": "eu_grc_15",
+    "country_name": "Greece",
+    "naval_spawn": {
+      "longitude": 20.442656132977284,
+      "latitude": 39.25503681070665
+    }
+  },
+  {
+    "id": "serbia_5",
+    "name": "Kraljevo",
+    "country": "serbia",
+    "country_id": "serbia",
+    "longitude": 20.689,
+    "latitude": 43.724,
+    "capital": false,
+    "province": "eu_srb_4",
+    "country_name": "Serbia"
+  },
+  {
+    "id": "serbia_6",
+    "name": "Cacak",
+    "country": "serbia",
+    "country_id": "serbia",
+    "longitude": 20.35,
+    "latitude": 43.891,
+    "capital": false,
+    "province": "eu_srb_12",
+    "country_name": "Serbia"
+  },
+  {
+    "id": "bulgaria_5",
+    "name": "Dobrich",
+    "country": "bulgaria",
+    "country_id": "bulgaria",
+    "longitude": 27.827,
+    "latitude": 43.572,
+    "capital": false,
+    "province": "eu_bgr_8",
+    "country_name": "Bulgaria",
+    "naval_spawn": {
+      "longitude": 28.2456117642973,
+      "latitude": 43.40594802009293
+    }
+  },
+  {
+    "id": "bulgaria_6",
+    "name": "Stara Zagora",
+    "country": "bulgaria",
+    "country_id": "bulgaria",
+    "longitude": 25.634,
+    "latitude": 42.425,
+    "capital": false,
+    "province": "eu_bgr_6",
+    "country_name": "Bulgaria"
+  }
+]

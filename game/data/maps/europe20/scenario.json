@@ -1,0 +1,404 @@
+{
+  "id": "europe20_campaign_v1",
+  "name": "Europe — Test Map",
+  "countries": [
+    {
+      "id": "russia",
+      "name": "Russia",
+      "color": "ad4741",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "russia_0",
+      "player_slot": true
+    },
+    {
+      "id": "ukraine",
+      "name": "Ukraine",
+      "color": "376bba",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "ukraine_0",
+      "player_slot": true
+    },
+    {
+      "id": "belarus",
+      "name": "Belarus",
+      "color": "4f8a4a",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "belarus_0",
+      "player_slot": true
+    },
+    {
+      "id": "poland",
+      "name": "Poland",
+      "color": "c9a53c",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "poland_0",
+      "player_slot": true
+    },
+    {
+      "id": "germany",
+      "name": "Germany",
+      "color": "6b6f78",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "germany_0",
+      "player_slot": true
+    },
+    {
+      "id": "france",
+      "name": "France",
+      "color": "4e74c9",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "france_0",
+      "player_slot": true
+    },
+    {
+      "id": "united_kingdom",
+      "name": "United Kingdom",
+      "color": "b8565f",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "united_kingdom_0",
+      "player_slot": true
+    },
+    {
+      "id": "spain",
+      "name": "Spain",
+      "color": "d39a34",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "spain_0",
+      "player_slot": true
+    },
+    {
+      "id": "italy",
+      "name": "Italy",
+      "color": "5a9c63",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "italy_0",
+      "player_slot": true
+    },
+    {
+      "id": "turkey",
+      "name": "Turkey",
+      "color": "c46a3c",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "turkey_0",
+      "player_slot": true
+    },
+    {
+      "id": "sweden",
+      "name": "Sweden",
+      "color": "3d8fb0",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "sweden_0",
+      "player_slot": true
+    },
+    {
+      "id": "norway",
+      "name": "Norway",
+      "color": "8a4f8f",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "norway_0",
+      "player_slot": true
+    },
+    {
+      "id": "finland",
+      "name": "Finland",
+      "color": "8bb7d8",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "finland_0",
+      "player_slot": true
+    },
+    {
+      "id": "romania",
+      "name": "Romania",
+      "color": "d2c25a",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "romania_0",
+      "player_slot": true
+    },
+    {
+      "id": "hungary",
+      "name": "Hungary",
+      "color": "9c7a4f",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "hungary_0",
+      "player_slot": true
+    },
+    {
+      "id": "czechia",
+      "name": "Czechia",
+      "color": "5c6fa0",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "czechia_0",
+      "player_slot": true
+    },
+    {
+      "id": "austria",
+      "name": "Austria",
+      "color": "c97b8a",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "austria_0",
+      "player_slot": true
+    },
+    {
+      "id": "greece",
+      "name": "Greece",
+      "color": "6cb2c4",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "greece_0",
+      "player_slot": true
+    },
+    {
+      "id": "serbia",
+      "name": "Serbia",
+      "color": "8f5b4a",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "serbia_0",
+      "player_slot": true
+    },
+    {
+      "id": "bulgaria",
+      "name": "Bulgaria",
+      "color": "7aa35a",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "bulgaria_0",
+      "player_slot": true
+    },
+    {
+      "id": "portugal",
+      "name": "Portugal",
+      "color": "9a9a8c",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "portugal_0",
+      "player_slot": false
+    },
+    {
+      "id": "ireland",
+      "name": "Ireland",
+      "color": "9a9a8c",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "ireland_0",
+      "player_slot": false
+    },
+    {
+      "id": "belgium",
+      "name": "Belgium",
+      "color": "9a9a8c",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "belgium_0",
+      "player_slot": false
+    },
+    {
+      "id": "netherlands",
+      "name": "Netherlands",
+      "color": "9a9a8c",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "netherlands_0",
+      "player_slot": false
+    },
+    {
+      "id": "luxembourg",
+      "name": "Luxembourg",
+      "color": "9a9a8c",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "luxembourg_0",
+      "player_slot": false
+    },
+    {
+      "id": "switzerland",
+      "name": "Switzerland",
+      "color": "9a9a8c",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "switzerland_0",
+      "player_slot": false
+    },
+    {
+      "id": "denmark",
+      "name": "Denmark",
+      "color": "9a9a8c",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "denmark_0",
+      "player_slot": false
+    },
+    {
+      "id": "estonia",
+      "name": "Estonia",
+      "color": "9a9a8c",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "estonia_0",
+      "player_slot": false
+    },
+    {
+      "id": "latvia",
+      "name": "Latvia",
+      "color": "9a9a8c",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "latvia_0",
+      "player_slot": false
+    },
+    {
+      "id": "lithuania",
+      "name": "Lithuania",
+      "color": "9a9a8c",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "lithuania_0",
+      "player_slot": false
+    },
+    {
+      "id": "moldova",
+      "name": "Moldova",
+      "color": "9a9a8c",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "moldova_0",
+      "player_slot": false
+    },
+    {
+      "id": "slovakia",
+      "name": "Slovakia",
+      "color": "9a9a8c",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "slovakia_0",
+      "player_slot": false
+    },
+    {
+      "id": "slovenia",
+      "name": "Slovenia",
+      "color": "9a9a8c",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "slovenia_0",
+      "player_slot": false
+    },
+    {
+      "id": "croatia",
+      "name": "Croatia",
+      "color": "9a9a8c",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "croatia_0",
+      "player_slot": false
+    },
+    {
+      "id": "bosnia",
+      "name": "Bosnia and Herzegovina",
+      "color": "9a9a8c",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "bosnia_0",
+      "player_slot": false
+    },
+    {
+      "id": "montenegro",
+      "name": "Montenegro",
+      "color": "9a9a8c",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "montenegro_0",
+      "player_slot": false
+    },
+    {
+      "id": "albania",
+      "name": "Albania",
+      "color": "9a9a8c",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "albania_0",
+      "player_slot": false
+    },
+    {
+      "id": "north_macedonia",
+      "name": "North Macedonia",
+      "color": "9a9a8c",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "north_macedonia_0",
+      "player_slot": false
+    },
+    {
+      "id": "kosovo",
+      "name": "Kosovo",
+      "color": "9a9a8c",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "kosovo_0",
+      "player_slot": false
+    },
+    {
+      "id": "cyprus",
+      "name": "Cyprus",
+      "color": "9a9a8c",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "cyprus_0",
+      "player_slot": false
+    },
+    {
+      "id": "malta",
+      "name": "Malta",
+      "color": "9a9a8c",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "malta_0",
+      "player_slot": false
+    },
+    {
+      "id": "georgia",
+      "name": "Georgia",
+      "color": "9a9a8c",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "georgia_0",
+      "player_slot": false
+    },
+    {
+      "id": "armenia",
+      "name": "Armenia",
+      "color": "9a9a8c",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "armenia_0",
+      "player_slot": false
+    },
+    {
+      "id": "azerbaijan",
+      "name": "Azerbaijan",
+      "color": "9a9a8c",
+      "statistics": {},
+      "relations": {},
+      "capital_city": "azerbaijan_0",
+      "player_slot": false
+    }
+  ],
+  "units": [],
+  "starting_tiers": true
+}

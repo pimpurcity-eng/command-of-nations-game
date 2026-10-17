@@ -17,11 +17,11 @@ func _ready() -> void:
 	panel = MobileStartPanel.new()
 	panel.audio = audio
 	add_child(panel)
-	panel.setup(StrategyTheme.create(), FileAccess.file_exists("user://regional_save.json"))
+	panel.setup(StrategyTheme.create(), FileAccess.file_exists(MapDefinition.save_path()))
 	panel.layer = 30
 	panel.begin_background_loading()
 	await get_tree().process_frame
-	var path := "res://scenes/main.tscn"
+	var path := MapDefinition.scene_path()
 	if ResourceLoader.load_threaded_request(path) != OK:
 		panel.set_progress(0, "Unable to load campaign. Please restart.")
 		push_error("Could not start main scene request")

@@ -1,0 +1,570 @@
+{
+  "cities": {
+    "Moscow": [
+      "materials"
+    ],
+    "St. Petersburg": [
+      "electronics"
+    ],
+    "Nizhny Novgorod": [
+      "fuel"
+    ],
+    "Rostov": [
+      "food"
+    ],
+    "Volgograd": [
+      "materials"
+    ],
+    "Kursk": [
+      "fuel"
+    ],
+    "Voronezh": [
+      "fuel"
+    ],
+    "Kiev": [
+      "materials"
+    ],
+    "Kharkiv": [
+      "electronics"
+    ],
+    "Dnipro": [
+      "fuel"
+    ],
+    "Odessa": [
+      "food"
+    ],
+    "Donetsk": [
+      "materials"
+    ],
+    "Vinnytsia": [
+      "electronics"
+    ],
+    "Poltava": [
+      "food"
+    ],
+    "Minsk": [
+      "materials"
+    ],
+    "Homyel": [
+      "electronics"
+    ],
+    "Mahilyow": [
+      "fuel"
+    ],
+    "Vitsyebsk": [
+      "food"
+    ],
+    "Hrodna": [
+      "materials"
+    ],
+    "Grodno": [
+      "fuel"
+    ],
+    "Bobruisk": [
+      "fuel"
+    ],
+    "Warsaw": [
+      "materials"
+    ],
+    "Katowice": [
+      "electronics"
+    ],
+    "Lodz": [
+      "fuel"
+    ],
+    "Gdansk": [
+      "food"
+    ],
+    "Wroclaw": [
+      "materials"
+    ],
+    "Szczecin": [
+      "electronics"
+    ],
+    "Lublin": [
+      "fuel"
+    ],
+    "Berlin": [
+      "materials"
+    ],
+    "Stuttgart": [
+      "electronics"
+    ],
+    "Frankfurt": [
+      "fuel"
+    ],
+    "Hamburg": [
+      "food"
+    ],
+    "Essen": [
+      "materials"
+    ],
+    "Bremen": [
+      "electronics"
+    ],
+    "Dresden": [
+      "food"
+    ],
+    "Paris": [
+      "materials"
+    ],
+    "Lyon": [
+      "electronics"
+    ],
+    "Marseille": [
+      "fuel"
+    ],
+    "Lille": [
+      "food"
+    ],
+    "Toulouse": [
+      "materials"
+    ],
+    "Bordeaux": [
+      "electronics"
+    ],
+    "Nice": [
+      "food"
+    ],
+    "London": [
+      "materials"
+    ],
+    "Birmingham": [
+      "electronics"
+    ],
+    "Manchester": [
+      "fuel"
+    ],
+    "Glasgow": [
+      "food"
+    ],
+    "Newcastle": [
+      "materials"
+    ],
+    "Bristol": [
+      "electronics"
+    ],
+    "Belfast": [
+      "food"
+    ],
+    "Madrid": [
+      "materials"
+    ],
+    "Barcelona": [
+      "electronics"
+    ],
+    "Seville": [
+      "fuel"
+    ],
+    "Bilbao": [
+      "food"
+    ],
+    "Valencia": [
+      "materials"
+    ],
+    "Malaga": [
+      "electronics"
+    ],
+    "Zaragoza": [
+      "food"
+    ],
+    "Rome": [
+      "materials"
+    ],
+    "Milan": [
+      "electronics"
+    ],
+    "Naples": [
+      "fuel"
+    ],
+    "Turin": [
+      "food"
+    ],
+    "Florence": [
+      "materials"
+    ],
+    "Genoa": [
+      "electronics"
+    ],
+    "Palermo": [
+      "food"
+    ],
+    "Ankara": [
+      "materials"
+    ],
+    "Istanbul": [
+      "electronics"
+    ],
+    "Izmir": [
+      "fuel"
+    ],
+    "Adana": [
+      "food"
+    ],
+    "Gaziantep": [
+      "materials"
+    ],
+    "Antalya": [
+      "electronics"
+    ],
+    "Samsun": [
+      "food"
+    ],
+    "Stockholm": [
+      "materials"
+    ],
+    "Goteborg": [
+      "electronics"
+    ],
+    "Malmo": [
+      "fuel"
+    ],
+    "Orebro": [
+      "food"
+    ],
+    "Jonkoping": [
+      "materials"
+    ],
+    "Umea": [
+      "electronics"
+    ],
+    "Vasteras": [
+      "food"
+    ],
+    "Oslo": [
+      "materials"
+    ],
+    "Bergen": [
+      "electronics"
+    ],
+    "Stavanger": [
+      "fuel"
+    ],
+    "Trondheim": [
+      "food"
+    ],
+    "Kristiansand": [
+      "materials"
+    ],
+    "Drammen": [
+      "electronics"
+    ],
+    "Hamar": [
+      "food"
+    ],
+    "Helsinki": [
+      "materials"
+    ],
+    "Tampere": [
+      "electronics"
+    ],
+    "Turku": [
+      "fuel"
+    ],
+    "Oulu": [
+      "food"
+    ],
+    "Jyvaskyla": [
+      "materials"
+    ],
+    "Vaasa": [
+      "electronics"
+    ],
+    "Lahti": [
+      "food"
+    ],
+    "Bucharest": [
+      "materials"
+    ],
+    "Iasi": [
+      "electronics"
+    ],
+    "Cluj-Napoca": [
+      "fuel"
+    ],
+    "Timisoara": [
+      "food"
+    ],
+    "Galati": [
+      "materials"
+    ],
+    "Constanta": [
+      "electronics"
+    ],
+    "Craiova": [
+      "fuel"
+    ],
+    "Budapest": [
+      "materials"
+    ],
+    "Miskolc": [
+      "electronics"
+    ],
+    "Szeged": [
+      "fuel"
+    ],
+    "Pecs": [
+      "food"
+    ],
+    "Gyor": [
+      "materials"
+    ],
+    "Veszprem": [
+      "electronics"
+    ],
+    "Debrecen": [
+      "food"
+    ],
+    "Prague": [
+      "materials"
+    ],
+    "Ostrava": [
+      "electronics"
+    ],
+    "Brno": [
+      "fuel"
+    ],
+    "Ceske Budejovice": [
+      "food"
+    ],
+    "Pizen": [
+      "materials"
+    ],
+    "Liberec": [
+      "electronics"
+    ],
+    "Olomouc": [
+      "food"
+    ],
+    "Vienna": [
+      "materials"
+    ],
+    "Linz": [
+      "electronics"
+    ],
+    "Graz": [
+      "fuel"
+    ],
+    "Innsbruck": [
+      "food"
+    ],
+    "Bregenz": [
+      "materials"
+    ],
+    "Klagenfurt": [
+      "electronics"
+    ],
+    "Sankt Polten": [
+      "food"
+    ],
+    "Athens": [
+      "materials"
+    ],
+    "Thessaloniki": [
+      "electronics"
+    ],
+    "Patra": [
+      "fuel"
+    ],
+    "Iraklio": [
+      "food"
+    ],
+    "Larissa": [
+      "materials"
+    ],
+    "Patras": [
+      "electronics"
+    ],
+    "Ioannina": [
+      "food"
+    ],
+    "Belgrade": [
+      "materials"
+    ],
+    "Nis": [
+      "electronics"
+    ],
+    "Subotica": [
+      "fuel"
+    ],
+    "Novi Sad": [
+      "food"
+    ],
+    "Kragujevac": [
+      "materials"
+    ],
+    "Kraljevo": [
+      "fuel"
+    ],
+    "Cacak": [
+      "fuel"
+    ],
+    "Sofia": [
+      "materials"
+    ],
+    "Plovdiv": [
+      "electronics"
+    ],
+    "Varna": [
+      "fuel"
+    ],
+    "Ruse": [
+      "food"
+    ],
+    "Pleven": [
+      "materials"
+    ],
+    "Dobrich": [
+      "electronics"
+    ],
+    "Stara Zagora": [
+      "food"
+    ],
+    "Lisbon": [
+      "materials",
+      "electronics",
+      "fuel",
+      "food"
+    ],
+    "Dublin": [
+      "materials",
+      "electronics",
+      "fuel",
+      "food"
+    ],
+    "Brussels": [
+      "materials",
+      "electronics",
+      "fuel",
+      "food"
+    ],
+    "Amsterdam": [
+      "materials",
+      "electronics",
+      "fuel",
+      "food"
+    ],
+    "Luxembourg": [
+      "materials",
+      "electronics",
+      "fuel",
+      "food"
+    ],
+    "Bern": [
+      "materials",
+      "electronics",
+      "fuel",
+      "food"
+    ],
+    "Kobenhavn": [
+      "materials",
+      "electronics",
+      "fuel",
+      "food"
+    ],
+    "Tallinn": [
+      "materials",
+      "electronics",
+      "fuel",
+      "food"
+    ],
+    "Riga": [
+      "materials",
+      "electronics",
+      "fuel",
+      "food"
+    ],
+    "Vilnius": [
+      "materials",
+      "electronics",
+      "fuel",
+      "food"
+    ],
+    "Chisinau": [
+      "materials",
+      "electronics",
+      "fuel",
+      "food"
+    ],
+    "Bratislava": [
+      "materials",
+      "electronics",
+      "fuel",
+      "food"
+    ],
+    "Ljubljana": [
+      "materials",
+      "electronics",
+      "fuel",
+      "food"
+    ],
+    "Zagreb": [
+      "materials",
+      "electronics",
+      "fuel",
+      "food"
+    ],
+    "Sarajevo": [
+      "materials",
+      "electronics",
+      "fuel",
+      "food"
+    ],
+    "Podgorica": [
+      "materials",
+      "electronics",
+      "fuel",
+      "food"
+    ],
+    "Tirana": [
+      "materials",
+      "electronics",
+      "fuel",
+      "food"
+    ],
+    "Skopje": [
+      "materials",
+      "electronics",
+      "fuel",
+      "food"
+    ],
+    "Pristina": [
+      "materials",
+      "electronics",
+      "fuel",
+      "food"
+    ],
+    "Nicosia": [
+      "materials",
+      "electronics",
+      "fuel",
+      "food"
+    ],
+    "Valletta": [
+      "materials",
+      "electronics",
+      "fuel",
+      "food"
+    ],
+    "Tbilisi": [
+      "materials",
+      "electronics",
+      "fuel",
+      "food"
+    ],
+    "Yerevan": [
+      "materials",
+      "electronics",
+      "fuel",
+      "food"
+    ],
+    "Baku": [
+      "materials",
+      "electronics",
+      "fuel",
+      "food"
+    ]
+  },
+  "sites": [],
+  "rates": {}
+}

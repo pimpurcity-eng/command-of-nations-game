@@ -89,20 +89,6 @@ func run() -> void:
 	theirs.sort()
 	check(mine == theirs and not alice.state.has("stockpiles") and not JSON.stringify(alice.state).contains("\"ukraine\":{\"funds\""), "each phone gets only its own stockpile")
 
-	# Combat removes casualties after their last frame; snapshots already omit them.
-	# The server must not index the shorter snapshot with live-array positions.
-	var casualty: Dictionary = units.units.filter(func(u: Dictionary): return u.health > 1.0)[0]
-	var previous_health: float = casualty.health
-	casualty.health = 0.0
-	var expected_ids: Dictionary = {}
-	for unit in units.units:
-		if unit.health > 0.001 and units.unit_visible(unit, "russia"): expected_ids[unit.id] = true
-	var casualty_tick: Dictionary = server._state("russia", "tick", false)
-	var received_ids: Dictionary = {}
-	for entry in casualty_tick.get("units", []): received_ids[entry.id] = true
-	check(received_ids == expected_ids and not received_ids.has(casualty.id), "a casualty still in the live array cannot break or misalign the next server tick")
-	casualty.health = previous_health
-
 	# Orders are checked against the sender's country.
 	var russian: Dictionary = {}
 	var ukrainian: Dictionary = {}

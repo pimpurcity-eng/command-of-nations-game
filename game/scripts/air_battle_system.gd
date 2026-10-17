@@ -91,6 +91,7 @@ func advance(seconds: float, armies: UnitSystem, pending: Dictionary = {}, resol
 			var target: Dictionary = {}
 			for enemy in armies.units:
 				if enemy.health <= 0 or enemy.country == unit.country: continue
+				if not MapDefinition.is_regional() and armies.diplomacy != null and not armies.diplomacy.at_war(unit.country,enemy.country): continue
 				if aa and (enemy.visual_kind != "fighter" or enemy.flight_mode == "grounded"): continue
 				if aa and (not can_engage(unit, enemy) or aa_holds_fire(unit, enemy)): continue
 				var point: = Vector2(enemy.node.position.x, enemy.node.position.z)

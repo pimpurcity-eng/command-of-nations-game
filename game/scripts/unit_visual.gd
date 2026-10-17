@@ -439,7 +439,7 @@ static func _enable_shadows(node: Node) -> void:
 ## Models supplied by the owner (air defence and the tank/APC/aircraft arsenal): original
 ## paint, +X forward.
 static func owner_model(path: String) -> bool:
-	return path.contains("/airdefense/") or path.contains("/arsenal/")
+	return path.contains("/airdefense/") or path.contains("/arsenal/") or path.contains("/american/")
 
 ## One MeshInstance3D holding every mesh of `source`, one surface per material.
 static var _merged_meshes: Dictionary = {}

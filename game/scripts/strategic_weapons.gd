@@ -71,6 +71,7 @@ func interception_chance(country: String, target: Vector2, armies: UnitSystem, k
 	for unit in armies.units:
 		if unit.country == country or unit.health <= 0 or unit.visual_kind != "air_defense": continue
 		if not str(unit.get("equipment_id", "")).begins_with("patriot"): continue
+		if not MapDefinition.is_regional() and armies.diplomacy != null and not armies.diplomacy.at_war(country,unit.country): continue
 		var level: = int(unit.get("level", 1))
 		if kind == "nuclear" and level < ABM_LEVEL: continue
 		if Vector2(unit.node.position.x, unit.node.position.z).distance_to(target) > ABM_RANGE: continue

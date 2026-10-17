@@ -94,6 +94,7 @@ func target(group: Array, groups: Array, armies: UnitSystem = null) -> Array:
 	var shore: bool = group.any(func(member):return EquipmentIdentity.spec(member.equipment_id).get("shore_bombardment",false))
 	for candidate in groups:
 		if candidate[0].visual_kind == "fighter" or candidate[0].country == group[0].country: continue
+		if not MapDefinition.is_regional() and armies != null and armies.diplomacy != null and not armies.diplomacy.at_war(group[0].country,candidate[0].country): continue
 		if (candidate[0].visual_kind == "naval") != (group[0].visual_kind == "naval") and not (coastal and candidate[0].visual_kind == "naval") and not (shore and group[0].visual_kind == "naval"): continue
 		var defenders: = alive(candidate)
 		if defenders.is_empty() or defenders[0].country == group[0].country: continue

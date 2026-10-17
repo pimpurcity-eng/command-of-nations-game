@@ -51,11 +51,13 @@ func advance(real_seconds: float) -> void :
 		hud_elapsed = 0.0
 		state_changed.emit()
 func set_speed(value: float) -> void :
+	if MatchClient.active != null: return
 	if value not in speeds(): return
 	speed = value
 	game_speed = value
 	state_changed.emit()
 func toggle_pause() -> void :
+	if MatchClient.active != null: return
 	paused = not paused
 	state_changed.emit()
 func snapshot() -> Dictionary:

@@ -1,0 +1,3445 @@
+[
+  {
+    "id": "infantry_united_states",
+    "country": "united_states",
+    "name": "Motorized infantry",
+    "category": "Infantry",
+    "visual_kind": "infantry",
+    "role": "infantry",
+    "asset_roster_id": "infantry_russia",
+    "seconds": 35,
+    "cost": {
+      "funds": 1440,
+      "materials": 300,
+      "electronics": 120,
+      "fuel": 60,
+      "manpower": 720,
+      "food": 492
+    },
+    "building_requirements": {
+      "barracks": 1
+    },
+    "research_days": [
+      1,
+      4,
+      7,
+      10,
+      13
+    ],
+    "research_tiers": [
+      {
+        "name": "US Army riflemen",
+        "model": "res://assets/library/arsenal/usa_army_rifleman.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_army_rifleman.webp"
+      },
+      {
+        "name": "US Army riflemen · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_army_rifleman.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_army_rifleman.webp"
+      },
+      {
+        "name": "US Army riflemen · upgrade 3",
+        "model": "res://assets/library/arsenal/usa_army_rifleman.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_army_rifleman.webp"
+      },
+      {
+        "name": "US Army riflemen · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_army_rifleman.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_army_rifleman.webp"
+      },
+      {
+        "name": "US Army riflemen · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_army_rifleman.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_army_rifleman.webp"
+      }
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "upkeep": {
+      "funds": 120.0,
+      "fuel": 4.0,
+      "manpower": 12.0,
+      "food": 24.0
+    },
+    "production_building": "barracks",
+    "research_branch": "Motorized infantry",
+    "starter": true,
+    "balance_profile": "motorized",
+    "prototype_id": "infantry_russia"
+  },
+  {
+    "id": "airborne_united_states",
+    "country": "united_states",
+    "name": "Airborne infantry",
+    "category": "Infantry",
+    "visual_kind": "infantry",
+    "role": "infantry",
+    "asset_roster_id": "airborne_russia",
+    "seconds": 35,
+    "cost": {
+      "funds": 1440,
+      "materials": 300,
+      "electronics": 120,
+      "fuel": 60,
+      "manpower": 720,
+      "food": 492
+    },
+    "building_requirements": {
+      "barracks": 1
+    },
+    "research_days": [
+      3,
+      6,
+      9,
+      12,
+      15
+    ],
+    "research_tiers": [
+      {
+        "name": "Army Rangers",
+        "model": "res://assets/library/arsenal/usa_army_ranger.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_army_ranger.webp"
+      },
+      {
+        "name": "Army Rangers · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_army_ranger.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_army_ranger.webp"
+      },
+      {
+        "name": "Army Rangers · upgrade 3",
+        "model": "res://assets/library/arsenal/usa_army_ranger.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_army_ranger.webp"
+      },
+      {
+        "name": "Army Rangers · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_army_ranger.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_army_ranger.webp"
+      },
+      {
+        "name": "Army Rangers · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_army_ranger.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_army_ranger.webp"
+      }
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "upkeep": {
+      "funds": 120.0,
+      "fuel": 4.0,
+      "manpower": 12.0,
+      "food": 24.0
+    },
+    "production_building": "barracks",
+    "research_branch": "Airborne infantry",
+    "starter": false,
+    "balance_profile": "airborne",
+    "prototype_id": "airborne_russia"
+  },
+  {
+    "id": "special_forces_united_states",
+    "country": "united_states",
+    "name": "Special forces",
+    "category": "Infantry",
+    "visual_kind": "infantry",
+    "role": "infantry",
+    "asset_roster_id": "special_forces_russia",
+    "seconds": 35,
+    "cost": {
+      "funds": 1440,
+      "materials": 300,
+      "electronics": 120,
+      "fuel": 60,
+      "manpower": 720,
+      "food": 492
+    },
+    "building_requirements": {
+      "barracks": 1
+    },
+    "research_days": [
+      6,
+      9,
+      12,
+      15,
+      18
+    ],
+    "research_tiers": [
+      {
+        "name": "Navy SEALs",
+        "model": "res://assets/library/arsenal/usa_navy_seal.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_navy_seal.webp"
+      },
+      {
+        "name": "Navy SEALs · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_navy_seal.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_navy_seal.webp"
+      },
+      {
+        "name": "Navy SEALs · upgrade 3",
+        "model": "res://assets/library/arsenal/usa_navy_seal.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_navy_seal.webp"
+      },
+      {
+        "name": "Navy SEALs · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_navy_seal.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_navy_seal.webp"
+      },
+      {
+        "name": "Navy SEALs · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_navy_seal.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_navy_seal.webp"
+      }
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "upkeep": {
+      "funds": 120.0,
+      "fuel": 4.0,
+      "manpower": 12.0,
+      "food": 24.0
+    },
+    "production_building": "barracks",
+    "research_branch": "Special forces",
+    "starter": false,
+    "balance_profile": "special",
+    "prototype_id": "special_forces_russia"
+  },
+  {
+    "id": "naval_infantry_united_states",
+    "country": "united_states",
+    "name": "Naval infantry",
+    "category": "Infantry",
+    "visual_kind": "infantry",
+    "role": "infantry",
+    "asset_roster_id": "naval_infantry_russia",
+    "seconds": 35,
+    "cost": {
+      "funds": 1440,
+      "materials": 300,
+      "electronics": 120,
+      "fuel": 60,
+      "manpower": 720,
+      "food": 492
+    },
+    "building_requirements": {
+      "barracks": 1
+    },
+    "research_days": [
+      4,
+      7,
+      10,
+      13,
+      16
+    ],
+    "research_tiers": [
+      {
+        "name": "US Marines",
+        "model": "res://assets/library/arsenal/usa_marine_rifleman.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_marine_rifleman.webp"
+      },
+      {
+        "name": "US Marines · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_marine_rifleman.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_marine_rifleman.webp"
+      },
+      {
+        "name": "US Marines · upgrade 3",
+        "model": "res://assets/library/arsenal/usa_marine_rifleman.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_marine_rifleman.webp"
+      },
+      {
+        "name": "US Marines · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_marine_rifleman.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_marine_rifleman.webp"
+      },
+      {
+        "name": "US Marines · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_marine_rifleman.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_marine_rifleman.webp"
+      }
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "upkeep": {
+      "funds": 120.0,
+      "fuel": 4.0,
+      "manpower": 12.0,
+      "food": 24.0
+    },
+    "production_building": "barracks",
+    "research_branch": "Naval infantry",
+    "starter": false,
+    "balance_profile": "marines",
+    "prototype_id": "naval_infantry_russia"
+  },
+  {
+    "id": "snipers_united_states",
+    "country": "united_states",
+    "name": "Snipers",
+    "category": "Infantry",
+    "visual_kind": "infantry",
+    "role": "infantry",
+    "asset_roster_id": "snipers_russia",
+    "seconds": 35,
+    "cost": {
+      "funds": 1440,
+      "materials": 300,
+      "electronics": 120,
+      "fuel": 60,
+      "manpower": 720,
+      "food": 492
+    },
+    "building_requirements": {
+      "barracks": 1
+    },
+    "research_days": [
+      1,
+      4,
+      7,
+      10,
+      13
+    ],
+    "research_tiers": [
+      {
+        "name": "Scout snipers",
+        "model": "res://assets/library/arsenal/usa_scout_sniper.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_scout_sniper.webp"
+      },
+      {
+        "name": "Scout snipers · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_scout_sniper.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_scout_sniper.webp"
+      },
+      {
+        "name": "Scout snipers · upgrade 3",
+        "model": "res://assets/library/arsenal/usa_scout_sniper.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_scout_sniper.webp"
+      },
+      {
+        "name": "Scout snipers · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_scout_sniper.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_scout_sniper.webp"
+      },
+      {
+        "name": "Scout snipers · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_scout_sniper.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_scout_sniper.webp"
+      }
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "upkeep": {
+      "funds": 120.0,
+      "fuel": 4.0,
+      "manpower": 12.0,
+      "food": 24.0
+    },
+    "production_building": "barracks",
+    "research_branch": "Snipers",
+    "starter": false,
+    "balance_profile": "snipers",
+    "prototype_id": "snipers_russia"
+  },
+  {
+    "id": "tanks_united_states",
+    "country": "united_states",
+    "name": "Main battle tanks",
+    "category": "Armor",
+    "visual_kind": "armor",
+    "research_branch": "Main battle tank",
+    "seconds": 45,
+    "cost": {
+      "funds": 3360,
+      "materials": 1140,
+      "electronics": 420,
+      "fuel": 480,
+      "manpower": 180,
+      "food": 168
+    },
+    "research_tiers": [
+      {
+        "name": "M60A3 Patton",
+        "model": "res://assets/library/arsenal/usa_m60a3_patton.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m60a3_patton.webp"
+      },
+      {
+        "name": "M60A3 Patton · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_m60a3_patton.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m60a3_patton.webp"
+      },
+      {
+        "name": "M1A1 Abrams",
+        "model": "res://assets/library/arsenal/usa_m1a1_abrams.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m1a1_abrams.webp"
+      },
+      {
+        "name": "M1A1 Abrams · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_m1a1_abrams.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m1a1_abrams.webp"
+      },
+      {
+        "name": "M1A2 SEP v3",
+        "model": "res://assets/library/arsenal/usa_m1a2_sepv3.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m1a2_sepv3.webp"
+      }
+    ],
+    "building_requirements": {
+      "tank_plant": 1
+    },
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "research_days": [
+      1,
+      5,
+      9,
+      13,
+      17
+    ],
+    "upkeep": {
+      "funds": 280.0,
+      "fuel": 32.0,
+      "manpower": 3.0,
+      "food": 6.0
+    },
+    "production_building": "tank_plant",
+    "starter": true,
+    "balance_profile": "mbt",
+    "prototype_id": "tanks_russia"
+  },
+  {
+    "id": "advanced_tanks_united_states",
+    "country": "united_states",
+    "name": "Next-generation tanks",
+    "category": "Armor",
+    "visual_kind": "armor",
+    "role": "armor",
+    "asset_roster_id": "advanced_tanks_russia",
+    "seconds": 60,
+    "cost": {
+      "funds": 3000,
+      "materials": 960,
+      "electronics": 480,
+      "fuel": 360,
+      "manpower": 360,
+      "food": 276
+    },
+    "building_requirements": {
+      "tank_plant": 1
+    },
+    "research_days": [
+      10,
+      13,
+      16,
+      19,
+      22
+    ],
+    "research_tiers": [
+      {
+        "name": "AbramsX demonstrator",
+        "model": "res://assets/library/arsenal/usa_abramsx.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_abramsx.webp"
+      },
+      {
+        "name": "AbramsX demonstrator · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_abramsx.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_abramsx.webp"
+      },
+      {
+        "name": "AbramsX demonstrator · upgrade 3",
+        "model": "res://assets/library/arsenal/usa_abramsx.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_abramsx.webp"
+      },
+      {
+        "name": "AbramsX demonstrator · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_abramsx.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_abramsx.webp"
+      },
+      {
+        "name": "AbramsX demonstrator · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_abramsx.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_abramsx.webp"
+      }
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions. Includes demonstrator/concept equipment for the late-game roster",
+    "upkeep": {
+      "funds": 250.0,
+      "fuel": 24.0,
+      "manpower": 6.0,
+      "food": 12.0
+    },
+    "production_building": "tank_plant",
+    "research_branch": "Next-generation tank",
+    "starter": false,
+    "balance_profile": "advanced_mbt",
+    "prototype_id": "advanced_tanks_russia"
+  },
+  {
+    "id": "light_tank_united_states",
+    "country": "united_states",
+    "name": "Light tanks",
+    "category": "Armor",
+    "visual_kind": "armor",
+    "research_branch": "Light tank",
+    "seconds": 45,
+    "cost": {
+      "funds": 3360,
+      "materials": 1140,
+      "electronics": 420,
+      "fuel": 480,
+      "manpower": 180,
+      "food": 168
+    },
+    "research_tiers": [
+      {
+        "name": "M10 Booker",
+        "model": "res://assets/library/arsenal/usa_m10_booker.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m10_booker.webp"
+      },
+      {
+        "name": "M10 Booker · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_m10_booker.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m10_booker.webp"
+      },
+      {
+        "name": "M10 Booker · upgrade 3",
+        "model": "res://assets/library/arsenal/usa_m10_booker.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m10_booker.webp"
+      },
+      {
+        "name": "M10 Booker · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_m10_booker.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m10_booker.webp"
+      },
+      {
+        "name": "M10 Booker · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_m10_booker.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m10_booker.webp"
+      }
+    ],
+    "building_requirements": {
+      "tank_plant": 1
+    },
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "research_days": [
+      1,
+      4,
+      7,
+      10,
+      13
+    ],
+    "upkeep": {
+      "funds": 280.0,
+      "fuel": 32.0,
+      "manpower": 3.0,
+      "food": 6.0
+    },
+    "production_building": "tank_plant",
+    "starter": true,
+    "asset_roster_id": "light_tank_russia",
+    "balance_profile": "light_tank",
+    "prototype_id": "light_tank_russia"
+  },
+  {
+    "id": "apcs_united_states",
+    "country": "united_states",
+    "name": "Armoured personnel carriers",
+    "category": "Mechanized",
+    "visual_kind": "ifv",
+    "research_branch": "Armoured personnel carrier",
+    "seconds": 28,
+    "cost": {
+      "funds": 1920,
+      "materials": 720,
+      "electronics": 240,
+      "fuel": 300,
+      "manpower": 240,
+      "food": 204
+    },
+    "research_tiers": [
+      {
+        "name": "M113A3",
+        "model": "res://assets/library/arsenal/usa_m113a3.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m113a3.webp"
+      },
+      {
+        "name": "M113A3 · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_m113a3.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m113a3.webp"
+      },
+      {
+        "name": "M1126 Stryker",
+        "model": "res://assets/library/arsenal/usa_m1126_stryker.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m1126_stryker.webp"
+      },
+      {
+        "name": "M1126 Stryker · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_m1126_stryker.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m1126_stryker.webp"
+      },
+      {
+        "name": "AMPV",
+        "model": "res://assets/library/arsenal/usa_m1283_ampv.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m1283_ampv.webp"
+      }
+    ],
+    "building_requirements": {
+      "barracks": 1
+    },
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "research_days": [
+      1,
+      4,
+      7,
+      10,
+      13
+    ],
+    "upkeep": {
+      "funds": 160.0,
+      "fuel": 20.0,
+      "manpower": 4.0,
+      "food": 8.0
+    },
+    "production_building": "barracks",
+    "starter": true,
+    "balance_profile": "apc",
+    "prototype_id": "apcs_russia"
+  },
+  {
+    "id": "ifv_united_states",
+    "country": "united_states",
+    "name": "Infantry fighting vehicles",
+    "category": "Mechanized",
+    "visual_kind": "ifv",
+    "research_branch": "Infantry fighting vehicle",
+    "seconds": 28,
+    "cost": {
+      "funds": 1920,
+      "materials": 720,
+      "electronics": 240,
+      "fuel": 300,
+      "manpower": 240,
+      "food": 204
+    },
+    "research_tiers": [
+      {
+        "name": "LAV-25",
+        "model": "res://assets/library/arsenal/usa_lav25.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_lav25.webp"
+      },
+      {
+        "name": "LAV-25 · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_lav25.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_lav25.webp"
+      },
+      {
+        "name": "M2A3 Bradley",
+        "model": "res://assets/library/arsenal/usa_m2a3_bradley.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m2a3_bradley.webp"
+      },
+      {
+        "name": "M2A3 Bradley · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_m2a3_bradley.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m2a3_bradley.webp"
+      },
+      {
+        "name": "XM30 concept",
+        "model": "res://assets/library/arsenal/usa_xm30.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_xm30.webp"
+      }
+    ],
+    "building_requirements": {
+      "barracks": 1
+    },
+    "model_status": "Original supplied American model; game balance values are abstractions. Includes demonstrator/concept equipment for the late-game roster",
+    "research_days": [
+      2,
+      5,
+      8,
+      11,
+      14
+    ],
+    "upkeep": {
+      "funds": 160.0,
+      "fuel": 20.0,
+      "manpower": 4.0,
+      "food": 8.0
+    },
+    "production_building": "barracks",
+    "starter": false,
+    "asset_roster_id": "ifv_russia",
+    "balance_profile": "ifv",
+    "prototype_id": "ifv_russia"
+  },
+  {
+    "id": "artillery_united_states",
+    "country": "united_states",
+    "name": "Self-propelled artillery",
+    "category": "Artillery",
+    "visual_kind": "artillery",
+    "asset_roster_id": "artillery_russia",
+    "research_branch": "Self-propelled artillery",
+    "seconds": 70,
+    "cost": {
+      "funds": 3960,
+      "materials": 1200,
+      "electronics": 780,
+      "fuel": 600,
+      "manpower": 240,
+      "food": 204
+    },
+    "building_requirements": {
+      "factory": 1
+    },
+    "research_days": [
+      4,
+      7,
+      10,
+      13,
+      16
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions. Includes demonstrator/concept equipment for the late-game roster",
+    "research_tiers": [
+      {
+        "name": "M110A2",
+        "model": "res://assets/library/arsenal/usa_m110a2.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m110a2.webp"
+      },
+      {
+        "name": "M110A2 · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_m110a2.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m110a2.webp"
+      },
+      {
+        "name": "M109A7 Paladin",
+        "model": "res://assets/library/arsenal/usa_m109a7_paladin.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m109a7_paladin.webp"
+      },
+      {
+        "name": "M109A7 Paladin · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_m109a7_paladin.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m109a7_paladin.webp"
+      },
+      {
+        "name": "XM1299 concept",
+        "model": "res://assets/library/arsenal/usa_xm1299_erca.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_xm1299_erca.webp"
+      }
+    ],
+    "upkeep": {
+      "funds": 330.0,
+      "fuel": 40.0,
+      "manpower": 4.0,
+      "food": 8.0
+    },
+    "production_building": "factory",
+    "starter": false,
+    "balance_profile": "sp_artillery",
+    "prototype_id": "artillery_russia"
+  },
+  {
+    "id": "d30_howitzer_united_states",
+    "country": "united_states",
+    "name": "Towed artillery",
+    "category": "Artillery",
+    "visual_kind": "artillery",
+    "role": "artillery",
+    "asset_roster_id": "d30_howitzer_russia",
+    "seconds": 60,
+    "cost": {
+      "funds": 3000,
+      "materials": 960,
+      "electronics": 480,
+      "fuel": 360,
+      "manpower": 360,
+      "food": 276
+    },
+    "building_requirements": {
+      "factory": 1
+    },
+    "research_days": [
+      1,
+      4,
+      7,
+      10,
+      13
+    ],
+    "research_tiers": [
+      {
+        "name": "M119A3",
+        "model": "res://assets/library/arsenal/usa_m119a3.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m119a3.webp"
+      },
+      {
+        "name": "M119A3 · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_m119a3.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m119a3.webp"
+      },
+      {
+        "name": "M777A2",
+        "model": "res://assets/library/arsenal/usa_m777a2.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m777a2.webp"
+      },
+      {
+        "name": "M777A2 · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_m777a2.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m777a2.webp"
+      },
+      {
+        "name": "M777A2 · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_m777a2.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m777a2.webp"
+      }
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "upkeep": {
+      "funds": 250.0,
+      "fuel": 24.0,
+      "manpower": 6.0,
+      "food": 12.0
+    },
+    "production_building": "factory",
+    "research_branch": "Towed artillery",
+    "starter": false,
+    "balance_profile": "towed_artillery",
+    "prototype_id": "d30_howitzer_russia"
+  },
+  {
+    "id": "rockets_united_states",
+    "country": "united_states",
+    "name": "Rocket artillery",
+    "category": "Missiles",
+    "visual_kind": "missile_launcher",
+    "asset_roster_id": "rockets_russia",
+    "research_branch": "Rocket artillery",
+    "seconds": 70,
+    "cost": {
+      "funds": 3960,
+      "materials": 1200,
+      "electronics": 780,
+      "fuel": 600,
+      "manpower": 240,
+      "food": 204
+    },
+    "building_requirements": {
+      "missile_factory": 1
+    },
+    "research_days": [
+      2,
+      6,
+      10,
+      14,
+      18
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "research_tiers": [
+      {
+        "name": "M270A2 MLRS",
+        "model": "res://assets/library/arsenal/usa_m270a2_mlrs.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m270a2_mlrs.webp"
+      },
+      {
+        "name": "M270A2 MLRS · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_m270a2_mlrs.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m270a2_mlrs.webp"
+      },
+      {
+        "name": "M142 HIMARS",
+        "model": "res://assets/library/arsenal/usa_m142_himars.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m142_himars.webp"
+      },
+      {
+        "name": "M142 HIMARS · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_m142_himars.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m142_himars.webp"
+      },
+      {
+        "name": "M142 HIMARS · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_m142_himars.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m142_himars.webp"
+      }
+    ],
+    "strike_range": 3.5,
+    "reload_rounds": 2.0,
+    "strike_damage": 12.0,
+    "upkeep": {
+      "funds": 330.0,
+      "fuel": 40.0,
+      "manpower": 4.0,
+      "food": 8.0
+    },
+    "production_building": "missile_factory",
+    "starter": false,
+    "balance_profile": "rocket_artillery",
+    "prototype_id": "rockets_russia"
+  },
+  {
+    "id": "skyguard_united_states",
+    "country": "united_states",
+    "name": "Short-range air defence",
+    "category": "Air defense",
+    "visual_kind": "air_defense",
+    "asset_roster_id": "skyguard",
+    "seconds": 40,
+    "cost": {
+      "funds": 2400,
+      "materials": 780,
+      "electronics": 600,
+      "fuel": 300,
+      "manpower": 180,
+      "food": 168
+    },
+    "building_requirements": {
+      "factory": 1
+    },
+    "aa_range": 2.4,
+    "aa_damage": 7.0,
+    "research_branch": "Short-range air defence",
+    "research_tiers": [
+      {
+        "name": "Avenger",
+        "model": "res://assets/library/arsenal/usa_avenger.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_avenger.webp",
+        "range": 1.8,
+        "damage": 5
+      },
+      {
+        "name": "Avenger · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_avenger.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_avenger.webp",
+        "range": 2.2,
+        "damage": 7
+      },
+      {
+        "name": "M-SHORAD",
+        "model": "res://assets/library/arsenal/usa_m_shorad.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m_shorad.webp",
+        "range": 2.5,
+        "damage": 8.5
+      },
+      {
+        "name": "M-SHORAD · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_m_shorad.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m_shorad.webp",
+        "range": 2.8,
+        "damage": 10
+      },
+      {
+        "name": "M-SHORAD · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_m_shorad.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m_shorad.webp",
+        "range": 3.1,
+        "damage": 11.5
+      }
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "research_days": [
+      1,
+      4,
+      7,
+      10,
+      13
+    ],
+    "upkeep": {
+      "funds": 200.0,
+      "fuel": 20.0,
+      "manpower": 3.0,
+      "food": 6.0
+    },
+    "production_building": "factory",
+    "starter": true,
+    "balance_profile": "short_aa",
+    "prototype_id": "skyguard_russia"
+  },
+  {
+    "id": "patriot_united_states",
+    "country": "united_states",
+    "name": "Long-range air defence",
+    "category": "Air defense",
+    "visual_kind": "air_defense",
+    "asset_roster_id": "patriot",
+    "seconds": 50,
+    "cost": {
+      "funds": 3000,
+      "materials": 960,
+      "electronics": 840,
+      "fuel": 300,
+      "manpower": 180,
+      "food": 168
+    },
+    "building_requirements": {
+      "factory": 1
+    },
+    "aa_range": 3.5,
+    "aa_damage": 10.0,
+    "research_branch": "Long-range air defence",
+    "research_tiers": [
+      {
+        "name": "Patriot",
+        "model": "res://assets/library/arsenal/usa_patriot.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_patriot.webp",
+        "range": 3.5,
+        "damage": 10
+      },
+      {
+        "name": "Patriot · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_patriot.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_patriot.webp",
+        "range": 4.0,
+        "damage": 12
+      },
+      {
+        "name": "Patriot · upgrade 3",
+        "model": "res://assets/library/arsenal/usa_patriot.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_patriot.webp",
+        "range": 4.4,
+        "damage": 13.5
+      },
+      {
+        "name": "Patriot · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_patriot.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_patriot.webp",
+        "range": 4.7,
+        "damage": 15
+      },
+      {
+        "name": "Patriot · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_patriot.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_patriot.webp",
+        "range": 5.2,
+        "damage": 16.5
+      }
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "research_days": [
+      6,
+      10,
+      14,
+      18,
+      22
+    ],
+    "upkeep": {
+      "funds": 250.0,
+      "fuel": 20.0,
+      "manpower": 3.0,
+      "food": 6.0
+    },
+    "production_building": "factory",
+    "starter": false,
+    "balance_profile": "long_aa",
+    "prototype_id": "patriot_russia"
+  },
+  {
+    "id": "missiles_united_states",
+    "country": "united_states",
+    "name": "Tactical ballistic missiles",
+    "category": "Missiles",
+    "visual_kind": "missile_launcher",
+    "role": "missile_launcher",
+    "asset_roster_id": "missiles_russia",
+    "seconds": 80,
+    "cost": {
+      "funds": 4800,
+      "materials": 1440,
+      "electronics": 1200,
+      "fuel": 720,
+      "manpower": 300,
+      "food": 240
+    },
+    "building_requirements": {
+      "missile_factory": 1
+    },
+    "research_days": [
+      8,
+      11,
+      14,
+      17,
+      20
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "research_tiers": [
+      {
+        "name": "PrSM / HIMARS",
+        "model": "res://assets/library/arsenal/usa_prsm_himars.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_prsm_himars.webp"
+      },
+      {
+        "name": "PrSM / HIMARS · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_prsm_himars.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_prsm_himars.webp"
+      },
+      {
+        "name": "LRHW Dark Eagle",
+        "model": "res://assets/library/arsenal/usa_lrhw_dark_eagle.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_lrhw_dark_eagle.webp"
+      },
+      {
+        "name": "LRHW Dark Eagle · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_lrhw_dark_eagle.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_lrhw_dark_eagle.webp"
+      },
+      {
+        "name": "LRHW Dark Eagle · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_lrhw_dark_eagle.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_lrhw_dark_eagle.webp"
+      }
+    ],
+    "strike_range": 6.0,
+    "strike_damage": 18.0,
+    "reload_rounds": 3.0,
+    "upkeep": {
+      "funds": 400.0,
+      "fuel": 48.0,
+      "manpower": 5.0,
+      "food": 10.0
+    },
+    "production_building": "missile_factory",
+    "research_branch": "Tactical ballistic missile",
+    "starter": false,
+    "balance_profile": "tactical_missile",
+    "prototype_id": "missiles_russia"
+  },
+  {
+    "id": "coastal_missiles_united_states",
+    "country": "united_states",
+    "name": "Coastal anti-ship missiles",
+    "category": "Missiles",
+    "visual_kind": "missile_launcher",
+    "role": "missile_launcher",
+    "asset_roster_id": "coastal_missiles_russia",
+    "seconds": 60,
+    "cost": {
+      "funds": 3000,
+      "materials": 960,
+      "electronics": 480,
+      "fuel": 360,
+      "manpower": 360,
+      "food": 276
+    },
+    "building_requirements": {
+      "missile_factory": 1
+    },
+    "research_days": [
+      9,
+      12,
+      15,
+      18,
+      21
+    ],
+    "research_tiers": [
+      {
+        "name": "NMESIS",
+        "model": "res://assets/library/arsenal/usa_nmesis.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_nmesis.webp"
+      },
+      {
+        "name": "NMESIS · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_nmesis.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_nmesis.webp"
+      },
+      {
+        "name": "NMESIS · upgrade 3",
+        "model": "res://assets/library/arsenal/usa_nmesis.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_nmesis.webp"
+      },
+      {
+        "name": "NMESIS · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_nmesis.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_nmesis.webp"
+      },
+      {
+        "name": "NMESIS · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_nmesis.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_nmesis.webp"
+      }
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "strike_range": 8.0,
+    "strike_damage": 22.0,
+    "reload_rounds": 4.0,
+    "targets_naval": true,
+    "upkeep": {
+      "funds": 250.0,
+      "fuel": 24.0,
+      "manpower": 6.0,
+      "food": 12.0
+    },
+    "production_building": "missile_factory",
+    "research_branch": "Coastal anti-ship missile",
+    "starter": false,
+    "balance_profile": "coastal_missile",
+    "prototype_id": "coastal_missiles_russia"
+  },
+  {
+    "id": "silos_united_states",
+    "country": "united_states",
+    "name": "Missile silos",
+    "category": "Missiles",
+    "visual_kind": "missile_launcher",
+    "role": "silo",
+    "asset_roster_id": "silos_russia",
+    "seconds": 80,
+    "cost": {
+      "funds": 4800,
+      "materials": 1440,
+      "electronics": 1200,
+      "fuel": 720,
+      "manpower": 300,
+      "food": 240
+    },
+    "building_requirements": {
+      "missile_factory": 1
+    },
+    "research_days": [
+      26,
+      29,
+      32,
+      35,
+      38
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions. Includes demonstrator/concept equipment for the late-game roster",
+    "research_tiers": [
+      {
+        "name": "Minuteman III silo",
+        "model": "res://assets/library/arsenal/usa_minuteman3_silo.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_minuteman3_silo.webp"
+      },
+      {
+        "name": "Minuteman III silo · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_minuteman3_silo.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_minuteman3_silo.webp"
+      },
+      {
+        "name": "Sentinel concept silo",
+        "model": "res://assets/library/arsenal/usa_sentinel_silo.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_sentinel_silo.webp"
+      },
+      {
+        "name": "Sentinel concept silo · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_sentinel_silo.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_sentinel_silo.webp"
+      },
+      {
+        "name": "Sentinel concept silo · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_sentinel_silo.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_sentinel_silo.webp"
+      }
+    ],
+    "stationary": true,
+    "strike_range": 8.0,
+    "strike_damage": 22.0,
+    "reload_rounds": 4.0,
+    "upkeep": {
+      "funds": 400.0,
+      "fuel": 48.0,
+      "manpower": 5.0,
+      "food": 10.0
+    },
+    "production_building": "missile_factory",
+    "research_branch": "Missile silo",
+    "starter": false,
+    "balance_profile": "silo",
+    "prototype_id": "silos_russia"
+  },
+  {
+    "id": "strategic_united_states",
+    "country": "united_states",
+    "name": "Strategic nuclear missiles",
+    "category": "Missiles",
+    "visual_kind": "missile_launcher",
+    "role": "missile_launcher",
+    "asset_roster_id": "strategic_russia",
+    "seconds": 80,
+    "cost": {
+      "funds": 4800,
+      "materials": 1440,
+      "electronics": 1200,
+      "fuel": 720,
+      "manpower": 300,
+      "food": 240
+    },
+    "building_requirements": {
+      "missile_factory": 1
+    },
+    "research_days": [
+      22,
+      25,
+      28,
+      31,
+      34
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "research_tiers": [
+      {
+        "name": "Trident II D5",
+        "model": "res://assets/library/arsenal/usa_trident2_d5.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_trident2_d5.webp"
+      },
+      {
+        "name": "Trident II D5 · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_trident2_d5.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_trident2_d5.webp"
+      },
+      {
+        "name": "Trident II D5 · upgrade 3",
+        "model": "res://assets/library/arsenal/usa_trident2_d5.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_trident2_d5.webp"
+      },
+      {
+        "name": "Trident II D5 · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_trident2_d5.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_trident2_d5.webp"
+      },
+      {
+        "name": "Trident II D5 · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_trident2_d5.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_trident2_d5.webp"
+      }
+    ],
+    "strike_range": 14.0,
+    "strike_damage": 40.0,
+    "reload_rounds": 3.0,
+    "upkeep": {
+      "funds": 400.0,
+      "fuel": 48.0,
+      "manpower": 5.0,
+      "food": 10.0
+    },
+    "production_building": "missile_factory",
+    "research_branch": "Strategic nuclear missile",
+    "starter": false,
+    "balance_profile": "strategic_missile",
+    "prototype_id": "strategic_russia"
+  },
+  {
+    "id": "yak130_united_states",
+    "country": "united_states",
+    "name": "Light attack aircraft",
+    "category": "Fighters",
+    "visual_kind": "fighter",
+    "role": "fighter",
+    "asset_roster_id": "yak130_russia",
+    "seconds": 60,
+    "cost": {
+      "funds": 3000,
+      "materials": 960,
+      "electronics": 480,
+      "fuel": 360,
+      "manpower": 360,
+      "food": 276
+    },
+    "building_requirements": {
+      "airbase": 1
+    },
+    "research_days": [
+      1,
+      4,
+      7,
+      10,
+      13
+    ],
+    "research_tiers": [
+      {
+        "name": "F-16C Block 70 · light loadout",
+        "model": "res://assets/library/arsenal/usa_f16c_blk70.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_f16c_blk70.webp"
+      },
+      {
+        "name": "F-16C Block 70 · light loadout · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_f16c_blk70.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_f16c_blk70.webp"
+      },
+      {
+        "name": "F-16C Block 70 · light loadout · upgrade 3",
+        "model": "res://assets/library/arsenal/usa_f16c_blk70.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_f16c_blk70.webp"
+      },
+      {
+        "name": "F-16C Block 70 · light loadout · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_f16c_blk70.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_f16c_blk70.webp"
+      },
+      {
+        "name": "F-16C Block 70 · light loadout · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_f16c_blk70.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_f16c_blk70.webp"
+      }
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "air_speed": 2.5,
+    "air_range": 16.0,
+    "requires_airbase": true,
+    "air_damage": 2.0,
+    "ground_damage": 3.0,
+    "upkeep": {
+      "funds": 250.0,
+      "fuel": 24.0,
+      "manpower": 6.0,
+      "food": 12.0
+    },
+    "production_building": "airbase",
+    "research_branch": "Light attack aircraft",
+    "starter": true,
+    "balance_profile": "light_attack",
+    "prototype_id": "yak130_russia"
+  },
+  {
+    "id": "fighters_united_states",
+    "country": "united_states",
+    "name": "Air superiority fighters",
+    "category": "Fighters",
+    "visual_kind": "fighter",
+    "role": "fighter",
+    "asset_roster_id": "fighters_russia",
+    "seconds": 60,
+    "cost": {
+      "funds": 3000,
+      "materials": 960,
+      "electronics": 480,
+      "fuel": 360,
+      "manpower": 360,
+      "food": 276
+    },
+    "building_requirements": {
+      "airbase": 1
+    },
+    "research_days": [
+      4,
+      8,
+      12,
+      16,
+      20
+    ],
+    "research_tiers": [
+      {
+        "name": "F/A-18E Super Hornet",
+        "model": "res://assets/library/arsenal/usa_fa18e.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_fa18e.webp"
+      },
+      {
+        "name": "F/A-18E Super Hornet · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_fa18e.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_fa18e.webp"
+      },
+      {
+        "name": "F-22A Raptor",
+        "model": "res://assets/library/arsenal/usa_f22a.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_f22a.webp"
+      },
+      {
+        "name": "F-22A Raptor · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_f22a.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_f22a.webp"
+      },
+      {
+        "name": "F-47 / NGAD concept",
+        "model": "res://assets/library/arsenal/usa_f47_ngad.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_f47_ngad.webp"
+      }
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions. Includes demonstrator/concept equipment for the late-game roster",
+    "air_speed": 3.2,
+    "air_range": 14.0,
+    "air_damage": 10.0,
+    "ground_damage": 7.0,
+    "requires_airbase": true,
+    "upkeep": {
+      "funds": 250.0,
+      "fuel": 24.0,
+      "manpower": 6.0,
+      "food": 12.0
+    },
+    "production_building": "airbase",
+    "research_branch": "Air superiority fighter",
+    "starter": false,
+    "balance_profile": "fighter",
+    "prototype_id": "fighters_russia"
+  },
+  {
+    "id": "strike_united_states",
+    "country": "united_states",
+    "name": "Strike fighters",
+    "category": "Fighters",
+    "visual_kind": "fighter",
+    "role": "fighter",
+    "asset_roster_id": "strike_russia",
+    "seconds": 60,
+    "cost": {
+      "funds": 3600,
+      "materials": 960,
+      "electronics": 1080,
+      "fuel": 960,
+      "manpower": 120,
+      "food": 132
+    },
+    "building_requirements": {
+      "airbase": 1
+    },
+    "research_days": [
+      7,
+      10,
+      13,
+      16,
+      19
+    ],
+    "research_tiers": [
+      {
+        "name": "F-15E Strike Eagle",
+        "model": "res://assets/library/arsenal/usa_f15e.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_f15e.webp"
+      },
+      {
+        "name": "F-15E Strike Eagle · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_f15e.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_f15e.webp"
+      },
+      {
+        "name": "F-35A Lightning II",
+        "model": "res://assets/library/arsenal/usa_f35a.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_f35a.webp"
+      },
+      {
+        "name": "F-35A Lightning II · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_f35a.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_f35a.webp"
+      },
+      {
+        "name": "F-35A Lightning II · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_f35a.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_f35a.webp"
+      }
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "air_speed": 3.1,
+    "air_range": 15.0,
+    "air_damage": 5.5,
+    "ground_damage": 9.0,
+    "requires_airbase": true,
+    "upkeep": {
+      "funds": 250.0,
+      "fuel": 24.0,
+      "manpower": 6.0,
+      "food": 12.0
+    },
+    "production_building": "airbase",
+    "research_branch": "Strike fighter",
+    "starter": false,
+    "balance_profile": "strike_fighter",
+    "prototype_id": "strike_russia"
+  },
+  {
+    "id": "bombers_united_states",
+    "country": "united_states",
+    "name": "Strategic bombers",
+    "category": "Bombers",
+    "visual_kind": "fighter",
+    "role": "bomber",
+    "research_branch": "Strategic bomber",
+    "seconds": 80,
+    "cost": {
+      "funds": 5040,
+      "materials": 1320,
+      "electronics": 1320,
+      "fuel": 1440,
+      "manpower": 180,
+      "food": 168
+    },
+    "building_requirements": {
+      "airbase": 1
+    },
+    "air_range": 22.0,
+    "air_speed": 2.2,
+    "air_damage": 2.0,
+    "ground_damage": 9.0,
+    "research_tiers": [
+      {
+        "name": "B-52H",
+        "model": "res://assets/library/arsenal/usa_b52h.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_b52h.webp"
+      },
+      {
+        "name": "B-52H · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_b52h.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_b52h.webp"
+      },
+      {
+        "name": "B-2A Spirit",
+        "model": "res://assets/library/arsenal/usa_b2a.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_b2a.webp"
+      },
+      {
+        "name": "B-2A Spirit · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_b2a.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_b2a.webp"
+      },
+      {
+        "name": "B-21 Raider",
+        "model": "res://assets/library/arsenal/usa_b21.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_b21.webp"
+      }
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "research_days": [
+      13,
+      16,
+      19,
+      22,
+      25
+    ],
+    "upkeep": {
+      "funds": 420.0,
+      "fuel": 96.0,
+      "manpower": 3.0,
+      "food": 6.0
+    },
+    "production_building": "airbase",
+    "starter": false,
+    "balance_profile": "bomber",
+    "prototype_id": "bombers_russia"
+  },
+  {
+    "id": "interceptor_united_states",
+    "country": "united_states",
+    "name": "Interceptors",
+    "category": "Fighters",
+    "visual_kind": "fighter",
+    "role": "fighter",
+    "asset_roster_id": "interceptor_russia",
+    "seconds": 60,
+    "cost": {
+      "funds": 3000,
+      "materials": 960,
+      "electronics": 480,
+      "fuel": 360,
+      "manpower": 360,
+      "food": 276
+    },
+    "building_requirements": {
+      "airbase": 1
+    },
+    "research_days": [
+      9,
+      12,
+      15,
+      18,
+      21
+    ],
+    "research_tiers": [
+      {
+        "name": "F-15E Strike Eagle",
+        "model": "res://assets/library/arsenal/usa_f15e.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_f15e.webp"
+      },
+      {
+        "name": "F-15E Strike Eagle · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_f15e.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_f15e.webp"
+      },
+      {
+        "name": "F-22A Raptor",
+        "model": "res://assets/library/arsenal/usa_f22a.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_f22a.webp"
+      },
+      {
+        "name": "F-22A Raptor · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_f22a.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_f22a.webp"
+      },
+      {
+        "name": "F-47 / NGAD concept",
+        "model": "res://assets/library/arsenal/usa_f47_ngad.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_f47_ngad.webp"
+      }
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions. Includes demonstrator/concept equipment for the late-game roster",
+    "air_speed": 4.0,
+    "air_range": 14.0,
+    "air_damage": 13.0,
+    "ground_damage": 2.0,
+    "requires_airbase": true,
+    "upkeep": {
+      "funds": 250.0,
+      "fuel": 24.0,
+      "manpower": 6.0,
+      "food": 12.0
+    },
+    "production_building": "airbase",
+    "research_branch": "Interceptor",
+    "starter": false,
+    "balance_profile": "interceptor",
+    "prototype_id": "interceptor_russia"
+  },
+  {
+    "id": "helicopters_united_states",
+    "country": "united_states",
+    "name": "Attack helicopters",
+    "category": "Helicopters",
+    "visual_kind": "fighter",
+    "asset_roster_id": "helicopters_russia",
+    "research_branch": "Attack helicopter",
+    "seconds": 70,
+    "cost": {
+      "funds": 3960,
+      "materials": 1200,
+      "electronics": 780,
+      "fuel": 600,
+      "manpower": 240,
+      "food": 204
+    },
+    "building_requirements": {
+      "airbase": 1
+    },
+    "research_days": [
+      2,
+      5,
+      8,
+      11,
+      14
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "research_tiers": [
+      {
+        "name": "AH-1Z Viper",
+        "model": "res://assets/library/arsenal/usa_ah1z_viper.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_ah1z_viper.webp"
+      },
+      {
+        "name": "AH-1Z Viper · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_ah1z_viper.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_ah1z_viper.webp"
+      },
+      {
+        "name": "AH-64E Apache",
+        "model": "res://assets/library/arsenal/usa_ah64e_apache.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_ah64e_apache.webp"
+      },
+      {
+        "name": "AH-64E Apache · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_ah64e_apache.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_ah64e_apache.webp"
+      },
+      {
+        "name": "AH-64E Apache · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_ah64e_apache.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_ah64e_apache.webp"
+      }
+    ],
+    "role": "helicopter",
+    "air_range": 10.0,
+    "air_speed": 1.8,
+    "air_damage": 2.0,
+    "ground_damage": 5.0,
+    "upkeep": {
+      "funds": 330.0,
+      "fuel": 40.0,
+      "manpower": 4.0,
+      "food": 8.0
+    },
+    "production_building": "airbase",
+    "starter": false,
+    "balance_profile": "attack_heli",
+    "prototype_id": "helicopters_russia"
+  },
+  {
+    "id": "transport_heli_united_states",
+    "country": "united_states",
+    "name": "Transport helicopters",
+    "category": "Helicopters",
+    "visual_kind": "fighter",
+    "asset_roster_id": "transport_heli_russia",
+    "research_branch": "Transport helicopter",
+    "seconds": 70,
+    "cost": {
+      "funds": 3960,
+      "materials": 1200,
+      "electronics": 780,
+      "fuel": 600,
+      "manpower": 240,
+      "food": 204
+    },
+    "building_requirements": {
+      "airbase": 1
+    },
+    "research_days": [
+      1,
+      4,
+      7,
+      10,
+      13
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "research_tiers": [
+      {
+        "name": "UH-60M Black Hawk",
+        "model": "res://assets/library/arsenal/usa_uh60m_blackhawk.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_uh60m_blackhawk.webp"
+      },
+      {
+        "name": "UH-60M Black Hawk · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_uh60m_blackhawk.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_uh60m_blackhawk.webp"
+      },
+      {
+        "name": "CH-47F Chinook",
+        "model": "res://assets/library/arsenal/usa_ch47f_chinook.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_ch47f_chinook.webp"
+      },
+      {
+        "name": "CH-47F Chinook · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_ch47f_chinook.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_ch47f_chinook.webp"
+      },
+      {
+        "name": "MV-22B Osprey",
+        "model": "res://assets/library/arsenal/usa_mv22b_osprey.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_mv22b_osprey.webp"
+      }
+    ],
+    "role": "helicopter",
+    "air_range": 10.0,
+    "air_speed": 1.8,
+    "air_damage": 2.0,
+    "ground_damage": 2.0,
+    "upkeep": {
+      "funds": 330.0,
+      "fuel": 40.0,
+      "manpower": 4.0,
+      "food": 8.0
+    },
+    "production_building": "airbase",
+    "starter": false,
+    "balance_profile": "transport_heli",
+    "prototype_id": "transport_heli_russia"
+  },
+  {
+    "id": "drones_united_states",
+    "country": "united_states",
+    "name": "Reconnaissance drones",
+    "category": "Drones",
+    "visual_kind": "fighter",
+    "role": "drone",
+    "asset_roster_id": "drones_russia",
+    "seconds": 80,
+    "cost": {
+      "funds": 4800,
+      "materials": 1440,
+      "electronics": 1200,
+      "fuel": 720,
+      "manpower": 300,
+      "food": 240
+    },
+    "building_requirements": {
+      "drone_factory": 1
+    },
+    "research_days": [
+      1,
+      4,
+      7,
+      10,
+      13
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "research_tiers": [
+      {
+        "name": "RQ-4B Global Hawk",
+        "model": "res://assets/library/arsenal/usa_rq4b_globalhawk.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_rq4b_globalhawk.webp"
+      },
+      {
+        "name": "RQ-4B Global Hawk · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_rq4b_globalhawk.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_rq4b_globalhawk.webp"
+      },
+      {
+        "name": "RQ-4B Global Hawk · upgrade 3",
+        "model": "res://assets/library/arsenal/usa_rq4b_globalhawk.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_rq4b_globalhawk.webp"
+      },
+      {
+        "name": "RQ-4B Global Hawk · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_rq4b_globalhawk.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_rq4b_globalhawk.webp"
+      },
+      {
+        "name": "RQ-4B Global Hawk · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_rq4b_globalhawk.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_rq4b_globalhawk.webp"
+      }
+    ],
+    "air_range": 12.0,
+    "air_speed": 2.2,
+    "air_damage": 0.0,
+    "ground_damage": 1.0,
+    "upkeep": {
+      "funds": 400.0,
+      "fuel": 48.0,
+      "manpower": 5.0,
+      "food": 10.0
+    },
+    "production_building": "drone_factory",
+    "research_branch": "Reconnaissance drone",
+    "starter": true,
+    "balance_profile": "recon_drone",
+    "prototype_id": "drones_russia"
+  },
+  {
+    "id": "strike_drone_united_states",
+    "country": "united_states",
+    "name": "Strike drones",
+    "category": "Drones",
+    "visual_kind": "fighter",
+    "role": "drone",
+    "asset_roster_id": "strike_drone_russia",
+    "seconds": 80,
+    "cost": {
+      "funds": 4800,
+      "materials": 1440,
+      "electronics": 1200,
+      "fuel": 720,
+      "manpower": 300,
+      "food": 240
+    },
+    "building_requirements": {
+      "drone_factory": 1
+    },
+    "research_days": [
+      5,
+      8,
+      11,
+      14,
+      17
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions. Includes demonstrator/concept equipment for the late-game roster",
+    "research_tiers": [
+      {
+        "name": "MQ-1C Gray Eagle",
+        "model": "res://assets/library/arsenal/usa_mq1c_grayeagle.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_mq1c_grayeagle.webp"
+      },
+      {
+        "name": "MQ-1C Gray Eagle · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_mq1c_grayeagle.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_mq1c_grayeagle.webp"
+      },
+      {
+        "name": "MQ-9A Reaper",
+        "model": "res://assets/library/arsenal/usa_mq9a_reaper.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_mq9a_reaper.webp"
+      },
+      {
+        "name": "MQ-9A Reaper · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_mq9a_reaper.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_mq9a_reaper.webp"
+      },
+      {
+        "name": "XQ-58A demonstrator",
+        "model": "res://assets/library/arsenal/usa_xq58a_valkyrie.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_xq58a_valkyrie.webp"
+      }
+    ],
+    "air_range": 12.0,
+    "air_speed": 2.2,
+    "air_damage": 0.0,
+    "ground_damage": 6.0,
+    "upkeep": {
+      "funds": 400.0,
+      "fuel": 48.0,
+      "manpower": 5.0,
+      "food": 10.0
+    },
+    "production_building": "drone_factory",
+    "research_branch": "Strike drone",
+    "starter": false,
+    "balance_profile": "strike_drone",
+    "prototype_id": "strike_drone_russia"
+  },
+  {
+    "id": "il76md_united_states",
+    "country": "united_states",
+    "name": "Transport aircraft",
+    "category": "Support",
+    "visual_kind": "fighter",
+    "role": "transport",
+    "asset_roster_id": "il76md_russia",
+    "seconds": 60,
+    "cost": {
+      "funds": 3000,
+      "materials": 960,
+      "electronics": 480,
+      "fuel": 360,
+      "manpower": 360,
+      "food": 276
+    },
+    "building_requirements": {
+      "airbase": 1
+    },
+    "research_days": [
+      8,
+      11,
+      14,
+      17,
+      20
+    ],
+    "research_tiers": [
+      {
+        "name": "C-130J",
+        "model": "res://assets/library/arsenal/usa_c130j.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_c130j.webp"
+      },
+      {
+        "name": "C-130J · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_c130j.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_c130j.webp"
+      },
+      {
+        "name": "C-17A Globemaster",
+        "model": "res://assets/library/arsenal/usa_c17a_globemaster.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_c17a_globemaster.webp"
+      },
+      {
+        "name": "C-17A Globemaster · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_c17a_globemaster.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_c17a_globemaster.webp"
+      },
+      {
+        "name": "KC-46A · cargo configuration",
+        "model": "res://assets/library/arsenal/usa_kc46a_pegasus.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_kc46a_pegasus.webp"
+      }
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "air_speed": 2.5,
+    "air_range": 16.0,
+    "requires_airbase": true,
+    "air_damage": 0.0,
+    "ground_damage": 0.0,
+    "upkeep": {
+      "funds": 250.0,
+      "fuel": 24.0,
+      "manpower": 6.0,
+      "food": 12.0
+    },
+    "production_building": "airbase",
+    "research_branch": "Transport aircraft",
+    "starter": false,
+    "balance_profile": "transport_aircraft",
+    "prototype_id": "il76md_russia"
+  },
+  {
+    "id": "a50u_united_states",
+    "country": "united_states",
+    "name": "Airborne early warning",
+    "category": "Support",
+    "visual_kind": "fighter",
+    "role": "radar_aircraft",
+    "asset_roster_id": "a50u_russia",
+    "seconds": 60,
+    "cost": {
+      "funds": 3000,
+      "materials": 960,
+      "electronics": 480,
+      "fuel": 360,
+      "manpower": 360,
+      "food": 276
+    },
+    "building_requirements": {
+      "airbase": 1
+    },
+    "research_days": [
+      15,
+      18,
+      21,
+      24,
+      27
+    ],
+    "research_tiers": [
+      {
+        "name": "E-2D Hawkeye",
+        "model": "res://assets/library/arsenal/usa_e2d_hawkeye.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_e2d_hawkeye.webp"
+      },
+      {
+        "name": "E-2D Hawkeye · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_e2d_hawkeye.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_e2d_hawkeye.webp"
+      },
+      {
+        "name": "E-3G Sentry",
+        "model": "res://assets/library/arsenal/usa_e3g_sentry.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_e3g_sentry.webp"
+      },
+      {
+        "name": "E-3G Sentry · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_e3g_sentry.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_e3g_sentry.webp"
+      },
+      {
+        "name": "E-3G Sentry · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_e3g_sentry.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_e3g_sentry.webp"
+      }
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "air_speed": 2.5,
+    "air_range": 16.0,
+    "requires_airbase": true,
+    "air_damage": 0.0,
+    "ground_damage": 0.0,
+    "upkeep": {
+      "funds": 250.0,
+      "fuel": 24.0,
+      "manpower": 6.0,
+      "food": 12.0
+    },
+    "production_building": "airbase",
+    "research_branch": "Airborne early warning",
+    "starter": false,
+    "balance_profile": "awacs",
+    "prototype_id": "a50u_russia"
+  },
+  {
+    "id": "fleet_united_states",
+    "country": "united_states",
+    "name": "Frigates",
+    "category": "Navy",
+    "visual_kind": "naval",
+    "role": "naval",
+    "asset_roster_id": "fleet_russia",
+    "seconds": 80,
+    "cost": {
+      "funds": 4800,
+      "materials": 1440,
+      "electronics": 1200,
+      "fuel": 720,
+      "manpower": 300,
+      "food": 240
+    },
+    "building_requirements": {
+      "naval_base": 1
+    },
+    "research_days": [
+      4,
+      8,
+      12,
+      16,
+      20
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "research_tiers": [
+      {
+        "name": "Constellation-class frigate",
+        "model": "res://assets/library/arsenal/usa_ffg62_constellation.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_ffg62_constellation.webp"
+      },
+      {
+        "name": "Constellation-class frigate · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_ffg62_constellation.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_ffg62_constellation.webp"
+      },
+      {
+        "name": "Constellation-class frigate · upgrade 3",
+        "model": "res://assets/library/arsenal/usa_ffg62_constellation.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_ffg62_constellation.webp"
+      },
+      {
+        "name": "Constellation-class frigate · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_ffg62_constellation.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_ffg62_constellation.webp"
+      },
+      {
+        "name": "Constellation-class frigate · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_ffg62_constellation.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_ffg62_constellation.webp"
+      }
+    ],
+    "requires_port": true,
+    "sea_speed": 1.2,
+    "sea_range": 3.0,
+    "upkeep": {
+      "funds": 400.0,
+      "fuel": 48.0,
+      "manpower": 5.0,
+      "food": 10.0
+    },
+    "sonar_range": 2.2,
+    "aa_damage": 4,
+    "aa_range": 2.5,
+    "shore_bombardment": true,
+    "production_building": "naval_base",
+    "research_branch": "Frigates",
+    "starter": false,
+    "balance_profile": "frigate",
+    "prototype_id": "fleet_russia"
+  },
+  {
+    "id": "destroyers_united_states",
+    "country": "united_states",
+    "name": "Destroyers",
+    "category": "Navy",
+    "visual_kind": "naval",
+    "role": "naval",
+    "asset_roster_id": "destroyers_russia",
+    "seconds": 80,
+    "cost": {
+      "funds": 4800,
+      "materials": 1440,
+      "electronics": 1200,
+      "fuel": 720,
+      "manpower": 300,
+      "food": 240
+    },
+    "building_requirements": {
+      "naval_base": 1
+    },
+    "research_days": [
+      8,
+      12,
+      16,
+      20,
+      24
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "research_tiers": [
+      {
+        "name": "Arleigh Burke-class destroyer",
+        "model": "res://assets/library/arsenal/usa_ddg125_burke.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_ddg125_burke.webp"
+      },
+      {
+        "name": "Arleigh Burke-class destroyer · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_ddg125_burke.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_ddg125_burke.webp"
+      },
+      {
+        "name": "Zumwalt-class destroyer",
+        "model": "res://assets/library/arsenal/usa_ddg1000_zumwalt.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_ddg1000_zumwalt.webp"
+      },
+      {
+        "name": "Zumwalt-class destroyer · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_ddg1000_zumwalt.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_ddg1000_zumwalt.webp"
+      },
+      {
+        "name": "Zumwalt-class destroyer · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_ddg1000_zumwalt.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_ddg1000_zumwalt.webp"
+      }
+    ],
+    "requires_port": true,
+    "sea_speed": 1.2,
+    "sea_range": 3.0,
+    "upkeep": {
+      "funds": 400.0,
+      "fuel": 48.0,
+      "manpower": 5.0,
+      "food": 10.0
+    },
+    "sonar_range": 2.2,
+    "aa_damage": 4,
+    "aa_range": 2.5,
+    "shore_bombardment": true,
+    "production_building": "naval_base",
+    "research_branch": "Destroyers",
+    "starter": false,
+    "balance_profile": "destroyer",
+    "prototype_id": "destroyers_russia"
+  },
+  {
+    "id": "submarines_united_states",
+    "country": "united_states",
+    "name": "Submarines",
+    "category": "Navy",
+    "visual_kind": "naval",
+    "role": "submarine",
+    "asset_roster_id": "submarines_russia",
+    "seconds": 80,
+    "cost": {
+      "funds": 4800,
+      "materials": 1440,
+      "electronics": 1200,
+      "fuel": 720,
+      "manpower": 300,
+      "food": 240
+    },
+    "building_requirements": {
+      "naval_base": 1
+    },
+    "research_days": [
+      6,
+      10,
+      14,
+      18,
+      22
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "research_tiers": [
+      {
+        "name": "Virginia-class submarine",
+        "model": "res://assets/library/arsenal/usa_ssn774_virginia.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_ssn774_virginia.webp"
+      },
+      {
+        "name": "Virginia-class submarine · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_ssn774_virginia.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_ssn774_virginia.webp"
+      },
+      {
+        "name": "Virginia-class submarine · upgrade 3",
+        "model": "res://assets/library/arsenal/usa_ssn774_virginia.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_ssn774_virginia.webp"
+      },
+      {
+        "name": "Virginia-class submarine · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_ssn774_virginia.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_ssn774_virginia.webp"
+      },
+      {
+        "name": "Virginia-class submarine · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_ssn774_virginia.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_ssn774_virginia.webp"
+      }
+    ],
+    "requires_port": true,
+    "sea_speed": 1.0,
+    "sea_range": 2.5,
+    "upkeep": {
+      "funds": 400.0,
+      "fuel": 48.0,
+      "manpower": 5.0,
+      "food": 10.0
+    },
+    "sonar_range": 1.5,
+    "aa_damage": 0,
+    "aa_range": 2.5,
+    "shore_bombardment": false,
+    "production_building": "naval_base",
+    "research_branch": "Submarines",
+    "starter": false,
+    "balance_profile": "submarine",
+    "prototype_id": "submarines_russia"
+  },
+  {
+    "id": "carriers_united_states",
+    "country": "united_states",
+    "name": "Aircraft carriers",
+    "category": "Navy",
+    "visual_kind": "naval",
+    "role": "carrier",
+    "asset_roster_id": "carriers_russia",
+    "seconds": 80,
+    "cost": {
+      "funds": 4800,
+      "materials": 1440,
+      "electronics": 1200,
+      "fuel": 720,
+      "manpower": 300,
+      "food": 240
+    },
+    "building_requirements": {
+      "naval_base": 1
+    },
+    "research_days": [
+      18,
+      22,
+      26,
+      30,
+      34
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "research_tiers": [
+      {
+        "name": "Gerald R. Ford-class carrier",
+        "model": "res://assets/library/arsenal/usa_cvn78_ford.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_cvn78_ford.webp"
+      },
+      {
+        "name": "Gerald R. Ford-class carrier · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_cvn78_ford.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_cvn78_ford.webp"
+      },
+      {
+        "name": "Gerald R. Ford-class carrier · upgrade 3",
+        "model": "res://assets/library/arsenal/usa_cvn78_ford.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_cvn78_ford.webp"
+      },
+      {
+        "name": "Gerald R. Ford-class carrier · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_cvn78_ford.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_cvn78_ford.webp"
+      },
+      {
+        "name": "Gerald R. Ford-class carrier · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_cvn78_ford.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_cvn78_ford.webp"
+      }
+    ],
+    "requires_port": true,
+    "sea_speed": 0.9,
+    "sea_range": 2.8,
+    "upkeep": {
+      "funds": 400.0,
+      "fuel": 48.0,
+      "manpower": 5.0,
+      "food": 10.0
+    },
+    "sonar_range": 0,
+    "aa_damage": 6,
+    "aa_range": 2.5,
+    "shore_bombardment": false,
+    "production_building": "naval_base",
+    "research_branch": "Aircraft carriers",
+    "starter": false,
+    "balance_profile": "carrier",
+    "prototype_id": "carriers_russia"
+  },
+  {
+    "id": "kamaz5350_supply_united_states",
+    "country": "united_states",
+    "name": "Supply trucks",
+    "category": "Support",
+    "visual_kind": "support",
+    "role": "supply",
+    "asset_roster_id": "kamaz5350_supply_russia",
+    "seconds": 60,
+    "cost": {
+      "funds": 3000,
+      "materials": 960,
+      "electronics": 480,
+      "fuel": 360,
+      "manpower": 360,
+      "food": 276
+    },
+    "building_requirements": {
+      "support_depot": 1
+    },
+    "research_days": [
+      1,
+      4,
+      7,
+      10,
+      13
+    ],
+    "research_tiers": [
+      {
+        "name": "M977 HEMTT",
+        "model": "res://assets/library/arsenal/usa_hemtt_m977.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_hemtt_m977.webp"
+      },
+      {
+        "name": "M977 HEMTT · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_hemtt_m977.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_hemtt_m977.webp"
+      },
+      {
+        "name": "M977 HEMTT · upgrade 3",
+        "model": "res://assets/library/arsenal/usa_hemtt_m977.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_hemtt_m977.webp"
+      },
+      {
+        "name": "M977 HEMTT · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_hemtt_m977.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_hemtt_m977.webp"
+      },
+      {
+        "name": "M977 HEMTT · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_hemtt_m977.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_hemtt_m977.webp"
+      }
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "upkeep": {
+      "funds": 250.0,
+      "fuel": 24.0,
+      "manpower": 6.0,
+      "food": 12.0
+    },
+    "production_building": "support_depot",
+    "research_branch": "Supply truck",
+    "starter": false,
+    "balance_profile": "supply",
+    "prototype_id": "kamaz5350_supply_russia"
+  },
+  {
+    "id": "brem1m_recovery_united_states",
+    "country": "united_states",
+    "name": "Recovery vehicles",
+    "category": "Support",
+    "visual_kind": "support",
+    "role": "recovery",
+    "asset_roster_id": "brem1m_recovery_russia",
+    "seconds": 60,
+    "cost": {
+      "funds": 3000,
+      "materials": 960,
+      "electronics": 480,
+      "fuel": 360,
+      "manpower": 360,
+      "food": 276
+    },
+    "building_requirements": {
+      "support_depot": 1
+    },
+    "research_days": [
+      4,
+      7,
+      10,
+      13,
+      16
+    ],
+    "research_tiers": [
+      {
+        "name": "M88A2 Hercules",
+        "model": "res://assets/library/arsenal/usa_m88a2_hercules.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m88a2_hercules.webp"
+      },
+      {
+        "name": "M88A2 Hercules · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_m88a2_hercules.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m88a2_hercules.webp"
+      },
+      {
+        "name": "M88A2 Hercules · upgrade 3",
+        "model": "res://assets/library/arsenal/usa_m88a2_hercules.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m88a2_hercules.webp"
+      },
+      {
+        "name": "M88A2 Hercules · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_m88a2_hercules.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m88a2_hercules.webp"
+      },
+      {
+        "name": "M88A2 Hercules · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_m88a2_hercules.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m88a2_hercules.webp"
+      }
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "upkeep": {
+      "funds": 250.0,
+      "fuel": 24.0,
+      "manpower": 6.0,
+      "food": 12.0
+    },
+    "production_building": "support_depot",
+    "research_branch": "Recovery vehicle",
+    "starter": false,
+    "balance_profile": "recovery",
+    "prototype_id": "brem1m_recovery_russia"
+  },
+  {
+    "id": "imr3m_engineer_united_states",
+    "country": "united_states",
+    "name": "Combat engineers",
+    "category": "Support",
+    "visual_kind": "support",
+    "role": "engineer",
+    "asset_roster_id": "imr3m_engineer_russia",
+    "seconds": 60,
+    "cost": {
+      "funds": 3000,
+      "materials": 960,
+      "electronics": 480,
+      "fuel": 360,
+      "manpower": 360,
+      "food": 276
+    },
+    "building_requirements": {
+      "support_depot": 1
+    },
+    "research_days": [
+      1,
+      4,
+      7,
+      10,
+      13
+    ],
+    "research_tiers": [
+      {
+        "name": "M1150 Assault Breacher",
+        "model": "res://assets/library/arsenal/usa_m1150_abv.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m1150_abv.webp"
+      },
+      {
+        "name": "M1150 Assault Breacher · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_m1150_abv.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m1150_abv.webp"
+      },
+      {
+        "name": "M1150 Assault Breacher · upgrade 3",
+        "model": "res://assets/library/arsenal/usa_m1150_abv.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m1150_abv.webp"
+      },
+      {
+        "name": "M1150 Assault Breacher · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_m1150_abv.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m1150_abv.webp"
+      },
+      {
+        "name": "M1150 Assault Breacher · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_m1150_abv.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m1150_abv.webp"
+      }
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "upkeep": {
+      "funds": 250.0,
+      "fuel": 24.0,
+      "manpower": 6.0,
+      "food": 12.0
+    },
+    "production_building": "support_depot",
+    "research_branch": "Combat engineers",
+    "starter": false,
+    "balance_profile": "engineer",
+    "prototype_id": "imr3m_engineer_russia"
+  },
+  {
+    "id": "mtu72_bridgelayer_united_states",
+    "country": "united_states",
+    "name": "Bridge layers",
+    "category": "Support",
+    "visual_kind": "support",
+    "role": "bridge",
+    "asset_roster_id": "mtu72_bridgelayer_russia",
+    "seconds": 60,
+    "cost": {
+      "funds": 3000,
+      "materials": 960,
+      "electronics": 480,
+      "fuel": 360,
+      "manpower": 360,
+      "food": 276
+    },
+    "building_requirements": {
+      "support_depot": 1
+    },
+    "research_days": [
+      5,
+      8,
+      11,
+      14,
+      17
+    ],
+    "research_tiers": [
+      {
+        "name": "M1074 Joint Assault Bridge",
+        "model": "res://assets/library/arsenal/usa_m1074_jab.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m1074_jab.webp"
+      },
+      {
+        "name": "M1074 Joint Assault Bridge · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_m1074_jab.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m1074_jab.webp"
+      },
+      {
+        "name": "M1074 Joint Assault Bridge · upgrade 3",
+        "model": "res://assets/library/arsenal/usa_m1074_jab.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m1074_jab.webp"
+      },
+      {
+        "name": "M1074 Joint Assault Bridge · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_m1074_jab.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m1074_jab.webp"
+      },
+      {
+        "name": "M1074 Joint Assault Bridge · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_m1074_jab.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m1074_jab.webp"
+      }
+    ],
+    "model_status": "Original supplied American model; game balance values are abstractions",
+    "upkeep": {
+      "funds": 250.0,
+      "fuel": 24.0,
+      "manpower": 6.0,
+      "food": 12.0
+    },
+    "production_building": "support_depot",
+    "research_branch": "Bridge layer",
+    "starter": false,
+    "balance_profile": "bridge",
+    "prototype_id": "mtu72_bridgelayer_russia"
+  },
+  {
+    "id": "medic_united_states",
+    "country": "united_states",
+    "name": "Field medics",
+    "category": "Support",
+    "visual_kind": "support",
+    "role": "medic",
+    "asset_roster_id": "medic_russia",
+    "seconds": 60,
+    "cost": {
+      "funds": 3000,
+      "materials": 960,
+      "electronics": 480,
+      "fuel": 360,
+      "manpower": 360,
+      "food": 276
+    },
+    "building_requirements": {
+      "support_depot": 1
+    },
+    "research_days": [
+      3,
+      6,
+      9,
+      12,
+      15
+    ],
+    "research_tiers": [
+      {
+        "name": "AMPV",
+        "model": "res://assets/library/arsenal/usa_m1283_ampv.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m1283_ampv.webp"
+      },
+      {
+        "name": "AMPV · upgrade 2",
+        "model": "res://assets/library/arsenal/usa_m1283_ampv.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m1283_ampv.webp"
+      },
+      {
+        "name": "AMPV · upgrade 3",
+        "model": "res://assets/library/arsenal/usa_m1283_ampv.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m1283_ampv.webp"
+      },
+      {
+        "name": "AMPV · upgrade 4",
+        "model": "res://assets/library/arsenal/usa_m1283_ampv.glb",
+        "improvement": "Improved targeting, reliability and training",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m1283_ampv.webp"
+      },
+      {
+        "name": "AMPV · upgrade 5",
+        "model": "res://assets/library/arsenal/usa_m1283_ampv.glb",
+        "improvement": "",
+        "preview": "res://assets/interface/unit_art/american/portraits/usa_m1283_ampv.webp"
+      }
+    ],
+    "model_status": "Medical support role using the supplied AMPV chassis picture/model",
+    "upkeep": {
+      "funds": 250.0,
+      "fuel": 24.0,
+      "manpower": 6.0,
+      "food": 12.0
+    },
+    "production_building": "support_depot",
+    "research_branch": "Field medics",
+    "starter": false,
+    "balance_profile": "medic",
+    "prototype_id": "medic_russia"
+  },
+  {
+    "id": "loitering_united_states",
+    "country": "united_states",
+    "name": "Loitering munitions",
+    "category": "Drones",
+    "visual_kind": "fighter",
+    "role": "drone",
+    "asset_roster_id": "loitering_ukraine",
+    "seconds": 80,
+    "cost": {
+      "funds": 4800,
+      "materials": 1440,
+      "electronics": 1200,
+      "fuel": 720,
+      "manpower": 300,
+      "food": 240
+    },
+    "building_requirements": {
+      "drone_factory": 1
+    },
+    "research_days": [
+      4,
+      7,
+      10,
+      13,
+      16
+    ],
+    "model_status": "Existing shared model retained: no matching American model supplied",
+    "research_tiers": [
+      {
+        "name": "Warmate",
+        "improvement": "Baseline equipment",
+        "model": "res://assets/library/arsenal/euro_warmate.glb",
+        "preview": "res://assets/library/arsenal/russia_lancet3_drone_only.png"
+      },
+      {
+        "name": "Warmate · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_warmate.glb",
+        "preview": "res://assets/library/arsenal/russia_lancet3_drone_only.png"
+      },
+      {
+        "name": "Warmate · optics",
+        "improvement": "Modernization level 3; combat effectiveness +24%",
+        "model": "res://assets/library/arsenal/euro_warmate.glb",
+        "preview": "res://assets/library/arsenal/russia_lancet3_drone_only.png"
+      },
+      {
+        "name": "Warmate · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_warmate.glb",
+        "preview": "res://assets/library/arsenal/russia_lancet3_drone_only.png"
+      },
+      {
+        "name": "Warmate · advanced",
+        "improvement": "Modernization level 5; combat effectiveness +48%",
+        "model": "res://assets/library/arsenal/euro_warmate.glb",
+        "preview": "res://assets/library/arsenal/russia_lancet3_drone_only.png"
+      }
+    ],
+    "air_range": 8.0,
+    "air_speed": 2.0,
+    "air_damage": 0.0,
+    "ground_damage": 7.0,
+    "single_use": true,
+    "upkeep": {
+      "funds": 400.0,
+      "fuel": 48.0,
+      "manpower": 5.0,
+      "food": 10.0
+    },
+    "production_building": "drone_factory",
+    "research_branch": "Loitering munition",
+    "starter": false,
+    "balance_profile": "loitering",
+    "prototype_id": "loitering_russia"
+  },
+  {
+    "id": "2b14_mortar_82_united_states",
+    "country": "united_states",
+    "name": "Mortars",
+    "category": "Artillery",
+    "visual_kind": "artillery",
+    "role": "artillery",
+    "asset_roster_id": "l16_mortar_81_ukraine",
+    "seconds": 60,
+    "cost": {
+      "funds": 3000,
+      "materials": 960,
+      "electronics": 480,
+      "fuel": 360,
+      "manpower": 360,
+      "food": 276
+    },
+    "building_requirements": {
+      "factory": 1
+    },
+    "research_days": [
+      1,
+      4,
+      7,
+      10,
+      13
+    ],
+    "research_tiers": [
+      {
+        "name": "L16 81 mm mortar",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_l16_mortar_81.glb"
+      },
+      {
+        "name": "L16 81 mm mortar · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_l16_mortar_81.glb"
+      },
+      {
+        "name": "MO-120-RT 120 mm mortar",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_mo120rt_mortar.glb"
+      },
+      {
+        "name": "MO-120-RT 120 mm mortar · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_mo120rt_mortar.glb"
+      },
+      {
+        "name": "MO-120-RT 120 mm mortar · guided rounds",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_mo120rt_mortar.glb"
+      }
+    ],
+    "model_status": "Existing shared model retained: no matching American model supplied",
+    "upkeep": {
+      "funds": 250.0,
+      "fuel": 24.0,
+      "manpower": 6.0,
+      "food": 12.0
+    },
+    "production_building": "factory",
+    "research_branch": "Mortars",
+    "starter": true,
+    "balance_profile": "light_mortar",
+    "prototype_id": "2b14_mortar_82_russia"
+  },
+  {
+    "id": "corvettes_united_states",
+    "country": "united_states",
+    "name": "Corvettes",
+    "category": "Navy",
+    "visual_kind": "naval",
+    "role": "naval",
+    "asset_roster_id": "corvettes_ukraine",
+    "seconds": 80,
+    "cost": {
+      "funds": 4800,
+      "materials": 1440,
+      "electronics": 1200,
+      "fuel": 720,
+      "manpower": 300,
+      "food": 240
+    },
+    "building_requirements": {
+      "naval_base": 1
+    },
+    "research_days": [
+      1,
+      5,
+      9,
+      13,
+      17
+    ],
+    "model_status": "Existing shared model retained: no matching American model supplied",
+    "research_tiers": [
+      {
+        "name": "Minerva",
+        "model": "res://assets/library/arsenal/euro_corvette_t1_starting_minerva.glb",
+        "improvement": "Original supplied model",
+        "preview": "res://assets/library/arsenal/euro_corvette_t1_starting_minerva_oct12_preview.png"
+      },
+      {
+        "name": "Minerva · upgrade",
+        "model": "res://assets/library/arsenal/euro_corvette_t1_starting_minerva.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/euro_corvette_t1_starting_minerva_oct12_preview.png"
+      },
+      {
+        "name": "K130 Braunschweig",
+        "model": "res://assets/library/arsenal/euro_corvette_t2_mid_k130_braunschweig.glb",
+        "improvement": "Original supplied model",
+        "preview": "res://assets/library/arsenal/euro_corvette_t2_mid_k130_braunschweig_oct12_preview.png"
+      },
+      {
+        "name": "K130 Braunschweig · upgrade",
+        "model": "res://assets/library/arsenal/euro_corvette_t2_mid_k130_braunschweig.glb",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "preview": "res://assets/library/arsenal/euro_corvette_t2_mid_k130_braunschweig_oct12_preview.png"
+      },
+      {
+        "name": "Visby",
+        "model": "res://assets/library/arsenal/euro_corvette_t3_modern_visby.glb",
+        "improvement": "Original supplied model",
+        "preview": "res://assets/library/arsenal/euro_corvette_t3_modern_visby_oct12_preview.png"
+      }
+    ],
+    "requires_port": true,
+    "sea_speed": 1.2,
+    "sea_range": 3.0,
+    "upkeep": {
+      "funds": 400.0,
+      "fuel": 48.0,
+      "manpower": 5.0,
+      "food": 10.0
+    },
+    "sonar_range": 2.2,
+    "aa_damage": 4,
+    "aa_range": 2.5,
+    "shore_bombardment": true,
+    "production_building": "naval_base",
+    "research_branch": "Corvettes",
+    "starter": true,
+    "balance_profile": "corvette",
+    "prototype_id": "corvettes_russia"
+  },
+  {
+    "id": "airborne_ifv_united_states",
+    "country": "united_states",
+    "name": "Airborne fighting vehicles",
+    "category": "Mechanized",
+    "visual_kind": "ifv",
+    "research_branch": "Airborne fighting vehicle",
+    "seconds": 28,
+    "cost": {
+      "funds": 1920,
+      "materials": 720,
+      "electronics": 240,
+      "fuel": 300,
+      "manpower": 240,
+      "food": 204
+    },
+    "research_tiers": [
+      {
+        "name": "Lynx KF41",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_lynx_kf41.glb"
+      },
+      {
+        "name": "Lynx KF41 · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_lynx_kf41.glb"
+      },
+      {
+        "name": "Lynx KF41 · Skyranger",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/euro_lynx_kf41.glb"
+      },
+      {
+        "name": "Lynx KF41 · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_lynx_kf41.glb"
+      },
+      {
+        "name": "Lynx KF41 · advanced",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/euro_lynx_kf41.glb"
+      }
+    ],
+    "building_requirements": {
+      "barracks": 1
+    },
+    "model_status": "Existing shared model retained: no matching American model supplied",
+    "research_days": [
+      5,
+      8,
+      11,
+      14,
+      17
+    ],
+    "upkeep": {
+      "funds": 160.0,
+      "fuel": 20.0,
+      "manpower": 4.0,
+      "food": 8.0
+    },
+    "production_building": "barracks",
+    "starter": false,
+    "asset_roster_id": "airborne_ifv_ukraine",
+    "balance_profile": "airborne_ifv",
+    "prototype_id": "airborne_ifv_russia"
+  },
+  {
+    "id": "geran_united_states",
+    "country": "united_states",
+    "name": "Long-range attack drones",
+    "category": "Drones",
+    "visual_kind": "fighter",
+    "role": "drone",
+    "asset_roster_id": "liutyi_ukraine",
+    "seconds": 80,
+    "cost": {
+      "funds": 4800,
+      "materials": 1440,
+      "electronics": 1200,
+      "fuel": 720,
+      "manpower": 300,
+      "food": 240
+    },
+    "building_requirements": {
+      "drone_factory": 1
+    },
+    "research_days": [
+      6,
+      9,
+      12,
+      15,
+      18
+    ],
+    "model_status": "Existing shared model retained: no matching American model supplied",
+    "research_tiers": [
+      {
+        "name": "FP-1 / Liutyi",
+        "improvement": "",
+        "model": "res://assets/library/arsenal/ukraine_liutyi.glb"
+      },
+      {
+        "name": "FP-1 / Liutyi · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/ukraine_liutyi.glb"
+      },
+      {
+        "name": "FP-1 / Liutyi · jam-resistant navigation",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/ukraine_liutyi.glb"
+      },
+      {
+        "name": "FP-1 / Liutyi · upgrade",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/ukraine_liutyi.glb"
+      },
+      {
+        "name": "FP-1 / Liutyi · heavier warhead",
+        "improvement": "Improved targeting, reliability and combat effectiveness",
+        "model": "res://assets/library/arsenal/ukraine_liutyi.glb"
+      }
+    ],
+    "air_range": 30.0,
+    "air_speed": 1.8,
+    "air_damage": 0.0,
+    "ground_damage": 12.0,
+    "upkeep": {
+      "funds": 400.0,
+      "fuel": 48.0,
+      "manpower": 5.0,
+      "food": 10.0
+    },
+    "production_building": "drone_factory",
+    "research_branch": "One-way attack drone",
+    "starter": false,
+    "single_use": true,
+    "balance_profile": "one_way_drone",
+    "prototype_id": "geran_russia"
+  },
+  {
+    "id": "cargo_united_states",
+    "country": "united_states",
+    "name": "Cargo ships",
+    "category": "Navy",
+    "visual_kind": "naval",
+    "role": "freight",
+    "research_branch": "Cargo ships",
+    "research_only": true,
+    "starter": false,
+    "seconds": 60,
+    "research_days": [
+      1,
+      4,
+      8,
+      12,
+      16
+    ],
+    "cost": {
+      "funds": 3000,
+      "materials": 900,
+      "electronics": 240,
+      "fuel": 300,
+      "manpower": 0,
+      "food": 0
+    },
+    "upkeep": {
+      "funds": 0,
+      "fuel": 0,
+      "food": 0,
+      "manpower": 0
+    },
+    "building_requirements": {
+      "naval_base": 1
+    },
+    "requires_port": true,
+    "production_building": "naval_base",
+    "research_tiers": [
+      {
+        "name": "Cargo ships 1",
+        "model": "res://assets/library/transport/civil_container_t2_panamax.glb",
+        "preview": "res://assets/interface/unit_art/civil_cargo_ship.webp",
+        "cargo_slots": 30,
+        "model_scale": 0.8,
+        "improvement": "Capacity: 30 cargo slots (3,000 resource units). Same research artwork at every level."
+      },
+      {
+        "name": "Cargo ships 2",
+        "model": "res://assets/library/transport/civil_container_t2_panamax.glb",
+        "preview": "res://assets/interface/unit_art/civil_cargo_ship.webp",
+        "cargo_slots": 60,
+        "model_scale": 0.9,
+        "improvement": "Capacity: 60 cargo slots (6,000 resource units). Same research artwork at every level."
+      },
+      {
+        "name": "Cargo ships 3",
+        "model": "res://assets/library/transport/civil_container_t2_panamax.glb",
+        "preview": "res://assets/interface/unit_art/civil_cargo_ship.webp",
+        "cargo_slots": 90,
+        "model_scale": 1.0,
+        "improvement": "Capacity: 90 cargo slots (9,000 resource units). Same research artwork at every level."
+      },
+      {
+        "name": "Cargo ships 4",
+        "model": "res://assets/library/transport/civil_container_t2_panamax.glb",
+        "preview": "res://assets/interface/unit_art/civil_cargo_ship.webp",
+        "cargo_slots": 120,
+        "model_scale": 1.1,
+        "improvement": "Capacity: 120 cargo slots (12,000 resource units). Same research artwork at every level."
+      },
+      {
+        "name": "Cargo ships 5",
+        "model": "res://assets/library/transport/civil_container_t2_panamax.glb",
+        "preview": "res://assets/interface/unit_art/civil_cargo_ship.webp",
+        "cargo_slots": 150,
+        "model_scale": 1.2,
+        "improvement": "Capacity: 150 cargo slots (15,000 resource units). Same research artwork at every level."
+      }
+    ],
+    "model_status": "Existing shared model retained: no matching American model supplied",
+    "balance_profile": "cargo_ship",
+    "prototype_id": "cargo_russia"
+  },
+  {
+    "id": "tankers_united_states",
+    "country": "united_states",
+    "name": "Oil tankers",
+    "category": "Navy",
+    "visual_kind": "naval",
+    "role": "freight",
+    "research_branch": "Oil tankers",
+    "research_only": true,
+    "starter": false,
+    "seconds": 60,
+    "research_days": [
+      1,
+      4,
+      8,
+      12,
+      16
+    ],
+    "cost": {
+      "funds": 3000,
+      "materials": 900,
+      "electronics": 240,
+      "fuel": 300,
+      "manpower": 0,
+      "food": 0
+    },
+    "upkeep": {
+      "funds": 0,
+      "fuel": 0,
+      "food": 0,
+      "manpower": 0
+    },
+    "building_requirements": {
+      "naval_base": 1
+    },
+    "requires_port": true,
+    "production_building": "naval_base",
+    "research_tiers": [
+      {
+        "name": "Oil tankers 1",
+        "model": "res://assets/library/transport/civil_tanker_t2_aframax.glb",
+        "preview": "res://assets/interface/unit_art/civil_oil_tanker.webp",
+        "cargo_slots": 30,
+        "model_scale": 0.8,
+        "improvement": "Capacity: 30 cargo slots (3,000 resource units). Same research artwork at every level."
+      },
+      {
+        "name": "Oil tankers 2",
+        "model": "res://assets/library/transport/civil_tanker_t2_aframax.glb",
+        "preview": "res://assets/interface/unit_art/civil_oil_tanker.webp",
+        "cargo_slots": 60,
+        "model_scale": 0.9,
+        "improvement": "Capacity: 60 cargo slots (6,000 resource units). Same research artwork at every level."
+      },
+      {
+        "name": "Oil tankers 3",
+        "model": "res://assets/library/transport/civil_tanker_t2_aframax.glb",
+        "preview": "res://assets/interface/unit_art/civil_oil_tanker.webp",
+        "cargo_slots": 90,
+        "model_scale": 1.0,
+        "improvement": "Capacity: 90 cargo slots (9,000 resource units). Same research artwork at every level."
+      },
+      {
+        "name": "Oil tankers 4",
+        "model": "res://assets/library/transport/civil_tanker_t2_aframax.glb",
+        "preview": "res://assets/interface/unit_art/civil_oil_tanker.webp",
+        "cargo_slots": 120,
+        "model_scale": 1.1,
+        "improvement": "Capacity: 120 cargo slots (12,000 resource units). Same research artwork at every level."
+      },
+      {
+        "name": "Oil tankers 5",
+        "model": "res://assets/library/transport/civil_tanker_t2_aframax.glb",
+        "preview": "res://assets/interface/unit_art/civil_oil_tanker.webp",
+        "cargo_slots": 150,
+        "model_scale": 1.2,
+        "improvement": "Capacity: 150 cargo slots (15,000 resource units). Same research artwork at every level."
+      }
+    ],
+    "model_status": "Existing shared model retained: no matching American model supplied",
+    "balance_profile": "oil_tanker",
+    "prototype_id": "tankers_russia"
+  }
+]
