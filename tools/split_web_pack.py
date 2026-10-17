@@ -87,7 +87,13 @@ for path in re.findall(r"res://(assets/library/[A-Za-z0-9_./-]+)", building_text
     if not path.startswith("assets/library/buildings_oct12/"):
         core_prefixes.append(path.rsplit(".", 1)[0])
 
+# Not needed before the home screen (owner 2026-10-17: "the start is really slow"): the two
+# training films and the extra battle tracks download in the background once the home screen
+# shows (the game waits for a film only if it is still on its way when the training starts).
+LATE_PREFIXES = ("assets/cinematics/", "assets/audio/music/battle_theme_")
+
 def is_extra(source):
+    if source.startswith(LATE_PREFIXES) and not source.endswith((".md", ".uid")): return True
     # Unused vehicle set, and everything in the library the start does not show: other weapons,
     # stand-ins, other buildings and levels, trade ships and trains (all loaded on demand with
     # existence checks; WebExtras swaps them in when the pack arrives).
@@ -142,7 +148,7 @@ extra_entries = [e for e in entries if e["name"] in extra]
 # only the packs for what is on screen; web_extras_index.txt says which pack holds each file.
 def group_of(source):
     source = source.rsplit(".", 1)[0]
-    for folder in ("assets/library/arsenal/", "assets/library/airdefense/", "assets/library/buildings_oct12/", "assets/library/transport/", "assets/interface/unit_art/", "assets/vehicles/"):
+    for folder in ("assets/library/arsenal/", "assets/library/airdefense/", "assets/library/buildings_oct12/", "assets/library/transport/", "assets/interface/unit_art/", "assets/vehicles/", "assets/cinematics/", "assets/audio/music/"):
         if source.startswith(folder):
             return (folder.split("/")[-2] + "_" + source[len(folder):].split("/")[0]).split(".")[0]
     rest = source[len("assets/library/"):] if source.startswith("assets/library/") else source
@@ -159,6 +165,8 @@ for e in extra_entries:
 bases = sorted({g for g in owner_of.values()}, key=len, reverse=True)
 def group_for(name):
     if name in owner_of: return owner_of[name]
+    # Plain files (films) each get their own pack.
+    if not name.startswith(".godot/") and not name.endswith((".import", ".remap")): return group_of(name)
     stem = name.split("/")[-1]
     for b in bases:
         if stem.startswith(b.split("_", 1)[-1]) or stem.startswith(b): return b
@@ -201,6 +209,11 @@ for e in extra_entries:
         for n, g in enumerate(group_names):
             if g.startswith(own + "_"): packs.add(n)
         needs["res://" + e["name"].rsplit(".", 1)[0]] = sorted(packs)
+# Files used as they are (the .ogv films have no import step) are listed under their own path.
+for e in extra_entries:
+    name = e["name"]
+    if not name.endswith((".import", ".remap")) and not name.startswith(".godot/"):
+        needs["res://" + name] = [pack_of_file[name]]
 listing = "\n".join(k + "\t" + ",".join(str(p) for p in v) for k, v in sorted(needs.items())).encode()
 core_entries = [e for e in core_entries if e["name"] != "web_extras_index.txt"]
 core_entries.append({"name": "web_extras_index.txt", "size": len(listing), "data": listing,

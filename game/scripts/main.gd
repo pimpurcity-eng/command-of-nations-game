@@ -579,9 +579,8 @@ func _ready() -> void :
 	boot_finished = true
 	boot_ready.emit()
 	if units != null and not GameSession.weapons_test: units.prewarm_models()
-	# Closed by the phone in the middle of a match: carry straight on with it.
-	if mobile_start != null and mobile_start.visible and _left_mid_match() and FileAccess.file_exists(SAVE_PATH) and not OS.has_feature("headless"):
-		mobile_start.continue_requested.emit()
+	# Owner 2026-10-17: "it takes me right to the game. It doesn't give me a choice." The app
+	# always opens on the home screen; a match that was interrupted is its Resume Game button.
 	# Coming back from "Sign in with Google" on the website: finish it and show the account.
 	if OS.has_feature("web") and str(JavaScriptBridge.eval("/[#&](access_token|error)=/.test(window.location.hash)")) == "true":
 		open_home_account()
@@ -600,6 +599,9 @@ func _ready() -> void :
 		# Computers fetch the weapons pack at once; phones only when something first needs it
 		# (owner 2026-10-14: "WebGL context lost" - the phone browser ran out of memory).
 		if not UnitSystem.mobile_device(): web_extras.start()
+		# The tutorial films (owner 2026-10-17: slow start): fetched once the home screen is up,
+		# so they are ready by the time the player taps Play.
+		else: web_extras.prefetch("res://assets/cinematics/")
 	if OS.has_feature("web"):
 		browser_callback = JavaScriptBridge.create_callback(_browser_hidden)
 		browser_resume_callback = JavaScriptBridge.create_callback(_browser_visible)
@@ -1423,9 +1425,6 @@ func _remember_match(running: bool) -> void:
 	var state: = ConfigFile.new()
 	state.set_value("match", "running", running)
 	state.save(RESUME_STATE)
-static func _left_mid_match() -> bool:
-	var state: = ConfigFile.new()
-	return state.load(RESUME_STATE) == OK and bool(state.get_value("match", "running", false))
 func _notification(what: int) -> void:
 	if what in [NOTIFICATION_APPLICATION_PAUSED, NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_WM_CLOSE_REQUEST, NOTIFICATION_WM_GO_BACK_REQUEST]:
 		if boot_finished and session != null and session.match_rules != null and mobile_start != null and not mobile_start.visible and MatchClient.active == null and not GameSession.weapons_test:

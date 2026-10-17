@@ -234,6 +234,9 @@ func _start_music(name: String) -> void:
 	if name == "menu_theme":
 		for custom in CUSTOM_MENU_THEME:
 			if ResourceLoader.exists(custom): path = custom
+	# Browser: the other battle tracks arrive in the background after the home screen; until a
+	# track is there, the first battle track plays instead (owner 2026-10-17: slow start).
+	if not WebExtras.has(path) and track.begins_with("battle_theme"): path = MUSIC_DIR + "battle_theme.ogg"
 	if not ResourceLoader.exists(path): return
 	var stream: AudioStream = load(path)
 	# One chosen track loops; in "all in turn" each track plays once and the next follows.

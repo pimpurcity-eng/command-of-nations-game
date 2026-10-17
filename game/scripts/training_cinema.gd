@@ -121,6 +121,30 @@ func setup(which: String, path: String, start_at: float, sound_on: bool) -> void
 	message.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
 	add_child(message)
 	resized.connect(_layout)
+	_path = path
+	_start_at = start_at
+	# Browser: the films download in the background after the home screen. If this one is still
+	# on its way, show that and start it the moment it arrives.
+	if not WebExtras.has(path):
+		message.text = "Loading the film…"
+		skip_button.text = "SKIP FILM  ›"
+		skip_button.pressed.connect(_finish)
+		_waiting = true
+		_layout()
+		return
+	_begin()
+
+var _path := ""
+var _start_at := 0.0
+var _waiting := false
+
+func _begin() -> void:
+	_waiting = false
+	message.text = ""
+	skip_button.text = "HOLD TO SKIP  ›"
+	if skip_button.pressed.is_connected(_finish): skip_button.pressed.disconnect(_finish)
+	var path := _path
+	var start_at := _start_at
 	if ResourceLoader.exists(path) and load(path) is VideoStream:
 		player.stream = load(path)
 		player.finished.connect(_finish)
@@ -185,6 +209,9 @@ func _layout() -> void:
 
 func _process(delta: float) -> void:
 	if _done: return
+	if _waiting:
+		if WebExtras.has(_path): _begin()
+		return
 	if _holding: _hold += delta
 	else: _hold = maxf(0.0, _hold - delta * 3.0)
 	if _hold >= HOLD_TO_SKIP:
