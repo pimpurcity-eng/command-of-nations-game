@@ -376,29 +376,35 @@ func _build_games() -> void:
 	fresh_button = _row_button("PLAY  ▶", true)
 	fresh_button.pressed.connect(func(): _choose_side("training", "RUSSIA VS UKRAINE · 1 PLAYER"))
 	training_buttons.append(fresh_button)
-	_new_game_card(page, "chevrons", "1P", "RUSSIA VS UKRAINE", "1 player · vs AI · offline",
+	_new_game_card(page, "map:russia_ukraine", "1", "RUSSIA VS UKRAINE", "1 player · vs AI · offline",
 		"Opening film, guided first orders, allied supplies by ship and train — then full command against the AI.", fresh_button)
 	# 2 players: the persistent online Russia–Ukraine match, one commander per side.
 	online_button = _row_button("JOIN  ▶", true)
 	online_button.pressed.connect(func(): _choose_side("online", "RUSSIA VS UKRAINE · 2 PLAYERS"))
-	_new_game_card(page, "provinces", "2P", "RUSSIA VS UKRAINE", "2 players · online · always running",
+	_new_game_card(page, "map:russia_ukraine", "2", "RUSSIA VS UKRAINE", "2 players · online · being built",
 		"One commander per side. Needs an account; the AI covers your side while you are away.", online_button)
-	locked_games.append({"button": online_button, "facts": _last_facts, "open": "JOIN  ▶", "text": _last_facts.text})
+	# Owner 2026-10-17: "unlock the two-player Russia, being built right now" — open while it is tested.
 	# Owner 2026-10-17: two more small-map games are being built.
 	var middle_east := _row_button("COMING SOON", false)
 	middle_east.disabled = true
-	_new_game_card(page, "attack", "6P", "IRAN · U.S. · ISRAEL", "6 players · smaller map · coming soon",
+	_new_game_card(page, "map:middle_east", "6", "IRAN · U.S. · ISRAEL", "6 players · smaller map · coming soon",
 		"A six-nation war in the Middle East on a compact map.", middle_east)
 	var china := _row_button("COMING SOON", false)
 	china.disabled = true
-	_new_game_card(page, "funds", "CN", "CHINA · ECONOMY", "Economy game · coming soon",
+	_new_game_card(page, "map:china", "$", "CHINA · ECONOMY", "Economy game · coming soon",
 		"Build China into the world's leading economy through industry and trade.", china)
 	coming_soon_buttons = [middle_east, china]
 	# Europe: the 20-nation map is not open yet.
 	europe_button = _row_button("COMING SOON", false)
 	europe_button.disabled = true
-	_new_game_card(page, "research", "20", "EUROPE · 20 NATIONS", "20 players · online · coming soon",
+	_new_game_card(page, "map:europe", "20", "EUROPE · 20 NATIONS", "20 players · online · coming soon",
 		"Pick one of 20 European countries and fight for the continent. Watch News for the launch.", europe_button)
+	# Owner 2026-10-17: the 100-player world map is coming too.
+	var world := _row_button("COMING SOON", false)
+	world.disabled = true
+	_new_game_card(page, "map:world", "100", "WORLD · 100 NATIONS", "100 players · online · coming soon",
+		"The whole world: 100 nations on one map, with every continent in play.", world)
+	coming_soon_buttons.append(world)
 	# Practice maps for each kind of weapon.
 	test_button = _row_button("PLAY  ▾", false)
 	test_button.pressed.connect(func():
@@ -493,7 +499,53 @@ func _big_action(title: String, subtitle: String, primary: bool) -> Button:
 	button.add_theme_constant_override("line_spacing", -2)
 	return button
 
-func _badge(icon_name: String, tag: String) -> PanelContainer:
+## Owner 2026-10-17: "have a little icon there too" — a map picture with the player count on a
+## ribbon, like Call of War. Pictures come from extras/maps/tools/render_game_thumbs.py.
+func _map_badge(map_name: String, players: String) -> Control:
+	var badge := Control.new()
+	badge.custom_minimum_size = Vector2(112, 112)
+	badge.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var frame := Panel.new()
+	frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	frame.offset_bottom = -10
+	var style := _surface(Color("0f1b23"), Color("5a6b73"), 0)
+	style.set_border_width_all(2)
+	frame.add_theme_stylebox_override("panel", style)
+	frame.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
+	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	badge.add_child(frame)
+	var picture := TextureRect.new()
+	picture.texture = load("res://assets/interface/game_thumbs/" + map_name + ".png")
+	picture.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	picture.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	frame.add_child(picture)
+	var ribbon := PanelContainer.new()
+	var ribbon_style := _surface(Color("17222a"), GOLD, 0)
+	ribbon_style.content_margin_left = 8
+	ribbon_style.content_margin_right = 8
+	ribbon_style.set_corner_radius_all(12)
+	ribbon_style.set_border_width_all(2)
+	ribbon.add_theme_stylebox_override("panel", ribbon_style)
+	ribbon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ribbon.anchor_left = 0.5
+	ribbon.anchor_right = 0.5
+	ribbon.anchor_top = 1
+	ribbon.anchor_bottom = 1
+	ribbon.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	ribbon.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	badge.add_child(ribbon)
+	var count := _label("★ " + players + " ★", 18, INK)
+	count.add_theme_font_override("font", _font(600, 1))
+	count.autowrap_mode = TextServer.AUTOWRAP_OFF
+	count.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	ribbon.add_child(count)
+	return badge
+
+func _badge(icon_name: String, tag: String) -> Control:
+	if icon_name.begins_with("map:"): return _map_badge(icon_name.substr(4), tag)
 	var badge := PanelContainer.new()
 	badge.custom_minimum_size = Vector2(76, 76)
 	badge.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -522,7 +574,13 @@ func _row_button(text: String, primary: bool) -> Button:
 	return button
 
 func _new_game_card(parent: Node, icon_name: String, tag: String, title: String, facts: String, text: String, button: Button) -> VBoxContainer:
-	var body := _box(_card(parent), 12)
+	var card := _card(parent)
+	# Playable games carry a gold edge; coming-soon games stay quiet.
+	var open := not button.disabled
+	var style := _surface(Color("16262f") if open else Color("111c23"), Color(GOLD, 0.5) if open else Color("24323b"))
+	if open: style.border_width_left = 6
+	card.add_theme_stylebox_override("panel", style)
+	var body := _box(card, 12)
 	var top := HBoxContainer.new()
 	top.add_theme_constant_override("separation", 16)
 	body.add_child(top)
@@ -532,7 +590,7 @@ func _new_game_card(parent: Node, icon_name: String, tag: String, title: String,
 	var name_label := _label(title, 24)
 	name_label.add_theme_font_override("font", _font(600, 1))
 	words.add_child(name_label)
-	_last_facts = _label(facts, 17, GOLD)
+	_last_facts = _label(facts, 17, MUTED if "coming soon" in facts else GOLD)
 	words.add_child(_last_facts)
 	top.add_child(button)
 	body.add_child(_label(text, 18, MUTED))
@@ -540,9 +598,9 @@ func _new_game_card(parent: Node, icon_name: String, tag: String, title: String,
 
 const GAME_KINDS := ["training", "online", "campaign"]
 const GAME_INFO := {
-	"training": ["chevrons", "1P", "RUSSIA VS UKRAINE"],
-	"online": ["provinces", "2P", "RUSSIA VS UKRAINE"],
-	"campaign": ["city", "AI", "RUSSIA VS UKRAINE · CLASSIC"],
+	"training": ["map:russia_ukraine", "1", "RUSSIA VS UKRAINE"],
+	"online": ["map:russia_ukraine", "2", "RUSSIA VS UKRAINE"],
+	"campaign": ["map:russia_ukraine", "1", "RUSSIA VS UKRAINE · CLASSIC"],
 }
 func _game_row(parent: Node, kind: String) -> Button:
 	var card := PanelContainer.new()
@@ -616,7 +674,7 @@ func refresh_active_games() -> void:
 	join_button.text = "+  JOIN NEW GAME\n" + "Russia vs Ukraine · Europe soon"
 	show_all_button.visible = not games.is_empty()
 	var unlocked := Tutorial.done()
-	if unlock_note != null: unlock_note.visible = not unlocked
+	if unlock_note != null: unlock_note.visible = not unlocked and not locked_games.is_empty()
 	for item in locked_games:
 		item.button.text = item.open if unlocked else "LOCKED"
 		item.button.disabled = loading or not unlocked
@@ -898,7 +956,7 @@ func show_paused_match(kind: String = "campaign") -> void:
 	scroll.scroll_vertical = 0
 func cancel_loading(message: String) -> void:
 	loading = false
-	for button in [fresh_button, test_button, profile_button, join_button, resume_button]: button.disabled = false
+	for button in [online_button, fresh_button, test_button, profile_button, join_button, resume_button]: button.disabled = false
 	for button in training_buttons: button.disabled = false
 	refresh_active_games()
 	language_picker.disabled = false

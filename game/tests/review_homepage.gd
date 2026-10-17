@@ -27,7 +27,7 @@ func run() -> void:
 	check(lobby.online_button.is_visible_in_tree() and lobby.europe_button.disabled and lobby.europe_button.text == "COMING SOON", "2-player tutorial listed, Europe coming soon")
 	var started := [""]
 	lobby.training_requested.connect(func(resume: bool): started[0] = "resume" if resume else "new")
-	check(lobby.online_button.disabled == not Tutorial.done(), "2-player game is locked until Russia vs Ukraine is played")
+	check(not lobby.online_button.disabled, "2-player Russia vs Ukraine is open while it is being built (owner 2026-10-17)")
 	lobby.fresh_button.pressed.emit()
 	for i in 3: await process_frame
 	check(lobby.side_overlay.visible and started[0] == "", "Play asks which side first")
