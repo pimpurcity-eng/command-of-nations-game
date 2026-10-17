@@ -3,8 +3,13 @@ extends RefCounted
 signal changed
 signal completed(equipment_id: String, country: String)
 const DAYS: = [1, 1, 2, 4, 6]
-const HOURS: = [2, 4, 8, 12, 18]
-const REFINEMENT_HOURS: = [2, 3, 5, 8]
+## Owner 2026-10-16: "Level one units to research about 30 minutes at one time, up to 2 hours
+## depending on what it is." Level 1 takes 30 min (basic families, complexity 0.75) up to 2 h
+## (complexity 2.0: strategic missiles, carriers) at 1x; each later level is a multiple of that.
+const LEVEL_ONE_MIN_HOURS: = 0.5
+const LEVEL_ONE_MAX_HOURS: = 2.0
+const HOURS: = [1.0, 2.0, 4.0, 6.0, 9.0]  # multiples of the family's level-1 time
+const REFINEMENT_HOURS: = [1.0, 1.5, 2.5, 4.0]  # multiples of the family's level-1 time
 const COST_FACTORS: = [0.4, 0.65, 0.95, 1.3, 1.7]
 const SLOTS: = 2
 var economy: ProductionSystem
@@ -42,9 +47,13 @@ func unlock_day(id: String, target: int) -> int:
 	return int(days[clampi(target - 1, 0, days.size() - 1)])
 func level(id: String) -> int:
 	return int(levels.get(id, initial_level(economy.equipment(id)) if economy != null else 1))
+## Real hours at 1x for level 1 of a family of this complexity (research_factor 0.75 .. 2.0).
+static func level_one_hours(complexity: float) -> float:
+	return clampf(LEVEL_ONE_MIN_HOURS + (complexity - 0.75) * 1.2, LEVEL_ONE_MIN_HOURS, LEVEL_ONE_MAX_HOURS)
+func _complexity(id: String) -> float:
+	return float(economy.equipment(id).get("research_factor", 1.0)) if economy != null and not id.is_empty() else 1.0
 func duration(target: int, id: String = "") -> float:
-	var complexity: = float(economy.equipment(id).get("research_factor", 1.0)) if economy != null and not id.is_empty() else 1.0
-	return HOURS[clampi(target - 1, 0, 4)] * complexity * 3600.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
+	return HOURS[clampi(target - 1, 0, 4)] * level_one_hours(_complexity(id)) * 3600.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
 func cost(id: String, target: int) -> Dictionary:
 	var result: Dictionary = {}
 	var spec: = economy.equipment(id)
@@ -97,8 +106,7 @@ func refined(id: String, tier: int) -> bool:
 func upgrade_day(id: String, tier: int) -> int:
 	return ceili((unlock_day(id,tier)+unlock_day(id,mini(5,tier+1)))/2.0)
 func upgrade_duration(tier: int, id: String = "") -> float:
-	var complexity: = float(economy.equipment(id).get("research_factor", 1.0)) if economy != null and not id.is_empty() else 1.0
-	return REFINEMENT_HOURS[clampi(tier - 1, 0, 3)] * complexity * 3600.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
+	return REFINEMENT_HOURS[clampi(tier - 1, 0, 3)] * level_one_hours(_complexity(id)) * 3600.0 / SimulationClock.REAL_SECONDS_PER_SIM_SECOND
 func upgrade_cost(id: String, tier: int) -> Dictionary:
 	var result: Dictionary = {}
 	for resource in ProductionSystem.RESOURCES: result[resource] = ceili(float(economy.equipment(id).cost.get(resource, 0.0)) * (0.2+0.1*(tier-1)))
