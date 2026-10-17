@@ -31,6 +31,9 @@ signal new_match_requested
 var city_scores: = {"russia": 0, "ukraine": 0}
 ## The player's progress toward a domination victory (0..1).
 var domination: = 0.0
+## Owner 2026-10-16: the victory goal (tooltip) and a domination countdown shown beside the score.
+var victory_goal: = ""
+var victory_warning: = ""
 signal army_roster_requested
 signal research_requested
 signal weapon_showcase_requested
@@ -236,6 +239,8 @@ func _build_toolbar(root: Control) -> void:
 	popup.add_item("Home screen", 100)
 	popup.add_item("Commander profile", 101)
 	popup.add_item("Army roster", 10)
+	# Owner 2026-10-16: "Make the newspaper better... make it more accessible" - its own entry.
+	popup.add_item("War newspaper", 33)
 	popup.add_item("Espionage", 38)
 	_nav_submenu(popup, "Reports", [[33,"War newspaper"],[34,"Battle reports"]])
 	nation_menu = _nav_submenu(popup, "Nation", [[24,"Victory progress"],[37,"Doctrine & strategic weapons"],[36,"Annex selected province"]])
@@ -630,8 +635,8 @@ func show_clock(elapsed: float, speed: float, paused: bool) -> void :
 	time_label.text = "Day %d · %02d:%02d" % [1 + seconds / 86400, (seconds % 86400) / 3600, (seconds % 3600) / 60]
 	_speed = speed
 	speed_button.text = "» %dx" % int(speed)
-	score_label.text = "★ %d%%" % roundi(100.0 * clampf(domination, 0.0, 1.0))
-	score_label.tooltip_text = "Progress to domination victory · More → Victory progress"
+	score_label.text = "★ %d%%" % roundi(100.0 * clampf(domination, 0.0, 1.0)) + ("" if victory_warning.is_empty() else " · " + victory_warning)
+	score_label.tooltip_text = "Progress to domination victory (100%% = %d%% of enemy victory points) · More → Victory progress" % roundi(VictoryRules.DOMINATION_SHARE * 100) + ("" if victory_goal.is_empty() else "\n" + victory_goal)
 	var at_war: = navigation_menu.text.begins_with("War")
 	war_label.text = "AT WAR" if at_war else "PEACE"
 	war_label.add_theme_color_override("font_color", Color("ff8f80") if at_war else MUTED)
